@@ -51,7 +51,8 @@ export function PastSuspension() {
 
 	return (
 		<>
-		<h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("SUSSPENSIONS")}</h4>
+		<h1 className={styles.carrierName}>{t("SUSSPENSIONS")}</h1>
+
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>
 				<BaseCheck

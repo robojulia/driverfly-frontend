@@ -58,10 +58,10 @@ export function AccidentHistory() {
 	}, [applicant, applicantExtras]);
 
 	return (
+		<>
+		<h1 className={styles.carrierName}>{t("MORE_ABOUT_ACCIDENTS")}</h1>
+
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-			<h6 className={styles.heading__sty}>
-				{t("MORE_ABOUT_ACCIDENTS")}
-			</h6>
 			<Row className={styles.bold}>
 				<BaseInput
 					min={0}
@@ -192,5 +192,6 @@ export function AccidentHistory() {
 				</Col>
 			</Row>
 		</Form>
+		</>
 	);
 }

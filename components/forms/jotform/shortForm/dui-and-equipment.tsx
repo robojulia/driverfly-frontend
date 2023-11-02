@@ -71,7 +71,7 @@ export function DuiAndEquipment() {
 
     return (
         <>
-		<h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("DUI_AND_EQUIPEMENTS")}</h4>
+            <h1 className={styles.carrierName}>{t("DUI_AND_EQUIPEMENTS")}</h1>
         <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
             <Row>
                 <ViewCard

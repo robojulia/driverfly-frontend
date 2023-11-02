@@ -68,12 +68,8 @@ export function PastEmploymentHistory() {
 			>
 				{t("ADD_EMPLOYMENT_HISTORY_SUB_HEADING")}
 			</h5>
+			<h1 className={styles.carrierName}>{t("PAST_EMPLOYMENT_HISTORY")}</h1>
 
-			<h4
-				className={`${styles.heading__sty} ${styles.striped__border}`}
-			>
-				{t("PAST_EMPLOYMENT_HISTORY")}
-			</h4>
 
 			<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 				{t("HONEST_ABOUT_PAST_EMPLOYMENT")}
