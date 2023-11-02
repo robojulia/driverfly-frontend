@@ -62,7 +62,7 @@ export function ReferralSourceForm(props: ReferralSourceFormProps) {
                 if (!globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast }))
                     formFailed(t, entity?.id ? "update": "create", "REFERRAL_SOURCE");
 
-                if (onSaveError) onSaveError(e);
+                // if (onSaveError) onSaveError(e);
             }
         }
     });

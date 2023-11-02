@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Button, ButtonGroup } from "react-bootstrap";
-import { ArrowCounterclockwise, EyeFill, PenFill, TrashFill} from 'react-bootstrap-icons';
+import { ArrowCounterclockwise, EyeFill, PenFill, TrashFill } from 'react-bootstrap-icons';
 
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import PageLayout from "../../../../../components/layouts/page/page-layout";
@@ -23,197 +23,196 @@ import OverlyPopover from "../../../../../components/popover/overly-popover";
 
 
 export default function ReferralList({ host }: { host: string }) {
-    const router = useRouter();
-    
-    const { t } = useTranslation();
+	const router = useRouter();
 
-    const { user, isSuperAdmin, hasPermission } = useAuth();
+	const { t } = useTranslation();
 
-    const [ referralSources, setReferralSources ] = useState<ReferralSourceEntity[]>([
-        {
-            id: 1,
-            name: "Kom",
-            code: "123456",
-            referrals: 5,
-            createdAt: new Date()
-        }
-    ]);
-    
-    const columnSettingKey = getDataTableColumnKey("admin", user, "referral-sources");
+	const { user, isSuperAdmin, hasPermission } = useAuth();
 
-    useEffectAsync(async () => {
-        if (!isSuperAdmin)
-        {
-            router.push("/dashboard/company/");
-            return;
-        }
-        const api = new ReferralSourceApi();
+	const [referralSources, setReferralSources] = useState<ReferralSourceEntity[]>([
+		{
+			id: 1,
+			name: "Kom",
+			code: "123456",
+			referrals: 5,
+			createdAt: new Date()
+		}
+	]);
 
-        try {
-            const list = await api.list();
+	const columnSettingKey = getDataTableColumnKey("admin", user, "referral-sources");
 
-            setReferralSources(list);
-        }
-        catch (e) {
-            globalAjaxExceptionHandler(e, { t: t, toast: toast, defaultMessage: t("UNABLE_TO_LOAD_{name}", { name: "REFERRAL_SOURCES" }, { translateProps: true })});
-        }
-      }, [ user, isSuperAdmin ]);
+	useEffectAsync(async () => {
+		if (!isSuperAdmin) {
+			router.push("/dashboard/company/");
+			return;
+		}
+		const api = new ReferralSourceApi();
 
-      async function onAddClick (e: React.MouseEvent) {
-        e.preventDefault();
-    
-        router.push(`${router.asPath}/create`);
-      }
-    
-      async function onEditClick (id: number) {
-        router.push(`${router.asPath}/${id}/edit`);
-      }
-    
-      async function onViewClick (id: number) {
-        router.push(`${router.asPath}/${id}`);
-      }
-    
-      async function onDeleteClick (id: number) {
-         try {
-            const api = new ReferralSourceApi();
-    
-            const entity = await api.remove(id);
-    
-            setReferralSources(referralSources.map(v => {
-                if (v.id === entity.id) return entity;
+		try {
+			const list = await api.list();
 
-                return v;
-            }));
-         }
-         catch (e) {
-           globalAjaxExceptionHandler(e, { t: t, toast: toast, defaultMessage: "UNABLE_TO_DELETE" });
-         }
-      }
-    
-      async function onRestoreClick(id: number) {
-        try {
-           const api = new ReferralSourceApi();
-   
-           const entity = await api.restore(id);
-   
-           setReferralSources(referralSources.map(v => {
-               if (v.id === entity.id) return entity;
+			setReferralSources(list);
+		}
+		catch (e) {
+			globalAjaxExceptionHandler(e, { t: t, toast: toast, defaultMessage: t("UNABLE_TO_LOAD_{name}", { name: "REFERRAL_SOURCES" }, { translateProps: true }) });
+		}
+	}, [user, isSuperAdmin]);
 
-               return v;
-           }));
-        }
-        catch (e) {
-          globalAjaxExceptionHandler(e, { t: t, toast: toast, defaultMessage: "UNABLE_TO_RESTORE" });
-        }
-     }
+	async function onAddClick(e: React.MouseEvent) {
+		e.preventDefault();
 
-     function renderDataTable(status: Status) {
-        return (
-            <ViewDataTable<ReferralSourceEntity>
-                columnSettingKey={columnSettingKey}
-                customStyles={{
-                    headCells: {
-                        style: {
-                            background: "#5bb0b9",
-                            color: "white"
-                        },
-                    },
-                }}
-                columns={[
-                    {
-                        id: "id",
-                        name: "ID",
-                        selector: v => v.id,
-                        hidable: false,
-                    },
-                    {
-                        id: "name",
-                        name: "NAME",
-                        selector: v => v.name,
-                        hidable: false,
-                    },
-                    {
-                        id: "code",
-                        name: "REFERRAL_CODE",
-                        selector: v => v.code,
-                    },
-                    {
-                      id: "url",
-                      name: "URL",
-                      wrap: false,
-                      width: "500",
-                      selector: v => ReferralSourceEntity.getReferralUrl(host, v),
-                      cell: v => ReferralSourceEntity.getReferralUrl(host, v)
-                    },
-                    {
-                        id: "referrals",
-                        name: "REFERRALS",
-                        selector: v => v.referrals,
-                    },
-                    {
-                        id: "createdAt",
-                        name: "CREATED_AT",
-                        selector: v => (typeof v.createdAt === "string" ? new Date(v.createdAt) : v.createdAt).toLocaleString(),
-                    },
-                ]}
-                actions={v => ([
-                    {
-                        onClick: e => onViewClick(v.id),
-                        icon: EyeFill,
-                        label: "VIEW",
-                      },
-                      {
-                        onClick: e => onEditClick(v.id),
-                        icon: PenFill,
-                        label: "EDIT",
-                      },
-                      {
-                        onClick: e => onDeleteClick(v.id),
-                        icon: TrashFill,
-                        label: "DELETE",
-                        hide: status === Status.DELETED
-                      },
-                      {
-                        onClick: e => onRestoreClick(v.id),
-                        icon: ArrowCounterclockwise,
-                        label: "RESTORE",
-                        hide: status === Status.ACTIVE
-                      },
-                ])}
-                items={referralSources.filter(v => v.status === status)}
-                />
-        );
-     }
-   
-      return <PageLayout
-        title="REFERRAL_SOURCES"
-        actions={(<ButtonGroup>
-              <Button onClick={onAddClick}>
-                + {t("CREATE")}
-              </Button>
-          </ButtonGroup>)}
-            >
-            <TabbedLayout items={{
-                [`Status.${Status.ACTIVE}`]: renderDataTable(Status.ACTIVE),
-                [`Status.${Status.DELETED}`]: renderDataTable(Status.DELETED),
-            }} />
-    </PageLayout>;
+		router.push(`${router.asPath}/create`);
+	}
+
+	async function onEditClick(id: number) {
+		router.push(`${router.asPath}/${id}/edit`);
+	}
+
+	async function onViewClick(id: number) {
+		router.push(`${router.asPath}/${id}`);
+	}
+
+	async function onDeleteClick(id: number) {
+		try {
+			const api = new ReferralSourceApi();
+
+			const entity = await api.remove(id);
+
+			setReferralSources(referralSources.map(v => {
+				if (v.id === entity.id) return entity;
+
+				return v;
+			}));
+		}
+		catch (e) {
+			globalAjaxExceptionHandler(e, { t: t, toast: toast, defaultMessage: "UNABLE_TO_DELETE" });
+		}
+	}
+
+	async function onRestoreClick(id: number) {
+		try {
+			const api = new ReferralSourceApi();
+
+			const entity = await api.restore(id);
+
+			setReferralSources(referralSources.map(v => {
+				if (v.id === entity.id) return entity;
+
+				return v;
+			}));
+		}
+		catch (e) {
+			globalAjaxExceptionHandler(e, { t: t, toast: toast, defaultMessage: "UNABLE_TO_RESTORE" });
+		}
+	}
+
+	function renderDataTable(status: Status) {
+		return (
+			<ViewDataTable<ReferralSourceEntity>
+				columnSettingKey={columnSettingKey}
+				customStyles={{
+					headCells: {
+						style: {
+							background: "#5bb0b9",
+							color: "white"
+						},
+					},
+				}}
+				columns={[
+					{
+						id: "id",
+						name: "ID",
+						selector: v => v.id,
+						hidable: false,
+					},
+					{
+						id: "name",
+						name: "NAME",
+						selector: v => v.name,
+						hidable: false,
+					},
+					{
+						id: "code",
+						name: "REFERRAL_CODE",
+						selector: v => v.code,
+					},
+					{
+						id: "url",
+						name: "URL",
+						wrap: false,
+						width: "500",
+						selector: v => ReferralSourceEntity.getReferralUrl(host, v, user?.company?.id),
+						cell: v => ReferralSourceEntity.getReferralUrl(host, v, user?.company?.id)
+					},
+					{
+						id: "referrals",
+						name: "REFERRALS",
+						selector: v => v.referrals,
+					},
+					{
+						id: "createdAt",
+						name: "CREATED_AT",
+						selector: v => (typeof v.createdAt === "string" ? new Date(v.createdAt) : v.createdAt).toLocaleString(),
+					},
+				]}
+				actions={v => ([
+					{
+						onClick: e => onViewClick(v.id),
+						icon: EyeFill,
+						label: "VIEW",
+					},
+					{
+						onClick: e => onEditClick(v.id),
+						icon: PenFill,
+						label: "EDIT",
+					},
+					{
+						onClick: e => onDeleteClick(v.id),
+						icon: TrashFill,
+						label: "DELETE",
+						hide: status === Status.DELETED
+					},
+					{
+						onClick: e => onRestoreClick(v.id),
+						icon: ArrowCounterclockwise,
+						label: "RESTORE",
+						hide: status === Status.ACTIVE
+					},
+				])}
+				items={referralSources.filter(v => v.status === status)}
+			/>
+		);
+	}
+
+	return <PageLayout
+		title="REFERRAL_SOURCES"
+		actions={(<ButtonGroup>
+			<Button onClick={onAddClick}>
+				+ {t("CREATE")}
+			</Button>
+		</ButtonGroup>)}
+	>
+		<TabbedLayout items={{
+			[`Status.${Status.ACTIVE}`]: renderDataTable(Status.ACTIVE),
+			[`Status.${Status.DELETED}`]: renderDataTable(Status.DELETED),
+		}} />
+	</PageLayout>;
 }
 
 ReferralList.getLayout = function getLayout(page) {
-    return (
-      <FullLayout>
-        {page}
-      </FullLayout>
-    )
-  }
-  
-export async function getServerSideProps (context) {
-  const { req, query, res, asPath, pathname } = context;
-  let host = null;
-  if (req) {
-      host = req.headers.host // will give you localhost:3000
-  }
+	return (
+		<FullLayout>
+			{page}
+		</FullLayout>
+	)
+}
 
-  return { props: { host } };
+export async function getServerSideProps(context) {
+	const { req, query, res, asPath, pathname } = context;
+	let host = null;
+	if (req) {
+		host = req.headers.host // will give you localhost:3000
+	}
+
+	return { props: { host } };
 }

@@ -11,14 +11,16 @@ import { CompanyEntity } from "../../../../models/company/company.entity";
 import BaseInput from "../../../../components/forms/base-input";
 import { JobEntity } from "../../../../models/job/job.entity";
 import { CompanyPreferenceEntity } from "../../../../models/company/company-preferences.entity";
+import { UtmReferral } from "../../../../models/auth/utm-referral.interface";
 
 export interface FullFormProps {
 	employer: CompanyEntity;
 	preferences: CompanyPreferenceEntity[];
+	utm?: UtmReferral;
 }
-export default function FullForm({ employer, preferences }: FullFormProps) {
+export default function FullForm({ employer, preferences, utm }: FullFormProps) {
 	console.log("preferences", preferences);
-
+	console.log("utm", utm);
 
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
 	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
@@ -47,7 +49,8 @@ export default function FullForm({ employer, preferences }: FullFormProps) {
 					jobs,
 					applicantExtras,
 					companyPreferences: preferences,
-					steps
+					steps,
+					utm
 				},
 				method: {
 					setApplicant,
@@ -84,6 +87,14 @@ export async function getServerSideProps({ query }: NextPageContext) {
 	try {
 		let companyId = +(query?.companyId); // { companyId } = query || {};
 
+		const utm: UtmReferral = {
+			utm_source: query?.utm_source as string ?? null,
+			utm_medium: query?.utm_medium as string ?? null,
+			utm_campaign: query?.utm_campaign as string ?? null,
+			utm_content: query?.utm_content as string ?? null,
+			referral_name: query?.referral_name as string ?? null,
+		};
+
 		if (!companyId) {
 			console.error(`form/jotform: Unable to fetch details for companyId: ${query?.companyId}`);
 			return { notFound: true }
@@ -102,7 +113,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
 			return { notFound: true };
 		}
 
-		return { props: { employer, preferences } }
+		return { props: { employer, preferences, utm } }
 	} catch (error) {
 		console.error(`form/jotform: Exception when attempting to fetch details for companyId: ${query?.companyId}`, error);
 		return { notFound: true }

@@ -23,7 +23,7 @@ import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 
 export function HearAbout() {
 	const {
-		state: { applicantExtras, applicant, jobs },
+		state: { applicantExtras, applicant, jobs, utm },
 		method: { setApplicantExtras, stepNext, stepBack, setApplicant },
 	}: JotFormContextType = useContext(JotformContext);
 
@@ -52,7 +52,8 @@ export function HearAbout() {
 					const data = await applicantApi.jotform.create({
 						applicant,
 						applicantExtras: filteredExtras,
-						jobs
+						jobs,
+						utm
 					});
 					setApplicantExtras(filteredExtras)
 					setApplicant({
@@ -184,10 +185,16 @@ export function HearAbout() {
 			...form.values,
 			HEAR_ABOUT_US: !!apx?.type
 				? apx
-				: new ApplicantExtrasEntity(ApplicantExtras.HEAR_ABOUT_US),
+				: {
+					...(new ApplicantExtrasEntity(ApplicantExtras.HEAR_ABOUT_US)),
+					value: Boolean(utm?.referral_name) ? HearAboutUsType.REFERRAL : null
+				},
 			REFERAL_NAME: !!apx_referal_name?.type
 				? apx_referal_name
-				: new ApplicantExtrasEntity(ApplicantExtras.REFERAL_NAME),
+				: {
+					...(new ApplicantExtrasEntity(ApplicantExtras.REFERAL_NAME)),
+					value: Boolean(utm?.referral_name) ? utm?.referral_name : null
+				},
 			GOOD_FIT: !!apx_good_Fit?.type
 				? apx_good_Fit
 				: new ApplicantExtrasEntity(ApplicantExtras.GOOD_FIT)
@@ -211,6 +218,7 @@ export function HearAbout() {
 						name="HEAR_ABOUT_US.value"
 						placeholder="CHOOSE"
 						formik={form}
+						readOnly={Boolean(utm?.referral_name)}
 					/>
 				</Row>
 
@@ -222,6 +230,7 @@ export function HearAbout() {
 							placeholder="REFERRAL_NAME"
 							label="REFERRAL_NAME"
 							formik={form}
+							readOnly={Boolean(utm?.referral_name)}
 						/>
 					</Row>
 				)}
