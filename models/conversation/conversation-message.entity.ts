@@ -11,6 +11,9 @@ export class ConversationMessageEntity {
     direction?: MessageDirection;
     text?: string;
     created_at?: string | Date;
+    error_message?: string;
+    error_code?: number;
+    message_sid?: string;
 
     static yupSchema() {
         return yup.object({

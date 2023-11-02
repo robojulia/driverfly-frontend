@@ -60,10 +60,10 @@ export function ViolationHistory() {
 		console.log("form error", form.errors);
 	}, [form.values, form.errors]);
 	return (
+		<>
+		<h1 className={styles.carrierName}>{t("VIOLATIONS_LAST_3_YEARS")}</h1>
+
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-			<h6 className={styles.heading__sty}>
-				{t("VIOLATIONS_LAST_3_YEARS")}
-			</h6>
 			<Row className={`${styles.bold} p-3`}>
 				<BaseInput
 					min={0}
@@ -171,5 +171,6 @@ export function ViolationHistory() {
 				</Col>
 			</Row>
 		</Form >
+		</>
 	);
 }

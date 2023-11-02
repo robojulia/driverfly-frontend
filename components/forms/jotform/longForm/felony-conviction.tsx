@@ -49,6 +49,9 @@ export function FelonyConviction() {
 	}, [form.values, form.errors]);
 
 	return (
+		<>
+		<h1 className={styles.carrierName}>{t("FELONY_CONVICTION")}</h1>
+
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>
 				<BaseCheck
@@ -82,5 +85,6 @@ export function FelonyConviction() {
 				</Col>
 			</Row>
 		</Form>
+		</>
 	);
 }

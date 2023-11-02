@@ -60,11 +60,9 @@ export function EmergencyContact() {
 
 	return (
 		<>
+		<h1 className={styles.carrierName}>{t("EMERGENCY_CONTACT_DETAILS")}</h1>
+
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<h4 className={`${styles.align__text_left} ${styles.heading__sty}`}>
-					{t("EMERGENCY_CONTACT_DETAILS")}
-				</h4>
-				
 				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseInput
 						className="col-md-6 my-3"

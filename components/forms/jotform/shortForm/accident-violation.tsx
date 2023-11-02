@@ -65,6 +65,7 @@ export function AccidentViolation() {
 
 	return (
 		<>
+            <h1 className={styles.carrierName}>{t("ACCIDENTS_AND_VOILATIONS")}</h1>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row >
 					<BaseCheck

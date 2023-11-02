@@ -50,6 +50,9 @@ export function PastSuspension() {
 	}, [form.values, form.errors]);
 
 	return (
+		<>
+		<h1 className={styles.carrierName}>{t("SUSSPENSIONS")}</h1>
+
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>
 				<BaseCheck
@@ -84,5 +87,6 @@ export function PastSuspension() {
 				</Col>
 			</Row>
 		</Form>
+		</>
 	);
 }

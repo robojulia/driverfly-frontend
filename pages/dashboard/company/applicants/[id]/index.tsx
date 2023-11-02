@@ -300,10 +300,10 @@ export default function ViewApplicant({ id }) {
 					</Col>
 				</Row>
 				<Row>
-					<Col lg={7}>
+					<Col lg={6}>
 						<ApplicantWorkHistory applicant={applicant} />
 					</Col>
-					<Col lg={5}>
+					<Col lg={6}>
 						{/* < ViewApplicantDAC applicant={applicant} /> */}
 						<ViewApplicantDqf applicant={applicant} />
 					</Col>

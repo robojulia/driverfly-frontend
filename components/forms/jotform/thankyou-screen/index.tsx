@@ -13,7 +13,8 @@ export function ThankyouPage() {
 
         <>
             <ToastContainer />
-            <h4 className={styles.Application}>{t("THANK_YOU")}</h4>
+		    <h1 className={styles.carrierName}>{t("THANK_YOU")}</h1>
+
             {/* <h6 className={styles.paragraph}>{t("SUBMITTED_YOUR_FORM")}</h6> */}
             <p className={styles.paragraph}>
                 {t('GET_REGISTERED_MESSAGE')}

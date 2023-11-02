@@ -4,6 +4,7 @@ import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import jotformContext from "../../../../context/jotform-context";
 import { WorkedBeforeDto } from "../../../../models/jot-form/long-form/worked-before.dto";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
@@ -57,6 +58,9 @@ export function WorkedBefore() {
 	}, [form.values, form.errors]);
 
 	return (
+		<>
+		<h1 className={styles.carrierName}>{t("WORKED_BEFORE")}</h1>
+
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row>
 				<BaseCheck
@@ -84,7 +88,7 @@ export function WorkedBefore() {
 						<>
 							<Row>
 								<BaseInput
-									className="col-md-6 my-3"
+									className="col-md-6 my-3 font-weight-bold"
 									type="date"
 									name="ALREADY_WORKED_TO_COMPANY.value.start_date"
 									placeholder="DATE"
@@ -93,7 +97,7 @@ export function WorkedBefore() {
 									formik={form}
 								/>
 								<BaseInput
-									className="col-md-6 my-3"
+									className="col-md-6 my-3 font-weight-bold"
 									type="date"
 									name="ALREADY_WORKED_TO_COMPANY.value.end_date"
 									placeholder="DATE"
@@ -121,5 +125,6 @@ export function WorkedBefore() {
 				</Col>
 			</Row>
 		</Form>
+		</>
 	);
 }

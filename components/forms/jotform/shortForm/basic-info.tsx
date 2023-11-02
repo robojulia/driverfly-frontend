@@ -69,6 +69,7 @@ export function BasicInfo() {
 	}, []);
 	return (
 		<>
+            <h1 className={styles.carrierName}>{t("basic_info")}</h1>
 
 			<Form
 				className={styles.align__text_left}

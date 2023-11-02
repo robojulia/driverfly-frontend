@@ -69,10 +69,10 @@ export function DriverLicense() {
 	}, [form.errors, form.values]);
 
 	return (
+		<>
+		<h1 className={styles.carrierName}>{t("DRIVER_LICENSE_PHOTO")}</h1>
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-			<Row>
-				<h3 className={`${styles.align__text_left}  ${styles.txtcolor}`}>{t("DRIVER_LICENSE_PHOTO")}</h3>
-			</Row>
+
 			<BaseCheck
 				className="my-3 col float-left p-0"
 				label="MEDIA_PREFERENCE"
@@ -115,5 +115,6 @@ export function DriverLicense() {
 				</Col>
 			</Row>
 		</Form>
+		</>
 	);
 }

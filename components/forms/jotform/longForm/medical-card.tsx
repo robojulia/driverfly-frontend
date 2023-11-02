@@ -57,10 +57,10 @@ export function MedicalCard() {
 
 
 	return (
+		<>
+		<h1 className={styles.carrierName}>{t("MEDICAL_CARD_UPLOAD_TITLE")}</h1>
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-			<Row>
-				<h3 className={`${styles.align__text_left}  ${styles.txtcolor}`}>{t("MEDICAL_CARD_UPLOAD_TITLE")}</h3>
-			</Row>
+			
 			<BaseCheck
 				className="my-3 col float-left p-0"
 				label="MEDIA_PREFERENCE"
@@ -98,5 +98,6 @@ export function MedicalCard() {
 
 			</Row>
 		</Form>
+		</>
 	)
 }

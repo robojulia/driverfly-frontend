@@ -121,7 +121,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
                                                 <td colSpan={2}>
                                                     {t(`ApplicantDqf.${value}`)}
                                                 </td>
-                                                <td colSpan={1} className="text-center">
+                                                <td colSpan={2} className="text-center">
                                                     <input className="" type="radio" disabled checked={Boolean(document?.id)} />
                                                 </td>
                                                 <td colSpan={2}>
@@ -203,7 +203,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
                                                 <td colSpan={2}>
                                                     {t(`ApplicantOnBoardingChecklist.${value}`)}
                                                 </td>
-                                                <td colSpan={1} className="text-center">
+                                                <td colSpan={2} className="text-center">
                                                     <input className="" type="radio" disabled checked={Boolean(document?.id)} />
                                                 </td>
                                                 <td colSpan={2}>
