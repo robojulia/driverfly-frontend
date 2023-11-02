@@ -17,6 +17,7 @@ export type JotFormContextType = {
 			utm_medium?: string;
 			utm_campaign?: string;
 			utm_content?: string;
+			referral_name?: string;
 		}
 	};
 	method: {
@@ -41,6 +42,7 @@ const JotformContext = createContext<JotFormContextType>({
 			utm_medium: null,
 			utm_campaign: null,
 			utm_content: null,
+			referral_name: null,
 		}
 	},
 	method: {

@@ -12,6 +12,7 @@ export class UpsertApplicantJotformDto {
 		utm_medium?: string;
 		utm_campaign?: string;
 		utm_content?: string;
+		referral_name?: string;
 	}
 
 	static yupSchema(enumType?: object) {

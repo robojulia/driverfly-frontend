@@ -20,6 +20,7 @@ export interface FullFormProps {
 		utm_medium?: string;
 		utm_campaign?: string;
 		utm_content?: string;
+		referral_name?: string;
 	}
 }
 export default function FullForm({ employer, preferences, utm }: FullFormProps) {
@@ -96,6 +97,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
 			utm_medium: query?.utm_medium ?? null,
 			utm_campaign: query?.utm_campaign ?? null,
 			utm_content: query?.utm_content ?? null,
+			referral_name: query?.referral_name ?? null,
 		};
 
 		if (!companyId) {
