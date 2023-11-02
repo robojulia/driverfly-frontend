@@ -299,16 +299,15 @@ export default function EmployeeDirectory() {
                         }
 
                         <FormGroup style={{ float: "right", display:'flex',  alignItems:'center' }}>
-                            <span className="p-4">{t("VIEW_BY_PAST_EMP")}</span>
+                            <span className="p-4">{t("VIEW_BY_{name}", { name:  "PAST_EMPLOYEE"   }, { translateProps: true })}</span>
                             <FormControlLabel
                                 control={<Switch
                                     value={viewMode === ViewModeType.EMPLOYEE ? ViewModeType.EMPLOYEE : ViewModeType.PAST_EMPLOYEE}
                                     checked={viewMode === ViewModeType.EMPLOYEE}
                                     onChange={onViewModeChange} />}
                                     label=''
-                                // label={t("VIEW_BY_{name}", { name: t(viewMode !== ViewModeType.EMPLOYEE ? "PAST_EMPLOYEE" : "EMPLOYEES" ) })}
                             />
-                            <span className="">{t("VIEW_BY_EMP")}</span>
+                            <span className="">{t("VIEW_BY_{name}", { name:  "EMPLOYEE"   },  { translateProps: true })}</span>
 
                         </FormGroup>
                     </Col>
