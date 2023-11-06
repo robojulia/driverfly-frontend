@@ -24,7 +24,7 @@ function BaseReCapcha({
   onChange,
 }: BaseReCapchaProps) {
   const { t } = useTranslation();
-  const key = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
+  const key = process.env.RECAPTCHA_SITE_KEY
 
   if (formik) {
     /**
