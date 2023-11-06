@@ -46,7 +46,7 @@ function BaseReCapcha({
       )}
       <ReCAPTCHA
         className={`${error? "is-invalid" : ""}`}
-        sitekey={process.env.RECAPTCHA_SITE_KEY}
+        sitekey={'6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'}
         onChange={onChange}
         ref={captchaRef}
       />

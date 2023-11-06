@@ -30,12 +30,15 @@ export default function Contact() {
     validationSchema: ContactUsEntity.yupSchema(),
     onSubmit: async (dto) => {
       try {
-        await contactApi.sendMail(dto);
+        const res = await contactApi.sendMail(dto);
+        console.log(res,"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Response from try");
         toast.success(t("THANKS_FOR_CONTACTING_US"));
       } catch (e) {
         if (e.response?.data?.recaptchaValue == "INVALID_RECAPTCHA_TOKEN")
           captchaRef.current.reset();
 
+          console.log(e.response,"========================================================================Response from Catch and Data : ",dto);
+          
         globalAjaxExceptionHandler(e, {
           formik: form,
           toast: toast,
@@ -47,8 +50,10 @@ export default function Contact() {
   });
 
   const handleReCapchaChange = (token: string) =>
+  {
+    console.log(token,"ToooooOOOOOOOOOOOOOOOOOOOOoooooooooooooooOOOOooooooOOOoOoooooooOOOOooooKen");
     form.setFieldValue("recaptchaValue", token || null);
-
+}
   return (
     <>
       <Head>
