@@ -31,13 +31,12 @@ export default function Contact() {
     onSubmit: async (dto) => {
       try {
         const res = await contactApi.sendMail(dto);
-        console.log(res,"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Response from try");
+  
         toast.success(t("THANKS_FOR_CONTACTING_US"));
       } catch (e) {
         if (e.response?.data?.recaptchaValue == "INVALID_RECAPTCHA_TOKEN")
           captchaRef.current.reset();
 
-          console.log(e.response,"========================================================================Response from Catch and Data : ",dto);
           
         globalAjaxExceptionHandler(e, {
           formik: form,
@@ -51,7 +50,6 @@ export default function Contact() {
 
   const handleReCapchaChange = (token: string) =>
   {
-    console.log(token,"ToooooOOOOOOOOOOOOOOOOOOOOoooooooooooooooOOOOooooooOOOoOoooooooOOOOooooKen");
     form.setFieldValue("recaptchaValue", token || null);
 }
   return (
