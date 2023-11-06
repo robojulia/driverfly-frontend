@@ -110,7 +110,7 @@ export default function EmployeeDirectory() {
                 await employeeApi.mark(values?.id, values)
                 moveToPastForm.resetForm();
                 filterEmployees(values?.id)
-                toast(t("successfully_saved_information"))
+                toast(t("SUCCESSFULLY_MOVED_TO_PAST"))
             } catch (e) {
                 globalAjaxExceptionHandler(e, { formik: moveToPastForm, t: t, toast: toast });
             }
@@ -135,7 +135,7 @@ export default function EmployeeDirectory() {
 
             if (data && data?.status == EmployeeStatus.DELETED) {
                 filterEmployees(modalAction?.entity?.id)
-                toast.success(t("successfully_saved_information"))
+                toast.success(t("EMPLOYEE_DELETED_SUCCESSFULLY"))
             } else {
                 toast.error(t("ERROR_MESSAGE_DEFAULT"))
             }

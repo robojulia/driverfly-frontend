@@ -30,7 +30,7 @@ export default function Contact() {
     validationSchema: ContactUsEntity.yupSchema(),
     onSubmit: async (dto) => {
       try {
-        await contactApi.sendMail(dto);
+        const dta = await contactApi.sendMail(dto);
         toast.success(t("THANKS_FOR_CONTACTING_US"));
       } catch (e) {
         if (e.response?.data?.recaptchaValue == "INVALID_RECAPTCHA_TOKEN")
