@@ -100,7 +100,7 @@
 
 .dashboardsidebar .active a,
 .dashboardsidebar .active .icon_left {
-  color: #4ca7a8;
+  color: #69e0e2;
 }
 
 .space {
@@ -355,7 +355,7 @@ textarea {
   border-radius: 5px;
   color: #fff;
   margin-right: 3px;
-  background-color: #5dcac4;
+  background-color: #73efe9;
   display: block;
 }
 
@@ -816,4 +816,18 @@ button:active {
 
 .hover-grey:hover {
   background-color: #eee !important;
+}
+
+.form-check-input:checked {
+  background-color: #2ec8c4 !important;
+  border-color: #4ca7a8 !important;
+}
+
+.form-check-input:focus {
+  border-color: #4ca7a8 !important;
+}
+
+.input-group>.form-control:focus,
+.input-group>.form-select:focus {
+  border-color: #4ca7a8 !important;
 }

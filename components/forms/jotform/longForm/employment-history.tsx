@@ -1,17 +1,21 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
-import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
+import { useTranslation } from "../../../../hooks/use-translation";
 import BaseInput from "../../base-input";
 import BaseInputPhone from "../../base-input-phone";
 import BaseCheck from "../../base-check";
 import { CurrentEmploymentHistoryPageDto } from "../../../../models/jot-form/long-form/current-employment-history-page.dto";
-import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
+import JotformContext, {
+	JotFormContextType,
+} from "../../../../context/jotform-context";
 import StateSelect from "../../state-select";
 import { LoaderIcon } from "../../../loading/loader-icon";
 import { CurrentEmploymentHistoryDto } from "../../../../models/jot-form/long-form/current-emplyment-history/index.dto";
 import { ApplicantEmployerEntity } from "../../../../models/applicant";
+import { PastEmployerNameInput } from "./past-employer-name-input";
+import { useEffectAsync } from "../../../../utils/react";
 
 export function EmploymentHistory() {
 	const {
@@ -21,22 +25,26 @@ export function EmploymentHistory() {
 
 	const { t } = useTranslation();
 
+	const [employer, setEmployer] = useState<string | ApplicantEmployerEntity>();
+
 	const form = useFormik({
 		initialValues: new CurrentEmploymentHistoryPageDto(),
 		validationSchema: CurrentEmploymentHistoryPageDto.yupSchema(),
 		onSubmit: (values) => {
 			const { employer, is_current_employed } = values;
 
-			const employers: ApplicantEmployerEntity[] = applicant?.employers?.filter(v => !!!v?.is_current)
+			const employers: ApplicantEmployerEntity[] = applicant?.employers?.filter(
+				(v) => !!!v?.is_current
+			);
 
-			if (!!is_current_employed) employers.push(employer)
+			if (!!is_current_employed) employers.push(employer);
 
 			setApplicant({
 				...applicant,
-				employers
+				employers,
 			});
 			stepNext();
-			return
+			return;
 		},
 		onReset: (values) => {
 			stepBack();
@@ -44,32 +52,54 @@ export function EmploymentHistory() {
 	});
 
 	useEffect(() => {
-		const employer: CurrentEmploymentHistoryDto = applicant.employers?.find(v => !!v?.is_current) as CurrentEmploymentHistoryDto;
+		const employer: CurrentEmploymentHistoryDto = applicant.employers?.find(
+			(v) => !!v?.is_current
+		) as CurrentEmploymentHistoryDto;
 
 		form.setValues({
 			...form.values,
 			employer: {
 				...employer,
-				is_subject_to_fmcsrs: Boolean(employer) ? employer?.is_subject_to_fmcsrs : true,
-				is_subject_to_drug_tests: Boolean(employer) ? employer?.is_subject_to_drug_tests : true,
-				is_current: true
+				is_subject_to_fmcsrs: Boolean(employer)
+					? employer?.is_subject_to_fmcsrs
+					: true,
+				is_subject_to_drug_tests: Boolean(employer)
+					? employer?.is_subject_to_drug_tests
+					: true,
+				is_current: true,
 			},
-			is_current_employed: !!employer,
+			is_current_employed: Boolean(employer),
 		});
 	}, [applicant]);
 
-	// useEffect(() => {
+	useEffect(() => {
+		console.log("values", form.values);
+		console.log("error", form.errors);
+	}, [form.values, form.errors]);
 
-	// 	console.log("values", form.values);
-	// 	console.log("error", form.errors);
-	// }, [form.values, form.errors]);
+	useEffectAsync(async () => {
+		typeof employer == "string" ||
+			typeof employer == "undefined" ||
+			employer == null
+			? await form.setFieldValue("employer.name", employer ?? null)
+			: await form.setFieldValue("employer", {
+				...(employer ?? {}),
+				id: null,
+				applicant: null,
+				created_at: null,
+				last_updated_at: null,
+				uuid_token: null,
+				is_current: true,
+				voe_submitted: null,
+				voe_attempts: null,
+				documents: null,
+			});
+	}, [employer]);
 
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<h4
-					className={`${styles.heading__sty} ${styles.striped__border}`}
-				>
+				<h4 className={`${styles.heading__sty} ${styles.striped__border}`}>
 					{t("EMPLOYMENT_HISTORY")}
 				</h4>
 				<p className={`${styles.paragraph} ${styles.align__text_left}`}>
@@ -97,7 +127,7 @@ export function EmploymentHistory() {
 							</p>
 						</Row>
 
-						<Row >
+						<Row>
 							<BaseCheck
 								className="mt-lg-12 my-3 col-md-12 float-left"
 								required
@@ -108,12 +138,14 @@ export function EmploymentHistory() {
 						</Row>
 
 						<Row className={`${styles.align__text_left} ${styles.bold}`}>
-							<BaseInput
+							<PastEmployerNameInput
 								className="col-md-6 my-3"
-								name="employer.name"
+								name="employer"
 								label="CURRENT_COMPANY_NAME"
 								required
 								formik={form}
+								onchangeHandler={(v) => setEmployer(v)}
+								error={form.errors?.employer?.name}
 							/>
 							<BaseInput
 								className="col-md-6 my-3"
@@ -128,7 +160,7 @@ export function EmploymentHistory() {
 								className="col-md-6 my-3"
 								required
 								type="date"
-								max={new Date().toISOString().split('T')[0]}
+								max={new Date().toISOString().split("T")[0]}
 								name="employer.start_at"
 								label="START_DATE"
 								formik={form}
@@ -160,8 +192,7 @@ export function EmploymentHistory() {
 							/>
 						</Row>
 
-						<Row className={styles.bold}>
-						</Row>
+						<Row className={styles.bold}></Row>
 						<Row className={styles.bold}>
 							<BaseInput
 								className="col-md-6 my-3"
@@ -206,7 +237,7 @@ export function EmploymentHistory() {
 							/>
 						</Row>
 
-						<Row >
+						<Row>
 							<BaseCheck
 								className="mt-2 col-md-6 float-left"
 								name={`employer.is_subject_to_fmcsrs`}
@@ -230,10 +261,7 @@ export function EmploymentHistory() {
 						</Button>
 					</Col>
 					<Col>
-						<Button
-							className="float-left"
-							type="submit"
-						>
+						<Button className="float-left" type="submit">
 							{t("NEXT")} <LoaderIcon isLoading={!!form?.isSubmitting} />
 						</Button>
 					</Col>

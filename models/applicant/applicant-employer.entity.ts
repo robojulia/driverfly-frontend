@@ -14,9 +14,9 @@ export class ApplicantEmployerEntity {
     state?: string;
     zip_code?: string;
     phone?: string;
-    can_contact: boolean = false;
-    is_subject_to_fmcsrs: boolean = false;
-    is_subject_to_drug_tests: boolean = false;
+    can_contact?: boolean = false;
+    is_subject_to_fmcsrs?: boolean = false;
+    is_subject_to_drug_tests?: boolean = false;
     created_at?: string;
     last_updated_at?: string;
 
@@ -25,12 +25,12 @@ export class ApplicantEmployerEntity {
     address?: string;
     address_2?: string;
     uuid_token?: string;
-    is_current: boolean;
+    is_current?: boolean;
 
     voe_submitted?: boolean;
     voe_attempts?: any;
 
-    documents: DocumentEntity[];
+    documents?: DocumentEntity[];
 
     static yupSchema() {
         return yup.object({

@@ -249,6 +249,11 @@ export default class ApplicantApi extends BaseApi {
 
 			return data;
 		},
+		search: async (params: ApplicantEmployerEntity): Promise<ApplicantEmployerEntity[]> => {
+			const { data } = await this.get(this.buildUrl(this.baseUrl + "/employer/search", params));
+
+			return data;
+		},
 		documents: {
 			baseUrl: (applicantId: number, employerId: number) =>
 				`${this.employer.baseUrl(applicantId)}/${employerId}/documents`,
