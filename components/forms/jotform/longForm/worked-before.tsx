@@ -59,7 +59,8 @@ export function WorkedBefore() {
 
 	return (
 		<>
-		<h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("WORKED_BEFORE")}</h4>
+		<h1 className={styles.carrierName}>{t("WORKED_BEFORE")}</h1>
+
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row>
 				<BaseCheck

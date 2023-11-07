@@ -65,8 +65,7 @@ export function AccidentViolation() {
 
 	return (
 		<>
-		 	<h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("ACCIDENTS_AND_VOILATIONS")}</h4>
-
+            <h1 className={styles.carrierName}>{t("ACCIDENTS_AND_VOILATIONS")}</h1>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row >
 					<BaseCheck

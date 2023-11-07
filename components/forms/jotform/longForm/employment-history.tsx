@@ -98,10 +98,9 @@ export function EmploymentHistory() {
 
 	return (
 		<>
+			<h1 className={styles.carrierName}>{t("EMPLOYMENT_HISTORY")}</h1>
+
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<h4 className={`${styles.heading__sty} ${styles.striped__border}`}>
-					{t("EMPLOYMENT_HISTORY")}
-				</h4>
 				<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 					{t("HONEST_ABOUT_PAST_EMP")}
 				</p>

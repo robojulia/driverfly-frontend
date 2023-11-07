@@ -47,12 +47,10 @@ export function HighestLevelEducation() {
 
 	return (
 		<>
+			<h1 className={styles.carrierName}>{t("TELL_ABOUT_YOUR_EDUCATION")}</h1>
+
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<Row>
-					<h6 className={styles.heading__sty}>
-						{t("TELL_ABOUT_YOUR_EDUCATION")}
-					</h6>
-				</Row>
+		
 				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseSelect
 						className="col my-3"

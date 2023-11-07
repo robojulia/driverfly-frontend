@@ -208,12 +208,8 @@ export function HearAbout() {
 
 	return (
 		<>
+			<h1 className={styles.carrierName}>{t("HOW_DID_YOU_HEAR_ABOUT_US")}</h1>
 			<form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<Row>
-					<h4 className={styles.heading__sty}>
-						{t("HOW_DID_YOU_HEAR_ABOUT_US")}
-					</h4>
-				</Row>
 				<Row>
 					<BaseSelect
 						className="mt-3 mb-3"

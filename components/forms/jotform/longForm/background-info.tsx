@@ -60,7 +60,7 @@ export function BackgroundInfo() {
 
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-			<h4 className={styles.heading__sty}>{t("BACKGROUND_INFO")}</h4>
+			<h1 className={styles.carrierName}>{t("BACKGROUND_INFO")}</h1>
 			<Row className={`${styles.align__text_left} ${styles.bold}`}>
 				<BaseInput
 					className="col mt-3 mb-3"

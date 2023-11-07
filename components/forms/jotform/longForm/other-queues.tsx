@@ -54,9 +54,8 @@ export function OtherQueues() {
 
     return (
         <>
-		<h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("Other_queues")}</h4>
-
-        <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+			<h1 className={styles.carrierName}>{t("Other_queues")}</h1>
+            <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
             {form.values.CDL_NUMBER?.value?.length > 0 && (
                 <>
                     {form.values.CDL_NUMBER?.value?.map((entity, i) => (

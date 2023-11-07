@@ -24,6 +24,7 @@ function BaseReCapcha({
   onChange,
 }: BaseReCapchaProps) {
   const { t } = useTranslation();
+  const key = process.env.RECAPTCHA_SITE_KEY
 
   if (formik) {
     /**
@@ -46,7 +47,7 @@ function BaseReCapcha({
       )}
       <ReCAPTCHA
         className={`${error? "is-invalid" : ""}`}
-        sitekey={process.env.RECAPTCHA_SITE_KEY}
+        sitekey={key}
         onChange={onChange}
         ref={captchaRef}
       />

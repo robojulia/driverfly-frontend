@@ -53,7 +53,8 @@ export function EmployedByUs() {
 
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-			<h4 className={`${styles.carrierName}`}>{t("EMPLOYMENT_VERIF")}</h4>
+			<h1 className={styles.carrierName}>{t("EMPLOYMENT_VERIF")}</h1>
+
 			<Row>
 				<BaseCheck
 					className="mt-3 mb-3"
