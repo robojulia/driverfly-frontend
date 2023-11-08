@@ -9,30 +9,44 @@ import { Bell, List } from 'react-bootstrap-icons';
 import React from "react";
 import { Nav, Navbar, NavDropdown, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useState } from "react";
+
 export default function MyNav() {
     const { user } = useAuth();
     const { t } = useTranslation();
+
+    const [expanded, setExpanded] = useState(false);
+
+    const handleNavToggle = () => {
+        setExpanded(!expanded);
+    };
+
+    const closeNav = () => {
+        setExpanded(false);
+    };
+
+
     return (
         <>
-            <Navbar collapseOnSelect expand="lg" variant="dark">
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar collapseOnSelect expand="lg" variant="dark" expanded={expanded}>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" onClick={handleNavToggle} />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="mr-auto">
-                        <Nav.Link className="nav-item ml-30">
+                        <Nav.Link className="nav-item ml-30" onClick={closeNav}>
                             <Link href="/">
                                 <div>{t("HOME")}</div >
                             </Link>
                         </Nav.Link>
-                        <Nav.Link className="nav-item ml-30">
+                        <Nav.Link className="nav-item ml-30" onClick={closeNav}>
                             <Link href="/about">
                                 <div>{t("ABOUT_US")}</div >
                             </Link>
                         </Nav.Link>
-                        <Nav.Link className="nav-item ml-30">
+                        <Nav.Link className="nav-item ml-30" onClick={closeNav}>
                             <Link href="/find-jobs">
                                 <div>{t("FIND_A_Job")}</div >
                             </Link>
-                        </Nav.Link >
+                        </Nav.Link  >
                         <NavDropdown title="Driver Resources" id="collasible-nav-dropdown" >
                             <NavDropdown.Item>
                                 <Link href="/faq">
@@ -89,10 +103,18 @@ export default function MyNav() {
                                 <LogoutButton as={Button} className="theme-secondary-btn mr-4" />
                             </>
                             :
-                            <>
+                            <div className="d-flex justify-content-between">
+                             <Nav.Link className="nav-item ml-30" onClick={closeNav}>
                                 <LoginButton className="theme-secondary-btn mr-4" />
+                            </Nav.Link>
+                            <Nav.Link className="nav-item ml-20" onClick={closeNav}>
                                 <SignupButton className="theme-secondary-btn mr-4" />
-                            </>}
+                            </Nav.Link>
+
+                                {/* <LoginButton className="theme-secondary-btn mr-4" /> */}
+                                {/* <SignupButton className="theme-secondary-btn mr-4" /> */}
+                            </div>
+                            }
                     </ul>
                 </Navbar.Collapse>
             </Navbar>
