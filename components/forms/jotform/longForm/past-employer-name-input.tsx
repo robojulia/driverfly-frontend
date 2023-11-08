@@ -1,45 +1,53 @@
 import CreatableSelect from "react-select/creatable";
-import animatedComponents from "react-select/animated";
 import { StylesConfig } from "react-select";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { ApplicantEmployerEntity } from "../../../../models/applicant";
 import { useEffectAsync } from "../../../../utils/react";
 import ApplicantApi from "../../../../pages/api/applicant";
 import BaseControl, { BaseControlProps } from "../../base-control";
+import { useTranslation } from "../../../../hooks/use-translation";
 
 export interface PastEmployerNameInputProps extends BaseControlProps {
+	index?: number;
+	annotation?: string;
 	accept?: string;
 	handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 	type?: string;
 	min?: string | number;
 	max?: string | number;
 	step?: number;
-	placeholder?: string | boolean;
+	placeholder?: string;
 	value?: any;
-	onchangeHandler?: (v?: string | ApplicantEmployerEntity) => void;
 	readOnly?: boolean;
 }
 
 export function PastEmployerNameInput({
+	index,
 	label,
 	className,
 	formik,
 	value,
 	touched,
 	name,
-	onchangeHandler,
+	annotation,
 	handleBlur,
 	error,
 	required,
 	prepend,
+	placeholder,
 	append,
-
 }: PastEmployerNameInputProps) {
+	const applicantApi = new ApplicantApi();
+	const { t } = useTranslation();
+
+	const [query, setQuery] = useState<string>(null);
+	const [employers, setEmployers] = useState<ApplicantEmployerEntity[]>([]);
+
 	if (formik) {
 		/**
 		 * @type {import('formik').FieldMetaProps}
 		 */
-		const meta = formik.getFieldMeta(name);
+		const meta = formik.getFieldMeta(`${name}.${annotation}`);
 
 		if (meta) {
 			value = meta.value;
@@ -49,36 +57,83 @@ export function PastEmployerNameInput({
 		handleBlur = handleBlur || formik.handleBlur;
 	}
 
-	const applicantApi = new ApplicantApi();
-
-	const [query, setQuery] = useState<string>(null);
-	const [employers, setEmployers] = useState<ApplicantEmployerEntity[]>([]);
-
 	const csutomStyles: StylesConfig = {
-		container: (styles) => ({ ...styles, width: "100%", }),
-		control: (styles) => ({ ...styles, backgroundColor: "white", color: "black", }),
+		placeholder: (styles, { isFocused }) => ({
+			...styles,
+			color: "black",
+			fontWeight: "lighter"
+		}),
+		clearIndicator: (styles, { isFocused }) => ({
+			...styles,
+			color: "black",
+			borderColor: error ? "red" : isFocused ? "#2ec8c4" : "#4ca7a8",
+		}),
+		container: (styles, { isFocused }) => ({
+			...styles,
+			width: "100%",
+			borderColor: error ? "red" : isFocused ? "#2ec8c4" : "#4ca7a8",
+		}),
+		control: (styles, { isFocused, menuIsOpen }) => ({
+			...styles,
+			backgroundColor: "white",
+			color: "black",
+			borderColor: error
+				? "red"
+				: isFocused || menuIsOpen
+					? "#2ec8c4"
+					: "#4ca7a8",
+		}),
 		option: (styles, { data, isDisabled, isFocused, isSelected }) => {
 			return {
 				...styles,
 				zIndex: 9999,
 				color: isFocused || isSelected ? "white" : "black",
-				backgroundColor: isFocused ? "#2ec8c4" : isSelected ? "#4ca7a8" : "white",
+				backgroundColor: isFocused
+					? "#2ec8c4"
+					: isSelected
+						? "#4ca7a8"
+						: "white",
 			};
 		},
 	};
 
 	useEffectAsync(
-		async () => await applicantApi.employer
-			.search({ name: query })
-			.then((data: ApplicantEmployerEntity[]) => setEmployers(data?.filter((v) => Boolean(v?.name))))
-			.catch((e) => console.error(e.message)),
+		async () =>
+			await applicantApi.employer
+				.search({ name: query })
+				.then((data: ApplicantEmployerEntity[]) =>
+					setEmployers(data?.filter((v) => Boolean(v?.name)))
+				)
+				.catch((e) => console.error(e.message)),
 		[query]
 	);
+
+	const handleEmployerNameChange = (
+		employer: string | ApplicantEmployerEntity
+	): void => {
+		console.log("employer", employer);
+		typeof employer == "string" ||
+			typeof employer == "undefined" ||
+			employer == null
+			? formik.setFieldValue(`${name}.${annotation}`, employer ?? null)
+			: formik.setFieldValue(name, {
+				...(employer ?? {}),
+				id: null,
+				applicant: null,
+				created_at: null,
+				last_updated_at: null,
+				uuid_token: null,
+				is_current: true,
+				voe_submitted: null,
+				voe_attempts: null,
+				documents: null,
+			});
+	};
 
 	return (
 		<BaseControl
 			className={className}
-			name={name}
+			name={`${name}.${annotation}`}
 			label={label}
 			required={required}
 			formik={formik}
@@ -88,30 +143,23 @@ export function PastEmployerNameInput({
 			append={append}
 		>
 			<CreatableSelect
-				// placeholder={''}
-				// ref={selectInputRef}
-				// name="companyId"
+				key={index}
+				placeholder={t(placeholder)}
 				styles={csutomStyles}
-				className={`${''} basic-single px-0 ${error ? "is-invalid" : ""}`}
-				// classNamePrefix="select"
+				className={`basic-single px-0 ${error ? "is-invalid" : ""}`}
 				isClearable={true}
-				// isSearchable={true}
+				isSearchable={true}
 				options={employers?.map((v) => ({ value: v?.id, label: v?.name }))}
 				onInputChange={(newValue) => setQuery(newValue)}
-				// components={animatedComponents()}
-				// value={options.find(v => v?.value == filters?.companyId)}
-				// defaultValue={filters?.companyId}
-				// defaultInputValue={value || ""}
-				// onChange={(v: any) => setFiltersByKeyValue("companyId", v?.value)}
-				ariaLiveMessages={{
-					onChange: ({ value }: any) => {
-						onchangeHandler && onchangeHandler(value?.__isNew__
+				defaultInputValue={value || ""}
+				onChange={(value: any) =>
+					handleEmployerNameChange(
+						value?.__isNew__
 							? value?.value
 							: employers?.find((v) => v.id == value?.value)
-						);
-						return "";
-					},
-				}} />
+					)
+				}
+			/>
 		</BaseControl>
 	);
 }

@@ -75,7 +75,12 @@ export function EmploymentHistory() {
 	useEffect(() => {
 		console.log("values", form.values);
 		console.log("error", form.errors);
-	}, [form.values, form.errors]);
+		// console.log("touched", form.touched);
+	}, [
+		form.values,
+		form.errors,
+		// form.touched
+	]);
 
 	useEffectAsync(async () => {
 		typeof employer == "string" ||
@@ -140,11 +145,11 @@ export function EmploymentHistory() {
 							<PastEmployerNameInput
 								className="col-md-6 my-3"
 								name="employer"
+								annotation="name"
 								label="CURRENT_COMPANY_NAME"
-								required
+								placeholder="SEARCH_OR_CREATE_NEW"
 								formik={form}
-								onchangeHandler={(v) => setEmployer(v)}
-								error={form.errors?.employer?.name}
+								required
 							/>
 							<BaseInput
 								className="col-md-6 my-3"
