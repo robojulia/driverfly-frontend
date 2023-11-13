@@ -129,7 +129,7 @@ export function PastEmploymentHistory() {
 											className="col-md-6 my-3"
 											name={`employers[${i}]`}
 											annotation="name"
-											label="CURRENT_COMPANY_NAME"
+											label="PREVIOUS_COMPANY_NAME"
 											placeholder="SEARCH_OR_CREATE_NEW"
 											formik={form}
 											required
