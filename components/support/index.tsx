@@ -19,7 +19,7 @@ export default function Support() {
         initialValues: new SupportDto(),
         validationSchema: SupportDto.yupSchema(),
         onSubmit: async (dto, { resetForm }) => {
-            dto.documents = dto.documents.filter((v) => Boolean(v?.file_base64))
+            dto.documents = dto?.documents?.filter((v) => Boolean(v?.file_base64))
             try {
                 await api.reportIssue(dto);
                 resetForm()
