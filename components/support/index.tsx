@@ -102,7 +102,7 @@ export default function Support() {
                                         ...form.values,
                                         documents: [
                                             ...(form.values?.documents || []),
-                                            new DocumentEntity(),
+                                            { ...(new DocumentEntity()), type: "document" },
                                         ],
                                     })
                                 }
