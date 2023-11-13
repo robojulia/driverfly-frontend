@@ -10,7 +10,7 @@ export default class SupportApi extends BaseApi {
         super();
     }
 
-    async ReportFlag(entity: SupportDto): Promise<SupportDto> {
+    async reportIssue(entity: SupportDto): Promise<SupportDto> {
         const { data } = await this.post(this.baseUrl, entity);
         return data;
     }
