@@ -3,17 +3,18 @@ import { Button, Col, Row, Form } from "react-bootstrap";
 import { useFormik } from "formik";
 import OtpInputField from 'react-otp-input';
 import { toast, ToastContainer } from "react-toastify";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import BaseInputPhone from "../../base-input-phone";
-import { useTranslation } from "../../../../hooks/use-translation";
-import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
-import ApplicantApi from "../../../../pages/api/applicant";
-import { LoaderIcon } from "../../../loading/loader-icon";
-import ViewModal from "../../../view-details/view-modal";
-import { PhoneNumberDto } from "../../../../models/jot-form/short-form/phone-number.dto";
-import { ApplicantOTPEntity } from "../../../../models/applicant/applicant-otp.entity";
-import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
-import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import styles from "../../../../../styles/digitalhiringapp.module.css";
+import BaseInputPhone from "../../../base-input-phone";
+import { useTranslation } from "../../../../../hooks/use-translation";
+import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
+import ApplicantApi from "../../../../../pages/api/applicant";
+import { LoaderIcon } from "../../../../loading/loader-icon";
+import ViewModal from "../../../../view-details/view-modal";
+import { PhoneNumberDto } from "../../../../../models/jot-form/short-form/phone-number.dto";
+import { ApplicantOTPEntity } from "../../../../../models/applicant/applicant-otp.entity";
+import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
+import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
+import { socketInitializer } from "./socketInitializer";
 
 
 export function PhoneNumber() {
@@ -121,7 +122,17 @@ export function PhoneNumber() {
         if (!!applicant?.extras) setApplicantExtras([...filteredSignature])
 
     }, [applicant])
-   
+
+
+    useEffect(() => {
+        console.log("useEffect ", applicant, otpApplicant?.expiry);
+
+        if (Boolean(otpApplicant?.expiry) && Boolean(applicant.id))
+            socketInitializer(applicant, otpApplicant?.expiry, ({ error_message }) => {
+                console.log("useEffect SmsStatus", error_message);
+                toast(error_message)
+            });
+    }, [otpApplicant, applicant]);
 
     return (
         <>

@@ -1452,6 +1452,7 @@
   "ip_address": "IP Address",
   "SUCCESSFULLY_TO_DEVELOPER": "Mail send successfully to developer",
   "UNABLE_TO_SEND_EMAIL": "Unable to send email",
+  "UNABLE_TO_SEND_SMS": "Unable to send sms",
   "DRIVERFLY": "DriverFly",
   "ALREADY_IN_CONVERSATION": "Driver is already in your Conversation",
   "PLEASE_LOGIN_TO_INAPPROPRIATE_JOB_OR_COMPANY": "Please login to inappropriate job or company profile.",
