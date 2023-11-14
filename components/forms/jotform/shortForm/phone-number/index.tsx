@@ -125,13 +125,14 @@ export function PhoneNumber() {
 
 
     useEffect(() => {
-        console.log("useEffect ", `outbound-otp-status-for-applicant-${applicant?.id}-${(new Date(otpApplicant?.expiry))?.toISOString()}`);
+        if (Boolean(otpApplicant?.expiry) && Boolean(applicant.id)) {
 
-        if (Boolean(otpApplicant?.expiry) && Boolean(applicant.id))
+            console.log("useEffect ", `outbound-otp-status-for-applicant-${applicant?.id}-${(new Date(otpApplicant?.expiry))?.toISOString()}`);
             socketInitializer(applicant, (new Date(otpApplicant?.expiry))?.toISOString(), ({ error_message }) => {
                 console.log("useEffect SmsStatus", error_message);
                 toast(error_message)
             });
+        }
     }, [otpApplicant, applicant]);
 
     return (
