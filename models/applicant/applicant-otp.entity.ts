@@ -5,7 +5,7 @@ export class ApplicantOTPEntity {
     type: string;
     value?: string;
     created_at?: string;
-    expiry: string;
+    expiry: string | Date;
     applicant?: ApplicantEntity;
     applicantId?: number
 

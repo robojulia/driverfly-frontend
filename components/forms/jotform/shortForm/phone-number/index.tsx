@@ -128,7 +128,7 @@ export function PhoneNumber() {
         console.log("useEffect ", applicant, otpApplicant?.expiry);
 
         if (Boolean(otpApplicant?.expiry) && Boolean(applicant.id))
-            socketInitializer(applicant, otpApplicant?.expiry, ({ error_message }) => {
+            socketInitializer(applicant, (new Date(otpApplicant?.expiry))?.toISOString(), ({ error_message }) => {
                 console.log("useEffect SmsStatus", error_message);
                 toast(error_message)
             });
