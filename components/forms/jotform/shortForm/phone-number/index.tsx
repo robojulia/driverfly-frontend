@@ -132,12 +132,12 @@ export function PhoneNumber() {
         ) {
             console.log(
                 "useEffect ",
-                `outbound-otp-status-for-applicant-${applicant?.id}-${new Date(
+                `outbound-otp-status-for-applicant-${otpApplicant?.applicantId || applicant?.id}-${new Date(
                     otpApplicant?.expiry
                 )?.toISOString()}`
             );
             socketInitializer(
-                applicant,
+                otpApplicant?.applicantId || applicant?.id,
                 new Date(otpApplicant?.expiry)?.toISOString(),
                 ({ error_message }) => {
                     console.log("useEffect SmsStatus", error_message);

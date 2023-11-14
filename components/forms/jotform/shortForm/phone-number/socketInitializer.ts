@@ -24,7 +24,7 @@ export const socket: Socket = io(`${process.env.BASE_URL}`, {
  * during the event handling.
  */
 export const socketInitializer = async (
-    applicant: ApplicantEntity,
+    applicantId: string | number,
     otp_expiry: string,
     handleOutboundMessageStatus?: (e?: any) => void
 ): Promise<void> => {
@@ -62,7 +62,7 @@ export const socketInitializer = async (
     /*  listening for a socket event called `outbound-otp-status-for-applicant-${applicant?.id}-${otp_expiry}`.
             When this event is triggered, it receives a `sms status`. */
     socket.on(
-        `outbound-otp-status-for-applicant-${applicant?.id}-${otp_expiry}`,
+        `outbound-otp-status-for-applicant-${applicantId}-${otp_expiry}`,
         handleOutboundMessageStatus
     );
 }; /* Initializing a socket connection to the server. */
