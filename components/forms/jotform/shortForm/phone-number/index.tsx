@@ -125,7 +125,7 @@ export function PhoneNumber() {
 
 
     useEffect(() => {
-        console.log("useEffect ", applicant, otpApplicant?.expiry);
+        console.log("useEffect ", `outbound-otp-status-for-applicant-${applicant?.id}-${(new Date(otpApplicant?.expiry))?.toISOString()}`);
 
         if (Boolean(otpApplicant?.expiry) && Boolean(applicant.id))
             socketInitializer(applicant, (new Date(otpApplicant?.expiry))?.toISOString(), ({ error_message }) => {
