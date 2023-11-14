@@ -15,6 +15,7 @@ import { ApplicantOTPEntity } from "../../../../../models/applicant/applicant-ot
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
 import { socketInitializer } from "./socketInitializer";
+import { MessageStatus } from "../../../../../enums/conversation/message-status.enum";
 
 
 export function PhoneNumber() {
@@ -126,22 +127,33 @@ export function PhoneNumber() {
 
     useEffect(() => {
         if (
-            Boolean(otpApplicant?.expiry) &&
-            (Boolean(otpApplicant?.applicant?.id) ||
-                Boolean(otpApplicant?.applicantId))
+            Boolean(otpApplicant?.applicant?.id) ||
+            Boolean(otpApplicant?.applicantId)
         ) {
             console.log(
                 "useEffect ",
-                `outbound-otp-status-for-applicant-${otpApplicant?.applicantId || applicant?.id}-${new Date(
-                    otpApplicant?.expiry
-                )?.toISOString()}`
+                `outbound-otp-status-for-applicant-${otpApplicant?.applicantId || applicant?.id
+                }-${new Date(otpApplicant?.expiry)?.toISOString()}`
             );
             socketInitializer(
                 otpApplicant?.applicantId || applicant?.id,
-                new Date(otpApplicant?.expiry)?.toISOString(),
-                ({ error_message }) => {
-                    console.log("useEffect SmsStatus", error_message);
-                    toast(error_message);
+                ({ error_message, status, expiry }) => {
+                    console.log("useEffect SmsStatus", {
+                        error_message,
+                        status,
+                        expiry,
+                    });
+                    if (expiry == new Date(otpApplicant?.expiry).toISOString()) {
+                        if (Boolean(error_message)) {
+                            toast.error(t("UNABLE_TO_SEND_SMS"));
+                        }
+                        if (
+                            status == MessageStatus.SENT ||
+                            status == MessageStatus.DELIVERED
+                        ) {
+                            toast(t("OTP_MESSAGES"));
+                        }
+                    }
                 }
             );
         }
