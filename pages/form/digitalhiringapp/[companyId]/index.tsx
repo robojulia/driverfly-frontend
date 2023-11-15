@@ -19,8 +19,6 @@ export interface FullFormProps {
 	utm?: UtmReferral;
 }
 export default function FullForm({ employer, preferences, utm }: FullFormProps) {
-	console.log("preferences", preferences);
-	console.log("utm", utm);
 
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
 	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
