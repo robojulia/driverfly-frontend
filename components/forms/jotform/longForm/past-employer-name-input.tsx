@@ -19,6 +19,7 @@ export interface PastEmployerNameInputProps extends BaseControlProps {
 	placeholder?: string;
 	value?: any;
 	readOnly?: boolean;
+	is_current?: boolean;
 }
 
 export function PastEmployerNameInput({
@@ -36,11 +37,11 @@ export function PastEmployerNameInput({
 	prepend,
 	placeholder,
 	append,
+	is_current,
 }: PastEmployerNameInputProps) {
 	const applicantApi = new ApplicantApi();
 	const { t } = useTranslation();
-
-	const [query, setQuery] = useState<string>(null);
+	const [query, setQuery] = useState<string>("");
 	const [employers, setEmployers] = useState<ApplicantEmployerEntity[]>([]);
 
 	if (formik) {
@@ -97,36 +98,38 @@ export function PastEmployerNameInput({
 		},
 	};
 
-	useEffectAsync(
-		async () =>
-			await applicantApi.employer
-				.search({ name: query })
-				.then((data: ApplicantEmployerEntity[]) =>
-					setEmployers(data?.filter((v) => Boolean(v?.name)))
-				)
-				.catch((e) => console.error(e.message)),
-		[query]
-	);
+	const fetchEmployers = async (): Promise<void> => await applicantApi.employer
+		.search({ name: query })
+		.then((data: ApplicantEmployerEntity[]) => setEmployers(data?.filter((v) => Boolean(v?.name))))
+		.catch((e) => console.error(e.message))
+
+	useEffectAsync(async () => await fetchEmployers(), []);
+
+	useEffectAsync(async () => await fetchEmployers(), [query]);
 
 	const handleEmployerNameChange = (
 		employer: string | ApplicantEmployerEntity
 	): void => {
-		console.log("employer", employer);
 		typeof employer == "string" ||
 			typeof employer == "undefined" ||
 			employer == null
 			? formik.setFieldValue(`${name}.${annotation}`, employer ?? null)
 			: formik.setFieldValue(name, {
-				...(employer ?? {}),
-				id: null,
-				applicant: null,
-				created_at: null,
-				last_updated_at: null,
-				uuid_token: null,
-				is_current: true,
-				voe_submitted: null,
-				voe_attempts: null,
-				documents: null,
+				title: employer?.title,
+				name: employer?.name,
+				manager_name: employer?.manager_name,
+				phone: employer?.phone,
+				email: employer?.email,
+				start_at: employer?.start_at,
+				end_at: Boolean(is_current) ? employer?.end_at : null,
+				address: employer?.address,
+				address_2: employer?.address_2,
+				zip_code: employer?.zip_code,
+				city: employer?.city,
+				state: employer?.state,
+				is_subject_to_fmcsrs: employer?.is_subject_to_fmcsrs,
+				is_subject_to_drug_tests: employer?.is_subject_to_drug_tests,
+				is_current: Boolean(is_current),
 			});
 	};
 

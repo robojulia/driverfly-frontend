@@ -15,7 +15,6 @@ import { LoaderIcon } from "../../../loading/loader-icon";
 import { CurrentEmploymentHistoryDto } from "../../../../models/jot-form/long-form/current-emplyment-history/index.dto";
 import { ApplicantEmployerEntity } from "../../../../models/applicant";
 import { PastEmployerNameInput } from "./past-employer-name-input";
-import { useEffectAsync } from "../../../../utils/react";
 
 export function EmploymentHistory() {
 	const {
@@ -24,8 +23,6 @@ export function EmploymentHistory() {
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
-
-	const [employer, setEmployer] = useState<string | ApplicantEmployerEntity>();
 
 	const form = useFormik({
 		initialValues: new CurrentEmploymentHistoryPageDto(),
@@ -82,25 +79,6 @@ export function EmploymentHistory() {
 		// form.touched
 	]);
 
-	useEffectAsync(async () => {
-		typeof employer == "string" ||
-			typeof employer == "undefined" ||
-			employer == null
-			? await form.setFieldValue("employer.name", employer ?? null)
-			: await form.setFieldValue("employer", {
-				...(employer ?? {}),
-				id: null,
-				applicant: null,
-				created_at: null,
-				last_updated_at: null,
-				uuid_token: null,
-				is_current: true,
-				voe_submitted: null,
-				voe_attempts: null,
-				documents: null,
-			});
-	}, [employer]);
-
 	return (
 		<>
 			<h1 className={styles.carrierName}>{t("EMPLOYMENT_HISTORY")}</h1>
@@ -150,6 +128,7 @@ export function EmploymentHistory() {
 								placeholder="SEARCH_OR_CREATE_NEW"
 								formik={form}
 								required
+								is_current
 							/>
 							<BaseInput
 								className="col-md-6 my-3"
