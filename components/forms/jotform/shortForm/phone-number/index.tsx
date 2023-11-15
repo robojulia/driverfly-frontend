@@ -148,10 +148,14 @@ export function PhoneNumber() {
                             toast.error(t("UNABLE_TO_SEND_SMS"));
                         }
                         if (
-                            status == MessageStatus.SENT ||
+                            status == MessageStatus.SENT
+                        ) {
+                            toast(t("OTP_MESSAGES_SENT"));
+                        }
+                        if (
                             status == MessageStatus.DELIVERED
                         ) {
-                            toast(t("OTP_MESSAGES"));
+                            toast.success(t("OTP_MESSAGES_DELIVERED"));
                         }
                     }
                 }

@@ -2021,6 +2021,8 @@
   "ALREADY_AN_APPLICANT": "It looks like you already applied to some other company.",
   "DO_YOU_WISH_TO_PROCEED_WITH_PREVIOUS_PROFILE": "Do you wish to proceed with your previous profile?",
   "OTP_MESSAGES": "We've sent you OTP, Please enter below to continue.",
+  "OTP_MESSAGES_SENT": "We'll send you OTP shortly",
+  "OTP_MESSAGES_DELIVERED": "An OTP is sent to your number, Please enter below to continue.",
   "ENTER_PHONE_NUMBER": "Please enter your phone number",
   "OTP_EXCEPTION_MESSAGE": "Your OTP is expired or invalid. Click here to ",
   "RESEND": "Resend",
