@@ -130,22 +130,17 @@ export function PhoneNumber() {
             Boolean(otpApplicant?.applicant?.id) ||
             Boolean(otpApplicant?.applicantId)
         ) {
-            console.log(
-                "useEffect ",
-                `outbound-otp-status-for-applicant-${otpApplicant?.applicantId || applicant?.id
-                }-${new Date(otpApplicant?.expiry)?.toISOString()}`
-            );
             socketInitializer(
                 otpApplicant?.applicantId || applicant?.id,
                 ({ error_message, status, expiry }) => {
-                    console.log("useEffect SmsStatus", {
-                        error_message,
-                        status,
-                        expiry,
-                    });
                     if (expiry == new Date(otpApplicant?.expiry).toISOString()) {
+                        console.log("SmsStatus", {
+                            error_message,
+                            status,
+                            expiry,
+                        });
                         if (Boolean(error_message)) {
-                            toast.error(t("UNABLE_TO_SEND_SMS"));
+                            toast.error(t("UNABLE_TO_SEND_OTP"));
                         }
                         if (
                             status == MessageStatus.SENT
