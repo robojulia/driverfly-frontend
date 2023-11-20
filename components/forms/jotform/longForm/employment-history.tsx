@@ -15,7 +15,6 @@ import { LoaderIcon } from "../../../loading/loader-icon";
 import { CurrentEmploymentHistoryDto } from "../../../../models/jot-form/long-form/current-emplyment-history/index.dto";
 import { ApplicantEmployerEntity } from "../../../../models/applicant";
 import { PastEmployerNameInput } from "./past-employer-name-input";
-import { useEffectAsync } from "../../../../utils/react";
 
 export function EmploymentHistory() {
 	const {
@@ -24,8 +23,6 @@ export function EmploymentHistory() {
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
-
-	const [employer, setEmployer] = useState<string | ApplicantEmployerEntity>();
 
 	const form = useFormik({
 		initialValues: new CurrentEmploymentHistoryPageDto(),
@@ -75,26 +72,12 @@ export function EmploymentHistory() {
 	useEffect(() => {
 		console.log("values", form.values);
 		console.log("error", form.errors);
-	}, [form.values, form.errors]);
-
-	useEffectAsync(async () => {
-		typeof employer == "string" ||
-			typeof employer == "undefined" ||
-			employer == null
-			? await form.setFieldValue("employer.name", employer ?? null)
-			: await form.setFieldValue("employer", {
-				...(employer ?? {}),
-				id: null,
-				applicant: null,
-				created_at: null,
-				last_updated_at: null,
-				uuid_token: null,
-				is_current: true,
-				voe_submitted: null,
-				voe_attempts: null,
-				documents: null,
-			});
-	}, [employer]);
+		// console.log("touched", form.touched);
+	}, [
+		form.values,
+		form.errors,
+		// form.touched
+	]);
 
 	return (
 		<>
@@ -140,11 +123,12 @@ export function EmploymentHistory() {
 							<PastEmployerNameInput
 								className="col-md-6 my-3"
 								name="employer"
+								annotation="name"
 								label="CURRENT_COMPANY_NAME"
-								required
+								placeholder="SEARCH_OR_CREATE_NEW"
 								formik={form}
-								onchangeHandler={(v) => setEmployer(v)}
-								error={form.errors?.employer?.name}
+								required
+								is_current
 							/>
 							<BaseInput
 								className="col-md-6 my-3"

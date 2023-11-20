@@ -3,17 +3,19 @@ import { Button, Col, Row, Form } from "react-bootstrap";
 import { useFormik } from "formik";
 import OtpInputField from 'react-otp-input';
 import { toast, ToastContainer } from "react-toastify";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import BaseInputPhone from "../../base-input-phone";
-import { useTranslation } from "../../../../hooks/use-translation";
-import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
-import ApplicantApi from "../../../../pages/api/applicant";
-import { LoaderIcon } from "../../../loading/loader-icon";
-import ViewModal from "../../../view-details/view-modal";
-import { PhoneNumberDto } from "../../../../models/jot-form/short-form/phone-number.dto";
-import { ApplicantOTPEntity } from "../../../../models/applicant/applicant-otp.entity";
-import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
-import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import styles from "../../../../../styles/digitalhiringapp.module.css";
+import BaseInputPhone from "../../../base-input-phone";
+import { useTranslation } from "../../../../../hooks/use-translation";
+import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
+import ApplicantApi from "../../../../../pages/api/applicant";
+import { LoaderIcon } from "../../../../loading/loader-icon";
+import ViewModal from "../../../../view-details/view-modal";
+import { PhoneNumberDto } from "../../../../../models/jot-form/short-form/phone-number.dto";
+import { ApplicantOTPEntity } from "../../../../../models/applicant/applicant-otp.entity";
+import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
+import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
+import { socketInitializer } from "./socketInitializer";
+import { MessageStatus } from "../../../../../enums/conversation/message-status.enum";
 
 
 export function PhoneNumber() {
@@ -121,7 +123,40 @@ export function PhoneNumber() {
         if (!!applicant?.extras) setApplicantExtras([...filteredSignature])
 
     }, [applicant])
-   
+
+
+    useEffect(() => {
+        if (
+            Boolean(otpApplicant?.applicant?.id) ||
+            Boolean(otpApplicant?.applicantId)
+        ) {
+            socketInitializer(
+                otpApplicant?.applicantId || applicant?.id,
+                ({ error_message, status, expiry }) => {
+                    if (expiry == new Date(otpApplicant?.expiry).toISOString()) {
+                        console.log("SmsStatus", {
+                            error_message,
+                            status,
+                            expiry,
+                        });
+                        if (Boolean(error_message)) {
+                            toast.error(t("UNABLE_TO_SEND_OTP"));
+                        }
+                        if (
+                            status == MessageStatus.SENT
+                        ) {
+                            toast(t("OTP_MESSAGES_SENT"));
+                        }
+                        if (
+                            status == MessageStatus.DELIVERED
+                        ) {
+                            toast.success(t("OTP_MESSAGES_DELIVERED"));
+                        }
+                    }
+                }
+            );
+        }
+    }, [otpApplicant, applicant]);
 
     return (
         <>

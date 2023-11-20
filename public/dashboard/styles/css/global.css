@@ -36,7 +36,7 @@
 }
 
 .dashboardsidebar aside:nth-child(2) {
-  background: linear-gradient(to bottom right, #2ec8c4, #1b4454ba);
+  background: linear-gradient(to bottom right, #2ec8c4, #007471);
 }
 
 .bg {
@@ -58,11 +58,11 @@
 }
 
 .dashboardsidebar aside:nth-child(2) li a {
-  color: #1b4454;
+  /* color: #1b4454; */
 }
 
 .dashboardsidebar aside:nth-child(2) .icon_left {
-  color: #1b4454;
+  /* color: #1b4454; */
 }
 
 .dashboardsidebar li {
@@ -93,14 +93,29 @@
   font-size: 15px;
 }
 
+.dashboardsidebar li:not(.active) {
+  box-shadow: inset 0 0 0 0 #4ca7a8;
+  transition: color .3s ease-in-out, box-shadow .3s ease-in-out;
+}
+
+.dashboardsidebar li:not(.active):hover {
+  box-shadow: inset 100px 100px 100px 100px #4ca7a8;
+}
+
 .dashboardsidebar .active {
   background-color: #fff !important;
   color: #000 !important;
+  box-shadow: inset 0 0 0 0 #fff;
+  transition: color .3s ease-in-out, box-shadow .3s ease-in-out;
+}
+
+.dashboardsidebar .active:hover {
+  box-shadow: inset 100px 100px 100px 100px #fff;
 }
 
 .dashboardsidebar .active a,
 .dashboardsidebar .active .icon_left {
-  color: #69e0e2;
+  color: #4ca7a8;
 }
 
 .space {
