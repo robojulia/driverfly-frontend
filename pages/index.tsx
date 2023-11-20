@@ -76,24 +76,21 @@ export default function Index() {
                         <p><Check />{t("HOME_BEST_TIME")}</p>
                         <p><Check />{t("FASTER_&_EASIER_HIRING")}</p>
                         <div className="mt-4">
-                            <button className="theme-bg-btn mr-4" type="button" onClick={() => router.push("signup")}>
-                                {t("SIGN_UP")}
+                            <button className="theme-bg-btn-light-green mr-4" type="button" onClick={() => router.push("signup")}>
+                                {t("SIGN_UP")}  
                             </button>
-                            <button className="theme-bg-btn mt-4" type="button" onClick={() => router.push("find-jobs")}>
+                            <button className="ocean-dark-bg-btn mt-4" type="button" onClick={() => router.push("find-jobs")}>
                                 {t("browse_job")}
                             </button>
                         </div>
                     </div>
                     <div className="hire-driver-item hire-driver-right d-flex flex-column justify-content-around">
-                        <h1>{t("HIRE_DRIVERS_+")}</h1>
-                        <p className="mb-4">{t("WE_WORK_WITH_SMALL_TO_MID_SIZE")}</p>
-                        <p><Check />{t("GREATER_REACH")}</p>
-                        <p><Check />{t("FASTER_HIRING")}</p>
-                        <p><Check />{t("HIGHER_RETENTION")}</p>
+                        <h1>{t("OWNER_OPERATORS")}</h1>
+                        <p className="mb-4">{t("Are_you_looking_to_lease_onto_a_motor_carrier?")}</p>
                         <div className="mt-4">
 
-                            <button className="theme-bg-btn" type="button" onClick={() => router.push("find-jobs")}>
-                                {t("LEARN_MORE")}
+                            <button className="theme-bg-btn-light-green" type="button" onClick={() => router.push("find-jobs")}>
+                                {t("BROWSE_JOBS")}
                             </button>
                         </div>
                     </div>
@@ -104,18 +101,20 @@ export default function Index() {
                     <Drivers />
                 </div>
             </section>
-            <section>
+            <section className="register-today-section">
                 <div className="d-lg-flex signup-driver-section d-md-block">
                     <div className="signup-driver-item signup-driver-left d-flex flex-column justify-content-center text-center">
                         <h1>{t("Getting a driver job has never been easier!")}</h1>
                         <div>
-                            <button className="white-bg-btn mt-3" type="button" onClick={() => router.push("signup")}>
+                            <button className="ocean-dark-bg-btn mt-3" type="button" onClick={() => router.push("signup")}>
                                 {t("REGISTER_TODAY")}
                             </button>
                         </div>
                     </div>
                     <div className="signup-driver-item signup-driver-right d-flex flex-column justify-content-around">
                     </div>
+                </div>
+                <div className="signup-driver-section-border-bottom">
                 </div>
             </section>
             <section className="tab-sec">
@@ -145,7 +144,6 @@ export default function Index() {
                             {t("RECENT_JOBS")}{" "}
                         </a>
                     </li>
-
                 </ul>
                 {
                     showTab === 'feature' ? < Featured />
@@ -153,8 +151,8 @@ export default function Index() {
                         < Recent />
                 }
             </section>
-            < OwnerOperators />
-            <CompaniesSlider />
+            {/* < OwnerOperators /> */}
+            {/* <CompaniesSlider /> */}
             <section>
                 <div className="opacity-overly">
                     <section className="get-feature-section">
@@ -164,6 +162,7 @@ export default function Index() {
                             <button className="theme-bg-btn " onClick={() => router.push("signup")}>{t("CREATE_AN_ACCOUNT")}</button>
                         </div>
                     </section>
+                        <div className="get-featured-border"></div>
                 </div>
             </section>
             <section>

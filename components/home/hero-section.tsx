@@ -9,7 +9,7 @@ export default function HeroSection() {
     return (
 
         <section className="hero-sec">
-            <div className="container ">
+            <div className="container">
                 <div className="row mt-5">
                     <div className="col-md-12">
                         <div className="hero-inner">

@@ -288,6 +288,10 @@ li:hover ul {
     font-size: 20px;
 }
 
+.tab-content .media-body h6{
+    color: #ffc107;
+
+}
 .tab-content .accordion-button:not(.collapsed) {
     color: #000;
     background-color: transparent;
@@ -1032,6 +1036,8 @@ input[type='range']::-webkit-slider-thumb {
 
 /************************************** HOW-IT-WORK-SEC *********************************/
 .how-it-work-sec {
+    height: 974px;
+    /* position: relative; */
     padding: 50px 10px 50px 10px;
 }
 
@@ -1065,6 +1071,7 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 .how-it-work-sec .card:hover h5,
+.how-it-work-sec .card:hover p,
 .how-it-work-sec .card:hover svg {
     color: white !important;
 }
@@ -1117,8 +1124,9 @@ img.who-we-img.img-fluid {
 }
 
 .testimonial-sec {
-    background: #fafafa;
-    padding: 80px 0px 0px;
+    margin-top: 300px;
+    /* background: #fafafa; */
+    padding: 80px 0px ;
 }
 
 .custom-tst .item {
@@ -1262,8 +1270,7 @@ img.who-we-img.img-fluid {
 }
 
 .hero-sec {
-    background: url(/img/banner.png);
-    background-color: #9f9b9b91;
+    background-color: white;
     background-position: 50%;
     background-repeat: no-repeat;
     background-size: cover;
@@ -1272,18 +1279,17 @@ img.who-we-img.img-fluid {
     align-items: center;
     justify-content: center;
 }
-
 .hero-inner h1 {
-    color: white;
+    color: #1B4454;
     font-size: 60px;
     line-height: 60px;
-    font-weight: 400;
+    font-weight: bold;
     letter-spacing: 2.5px;
 }
 
 .hero-inner h2 {
     margin: 20px 0px;
-    color: #CCDEDE;
+    color: #1B4454;
     font-size: 32px;
     font-weight: 400;
 }
@@ -1296,15 +1302,15 @@ img.who-we-img.img-fluid {
 .trending-keywords li {
     display: inline-block;
     margin: 5px 3px;
-    color: #fff !important;
+    color: #1B4454;
 }
 
 .form-search .trending-keywords .title {
-    color: #fff;
+    color: #1B4454;
 }
 
 .trending-keywords a {
-    color: #C5C5C5;
+    color: #1B4454;
     text-decoration: none;
 }
 
@@ -1361,7 +1367,7 @@ img.who-we-img.img-fluid {
 }
 
 .fa-search:before {
-    color: #cbcbcb;
+    color: #1B4454;
     font-size: 20px;
 }
 
@@ -1394,14 +1400,15 @@ img.who-we-img.img-fluid {
 
 /******************************* TABS-SEC ***************************/
 .tab-sec {
+    margin-top: 20vh;
     padding: 100px 0px 70px 0px;
 }
 
 .tab-content .media {
     padding: 45px 80px 40px 20px;
-    border: 1px solid lightgrey;
+    /* border: 1px solid lightgrey; */
     background: rgb(250, 254, 255);
-    background: linear-gradient(127deg, rgba(250, 254, 255, 1) 61%, rgba(250, 254, 255, 1) 66%, rgb(115 231 255 / 56%) 91%, rgb(115 231 255 / 56%) 91%, rgb(0 212 255 / 34%) 97%);
+    /* background: linear-gradient(127deg, rgba(250, 254, 255, 1) 61%, rgba(250, 254, 255, 1) 66%, rgb(115 231 255 / 56%) 91%, rgb(115 231 255 / 56%) 91%, rgb(0 212 255 / 34%) 97%); */
 }
 
 .tab-content .media h4 {
@@ -1423,7 +1430,7 @@ img.who-we-img.img-fluid {
 }
 
 .tab-sec .nav-link.active {
-    background: #ffc107 !important;
+    background:     #345665 !important;
     color: #fff !important;
 }
 
@@ -1889,8 +1896,29 @@ li.link-wrapper>a.active {
 
 /* new css code */
 .hire-driver-bg {
-    background: #D1DDDD;
     padding: 50px 0px;
+    position: relative;
+    height: 350px;
+    margin-bottom: 50px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hire-driver-section{
+    position: absolute;
+    top: -20vh;
+}
+
+@media (max-width: 990px) {
+    .hire-driver-bg{
+        margin-bottom: 200px;
+    }
+
+    .hire-driver-section {
+        position: relative;
+    }
 }
 
 .hire-driver-item {
@@ -1901,7 +1929,7 @@ li.link-wrapper>a.active {
 }
 
 .hire-driver-item:hover {
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
 .hire-driver-left {
@@ -1909,7 +1937,7 @@ li.link-wrapper>a.active {
 }
 
 .hire-driver-left::before {
-    background: linear-gradient(to bottom, #1D4354 0%, rgb(0 123 255 / 25%) 100%), url("/img/black-man-truck-driver-near-his-truck-parked-in-a-FD6XPWU.jpeg");
+    background: linear-gradient(to bottom, #31bab4 40%, rgb(0 123 255 / 25%) 100%), url("/img/black-man-truck-driver-near-his-truck-parked-in-a-FD6XPWU.jpeg");
     content: "";
     background-size: cover;
     position: absolute;
@@ -1921,20 +1949,32 @@ li.link-wrapper>a.active {
 }
 
 .hire-driver-right {
-    background-color: transparent;
-    background-image: linear-gradient(180deg, #2EC8C4 0%, #1D4354 100%);
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-inline: 100px;
     opacity: 1;
-    position: relative;
+    /* position: relative; */
+}
+.hire-driver-right h1,p{
+    color: #000000;
+}
+.hire-driver-right p{
+    font-weight: 400;
+    font-size: 21px;
+    line-height: 34.5px;
 }
 
-.hire-driver-item h1 {
+.hire-driver-left h1 {
     color: #fff;
     font-size: 42px;
     font-weight: 500;
     position: relative;
 }
 
-.hire-driver-item p {
+.hire-driver-left p {
     color: #fff;
     font-size: 18px;
     line-height: 30px;
@@ -1943,16 +1983,19 @@ li.link-wrapper>a.active {
 }
 
 .opacity-overly {
-    background-color: #1D4354;
-}
-
-.owner-operator-bg {
+    background-color: #345665;
+    /* border: 2px solid red; */
     position: relative;
-    height: 400px;
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.owner-operator-bg {
+    /* position: relative; */
+    height: 400px;
+    width: 100%;
+
 }
 
 .owner-operator-bg::before {
@@ -1981,6 +2024,19 @@ li.link-wrapper>a.active {
     position: relative;
 }
 
+.ocean-dark-bg-btn{
+    font-size: 16px;
+    font-weight: bold;
+    fill: #1D4354;
+    color: white;
+    background-color: #1D4354;
+    border-radius: 0px 0px 0px 0px;
+    padding: 15px 40px 15px 40px;
+    position: relative;
+    transition: all ease-in-out 0.3s;
+    opacity: 0.9;
+}
+
 .white-bg-btn {
     font-size: 16px;
     font-weight: bold;
@@ -1990,20 +2046,36 @@ li.link-wrapper>a.active {
     border-radius: 0px 0px 0px 0px;
     padding: 15px 40px 15px 40px;
     position: relative;
-    transition: all ease-in-out 0.4s;
+    transition: all ease-in-out 0.2s;
+    opacity: 0.9;
 }
+
+.theme-bg-btn-light-green {
+    font-size: 16px;
+    font-weight: bold;
+    fill: #1D4354;
+    color: #1D4354;
+    background-color: #ADFB51;
+    border-radius: 0px 0px 0px 0px;
+    padding: 15px 40px 15px 40px;
+    position: relative;
+    transition: all ease-in-out 0.2s;
+    opacity: 0.8;
+}
+.theme-bg-btn-light-green:hover, .white-bg-btn:hover, .ocean-dark-bg-btn:hover {
+    opacity: 1;
+}
+
 
 .get-feature-section {
-    position: relative;
     height: 400px;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 100px;
+    text-align: center;
+    margin-top: 150px;
+
 }
 
-.get-feature-section::before {
+/* .get-feature-section::before {
     content: "";
     background-image: url('/img/husband-and-wife-driving-team-checking-their-itine-RW6LREM.jpeg');
     background-size: cover;
@@ -2015,21 +2087,30 @@ li.link-wrapper>a.active {
     left: 0px;
     opacity: 0.45;
     background-attachment: fixed;
-}
+} */
 
 .get-feature-section h1 {
     color: #FFFFFF;
     font-size: 40px;
+    font-weight: bold;
     text-transform: uppercase;
-    position: relative;
 }
 
 .get-feature-section p {
     color: #FFFFFF;
     font-size: 18px;
-    position: relative;
 }
-
+.get-featured-border{
+    position: absolute;
+    background: url('/img/get-featured-border.png');
+    background-size: fill;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100%;
+    width: 100%;
+    top: 350px;
+    bottom: 0;
+}
 .news-letter-signup-sec {
     height: 350px;
     background-color: #17161A;
@@ -2038,13 +2119,10 @@ li.link-wrapper>a.active {
     justify-content: center;
     align-items: center;
     position: relative;
-    background-image: linear-gradient(180deg, #1e1e1ca8, rgb(0 0 0 / 25%)), url(/img/truck-on-windy-road-hero-min.jpg);
-    background-size: cover;
+    background-image: linear-gradient(to bottom, #31bab369 0%, rgb(0 123 255 / 25%) 100%), url(/img/driver-standing-truck-door.png);
+    background-size: fill;
     background-position: center;
     background-attachment: fixed;
-
-
-
 }
 
 /* .news-letter-signup-sec::before {
@@ -2064,6 +2142,7 @@ li.link-wrapper>a.active {
     font-size: 16px;
     line-height: 30px;
     text-align: center;
+    color: #fff;
 }
 
 /* muli crousal styling */
@@ -2197,10 +2276,14 @@ input[type=checkbox] {
 .get_result_text {
     color: #5dcac4 !important;
 }
+.register-today-section{
+    position: relative;
+}
 
 .signup-driver-section .signup-driver-item {
     width: 50%;
-    padding: 30px;
+    padding:30px;
+    padding-bottom: 100px;
     line-height: 1;
     transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
 }
@@ -2208,28 +2291,58 @@ input[type=checkbox] {
 .signup-driver-right {
     position: relative;
     height: 475px;
-
 }
 
-.signup-driver-section .signup-driver-right::before {
-    background: url(/img/googleusercontent.png);
+.signup-driver-section .signup-driver-right {
+    background: url(/img/man-holding-money.png);
     content: "";
     background-size: cover;
-    position: absolute;
+    /* position: absolute; */
     background-position: center center;
     top: 0px;
     right: 0px;
     bottom: 0px;
     left: -3px;
 }
+.signup-driver-section-border-bottom{
+    position: absolute;
+    height: 80%;
+    width: 100%;
+    bottom: 0;
+    bottom:-25vh; 
+    /* bottom: -60vh; */
+    /* bottom: -50vh;  */
+    background: url(/img/design-bottom-border-small.png);
+    /* background-position: center; */
+    background-repeat: no-repeat;
+    background-size: unset;
+}
+@media (min-width: 990px) {
+    .signup-driver-section-border-bottom {
+        bottom: -25vh;
+    }
+}
+
+/* Adjust for width <= 985px */
+@media (max-width: 990px) {
+    .signup-driver-section-border-bottom {
+        bottom: -60vh;
+    }
+}
+
+/* Adjust for width <= 760px */
+@media (max-width: 760px) {
+    .signup-driver-section-border-bottom {
+        bottom: -50vh;
+    }
+}
+
 
 .signup-driver-section .signup-driver-left {
-    background-color: #5db1bb;
-
+    background-color: #2EC7C3;
     opacity: 1;
     position: relative;
     height: 475px;
-
 }
 
 .signup-driver-section .signup-driver-item h1 {
@@ -2251,20 +2364,33 @@ input[type=checkbox] {
 /*  Home motor carrier section css*/
 
 .motor-carrier-bg {
-    background: linear-gradient(to bottom, rgb(8 177 184 / 85%) 0%, rgb(8 177 184 / 85%) 100%), url(/img/motor-carrier.jpeg);
-    background-size: cover;
-    background-repeat: no-repeat;
+    height: 853px;
+    position: relative;
+}
+.motor-carrier-top-bg{
+    background-image: url("/img/motor-carrier-top-bg.png");
     background-position: center;
-    height: 350px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+}
+.motor-carrier-bottom-bg
+{
+    position: absolute;
+    background: url("/img/motor-carrier-bottom-bg.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 50%;
+    width: 100%;
+    bottom: 0;
+    bottom: -20vh;
 }
 
 .motor-carrier {
     color: #fff;
     font-weight: 700;
-
 }
 
 .motor-carrier-bg a {

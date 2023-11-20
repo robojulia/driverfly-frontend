@@ -75,9 +75,7 @@ export default function HeroSearch(props) {
     return (
         <div className="hero-search">
             <div className="input-group border-0">
-                <div className="input-group-prepend">
-                    <Search color="#C5C5C5" />
-                </div>
+             
                 <input
                     onKeyPress={handleKeywordSearch}
                     onChange={handleChange}
