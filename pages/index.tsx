@@ -86,7 +86,7 @@ export default function Index() {
                     </div>
                     <div className="hire-driver-item hire-driver-right d-flex flex-column justify-content-around">
                         <h1>{t("OWNER_OPERATORS")}</h1>
-                        <p className="mb-4">{t("Are_you_looking_to_lease_onto_a_motor_carrier?")}</p>
+                        <p className="mb-4">{t("ARE_YOU_LOOKING_LEASE_ONTO_NOTOR_CARRIER")}</p>
                         <div className="mt-4">
 
                             <button className="theme-bg-btn-light-green" type="button" onClick={() => router.push("find-jobs")}>
