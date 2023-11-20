@@ -37,7 +37,7 @@ export default function HeroSearch(props) {
 
     const handleKeywordSearch = (e) => {
         if (e.key === "Enter") {
-            handleSubmit();
+            handleSubmit(e);
         }
     };
 
