@@ -88,10 +88,10 @@ export default function HeroSearch(props) {
                 />
             </div>
 
-            {/* <div className="input-group">
+            <div className="input-group">
                 <AsyncTypeahead
                     id="async-example"
-                    name="location"
+                    // name="location"
                     isLoading={isLoading}
                     labelKey="place_name"
                     minLength={1}
@@ -102,11 +102,11 @@ export default function HeroSearch(props) {
                     placeholder="Location"
                     renderMenuItemChildren={(option, props) => (
                         <>
-                            <span className='text-dark'>{option.place_name}</span>
+                            <span className='text-dark'>{option}</span>
                         </>
                     )}
                 />
-            </div> */}
+            </div>
             <select
                 name="employment_type"
                 onChange={handleChange}
