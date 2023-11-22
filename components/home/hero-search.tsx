@@ -88,7 +88,7 @@ export default function HeroSearch(props) {
                 />
             </div>
 
-            <div className="input-group">
+            {/* <div className="input-group">
                 <AsyncTypeahead
                     id="async-example"
                     name="location"
@@ -106,7 +106,7 @@ export default function HeroSearch(props) {
                         </>
                     )}
                 />
-            </div>
+            </div> */}
             <select
                 name="employment_type"
                 onChange={handleChange}
