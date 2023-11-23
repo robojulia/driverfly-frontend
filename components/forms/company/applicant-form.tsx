@@ -157,14 +157,20 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 		form.setValues(() => {
 			let values: ApplicantEntity;
+			let extras: ApplicantExtrasEntity[] = entity?.extras ?? [];
+			if (!extras?.find((v) => v.type == ApplicantExtras.ROUTES)) extras?.push({
+				...new ApplicantExtrasEntity(),
+				type: ApplicantExtras.ROUTES,
+			});
+			if (!extras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME)) extras?.push({
+				...new ApplicantExtrasEntity(),
+				type: ApplicantExtras.BUSINESS_NAME,
+			});
+			if (!extras?.find((v) => v.type == ApplicantExtras.DOT_NUMBER)) extras?.push({
+				...new ApplicantExtrasEntity(),
+				type: ApplicantExtras.DOT_NUMBER,
+			});
 			if (!!entity?.id) {
-				// if (form.dirty) return values;
-				let extras: ApplicantExtrasEntity[] = entity.extras;
-				if (!extras?.find((v) => v.type == ApplicantExtras.ROUTES))
-					extras?.push({
-						...new ApplicantExtrasEntity(),
-						type: ApplicantExtras.ROUTES,
-					});
 				values = {
 					...entity,
 					documents: entity.documents?.filter((v) =>
@@ -176,12 +182,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				};
 			} else {
 				values = {
-					extras: [
-						{
-							...new ApplicantExtrasEntity(),
-							type: ApplicantExtras.ROUTES,
-						},
-					],
+					...(new ApplicantEntity()),
+					extras
 				};
 			}
 			return values;
@@ -421,6 +423,26 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									name="is_owner_operator"
 									formik={form}
 								/>
+								{Boolean(form.values.is_owner_operator) &&
+									<>
+										<BaseInput
+											className="col-12"
+											label="BUSINESS_NAME"
+											name={`extras[${form.values?.extras?.findIndex(
+												(v) => v.type == ApplicantExtras.BUSINESS_NAME
+											)}].value`}
+											formik={form}
+										/>
+										<BaseInput
+											className="col-12"
+											name={`extras[${form.values?.extras?.findIndex(
+												(v) => v.type == ApplicantExtras.DOT_NUMBER
+											)}].value`}
+											label="DOT_NUMBER"
+											formik={form}
+										/>
+									</>
+								}
 								<BaseCheck
 									className="col-12 mt-2"
 									disabled={Boolean(entity?.is_hired)}
