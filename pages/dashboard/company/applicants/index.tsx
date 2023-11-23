@@ -513,16 +513,16 @@ function ApplicantView(props: ViewProps) {
                 ]}
                 items={items}
                 actions={row => [
-                    {
-                        icon: EyeFill,
-                        label: "VIEW",
-                        onClick: (e) => onViewClick(row.id)
-                    },
+                    // {
+                    //     icon: EyeFill,
+                    //     label: "VIEW",
+                    //     onClick: (e) => onViewClick(row.id)
+                    // },
                     {
                         icon: PencilFill,
                         label: "EDIT",
                         onClick: (e) => onEditClick(row.id),
-                        hide: !hasPermission("CanEditApplicant")
+                        hide: !hasPermission("CanUpdateApplicant")
                     },
                 ]}
                 expandableRowsComponent={({ data }) => (
