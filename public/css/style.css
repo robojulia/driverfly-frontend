@@ -1055,7 +1055,9 @@ input[type='range']::-webkit-slider-thumb {
     font-size: 60px;
 
 }
-
+.registration_link{
+   font-size: large;
+}
 .about_work svg {
     margin: 0 auto;
 }
@@ -1065,13 +1067,26 @@ input[type='range']::-webkit-slider-thumb {
     text-align: center;
     padding: 30px;
     transition: all 0.3s;
-    color: #262626a6 !important;
+    /* color: #262626a6 !important; */
     background-color: transparent;
     border: 0;
+}
+.card-title{
+    color: #262626 ;
+}
+.card-text{
+    color: #262626a3 ;
+}
+
+.registration_link a{
+    cursor: pointer;
+    color: black;
+    font-weight: bold;
 }
 
 .how-it-work-sec .card:hover h5,
 .how-it-work-sec .card:hover p,
+.how-it-work-sec .card:hover p a,
 .how-it-work-sec .card:hover svg {
     color: white !important;
 }
@@ -1264,14 +1279,12 @@ img.who-we-img.img-fluid {
 }
 
 /********************************* HERO-SEC **************************/
-.hero-sec {
-    height: 750px;
-    align-items: center;
-}
+
 
 .hero-sec {
-    background-color: white;
+    background-color: #FAFAFA;
     background-position: 50%;
+    height: 750px;
     background-repeat: no-repeat;
     background-size: cover;
     background-blend-mode: multiply;
@@ -1322,7 +1335,7 @@ img.who-we-img.img-fluid {
 
 .hero-search {
     display: flex;
-    background: white;
+    background: #FFFFFF;
     align-items: center;
     padding: 0px 0px 0px 10px;
     border-radius: 5px;
@@ -1926,10 +1939,6 @@ li.link-wrapper>a.active {
     padding: 30px;
     line-height: 1;
     transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
-}
-
-.hire-driver-item:hover {
-    opacity: 0.9;
 }
 
 .hire-driver-left {
