@@ -26,7 +26,7 @@
     "pages/dashboard/_middleware.js",
     "pages/dashboard/dashboard.js",
     "components/BaseInput.js"
-, "pages/_app.js", "components/works/drivers.tsx"  ],
+, "pages/_app.js"  ],
   "exclude": [
     "node_modules"
   ]
