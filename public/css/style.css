@@ -2308,32 +2308,38 @@ input[type=checkbox] {
     position: absolute;
     height: 80%;
     width: 100%;
-    bottom: 0;
-    bottom:-25vh; 
-    /* bottom: -60vh; */
-    /* bottom: -50vh;  */
+    bottom:-18vh; 
+  
     background: url(/img/design-bottom-border-small.png);
-    /* background-position: center; */
     background-repeat: no-repeat;
-    background-size: unset;
+    background-size: cover;
 }
-@media (min-width: 990px) {
+
+
+@media (max-width: 1500px) {
     .signup-driver-section-border-bottom {
-        bottom: -25vh;
+        height: 70%;
+        bottom: -20vh;
+        background-size: unset;
     }
 }
 
 /* Adjust for width <= 985px */
 @media (max-width: 990px) {
     .signup-driver-section-border-bottom {
-        bottom: -60vh;
+        bottom: -20vh;
+        background-size: unset;
+        height: 40%;
     }
 }
 
 /* Adjust for width <= 760px */
 @media (max-width: 760px) {
     .signup-driver-section-border-bottom {
-        bottom: -50vh;
+        bottom: -20vh;
+        background-size: unset;
+        height: 40%;
+
     }
 }
 
