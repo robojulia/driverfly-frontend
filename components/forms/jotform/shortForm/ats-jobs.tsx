@@ -53,6 +53,7 @@ export function AtsJobs() {
         }
     }, [applicant, form.values?.applying_for_job]);
 
+
     useEffectAsync(async () => {
         const job = jobs?.find(v => v?.id)
         form.setValues({
@@ -114,7 +115,7 @@ export function AtsJobs() {
 
                     <Col>
                         <Button
-                            disabled={(form.isValidating || form.isSubmitting || !form.isValid)}
+                            disabled={(form.isValidating || form.isSubmitting || !form.isValid || Boolean(form.values.applying_for_job) ? !(Boolean(form.values.applying_for_job) && Boolean(form.values.jobId)) : false)}
                             className="float-left theme-secondary-btn"
                             type="submit"
                         >
