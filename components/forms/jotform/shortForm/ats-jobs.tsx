@@ -115,7 +115,7 @@ export function AtsJobs() {
 
                     <Col>
                         <Button
-                            disabled={(form.isValidating || form.isSubmitting || !form.isValid || Boolean(form.values.applying_for_job) ? !(Boolean(form.values.applying_for_job) && Boolean(form.values.jobId)) : false)}
+                            disabled={(form.isValidating || form.isSubmitting || !form.isValid || (Boolean(form.values.applying_for_job) && Boolean(jobCount > 0))? !(Boolean(form.values.applying_for_job) && Boolean(form.values.jobId)) : false)}
                             className="float-left theme-secondary-btn"
                             type="submit"
                         >
