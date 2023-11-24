@@ -1140,6 +1140,7 @@ img.who-we-img.img-fluid {
 
 .testimonial-sec {
     margin-top: 300px;
+    background-color: #FAFAFA;
     /* background: #fafafa; */
     padding: 80px 0px ;
 }
@@ -1480,7 +1481,7 @@ img.who-we-img.img-fluid {
 
 /************************** DRIVER-SEC **********************/
 .driver-sec {
-    background-color: #fafafa;
+    background-color: #FFFFFF;
 }
 
 .driver-sec .card {
@@ -1946,7 +1947,7 @@ li.link-wrapper>a.active {
 }
 
 .hire-driver-left::before {
-    background: linear-gradient(to bottom, #31bab4 40%, rgb(0 123 255 / 25%) 100%), url("/img/black-man-truck-driver-near-his-truck-parked-in-a-FD6XPWU.jpeg");
+    background: linear-gradient(to bottom, #31bab3e2 100%, rgb(0 123 255 / 25%) 0%), url("/img/black-man-truck-driver-near-his-truck-parked-in-a-FD6XPWU.jpeg");
     content: "";
     background-size: cover;
     position: absolute;
@@ -1958,7 +1959,7 @@ li.link-wrapper>a.active {
 }
 
 .hire-driver-right {
-    background-color: white;
+    background-color: #FAFAFA;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -2381,6 +2382,7 @@ input[type=checkbox] {
 .motor-carrier-bg {
     height: 853px;
     position: relative;
+    background-color: #FAFAFA;
 }
 .motor-carrier-top-bg{
     background-image: url("/img/motor-carrier-top-bg.png");
