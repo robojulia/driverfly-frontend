@@ -14,7 +14,7 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 	const router = useRouter()
 	const { t } = useTranslation();
 
-	const onViewProfileCLick = () => router.push(`/dashboard/company/applicants/${employee?.applicant?.id}`)
+	const onViewProfileCLick = () => router.push(`/dashboard/company/applicants/${employee?.applicant?.id}/edit`)
 	const onEditClick = () => router.push(`/dashboard/company/compliance/employee-directory/${employee?.id}/edit`)
 
 	let { user, hasPermission } = useAuth();

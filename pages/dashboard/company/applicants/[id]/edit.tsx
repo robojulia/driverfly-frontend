@@ -15,7 +15,8 @@ export default function EditApplicant({ id }) {
     const router = useRouter();
     const { t } = useTranslation();
 
-    const backPath = `/dashboard/company/applicants/${id}`;
+    const backPath = "/dashboard/company/applicants";
+    // const backPath = `/dashboard/company/applicants/${id}`;
 
     // const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
     const goBack = () => window.setTimeout(() => router.back(), 2000);
