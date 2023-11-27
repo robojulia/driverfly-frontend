@@ -464,6 +464,8 @@ ViewApplicant.getLayout = function getLayout(page) {
 };
 
 export async function getServerSideProps(context) {
+	// disabling view applicant page
+	return { notFound: true };
 	try {
 		const id = +context.params?.id;
 		if (!id) return { notFound: true };
