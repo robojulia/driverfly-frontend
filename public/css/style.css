@@ -1036,7 +1036,7 @@ input[type='range']::-webkit-slider-thumb {
 
 /************************************** HOW-IT-WORK-SEC *********************************/
 .how-it-work-sec {
-    height: 974px;
+    /* height: 1000px; */
     /* position: relative; */
     padding: 50px 10px 50px 10px;
 }
@@ -1138,11 +1138,24 @@ img.who-we-img.img-fluid {
     padding: 4% !important;
 }
 
+@media (max-width: 1400px){
+    .slide___3-Nqo {
+        padding: 7% !important;
+    }
+}
+@media (max-width: 500px){
+    .slide___3-Nqo {
+        padding: 100% !important;
+    }
+}
+
 .testimonial-sec {
-    margin-top: 300px;
+    margin-top: 340px;
     background-color: #FAFAFA;
     /* background: #fafafa; */
     padding: 80px 0px ;
+    height: 500px !important;
+
 }
 
 .custom-tst .item {
@@ -1414,7 +1427,7 @@ img.who-we-img.img-fluid {
 
 /******************************* TABS-SEC ***************************/
 .tab-sec {
-    margin-top: 20vh;
+    margin-top: 300px;
     padding: 100px 0px 70px 0px;
 }
 
@@ -1922,7 +1935,7 @@ li.link-wrapper>a.active {
 
 .hire-driver-section{
     position: absolute;
-    top: -20vh;
+    top: -215px;
 }
 
 @media (max-width: 990px) {
@@ -2113,7 +2126,7 @@ li.link-wrapper>a.active {
 .get-featured-border{
     position: absolute;
     background: url('/img/get-featured-border.png');
-    background-size: fill;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     height: 100%;
@@ -2300,7 +2313,7 @@ input[type=checkbox] {
 
 .signup-driver-right {
     position: relative;
-    height: 475px;
+    height: 550px;
 }
 
 .signup-driver-section .signup-driver-right {
@@ -2312,33 +2325,39 @@ input[type=checkbox] {
     top: 0px;
     right: 0px;
     bottom: 0px;
-    left: -3px;
+    left: 0px;
 }
 .signup-driver-section-border-bottom{
     position: absolute;
-    height: 80%;
+    height: 100%;
     width: 100%;
-    bottom:-18vh; 
+    bottom:-378px; 
   
     background: url(/img/design-bottom-border-small.png);
     background-repeat: no-repeat;
     background-size: cover;
 }
-
-
-@media (max-width: 1500px) {
+@media (min-width: 1600px) {
     .signup-driver-section-border-bottom {
-        height: 70%;
-        bottom: -20vh;
-        background-size: unset;
+        height: 100%;
+        bottom: -378px;
+        background-size: cover;
+    }
+}
+
+@media (max-width: 1600px) {
+    .signup-driver-section-border-bottom {
+        height: 80%;
+        bottom: -300px;
+        background-size: cover;
     }
 }
 
 /* Adjust for width <= 985px */
 @media (max-width: 990px) {
     .signup-driver-section-border-bottom {
-        bottom: -20vh;
-        background-size: unset;
+        bottom: -320px;
+        background-size: cover;
         height: 40%;
     }
 }
@@ -2346,8 +2365,8 @@ input[type=checkbox] {
 /* Adjust for width <= 760px */
 @media (max-width: 760px) {
     .signup-driver-section-border-bottom {
-        bottom: -20vh;
-        background-size: unset;
+        bottom: -270px;
+        background-size: cover;
         height: 40%;
 
     }
@@ -2358,7 +2377,7 @@ input[type=checkbox] {
     background-color: #2EC7C3;
     opacity: 1;
     position: relative;
-    height: 475px;
+    height: 550px;
 }
 
 .signup-driver-section .signup-driver-item h1 {
@@ -2402,7 +2421,7 @@ input[type=checkbox] {
     height: 50%;
     width: 100%;
     bottom: 0;
-    bottom: -20vh;
+    bottom: -215px;
 }
 
 .motor-carrier {
