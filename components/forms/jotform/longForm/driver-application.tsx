@@ -92,7 +92,7 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit}>
-				<h6 className={styles.carrierName}>
+				<div className={styles.carrierName}>
 					<h1>
 						{t(
 							"{COMPANY_NAME}",
@@ -100,7 +100,7 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 							{ translateProps: true }
 						)}
 					</h1>
-				</h6>
+				</div>
 				<h1 className={styles.carrierName}>{t("DRIVER_APPLICATION")}</h1>
 
 				<p className={`${styles.paragraph} ${styles.align__text_left}`}>

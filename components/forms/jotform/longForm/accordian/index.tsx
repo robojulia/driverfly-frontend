@@ -16,6 +16,7 @@ import { ImportantDisclosureBackgroundPsp } from "./important-disclosure-backgro
 import { GeneralConsentQueries } from "./general-consent-queries";
 import { LoaderIcon } from "../../../../loading/loader-icon";
 import styles from "../../../../../styles/digitalhiringapp.module.css";
+import { ApplicantEntity } from "../../../../../models/applicant";
 
 
 export function AccordianPage() {
@@ -39,12 +40,20 @@ export function AccordianPage() {
 
 			try {
 				const filtered_extras = applicantExtras?.filter((v) => !!v.value);
-				const response = await applicantApi.jotform.update(applicant.id, {
-					applicant,
-					applicantExtras: filtered_extras,
-					jobs,
-				});
-
+				let response: ApplicantEntity;
+				if (applicant?.id) {
+					response = await applicantApi.jotform.update(applicant.id, {
+						applicant,
+						applicantExtras: filtered_extras,
+						jobs,
+					});
+				} else {
+					response = await applicantApi.jotform.create({
+						applicant,
+						applicantExtras: filtered_extras,
+						jobs,
+					});
+				}
 				if (response) stepNext();
 			} catch (error) {
 				console.log(error);
