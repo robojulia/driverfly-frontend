@@ -1342,7 +1342,7 @@ img.who-we-img.img-fluid {
 }
 
 .trending-keywords a:hover {
-    color: white;
+    color: #0d3546;
     transition: all 0.3s;
     text-decoration: none;
 }
@@ -1427,7 +1427,7 @@ img.who-we-img.img-fluid {
 
 /******************************* TABS-SEC ***************************/
 .tab-sec {
-    margin-top: 300px;
+    margin-top: 200px;
     padding: 100px 0px 70px 0px;
 }
 
@@ -1935,7 +1935,8 @@ li.link-wrapper>a.active {
 
 .hire-driver-section{
     position: absolute;
-    top: -215px;
+    height: 530px !important;
+    top: -280px;
 }
 
 @media (max-width: 990px) {
@@ -1957,6 +1958,8 @@ li.link-wrapper>a.active {
 
 .hire-driver-left {
     position: relative;
+    
+
 }
 
 .hire-driver-left::before {
@@ -1973,12 +1976,9 @@ li.link-wrapper>a.active {
 
 .hire-driver-right {
     background-color: #FAFAFA;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
     padding-inline: 100px;
     opacity: 1;
+    text-align: center;
     /* position: relative; */
 }
 .hire-driver-right h1,p{
@@ -2128,10 +2128,10 @@ li.link-wrapper>a.active {
     background: url('/img/get-featured-border.png');
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: center;
+    /* background-position: center; */
     height: 100%;
     width: 100%;
-    top: 350px;
+    top: 340px;
     bottom: 0;
 }
 .news-letter-signup-sec {
@@ -2319,9 +2319,9 @@ input[type=checkbox] {
 .signup-driver-section .signup-driver-right {
     background: url(/img/man-holding-money.png);
     content: "";
+    background-position: center;
+    background-repeat: no-repeat;
     background-size: cover;
-    /* position: absolute; */
-    background-position: center center;
     top: 0px;
     right: 0px;
     bottom: 0px;
@@ -2331,44 +2331,38 @@ input[type=checkbox] {
     position: absolute;
     height: 100%;
     width: 100%;
-    bottom:-378px; 
+    bottom:-360px; 
   
     background: url(/img/design-bottom-border-small.png);
     background-repeat: no-repeat;
-    background-size: cover;
+    object-fit: cover;
 }
 @media (min-width: 1600px) {
     .signup-driver-section-border-bottom {
-        height: 100%;
-        bottom: -378px;
-        background-size: cover;
+        bottom: -360px;
     }
 }
 
 @media (max-width: 1600px) {
     .signup-driver-section-border-bottom {
-        height: 80%;
-        bottom: -300px;
-        background-size: cover;
+        bottom: -350px;
     }
 }
 
-/* Adjust for width <= 985px */
 @media (max-width: 990px) {
     .signup-driver-section-border-bottom {
-        bottom: -320px;
-        background-size: cover;
-        height: 40%;
+        bottom: -930px;
     }
 }
 
-/* Adjust for width <= 760px */
-@media (max-width: 760px) {
+@media (max-width: 770px) {
     .signup-driver-section-border-bottom {
-        bottom: -270px;
-        background-size: cover;
-        height: 40%;
-
+        bottom: -930px;
+    }
+}
+@media (max-width: 768px) {
+    .signup-driver-section-border-bottom {
+        bottom: -770px;
     }
 }
 
@@ -2415,7 +2409,8 @@ input[type=checkbox] {
 {
     position: absolute;
     background: url("/img/motor-carrier-bottom-bg.png");
-    background-position: center;
+    /* background-position: center; */
+    object-fit: cover;
     background-repeat: no-repeat;
     background-size: cover;
     height: 50%;
