@@ -276,20 +276,17 @@ const ImportApplicants = () => {
         }
     };
 
-    // const headers: string[] = Object.keys(schemaDescribe.fields).filter((v) => {
-    //     switch (v) {
-    //         case "equipment_owned":
-    //         case "employers":
-    //         case "documents":
-    //         case "jobs":
-    //             return false;
-    //         default:
-    //             return true;
-    //     }
-    // }); //Object.keys(new ApplicantEntity());
-
-    const allowedKeys: string[] = ["first_name", "last_name", "phone", "email", "birthdate", "street"];
-    const headers: string[] = Object.keys(schemaDescribe.fields).filter((v) => allowedKeys.includes(v));
+    const headers: string[] = Object.keys(schemaDescribe.fields).filter((v) => {
+        switch (v) {
+            case "equipment_owned":
+            case "employers":
+            case "documents":
+            case "jobs":
+                return false;
+            default:
+                return true;
+        }
+    }); //Object.keys(new ApplicantEntity());
 
     const headersData: string[] = headers?.map(
         (h) =>
@@ -306,7 +303,7 @@ const ImportApplicants = () => {
     const onDownloadClick = (e) => {
         FileDownload(
             `${headers.join(",")}\n${headersData.join(",")}`,
-            "Import Applicants Template.csv"
+            "Import Applicants Template.xls"
         );
     };
 
