@@ -979,6 +979,9 @@ input[type='range']::-webkit-slider-thumb {
     margin-bottom: 18px;
     border: none;
     background-color: transparent;
+
+}
+.how-it-work-sections{
     height: 300px !important;
     border: 2px solid red;
 }
@@ -1498,7 +1501,7 @@ img.who-we-img.img-fluid {
 /************************** DRIVER-SEC **********************/
 .driver-sec {
     background-color: #FFFFFF;
-    margin: 0px 0px 200px 0px;
+    margin: 50px 0px 200px 0px;
 }
 
 .driver-sec .card {
