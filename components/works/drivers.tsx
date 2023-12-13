@@ -19,7 +19,7 @@ export default function Driver() {
       </h3>
       <div className="row mb-4">
         <div className="col-md-4">
-          <div className="card">
+          <div className="how-it-work-sections card">
             <FileEarmarkZip />
             <div className="card-body px-0">
               <h5 className="card-title">{t("CREATE_AN_ACCOUNT")}</h5>
@@ -38,7 +38,7 @@ export default function Driver() {
           </div>
         </div>
         <div className="col-md-4">
-          <div className="card">
+          <div className="how-it-work-sections card">
             <Funnel />
             <div className="card-body px-0">
               <h5 className="card-title">{t("FILTER_&_SEARCH_DRIVER_JOBS")}</h5>
@@ -49,7 +49,7 @@ export default function Driver() {
           </div>
         </div>
         <div className="col-md-4">
-          <div className="card">
+          <div className="how-it-work-sections card">
             <CheckSquare />
             <div className="card-body px-0">
               <h5 className="card-title">{t("SAVE_&_APPLY")}</h5>
@@ -60,7 +60,7 @@ export default function Driver() {
           </div>
         </div>
         <div className="col-md-4">
-          <div className="card">
+          <div className="how-it-work-sections card">
             <Bell />
             <div className="card-body px-0">
               <h5 className="card-title">{t("HAVE_JOBS_COME_TO_YOU")}</h5>
@@ -71,7 +71,7 @@ export default function Driver() {
           </div>
         </div>
         <div className="col-md-4">
-          <div className="card">
+          <div className="how-it-work-sections card">
             <Trophy />
             <div className="card-body px-0">
               <h5 className="card-title">{t("GET_HIRED")}</h5>
@@ -80,7 +80,7 @@ export default function Driver() {
           </div>
         </div>
         <div className="col-md-4">
-          <div className="card">
+          <div className="how-it-work-sections card">
             <HandIndexThumb />
             <div className="card-body px-0">
               <h5 className="card-title">{t("REVIEW_YOUR_EMPLOYER")}</h5>
