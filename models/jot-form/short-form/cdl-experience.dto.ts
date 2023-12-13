@@ -23,7 +23,7 @@ export class CdlDto {
         .number()
         .when("license_type", {
           is: (value) => !!value && value !== DriverLicenseType.NO_CDL,
-          then: yup.number().moreThan(0).required(),
+          then: yup.number().moreThan(-1).required(),
         })
         .nullable(),
       is_owner_operator: yup.boolean().nullable(),
