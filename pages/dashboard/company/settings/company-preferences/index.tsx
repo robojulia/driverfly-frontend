@@ -45,7 +45,7 @@ export default function CompanyPreference() {
 		| CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM;
 	}>(null);
 
-	const { user, isSuperAdmin } = useAuth();
+	const { user, isSuperAdmin, isCompanyAdmin } = useAuth();
 
 	const { t } = useTranslation();
 	const removeEmploymentTypes = [
@@ -347,7 +347,7 @@ export default function CompanyPreference() {
 						onClick={() => setShowReferModal(true)}
 						style={{ fontSize: "12px" }}
 					>
-						{!Boolean(isSuperAdmin) ? (
+						{!Boolean(isCompanyAdmin) ? (
 							<OverlayTrigger
 								trigger={["hover"]}
 								delay={{ show: 0, hide: 0 }}
@@ -362,7 +362,7 @@ export default function CompanyPreference() {
 					<BaseCheck
 						className="mt-2 col float-left"
 						name="is_current_employed"
-						disabled={!Boolean(isSuperAdmin)}
+						disabled={!Boolean(isCompanyAdmin)}
 						checked={Boolean(
 							preferences?.find(
 								(pref) =>

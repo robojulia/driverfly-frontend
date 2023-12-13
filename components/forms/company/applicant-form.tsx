@@ -69,7 +69,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	const applicantApi = new ApplicantApi();
 	let { className, entity, onSaveComplete, onSaveError } = props;
 	const current_date = new Date();
-	let { user, hasPermission, isSuperAdmin } = useAuth();
+	let { user, hasPermission, isSuperAdmin, isCompanyAdmin } = useAuth();
 
 	const [protectedFields, setProtectedFields] = useState({
 		license_number: false,
@@ -277,7 +277,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							<Col md="4" className="px-2">
 								<BaseSelect
 									// className="col-12 my-2"
-									readOnly={!Boolean(isSuperAdmin) || Boolean(entity?.is_hired)}
+									readOnly={!Boolean(isSuperAdmin) || !Boolean(isCompanyAdmin) || Boolean(entity?.is_hired)}
 									label="ASSIGNED_RECRUITER"
 									name="assignedUserId"
 									placeholder
