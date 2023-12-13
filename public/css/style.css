@@ -2520,3 +2520,13 @@ button:active {
 .basic-single {
     z-index: 99999;
 }
+
+[data-column-id="drivers_needed"].rdt_TableCol:hover  div{
+    overflow: visible !important;
+}[data-column-id="expiration_date"].rdt_TableCol:hover  div{
+    overflow: visible !important;
+}[data-column-id="employment_type"].rdt_TableCol:hover  div{
+    overflow: visible !important;
+}[data-column-id="delivery_type"].rdt_TableCol:hover  div{
+    overflow: visible !important;}
+
