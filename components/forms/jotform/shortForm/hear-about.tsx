@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useFormik } from "formik";
+import { toast } from "react-toastify";
+import React, { useContext, useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import BaseSelect from "../../base-select";
-import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { HearAboutUsDto } from "../../../../models/jot-form/short-form/hear-about.dto";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
@@ -11,26 +12,14 @@ import styles from "../../../../styles/digitalhiringapp.module.css";
 import { HearAboutUsType } from "../../../../enums/jotform/hear-about-type.enum";
 import BaseInput from "../../base-input";
 import ApplicantApi from "../../../../pages/api/applicant";
-import { toast, ToastContainer } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { LoaderIcon } from "../../../loading/loader-icon";
-import CompanyApi from "../../../../pages/api/company";
-import { CompanyPreferenceEntity } from "../../../../models/company/company-preferences.entity";
-import { CompanyPreferenceCategory } from "../../../../enums/company/company-preference-category.enum";
-import { CompanyPreferenceJotformLabel } from "../../../../enums/company/company-preferences-jotform-label.enum";
-import { useEffectAsync } from "../../../../utils/react";
-import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 
 export function HearAbout() {
 	const {
 		state: { applicantExtras, applicant, jobs, utm },
 		method: { setApplicantExtras, stepNext, stepBack, setApplicant },
 	}: JotFormContextType = useContext(JotformContext);
-
-
-	const [companyCdlPreferences, setCompanyCdlPreferences] = useState<string[]>([])
-	const [companyPref, setCompanyPref] = useState<CompanyPreferenceEntity[]>([])
-
 
 	const { t } = useTranslation();
 
@@ -39,14 +28,13 @@ export function HearAbout() {
 		validationSchema: HearAboutUsDto.yupSchema(),
 		onSubmit: async (values) => {
 			const applicantApi = new ApplicantApi();
-			const { HEAR_ABOUT_US, REFERAL_NAME, GOOD_FIT } = values;
+			const { HEAR_ABOUT_US, REFERAL_NAME } = values;
 			if (applicant?.can_pass_drug_test) {
 				try {
 					const filteredExtras = ([
 						...applicantExtras,
 						{ ...HEAR_ABOUT_US },
 						{ ...REFERAL_NAME },
-						{ ...GOOD_FIT },
 					]).filter(v => !!v?.value)
 
 					const data = await applicantApi.jotform.create({
@@ -55,12 +43,12 @@ export function HearAbout() {
 						jobs,
 						utm
 					});
-					setApplicantExtras(filteredExtras)
+					setApplicantExtras(data?.extras)
 					setApplicant({
 						...applicant,
 						...data
 					});
-					console.log("sdksdjskjd")
+
 					stepNext();
 
 				} catch (error) {
@@ -76,110 +64,12 @@ export function HearAbout() {
 		},
 	});
 
-	useEffectAsync(async () => {
-		if (applicant?.company) {
-			const companyApi = new CompanyApi();
-			const cdl_class: CompanyPreferenceEntity = await companyApi.preferences
-				.list(applicant?.company?.id,
-					{ category: CompanyPreferenceCategory.JOTFORM }
-				)
-				.then((preferences: CompanyPreferenceEntity[]) =>
-					preferences?.find((v) =>
-						v?.label === CompanyPreferenceJotformLabel.CDL_CLASS
-					)
-				);
-
-			setCompanyCdlPreferences(cdl_class?.value?.map(v => v ?? []))
-
-			const companyPref: CompanyPreferenceEntity[] = await companyApi.preferences
-				.list(applicant?.company?.id,
-					{ category: CompanyPreferenceCategory.JOTFORM }
-				)
-			setCompanyPref(companyPref)
-
-
-			// if (applicant?.can_pass_drug_test) toast.success(t("successfully_saved_information"));
-		}
-	}, [applicant?.company])
-
-
-	const CompanyPrefferedEmploymentType: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.EMPLOYMENT_TYPE)
-	const CompanyPrefferedMinExperience: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.YEARS_CDL_EXPERIENCE)
-	const CompanyPrefferedAccidentCountLimit: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.MINIMUM_ACCIDENTS)
-	const CompanyPrefferedAccidentViolationLimit: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.MIN_MOVING_VIOLATIONS)
-	const CompanyPreferedLocations: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.JOB_GEOGRAPHY)
-	const ApplicantAddedRoutes: ApplicantExtrasEntity = applicantExtras.find(v => v.type === ApplicantExtras.ROUTES)
-
-	const ApplicantSalariedW2: ApplicantExtrasEntity = applicantExtras?.find(v => v.type == ApplicantExtras.REQUIRE_W2_EMPLOYMENT && v.value == BooleanType.YES)
-
-
-	function checkJobGeographyInRouteType(RouteType: string[], JobGeography: string[]): boolean {
-		for (let i = 0; i < RouteType?.length; i++) {
-			for (let j = 0; j < JobGeography?.length; j++) {
-				if (RouteType[i]?.includes(JobGeography[j])) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	const hasJobGeographyInRouteType = checkJobGeographyInRouteType(ApplicantAddedRoutes?.value, CompanyPreferedLocations?.value);
-
-	const checkApplicantEligibility = () => {
-		if (Boolean(companyCdlPreferences?.length > 0)
-			&& !Boolean(companyCdlPreferences.includes(applicant?.license_type))) {
-			return false
-		}
-
-		if (Boolean(applicant?.years_cdl_experience < CompanyPrefferedMinExperience?.value)) {
-			return false
-		}
-
-		if (
-			!Boolean(hasJobGeographyInRouteType) &&
-			!Boolean(
-				(CompanyPrefferedEmploymentType?.value?.includes('W2') && ApplicantSalariedW2) ||
-				(CompanyPrefferedEmploymentType?.value?.includes('CONTRACT') && applicant?.is_owner_operator && ApplicantSalariedW2)
-
-			)
-		) {
-			return false
-		}
-		if ((CompanyPrefferedEmploymentType?.value?.includes('OWNER_OPERATOR') && !applicant?.is_owner_operator)) {
-			return false
-		}
-
-		if (Boolean(applicant?.accident_count > CompanyPrefferedAccidentCountLimit?.value)
-			&& Boolean(applicant?.moving_violations_count > CompanyPrefferedAccidentViolationLimit?.value)) {
-			return false
-		}
-
-		return true
-	}
-
-
-	useEffect(() => {
-		if (checkApplicantEligibility()) {
-			console.log("Applicant is suitable");
-			form?.setFieldValue("GOOD_FIT.value", true)
-		} else {
-			console.log("Applicant is not suitable");
-			form?.setFieldValue("GOOD_FIT.value", false)
-		}
-	}, [form.values])
-
-
-
 	useEffect(() => {
 		const apx = applicantExtras?.find(
 			(v) => v.type === ApplicantExtras.HEAR_ABOUT_US
 		);
 		const apx_referal_name = applicantExtras?.find(
 			(v) => v.type === ApplicantExtras.REFERAL_NAME
-		);
-		const apx_good_Fit = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.GOOD_FIT
 		);
 		form.setValues({
 			...form.values,
@@ -195,16 +85,13 @@ export function HearAbout() {
 					...(new ApplicantExtrasEntity(ApplicantExtras.REFERAL_NAME)),
 					value: Boolean(utm?.referral_name) ? utm?.referral_name : null
 				},
-			GOOD_FIT: !!apx_good_Fit?.type
-				? apx_good_Fit
-				: new ApplicantExtrasEntity(ApplicantExtras.GOOD_FIT)
 		});
 	}, [applicantExtras]);
 
-	// useEffect(() => {
-	// 	console.log("form values", form.values);
-	// 	console.log("form error", form.errors);
-	// }, [form.values, form.errors]);
+	useEffect(() => {
+		console.log("form values", form.values);
+		console.log("form error", form.errors);
+	}, [form.values, form.errors]);
 
 	return (
 		<>

@@ -5,13 +5,10 @@ import { HearAboutUsType } from "../../../enums/jotform/hear-about-type.enum";
 export class HearAboutUsDto {
 	HEAR_ABOUT_US: ApplicantExtrasEntity;
 	REFERAL_NAME?: ApplicantExtrasEntity;
-	GOOD_FIT?: ApplicantExtrasEntity;
-
 
 	static yupSchema() {
 		return yup.object({
 			HEAR_ABOUT_US: ApplicantExtrasEntity.yupSchema(),
-			GOOD_FIT: ApplicantExtrasEntity.yupSchema(),
 			REFERAL_NAME: yup.object().when("HEAR_ABOUT_US", {
 				is: v => v.value == HearAboutUsType.REFERRAL,
 				then: ApplicantExtrasEntity.yupSchema()

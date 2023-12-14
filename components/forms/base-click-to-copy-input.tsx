@@ -1,4 +1,4 @@
-import { InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Button, InputGroup, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Clipboard } from 'react-bootstrap-icons';
 import BaseInput, { BaseInputProps } from './base-input';
 
@@ -7,7 +7,7 @@ export interface BaseClickToCopyInputProps extends BaseInputProps {
 	tooltipText: string
 }
 export default function BaseClickToCopyInput({ tooltipText, value, className, label }: BaseClickToCopyInputProps) {
-	const clickHandler = () => { navigator.clipboard.writeText(value) }
+	const copyToClipboard = () => navigator.clipboard.writeText(value)
 	return (
 		<BaseInput
 			prepend={
@@ -16,9 +16,9 @@ export default function BaseClickToCopyInput({ tooltipText, value, className, la
 					delay={{ show: 50, hide: 400 }}
 					overlay={<Tooltip>{tooltipText}</Tooltip>}
 				>
-					<InputGroup.Text role={"button"} className='bg-secondary'>
-						<Clipboard className='text-white' onClick={clickHandler} />
-					</InputGroup.Text>
+					<Button variant='secondary' className=' bg-secondary px-3' onClick={copyToClipboard}>
+						<Clipboard className='text-white' />
+					</Button>
 				</OverlayTrigger>
 			}
 			label={label}
