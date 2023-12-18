@@ -39,9 +39,9 @@ const FullLayout = ({ children }) => {
 	const { t } = useTranslation();
 	const router = useRouter()
 
-	const { user, isSuperAdmin } = useAuth();
+	const { user, isSuperAdmin, isCompanyAdmin } = useAuth();
 
-	console.log("FullLayout", user, isSuperAdmin)
+	console.log("FullLayout", { user, isSuperAdmin, isCompanyAdmin })
 
 	if (!user?.company) {
 		return <></>
@@ -110,7 +110,7 @@ const FullLayout = ({ children }) => {
 					text: "COMPANIES",
 					permissions: "CanViewCompany",
 					startsWith: true,
-					visible: isSuperAdmin,
+					visible: isCompanyAdmin,
 
 				},
 				{
@@ -169,7 +169,7 @@ const FullLayout = ({ children }) => {
 					pathname: "/dashboard/company/admin/referral",
 					icon: PersonHearts,
 					text: "REFERRAL_SOURCES",
-					visible: isSuperAdmin,
+					visible: isCompanyAdmin,
 					startsWith: true,
 				},
 			],

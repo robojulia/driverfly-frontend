@@ -8,6 +8,7 @@ export interface JwtTokenPayload extends JwtUser {
     email: string;
     // roles == "admin"
     super_admin: boolean;
+    company_admin: boolean;
     // enumerated list of CAN* permissions assigned to user
     permissions: string[];
     // companies

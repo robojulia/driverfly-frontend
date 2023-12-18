@@ -27,7 +27,7 @@ export default function ReferralList({ host }: { host: string }) {
 
 	const { t } = useTranslation();
 
-	const { user, isSuperAdmin, hasPermission } = useAuth();
+	const { user, isSuperAdmin, isCompanyAdmin, hasPermission } = useAuth();
 
 	const [referralSources, setReferralSources] = useState<ReferralSourceEntity[]>([
 		{
@@ -42,7 +42,7 @@ export default function ReferralList({ host }: { host: string }) {
 	const columnSettingKey = getDataTableColumnKey("admin", user, "referral-sources");
 
 	useEffectAsync(async () => {
-		if (!isSuperAdmin) {
+		if (!isCompanyAdmin) {
 			router.push("/dashboard/company/");
 			return;
 		}
@@ -56,7 +56,7 @@ export default function ReferralList({ host }: { host: string }) {
 		catch (e) {
 			globalAjaxExceptionHandler(e, { t: t, toast: toast, defaultMessage: t("UNABLE_TO_LOAD_{name}", { name: "REFERRAL_SOURCES" }, { translateProps: true }) });
 		}
-	}, [user, isSuperAdmin]);
+	}, [user, isCompanyAdmin]);
 
 	async function onAddClick(e: React.MouseEvent) {
 		e.preventDefault();

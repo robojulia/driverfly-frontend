@@ -20,7 +20,7 @@ export default function CompanyList() {
 
   const { t } = useTranslation();
   const router = useRouter();
-  const { user, company, hasPermission } = useAuth();
+  const { user, company, hasPermission, isCompanyAdmin } = useAuth();
 
   const columnSettingKey = getDataTableColumnKey("company", user, "companies");
 
@@ -64,7 +64,7 @@ export default function CompanyList() {
       actions={
         <>
           {
-            hasPermission("CanCreateCompany") &&
+            (hasPermission("CanCreateCompany") || isCompanyAdmin) &&
             <Button variant='primary' onClick={onAddClick}>
               + {t("CREATE")}
             </Button>
