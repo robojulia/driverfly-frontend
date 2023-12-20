@@ -45,6 +45,7 @@ export function PieChart(props: PieChartProps): JSX.Element {
 		if (!props?.disableRerender) setChartKey((prevKey) => prevKey + 1);
 	}, [data]);
 
+
 	return (
 		<Doughnut
 			key={chartKey}
@@ -59,9 +60,18 @@ export function PieChart(props: PieChartProps): JSX.Element {
 							return value === 0 ? "transparent" : "white";
 						},
 						font: {
-							size: 18,
+							size: 16,
 						},
 					},
+
+					// legend: {
+					// 	labels: {
+					// 	  font: {
+					// 		family:'Poppins'
+					// 		// size: , // Adjust the legend font size as needed
+					// 	  },
+					// 	},
+					//   },					
 				},
 			}}
 			data={{
@@ -71,7 +81,7 @@ export function PieChart(props: PieChartProps): JSX.Element {
 						label: t(title),
 						data,
 						backgroundColor,
-						borderWidth: 1,
+						borderWidth: 0,
 					},
 				],
 			}}

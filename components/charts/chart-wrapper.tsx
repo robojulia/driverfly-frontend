@@ -17,11 +17,11 @@ export const ChartWrapper: React.FC<IChartWrapper> = ({
 }: IChartWrapper) => {
   const { t } = useTranslation();
   return (
-    <Col md={md} sm={sm} lg={lg} className={`p-0 justify-content-center mb-5 ${className}`}>
-      <Col className={`p-0 m-0 h-10 ${titleClassName}`}>
+    <Col md={md} sm={sm} lg={lg} className={`px-5 justify-content-around  mb-5 ${className}`} >
+      <Col className={`p-0  h-4 ${titleClassName}`} style={{display:'flex', justifyContent:'left'}}>
         <h3 className="font-weight-bold">{t(title)}</h3>
       </Col>
-      <Col className="p-0  justify-content-center">{children}</Col>
+      <Col className="p-0 m-0 justify-content-start">{children}</Col>
     </Col>
   );
 };

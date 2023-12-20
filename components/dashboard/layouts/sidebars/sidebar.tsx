@@ -69,6 +69,7 @@ function SidebarArea({ children }) {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
+            
         </div>
     );
 }

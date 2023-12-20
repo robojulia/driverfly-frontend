@@ -71,17 +71,19 @@ export function TotalApplicantBarChart() {
 		return [
 			{
 				label: t("Applicants"),
-				backgroundColor: "rgba(29, 67, 84)",
-				borderColor: "rgba(29, 67, 84)",
+				backgroundColor: "rgb(56, 171, 172)",
+				borderColor: "transparent",
 				data: applicantData,
 				borderWidth: 1,
+				borderRadius:10,
 			},
 			{
 				label: t("Hired"),
-				backgroundColor: "rgba(92, 200, 196)",
-				borderColor: "rgba(92, 200, 196)",
+				backgroundColor: "rgb(245, 191, 25)",
+				borderColor: "transparent",
 				data: hiredData,
 				borderWidth: 1,
+				borderRadius:10,
 			},
 		];
 	};

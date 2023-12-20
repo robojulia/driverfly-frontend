@@ -206,9 +206,9 @@ const FullLayout = ({ children }) => {
 						{/******** Sidebar **********/}
 						<Sidebar items={menuItems} />
 						{/********Content Area**********/}
-						<div className="header" ref={dashboardContainer}>
+						<div className="header dashboard-container" ref={dashboardContainer}>
 							{/********Middle Content**********/}
-							<Container className="p-4 wrapper" fluid>
+							<Container className="p-4 wrapper " fluid>
 								<div>{children}</div>
 							</Container>
 						</div>
