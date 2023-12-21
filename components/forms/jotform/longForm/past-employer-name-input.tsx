@@ -59,22 +59,22 @@ export function PastEmployerNameInput({
 	}
 
 	const csutomStyles: StylesConfig = {
-		placeholder: (styles, { isFocused }) => ({
+		placeholder: (styles:any, { isFocused }) => ({
 			...styles,
 			color: "black",
 			fontWeight: "lighter"
 		}),
-		clearIndicator: (styles, { isFocused }) => ({
+		clearIndicator: (styles:any, { isFocused }) => ({
 			...styles,
 			color: "black",
 			borderColor: error ? "red" : isFocused ? "#2ec8c4" : "#4ca7a8",
 		}),
-		container: (styles, { isFocused }) => ({
+		container: (styles:any, { isFocused }) => ({
 			...styles,
 			width: "100%",
 			borderColor: error ? "red" : isFocused ? "#2ec8c4" : "#4ca7a8",
 		}),
-		control: (styles, { isFocused, menuIsOpen }) => ({
+		control: (styles:any, { isFocused, menuIsOpen }) => ({
 			...styles,
 			backgroundColor: "white",
 			color: "black",
@@ -84,7 +84,7 @@ export function PastEmployerNameInput({
 					? "#2ec8c4"
 					: "#4ca7a8",
 		}),
-		option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+		option: (styles:any, { data, isDisabled, isFocused, isSelected }) => {
 			return {
 				...styles,
 				zIndex: 9999,

@@ -36,8 +36,8 @@ export default function SearchByCompany(props) {
     );
 
     const csutomStyles: StylesConfig = {
-        control: (styles) => ({ ...styles, backgroundColor: "white" }),
-        option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+        control: (styles:any) => ({ ...styles, backgroundColor: "white" }),
+        option: (styles:any, { data, isDisabled, isFocused, isSelected }) => {
             return {
                 ...styles,
                 zIndex: 9999,
