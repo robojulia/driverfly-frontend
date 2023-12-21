@@ -21,7 +21,7 @@ import { ApplicantEntity } from "../../../../../models/applicant";
 
 export function AccordianPage() {
 	const {
-		state: { applicantExtras, applicant, jobs },
+		state: { applicantExtras, applicant, jobs, company },
 		method: { stepBack, updateApplicantExtras, stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 	const [showTab, setShowTab] = useState<boolean[]>([
@@ -48,7 +48,7 @@ export function AccordianPage() {
 						jobs,
 					});
 				} else {
-					response = await applicantApi.jotform.create({
+					response = await applicantApi.jotform.create(company.id, {
 						applicant,
 						applicantExtras: filtered_extras,
 						jobs,

@@ -12,13 +12,16 @@ import {
 import ApplicantApi from "../../../../../api/applicant";
 import { JobEntity } from "../../../../../../models/job/job.entity";
 import JobApi from "../../../../../api/job";
+import { CompanyEntity } from "../../../../../../models/company/company.entity";
+import CompanyApi from "../../../../../api/company";
 
 export interface SuggestedJobsProps {
     entity: ApplicantEntity;
     job: JobEntity;
+    company: CompanyEntity;
 }
 
-export default function SuggestedJobs({ entity, job }: SuggestedJobsProps) {
+export default function SuggestedJobs({ entity, job, company }: SuggestedJobsProps) {
     console.log("entity", entity);
 
 
@@ -49,7 +52,8 @@ export default function SuggestedJobs({ entity, job }: SuggestedJobsProps) {
                     applicant,
                     applicantExtras,
                     steps,
-                    jobs
+                    jobs,
+                    company
                 },
                 method: {
                     setApplicant,
@@ -94,6 +98,9 @@ export async function getServerSideProps({ query }) {
 
         if (!Boolean(entity) || !Boolean(job)) return { notFound: true };
 
+        const companyApi = new CompanyApi();
+        const company: CompanyEntity = await companyApi.employer.getById(job.company?.id);
+
         delete entity.id
         delete entity.user?.id
         delete entity.company
@@ -102,7 +109,7 @@ export async function getServerSideProps({ query }) {
         delete entity.uuid_token
         entity.extras = entity.extras?.map(({ type, value }) => ({ type, value }))
 
-        return { props: { entity, job } };
+        return { props: { entity, job, company } };
     } catch (error) {
         return { notFound: true };
     }

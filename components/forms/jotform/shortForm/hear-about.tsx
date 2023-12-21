@@ -17,7 +17,7 @@ import { LoaderIcon } from "../../../loading/loader-icon";
 
 export function HearAbout() {
 	const {
-		state: { applicantExtras, applicant, jobs, utm },
+		state: { applicantExtras, applicant, jobs, utm, company },
 		method: { setApplicantExtras, stepNext, stepBack, setApplicant },
 	}: JotFormContextType = useContext(JotformContext);
 
@@ -37,7 +37,7 @@ export function HearAbout() {
 						{ ...REFERAL_NAME },
 					]).filter(v => !!v?.value)
 
-					const data = await applicantApi.jotform.create({
+					const data = await applicantApi.jotform.create(company.id, {
 						applicant,
 						applicantExtras: filteredExtras,
 						jobs,
