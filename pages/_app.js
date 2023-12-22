@@ -12,6 +12,9 @@ import "bootstrap/dist/css/bootstrap.css";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import "../public/bootstrap/css/bootstrap.min.css";
 
+// init fontawsome
+import '@fortawesome/fontawesome-free/css/all.css';
+
 // set up chart JS
 import { yupInit } from "../config/yup";
 import { chartJsInit } from "../config/chartjs";
