@@ -304,7 +304,7 @@ const ImportApplicants = () => {
         FileDownload(
             `${headers.join(",")}\n${headersData.join(",")}`,
             "Import Applicants Template.xls"
-        );
+            );
     };
 
     const onClearClick = (e) => {
