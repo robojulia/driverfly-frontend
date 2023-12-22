@@ -7,7 +7,10 @@ import { ApplicantsPerRecruiterChart } from "../../../components/charts/company/
 import { TotalApplicantBarChart } from "../../../components/charts/company/total-applicants-bar-chart";
 import FullLayout from "../../../components/dashboard/layouts/layout/full-layout";
 import PageLayout from "../../../components/layouts/page/page-layout";
-import { ChartWrapper } from "../../../components/charts/chart-wrapper";
+import {
+  ChartWrapper,
+  ChartInerWrapper,
+} from "../../../components/charts/chart-wrapper";
 import { SourceBreakdownChart } from "../../../components/charts/company/source-breakdown-chart";
 import { DashboardStats } from "../../../components/charts/dashboard-stats";
 import DashboardChartContext from "../../../context/dashboard-chart-context";
@@ -60,68 +63,71 @@ export default function Dashboard() {
               },
             }}
           >
-            <Row className="my_chart mx-2 " >
-              
-              <ChartWrapper title="Hello Evano" md="12" lg="12">
+            <div className="my_chart px-4">
+              <ChartWrapper
+                title="Hello Evano"
+                sm="12"
+                md="12"
+                lg="12"
+                className=""
+              >
                 <DashboardStats />
               </ChartWrapper>
 
-              <Row className="my-2 px-5 mx-1 d-flex justify-content-between  dhashboard_circular_graphs">
-                <ChartWrapper
-                  title="APPLICATION_STATUS"
-                  md="6"
-                  lg="3"
-                  className=" py-4 ChartWrapper"
-                >
-                  <ApplicantPieChart />
-                </ChartWrapper>
-
-                <ChartWrapper
+              <div className="px-3 my-3 innerChart-parent ">
+                <ChartInerWrapper
                   title="SOURCE_BREAKDOWN"
-                  md="6"
-                  lg="3"
-                  className="py-4 ChartWrapper"
-                  titleClassName="text-center justify-content-center"
+                  className="py-4 ChartWrapper innerChart "
+                  subHeading="The methods or platforms your applicants
+                  came in from."
                 >
                   <SourceBreakdownChart />
-                </ChartWrapper>
+                </ChartInerWrapper>
 
-                <ChartWrapper
+                <ChartInerWrapper
+                  title="APPLICATION_STATUS"
+                  className=" py-4 ChartWrapper innerChart "
+                  subHeading="Where they’re at in the recruiting process."
+                >
+                  <ApplicantPieChart />
+                </ChartInerWrapper>
+
+                <ChartInerWrapper
                   title="LEAD_ASSIGNMENT"
-                  md="6"
-                  lg="3"
-                  className="py-4  ChartWrapper"
+                  className="py-4  ChartWrapper innerChart "
+                  subHeading="Who’s handling what."
                 >
                   <ApplicantsPerRecruiterChart />
-                </ChartWrapper>
-              </Row>
+                </ChartInerWrapper>
+              </div>
 
-            
-
-              <Row className=" my-2 px-5 d-flex justify-content-between  dhashboard_circular_graphs">
-                <Col lg={9}>
+              <Row className="my-2 px-2 mr-2">
+                <Col lg={9} md={8} sm={12}>
                   <ChartWrapper
                     title="HISTORICAL_RANGE"
-                    md="6"
+                    md="12"
                     lg="12"
+                    sm="12"
                     className="py-4 ChartWrapper"
                     titleClassName="justify-content-start "
                   >
                     <TotalApplicantBarChart />
                   </ChartWrapper>
                 </Col>
-                <Col lg={3}>
-                <div className="auto_recruiting">
-                  <h4 className="text-white font-weight-bold">Sign Up For Auto Recruiting</h4>
-                  <div className="auto_rec_link">
-                  <Link href={''} >Get Drivers Now!</Link>
+                <Col lg={3} md={4} sm={12}>
+                  <div className="auto_recruiting ">
+                    <h4 className="text-white font-weight-bold">
+                      Sign Up For Auto Recruiting
+                    </h4>
+                    <div className="auto_rec_link">
+                      <Link href={""} className="Link">
+                        Get Drivers Now!
+                      </Link>
+                    </div>
                   </div>
-                </div>
-                
                 </Col>
               </Row>
-
-            </Row>
+            </div>
           </DashboardChartContext.Provider>
         )}
       </Row>

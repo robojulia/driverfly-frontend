@@ -7,66 +7,126 @@ import { BarChart } from "../bar-chart";
 export function TotalApplicantBarChart() {
 	const { state } = useContext(DashboardChartContext);
 	const { t } = useTranslation();
-
-	const getWeeksWithInMonth = () => {
-		const startOfMonth = moment().startOf("month");
-		const endOfMonth = moment().endOf("month");
-		const weeks = [];
-		let currentWeek = startOfMonth.clone().startOf("week");
-		const endWeek = endOfMonth.clone().endOf("week");
-		while (currentWeek.isSameOrBefore(endWeek)) {
-			weeks.push(currentWeek.clone());
-			currentWeek.add(1, "week");
-		}
-		return weeks;
-	};
-
-	const labels: string[] = getWeeksWithInMonth().map((el) =>
-		moment(el).format("DD-MM-YYYY")
-	);
-
 	const yearToShow: number = new Date().getFullYear();
 
-	const isWeekData = ({
-		created_at,
-		week,
-		weekEnd,
-	}: {
-		created_at: string | Date;
-		week: string;
-		weekEnd: string;
-	}) => {
-		return (
-			moment(created_at).isSameOrAfter(week, "day") &&
-			moment(created_at).isSameOrBefore(weekEnd, "day")
-		);
+
+	// const getWeeksWithInMonth = () => {
+	// 	const startOfMonth = moment().startOf("month");
+	// 	const endOfMonth = moment().endOf("month");
+	// 	const weeks = [];
+	// 	let currentWeek = startOfMonth.clone().startOf("week");
+	// 	const endWeek = endOfMonth.clone().endOf("week");
+	// 	while (currentWeek.isSameOrBefore(endWeek)) {
+	// 		weeks.push(currentWeek.clone());
+	// 		currentWeek.add(1, "week");
+	// 	}
+	// 	return weeks;
+	// };
+
+	// const labels: string[] = getWeeksWithInMonth().map((el) =>
+	// 	moment(el).format("DD-MM-YYYY")
+	// );
+
+
+	// const isWeekData = ({
+	// 	created_at,
+	// 	week,
+	// 	weekEnd,
+	// }: {
+	// 	created_at: string | Date;
+	// 	week: string;
+	// 	weekEnd: string;
+	// }) => {
+	// 	return (
+	// 		moment(created_at).isSameOrAfter(week, "day") &&
+	// 		moment(created_at).isSameOrBefore(weekEnd, "day")
+	// 	);
+	// };
+
+	const getMonthsInYear = () => {
+		const startOfYear = moment().startOf("year");
+		const endOfYear = moment().endOf("year");
+		const months = [];
+		let currentMonth = startOfYear.clone().startOf("month");
+
+		while (currentMonth.isSameOrBefore(endOfYear)) {
+			months.push(currentMonth.clone());
+			currentMonth.add(1, "month");
+		}
+		return months;
 	};
 
+	const labels: string[] = getMonthsInYear().map((month) =>
+		month.format("MMMM")
+	);
+
+
+
+	const isMonthData = ({
+		created_at,
+		monthStart,
+		monthEnd,
+	}: {
+		created_at: string | Date;
+		monthStart: string;
+		monthEnd:string;
+	}) => {
+		return( moment(created_at).isSameOrAfter(monthStart, "month") && moment(created_at).isSameOrBefore(monthEnd, "month"));
+	};
+
+
 	const fetchData = () => {
-		const weeks = getWeeksWithInMonth();
+		const months = getMonthsInYear();
 		const applicantData = [];
 		const hiredData = [];
 
-		weeks.forEach((week) => {
-			const weekEnd = week.clone().endOf("week");
+		months.forEach((month) => {
+			const monthStart = month.clone().startOf(`${month}`).format("YYYY-MM-DD");
+			const monthEnd = month.clone().endOf(`${month}`).format("YYYY-MM-DD");
+		  
 			let applicantCount = 0;
 			let hiredCount = 0;
 
-			state?.applicants?.forEach(applicant => {
-				if (isWeekData({ created_at: applicant.created_at, week, weekEnd })) {
+			state?.applicants?.forEach((applicant) => {
+				if (isMonthData({ created_at: applicant.created_at, monthStart, monthEnd })) {
 					applicantCount++;
 				}
-			})
+			});
 
-			state?.employees?.forEach(employee => {
-				if (isWeekData({ created_at: employee.hire_date, week, weekEnd })) {
+			state?.employees?.forEach((employee) => {
+				if (isMonthData({ created_at: employee.hire_date, monthStart, monthEnd })) {
 					hiredCount++;
 				}
-			})
+			});
 
 			applicantData.push(applicantCount);
 			hiredData.push(hiredCount);
 		});
+		
+		// const weeks = getWeeksWithInMonth();
+		// const applicantData = [];
+		// const hiredData = [];
+
+		// weeks.forEach((week) => {
+		// 	const weekEnd = week.clone().endOf("week");
+		// 	let applicantCount = 0;
+		// 	let hiredCount = 0;
+
+		// 	state?.applicants?.forEach(applicant => {
+		// 		if (isWeekData({ created_at: applicant.created_at, week, weekEnd })) {
+		// 			applicantCount++;
+		// 		}
+		// 	})
+
+		// 	state?.employees?.forEach(employee => {
+		// 		if (isWeekData({ created_at: employee.hire_date, week, weekEnd })) {
+		// 			hiredCount++;
+		// 		}
+		// 	})
+
+		// 	applicantData.push(applicantCount);
+		// 	hiredData.push(hiredCount);
+		// });
 
 		return [
 			{
@@ -93,11 +153,11 @@ export function TotalApplicantBarChart() {
 	}, [state]);
 
 	return (
-		<BarChart
-			yearToShow={yearToShow}
-			title="APPLICANTS"
-			labels={labels}
-			data={data}
-		/>
+			<BarChart
+				yearToShow={yearToShow}
+				title="APPLICANTS"
+				labels={labels}
+				data={data}
+			/>
 	);
 }

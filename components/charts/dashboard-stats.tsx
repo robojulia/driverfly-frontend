@@ -14,8 +14,8 @@ export const DashboardStats = () => {
   const { t } = useTranslation();
   const statsIcon = [newApplicantIcon, totalHiresIcon, totalEmployeesIcon];
 
-//   this is temporary check, it will bre removed after actual calculations
-  const tempCheck = 30
+  //   this is temporary check, it will bre removed after actual calculations
+  const tempCheck = 30;
 
   const fetchData = () => {
     const applicants = state?.applicants || [];
@@ -130,29 +130,49 @@ export const DashboardStats = () => {
         {Object?.entries(data)
           ?.slice(0, 3)
           ?.map(([key, value], index) => (
-            <Col key={key} xl={4} lg={6} md={6} className="m-0 dashboard_items">
+            <Col
+              key={key}
+              xl={4}
+              lg={4}
+              md={4}
+              sm={12}
+              className="m-0 dashboard_items"
+            >
               {/* <div className={`card mb-4 mb-xl-0`}> */}
               <div className={`card-body`}>
                 <Row className="d-flex align-items-center">
-                  <Col lg={3}>
+                  <Col lg={4} md={5} sm={4}>
                     <Image src={statsIcon[index]} alt={statsIcon[index]} />
                   </Col>
                   <Col
-                    lg={9}
+                    md={7}
+                    lg={8}
+                    sm={8}
                     className="d-flex flex-column align-items-start justify-content-start"
                   >
                     <h5 className={`card-title  text-muted mb-0`}>{t(key)}</h5>
                     <span className={`h2 font-weight-bold mb-0`}>{value}</span>
-                    
-					          <p className={`mt-0 mb-0 text-muted`}>
-                      <span className={`${tempCheck > 60 ? 'text-success' : 'text-danger' }  mr-2 text-lg font-weight-bold`}>
-                        <i className={` ${tempCheck > 60 ? 'fa fa-arrow-up' : 'fa fa-arrow-down' } mr-1`} aria-hidden="true"></i>
+
+                    <p className={`mt-0 mb-0 text-muted`}>
+                      <span
+                        className={`${
+                          tempCheck > 60 ? "text-success" : "text-danger"
+                        }  mr-2 text-lg font-weight-bold`}
+                      >
+                        <i
+                          className={` ${
+                            tempCheck > 60
+                              ? "fa fa-arrow-up"
+                              : "fa fa-arrow-down"
+                          } mr-1`}
+                          aria-hidden="true"
+                        ></i>
                         3.48%
                       </span>
                       <span className={`text-black`}>this month</span>
                     </p>
                   </Col>
-				  
+
                   {/* <Col className={`col-auto`}>
 										<div
 											className={`icon icon-shape bg-danger text-white rounded-circle shadow`}
@@ -171,13 +191,23 @@ export const DashboardStats = () => {
         {Object?.entries(data)
           ?.slice(3)
           ?.map(([key, value]) => (
-            <Col key={key} xl={4} lg={6} md={6} className="my-2 dashboard_items">
+            <Col
+              key={key}
+              xl={4}
+              lg={4}
+              md={4}
+              sm={12}
+              className="my-2 dashboard_items"
+            >
               {/* <div className={`card mb-4 mb-xl-0`}> */}
               <div className={`card-body`}>
                 <Row className="d-flex align-items-start ">
-                  <Col lg={3}></Col>
+                <Col lg={4} md={5} sm={4}>
+                  </Col>
                   <Col
-                    lg={9}
+                    md={7}
+                    lg={8}
+                    sm={8}
                     className="d-flex flex-column align-items-start justify-content-start"
                   >
                     <h5 className={`card-title  text-muted mb-0`}>{t(key)}</h5>

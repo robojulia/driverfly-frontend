@@ -28,10 +28,10 @@ export function PieChart(props: PieChartProps): JSX.Element {
 	const [chartKey, setChartKey] = useState(0);
 
 	const [backgroundColor, setBackgroundColor] = useState<string[]>([
-		"rgba(29, 67, 84)",
-		"rgba(92, 200, 196)",
-		"rgba(245, 192, 24)",
-		"rgba(90, 11, 11)",
+		"#37AEAF",
+		"#87F934",
+		"#F5BF19",
+		"#CDF4FF",
 	]);
 
 	useEffect(() => {
@@ -53,6 +53,13 @@ export function PieChart(props: PieChartProps): JSX.Element {
 				maintainAspectRatio: false,
 				responsive: true,
 				plugins: {
+					legend: {
+						position: 'right',
+						labels: {
+							padding: 10, 
+							// color: 'rgb(255, 99, 132)'
+						}
+					},
 					datalabels: {
 						color: function (context) {
 							var index = context.dataIndex;
@@ -80,7 +87,7 @@ export function PieChart(props: PieChartProps): JSX.Element {
 					{
 						label: t(title),
 						data,
-						backgroundColor,
+						backgroundColor ,
 						borderWidth: 0,
 					},
 				],
