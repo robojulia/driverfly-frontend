@@ -10,12 +10,15 @@ import {
 	getLongFormStyle,
 } from "../../../../../components/forms/jotform/jotform-pages";
 import ApplicantApi from "../../../../api/applicant";
+import { CompanyEntity } from "../../../../../models/company/company.entity";
+import CompanyApi from "../../../../api/company";
 
 export interface LongFormProps {
 	entity: ApplicantEntity;
+	company: CompanyEntity;
 }
 
-export default function LongForm({ entity }: LongFormProps) {
+export default function LongForm({ entity, company }: LongFormProps) {
 
 	const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
 	const [applicantExtras, setApplicantExtras] = useState<
@@ -48,6 +51,7 @@ export default function LongForm({ entity }: LongFormProps) {
 					applicant,
 					applicantExtras,
 					steps,
+					company,
 				},
 				method: {
 					setApplicant,
@@ -87,8 +91,11 @@ export async function getServerSideProps({ query }) {
 		);
 
 		if (!!!entity) return { notFound: true };
+        const companyApi = new CompanyApi();
+        const company: CompanyEntity = await companyApi.employer.getById(entity?.company?.id);
 
-		return { props: { entity } };
+
+		return { props: { entity, company } };
 	} catch (error) {
 		return { notFound: true };
 	}

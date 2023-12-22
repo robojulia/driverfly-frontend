@@ -39,9 +39,9 @@ const FullLayout = ({ children }) => {
 	const { t } = useTranslation();
 	const router = useRouter()
 
-	const { user, isSuperAdmin } = useAuth();
+	const { user, isSuperAdmin, isCompanyAdmin } = useAuth();
 
-	console.log("FullLayout", user, isSuperAdmin)
+	console.log("FullLayout", { user, isSuperAdmin, isCompanyAdmin })
 
 	if (!user?.company) {
 		return <></>
@@ -110,7 +110,7 @@ const FullLayout = ({ children }) => {
 					text: "COMPANIES",
 					permissions: "CanViewCompany",
 					startsWith: true,
-					visible: isSuperAdmin,
+					visible: isCompanyAdmin,
 
 				},
 				{
@@ -169,7 +169,7 @@ const FullLayout = ({ children }) => {
 					pathname: "/dashboard/company/admin/referral",
 					icon: PersonHearts,
 					text: "REFERRAL_SOURCES",
-					visible: isSuperAdmin,
+					visible: isCompanyAdmin,
 					startsWith: true,
 				},
 			],
@@ -206,9 +206,9 @@ const FullLayout = ({ children }) => {
 						{/******** Sidebar **********/}
 						<Sidebar items={menuItems} />
 						{/********Content Area**********/}
-						<div className="header" ref={dashboardContainer}>
+						<div className="header dashboard-container" ref={dashboardContainer}>
 							{/********Middle Content**********/}
-							<Container className="p-4 wrapper" fluid>
+							<Container className="p-4 wrapper " fluid>
 								<div>{children}</div>
 							</Container>
 						</div>
