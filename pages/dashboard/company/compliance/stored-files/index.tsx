@@ -244,9 +244,9 @@ export default function StoredFiles() {
                             label={`UPLOAD_FILE`}
                             name={`file`}
                             required
-                            accept="application/pdf"
+                            accept="application/pdf,application/msword,.docx"
                             documentType={"PDF"}
-                            allowedSizeInByte={3145728}
+                            allowedSizeInByte={5242880}
                             formik={form}
                         />
                     </Row>
