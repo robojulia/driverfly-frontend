@@ -1,5 +1,5 @@
 import moment from "moment";
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 import DashboardChartContext from "../../context/dashboard-chart-context";
 import { useTranslation } from "../../hooks/use-translation";
@@ -8,14 +8,26 @@ import newApplicantIcon from "../../public/img/new_appicants_this_week.svg";
 import totalHiresIcon from "../../public/img/total_hires_this_month.svg";
 import totalEmployeesIcon from "../../public/img/total_employees.svg";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+
+
+type EmployeeDetail = {
+  date: string;
+  first_name: string;
+  last_name: string;
+};
 
 export const DashboardStats = () => {
   const { state } = useContext(DashboardChartContext);
+  const [showBdaysList, setShowBdaysList] = useState<boolean>(false);
+
   const { t } = useTranslation();
   const statsIcon = [newApplicantIcon, totalHiresIcon, totalEmployeesIcon];
-
+  const router = useRouter();
   //   this is temporary check, it will bre removed after actual calculations
   const tempCheck = 30;
+  const [birthdayDetails, setBirthdayDetails] = useState<EmployeeDetail[]>([]);
 
   const fetchData = () => {
     const applicants = state?.applicants || [];
@@ -84,9 +96,28 @@ export const DashboardStats = () => {
       const diff: number = bday.getTime() - today.getTime();
       const days: number = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-      if (days <= 7) stats.EMPLOYEE_BIRTHDAYS++;
+      if (days <= 7) {
+        stats.EMPLOYEE_BIRTHDAYS++;
+        const formattedDate = moment(new Date(a.birthdate)).format("MM/DD");
+        const empDetail = {
+          date: formattedDate,
+          first_name: a.first_name,
+          last_name: a.last_name,
+        };
+        const dublicateCheck = birthdayDetails?.map((itm) => {
+          if (
+            itm.date === empDetail.date &&
+            itm.first_name === empDetail.first_name
+          ) {
+            return false;
+          }
+        });
+        if (!dublicateCheck.includes(false)) {
+          Boolean(dublicateCheck) &&
+            setBirthdayDetails((prevDetails) => [...prevDetails, empDetail]);
+        }
+      }
     });
-
     const conversionRate =
       (applicants?.filter((a) => Boolean(a?.is_hired))?.length /
         applicants?.length) *
@@ -98,9 +129,25 @@ export const DashboardStats = () => {
     return stats;
   };
 
+
   const data = useMemo(() => {
     return fetchData();
   }, [state]);
+
+  const redirectUrls = [
+    "/dashboard/company/applicants",
+    "/dashboard/company/compliance/employee-directory",
+    "/dashboard/company/compliance/employee-directory",
+    "",
+    "/dashboard/company/jobs",
+    "",
+  ];
+  function handShowLeistner() {
+    setShowBdaysList(true);
+  }
+  function handleHideListner() {
+    setShowBdaysList(false);
+  }
 
   return (
     // <Card className={`rounded-lg stats_card w-100 mt-3`}>
@@ -139,7 +186,11 @@ export const DashboardStats = () => {
               className="m-0 dashboard_items"
             >
               {/* <div className={`card mb-4 mb-xl-0`}> */}
-              <div className={`card-body`}>
+              <div
+                className={`card-body`}
+                onClick={() => router.push(redirectUrls[index])}
+                style={{ cursor: "pointer" }}
+              >
                 <Row className="d-flex align-items-center">
                   <Col lg={4} md={5} sm={4}>
                     <Image src={statsIcon[index]} alt={statsIcon[index]} />
@@ -153,12 +204,12 @@ export const DashboardStats = () => {
                     <h5 className={`card-title  text-muted mb-0`}>{t(key)}</h5>
                     <span className={`h2 font-weight-bold mb-0`}>{value}</span>
 
-                    <p className={`mt-0 mb-0 text-muted`}>
+                    {/* <p className={`mt-0 mb-0 text-muted`}>
                       <span
                         className={`${
                           tempCheck > 60 ? "text-success" : "text-danger"
                         }  mr-2 text-lg font-weight-bold`}
-                      >
+                      >true
                         <i
                           className={` ${
                             tempCheck > 60
@@ -170,7 +221,7 @@ export const DashboardStats = () => {
                         3.48%
                       </span>
                       <span className={`text-black`}>this month</span>
-                    </p>
+                    </p> */}
                   </Col>
 
                   {/* <Col className={`col-auto`}>
@@ -190,7 +241,7 @@ export const DashboardStats = () => {
       <Row className=" my-2 ">
         {Object?.entries(data)
           ?.slice(3)
-          ?.map(([key, value]) => (
+          ?.map(([key, value], index) => (
             <Col
               key={key}
               xl={4}
@@ -199,11 +250,17 @@ export const DashboardStats = () => {
               sm={12}
               className="my-2 dashboard_items"
             >
-              {/* <div className={`card mb-4 mb-xl-0`}> */}
-              <div className={`card-body`}>
-                <Row className="d-flex align-items-start ">
-                <Col lg={4} md={5} sm={4}>
-                  </Col>
+              <div
+                className={`card-body`}
+                onClick={() => {
+                  if (index === 0) handShowLeistner();
+                  else router.push(redirectUrls.slice(3)[index]);
+                }}
+                style={{ cursor: "pointer" }}
+                {...(index === 0 ? { onMouseLeave: handleHideListner } : {})}
+              >
+                <Row className="d-flex align-items-start">
+                  <Col lg={4} md={5} sm={4}></Col>
                   <Col
                     md={7}
                     lg={8}
@@ -228,8 +285,17 @@ export const DashboardStats = () => {
 										</div>
 									</Col> */}
                 </Row>
+                {index === 0 && showBdaysList && (
+                  <div className={`dashboard_bday_box`}>
+                    {birthdayDetails?.map((employee, index) => (
+                      <span key={index} className="text-secondary">
+                        {employee.first_name} {employee.last_name} --{" "}
+                        {employee.date}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
-              {/* </div> */}
             </Col>
           ))}
       </Row>
