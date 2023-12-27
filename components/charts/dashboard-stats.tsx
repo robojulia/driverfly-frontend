@@ -104,18 +104,15 @@ export const DashboardStats = () => {
           first_name: a.first_name,
           last_name: a.last_name,
         };
-        const dublicateCheck = birthdayDetails?.map((itm) => {
-          if (
-            itm.date === empDetail.date &&
-            itm.first_name === empDetail.first_name
-          ) {
-            return false;
-          }
-        });
-        if (!dublicateCheck.includes(false)) {
-          Boolean(dublicateCheck) &&
-            setBirthdayDetails((prevDetails) => [...prevDetails, empDetail]);
+        const isDuplicate = birthdayDetails.some(
+          (itm) =>
+            itm.date === empDetail.date && itm.first_name === empDetail.first_name
+        );
+        
+        if (!isDuplicate) {
+          setBirthdayDetails((prevDetails) => [...prevDetails, empDetail]);
         }
+        
       }
     });
     const conversionRate =
