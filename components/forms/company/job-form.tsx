@@ -1236,7 +1236,7 @@ export function JobForm(props: JobFormProps) {
                                                         className="col-12 p-0"
                                                         label="location"
                                                         name="orientation.location.id"
-                                                        required
+                                                        // required
                                                         placeholder
                                                         formik={form}
                                                         valueKey="id"

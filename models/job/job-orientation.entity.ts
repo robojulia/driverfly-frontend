@@ -13,15 +13,27 @@ export class JobOrientationEntity {
     static yupSchema() {
         return yup.object(
             {
-                location: LocationEntity.yupConnectSchema(true),
+                location: LocationEntity.yupConnectSchema(false),
                 start_datetime: yup
                     .date()
-                    .required()
+                    .optional()
                     .nullable(),
                 end_datetime: yup
                     .date()
-                    .required()
-                    .nullable(),
+                    .optional()
+                    .test({
+                        test: (value, context) => {
+                            const start_date = context.resolve(yup.ref('start_datetime'));
+                            if (!Boolean(value)) return true;
+                            if (value > start_date) return true;
+
+                            return context.createError({
+                                path: context.path,
+                                message: 'END_DATE_MUST_BE_AFTER_START_DATE'
+                            })
+                        }
+                    }
+                    ).nullable(),
             },
         );
     }
