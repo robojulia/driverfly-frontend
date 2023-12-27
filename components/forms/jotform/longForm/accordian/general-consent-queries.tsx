@@ -1,7 +1,5 @@
 import { useContext, useEffect, useRef } from "react";
 import { Col, Row } from "react-bootstrap";
-import BaseInput from "../../../base-input";
-import Accordion from "react-bootstrap/Accordion";
 import SignatureCanvas from "react-signature-canvas";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import styles from "../../../../../styles/digitalhiringapp.module.css";
@@ -12,8 +10,8 @@ import { ApplicantExtrasEntity } from "../../../../../models/applicant";
 
 export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
     const {
-        state: { applicant, applicantExtras },
-        method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+        state: { applicant, applicantExtras, company },
+        // method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
     }: JotFormContextType = useContext(JotformContext);
     const { t } = useTranslation();
     const canvasRef = useRef<SignatureCanvas>();
@@ -54,7 +52,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                     className={`${styles.paragraph} ${styles.align__text_left}`} >
                     {t(
                         "{COMPANY_NAME}",
-                        { COMPANY_NAME: applicant?.company?.name },
+                        { COMPANY_NAME: company?.name ?? applicant?.company?.name },
                         { translateProps: true }
                     )}
                 </h1>
@@ -100,7 +98,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                 >
                     {t(
                         "APPLICANT_{COMPANY_NAME}",
-                        { COMPANY_NAME: applicant?.company?.name },
+                        { COMPANY_NAME: company?.name ?? applicant?.company?.name },
                         { translateProps: true }
                     )}
                 </h6>
@@ -121,7 +119,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                     {t(
                         "{APPLICANT_NAME}_CONSENT_TO_CLEARINGHOUSE_1_{COMPANY_NAME}",
-                        { COMPANY_NAME: applicant?.company?.name, APPLICANT_NAME: `${applicant?.first_name} ${applicant?.last_name}` },
+                        { COMPANY_NAME: company?.name ?? applicant?.company?.name, APPLICANT_NAME: `${applicant?.first_name} ${applicant?.last_name}` },
                         { translateProps: true }
                     )}
                 </p>
@@ -130,7 +128,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                     {t(
                         "CONSENT_TO_CLEARINGHOUSE_2_{COMPANY_NAME}",
-                        { COMPANY_NAME: applicant?.company?.name },
+                        { COMPANY_NAME: company?.name ?? applicant?.company?.name },
                         { translateProps: true }
                     )}
                 </p>
@@ -139,7 +137,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                     {t(
                         "CONSENT_TO_CLEARINGHOUSE_3_{COMPANY_NAME}",
-                        { COMPANY_NAME: applicant?.company?.name },
+                        { COMPANY_NAME: company?.name ?? applicant?.company?.name },
                         { translateProps: true }
                     )}
                 </p>
@@ -148,7 +146,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                     {t(
                         "CONSENT_TO_CLEARINGHOUSE_4_{COMPANY_NAME}",
-                        { COMPANY_NAME: applicant?.company?.name },
+                        { COMPANY_NAME: company?.name ?? applicant?.company?.name },
                         { translateProps: true }
                     )}
                 </p>

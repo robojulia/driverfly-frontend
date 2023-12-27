@@ -303,8 +303,8 @@ const ImportApplicants = () => {
     const onDownloadClick = (e) => {
         FileDownload(
             `${headers.join(",")}\n${headersData.join(",")}`,
-            "Import Applicants Template.csv"
-        );
+            '../../../Import Applicants Template .xlsx',
+            );
     };
 
     const onClearClick = (e) => {

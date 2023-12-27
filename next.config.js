@@ -1,7 +1,9 @@
 module.exports = {
   swcMinify: false, // it should be false by default
   reactStrictMode: false,
-  reloadOnPrerender: true,
+  images: {
+    unoptimized: true,
+  },
   env: {
     BASE_URL: process.env.BASE_URL,
     FRONTEND_BASE_URL: process.env.FRONTEND_BASE_URL,

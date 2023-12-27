@@ -49,7 +49,8 @@ export default function FullForm({ employer, preferences, utm }: FullFormProps) 
 					applicantExtras,
 					companyPreferences: preferences,
 					steps,
-					utm
+					utm,
+					company: employer
 				},
 				method: {
 					setApplicant,

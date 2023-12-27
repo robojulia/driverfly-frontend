@@ -33,11 +33,14 @@ export function ApplicantPieChart() {
 		(v) => `ApplicantPipelineChartLabel.${v}`
 	);
 
+	
 	return (
+		<div >
 		<PieChart
 			title="APPLICANTS"
 			labels={labels}
 			data={data}
 		/>
+		</div>
 	);
 }

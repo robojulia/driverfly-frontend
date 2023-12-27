@@ -234,6 +234,7 @@ export function useAuth() {
         company: userContext.user?.company,
         isImpersonating: !!userContext.user?.jwt?.impersonatedBy,
         isSuperAdmin: !!userContext.user?.jwt?.super_admin,
+        isCompanyAdmin: !!userContext.user?.jwt?.company_admin,
         updateUser,
         getUser: () => userContext.user,
         getCompany: () => userContext.user?.company,

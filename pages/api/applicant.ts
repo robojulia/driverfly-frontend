@@ -188,9 +188,10 @@ export default class ApplicantApi extends BaseApi {
 	jotform = {
 		baseUrl: () => `${this.baseUrl}/applicant-jotform`,
 		create: async (
+			companyId: number,
 			dto: UpsertApplicantJotformDto
 		): Promise<ApplicantEntity> => {
-			const { data } = await this.post(`${this.jotform.baseUrl()}?companyId=${dto?.applicant?.company?.id}`, dto);
+			const { data } = await this.post(`${this.jotform.baseUrl()}?companyId=${companyId}`, dto);
 			return data;
 		},
 		update: async (
