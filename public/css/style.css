@@ -2492,6 +2492,17 @@ input[type='radio']:checked:after {
     }
 }
 
+
+[data-column-id="drivers_needed"].rdt_TableCol:hover  div{
+    overflow: visible !important;
+}[data-column-id="expiration_date"].rdt_TableCol:hover  div{
+    overflow: visible !important;
+}[data-column-id="employment_type"].rdt_TableCol:hover  div{
+    overflow: visible !important;
+}[data-column-id="delivery_type"].rdt_TableCol:hover  div{
+    overflow: visible !important;}
+
+
 /* End Styling only for Firefox browser */
 
 .single-past-employer-items {
