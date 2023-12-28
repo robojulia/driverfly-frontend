@@ -94,19 +94,13 @@ export const DashboardStats = () => {
       if (days <= 7) {
         stats.EMPLOYEE_BIRTHDAYS++;
         // const formattedDate = moment(new Date(a.birthdate)).format("MM/DD");
-        const empDetail = {
-          birthdate: a.birthdate,
-          first_name: a.first_name,
-          last_name: a.last_name,
-        };
-        const isDuplicate = birthdayDetails.some(
+        const isDuplicate = birthdayDetails?.some(
           (itm) =>
-            itm.birthdate === empDetail.birthdate && itm.first_name === empDetail.first_name
+            itm.birthdate === a.birthdate && itm.first_name === a.first_name
         );
         if (!isDuplicate) {
           setBirthdayDetails((prevVal) => [...prevVal, a]);
         }
-        
       }
     });
     const conversionRate =
@@ -132,12 +126,6 @@ export const DashboardStats = () => {
     "/dashboard/company/jobs",
     "",
   ];
-  function ShowListner() {
-    setShowBdaysList(true);
-  }
-  function HideListner() {
-    setShowBdaysList(false);
-  }
 
   return (
     // <Card className={`rounded-lg stats_card w-100 mt-3`}>
@@ -243,11 +231,11 @@ export const DashboardStats = () => {
               <div
                 className={`card-body`}
                 onClick={() => {
-                  if (index === 0) ShowListner();
+                  if (index === 0) setShowBdaysList(true);
                   else router.push(redirectUrls.slice(3)[index]);
                 }}
                 style={{ cursor: "pointer" }}
-                {...(index === 0 ? { onMouseLeave: HideListner } : {})}
+                {...(index === 0 ? { onMouseLeave: ()=> setShowBdaysList(false) } : {})}
               >
                 <Row className="d-flex align-items-start">
                   <Col lg={4} md={5} sm={4}></Col>
