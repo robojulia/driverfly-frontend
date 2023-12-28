@@ -1995,9 +1995,15 @@
   "LEAD_ASSIGNMENT": "Lead Assignment",
   "HISTORICAL_RANGE": "Historical Range",
   "SOURCE_BREAKDOWN": "Applicant Source",
-  "NEW_LEADS": "New Applicants This Week",
-  "TOTAL_LEADS": "Total Hires This Month",
-  "TOTAL_ACTIVE_EMPLOYEE": "Total Employees",
+
+  "NEW_APPLICANTS": "New Applicants This Week",
+  "TOTAL_HIRES": "Total Hires This Month",
+  "TOTAL_EMPLOYEE": "Total Employees",
+  
+  "NEW_LEADS": "New Leads this week",
+  "TOTAL_LEADS": "Total Leads",
+  "TOTAL_ACTIVE_EMPLOYEE": "Total Active Employees",
+  
   "EMPLOYEE_BIRTHDAYS": "Employee Birthdays this week",
   "ACTIVE_JOB_POSTS": "Active Job Posts",
   "CONVERSION_RATE": "Conversion rate (lead to hire)",

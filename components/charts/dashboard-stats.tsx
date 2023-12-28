@@ -1,5 +1,7 @@
 import moment from "moment";
-import { useContext, useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { useContext,  useMemo, useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 import DashboardChartContext from "../../context/dashboard-chart-context";
 import { useTranslation } from "../../hooks/use-translation";
@@ -7,16 +9,8 @@ import { EmployeeStatus } from "../../enums/applicants/employee-status.enum";
 import newApplicantIcon from "../../public/img/new_appicants_this_week.svg";
 import totalHiresIcon from "../../public/img/total_hires_this_month.svg";
 import totalEmployeesIcon from "../../public/img/total_employees.svg";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import { EmployeeEntity } from "../../models/employee/employee.entity";
 
-
-type EmployeeDetail = {
-  date: string;
-  first_name: string;
-  last_name: string;
-};
 
 export const DashboardStats = () => {
   const { state } = useContext(DashboardChartContext);
@@ -27,7 +21,7 @@ export const DashboardStats = () => {
   const router = useRouter();
   //   this is temporary check, it will bre removed after actual calculations
   const tempCheck = 30;
-  const [birthdayDetails, setBirthdayDetails] = useState<EmployeeDetail[]>([]);
+  const [birthdayDetails, setBirthdayDetails] = useState<EmployeeEntity[]>([]);
 
   const fetchData = () => {
     const applicants = state?.applicants || [];
@@ -36,27 +30,28 @@ export const DashboardStats = () => {
     const today = new Date();
     const currentWeek = moment().isoWeek();
 
+
     const stats: {
-      NEW_LEADS?: number;
-      TOTAL_LEADS?: number;
-      TOTAL_ACTIVE_EMPLOYEE?: JSX.Element;
+      NEW_APPLICANTS?: number,
+      TOTAL_HIRES?: number;
+      TOTAL_EMPLOYEE?: JSX.Element;
       EMPLOYEE_BIRTHDAYS?: number;
       ACTIVE_JOB_POSTS?: JSX.Element;
       CONVERSION_RATE?: string;
     } = applicants?.reduce(
       (acc, a) => {
         if (a?.current_application_status?.startsWith("NEW_")) {
-          acc.TOTAL_LEADS++;
+          acc.TOTAL_HIRES++;
           if (moment(a?.created_at).isoWeek() === currentWeek) {
-            acc.NEW_LEADS++;
+            acc.NEW_APPLICANTS++;
           }
         }
         return acc;
       },
       {
-        NEW_LEADS: 0,
-        TOTAL_LEADS: 0,
-        TOTAL_ACTIVE_EMPLOYEE: (
+        NEW_APPLICANTS: 0,
+        TOTAL_HIRES: 0,
+        TOTAL_EMPLOYEE: (
           <>
             {
               employees?.filter((v) => v?.status === EmployeeStatus.ACTIVE)
@@ -83,7 +78,7 @@ export const DashboardStats = () => {
       }
     );
 
-    employees?.forEach((a) => {
+     employees?.forEach( (a) =>  {
       const birthdate: Date = new Date(a.birthdate);
       let bday: Date = new Date(
         today.getFullYear(),
@@ -98,19 +93,18 @@ export const DashboardStats = () => {
 
       if (days <= 7) {
         stats.EMPLOYEE_BIRTHDAYS++;
-        const formattedDate = moment(new Date(a.birthdate)).format("MM/DD");
+        // const formattedDate = moment(new Date(a.birthdate)).format("MM/DD");
         const empDetail = {
-          date: formattedDate,
+          birthdate: a.birthdate,
           first_name: a.first_name,
           last_name: a.last_name,
         };
         const isDuplicate = birthdayDetails.some(
           (itm) =>
-            itm.date === empDetail.date && itm.first_name === empDetail.first_name
+            itm.birthdate === empDetail.birthdate && itm.first_name === empDetail.first_name
         );
-        
         if (!isDuplicate) {
-          setBirthdayDetails((prevDetails) => [...prevDetails, empDetail]);
+          setBirthdayDetails((prevVal) => [...prevVal, a]);
         }
         
       }
@@ -122,7 +116,6 @@ export const DashboardStats = () => {
     stats.CONVERSION_RATE = conversionRate
       ? Number(conversionRate?.toFixed(2)) + "%"
       : "-";
-
     return stats;
   };
 
@@ -139,10 +132,10 @@ export const DashboardStats = () => {
     "/dashboard/company/jobs",
     "",
   ];
-  function handShowLeistner() {
+  function ShowListner() {
     setShowBdaysList(true);
   }
-  function handleHideListner() {
+  function HideListner() {
     setShowBdaysList(false);
   }
 
@@ -250,11 +243,11 @@ export const DashboardStats = () => {
               <div
                 className={`card-body`}
                 onClick={() => {
-                  if (index === 0) handShowLeistner();
+                  if (index === 0) ShowListner();
                   else router.push(redirectUrls.slice(3)[index]);
                 }}
                 style={{ cursor: "pointer" }}
-                {...(index === 0 ? { onMouseLeave: handleHideListner } : {})}
+                {...(index === 0 ? { onMouseLeave: HideListner } : {})}
               >
                 <Row className="d-flex align-items-start">
                   <Col lg={4} md={5} sm={4}></Col>
@@ -287,7 +280,7 @@ export const DashboardStats = () => {
                     {birthdayDetails?.map((employee, index) => (
                       <span key={index} className="text-secondary">
                         {employee.first_name} {employee.last_name} --{" "}
-                        {employee.date}
+                        {moment(new Date(employee.birthdate)).format("MM/DD")}
                       </span>
                     ))}
                   </div>
