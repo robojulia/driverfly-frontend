@@ -94,6 +94,11 @@ const FullLayout = ({ children }) => {
 
 		},
 		{
+			pathname: "/dashboard/company/company-preferences",
+			icon: Sliders,
+			text: "DIGITAL_HIRING_APPLICATION",
+		},
+		{
 			pathname: "/dashboard/company/settings",
 			icon: GearFill,
 			text: "SETTINGS",
@@ -150,11 +155,7 @@ const FullLayout = ({ children }) => {
 					icon: QuestionCircleFill,
 					text: "SUPPORT",
 				},
-				{
-					pathname: "/dashboard/company/settings/company-preferences",
-					icon: Sliders,
-					text: "DIGITAL_HIRING_APPLICATION",
-				},
+				
 			],
 
 		},
