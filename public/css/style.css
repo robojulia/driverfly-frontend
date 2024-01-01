@@ -983,7 +983,6 @@ input[type='range']::-webkit-slider-thumb {
 }
 .how-it-work-sections{
     height: 300px !important;
-    border: 2px solid red;
 }
 
 .card-header {
@@ -2338,11 +2337,12 @@ input[type=checkbox] {
     position: absolute;
     height: 100%;
     width: 100%;
-    bottom:-360px; 
+    /* bottom: -330px;  */
   
     background: url(/img/design-bottom-border-small.png);
     background-repeat: no-repeat;
-    object-fit: cover;
+    background-size: cover;
+
 }
 @media (min-width: 1600px) {
     .signup-driver-section-border-bottom {
@@ -2352,27 +2352,28 @@ input[type=checkbox] {
 
 @media (max-width: 1600px) {
     .signup-driver-section-border-bottom {
-        bottom: -350px;
+        bottom: -360px;
     }
 }
 
 @media (max-width: 990px) {
     .signup-driver-section-border-bottom {
-        bottom: -930px;
+    background-size: cover;
+        height: 40%;    
+        bottom: -300px;
     }
 }
 
 @media (max-width: 770px) {
     .signup-driver-section-border-bottom {
-        bottom: -930px;
+        bottom: -1000px;
     }
 }
 @media (max-width: 768px) {
     .signup-driver-section-border-bottom {
-        bottom: -770px;
+        bottom: -240px;
     }
 }
-
 
 .signup-driver-section .signup-driver-left {
     background-color: #2EC7C3;
@@ -2404,26 +2405,36 @@ input[type=checkbox] {
     position: relative;
     background-color: #FAFAFA;
 }
-.motor-carrier-top-bg{
+.motor-carrier-top-bg {
+    position: relative;
     background-image: url("/img/motor-carrier-top-bg.png");
     background-position: center;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size:  cover;
     height: 100%;
     width: 100%;
 }
+
 .motor-carrier-bottom-bg
 {
     position: absolute;
     background: url("/img/motor-carrier-bottom-bg.png");
-    /* background-position: center; */
-    object-fit: cover;
+    background-position: center center;
     background-repeat: no-repeat;
-    background-size: cover;
-    height: 50%;
+    background-size: contain;
+    height: 100%;
     width: 100%;
     bottom: 0;
-    bottom: -215px;
+    bottom: -375px;
+}
+@media (max-width:1250px) {
+    .motor-carrier-bottom-bg
+    {
+        height: 100%;
+        width: 100%;
+        background-size: auto;
+
+    }
 }
 
 .motor-carrier {
