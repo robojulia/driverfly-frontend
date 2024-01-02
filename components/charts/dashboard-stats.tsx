@@ -1,7 +1,7 @@
 import moment from "moment";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useContext,  useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 import DashboardChartContext from "../../context/dashboard-chart-context";
 import { useTranslation } from "../../hooks/use-translation";
@@ -10,7 +10,7 @@ import newApplicantIcon from "../../public/img/new_appicants_this_week.svg";
 import totalHiresIcon from "../../public/img/total_hires_this_month.svg";
 import totalEmployeesIcon from "../../public/img/total_employees.svg";
 import { EmployeeEntity } from "../../models/employee/employee.entity";
-
+import Link from "next/link";
 
 export const DashboardStats = () => {
   const { state } = useContext(DashboardChartContext);
@@ -30,34 +30,39 @@ export const DashboardStats = () => {
     const today = new Date();
     const currentWeek = moment().isoWeek();
 
-
     const stats: {
-      NEW_APPLICANTS?: number,
-      TOTAL_HIRES?: number;
-      TOTAL_EMPLOYEE?: JSX.Element;
-      EMPLOYEE_BIRTHDAYS?: number;
-      ACTIVE_JOB_POSTS?: JSX.Element;
-      CONVERSION_RATE?: string;
+      NEW_APPLICANTS?: { element: number; link: string };
+      TOTAL_HIRES?: { element: number; link: string };
+      TOTAL_EMPLOYEE?: { element: JSX.Element; link: string };
+      EMPLOYEE_BIRTHDAYS?: { element: number; link: string };
+      ACTIVE_JOB_POSTS?: { element: JSX.Element; link: string };
+      CONVERSION_RATE?: { element: string; link: string };
     } = applicants?.reduce(
       (acc, a) => {
         if (a?.current_application_status?.startsWith("NEW_")) {
-          acc.TOTAL_HIRES++;
+          acc.TOTAL_HIRES.element++;
           if (moment(a?.created_at).isoWeek() === currentWeek) {
-            acc.NEW_APPLICANTS++;
+            acc.NEW_APPLICANTS.element++;
           }
         }
         return acc;
       },
       {
-        NEW_APPLICANTS: 0,
-        TOTAL_HIRES: 0,
-        TOTAL_EMPLOYEE: (
-          <>
-            {
-              employees?.filter((v) => v?.status === EmployeeStatus.ACTIVE)
-                ?.length
-            }
-          </>
+        NEW_APPLICANTS: { element: 0, link: "/dashboard/company/applicants" },
+        TOTAL_HIRES: {
+          element: 0,
+          link: "/dashboard/company/compliance/employee-directory",
+        },
+        TOTAL_EMPLOYEE: {
+          element: (
+            <>
+              {
+                employees?.filter((v) => v?.status === EmployeeStatus.ACTIVE)
+                  ?.length
+              }
+            </>
+          ),
+          link: "/dashboard/company/compliance/employee-directory",
           // <Link href={`/dashboard/company/jobs`}>
           // 	<a className="text-dark text-decoration-none">
           // 		{
@@ -66,19 +71,22 @@ export const DashboardStats = () => {
           // 		}
           // 	</a>
           // </Link>
-        ),
-        EMPLOYEE_BIRTHDAYS: 0,
-        ACTIVE_JOB_POSTS: (
-          <>{jobs?.length}</>
-          // <Link href={`/dashboard/company/jobs`}>
-          // 	<a className="text-dark text-decoration-none">{jobs?.length}</a>
-          // </Link>
-        ),
-        CONVERSION_RATE: "0%",
+        },
+        EMPLOYEE_BIRTHDAYS: { element: 0, link: "" },
+        ACTIVE_JOB_POSTS: {
+          element: (
+            <>{jobs?.length}</>
+            // <Link href={`/dashboard/company/jobs`}>
+            // 	<a className="text-dark text-decoration-none">{jobs?.length}</a>
+            // </Link>
+          ),
+          link: "/dashboard/company/jobs",
+        },
+        CONVERSION_RATE: { element: "0%", link: "" },
       }
     );
 
-     employees?.forEach( (a) =>  {
+    employees?.forEach((a) => {
       const birthdate: Date = new Date(a.birthdate);
       let bday: Date = new Date(
         today.getFullYear(),
@@ -92,40 +100,28 @@ export const DashboardStats = () => {
       const days: number = Math.floor(diff / (1000 * 60 * 60 * 24));
 
       if (days <= 7) {
-        stats.EMPLOYEE_BIRTHDAYS++;
-        // const formattedDate = moment(new Date(a.birthdate)).format("MM/DD");
-        const isDuplicate = birthdayDetails?.some(
-          (itm) =>
+        stats.EMPLOYEE_BIRTHDAYS.element++;
+        const isDuplicate = birthdayDetails?.some((itm) => {
+          return (
             itm.birthdate === a.birthdate && itm.first_name === a.first_name
-        );
-        if (!isDuplicate) {
-          setBirthdayDetails((prevVal) => [...prevVal, a]);
-        }
+          );
+        });
+        if (!isDuplicate) setBirthdayDetails((prevVal) => [...prevVal, a]);
       }
     });
     const conversionRate =
       (applicants?.filter((a) => Boolean(a?.is_hired))?.length /
         applicants?.length) *
       100;
-    stats.CONVERSION_RATE = conversionRate
+    stats.CONVERSION_RATE.element = conversionRate
       ? Number(conversionRate?.toFixed(2)) + "%"
       : "-";
     return stats;
   };
 
-
   const data = useMemo(() => {
     return fetchData();
   }, [state]);
-
-  const redirectUrls = [
-    "/dashboard/company/applicants",
-    "/dashboard/company/compliance/employee-directory",
-    "/dashboard/company/compliance/employee-directory",
-    "",
-    "/dashboard/company/jobs",
-    "",
-  ];
 
   return (
     // <Card className={`rounded-lg stats_card w-100 mt-3`}>
@@ -166,7 +162,7 @@ export const DashboardStats = () => {
               {/* <div className={`card mb-4 mb-xl-0`}> */}
               <div
                 className={`card-body`}
-                onClick={() => router.push(redirectUrls[index])}
+                onClick={() => router.push(value.link)}
                 style={{ cursor: "pointer" }}
               >
                 <Row className="d-flex align-items-center">
@@ -180,7 +176,9 @@ export const DashboardStats = () => {
                     className="d-flex flex-column align-items-start justify-content-start"
                   >
                     <h5 className={`card-title  text-muted mb-0`}>{t(key)}</h5>
-                    <span className={`h2 font-weight-bold mb-0`}>{value}</span>
+                    <span className={`h2 font-weight-bold mb-0`}>
+                      {value.element}
+                    </span>
 
                     {/* <p className={`mt-0 mb-0 text-muted`}>
                       <span
@@ -232,10 +230,12 @@ export const DashboardStats = () => {
                 className={`card-body`}
                 onClick={() => {
                   if (index === 0) setShowBdaysList(true);
-                  else router.push(redirectUrls.slice(3)[index]);
+                  else router.push(value.link);
                 }}
                 style={{ cursor: "pointer" }}
-                {...(index === 0 ? { onMouseLeave: ()=> setShowBdaysList(false) } : {})}
+                {...(index === 0
+                  ? { onMouseLeave: () => setShowBdaysList(false) }
+                  : {})}
               >
                 <Row className="d-flex align-items-start">
                   <Col lg={4} md={5} sm={4}></Col>
@@ -246,7 +246,9 @@ export const DashboardStats = () => {
                     className="d-flex flex-column align-items-start justify-content-start"
                   >
                     <h5 className={`card-title  text-muted mb-0`}>{t(key)}</h5>
-                    <span className={`h2 font-weight-bold mb-0`}>{value}</span>
+                    <span className={`h2 font-weight-bold mb-0`}>
+                      {value.element}
+                    </span>
 
                     {/* <p className={`mt-3 mb-0 text-muted text-sm`}>
                   <span className={`text-success mr-2`}>
@@ -265,12 +267,12 @@ export const DashboardStats = () => {
                 </Row>
                 {index === 0 && showBdaysList && (
                   <div className={`dashboard_bday_box`}>
-                    {birthdayDetails?.map((employee, index) => (
+                    {birthdayDetails.length > 0 ? birthdayDetails?.map((employee, index) => (
                       <span key={index} className="text-secondary">
                         {employee.first_name} {employee.last_name} --{" "}
                         {moment(new Date(employee.birthdate)).format("MM/DD")}
                       </span>
-                    ))}
+                    )) : <span key={index} className="text-secondary">{t("NO_BIRTHDAYS_THIS_WEEK")}</span>}
                   </div>
                 )}
               </div>
