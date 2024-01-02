@@ -155,26 +155,26 @@ const FullLayout = ({ children }) => {
 					icon: QuestionCircleFill,
 					text: "SUPPORT",
 				},
-				
-			],
-
-		},
-
-		// superadmin panel
-		{
-			icon: Link45deg,
-			text: "REFERRALS",
-			// visible: isSuperAdmin,
-			items: [
+				// superadmin panel
 				{
-					pathname: "/dashboard/company/admin/referral",
-					icon: PersonHearts,
-					text: "REFERRAL_SOURCES",
-					visible: isCompanyAdmin,
-					startsWith: true,
+					icon: Link45deg,
+					text: "REFERRALS",
+					// visible: isSuperAdmin,
+					items: [
+						{
+							pathname: "/dashboard/company/settings/admin/referral",
+							icon: PersonHearts,
+							text: "REFERRAL_SOURCES",
+							visible: isCompanyAdmin,
+							startsWith: true,
+						},
+					],
 				},
 			],
+
 		},
+
+		
 
 	];
 	//  Code below is to set scroll to top on each child page
