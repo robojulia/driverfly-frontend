@@ -7,7 +7,7 @@ export default function NewsletterSingup() {
 
     return (
         <>
-            <div className='d-flex flex-column align-items-center justify-content-center'>
+            <div className=' d-flex flex-column align-items-center justify-content-center'>
                 <h1 className='general-headings text-white mt-3 text-uppercase'>{t("NEWSLETTER_SIGN_UP")}</h1>
                 <p>{t("SUBSCRIBE_TO_DRIVERFLY_PACIFIC_NEWALETTERTO_GET_THE_LATEST_JOBS_POSTED")}<br />{t("CANDIDATES_AND_OTHER_LATEST_NEWS")} ​</p>
                 <div className="input-group my-3 w-50" >

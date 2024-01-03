@@ -94,7 +94,7 @@ export default function MyNav() {
                             </Link>
                         </Nav.Link>
                     </Nav>
-                    <ul className="d-flex align-items-center mb-0">
+                    <ul className="d-flex align-items-center mb-0 ">
 
                         {user ?
                             <>
@@ -103,8 +103,8 @@ export default function MyNav() {
                                 <LogoutButton as={Button} className="theme-secondary-btn mr-4" />
                             </>
                             :
-                            <div className="d-flex justify-content-between">
-                             <Nav.Link className="nav-item ml-30" onClick={closeNav}>
+                            <div className="d-flex justify-content-around dashboard-nav-btns">
+                             <Nav.Link className="nav-item ml-30 left-child" onClick={closeNav}>
                                 <LoginButton className="theme-secondary-btn mr-4" />
                             </Nav.Link>
                             <Nav.Link className="nav-item ml-20" onClick={closeNav}>
