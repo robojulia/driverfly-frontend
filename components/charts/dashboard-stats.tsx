@@ -2,15 +2,14 @@ import moment from "moment";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useContext, useMemo, useState } from "react";
-import { Card, Col, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import DashboardChartContext from "../../context/dashboard-chart-context";
-import { useTranslation } from "../../hooks/use-translation";
 import { EmployeeStatus } from "../../enums/applicants/employee-status.enum";
-import newApplicantIcon from "../../public/img/new_appicants_this_week.svg";
-import totalHiresIcon from "../../public/img/total_hires_this_month.svg";
-import totalEmployeesIcon from "../../public/img/total_employees.svg";
+import { useTranslation } from "../../hooks/use-translation";
 import { EmployeeEntity } from "../../models/employee/employee.entity";
-import Link from "next/link";
+import newApplicantIcon from "../../public/img/new_appicants_this_week.svg";
+import totalEmployeesIcon from "../../public/img/total_employees.svg";
+import totalHiresIcon from "../../public/img/total_hires_this_month.svg";
 
 export const DashboardStats = () => {
   const { state } = useContext(DashboardChartContext);
