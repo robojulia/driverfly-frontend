@@ -75,7 +75,7 @@ export default function Index() {
                         <p><Check />{t("TOP_PAYING_JOBS")}</p>
                         <p><Check />{t("HOME_BEST_TIME")}</p>
                         <p><Check />{t("FASTER_&_EASIER_HIRING")}</p>
-                        <div className="mb-5 ">
+                        <div className="mb-5 hire-driver-left-btns">
                             <button className="theme-bg-btn-light-green mr-4" type="button" onClick={() => router.push("signup")}>
                                 {t("SIGN_UP")}  
                             </button>

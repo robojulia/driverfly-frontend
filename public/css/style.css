@@ -1065,6 +1065,13 @@ input[type='range']::-webkit-slider-thumb {
         background-color: #FFFFFF;
         margin: 50px 0px 50px 0px !important;
     }   
+
+    .hire-driver-left-btns{
+        margin-top: 10px;
+        display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 }
 
 .how-it-work-sec h3,
