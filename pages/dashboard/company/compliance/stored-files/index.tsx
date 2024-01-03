@@ -4,12 +4,14 @@ import { Button, Row } from "react-bootstrap";
 import { Eye, Plus, Send } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
+import { DownloadDocumentButton } from "../../../../../components/documents/buttons";
 import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
 import BaseSelect from "../../../../../components/forms/base-select";
 import FileInput from "../../../../../components/forms/file-input";
 import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
 import EntityForm from "../../../../../components/layouts/page/entity-form";
 import PageLayout from "../../../../../components/layouts/page/page-layout";
+import { TabbedLayout } from "../../../../../components/layouts/page/tabbed-layout";
 import OverlyPopover from "../../../../../components/popover/overly-popover";
 import ViewDataTable, {
     getDataTableColumnKey,
@@ -22,22 +24,23 @@ import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import { StoredFileDto } from "../../../../../models/compiance/stored-file.dto";
 import { DocumentEntity } from "../../../../../models/documents/document.entity";
+import { EmployeeEntity } from "../../../../../models/employee/employee.entity";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
-import { useEffectAsync } from "../../../../../utils/react";
-import ApplicantApi from "../../../../api/applicant";
-import ComplianceApi from "../../../../api/compliance";
-import DocumentApi from "../../../../api/document";
-import { DownloadDocumentButton } from "../../../../../components/documents/buttons";
 import {
     handleDownloadDocument,
     handleViewDocument,
 } from "../../../../../utils/documents/button-actions";
+import { useEffectAsync } from "../../../../../utils/react";
+import ApplicantApi from "../../../../api/applicant";
+import ComplianceApi from "../../../../api/compliance";
+import EmployeeApi from "../../../../api/employee";
 
 export default function StoredFiles() {
-    const { user, hasPermission } = useAuth();
+    const { user } = useAuth();
     const { t } = useTranslation();
     const complianceApi = new ComplianceApi();
     const applicantApi = new ApplicantApi();
+    const employeeApi = new EmployeeApi();
 
     // showFileUploadModel
     const [showFileUploadModel, setShowFileUploadModel] =
@@ -56,28 +59,26 @@ export default function StoredFiles() {
 
     const [files, setFiles] = useState<DocumentEntity[]>([]);
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
+    const [employees, setEmployees] = useState<EmployeeEntity[]>([]);
+
+    const [pdf, setPdf] = useState({});
 
     useEffectAsync(
         async () => {
             const v = await complianceApi.filesList();
             setFiles(v);
 
-            const data = await applicantApi.list();
-            setApplicants(data);
+            const a = await applicantApi.list();
+            setApplicants(a);
+
+            const e = await employeeApi.list();
+            setEmployees(e);
         },
         [user],
         () => {
             console.log("unloading page...");
         }
     );
-
-    //for multiple file selection
-
-    const [selectedRowsIds, setSelectedRowsIds] = useState<number[]>();
-
-    const handleSelectedRowsChange = ({ selectedRows }: any) => {
-        setSelectedRowsIds(selectedRows?.map((selectedRow) => selectedRow?.id));
-    };
 
     const form = useFormik({
         initialValues: new StoredFileDto(),
@@ -99,37 +100,210 @@ export default function StoredFiles() {
         },
     });
 
-    const sendEmail = async (applicantIds: number[]): Promise<void> => {
+    const sendEmail = async (
+        entities: ApplicantEntity[] | EmployeeEntity[]
+    ): Promise<void> => {
         try {
             if (documentId)
                 await complianceApi
-                    .sendComplianceFile({ applicantIds, documentId })
+                    .sendComplianceFile({ documentId, entities })
                     .then((res) => {
                         toast.success(t("DOCUMENT_SENT_SUCCESS_MESSAGE"));
-                        setTimeout(() => {
-                            resetDocumentId();
-                            setSelectedRowsIds(null);
-                        }, 1000);
+                        resetDocumentId();
                     });
         } catch (error) {
             toast.error(t("DOCUMENT_SENT_FAILED_MESSAGE"));
         }
     };
 
-    const [pdf, setPdf] = useState({});
+    function ApplicantListing() {
+        const [selectedRows, setSelectedRows] = useState<ApplicantEntity[]>();
+        const handleSelectedRowsChange = (arg: any) => {
+            setSelectedRows(
+                arg?.selectedRows?.map(({ email, first_name, last_name }) => ({
+                    email,
+                    first_name,
+                    last_name,
+                }))
+            );
+        };
 
-    const viewDocumentClick = async (id, name) => {
-        const api = new DocumentApi();
+        return (
+            <>
+                <ViewDataTable<ApplicantEntity>
+                    subHeader={
+                        <div className="float-left pr-2">
+                            {Boolean(selectedRows?.length) && (
+                                <Button
+                                    className=" w-100"
+                                    onClick={() => sendEmail(selectedRows)}
+                                >
+                                    {t(
+                                        "selected_row_{count}",
+                                        { count: selectedRows?.length },
+                                        { translateProps: true }
+                                    )}
+                                </Button>
+                            )}
+                        </div>
+                    }
+                    enableSelectableRows={true}
+                    selectableRowChangeHandler={handleSelectedRowsChange}
+                    columnSettingKey={columnSettingKey}
+                    customStyles={{
+                        headRow: {
+                            style: {
+                                background:
+                                    "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                                color: "white",
+                            },
+                        },
+                    }}
+                    columns={[
+                        {
+                            id: "id",
+                            name: "ID",
+                            selector: (applicant) => applicant.id,
+                            hidable: false,
+                        },
+                        {
+                            name: "first_name",
+                            selector: (applicant) => applicant.first_name,
+                            hidable: false,
+                        },
+                        {
+                            name: "last_name",
+                            selector: (applicant) => applicant.last_name,
+                            hidable: false,
+                        },
+                        {
+                            name: "email",
+                            selector: (applicant) => applicant.email,
+                            hidable: false,
+                        },
+                        {
+                            cell: (applicant) =>
+                                !Boolean(selectedRows?.length) && (
+                                    <>
+                                        <Button
+                                            type="button"
+                                            onClick={() =>
+                                                sendEmail([
+                                                    {
+                                                        email: applicant.email,
+                                                        first_name: applicant.first_name,
+                                                        last_name: applicant.last_name,
+                                                    },
+                                                ])
+                                            }
+                                            className="theme-secondary-btn mr-2 px-4 py-1"
+                                        >
+                                            <Send />
+                                        </Button>
+                                    </>
+                                ),
+                        },
+                    ]}
+                    items={applicants}
+                />
+            </>
+        );
+    }
 
-        const document = await api.getSignedUrl(id);
+    function EmployeeListing() {
+        const [selectedRows, setSelectedRows] = useState<EmployeeEntity[]>();
+        const handleSelectedRowsChange = (arg: any) => {
+            setSelectedRows(
+                arg?.selectedRows?.map(({ email, first_name, last_name }) => ({
+                    email,
+                    first_name,
+                    last_name,
+                }))
+            );
+        };
 
-        if (document) {
-            setPdf({
-                name: `${t(name)} (${document.name})`,
-                url: document.path,
-            });
-        }
-    };
+        return (
+            <>
+                <ViewDataTable<EmployeeEntity>
+                    subHeader={
+                        <div className="float-left pr-2">
+                            {Boolean(selectedRows?.length) && (
+                                <Button
+                                    className=" w-100"
+                                    onClick={() => sendEmail(selectedRows)}
+                                >
+                                    {t(
+                                        "selected_row_{count}",
+                                        { count: selectedRows?.length },
+                                        { translateProps: true }
+                                    )}
+                                </Button>
+                            )}
+                        </div>
+                    }
+                    enableSelectableRows={true}
+                    selectableRowChangeHandler={handleSelectedRowsChange}
+                    columnSettingKey={columnSettingKey}
+                    customStyles={{
+                        headRow: {
+                            style: {
+                                background:
+                                    "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                                color: "white",
+                            },
+                        },
+                    }}
+                    columns={[
+                        {
+                            id: "id",
+                            name: "ID",
+                            selector: (employee) => employee.id,
+                            hidable: false,
+                        },
+                        {
+                            name: "first_name",
+                            selector: (employee) => employee.first_name,
+                            hidable: false,
+                        },
+                        {
+                            name: "last_name",
+                            selector: (employee) => employee.last_name,
+                            hidable: false,
+                        },
+                        {
+                            name: "email",
+                            selector: (employee) => employee.email,
+                            hidable: false,
+                        },
+                        {
+                            cell: (employee) =>
+                                !Boolean(selectedRows?.length) && (
+                                    <>
+                                        <Button
+                                            type="button"
+                                            onClick={() =>
+                                                sendEmail([
+                                                    {
+                                                        email: employee.email,
+                                                        first_name: employee.first_name,
+                                                        last_name: employee.last_name,
+                                                    },
+                                                ])
+                                            }
+                                            className="theme-secondary-btn mr-2 px-4 py-1"
+                                        >
+                                            <Send />
+                                        </Button>
+                                    </>
+                                ),
+                        },
+                    ]}
+                    items={employees}
+                />
+            </>
+        );
+    }
+
     return (
         <PageLayout
             title="STORED_FILES"
@@ -279,79 +453,13 @@ export default function StoredFiles() {
                 closeText="CANCEL"
                 title="APPLICANTS"
             >
-                <>
-                    <div className="float-right pr-2">
-                        {Boolean(selectedRowsIds?.length) && (
-                            <Button
-                                className=" w-100"
-                                onClick={() => sendEmail(selectedRowsIds)}
-                            >
-                                {t(
-                                    "selected_row_{count}",
-                                    { count: selectedRowsIds?.length },
-                                    { translateProps: true }
-                                )}
-                            </Button>
-                        )}
-                    </div>
-                    <ViewDataTable<ApplicantEntity>
-                        enableSelectableRows={true}
-                        selectableRowChangeHandler={handleSelectedRowsChange}
-                        columnSettingKey={columnSettingKey}
-                        customStyles={{
-                            headRow: {
-                                style: {
-                                    background:
-                                        "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
-                                    color: "white",
-                                },
-                            },
-                        }}
-                        columns={[
-                            {
-                                id: "id",
-                                name: "ID",
-                                selector: (applicant) => applicant.id,
-                                hidable: false,
-                            },
-                            {
-                                name: "first_name",
-                                selector: (applicant) => applicant.first_name,
-                                hidable: false,
-                            },
-                            {
-                                name: "last_name",
-                                selector: (applicant) => applicant.last_name,
-                                hidable: false,
-                            },
-                            {
-                                name: "email",
-                                selector: (applicant) => applicant.email,
-                                hidable: false,
-                            },
-                            {
-                                cell: (applicant) =>
-                                    Boolean(!!!selectedRowsIds) && (
-                                        <>
-                                            <Button
-                                                type="button"
-                                                disabled={
-                                                    form.isSubmitting ||
-                                                    !form.isValid ||
-                                                    form.isValidating
-                                                }
-                                                onClick={() => sendEmail([applicant?.id])}
-                                                className="theme-secondary-btn mr-2 px-4 py-1"
-                                            >
-                                                <Send />
-                                            </Button>
-                                        </>
-                                    ),
-                            },
-                        ]}
-                        items={applicants}
-                    />
-                </>
+                <TabbedLayout
+                    items={{
+                        APPLICANT: <ApplicantListing />,
+                        EMPLOYEE: <EmployeeListing />,
+                    }}
+                    className="mt-0"
+                ></TabbedLayout>
             </ViewModal>
         </PageLayout>
     );

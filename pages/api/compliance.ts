@@ -24,7 +24,7 @@ export default class ComplianceApi extends BaseApi {
         await this.delete(`${this.baseUrl}/${id}`);
     }
     async sendComplianceFile(dto: SendFileDto): Promise<void> {
-        const { data } = await this.get(this.buildUrl(this.baseUrl + "/send-file", dto));
+        const { data } = await this.post(this.baseUrl + "/send-file", dto);
 
         return data;
     }
