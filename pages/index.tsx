@@ -68,14 +68,14 @@ export default function Index() {
             <HeroSection />
             <MotorCarrier />
             <section className="hire-driver-bg">
-                <div className="container d-flex justify-content-center hire-driver-section">
+                <div className="hire-driver-section container d-flex justify-content-center ">
                     <div className="hire-driver-item hire-driver-left d-flex flex-column justify-content-between ">
                         <h1 className="mt-5">{t("FIND_JOBS_+")}</h1>
                         <p className="">{t("IT_COULD_NOT_BETTER_TIME")}</p>
                         <p><Check />{t("TOP_PAYING_JOBS")}</p>
                         <p><Check />{t("HOME_BEST_TIME")}</p>
                         <p><Check />{t("FASTER_&_EASIER_HIRING")}</p>
-                        <div className="mb-5">
+                        <div className="mb-5 ">
                             <button className="theme-bg-btn-light-green mr-4" type="button" onClick={() => router.push("signup")}>
                                 {t("SIGN_UP")}  
                             </button>
@@ -87,7 +87,7 @@ export default function Index() {
                     <div className="hire-driver-item hire-driver-right d-flex flex-column justify-content-between align-items-center ">
                         <h1 className="mt-5">{t("OWNER_OPERATORS")}</h1>
                         <p className="">{t("ARE_YOU_LOOKING_LEASE_ONTO_NOTOR_CARRIER")}</p>
-                        <div className="mb-5">
+                        <div className="mb-5 ">
                             <button className="theme-bg-btn-light-green" type="button" onClick={() => router.push("find-jobs")}>
                                 {t("BROWSE_JOBS")}
                             </button>
@@ -166,7 +166,7 @@ export default function Index() {
             </section>
             <section>
                 <div className="testimonial-sec home-testominial">
-                    <div className="container">
+                    <div className="container home-testominial">
                         <h2 className="text-center">{t("WHAT_DRIVERS_SAY_ABOUT_US")}</h2>
                         <div className="custom-tst pb-5">
                             <div className="row owl-carousel owl-theme d-block" id="owl-demo">
