@@ -37,7 +37,7 @@ export default function MessageList() {
 
     return (
         <PageLayout
-            title="MESSAGES"
+            title="SMS_MESSAGES"
         >
             <Messenger
                 getOptions={getOptions}
