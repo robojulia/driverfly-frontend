@@ -228,8 +228,8 @@ export const DashboardStats = () => {
               <div
                 className={`card-body`}
                 onClick={() => {
-                  if (index === 0) setShowBdaysList(true);
-                  else router.push(value.link);
+                  if (Boolean(value.link)) router.push(value.link);
+                  else setShowBdaysList(true);
                 }}
                 style={{ cursor: "pointer" }}
                 {...(index === 0
