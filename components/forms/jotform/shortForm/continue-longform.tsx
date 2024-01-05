@@ -176,9 +176,10 @@ export function ContinueLongForm() {
 										className={`${styles.paragraph} ${styles.margin__top} text-bold  p-1`}
 									>
 										{t(
-											"{company_name}_PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE",
+											"MIN_EXPERIECE_VALIDATION_MESSAGE_PREFERED_MIN_CDL_{preffered_experience}",
 											{
-												company_name: applicant?.company?.name,
+												
+												preffered_experience:companyPrefferedMinExperience,
 											}
 										)}
 									</h6>
@@ -208,9 +209,10 @@ export function ContinueLongForm() {
 										className={`${styles.paragraph} ${styles.margin__top} text-bold  p-1`}
 									>
 										{t(
-											"{company_name}_PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE",
+											"PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_MIN_ACCIDENT_COUNT_{preffered_accident_count}",
 											{
-												company_name: applicant?.company?.name,
+												preffered_accident_count:
+													companyPrefferedAccidentCountLimit,
 											}
 										)}
 									</h6>
@@ -241,9 +243,10 @@ export function ContinueLongForm() {
 										className={`${styles.paragraph} ${styles.margin__top} text-bold  p-1`}
 									>
 										{t(
-											"{company_name}_PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE",
+											"PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PREFERED_MIN_VIOLATION_COUNT_{preffered_violation_count}",
 											{
-												company_name: applicant?.company?.name,
+												preffered_violation_count:
+													companyPrefferedMinViolationLimit,
 											}
 										)}
 									</h6>
@@ -275,10 +278,13 @@ export function ContinueLongForm() {
 											className={`${styles.paragraph} ${styles.margin__top} text-bold  p-1`}
 										>
 											{t(
-												"{company_name}_PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE",
+												"PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PREFERED_ROUTES_VALIDATION_{preffered_routes}",
 												{
-													company_name: applicant?.company?.name,
-												}
+													preffered_routes: companyPrefferedLocations
+														?.map((v) => t(`JobGeography.${v}`))
+														?.join(", "),
+												},
+												{ translateProps: true }
 											)}
 										</h6>
 										<h6
