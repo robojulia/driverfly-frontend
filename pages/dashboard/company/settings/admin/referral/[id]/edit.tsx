@@ -1,21 +1,21 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import FullLayout from "../../../../../../components/dashboard/layouts/layout/full-layout";
-import { ReferralSourceForm } from "../../../../../../components/forms/admin/referral-source-form";
-import ChildPageLayout from "../../../../../../components/layouts/page/child-page-layout";
-import { useAuth } from "../../../../../../hooks/use-auth";
-import { useTranslation } from "../../../../../../hooks/use-translation";
-import { ReferralSourceEntity } from "../../../../../../models/referral-source/referral-source.entity";
-import { useEffectAsync } from "../../../../../../utils/react";
-import { ReferralSourceApi } from "../../../../../api/referral-source";
+import FullLayout from "../../../../../../../components/dashboard/layouts/layout/full-layout";
+import { ReferralSourceForm } from "../../../../../../../components/forms/admin/referral-source-form";
+import ChildPageLayout from "../../../../../../../components/layouts/page/child-page-layout";
+import { useAuth } from "../../../../../../../hooks/use-auth";
+import { useTranslation } from "../../../../../../../hooks/use-translation";
+import { ReferralSourceEntity } from "../../../../../../../models/referral-source/referral-source.entity";
+import { useEffectAsync } from "../../../../../../../utils/react";
+import { ReferralSourceApi } from "../../../../../../api/referral-source";
 
 
 export default function EditReferral({ id }) {
     const router = useRouter();
     const { t } = useTranslation();
 
-    const backPath = `/dashboard/company/admin/referral/${id || ""}`;
+    const backPath = `/dashboard/company/settings/admin/referral/${id || ""}`;
 
     const { user } = useAuth();
 

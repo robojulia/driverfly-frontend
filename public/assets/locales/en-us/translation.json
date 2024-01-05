@@ -627,6 +627,7 @@
   "NON_MMEMBER": "Non Member",
   "APPLICANTS_PER_RECRUITER": "Applicants per recruiter",
   "UNASSIGNED": "Unassigned",
+  "SMS_MESSAGES":"SMS Messages",
   "MESSAGES": "Messages",
   "STORED_FILES": "Stored Files",
   "STORED_FILES_DESC": "This section contains files you wish to send to your applicants and employees",

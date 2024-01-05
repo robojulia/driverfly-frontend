@@ -1,4 +1,3 @@
-import { Modal, Button, Spinner } from "react-bootstrap";
 // import { SpecialZoomLevel, Viewer, Worker } from '@react-pdf-viewer/core'
 // import '@react-pdf-viewer/core/lib/styles/index.css'
 // import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout'
@@ -6,7 +5,6 @@ import { Modal, Button, Spinner } from "react-bootstrap";
 
 import ViewModal from "./view-modal";
 
-import { useEffect, useState } from "react";
 import { useTranslation } from "../../hooks/use-translation";
 
 export interface ViewPdfProps {
