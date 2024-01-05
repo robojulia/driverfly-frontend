@@ -80,7 +80,7 @@ export function Preferences() {
 
 	return (
 		<>
-            <h1 className={styles.carrierName}>{t("PREFERENCES")}</h1>
+            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("PREFERENCES")}</h1>
 
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={styles.align__text_left}>
