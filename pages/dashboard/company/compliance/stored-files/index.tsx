@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import { useState } from "react";
 import { Button, Row } from "react-bootstrap";
-import { Eye, Plus, Send } from "react-bootstrap-icons";
+import { CloudArrowDown, Eye, Plus, Send } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import { DownloadDocumentButton } from "../../../../../components/documents/buttons";
@@ -34,6 +34,7 @@ import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
 import ComplianceApi from "../../../../api/compliance";
 import EmployeeApi from "../../../../api/employee";
+import Link from "next/link";
 
 export default function StoredFiles() {
     const { user } = useAuth();
@@ -347,7 +348,7 @@ export default function StoredFiles() {
                         name: "type",
                         maxWidth: "20%",
                         minWidth: "20%",
-                        cell: (file) => (
+                        cell: (file, rowIndex, column) => (
                             <ShowEnumFromString
                                 popover
                                 labelPrefix="CompanyDocumentType"
@@ -382,11 +383,15 @@ export default function StoredFiles() {
                                     <Send />
                                 </button>
                                 {file?.name?.includes(".doc") ? (
-                                    <DownloadDocumentButton
-                                        className="btn-success mr-0 px-4 py-2"
-                                        onClick={handleDownloadDocument}
-                                        document={file}
-                                    />
+                                    <Link
+                                        href={file.path}
+                                        legacyBehavior>
+                                        <button
+                                            className="btn-success mr-0 px-4 py-2"
+                                        >
+                                            <CloudArrowDown />
+                                        </button>
+                                    </Link>
                                 ) : (
                                     <button
                                         type="button"
