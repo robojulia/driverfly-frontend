@@ -58,7 +58,7 @@ export function MedicalCard() {
 
 	return (
 		<>
-		<h1 className={styles.carrierName}>{t("MEDICAL_CARD_UPLOAD_TITLE")}</h1>
+		<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("MEDICAL_CARD_UPLOAD_TITLE")}</h1>
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			
 			<BaseCheck

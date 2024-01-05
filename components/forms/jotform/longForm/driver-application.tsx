@@ -92,7 +92,7 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit}>
-				<div className={styles.carrierName}>
+				<div className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
 					<h1>
 						{t(
 							"{COMPANY_NAME}",

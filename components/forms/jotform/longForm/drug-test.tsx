@@ -50,7 +50,7 @@ export function DrugTest() {
 
 	return (
 		<>
-		<h1 className={styles.carrierName}>{t("DRUG_TEST")}</h1>
+		<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("DRUG_TEST")}</h1>
 
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>

@@ -95,7 +95,7 @@ export function HearAbout() {
 
 	return (
 		<>
-			<h1 className={styles.carrierName}>{t("HOW_DID_YOU_HEAR_ABOUT_US")}</h1>
+			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("HOW_DID_YOU_HEAR_ABOUT_US")}</h1>
 			<form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row>
 					<BaseSelect
