@@ -59,7 +59,7 @@ export function WorkedBefore() {
 
 	return (
 		<>
-		<h1 className={styles.carrierName}>{t("WORKED_BEFORE")}</h1>
+		<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("WORKED_BEFORE")}</h1>
 
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row>

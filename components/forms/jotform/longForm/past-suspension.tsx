@@ -51,7 +51,7 @@ export function PastSuspension() {
 
 	return (
 		<>
-		<h1 className={styles.carrierName}>{t("SUSSPENSIONS")}</h1>
+		<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("SUSSPENSIONS")}</h1>
 
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>

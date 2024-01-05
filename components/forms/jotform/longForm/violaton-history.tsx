@@ -61,7 +61,7 @@ export function ViolationHistory() {
 	}, [form.values, form.errors]);
 	return (
 		<>
-		<h1 className={styles.carrierName}>{t("VIOLATIONS_LAST_3_YEARS")}</h1>
+		<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("VIOLATIONS_LAST_3_YEARS")}</h1>
 
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={`${styles.bold} p-3`}>

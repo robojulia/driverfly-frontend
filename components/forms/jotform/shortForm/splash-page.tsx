@@ -56,7 +56,7 @@ export function SplashPage() {
 					/>
 				</div> */}
 
-				<h1 className={styles.carrierName}>
+				<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
 					{t("{name}_carrier", { name: applicant?.company?.name }, { translateProps: true })}
 				</h1>
 				<h4 className={styles.Application}>{t("DRIVER_APPLICATION")}</h4>

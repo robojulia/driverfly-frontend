@@ -70,7 +70,7 @@ export function DriverLicense() {
 
 	return (
 		<>
-		<h1 className={styles.carrierName}>{t("DRIVER_LICENSE_PHOTO")}</h1>
+		<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("DRIVER_LICENSE_PHOTO")}</h1>
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 
 			<BaseCheck

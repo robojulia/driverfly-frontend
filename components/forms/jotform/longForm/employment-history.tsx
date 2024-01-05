@@ -81,7 +81,7 @@ export function EmploymentHistory() {
 
 	return (
 		<>
-			<h1 className={styles.carrierName}>{t("EMPLOYMENT_HISTORY")}</h1>
+			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("EMPLOYMENT_HISTORY")}</h1>
 
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<p className={`${styles.paragraph} ${styles.align__text_left}`}>
