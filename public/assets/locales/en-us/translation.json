@@ -1997,9 +1997,15 @@
   "LEAD_ASSIGNMENT": "Lead Assignment",
   "HISTORICAL_RANGE": "Historical Range",
   "SOURCE_BREAKDOWN": "Applicant Source",
+
+  "NEW_APPLICANTS": "New Applicants This Week",
+  "TOTAL_HIRES": "Total Hires This Month",
+  "TOTAL_EMPLOYEE": "Total Employees",
+  
   "NEW_LEADS": "New Leads this week",
   "TOTAL_LEADS": "Total Leads",
   "TOTAL_ACTIVE_EMPLOYEE": "Total Active Employees",
+  
   "EMPLOYEE_BIRTHDAYS": "Employee Birthdays this week",
   "ACTIVE_JOB_POSTS": "Active Job Posts",
   "CONVERSION_RATE": "Conversion rate (lead to hire)",
@@ -2230,5 +2236,6 @@
   "THIRD_PARTY_RESOURCES_META_TITLE": "Third-Party Resources - Valuable Trucking Industry Partnerships ",
   "THIRD_PARTY_RESOURCES_META_DESC": "Explore valuable third-party resources and partnerships within the trucking industry. Enhance your driving career with DriverFly's connections.",
   "VERIFY_EMAIL_META_TITLE": "Verify Email Token - Securely Verify Your DriverFly Account",
-  "VERIFY_EMAIL_META_DESC": "Securely verify your DriverFly account through an email token. Confirm your account and unlock a world of opportunities in trucking."
+  "VERIFY_EMAIL_META_DESC": "Securely verify your DriverFly account through an email token. Confirm your account and unlock a world of opportunities in trucking.",
+  "NO_BIRTHDAYS_THIS_WEEK":"No Birthdays this week"
 }
