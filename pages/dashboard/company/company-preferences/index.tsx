@@ -226,7 +226,7 @@ export default function CompanyPreference() {
 
 	return (
 		<>
-			<PageLayout title="DIGITAL_HIRING_APPLICATION">
+			<PageLayout title="DIGITAL_HIRING_APPLICATION_AUTO_RECRUITING">
 				{showModal && (
 					<ViewModal
 						show={showModal}
