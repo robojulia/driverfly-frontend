@@ -58,7 +58,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
 
         if (!!allowedSizeInByte && e.target.files[0].size >= allowedSizeInByte) {
             if (formik) {
-                formik.setFieldError(name, t('FILE_MUST_BE_OF_{size}_{unit}', { size: allowedSizeInByte / 1048576, unit: "MB" }))
+                formik.setFieldError(name, t('FILE_MUST_BE_OF_{size}_{unit}_{uploaded_size}', { size: allowedSizeInByte / 1048576, unit: "MB", uploaded_size: e.target.files[0].size / 1048576 }))
             } else {
                 alert(t('FILE_MUST_BE_OF_{size}_{unit}', { size: allowedSizeInByte / 1048576, unit: "MB" }))
             }
