@@ -84,6 +84,9 @@ export default function StoredFiles() {
     const form = useFormik({
         initialValues: new StoredFileDto(),
         validationSchema: StoredFileDto.yupSchema(),
+        validateOnBlur: false,
+        validateOnMount: false,
+        isInitialValid: true,
         onSubmit: async (data, { resetForm }) => {
             try {
                 await complianceApi.createFile(data).then((entity: DocumentEntity) => {
