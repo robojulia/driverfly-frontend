@@ -223,7 +223,7 @@ const ImportEmployees = () => {
         });//Object.keys(new ApplicantEntity());
 
     const onDownloadClick = (e) => {
-        FileDownload(headers.join(","), `${'../../../Import Employee Template.xlsx'}`);
+        FileDownload(headers.join(","), `${'Import Employee Template.xlsx'}`);
     }
 
     const onClearClick = (e) => {
