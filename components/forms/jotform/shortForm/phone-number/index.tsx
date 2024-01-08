@@ -161,7 +161,7 @@ export function PhoneNumber() {
     return (
         <>
             <ToastContainer />
-            <h1 className={styles.carrierName}>{t("phone")}</h1>
+            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("phone")}</h1>
             <ViewModal
                 show={openModal}
                 title="NUMBER_ALREADY_EXISTS"

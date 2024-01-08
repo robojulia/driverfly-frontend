@@ -1,21 +1,26 @@
 import moment from "moment";
-import { useContext, useMemo } from "react";
-import { Card, Col, Row } from "react-bootstrap";
-import DashboardChartContext from "../../context/dashboard-chart-context";
-import { useTranslation } from "../../hooks/use-translation";
-import { EmployeeStatus } from "../../enums/applicants/employee-status.enum";
-import newApplicantIcon from "../../public/img/new_appicants_this_week.svg";
-import totalHiresIcon from "../../public/img/total_hires_this_month.svg";
-import totalEmployeesIcon from "../../public/img/total_employees.svg";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useContext, useMemo, useState } from "react";
+import { Col, Row } from "react-bootstrap";
+import DashboardChartContext from "../../context/dashboard-chart-context";
+import { EmployeeStatus } from "../../enums/applicants/employee-status.enum";
+import { useTranslation } from "../../hooks/use-translation";
+import { EmployeeEntity } from "../../models/employee/employee.entity";
+import newApplicantIcon from "../../public/img/new_appicants_this_week.svg";
+import totalEmployeesIcon from "../../public/img/total_employees.svg";
+import totalHiresIcon from "../../public/img/total_hires_this_month.svg";
 
 export const DashboardStats = () => {
   const { state } = useContext(DashboardChartContext);
+  const [showBdaysList, setShowBdaysList] = useState<boolean>(false);
+
   const { t } = useTranslation();
   const statsIcon = [newApplicantIcon, totalHiresIcon, totalEmployeesIcon];
-
+  const router = useRouter();
   //   this is temporary check, it will bre removed after actual calculations
   const tempCheck = 30;
+  const [birthdayDetails, setBirthdayDetails] = useState<EmployeeEntity[]>([]);
 
   const fetchData = () => {
     const applicants = state?.applicants || [];
@@ -25,32 +30,38 @@ export const DashboardStats = () => {
     const currentWeek = moment().isoWeek();
 
     const stats: {
-      NEW_LEADS?: number;
-      TOTAL_LEADS?: number;
-      TOTAL_ACTIVE_EMPLOYEE?: JSX.Element;
-      EMPLOYEE_BIRTHDAYS?: number;
-      ACTIVE_JOB_POSTS?: JSX.Element;
-      CONVERSION_RATE?: string;
+      NEW_APPLICANTS?: { element: number; link: string };
+      TOTAL_HIRES?: { element: number; link: string };
+      TOTAL_EMPLOYEE?: { element: JSX.Element; link: string };
+      EMPLOYEE_BIRTHDAYS?: { element: number; link: string };
+      ACTIVE_JOB_POSTS?: { element: JSX.Element; link: string };
+      CONVERSION_RATE?: { element: string; link: string };
     } = applicants?.reduce(
       (acc, a) => {
         if (a?.current_application_status?.startsWith("NEW_")) {
-          acc.TOTAL_LEADS++;
+          acc.TOTAL_HIRES.element++;
           if (moment(a?.created_at).isoWeek() === currentWeek) {
-            acc.NEW_LEADS++;
+            acc.NEW_APPLICANTS.element++;
           }
         }
         return acc;
       },
       {
-        NEW_LEADS: 0,
-        TOTAL_LEADS: 0,
-        TOTAL_ACTIVE_EMPLOYEE: (
-          <>
-            {
-              employees?.filter((v) => v?.status === EmployeeStatus.ACTIVE)
-                ?.length
-            }
-          </>
+        NEW_APPLICANTS: { element: 0, link: "/dashboard/company/applicants" },
+        TOTAL_HIRES: {
+          element: 0,
+          link: "/dashboard/company/compliance/employee-directory",
+        },
+        TOTAL_EMPLOYEE: {
+          element: (
+            <>
+              {
+                employees?.filter((v) => v?.status === EmployeeStatus.ACTIVE)
+                  ?.length
+              }
+            </>
+          ),
+          link: "/dashboard/company/compliance/employee-directory",
           // <Link href={`/dashboard/company/jobs`}>
           // 	<a className="text-dark text-decoration-none">
           // 		{
@@ -59,15 +70,18 @@ export const DashboardStats = () => {
           // 		}
           // 	</a>
           // </Link>
-        ),
-        EMPLOYEE_BIRTHDAYS: 0,
-        ACTIVE_JOB_POSTS: (
-          <>{jobs?.length}</>
-          // <Link href={`/dashboard/company/jobs`}>
-          // 	<a className="text-dark text-decoration-none">{jobs?.length}</a>
-          // </Link>
-        ),
-        CONVERSION_RATE: "0%",
+        },
+        EMPLOYEE_BIRTHDAYS: { element: 0, link: "" },
+        ACTIVE_JOB_POSTS: {
+          element: (
+            <>{jobs?.length}</>
+            // <Link href={`/dashboard/company/jobs`}>
+            // 	<a className="text-dark text-decoration-none">{jobs?.length}</a>
+            // </Link>
+          ),
+          link: "/dashboard/company/jobs",
+        },
+        CONVERSION_RATE: { element: "0%", link: "" },
       }
     );
 
@@ -84,17 +98,23 @@ export const DashboardStats = () => {
       const diff: number = bday.getTime() - today.getTime();
       const days: number = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-      if (days <= 7) stats.EMPLOYEE_BIRTHDAYS++;
+      if (days <= 7) {
+        stats.EMPLOYEE_BIRTHDAYS.element++;
+        const isDuplicate = birthdayDetails?.some((itm) => {
+          return (
+            itm.birthdate === a.birthdate && itm.first_name === a.first_name
+          );
+        });
+        if (!isDuplicate) setBirthdayDetails((prevVal) => [...prevVal, a]);
+      }
     });
-
     const conversionRate =
       (applicants?.filter((a) => Boolean(a?.is_hired))?.length /
         applicants?.length) *
       100;
-    stats.CONVERSION_RATE = conversionRate
+    stats.CONVERSION_RATE.element = conversionRate
       ? Number(conversionRate?.toFixed(2)) + "%"
       : "-";
-
     return stats;
   };
 
@@ -139,7 +159,11 @@ export const DashboardStats = () => {
               className="m-0 dashboard_items"
             >
               {/* <div className={`card mb-4 mb-xl-0`}> */}
-              <div className={`card-body`}>
+              <div
+                className={`card-body`}
+                onClick={() => router.push(value.link)}
+                style={{ cursor: "pointer" }}
+              >
                 <Row className="d-flex align-items-center">
                   <Col lg={4} md={5} sm={4}>
                     <Image src={statsIcon[index]} alt={statsIcon[index]} />
@@ -151,14 +175,16 @@ export const DashboardStats = () => {
                     className="d-flex flex-column align-items-start justify-content-start"
                   >
                     <h5 className={`card-title  text-muted mb-0`}>{t(key)}</h5>
-                    <span className={`h2 font-weight-bold mb-0`}>{value}</span>
+                    <span className={`h2 font-weight-bold mb-0`}>
+                      {value.element}
+                    </span>
 
-                    <p className={`mt-0 mb-0 text-muted`}>
+                    {/* <p className={`mt-0 mb-0 text-muted`}>
                       <span
                         className={`${
                           tempCheck > 60 ? "text-success" : "text-danger"
                         }  mr-2 text-lg font-weight-bold`}
-                      >
+                      >true
                         <i
                           className={` ${
                             tempCheck > 60
@@ -170,7 +196,7 @@ export const DashboardStats = () => {
                         3.48%
                       </span>
                       <span className={`text-black`}>this month</span>
-                    </p>
+                    </p> */}
                   </Col>
 
                   {/* <Col className={`col-auto`}>
@@ -190,7 +216,7 @@ export const DashboardStats = () => {
       <Row className=" my-2 ">
         {Object?.entries(data)
           ?.slice(3)
-          ?.map(([key, value]) => (
+          ?.map(([key, value], index) => (
             <Col
               key={key}
               xl={4}
@@ -199,11 +225,19 @@ export const DashboardStats = () => {
               sm={12}
               className="my-2 dashboard_items"
             >
-              {/* <div className={`card mb-4 mb-xl-0`}> */}
-              <div className={`card-body`}>
-                <Row className="d-flex align-items-start ">
-                <Col lg={4} md={5} sm={4}>
-                  </Col>
+              <div
+                className={`card-body`}
+                onClick={() => {
+                  if (!Boolean(value.link) && index==0)  setShowBdaysList(true); 
+                  else router.push(value.link);
+                }}
+                style={{ cursor: "pointer" }}
+                {...(index === 0
+                  ? { onMouseLeave: () => setShowBdaysList(false) }
+                  : {})}
+              >
+                <Row className="d-flex align-items-start">
+                  <Col lg={4} md={5} sm={4}></Col>
                   <Col
                     md={7}
                     lg={8}
@@ -211,7 +245,9 @@ export const DashboardStats = () => {
                     className="d-flex flex-column align-items-start justify-content-start"
                   >
                     <h5 className={`card-title  text-muted mb-0`}>{t(key)}</h5>
-                    <span className={`h2 font-weight-bold mb-0`}>{value}</span>
+                    <span className={`h2 font-weight-bold mb-0`}>
+                      {value.element}
+                    </span>
 
                     {/* <p className={`mt-3 mb-0 text-muted text-sm`}>
                   <span className={`text-success mr-2`}>
@@ -228,8 +264,17 @@ export const DashboardStats = () => {
 										</div>
 									</Col> */}
                 </Row>
+                {index === 0 && showBdaysList && (
+                  <div className={`dashboard_bday_box`}>
+                    {birthdayDetails.length > 0 ? birthdayDetails?.map((employee, index) => (
+                      <span key={index} className="text-secondary">
+                        {employee.first_name} {employee.last_name} --{" "}
+                        {moment(new Date(employee.birthdate)).format("MM/DD")}
+                      </span>
+                    )) : <span key={index} className="text-secondary">{t("NO_BIRTHDAYS_THIS_WEEK")}</span>}
+                  </div>
+                )}
               </div>
-              {/* </div> */}
             </Col>
           ))}
       </Row>

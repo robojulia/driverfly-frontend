@@ -50,7 +50,7 @@ export function FelonyConviction() {
 
 	return (
 		<>
-		<h1 className={styles.carrierName}>{t("FELONY_CONVICTION")}</h1>
+		<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("FELONY_CONVICTION")}</h1>
 
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>

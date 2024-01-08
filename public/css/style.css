@@ -200,6 +200,18 @@ h2 {
     position: relative;
 }
 
+@media (min-width:990px) and (max-width: 1320px){
+    .dashboard-nav-btns{
+        padding: 20px 0px !important;
+        height: 200px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+    .dashboard-nav-btns .left-child{
+        margin-left: 0px !important;
+    }
+}
+
 .navbar-nav a a {
     color: #fff !important;
     text-decoration: none !important;
@@ -1043,9 +1055,42 @@ input[type='range']::-webkit-slider-thumb {
 .how-it-work-sec {
     /* height: 1000px; */
     /* position: relative; */
-    padding: 50px 10px 50px 10px;
+    padding: 10px 10px 50px 10px;
 }
+@media (max-width : 410px) {
+    .how-it-work-sec {
+    padding: 100px 10px 50px 10px;
+    }
+    .driver-sec {
+        background-color: #FFFFFF;
+        margin: 50px 0px 50px 0px !important;
+    }   
 
+    .hire-driver-left-btns{
+        margin-top: 10px;
+        display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+        }
+ 
+}
+@media (min-width : 410px) and (max-width :996px){
+    .how-it-work-sec {
+    padding: 100px 10px 50px 10px;
+    }
+    .driver-sec {
+        background-color: #FFFFFF;
+        margin: 50px 0px 50px 0px !important;
+    }   
+
+    .hire-driver-left-btns{
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
+}
 .how-it-work-sec h3,
 .driver-sec h3 {
     text-align: center;
@@ -1143,13 +1188,20 @@ img.who-we-img.img-fluid {
     padding: 4% !important;
 }
 
-@media (max-width: 1400px){
+@media (min-width:700px) and (max-width: 1400px){
     .slide___3-Nqo {
-        padding: 7% !important;
+        height: max-content !important;
+        padding: 7% 0% !important;
+    }
+    /* horizontalSlider___281Ls carousel__slider carousel__slider--horizontal Slider__container */
+    .horizontalSlider___281Ls{
+        margin: -11% 0%;
+        padding: 8% 0% !important;
     }
 }
-@media (max-width: 500px){
+@media (max-width: 700px){
     .slide___3-Nqo {
+    height: 700px !important;
         padding: 100% !important;
     }
 }
@@ -1159,8 +1211,7 @@ img.who-we-img.img-fluid {
     background-color: #FAFAFA;
     /* background: #fafafa; */
     padding: 80px 0px ;
-    height: 500px !important;
-
+    height: 500px;
 }
 
 .custom-tst .item {
@@ -1956,16 +2007,15 @@ li.link-wrapper>a.active {
 }
 
 .hire-driver-item {
+    justify-content:flex-end;
     width: 50%;
-    padding: 30px;
+    padding: 0 30px;
     line-height: 1;
     transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
 }
 
 .hire-driver-left {
     position: relative;
-    
-
 }
 
 .hire-driver-left::before {
@@ -2545,7 +2595,25 @@ button:active {
     z-index: 99999;
 }
 
+.dashboard_bday_box{
+    position: absolute;
+    right: 0;
+    margin-top: -4%;
+    margin-right: -15%;
+    padding: 4%;
+    font-family: 'Poppins';
+    background-color:#FFFFFF !important;
+    box-shadow: rgba(38, 90, 90, 0.393) 2px 5px 10px;
+    min-height: 120px ;
+    min-width: 350px;
+    border-radius: 25px;
+    z-index: 9999;
 
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    overflow-y: auto;    
+}
 
 

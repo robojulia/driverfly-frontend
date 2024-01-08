@@ -39,14 +39,14 @@ type StateHandler<T> = React.Dispatch<SetStateAction<T>>;
  * It gets the signed URL for a document and sets the state of the PDF viewer
  * @param {number} id - The id of the document you want to view
  */
-export const handleViewDocument = async (id: number, setPdf: StateHandler<ViewPdfProps>): Promise<void> => {
+export const handleViewDocument = async (id: number, setPdf: StateHandler<ViewPdfProps>, name?: string): Promise<void> => {
     const api = new DocumentApi();
 
     const document: DocumentEntity = await api.getSignedUrl(id);
 
     if (document) {
         setPdf({
-            name: document.name,
+            name: name ?? document.name,
             url: document.path
         });
     }

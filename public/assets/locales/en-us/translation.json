@@ -627,9 +627,10 @@
   "NON_MMEMBER": "Non Member",
   "APPLICANTS_PER_RECRUITER": "Applicants per recruiter",
   "UNASSIGNED": "Unassigned",
+  "SMS_MESSAGES":"SMS Messages",
   "MESSAGES": "Messages",
   "STORED_FILES": "Stored Files",
-  "STORED_FILES_DESC": "This section contains files you wish to send to your applicants and employees",
+  "STORED_FILES_DESC": "Here you can upload word and PDF documents that can then be viewed, downloaded, or sent to applicants and employees in the system.",
   "USERS_DESC": "These are individuals whom you wish to grant access to manage your applicants alongside you. Additional fees may apply. Check your contract for details.",
   "MANAGERS_DESC": "Managers are individuals whom you can assign employees under. Note: Managers do not have access to the system. To provide them with access, add them as a user.",
   "VEHICLES_DESC": "List your current fleet equipment below.",
@@ -1077,7 +1078,7 @@
   "SAVE": "Save",
   "IMPORT_APPLICANTS": "Import Applicants",
   "UPLOAD_YOUR_FILE": "Upload your file",
-  "FILE_MUST_BE_OF_{size}_{unit}": "File size must not be greater than {{size}} {{unit}}",
+  "FILE_MUST_BE_OF_{size}_{unit}_{uploaded_size}": "File size must not be greater than {{size}} {{unit}}. Your file is of {{uploaded_size}} {{unit}}",
   "DOWNLOAD_TEMPLATE": "Download Template",
   "ONLY_DISPLAY_ERRORS": "Only display errors",
   "ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE": "One or more errors were found on the input file, please correct them and re-upload",
@@ -1996,9 +1997,15 @@
   "LEAD_ASSIGNMENT": "Lead Assignment",
   "HISTORICAL_RANGE": "Historical Range",
   "SOURCE_BREAKDOWN": "Applicant Source",
+
+  "NEW_APPLICANTS": "New Applicants This Week",
+  "TOTAL_HIRES": "Total Hires This Month",
+  "TOTAL_EMPLOYEE": "Total Employees",
+  
   "NEW_LEADS": "New Leads this week",
   "TOTAL_LEADS": "Total Leads",
   "TOTAL_ACTIVE_EMPLOYEE": "Total Active Employees",
+  
   "EMPLOYEE_BIRTHDAYS": "Employee Birthdays this week",
   "ACTIVE_JOB_POSTS": "Active Job Posts",
   "CONVERSION_RATE": "Conversion rate (lead to hire)",
@@ -2019,6 +2026,13 @@
   "{company_name}_PREFERED_MIN_ACCIDENT_COUNT_{preffered_accident_count}": "Warning: {{company_name}}'s maximum accident allowance in the last 5 years is listed as {{preffered_accident_count}}. ",
   "{company_name}_PREFERED_MIN_VIOLATION_COUNT_{preffered_violation_count}": "Warning: {{company_name}}'s maximum moving violations is listed as {{preffered_violation_count}}. ",
   "{company_name}_PREFERED_ROUTES_VALIDATION_{preffered_routes}": "Warning: {{company_name}}'s may only be looking for Route types {{preffered_routes}} at the moment. ",
+  
+  "MIN_EXPERIECE_VALIDATION_MESSAGE_PREFERED_MIN_CDL_{preffered_experience}":"Please note that the company has indicated that they require at least {{preffered_experience}} years of experience. Please continue this application to be considered for this job and in the event you are not a good fit, DriverFly will work to get you alternative job options accordingly.",
+  "PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_MIN_ACCIDENT_COUNT_{preffered_accident_count}":"Please note that the company has indicated that they require {{preffered_accident_count}} maximum accident allowance in the last 5 years. Please continue this application to be considered for this job and in the event you are not a good fit, DriverFly will work to get you alternative job options accordingly.",
+  "PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PREFERED_MIN_VIOLATION_COUNT_{preffered_violation_count}":"Please note that the company has indicated that they require maximum moving violations is listed as {{preffered_violation_count}}. Please continue this application to be considered for this job and in the event you are not a good fit, DriverFly will work to get you alternative job options accordingly.",
+  "PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PREFERED_ROUTES_VALIDATION_{preffered_routes}":"Please note that the company has indicated that they are looking for Route types {{preffered_routes}} at the moment. Please continue this application to be considered for this job and in the event you are not a good fit, DriverFly will work to get you alternative job options accordingly.",
+
+  
   "ADD_EMPLOYMENT_HISTORY_NUMBER_{number}": "Please provide last {{number}} years of Employment History",
   "ADD_EMPLOYMENT_HISTORY_SUB_HEADING": "You can leave the extra sections empty",
   "PROCEED": "Proceed",
@@ -2223,5 +2237,6 @@
   "THIRD_PARTY_RESOURCES_META_TITLE": "Third-Party Resources - Valuable Trucking Industry Partnerships ",
   "THIRD_PARTY_RESOURCES_META_DESC": "Explore valuable third-party resources and partnerships within the trucking industry. Enhance your driving career with DriverFly's connections.",
   "VERIFY_EMAIL_META_TITLE": "Verify Email Token - Securely Verify Your DriverFly Account",
-  "VERIFY_EMAIL_META_DESC": "Securely verify your DriverFly account through an email token. Confirm your account and unlock a world of opportunities in trucking."
+  "VERIFY_EMAIL_META_DESC": "Securely verify your DriverFly account through an email token. Confirm your account and unlock a world of opportunities in trucking.",
+  "NO_BIRTHDAYS_THIS_WEEK":"No Birthdays this week"
 }

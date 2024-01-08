@@ -62,7 +62,7 @@ export function DrivingExperience() {
 	}, [form.values])
 	return (
 		<>
-			<h1 className={styles.carrierName}>{t("DRVING_EXPERIENCE")}</h1>
+			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("DRVING_EXPERIENCE")}</h1>
 
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.bold}>
