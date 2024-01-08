@@ -369,10 +369,16 @@
   color: #1C4353;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
 }
-.auto_rec_link .Link:hover{
+.auto_rec_link .Link{
+background: transparent !important;
+font-weight: 900;
+}
+
+
+/* :hover{
   text-decoration: none;
   color: #1C4353;
-}
+} */
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 .bSqufN::-webkit-scrollbar,
