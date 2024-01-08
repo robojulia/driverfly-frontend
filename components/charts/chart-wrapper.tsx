@@ -41,12 +41,12 @@ export const ChartInerWrapper: React.FC<IChartWrapper> = ({
 }: IChartWrapper) => {
   const { t } = useTranslation();
   return (
-    <div  className={`px-3 d-flex flex-column justify-content-center  mb-5 text-Poppins  ${className}`} >
+    <div  className={`px-3 d-flex flex-column justify-content-between  mb-5 text-Poppins  ${className}`} >
       <div className={`m-0 d-flex flex-column align-items-start ${titleClassName}`} >
-        <h3 className="font-weight-bold">{t(title)}</h3>
-        <p className="fs-6 font-weight-light text-secondary" style={{opacity:'0.7'}}>{subHeading}</p>
+        <h3 className="font-weight-bold mt-4 mb-0">{t(title)}</h3>
+        <p className="fs-6 text-secondary" style={{opacity:'0.7'}}>{subHeading}</p>
       </div>
-      <div className="p-0 m-0 ">{children}</div>
+      {children}
     </div>
   );
 };
