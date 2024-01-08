@@ -1,10 +1,10 @@
 import { useFormik } from "formik";
+import Link from "next/link";
 import { useState } from "react";
 import { Button, Row } from "react-bootstrap";
 import { CloudArrowDown, Eye, Plus, Send } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
-import { DownloadDocumentButton } from "../../../../../components/documents/buttons";
 import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
 import BaseSelect from "../../../../../components/forms/base-select";
 import FileInput from "../../../../../components/forms/file-input";
@@ -27,14 +27,12 @@ import { DocumentEntity } from "../../../../../models/documents/document.entity"
 import { EmployeeEntity } from "../../../../../models/employee/employee.entity";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import {
-    handleDownloadDocument,
-    handleViewDocument,
+    handleViewDocument
 } from "../../../../../utils/documents/button-actions";
 import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
 import ComplianceApi from "../../../../api/compliance";
 import EmployeeApi from "../../../../api/employee";
-import Link from "next/link";
 
 export default function StoredFiles() {
     const { user } = useAuth();
@@ -386,12 +384,8 @@ export default function StoredFiles() {
                                     <Send />
                                 </button>
                                 {file?.name?.includes(".doc") ? (
-                                    <Link
-                                        href={file.path}
-                                        legacyBehavior>
-                                        <button
-                                            className="btn-success mr-0 px-4 py-2"
-                                        >
+                                    <Link href={file.path} legacyBehavior>
+                                        <button className="btn-success mr-0 px-4 py-2">
                                             <CloudArrowDown />
                                         </button>
                                     </Link>
@@ -444,7 +438,8 @@ export default function StoredFiles() {
                             label={`UPLOAD_FILE`}
                             name={`file`}
                             required
-                            accept="application/pdf,application/msword,.docx"
+                            allowedTypesFriendlyName="PDF, DOC, DOCX"
+                            accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                             documentType={"PDF"}
                             allowedSizeInByte={5242880}
                             formik={form}
