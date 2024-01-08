@@ -47,18 +47,24 @@ export function PieChart(props: PieChartProps): JSX.Element {
 
 
 	return (
+<div className="chart-container">
 		<Doughnut
 			key={chartKey}
 			options={{
-				maintainAspectRatio: false,
+				maintainAspectRatio: true,
 				responsive: true,
 				plugins: {
 					legend: {
+						maxWidth: 100,
 						position: 'right',
 						labels: {
-							padding: 10, 
-							// color: 'rgb(255, 99, 132)'
-						}
+							boxWidth: 5,
+							
+							// padding:  1, 
+							// boxWidth: 20, // Set the width of the legend color box
+							// boxHeight: 20, // Set the height of the legend color box
+						},
+						
 					},
 					datalabels: {
 						color: function (context) {
@@ -67,7 +73,7 @@ export function PieChart(props: PieChartProps): JSX.Element {
 							return value === 0 ? "transparent" : "white";
 						},
 						font: {
-							size: 16,
+							size: 18,
 						},
 					},
 
@@ -93,5 +99,7 @@ export function PieChart(props: PieChartProps): JSX.Element {
 				],
 			}}
 		/>
+
+</div>
 	);
 }
