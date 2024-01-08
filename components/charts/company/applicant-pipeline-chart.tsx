@@ -35,12 +35,10 @@ export function ApplicantPieChart() {
 
 	
 	return (
-		<div >
 		<PieChart
 			title="APPLICANTS"
 			labels={labels}
 			data={data}
 		/>
-		</div>
 	);
 }
