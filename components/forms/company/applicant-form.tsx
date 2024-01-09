@@ -75,7 +75,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		license_number: false,
 		social_security_number: false,
 	});
-
+	const [isWorkedBefore, setIsWorkedBefore] = useState<boolean>(false);
 
 	const form = useFormik({
 		initialValues: new ApplicantEntity(),
@@ -86,8 +86,11 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			);
 			const jobs = values.jobs || [];
 			if ("jobs" in values) delete values.jobs;
-			
-			console.log(values,"Values in Formik +++++++++++++++++++++++++++++++++++++++");
+
+			console.log(
+				values,
+				"Values in Formik +++++++++++++++++++++++++++++++++++++++"
+			);
 			try {
 				if (entity?.id) {
 					values = await applicantApi.update(entity.id, {
@@ -138,7 +141,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		},
 	});
 
-
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
 
 	useEffectAsync(async () => {
@@ -161,18 +163,51 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		form.setValues(() => {
 			let values: ApplicantEntity;
 			let extras: ApplicantExtrasEntity[] = entity?.extras ?? [];
-			if (!extras?.find((v) => v.type == ApplicantExtras.ROUTES)) extras?.push({
-				...new ApplicantExtrasEntity(),
-				type: ApplicantExtras.ROUTES,
-			});
-			if (!extras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME)) extras?.push({
-				...new ApplicantExtrasEntity(),
-				type: ApplicantExtras.BUSINESS_NAME,
-			});
-			if (!extras?.find((v) => v.type == ApplicantExtras.DOT_NUMBER)) extras?.push({
-				...new ApplicantExtrasEntity(),
-				type: ApplicantExtras.DOT_NUMBER,
-			});
+
+			if (!extras?.find((v) => v.type == ApplicantExtras.ROUTES))
+				extras?.push({
+					...new ApplicantExtrasEntity(),
+					type: ApplicantExtras.ROUTES,
+				});
+
+			if (!extras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME))
+				extras?.push({
+					...new ApplicantExtrasEntity(),
+					type: ApplicantExtras.BUSINESS_NAME,
+				});
+
+			if (!extras?.find((v) => v.type == ApplicantExtras.DOT_NUMBER))
+				extras?.push({
+					...new ApplicantExtrasEntity(),
+					type: ApplicantExtras.DOT_NUMBER,
+				});
+
+			if (
+				!extras?.find(
+					(v) => v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
+				)
+			)
+				extras?.push({
+					...new ApplicantExtrasEntity(),
+					type: ApplicantExtras.ALREADY_APPLIED_TO_COMPANY,
+					value: 0,
+				});
+
+			if (
+				!extras?.find(
+					(v) => v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
+				)
+			) {
+				setIsWorkedBefore(false);
+				extras?.push({
+					...new ApplicantExtrasEntity(),
+					type: ApplicantExtras.ALREADY_WORKED_TO_COMPANY,
+				});
+			} else {
+				setIsWorkedBefore(true);
+			}
+
+			extras = extras.filter(Boolean);
 			if (!!entity?.id) {
 				values = {
 					...entity,
@@ -185,8 +220,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				};
 			} else {
 				values = {
-					...(new ApplicantEntity()),
-					extras
+					...new ApplicantEntity(),
+					extras,
 				};
 			}
 			return values;
@@ -235,7 +270,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	useEffectAsync(async () => {
 		const userApi = new UserApi();
 		const data = await userApi.list();
-		setCompanyUsers(data?.filter(u => u.status == Status.ACTIVE))
+		setCompanyUsers(data?.filter((u) => u.status == Status.ACTIVE));
 	}, []);
 
 	const today = new Date();
@@ -277,7 +312,11 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							<Col md="4" className="px-2">
 								<BaseSelect
 									// className="col-12 my-2"
-									readOnly={!Boolean(isSuperAdmin) || !Boolean(isCompanyAdmin) || Boolean(entity?.is_hired)}
+									readOnly={
+										!Boolean(isSuperAdmin) ||
+										!Boolean(isCompanyAdmin) ||
+										Boolean(entity?.is_hired)
+									}
 									label="ASSIGNED_RECRUITER"
 									name="assignedUserId"
 									placeholder
@@ -372,19 +411,28 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										<ViewDetails
 											default={t("NOT_ANSWERED")}
 											obj={{
-												AUTOMATED_RECRUITING_LEAD: Boolean(entity?.extras?.find(ap => ap?.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD && ap?.value)) ? BooleanType.YES : BooleanType.NO,
-												LEAD_TYPE: entity?.type ? t(`ApplicantType.${entity?.type}`) : null,
+												AUTOMATED_RECRUITING_LEAD: Boolean(
+													entity?.extras?.find(
+														(ap) =>
+															ap?.type ==
+															ApplicantExtras.AUTOMATED_RECRUITING_LEAD &&
+															ap?.value
+													)
+												)
+													? BooleanType.YES
+													: BooleanType.NO,
+												LEAD_TYPE: entity?.type
+													? t(`ApplicantType.${entity?.type}`)
+													: null,
 												REFERRAL_NAME: entity?.utm?.referral_name,
 												UTM_SOURCE: entity?.utm?.utm_source,
 												UTM_MEDIUM: entity?.utm?.utm_medium,
 												UTM_CAMPAIGN: entity?.utm?.utm_campaign,
 												UTM_CONTENT: entity?.utm?.utm_content,
-
 											}}
 										/>
 									</Col>
 								</Row>
-
 							</Col>
 							<Col md="4" className="px-2">
 								<BaseInput
@@ -402,7 +450,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									readOnly={Boolean(entity?.is_hired)}
 									label="expiration_date"
 									name="license_expiry"
-									min={(new Date(current_date.getFullYear(), current_date.getMonth() + 6, current_date.getDate())).toISOString().split("T")[0]}
+									min={
+										new Date(
+											current_date.getFullYear(),
+											current_date.getMonth() + 6,
+											current_date.getDate()
+										)
+											.toISOString()
+											.split("T")[0]
+									}
 									type="date"
 									placeholder="expiration_date"
 									formik={form}
@@ -443,7 +499,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									name="is_owner_operator"
 									formik={form}
 								/>
-								{Boolean(form.values.is_owner_operator) &&
+								{Boolean(form.values.is_owner_operator) && (
 									<>
 										<BaseInput
 											className="col-12"
@@ -462,7 +518,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											formik={form}
 										/>
 									</>
-								}
+								)}
 								<BaseCheck
 									className="col-12 mt-2"
 									disabled={Boolean(entity?.is_hired)}
@@ -777,7 +833,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				</Row>
 			</Row>
 			<Row>
-				<Col md="4" className="p-0 px-lg-2">
+				<Col md="6" className="p-0 px-lg-2">
 					<ViewCard
 						title="WORK_HISTORY"
 						actions={
@@ -826,7 +882,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 															employers: form.values?.employers?.filter(
 																(v, idx) => idx !== i
 															),
-
 														})
 													}
 												>
@@ -853,7 +908,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														name={`employers[${i}].start_at`}
 														label="DATES_EMPLOYED"
 														type="date"
-														max={(new Date()).toISOString().split("T")[0]}
+														max={new Date().toISOString().split("T")[0]}
 														formik={form}
 													/>
 
@@ -942,73 +997,78 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								})}
 							</>
 						)}
-						
-						{
-							form?.values?.extras?.map((itm, index)=> {
-								const meta = form.getFieldMeta(`extras[${index}]`);
-
-									const hasError = Object.keys(itm|| {}).some(
-										(v) => form.getFieldMeta(`extras[${index}].${v}`).error
-									);
-								if ( itm.type === ApplicantExtras.ALREADY_WORKED_TO_COMPANY)
-								{
-									return(
-										<Accordion
-											key={index}
-											defaultExpanded={index === 0 || !meta.touched || hasError}
-											expanded={hasError || undefined}
-										>
-												<AccordionSummary expandIcon={<ChevronUp />}>
-												<Button
-													disabled={Boolean(entity?.is_hired)}
-													type="button"
-													size="sm"
-													variant="danger"
-													onClick={(v) =>
-														form.setValues({
-															...form.values,
-															extras: form.values?.extras?.filter(
-																(v, idx) => idx !== index
-															),
-
-														})
-													}
-												>
-													<XCircle /> {t("REMOVE")}
-												</Button>
-												<span style={{ marginLeft: "10px" }}>
-													{t("ALREADY_WORKED_TO_COMPANY")}
-												</span>
-											</AccordionSummary>
-											<AccordionDetails>
-												<Row>
-													<BaseInput
-														readOnly={Boolean(entity?.is_hired)}
-														className="col-6"
-														name={`extras[${index}].value.start_date`}
-														label="DATES_EMPLOYED"
-														type="date"
-														max={(new Date()).toISOString().split("T")[0]}
-														formik={form}
-													/>
-														<BaseInput
-														readOnly={Boolean(entity?.is_hired)}
-														className="col-6"
-														name={`extras[${index}].value.end_date`}
-														label="THROUGH_OPTIONAL"
-														type="date"
-														max={(new Date()).toISOString().split("T")[0]}
-														formik={form}
-													/>
-													</Row></AccordionDetails>
-										</Accordion>
-									)
-								}
-							})
-						}
 					</ViewCard>
 				</Col>
-				<Col md="8" className="p-0 px-lg-2">
+				<Col md="6" className="p-0 px-lg-2">
+					<ViewCard title="ALREADY_WORKED_TO_COMPANY">
+						<Row>
+							<Col>
+								<BaseCheck
+									className="my-3 col float-left p-0"
+									required
+									name={`extras[${form.values?.extras?.findIndex(
+										(v) => v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
+									)}].value`}
+									label="APPLIED_HERE_BEFORE"
+									formik={form}
+								/>
+							</Col>
+						</Row>
+						{Boolean(
+							form.values?.extras.find(
+								({ type }) =>
+									type === ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
+							)?.value
+						) && (
+								<>
+									<Row>
+										<Col>
+											<BaseCheck
+												className="my-3 col float-left p-0"
+												required
+												name="is_worked_before"
+												label="WORKED_HERE_BEFORE"
+												checked={Boolean(isWorkedBefore)}
+												onChange={() => setIsWorkedBefore(!isWorkedBefore)}
+											/>
+										</Col>
+									</Row>
+									{isWorkedBefore && (
+										<Row>
+											<BaseInput
+												className="col-md-6 my-3 font-weight-bold"
+												type="date"
+												name={`extras[${form.values?.extras?.findIndex(
+													(v) =>
+														v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
+												)}].value.start_date`}
+												placeholder="DATE"
+												label="FROM"
+												max={`9999-12-31`}
+												formik={form}
+											/>
+											<BaseInput
+												className="col-md-6 my-3 font-weight-bold"
+												type="date"
+												name={`extras[${form.values?.extras?.findIndex(
+													(v) =>
+														v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
+												)}].value.end_date`}
+												placeholder="DATE"
+												required
+												label="TO"
+												max={`9999-12-31`}
+												formik={form}
+											/>
+										</Row>
+									)}
+								</>
+							)}
+					</ViewCard>
+				</Col>
+			</Row>
+			<Row>
+				<Col md="12" className="p-0 px-lg-2">
 					<ViewCard title="SAFETY_BACKGROUND">
 						<Row>
 							<Col md="6">
