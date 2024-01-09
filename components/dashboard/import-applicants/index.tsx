@@ -300,10 +300,10 @@ const ImportApplicants = () => {
     console.log("headers", headers);
     console.log("headers data", headersData);
 
-    const onDownloadClick = (e) => {
+    const onDownloadClick = (e) => {       
         FileDownload(
             `${headers.join(",")}\n${headersData.join(",")}`,
-            '../../../Import Applicants Template .xlsx',
+            'Import Applicants Template.xlsx',
             );
     };
 

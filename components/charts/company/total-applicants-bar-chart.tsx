@@ -138,7 +138,7 @@ export function TotalApplicantBarChart() {
 				borderRadius:10,
 			},
 			{
-				label: t("Hired"),
+				label: t("EMPLOYEE"),
 				backgroundColor: "rgb(245, 191, 25)",
 				borderColor: "transparent",
 				data: hiredData,
