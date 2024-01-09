@@ -2233,5 +2233,6 @@
   "THIRD_PARTY_RESOURCES_META_DESC": "Explore valuable third-party resources and partnerships within the trucking industry. Enhance your driving career with DriverFly's connections.",
   "VERIFY_EMAIL_META_TITLE": "Verify Email Token - Securely Verify Your DriverFly Account",
   "VERIFY_EMAIL_META_DESC": "Securely verify your DriverFly account through an email token. Confirm your account and unlock a world of opportunities in trucking.",
-  "NO_BIRTHDAYS_THIS_WEEK": "No Birthdays this week"
+  "NO_BIRTHDAYS_THIS_WEEK": "No Birthdays this week",
+  "ALREADY_WORKED_TO_COMPANY":"Already Worked in this Company"
 }

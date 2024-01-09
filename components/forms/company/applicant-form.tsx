@@ -1,7 +1,7 @@
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
+import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { Button, Col, Row, Table } from "react-bootstrap";
 import {
 	ChevronUp,
@@ -9,56 +9,56 @@ import {
 	PlusCircle,
 	XCircle,
 } from "react-bootstrap-icons";
-import { useFormik } from "formik";
+import { toast } from "react-toastify";
 
-import { useEffectAsync } from "../../../utils/react";
-import { useTranslation } from "../../../hooks/use-translation";
 import { useAuth } from "../../../hooks/use-auth";
-import { formFailed, formSuccess } from "../../../utils/toast";
+import { useTranslation } from "../../../hooks/use-translation";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
-import { BaseFormProps } from "./base-form-props";
+import { useEffectAsync } from "../../../utils/react";
+import { formFailed, formSuccess } from "../../../utils/toast";
 import EntityForm from "../../layouts/page/entity-form";
 import ViewCard from "../../view-details/view-card";
+import BaseCheck from "../base-check";
 import BaseCheckList from "../base-check-list";
 import BaseInput from "../base-input";
+import BaseInputPhone from "../base-input-phone";
 import BaseSelect from "../base-select";
 import BaseTextArea from "../base-text-area";
-import BaseInputPhone from "../base-input-phone";
-import StateSelect from "../state-select";
-import BaseCheck from "../base-check";
 import FileInput from "../file-input";
+import StateSelect from "../state-select";
+import { BaseFormProps } from "./base-form-props";
 
-import JobApi from "../../../pages/api/job";
 import ApplicantApi from "../../../pages/api/applicant";
+import JobApi from "../../../pages/api/job";
 
-import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
+import { ApplicantEmployerEntity } from "../../../models/applicant/applicant-employer.entity";
 import { ApplicantEquipmentEntity } from "../../../models/applicant/applicant-equipment.entity";
 import { ApplicantExperienceEntity } from "../../../models/applicant/applicant-experience.entity";
-import { ApplicantEmployerEntity } from "../../../models/applicant/applicant-employer.entity";
 import { ApplicantJobEntity } from "../../../models/applicant/applicant-job.entity";
-import { JobEntity } from "../../../models/job/job.entity";
+import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import { DocumentEntity } from "../../../models/documents/document.entity";
+import { JobEntity } from "../../../models/job/job.entity";
 
+import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
+import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
+import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
+import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
+import { JobGeography } from "../../../enums/jobs/job-geography.enum";
+import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
+import { BooleanType } from "../../../enums/jotform/boolean-type.enum";
+import { Status } from "../../../enums/status.enum";
 import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
 import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
 import { EducationLevel } from "../../../enums/users/education-level.enum";
-import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
 import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
-import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
-import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
-import { JobGeography } from "../../../enums/jobs/job-geography.enum";
-import ViewModal from "../../view-details/view-modal";
-import UserApi from "../../../pages/api/user";
-import { UserEntity } from "../../../models/user/user.entity";
-import { JobForm } from "./job-form";
-import { HireApplicantDto } from "../../../models/applicant/hire-applicant.dto";
-import EmployeeApi from "../../../pages/api/employee";
-import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../models/applicant";
-import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
-import { Status } from "../../../enums/status.enum";
+import { HireApplicantDto } from "../../../models/applicant/hire-applicant.dto";
+import { UserEntity } from "../../../models/user/user.entity";
+import EmployeeApi from "../../../pages/api/employee";
+import UserApi from "../../../pages/api/user";
 import ViewDetails from "../../view-details/view-details";
-import { BooleanType } from "../../../enums/jotform/boolean-type.enum";
+import ViewModal from "../../view-details/view-modal";
+import { JobForm } from "./job-form";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
@@ -76,17 +76,18 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		social_security_number: false,
 	});
 
+
 	const form = useFormik({
 		initialValues: new ApplicantEntity(),
 		validationSchema: ApplicantEntity.yupSchema(),
 		onSubmit: async (values) => {
-
 			values.extras = values.extras?.filter(
 				(v) => v.value != undefined || v.value != null
 			);
 			const jobs = values.jobs || [];
 			if ("jobs" in values) delete values.jobs;
-
+			
+			console.log(values,"Values in Formik +++++++++++++++++++++++++++++++++++++++");
 			try {
 				if (entity?.id) {
 					values = await applicantApi.update(entity.id, {
@@ -155,7 +156,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	}, [user]);
 
 	useEffect(() => {
-		console.log("entity", entity);
+		// console.log("entity", entity);
 
 		form.setValues(() => {
 			let values: ApplicantEntity;
@@ -245,7 +246,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	)
 		.toISOString()
 		.split("T")[0];
-
 
 	useEffect(() => {
 		console.log("form.values", form.values);
@@ -788,8 +788,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									form.setValues({
 										...form.values,
 										employers: [
-											...(form.values?.employers || []),
 											new ApplicantEmployerEntity(),
+											...(form.values?.employers || []),
 										],
 									})
 								}
@@ -942,6 +942,70 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								})}
 							</>
 						)}
+						
+						{
+							form?.values?.extras?.map((itm, index)=> {
+								const meta = form.getFieldMeta(`extras[${index}]`);
+
+									const hasError = Object.keys(itm|| {}).some(
+										(v) => form.getFieldMeta(`extras[${index}].${v}`).error
+									);
+								if ( itm.type === ApplicantExtras.ALREADY_WORKED_TO_COMPANY)
+								{
+									return(
+										<Accordion
+											key={index}
+											defaultExpanded={index === 0 || !meta.touched || hasError}
+											expanded={hasError || undefined}
+										>
+												<AccordionSummary expandIcon={<ChevronUp />}>
+												<Button
+													disabled={Boolean(entity?.is_hired)}
+													type="button"
+													size="sm"
+													variant="danger"
+													onClick={(v) =>
+														form.setValues({
+															...form.values,
+															extras: form.values?.extras?.filter(
+																(v, idx) => idx !== index
+															),
+
+														})
+													}
+												>
+													<XCircle /> {t("REMOVE")}
+												</Button>
+												<span style={{ marginLeft: "10px" }}>
+													{t("ALREADY_WORKED_TO_COMPANY")}
+												</span>
+											</AccordionSummary>
+											<AccordionDetails>
+												<Row>
+													<BaseInput
+														readOnly={Boolean(entity?.is_hired)}
+														className="col-6"
+														name={`extras[${index}].value.start_date`}
+														label="DATES_EMPLOYED"
+														type="date"
+														max={(new Date()).toISOString().split("T")[0]}
+														formik={form}
+													/>
+														<BaseInput
+														readOnly={Boolean(entity?.is_hired)}
+														className="col-6"
+														name={`extras[${index}].value.end_date`}
+														label="THROUGH_OPTIONAL"
+														type="date"
+														max={(new Date()).toISOString().split("T")[0]}
+														formik={form}
+													/>
+													</Row></AccordionDetails>
+										</Accordion>
+									)
+								}
+							})
+						}
 					</ViewCard>
 				</Col>
 				<Col md="8" className="p-0 px-lg-2">
