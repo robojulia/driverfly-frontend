@@ -373,12 +373,12 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											default={t("NOT_ANSWERED")}
 											obj={{
 												AUTOMATED_RECRUITING_LEAD: Boolean(entity?.extras?.find(ap => ap?.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD && ap?.value)) ? BooleanType.YES : BooleanType.NO,
-												LEAD_TYPE: entity.type ? t(`ApplicantType.${entity.type}`) : null,
-												REFERRAL_NAME: entity.utm?.referral_name,
-												UTM_SOURCE: entity.utm?.utm_source,
-												UTM_MEDIUM: entity.utm?.utm_medium,
-												UTM_CAMPAIGN: entity.utm?.utm_campaign,
-												UTM_CONTENT: entity.utm?.utm_content,
+												LEAD_TYPE: entity?.type ? t(`ApplicantType.${entity?.type}`) : null,
+												REFERRAL_NAME: entity?.utm?.referral_name,
+												UTM_SOURCE: entity?.utm?.utm_source,
+												UTM_MEDIUM: entity?.utm?.utm_medium,
+												UTM_CAMPAIGN: entity?.utm?.utm_campaign,
+												UTM_CONTENT: entity?.utm?.utm_content,
 
 											}}
 										/>
