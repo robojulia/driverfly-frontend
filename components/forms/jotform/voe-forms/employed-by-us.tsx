@@ -1,32 +1,44 @@
 import { useFormik } from "formik";
-import { useTranslation } from "../../../../hooks/use-translation";
-import { Form, Button, Col, Row } from "react-bootstrap";
-import VoeFormContext, { VoeFormContextType } from "../../../../context/voeform-context";
 import { useContext, useEffect } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import VoeFormContext, {
+	VoeFormContextType,
+} from "../../../../context/voeform-context";
+import { useTranslation } from "../../../../hooks/use-translation";
+import { ApplicantVoeEntity } from "../../../../models/applicant/applicant-voe.entity";
 import styles from "../../../../styles/voe.module.css";
 import BaseCheck from "../../base-check";
-import { EmployedByUsDto } from "../../../../models/jot-form/voe-form/employed-by-us.dto";
-import { ApplicantVoeFormEnum } from "../../../../enums/applicants/applicant-voe-form.enum";
-import { ApplicantVoeFormEntity } from "../../../../models/applicant/applicant-voe-form.entity";
 
 export function EmployedByUs() {
 	const {
-		state: { applicantVoe, applicant, steps },
-		method: { stepNext, stepBack, updateApplicantVoe, jumpToStep },
+		state: { voe, applicant },
+		method: { stepNext, stepBack, updateVoe, jumpToStep },
 	}: VoeFormContextType = useContext(VoeFormContext);
 
 	const { t } = useTranslation();
 
 	const form = useFormik({
-		initialValues: new EmployedByUsDto(),
-		validationSchema: EmployedByUsDto.yupSchema(),
-		onSubmit: (values) => {
-			const { EMPLOYED_BY_US } = values;
-			updateApplicantVoe(EMPLOYED_BY_US);
-			if (!!EMPLOYED_BY_US.value) {
+		initialValues: new ApplicantVoeEntity(),
+		validationSchema: ApplicantVoeEntity.yupSchemaEmployedByUs(),
+		validateOnMount: false,
+		onSubmit: ({ was_employed }) => {
+			updateVoe({ was_employed });
+			if (Boolean(was_employed)) {
 				stepNext();
 			} else {
-				jumpToStep(3)
+				updateVoe({
+					was_employed: false,
+					position: null,
+					start_date: null,
+					end_date: null,
+					did_drive_check: false,
+					drived_vehicle: null,
+					safety_performance: false,
+					registered_accidents_details: false,
+					accidents_reported_to_government: null,
+					reason_to_leave: null,
+				})
+				jumpToStep(3);
 			}
 		},
 		onReset: (values) => {
@@ -35,16 +47,12 @@ export function EmployedByUs() {
 	});
 
 	useEffect(() => {
-		const apx = applicantVoe?.find(
-			(v) => v.type === ApplicantVoeFormEnum.EMPLOYED_BY_US
-		);
+		const { was_employed = false } = voe;
 		form.setValues({
 			...form.values,
-			EMPLOYED_BY_US: !!apx?.type
-				? apx
-				: new ApplicantVoeFormEntity(ApplicantVoeFormEnum.EMPLOYED_BY_US),
+			was_employed,
 		});
-	}, [applicantVoe]);
+	}, [voe]);
 
 	useEffect(() => {
 		console.log("form values", form.values);
@@ -59,11 +67,11 @@ export function EmployedByUs() {
 				<BaseCheck
 					className="mt-3 mb-3"
 					required
-					name="EMPLOYED_BY_US.value"
+					name="was_employed"
 					label={t(
 						"{applicantName}_EMPLOYED_BY_US",
 						{
-							applicantName: `${applicant?.first_name} ${applicant?.last_name}`
+							applicantName: `${applicant?.first_name} ${applicant?.last_name}`,
 						},
 						{ translateProps: true }
 					)}

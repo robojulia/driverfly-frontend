@@ -1,24 +1,106 @@
 import styles from "../../../../../styles/voe.module.css";
 import ApplicantApi from "../../../../api/applicant";
-import { ApplicantEmployerEntity, ApplicantEntity, ApplicantVoeFormEntity } from "../../../../../models/applicant";
-import { ViewVoeDetails } from "../../../../../components/forms/jotform/voe-forms/view-voe-details";
+import { ApplicantEmployerEntity, ApplicantEntity, ApplicantVoeEntity } from "../../../../../models/applicant";
+import { Col, Row } from "react-bootstrap";
+import { useTranslation } from "../../../../../hooks/use-translation";
+import ViewCard from "../../../../../components/view-details/view-card";
+import ViewDetails from "../../../../../components/view-details/view-details";
+import ShowFormattedDate, { formatDate } from "../../../../../components/jobs/show-formatted-date";
 
 export interface VoeFormProps {
     applicant: ApplicantEntity;
-    employer: ApplicantEmployerEntity
+    employer: ApplicantEmployerEntity;
+    voeData: ApplicantVoeEntity;
 }
 
-export default function ViewVoeForm({ applicant, employer }: VoeFormProps) {
+export default function ViewVoeForm({ applicant, employer, voeData }: VoeFormProps) {
+
+    const { t } = useTranslation();
 
     return (
         <div className={styles.container}>
             <div className={styles.main}>
                 <div className={styles.main__voe_form}>
-                    <ViewVoeDetails
-                        applicant={applicant}
-                        employer={employer}
-                        applicantVoe={(applicant.voeData.filter(val => val?.employerId === employer?.id))}
-                    />
+                    <Row>
+                        <h4 className={styles.carrierName}>{t("VOE_SUBMIT_DETAILS")}</h4>
+                    </Row>
+                    <Row>
+                        <span className="text-black my-3 text-center">
+                            {t("VERIFICATION_OF_{APPLICANT_NAME}_BY_{EMPLOYER_NAME}", {
+                                APPLICANT_NAME: `${applicant?.first_name} ${applicant?.last_name}`,
+                                EMPLOYER_NAME: `${employer?.name}`,
+                            })}
+                        </span>
+                    </Row>
+                    <ViewCard title="BASIC_QUESTIONAIRE">
+                        <ViewDetails
+                            default={t("NOT_ANSWERED")}
+                            obj={{
+                                EMPLOYED_BY_US: Boolean(voeData.was_employed) ? t("YES") : t("NO"),
+                                VOE_DRIVER_QUES: Boolean(voeData.drived_vehicle) ? t("YES") : t("NO"),
+                                SAFETY_PERFORMANCE_REPORT: Boolean(voeData.safety_performance)
+                                    ? t("YES")
+                                    : t("NO"),
+                                ACCIDENT_REGISTER: Boolean(voeData.registered_accidents_details) ? t("YES") : t("NO"),
+                            }}
+                        />
+                    </ViewCard>
+                    <ViewCard title="WAS_EMPLOYED_AS">
+                        <ViewDetails
+                            obj={{
+                                POSITION: voeData.position,
+                                START_DATE: formatDate(voeData.start_date, true),
+                                END_DATE: formatDate(voeData.end_date, true),
+                            }}
+                        />
+                    </ViewCard>
+
+                    <Row className={`${styles.align__text_left} ${styles.paragraph}`}>
+                        <label className={`${styles.bold}`}>{t("VEHICLE_TYPE")}</label>
+                        <Col className={`${styles.align__text_left} ${styles.paragraph}`}>
+                            <p>{voeData.drived_vehicle ?? t('N/A')}</p>
+                        </Col>
+                    </Row>
+
+                    {Boolean(voeData.registered_accidents_details) &&
+                        <Row className={`${styles.align__text_left}${styles.paragraph}`}>
+                            <label className={`${styles.bold}`}>
+                                {t("ACCIDENTS_REPORTED_TO_GOVERNMENT")}
+                            </label>
+                            <Col className={`${styles.align__text_left}  ${styles.paragraph}`}>
+                                <p>{voeData.accidents_reported_to_government ?? t('N/A')}</p>
+                            </Col>
+                        </Row>
+                    }
+
+                    <ViewCard title="SUBMISSION_DETAILS">
+                        <ViewDetails
+                            obj={{
+                                REASON_TO_LEAVE_EMPLOYMENT: t(voeData.reason_to_leave ? `ReasonsForLeavingEmployment.${voeData.reason_to_leave}` : "N/A"),
+                                FULL_NAME: voeData.focal_person_name,
+                                title: voeData.focal_person_title,
+                                phone: voeData.focal_person_phone,
+                                email: voeData.focal_person_email,
+                                DATE: formatDate(voeData.signed_date),
+                            }}
+                        />
+                    </ViewCard>
+
+                    <Row className={`${styles.align__text_left}`}>
+                        <label className={`${styles.bold} text-black`}>{t("SIGNATURE")}</label>
+                        <Col className="">
+                            <img
+                                src={voeData.signature}
+                                style={{
+                                    width: "100%",
+                                    height: "200px",
+                                    border: "1px solid black",
+                                }}
+                                alt="No Signature"
+                            />
+                        </Col>
+                    </Row>
+
                 </div>
             </div>
         </div>
@@ -38,7 +120,9 @@ export async function getServerSideProps({ query }) {
 
         if (!!!applicant || !!!employer || applicant.id !== employer.applicant.id) return { notFound: true }
 
-        return { props: { applicant, employer } }
+        const voeData = await applicantApi.voeform.fetch(applicant_uuid, employer_uuid)
+
+        return { props: { applicant, employer, voeData } }
     } catch (error) {
         return { notFound: true }
     }

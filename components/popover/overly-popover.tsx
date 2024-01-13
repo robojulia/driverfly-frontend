@@ -1,9 +1,13 @@
 import { ReactNode } from "react";
 import { OverlayTrigger, Popover, Tooltip } from "react-bootstrap";
 import { useTranslation } from "../../hooks/use-translation";
+import { Placement } from "react-bootstrap/esm/types";
+import { OverlayTriggerType } from "react-bootstrap/esm/OverlayTrigger";
 
 export interface OverlyPopoverProps {
     str?: string;
+    placement?: Placement;
+    trigger?: OverlayTriggerType | OverlayTriggerType[];
     skipTranslate?: boolean;
     labelPrefix?: string;
     header?: string | ReactNode;
@@ -14,6 +18,8 @@ export interface OverlyPopoverProps {
 
 export default function OverlyPopover({
     str,
+    placement,
+    trigger,
     skipTranslate,
     labelPrefix,
     header,
@@ -40,7 +46,8 @@ export default function OverlyPopover({
     );
 
     return <OverlayTrigger
-        placement="bottom"
+        trigger={trigger}
+        placement={placement ?? "bottom"}
         delay={{ show: 250, hide: 400 }}
         overlay={popover}
     >
