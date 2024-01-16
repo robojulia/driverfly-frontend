@@ -14,10 +14,12 @@ export default function Logout(props: LogoutProps) {
     const { logout } = useAuth();
 
     return (
+        <>
         <Cmp
             className={className}
             onClick={logout}>
             {t("LOGOUT")}
         </Cmp>
+        </>
     )
 }
