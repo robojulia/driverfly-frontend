@@ -314,7 +314,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									formik={form}
 									max={OldThan18Year}
 								/>
-
 								<BaseInputPhone
 									className="col-12"
 									readOnly={Boolean(entity?.is_hired)}
