@@ -1,16 +1,9 @@
 import { useAuth } from '../../hooks/use-auth';
 import Router from 'next/router'
 import { useTranslation } from "../../hooks/use-translation";
-import { Dropdown } from "react-bootstrap";
 
 
-export interface DashboardButtonProps {
-    as?: React.ElementType;
-    className?: string;
-}
-
-export default function DashboardButton(props:DashboardButtonProps) {
-    let { as: Cmp = Dropdown.Item, className } = props;
+export default function DashboardButton(props) {
     const { t } = useTranslation();
     const { getUser } = useAuth();
 
@@ -28,12 +21,12 @@ export default function DashboardButton(props:DashboardButtonProps) {
 
     return (
         <>
-            <Cmp
+            <button
                 onClick={handleRedirect}
                 type="button"
                 className={props.className}>
                 {t("dashboard")}
-            </Cmp>
+            </button>
         </>
     )
 }
