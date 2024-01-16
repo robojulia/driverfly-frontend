@@ -19,7 +19,7 @@ import {
 	ApplicantDacEntity,
 	ApplicantExtrasEntity
 } from "./index"
-import { ApplicantVoeFormEntity } from "./applicant-voe-form.entity";
+import { ApplicantVoeEntity } from "./applicant-voe.entity";
 import { Status } from "../../enums/status.enum";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
 import { ApplicantJobStatusHistoryEntity } from "./applicant-job-status-history.entity";
@@ -93,7 +93,7 @@ export class ApplicantEntity {
 	last_updated_at?: string;
 	dac?: ApplicantDacEntity[];
 	extras?: ApplicantExtrasEntity[] = []
-	voeData?: ApplicantVoeFormEntity[] = []
+	voeData?: ApplicantVoeEntity[] = []
 	uuid_token?: string;
 	status?: Status;
 	current_application_status?: ApplicantStatus;

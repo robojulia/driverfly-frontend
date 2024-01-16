@@ -1,19 +1,20 @@
-import { useEffect, useState } from "react";
-import styles from "../../../../../../styles/digitalhiringapp.module.css";
-import {
-    ApplicantEntity,
-    ApplicantExtrasEntity,
-} from "../../../../../../models/applicant";
-import JotformContext from "../../../../../../context/jotform-context";
+import { useState } from "react";
 import {
     getLongFormStyle,
     getSuggestedJobPages,
 } from "../../../../../../components/forms/jotform/jotform-pages";
-import ApplicantApi from "../../../../../api/applicant";
-import { JobEntity } from "../../../../../../models/job/job.entity";
-import JobApi from "../../../../../api/job";
+import JotformContext from "../../../../../../context/jotform-context";
+import {
+    ApplicantEntity,
+    ApplicantExtrasEntity,
+} from "../../../../../../models/applicant";
 import { CompanyEntity } from "../../../../../../models/company/company.entity";
+import { JobEntity } from "../../../../../../models/job/job.entity";
+import styles from "../../../../../../styles/digitalhiringapp.module.css";
+import ApplicantApi from "../../../../../api/applicant";
 import CompanyApi from "../../../../../api/company";
+import JobApi from "../../../../../api/job";
+import { ApplicantExtras } from "../../../../../../enums/applicants/applicant-extras.enum";
 
 export interface SuggestedJobsProps {
     entity: ApplicantEntity;
@@ -21,9 +22,12 @@ export interface SuggestedJobsProps {
     company: CompanyEntity;
 }
 
-export default function SuggestedJobs({ entity, job, company }: SuggestedJobsProps) {
+export default function SuggestedJobs({
+    entity,
+    job,
+    company,
+}: SuggestedJobsProps) {
     console.log("entity", entity);
-
 
     const [jobs, setJobs] = useState<JobEntity[]>([job]);
     const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
@@ -53,14 +57,14 @@ export default function SuggestedJobs({ entity, job, company }: SuggestedJobsPro
                     applicantExtras,
                     steps,
                     jobs,
-                    company
+                    company,
                 },
                 method: {
                     setApplicant,
                     updateApplicantExtras,
                     stepNext,
                     stepBack,
-                    setJobs
+                    setJobs,
                 },
             }}
         >
@@ -99,18 +103,35 @@ export async function getServerSideProps({ query }) {
         if (!Boolean(entity) || !Boolean(job)) return { notFound: true };
 
         const companyApi = new CompanyApi();
-        const company: CompanyEntity = await companyApi.employer.getById(job.company?.id);
+        const company: CompanyEntity = await companyApi.employer.getById(
+            job.company?.id
+        );
 
-        delete entity.id
-        delete entity.user?.id
-        delete entity.company
-        delete entity.documents
-        delete entity.voeData
-        delete entity.uuid_token
-        entity.extras = entity.extras?.map(({ type, value }) => ({ type, value }))
+        delete entity?.id;
+        delete entity?.user;
+        delete entity?.company;
+        delete entity?.uuid_token;
+        entity.employers = entity?.employers?.map((employer) => {
+            delete employer?.id;
+            delete employer?.voeData?.id;
+            if (!Boolean(employer?.voeData?.allow_share)) delete employer?.voeData;
+            return employer;
+        });
+        entity.extras = entity.extras
+            ?.map(({ type, value }) => ({ type, value }))
+            ?.filter(
+                ({ type }) =>
+                    !Boolean(
+                        [ApplicantExtras.GOOD_FIT, ApplicantExtras.BAD_FIT_REASON].includes(
+                            type
+                        )
+                    )
+            );
 
         return { props: { entity, job, company } };
     } catch (error) {
+        console.log("error", error.message);
+
         return { notFound: true };
     }
 }

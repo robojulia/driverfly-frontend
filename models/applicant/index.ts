@@ -7,5 +7,6 @@ export { ApplicantExtrasEntity } from "./applicant-extras.entity"
 export { ApplicantJobEntity } from "./applicant-job.entity"
 export { ApplicantNoteEntity } from "./applicant-note.entity"
 export { ApplicantSuggestedJobEntity } from "./applicant-suggested-job.entity"
-export { ApplicantVoeFormEntity } from "./applicant-voe-form.entity"
+export { ApplicantVoeEntity } from "./applicant-voe.entity"
 export { ApplicantEntity } from "./applicant.entity"
+
