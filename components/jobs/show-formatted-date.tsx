@@ -12,7 +12,7 @@ interface FormattedDateProps {
 
 export default function ShowFormattedDate({ date, labelPrefix, labelPostfix, hideTime, showTimeSince, className }: FormattedDateProps) {
 
-    if (!!!date) return <></>
+    if (!Boolean(date)) return <></>
 
     const { t } = useTranslation();
     let displayDate: Date | string;
@@ -20,14 +20,7 @@ export default function ShowFormattedDate({ date, labelPrefix, labelPostfix, hid
     if (showTimeSince) {
         displayDate = timeSince(date)
     } else {
-        const formatter = new Intl.DateTimeFormat("en-GB", {
-            year: "numeric",
-            month: "long",
-            day: "2-digit",
-            hour: !!!hideTime ? "2-digit" : undefined,
-            minute: !!!hideTime ? "2-digit" : undefined,
-        });
-        displayDate = formatter.format(typeof date === 'string' ? new Date(date) : date)
+        displayDate = formatDate(date, Boolean(hideTime))
     }
 
     return (
@@ -37,4 +30,15 @@ export default function ShowFormattedDate({ date, labelPrefix, labelPostfix, hid
             {labelPostfix && t(labelPostfix)}&nbsp;
         </span>
     );
+}
+
+export function formatDate(date: Date | string, hideTime?: boolean) {
+    const formatter = new Intl.DateTimeFormat("en-GB", {
+        year: "numeric",
+        month: "long",
+        day: "2-digit",
+        hour: !!!hideTime ? "2-digit" : undefined,
+        minute: !!!hideTime ? "2-digit" : undefined,
+    });
+    return formatter.format(typeof date === 'string' ? new Date(date) : date)
 }
