@@ -38,6 +38,9 @@ import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum
 import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
 import { ApplicantExperienceEntity } from "../../../models/applicant/applicant-experience.entity";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
+import * as XLSX from "xlsx";
+
+
 
 const ImportApplicants = () => {
     const style: any = _style;
@@ -301,11 +304,22 @@ const ImportApplicants = () => {
     console.log("headers data", headersData);
 
     const onDownloadClick = (e) => {       
-        FileDownload(
-            `${headers.join(",")}\n${headersData.join(",")}`,
-            'Import Applicants Template.xlsx',
-            );
-    };
+        // FileDownload(
+        //     `${headers.join(",")}\n${headersData.join(",")}`,
+        //     'Import Applicants Template.xlsx',
+        //     );
+          // create workbook and worksheet
+
+        const filePath = '../../../Import Applicants Template.xlsx';
+        const workbook = XLSX.read(filePath, { type: 'buffer' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        XLSX.utils.sheet_add_aoa(worksheet, [headers, headersData]);
+        XLSX.writeFile(workbook, 'Import Applicants Template.xlsx', { compression: true });
+
+     };
+ 
+
+
 
     const onClearClick = (e) => {
         form.resetForm();
