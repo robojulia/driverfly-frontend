@@ -25,6 +25,8 @@ import { ApplicantExperienceEntity } from "../../../models/applicant/applicant-e
 import { EmployeeEntity } from "../../../models/employee/employee.entity";
 import EmployeeApi from "../../../pages/api/employee";
 import { EmployeeExperienceEntity } from "../../../models/employee/employee-experience.entity";
+import * as XLSX from "xlsx";
+
 
 const ImportEmployees = () => {
     const style: any = _style;
@@ -223,7 +225,13 @@ const ImportEmployees = () => {
         });//Object.keys(new ApplicantEntity());
 
     const onDownloadClick = (e) => {
-        FileDownload(headers.join(","), `${'Import Employee Template.xlsx'}`);
+        // FileDownload(headers.join(","), `${'Import Employee Template.xlsx'}`);
+
+        const filePath = '../../../Import Employee Template.xlsx';
+        const workbook = XLSX.read(filePath, { type: 'buffer' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        XLSX.utils.sheet_add_aoa(worksheet, [headers]);
+        XLSX.writeFile(workbook, 'Import Applicants Template.xlsx', { compression: true });
     }
 
     const onClearClick = (e) => {
