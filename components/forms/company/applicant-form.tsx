@@ -396,17 +396,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								// 	!protectedFields.license_number || Boolean(entity?.is_hired)
 								// }
 								/>
-								<BaseInput
-									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
-									label="expiration_date"
-									name="license_expiry"
-									min={(new Date(current_date.getFullYear(), current_date.getMonth() + 6, current_date.getDate())).toISOString().split("T")[0]}
-									type="date"
-									placeholder="expiration_date"
-									formik={form}
-								/>
 								<Row className="px-3">
+									<BaseInput
+										className="col-6"
+										readOnly={Boolean(entity?.is_hired)}
+										label="expiration_date"
+										name="license_expiry"
+										min={(new Date(current_date.getFullYear(), current_date.getMonth() + 6, current_date.getDate())).toISOString().split("T")[0]}
+										type="date"
+										placeholder="expiration_date"
+										formik={form}
+									/>
 									<StateSelect
 										className="col-6"
 										readOnly={Boolean(entity?.is_hired)}
@@ -415,6 +415,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										placeholder="state_issued"
 										formik={form}
 									/>
+								</Row>
+								{/* Additional License Number  */}
+								<hr className="col-12 w-75 border-3 ml-5 m-4 "></hr>
+								<hr className="col-12 w-75 border-3 ml-5 m-4 "></hr>
+
+
+								<Row className="px-3">
 									<BaseSelect
 										className="col-6"
 										readOnly={Boolean(entity?.is_hired)}
@@ -425,16 +432,16 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										enumType={DriverLicenseType}
 										formik={form}
 									/>
+									<BaseInput
+										className="col-6"
+										readOnly={Boolean(entity?.is_hired)}
+										label="years_cdl_experience"
+										name="years_cdl_experience"
+										type="number"
+										placeholder="years_cdl_experience"
+										formik={form}
+									/>
 								</Row>
-								<BaseInput
-									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
-									label="years_cdl_experience"
-									name="years_cdl_experience"
-									type="number"
-									placeholder="years_cdl_experience"
-									formik={form}
-								/>
 								<BaseCheck
 									className="col-12 mt-2"
 									disabled={Boolean(entity?.is_hired)}
