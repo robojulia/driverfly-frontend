@@ -29,6 +29,7 @@ export default function Settings() {
 			title="COMPANY"
 		>
 			<CompanyForm
+				showClickToCopy
 				entity={user?.company}
 				onSaveComplete={onSaveComplete}
 			/>
