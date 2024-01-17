@@ -98,8 +98,8 @@ export default function MyNav() {
 
                         {user ?
                             <>
-                                <li><a href="#" className="nav-link"> < Bell /></a></li>
-                                <DashboardButton className="theme-secondary-btn mr-4" />
+                                <li><a href="#" className="nav-link px-4"> < Bell /></a></li>
+                                <DashboardButton as={Button} className="theme-secondary-btn mr-4" />
                                 <LogoutButton as={Button} className="theme-secondary-btn mr-4" />
                             </>
                             :
