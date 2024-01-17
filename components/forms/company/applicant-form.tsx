@@ -42,6 +42,7 @@ import { JobEntity } from "../../../models/job/job.entity";
 import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
 import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
+import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
 import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
@@ -53,23 +54,32 @@ import { EducationLevel } from "../../../enums/users/education-level.enum";
 import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
 import { ApplicantExtrasEntity } from "../../../models/applicant";
 import { HireApplicantDto } from "../../../models/applicant/hire-applicant.dto";
+import { ReferralSourceEntity } from "../../../models/referral-source/referral-source.entity";
 import { UserEntity } from "../../../models/user/user.entity";
 import EmployeeApi from "../../../pages/api/employee";
+import { ReferralSourceApi } from "../../../pages/api/referral-source";
 import UserApi from "../../../pages/api/user";
+import { buildReferral } from "../../../utils/common";
 import ViewDetails from "../../view-details/view-details";
 import ViewModal from "../../view-details/view-modal";
+import { ReferralSourceForm } from "../admin/referral-source-form";
 import { JobForm } from "./job-form";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
 export function ApplicantForm(props: ApplicantFormProps) {
-	const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([]);
+	let { className, entity, onSaveComplete, onSaveError } = props;
+	let { user, hasPermission, isSuperAdmin, isCompanyAdmin } = useAuth();
 	const { t } = useTranslation();
 	const router = useRouter();
-	const applicantApi = new ApplicantApi();
-	let { className, entity, onSaveComplete, onSaveError } = props;
 	const current_date = new Date();
-	let { user, hasPermission, isSuperAdmin, isCompanyAdmin } = useAuth();
+
+	const applicantApi = new ApplicantApi();
+	const referralSourceApi = new ReferralSourceApi();
+
+	const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([]);
+
+	const [referralSources, setReferralSources] = useState<ReferralSourceEntity[]>([])
 
 	const [protectedFields, setProtectedFields] = useState({
 		license_number: false,
@@ -155,6 +165,10 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		const jobs = await api.list();
 
 		setJobs(jobs);
+
+		const ref_list = await referralSourceApi.list();
+		setReferralSources(ref_list);
+
 	}, [user]);
 
 	useEffect(() => {
@@ -267,6 +281,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		setCreateJob(false);
 	};
 
+	const [createReferral, setCreateReferral] = useState(false);
+
+	const onLocationAdded = (referral: ReferralSourceEntity) => {
+		form.setFieldValue(`referralSource.id`, referral.id);
+		setReferralSources([
+			...referralSources,
+			referral
+		]);
+		setCreateReferral(false);
+	}
+
 	useEffectAsync(async () => {
 		const userApi = new UserApi();
 		const data = await userApi.list();
@@ -353,7 +378,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									formik={form}
 									max={OldThan18Year}
 								/>
-
 								<BaseInputPhone
 									className="col-12"
 									readOnly={Boolean(entity?.is_hired)}
@@ -404,6 +428,35 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										name="zip_code"
 										placeholder="ZIP_CODE"
 										formik={form}
+									/>
+									<BaseCheck
+										className="col-12 my-2"
+										disabled={Boolean(entity?.is_hired)}
+										label="AUTOMATED_RECRUITING_LEAD"
+										name={`extras[${form.values?.extras?.findIndex(
+											(v) => v.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD
+										)}].value`}
+										formik={form}
+									/>
+									<BaseSelect
+										className="col-12 p-0 px-lg-2"
+										label="LEAD_TYPE"
+										labelPrefix="ApplicantType"
+										name="type"
+										placeholder
+										formik={form}
+										enumType={ApplicantType}
+									/>
+									<BaseSelect
+										className="col-12 p-0 px-lg-2"
+										label="REFERRAL_SOURCE"
+										name="referralSource.id"
+										placeholder
+										formik={form}
+										valueKey="id"
+										createLabel={v => buildReferral(v)}
+										options={referralSources}
+										append={<Button variant="btn create_btn" onClick={() => setCreateReferral(true)}><PlusCircle /> {t("CREATE")}</Button>}
 									/>
 								</Row>
 								<Row className="px-3 mt-2">
@@ -638,97 +691,96 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			</Row>
 			<Row>
 				<Row>
-					<Col className="col-md-6">
-						<Col xs="12" className="p-2 mt-2">
-							<ViewCard
-								title="equipment_experience"
-								actions={
-									<Button
-										disabled={Boolean(entity?.is_hired)}
-										size="sm"
-										onClick={() =>
-											form.setValues({
-												...form.values,
-												equipment_experience: [
-													...(form.values?.equipment_experience || []),
-													new ApplicantExperienceEntity(),
-												],
-											})
-										}
-									>
-										<PlusCircle /> {t("ADD")}
-									</Button>
-								}
-							>
-								{form.values?.equipment_experience?.length > 0 && (
-									<>
-										{form.values?.equipment_experience.map((entity, i) => (
-											<Row key={i}>
-												<div className="col-md-6 mt-2">
-													<Col className="p-0">
-														<strong>{t("TYPE")}</strong>
-													</Col>
+					<Col className="col-md-6 p-2 mt-2">
 
-													<BaseSelect
-														readOnly={Boolean(props?.entity?.is_hired)}
-														name={`equipment_experience[${i}].type`}
-														placeholder="TYPE"
-														labelPrefix="JobEquipmentType"
-														enumType={JobEquipmentType}
-														formik={form}
-													/>
-												</div>
-												<div className="col-md-5 mt-2">
-													<Col className="p-0">
-														<strong>{t("YEARS")}</strong>
-													</Col>
+						<ViewCard
+							title="equipment_experience"
+							actions={
+								<Button
+									disabled={Boolean(entity?.is_hired)}
+									size="sm"
+									onClick={() =>
+										form.setValues({
+											...form.values,
+											equipment_experience: [
+												...(form.values?.equipment_experience || []),
+												new ApplicantExperienceEntity(),
+											],
+										})
+									}
+								>
+									<PlusCircle /> {t("ADD")}
+								</Button>
+							}
+						>
+							{form.values?.equipment_experience?.length > 0 && (
+								<>
+									{form.values?.equipment_experience.map((entity, i) => (
+										<Row key={i}>
+											<div className="col-md-6 mt-2">
+												<Col className="p-0">
+													<strong>{t("TYPE")}</strong>
+												</Col>
 
+												<BaseSelect
+													readOnly={Boolean(props?.entity?.is_hired)}
+													name={`equipment_experience[${i}].type`}
+													placeholder="TYPE"
+													labelPrefix="JobEquipmentType"
+													enumType={JobEquipmentType}
+													formik={form}
+												/>
+											</div>
+											<div className="col-md-5 mt-2">
+												<Col className="p-0">
+													<strong>{t("YEARS")}</strong>
+												</Col>
+
+												<BaseInput
+													readOnly={Boolean(props?.entity?.is_hired)}
+													name={`equipment_experience[${i}].years`}
+													placeholder="YEARS"
+													type="int"
+													min="1"
+													formik={form}
+												/>
+											</div>
+											{entity.type === JobEquipmentType.OTHER && (
+												<div>
 													<BaseInput
 														readOnly={Boolean(props?.entity?.is_hired)}
-														name={`equipment_experience[${i}].years`}
-														placeholder="YEARS"
-														type="int"
-														min="1"
+														className="my-2"
+														name={`equipment_experience[${i}].type_other`}
+														placeholder="TYPE"
 														formik={form}
 													/>
 												</div>
-												{entity.type === JobEquipmentType.OTHER && (
-													<div>
-														<BaseInput
-															readOnly={Boolean(props?.entity?.is_hired)}
-															className="my-2"
-															name={`equipment_experience[${i}].type_other`}
-															placeholder="TYPE"
-															formik={form}
-														/>
-													</div>
-												)}
-												<div className="pl-sm-1 pt-lg-2 col-lg-1 col-md-12">
-													<Col className="mt-4"></Col>
-													<a
-														href="#"
-														onClick={() =>
-															form.setValues({
-																...form.values,
-																equipment_experience:
-																	form.values?.equipment_experience?.filter(
-																		(v, idx) => i != idx
-																	),
-															})
-														}
-													>
-														<DashCircle color="red" />
-													</a>
-												</div>
-												<div className="12">
-													<hr />
-												</div>
-											</Row>
-										))}
-									</>
-								)}
-							</ViewCard>
-						</Col>
+											)}
+											<div className="pl-sm-1 pt-lg-2 col-lg-1 col-md-12">
+												<Col className="mt-4"></Col>
+												<a
+													href="#"
+													onClick={() =>
+														form.setValues({
+															...form.values,
+															equipment_experience:
+																form.values?.equipment_experience?.filter(
+																	(v, idx) => i != idx
+																),
+														})
+													}
+												>
+													<DashCircle color="red" />
+												</a>
+											</div>
+											<div className="12">
+												<hr />
+											</div>
+										</Row>
+									))}
+								</>
+							)}
+						</ViewCard>
 					</Col>
 					<Col md="6" className="px-2">
 						{form.values?.is_owner_operator && (
@@ -1435,6 +1487,16 @@ export function ApplicantForm(props: ApplicantFormProps) {
 					</ViewCard>
 				</Col>
 			</Row>
+
+			<ViewModal
+				title={t("CREATE_{name}", { name: "REFERRAL_SOURCE" }, { translateProps: true })}
+				show={createReferral}
+				onCloseClick={() => setCreateReferral(false)}
+			>
+				<ReferralSourceForm
+					onSaveComplete={onLocationAdded}
+				/>
+			</ViewModal>
 
 			<ViewModal
 				title={t("HIRE")}
