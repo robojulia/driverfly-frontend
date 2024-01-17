@@ -1,7 +1,7 @@
-import { DocumentEntity } from "../documents/document.entity";
 import * as yup from "yup";
-import { useTranslation } from "../../hooks/use-translation";
 import { Status } from "../../enums/status.enum";
+import { useTranslation } from "../../hooks/use-translation";
+import { DocumentEntity } from "../documents/document.entity";
 import { UserEntity } from "../user/user.entity";
 
 export class CompanyEntity {
@@ -12,6 +12,7 @@ export class CompanyEntity {
 	website?: string;
 	photo?: DocumentEntity;
 	status?: Status;
+	uuid_token: string;
 
 	users?: UserEntity[];
 	parent?: CompanyEntity;
