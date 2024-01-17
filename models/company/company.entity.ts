@@ -12,7 +12,7 @@ export class CompanyEntity {
 	website?: string;
 	photo?: DocumentEntity;
 	status?: Status;
-	uuid_token: string;
+	uuid_token?: string;
 
 	users?: UserEntity[];
 	parent?: CompanyEntity;
