@@ -1464,6 +1464,7 @@
   "UTM_MEDIUM": "UTM Medium",
   "UTM_CAMPAIGN": "UTM Campaign",
   "UTM_CONTENT": "UTM Conntent",
+  "UTM_FIELD_HELP_TEXT": "Once saved, it will not be editable",
   "utm_source": {
     "ON_MY_OWN": "On my own",
     "DRIVERFLY_REPRESENTATIVE": "Referral Code",
@@ -1992,6 +1993,7 @@
   "DIGITAL_HIRING_APP": "Digital Hiring App",
   "ATS": "ATS",
   "SOURCE": "Source",
+  "MEDIUM": "Medium",
   "ApplicantType": {
     "USER": "Job Board Lead",
     "COMPANY": "Company Uploaded",

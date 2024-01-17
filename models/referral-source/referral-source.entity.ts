@@ -1,5 +1,5 @@
-import { Status } from "../../enums/status.enum";
 import * as yup from "yup";
+import { Status } from "../../enums/status.enum";
 
 export class ReferralSourceEntity {
     id?: number;
@@ -7,6 +7,9 @@ export class ReferralSourceEntity {
     referrals?: number;
     name?: string;
     code?: string;
+    source?: string;
+    medium?: string;
+    campaign?: string;
     createdAt?: Date | string;
     createdBy?: number;
     updatedAt?: Date | string;
@@ -15,11 +18,13 @@ export class ReferralSourceEntity {
     static yupSchema() {
         return yup.object({
             name: yup.string().required().nullable(),
-            code: yup.string().required().nullable()
+            code: yup.string().required().nullable(),
+            source: yup.string().required().nullable(),
+            medium: yup.string().required().nullable(),
         });
     }
 
-    static getReferralUrl(host: string, entity: ReferralSourceEntity, companyId: number) {
-        return `${host}/form/digitalhiringapp/${companyId}?utm_source=rep&utm_medium=rep&utm_campaign=${entity.code}&referral_name=${entity?.name}`;
+    static getReferralUrl(host: string, entity: ReferralSourceEntity, company_uuid: string) {
+        return `${host}/form/digitalhiringapp/${company_uuid}?utm_source=${entity?.source}&utm_medium=${entity?.medium}&utm_campaign=${entity?.code}&referral_name=${entity?.name}`;
     }
 }

@@ -1,12 +1,11 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
-import { ArrowCounterclockwise, Pencil } from "react-bootstrap-icons";
+import { Pencil } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
 import { DeleteButton } from "../../../../../../../components/buttons/delete-button";
 import { RestoreButton } from "../../../../../../../components/buttons/restore-button";
 import FullLayout from "../../../../../../../components/dashboard/layouts/layout/full-layout";
-import { ReferralSourceForm } from "../../../../../../../components/forms/admin/referral-source-form";
 import ChildPageLayout from "../../../../../../../components/layouts/page/child-page-layout";
 import ViewDetails from "../../../../../../../components/view-details/view-details";
 import { Status } from "../../../../../../../enums/status.enum";
@@ -129,7 +128,9 @@ export default function ViewReferral({ id, host }) {
                             ID: entity.id,
                             NAME: entity.name,
                             REFERRAL_CODE: entity.code,
-                            URL: entity.code ? ReferralSourceEntity.getReferralUrl(host, entity, user?.company?.id) : null,
+                            SOURCE: entity.source,
+                            MEDIUM: entity.medium,
+                            URL: entity.code ? ReferralSourceEntity.getReferralUrl(host, entity, user?.company?.uuid_token) : null,
                             REFERRALS: entity.referrals,
                             CREATED_AT: (typeof entity.createdAt === "string" ? new Date(entity.createdAt) : entity.createdAt)?.toLocaleString()
                         }}
