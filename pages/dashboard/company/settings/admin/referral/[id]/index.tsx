@@ -130,7 +130,7 @@ export default function ViewReferral({ id, host }) {
                             REFERRAL_CODE: entity.code,
                             SOURCE: entity.source,
                             MEDIUM: entity.medium,
-                            URL: entity.code ? ReferralSourceEntity.getReferralUrl(host, entity, user?.company?.id) : null,
+                            URL: entity.code ? ReferralSourceEntity.getReferralUrl(host, entity, user?.company?.uuid_token) : null,
                             REFERRALS: entity.referrals,
                             CREATED_AT: (typeof entity.createdAt === "string" ? new Date(entity.createdAt) : entity.createdAt)?.toLocaleString()
                         }}

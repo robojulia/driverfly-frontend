@@ -24,7 +24,7 @@ export class ReferralSourceEntity {
         });
     }
 
-    static getReferralUrl(host: string, entity: ReferralSourceEntity, companyId: number) {
-        return `${host}/form/digitalhiringapp/${companyId}?utm_source=${entity?.source}&utm_medium=${entity?.medium}&utm_campaign=${entity?.code}&referral_name=${entity?.name}`;
+    static getReferralUrl(host: string, entity: ReferralSourceEntity, company_uuid: string) {
+        return `${host}/form/digitalhiringapp/${company_uuid}?utm_source=${entity?.source}&utm_medium=${entity?.medium}&utm_campaign=${entity?.code}&referral_name=${entity?.name}`;
     }
 }

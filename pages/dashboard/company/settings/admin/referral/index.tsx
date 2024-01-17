@@ -140,8 +140,8 @@ export default function ReferralList({ host }: { host: string }) {
 						name: "URL",
 						wrap: false,
 						width: "500",
-						selector: v => ReferralSourceEntity.getReferralUrl(host, v, user?.company?.id),
-						cell: v => ReferralSourceEntity.getReferralUrl(host, v, user?.company?.id)
+						selector: v => ReferralSourceEntity.getReferralUrl(host, v, user?.company?.uuid_token),
+						cell: v => ReferralSourceEntity.getReferralUrl(host, v, user?.company?.uuid_token)
 					},
 					{
 						id: "referrals",
