@@ -73,7 +73,7 @@ export default function HeroSearch(props) {
     useEffect(handleTypeheadChange, [location])
 
     return (
-        <div className="hero-search">
+        <div className="hero-search shadow mb-5 bg-white ">
             <div className="input-group border-0">
              
                 <input
