@@ -15,11 +15,10 @@ import { useEffectAsync } from "../../../../../../utils/react";
 
 import { ReferralSourceEntity } from "../../../../../../models/referral-source/referral-source.entity";
 
+import { TabbedLayout } from "../../../../../../components/layouts/page/tabbed-layout";
+import { Status } from "../../../../../../enums/status.enum";
 import { globalAjaxExceptionHandler } from "../../../../../../utils/ajax";
 import { ReferralSourceApi } from "../../../../../api/referral-source";
-import { Status } from "../../../../../../enums/status.enum";
-import { TabbedLayout } from "../../../../../../components/layouts/page/tabbed-layout";
-import OverlyPopover from "../../../../../../components/popover/overly-popover";
 
 
 export default function ReferralList({ host }: { host: string }) {
