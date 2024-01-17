@@ -118,24 +118,48 @@
   color: #4ca7a8;
 }
 
-.dashboard-container{
+.dashboard-container {
   background-color: #FAFBFF;
 }
-.company_dashobard{
+
+.company_dashobard {
   box-shadow: rgba(120, 120, 133, 0.13) 0px 7px 29px 0px;
 }
+
 .dashboard_items {
   position: relative;
 }
+
 .dashboard_items:nth-child(1):before,
-.dashboard_items:nth-child(even):before{
+.dashboard_items:nth-child(even):before {
   content: '';
-  height: 60%; 
+  height: 60%;
   width: 2px;
   position: absolute;
   right: 0;
   top: 20%;
   background-color: #F0F0F0;
+}
+
+.stat-items {
+  border-width: 0px 0px 0px 3px;
+  border-radius: 30px;
+  border-style: solid;
+  border-color: #fff;
+  transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.stat-items::after {
+  transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.stat-items:hover {
+  border-color: #2da2af;
+  transform: scale(1.04, 1.04);
+}
+
+.stat-items:hover::after {
+  opacity: 1;
 }
 
 /* .dashboard_items:nth-child(even):before{
@@ -152,31 +176,33 @@
 
 } */
 
-.ChartWrapper{
-  background-color:#FFFFFF !important;
+.ChartWrapper {
+  background-color: #FFFFFF !important;
   box-shadow: rgba(120, 120, 133, 0.13) 0px 7px 29px 0px;
   border-radius: 30px;
 }
 
-.innerChart-parent{
+.innerChart-parent {
   display: flex;
   justify-content: space-between;
 }
+
 .innerChart {
   width: 30% !important;
 }
 
 @media screen and (max-width:820px) {
-  .innerChart-parent{
-    display: flex  !important;
+  .innerChart-parent {
+    display: flex !important;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
+
   .innerChart {
     width: 80% !important;
   }
-  
+
 }
 
 
@@ -345,7 +371,7 @@
   padding: 0.5rem 0;
 }
 
-.auto_recruiting{
+.auto_recruiting {
   box-shadow: rgba(87, 87, 97, 0.241) 0px 7px 29px 0px;
   display: flex;
   flex-direction: column;
@@ -360,7 +386,8 @@
   border-radius: 18px;
   background: linear-gradient(to right, #38AFB0, #87FA35);
 }
-.auto_rec_link{
+
+.auto_rec_link {
   background-color: white !important;
   width: 100%;
   font-weight: bold;
@@ -369,9 +396,10 @@
   color: #1C4353;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
 }
-.auto_rec_link .Link{
-background: transparent !important;
-font-weight: 900;
+
+.auto_rec_link .Link {
+  background: transparent !important;
+  font-weight: 900;
 }
 
 
@@ -714,7 +742,8 @@ textarea {
 .accordion-button:not(.collapsed)::after {
   background-image: url("../../../img/arrowdown.svg") !important;
 }
-.my_chart{
+
+.my_chart {
   font-family: 'Poppins';
 }
 
