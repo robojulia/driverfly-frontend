@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import { ArcElement, Chart } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { useTranslation } from "../../hooks/use-translation";
 Chart.register(ArcElement);
@@ -47,59 +47,59 @@ export function PieChart(props: PieChartProps): JSX.Element {
 
 
 	return (
-<div className="chart-container">
-		<Doughnut
-			key={chartKey}
-			options={{
-				maintainAspectRatio: true,
-				responsive: true,
-				plugins: {
-					legend: {
-						maxWidth: 100,
-						position: 'right',
-						labels: {
-							boxWidth: 5,
-							
-							// padding:  1, 
-							// boxWidth: 20, // Set the width of the legend color box
-							// boxHeight: 20, // Set the height of the legend color box
-						},
-						
-					},
-					datalabels: {
-						color: function (context) {
-							var index = context.dataIndex;
-							var value = context.dataset.data[index];
-							return value === 0 ? "transparent" : "white";
-						},
-						font: {
-							size: 18,
-						},
-					},
+		<div className="chart-container">
+			<Doughnut
+				key={chartKey}
+				options={{
+					maintainAspectRatio: true,
+					responsive: true,
+					plugins: {
+						legend: {
+							maxWidth: 100,
+							position: 'right',
+							labels: {
+								boxWidth: 5,
 
-					// legend: {
-					// 	labels: {
-					// 	  font: {
-					// 		family:'Poppins'
-					// 		// size: , // Adjust the legend font size as needed
-					// 	  },
-					// 	},
-					//   },					
-				},
-			}}
-			data={{
-				labels: labels.map((v) => t(v)),
-				datasets: [
-					{
-						label: t(title),
-						data,
-						backgroundColor ,
-						borderWidth: 0,
-					},
-				],
-			}}
-		/>
+								// padding:  1, 
+								// boxWidth: 20, // Set the width of the legend color box
+								// boxHeight: 20, // Set the height of the legend color box
+							},
 
-</div>
+						},
+						datalabels: {
+							color: function (context) {
+								var index = context.dataIndex;
+								var value = context.dataset.data[index];
+								return value === 0 ? "transparent" : "white";
+							},
+							font: {
+								size: 18,
+							},
+						},
+
+						// legend: {
+						// 	labels: {
+						// 	  font: {
+						// 		family:'Poppins'
+						// 		// size: , // Adjust the legend font size as needed
+						// 	  },
+						// 	},
+						//   },					
+					},
+				}}
+				data={{
+					labels: labels.map((v) => t(v)),
+					datasets: [
+						{
+							label: t(title),
+							data,
+							backgroundColor,
+							borderWidth: 0,
+						},
+					],
+				}}
+			/>
+
+		</div>
 	);
 }

@@ -54,6 +54,7 @@ import { EducationLevel } from "../../../enums/users/education-level.enum";
 import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
 import { ApplicantExtrasEntity } from "../../../models/applicant";
 import { HireApplicantDto } from "../../../models/applicant/hire-applicant.dto";
+import { CdlExtras } from "../../../models/jot-form/long-form/cdl-object/index.dto";
 import { ReferralSourceEntity } from "../../../models/referral-source/referral-source.entity";
 import { UserEntity } from "../../../models/user/user.entity";
 import EmployeeApi from "../../../pages/api/employee";
@@ -177,25 +178,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		form.setValues(() => {
 			let values: ApplicantEntity;
 			let extras: ApplicantExtrasEntity[] = entity?.extras ?? [];
-
-			if (!extras?.find((v) => v.type == ApplicantExtras.ROUTES))
-				extras?.push({
-					...new ApplicantExtrasEntity(),
-					type: ApplicantExtras.ROUTES,
-				});
-
-			if (!extras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME))
-				extras?.push({
-					...new ApplicantExtrasEntity(),
-					type: ApplicantExtras.BUSINESS_NAME,
-				});
-
-			if (!extras?.find((v) => v.type == ApplicantExtras.DOT_NUMBER))
-				extras?.push({
-					...new ApplicantExtrasEntity(),
-					type: ApplicantExtras.DOT_NUMBER,
-				});
-
+   
 			if (
 				!extras?.find(
 					(v) => v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
@@ -222,6 +205,26 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			}
 
 			extras = extras.filter(Boolean);
+			if (!extras?.find((v) => v.type == ApplicantExtras.ROUTES)) extras?.push({
+				...new ApplicantExtrasEntity(),
+				type: ApplicantExtras.ROUTES,
+			});
+			if (!extras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME)) extras?.push({
+				...new ApplicantExtrasEntity(),
+				type: ApplicantExtras.BUSINESS_NAME,
+			});
+			if (!extras?.find((v) => v.type == ApplicantExtras.DOT_NUMBER)) extras?.push({
+				...new ApplicantExtrasEntity(),
+				type: ApplicantExtras.DOT_NUMBER,
+			});
+			if (!extras?.find((v) => v.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD)) extras?.push({
+				...new ApplicantExtrasEntity(),
+				type: ApplicantExtras.AUTOMATED_RECRUITING_LEAD,
+			});
+			if (!extras?.find((v) => v.type == ApplicantExtras.CDL_NUMBER)) extras?.push({
+				...new ApplicantExtrasEntity(),
+				type: ApplicantExtras.CDL_NUMBER,
+			});
 			if (!!entity?.id) {
 				values = {
 					...entity,
@@ -311,6 +314,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		console.log("form.values", form.values);
 		console.log("form.errors", form.errors);
 	}, [form.values, form.errors]);
+
+
 
 	return (
 		<EntityForm
@@ -490,7 +495,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							<Col md="4" className="px-2">
 								<BaseInput
 									className="col-12"
-									label="driver_license_number"
+									label="driver's_license_number"
 									name="license_number"
 									placeholder="driver_license_number"
 									formik={form}
@@ -517,6 +522,16 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									formik={form}
 								/>
 								<Row className="px-3">
+									<BaseInput
+										className="col-6"
+										readOnly={Boolean(entity?.is_hired)}
+										label="expiration_date"
+										name="license_expiry"
+										min={(new Date(current_date.getFullYear(), current_date.getMonth() + 6, current_date.getDate())).toISOString().split("T")[0]}
+										type="date"
+										placeholder="expiration_date"
+										formik={form}
+									/>
 									<StateSelect
 										className="col-6"
 										readOnly={Boolean(entity?.is_hired)}
@@ -525,6 +540,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										placeholder="state_issued"
 										formik={form}
 									/>
+								</Row>
+								<Row className="px-3">
 									<BaseSelect
 										className="col-6"
 										readOnly={Boolean(entity?.is_hired)}
@@ -535,16 +552,16 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										enumType={DriverLicenseType}
 										formik={form}
 									/>
+									<BaseInput
+										className="col-6"
+										readOnly={Boolean(entity?.is_hired)}
+										label="years_cdl_experience"
+										name="years_cdl_experience"
+										type="number"
+										placeholder="years_cdl_experience"
+										formik={form}
+									/>
 								</Row>
-								<BaseInput
-									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
-									label="years_cdl_experience"
-									name="years_cdl_experience"
-									type="number"
-									placeholder="years_cdl_experience"
-									formik={form}
-								/>
 								<BaseCheck
 									className="col-12 mt-2"
 									disabled={Boolean(entity?.is_hired)}
@@ -691,8 +708,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			</Row>
 			<Row>
 				<Row>
-					<Col className="col-md-6 p-2 mt-2">
-
+					<Col className="col-md-4 p-2 mt-2">
 						<ViewCard
 							title="equipment_experience"
 							actions={
@@ -782,7 +798,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							)}
 						</ViewCard>
 					</Col>
-					<Col md="6" className="px-2">
+					<Col md="4" className="px-2">
 						{form.values?.is_owner_operator && (
 							<Col xs="12" className="mt-3">
 								<ViewCard
@@ -882,6 +898,109 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							</Col>
 						)}
 					</Col>
+					<Col className="col-md-4 p-2 mt-2">
+					<ViewCard
+							title="ANY_ACTIVE_DRIVERS_LICENSE"
+							actions={
+								<Button
+								// disabled={Boolean(entity?.is_hired)}
+								size="sm"
+								onClick={() =>
+									form.setValues({
+										...form.values,
+										extras: [
+										  ...form.values?.extras?.map((item) => {
+											if (item.type === ApplicantExtras.CDL_NUMBER) {
+											  return {
+												...item,
+												value: [new CdlExtras(), ...item.value],
+											  };
+											}
+											return item;
+										  }),
+										],
+									  })
+								}
+							>
+								<PlusCircle /> {t("ADD")}
+							</Button>
+							}
+						>
+					{form.values?.extras?.find(v => v.type === ApplicantExtras.CDL_NUMBER)?.value?.length > 0 && (
+                <>
+                    {form.values?.extras?.find(v => v.type === ApplicantExtras.CDL_NUMBER)?.value?.map((entity, i) => (
+						
+                        <Row key={i} className={` single-past-employer-items my-3`}>
+                            <BaseInput
+                                name={`extras[${form.values?.extras?.findIndex(
+									(v) => v.type == ApplicantExtras.CDL_NUMBER
+								)}].value[${i}].license_number`}
+                                className="col-md-4 my-3"
+                                placeholder="CDL_NUMBER_1"
+                                label="CDL_NUMBER"
+                                required
+                                formik={form}
+                            />
+                            <StateSelect
+                                className="col-md-4 my-3"
+                                name={`extras[${form.values?.extras?.findIndex(
+									(v) => v.type == ApplicantExtras.CDL_NUMBER
+								)}].value[${i}].state`}
+                                placeholder="STATE"
+                                label="CHOOSE"
+                                required
+                                formik={form}
+                            />
+                            <BaseInput
+                                className="col-md-4 my-3"
+                                type="date"
+                                name={`extras[${form.values?.extras?.findIndex(
+									(v) => v.type == ApplicantExtras.CDL_NUMBER
+								)}].value[${i}].date`}
+                                placeholder="expiration_date"
+                                label="DATE"
+                                required
+                                formik={form}
+                            />
+
+                            <Button
+                                className="rounded-lg"
+                                variant="outline-danger close_btn w-25 mx-auto my-2"
+                                onClick={() =>
+                                    form.setValues({
+                                        ...form.values,
+										extras:[ ...form.values?.extras?.map((item) => {
+												if (item.type === ApplicantExtras.CDL_NUMBER) {
+												  return {
+													...item,
+													value: item.value?.filter(
+														(v, idx) => i != idx
+													),
+												  };
+												}
+												return item;
+											  })]
+
+											// ...form.values?.extras.find(v => v.type == ApplicantExtras.CDL_NUMBER).value,
+											// value: form.values?.extras?.find(v => v.type == ApplicantExtras.CDL_NUMBER)?.value?.filter(
+                                            //     (v, idx) => i != idx
+                                            // ),
+										// }
+                                    })
+                                }
+                            >
+                                <DashCircle /></Button>
+                            <div className='Row' style={{ height: '3px', borderBottom: 'solid 2px #8d8c8c', marginTop: '0px' }}></div >
+			
+                        </Row>
+                    ))}
+
+                </>
+            )}
+ 
+						</ViewCard>
+					</Col>
+														
 				</Row>
 			</Row>
 			<Row>
