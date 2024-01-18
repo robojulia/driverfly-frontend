@@ -50,6 +50,7 @@ export const DashboardStats = () => {
         }
         return acc;
       },
+
       {
         NEW_LEADS: {
           value: 0,
@@ -208,10 +209,7 @@ export const DashboardStats = () => {
           <div className={`card-body`} style={{ cursor: "pointer" }}>
             <Row className="d-flex align-items-center ">
               <Col lg={4} md={5} sm={4}></Col>
-              <Link
-                legacyBehavior
-                href={data.ACTIVE_JOB_POSTS?.link}
-              >
+              <Link legacyBehavior href={data.ACTIVE_JOB_POSTS?.link}>
                 <Col
                   md={7}
                   lg={8}
