@@ -464,33 +464,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										append={<Button variant="btn create_btn" onClick={() => setCreateReferral(true)}><PlusCircle /> {t("CREATE")}</Button>}
 									/>
 								</Row>
-								<Row className="px-3 mt-2">
-									<Col>
-										<ViewDetails
-											default={t("NOT_ANSWERED")}
-											obj={{
-												AUTOMATED_RECRUITING_LEAD: Boolean(
-													entity?.extras?.find(
-														(ap) =>
-															ap?.type ==
-															ApplicantExtras.AUTOMATED_RECRUITING_LEAD &&
-															ap?.value
-													)
-												)
-													? BooleanType.YES
-													: BooleanType.NO,
-												LEAD_TYPE: entity?.type
-													? t(`ApplicantType.${entity?.type}`)
-													: null,
-												REFERRAL_NAME: entity?.utm?.referral_name,
-												UTM_SOURCE: entity?.utm?.utm_source,
-												UTM_MEDIUM: entity?.utm?.utm_medium,
-												UTM_CAMPAIGN: entity?.utm?.utm_campaign,
-												UTM_CONTENT: entity?.utm?.utm_content,
-											}}
-										/>
-									</Col>
-								</Row>
 							</Col>
 							<Col md="4" className="px-2">
 								<BaseInput
