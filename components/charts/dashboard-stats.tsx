@@ -19,6 +19,7 @@ type StatAttributes = {
     onClick?: (e?: any) => void;
     icon?: any;
 };
+
 export const DashboardStats = () => {
     const { state } = useContext(DashboardChartContext);
     const [showBdaysList, setShowBdaysList] = useState<boolean>(false);
