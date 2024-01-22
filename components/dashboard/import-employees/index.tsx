@@ -247,9 +247,10 @@ const ImportEmployees = () => {
                     <InputGroup>
                         <div className="input-group-prepend">
                             <a
-                                href="../../../../EmployeeTemplate.xlsx.zip"
+                                download
+                                href="../../../../EmployeeTemplate.xlsx"
                                 type="button"
-                                onClick={onDownloadClick}
+                                // onClick={onDownloadClick}
                                 className="btn btn-md btn-primary pl-3">{t("DOWNLOAD_TEMPLATE")}</a>
                         </div>
                         <input onChange={onFileChange} disabled={!canUpload} className="form-control" type="file" accept=".csv" value={fileName} id="formFile" />

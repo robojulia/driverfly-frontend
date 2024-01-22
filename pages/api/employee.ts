@@ -1,3 +1,4 @@
+import { AxiosRequestConfig } from "axios";
 import { HireApplicantDto } from "../../models/applicant/hire-applicant.dto";
 import { DocumentEntity } from "../../models/documents/document.entity";
 import { EmployeeEntity } from "../../models/employee/employee.entity";
@@ -14,6 +15,18 @@ export default class EmployeeApi extends BaseApi {
 
 	async list(dto?: SearchEmployeeDto): Promise<EmployeeEntity[]> {
 		const { data } = await this.get(`${this.buildUrl(this.baseUrl, dto)}`);
+
+		return data;
+	}
+
+	async search(
+		params: EmployeeEntity,
+		config?: AxiosRequestConfig
+	): Promise<EmployeeEntity[]> {
+		const { data } = await this.get(
+			this.buildUrl(this.baseUrl + "/search", params),
+			config
+		);
 
 		return data;
 	}
