@@ -71,7 +71,7 @@ export function DuiAndEquipment() {
 
     return (
         <>
-            <h1 className={styles.carrierName}>{t("DUI_AND_EQUIPEMENTS")}</h1>
+            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("DUI_AND_EQUIPEMENTS")}</h1>
         <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
             <Row>
                 <ViewCard

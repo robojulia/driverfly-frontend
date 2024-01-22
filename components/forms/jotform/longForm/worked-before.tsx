@@ -59,7 +59,7 @@ export function WorkedBefore() {
 
 	return (
 		<>
-		<h1 className={styles.carrierName}>{t("WORKED_BEFORE")}</h1>
+		<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("WORKED_BEFORE")}</h1>
 
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row>
@@ -93,7 +93,7 @@ export function WorkedBefore() {
 									name="ALREADY_WORKED_TO_COMPANY.value.start_date"
 									placeholder="DATE"
 									label="FROM"
-									max={`9999-12-31`}	
+									max={new Date((new Date().getFullYear()), new Date().getMonth(), new Date().getDate()).toISOString().split("T")[0]}	
 									formik={form}
 								/>
 								<BaseInput
@@ -103,7 +103,7 @@ export function WorkedBefore() {
 									placeholder="DATE"
 									required
 									label="TO"
-									max={`9999-12-31`}
+									max={new Date((new Date().getFullYear()), new Date().getMonth(), new Date().getDate()).toISOString().split("T")[0]}	
 									formik={form}
 								/>
 

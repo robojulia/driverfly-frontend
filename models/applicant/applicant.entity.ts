@@ -1,31 +1,32 @@
-import { UserEntity } from "../user/user.entity";
+import moment from "moment";
+import * as yup from "yup";
+import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
+import { LicenseRestrictions } from "../../enums/applicants/applicant-license-restrictions-type.enum";
+import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
+import { ApplicantType } from "../../enums/applicants/applicant-type.enum";
+import { JobGeography } from "../../enums/jobs/job-geography.enum";
+import { Status } from "../../enums/status.enum";
+import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum";
+import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
+import { EducationLevel } from "../../enums/users/education-level.enum";
+import { VehicleTransmissionType } from "../../enums/vehicles/vehicle-transmission-type.enum";
+import { UtmReferral } from "../auth/utm-referral.interface";
 import { CompanyEntity } from "../company/company.entity";
 import { DocumentEntity } from "../documents/document.entity";
-import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
-import { LicenseRestrictions } from "../../enums/applicants/applicant-license-restrictions-type.enum";
-import { EducationLevel } from "../../enums/users/education-level.enum";
-import { ApplicantType } from "../../enums/applicants/applicant-type.enum";
-import * as yup from "yup";
-import { VehicleTransmissionType } from "../../enums/vehicles/vehicle-transmission-type.enum";
-import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum";
-import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
-import { JobGeography } from "../../enums/jobs/job-geography.enum";
-import {
-	ApplicantExperienceEntity,
-	ApplicantEquipmentEntity,
-	ApplicantEmployerEntity,
-	ApplicantNoteEntity,
-	ApplicantJobEntity,
-	ApplicantDacEntity,
-	ApplicantExtrasEntity
-} from "./index"
-import { ApplicantVoeFormEntity } from "./applicant-voe-form.entity";
-import { Status } from "../../enums/status.enum";
-import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
-import { ApplicantJobStatusHistoryEntity } from "./applicant-job-status-history.entity";
 import { EmployeeEntity } from "../employee/employee.entity";
-import moment from "moment";
-import { UtmReferral } from "../auth/utm-referral.interface";
+import { ReferralSourceEntity } from "../referral-source/referral-source.entity";
+import { UserEntity } from "../user/user.entity";
+import { ApplicantJobStatusHistoryEntity } from "./applicant-job-status-history.entity";
+import { ApplicantVoeEntity } from "./applicant-voe.entity";
+import {
+	ApplicantDacEntity,
+	ApplicantEmployerEntity,
+	ApplicantEquipmentEntity,
+	ApplicantExperienceEntity,
+	ApplicantExtrasEntity,
+	ApplicantJobEntity,
+	ApplicantNoteEntity
+} from "./index";
 
 
 export class ApplicantEntity {
@@ -93,7 +94,7 @@ export class ApplicantEntity {
 	last_updated_at?: string;
 	dac?: ApplicantDacEntity[];
 	extras?: ApplicantExtrasEntity[] = []
-	voeData?: ApplicantVoeFormEntity[] = []
+	voeData?: ApplicantVoeEntity[] = []
 	uuid_token?: string;
 	status?: Status;
 	current_application_status?: ApplicantStatus;
@@ -101,8 +102,9 @@ export class ApplicantEntity {
 	employee?: EmployeeEntity;
 	is_hired?: boolean = false;
 	remarks?: string;
-
 	utm?: UtmReferral;
+	// referralSourceId?: number;
+	referralSource?: ReferralSourceEntity;
 
 	static yupSchema() {
 		return yup.object({

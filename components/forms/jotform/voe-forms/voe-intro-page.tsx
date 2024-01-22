@@ -1,13 +1,13 @@
 import { useFormik } from "formik";
-import { useTranslation } from "../../../../hooks/use-translation";
-import { Form, Button, Col, Row } from "react-bootstrap";
-import VoeFormContext, { VoeFormContextType } from "../../../../context/voeform-context";
 import { useContext } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import VoeFormContext, { VoeFormContextType } from "../../../../context/voeform-context";
+import { useTranslation } from "../../../../hooks/use-translation";
 import styles from "../../../../styles/voe.module.css";
 
 export function IntroPage() {
 	const {
-		state: { applicant, applicantVoe },
+		state: { applicant, voe},
 		method: { stepNext },
 	}: VoeFormContextType = useContext(VoeFormContext);
 	const { t } = useTranslation();

@@ -111,7 +111,7 @@ export function AccordianPage() {
 				</div>
 			) : null}
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<h1 className={styles.carrierName}>{t("FORMS_TO_SIGNUP")}</h1>
+				<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("FORMS_TO_SIGNUP")}</h1>
 				<h6 className={`${styles.paragraph} my-3`}>{t("PLEASE_CLICK_EACH_ARROW")}</h6>
 				<button
 					type="button"

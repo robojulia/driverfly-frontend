@@ -5,26 +5,26 @@ import * as yup from "yup";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
-import PageLayout from "../../../../../components/layouts/page/page-layout";
-import { useTranslation } from "../../../../../hooks/use-translation";
-import BaseClickToCopyInput from "../../../../../components/forms/base-click-to-copy-input";
-import { DriverLicenseType } from "../../../../../enums/users/driver-license-type.enum";
-import { useAuth } from "../../../../../hooks/use-auth";
-import CompanyApi from "../../../../api/company";
-import { CompanyPreferenceEntity } from "../../../../../models/company/company-preferences.entity";
+import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
+import { useTranslation } from "../../../../hooks/use-translation";
+import BaseClickToCopyInput from "../../../../components/forms/base-click-to-copy-input";
+import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
+import { useAuth } from "../../../../hooks/use-auth";
+import CompanyApi from "../../../api/company";
+import { CompanyPreferenceEntity } from "../../../../models/company/company-preferences.entity";
 
-import { CompanyPreferenceCategory } from "../../../../../enums/company/company-preference-category.enum";
-import { CompanyPreferenceJotformLabel } from "../../../../../enums/company/company-preferences-jotform-label.enum";
-import { useEffectAsync } from "../../../../../utils/react";
-import BaseCheckList from "../../../../../components/forms/base-check-list";
-import BaseInput from "../../../../../components/forms/base-input";
-import { JobEmploymentType } from "../../../../../enums/jobs/job-employment-type.enum";
-import { JobGeography } from "../../../../../enums/jobs/job-geography.enum";
-import ViewModal from "../../../../../components/view-details/view-modal";
-import BaseCheck from "../../../../../components/forms/base-check";
-import { CompanyPreferenceAutoRecrutingLabel } from "../../../../../enums/company/company-preferences-auto-recruiting-label.enum";
-import { CompanyPreferenceEnhancementLabel } from "../../../../../enums/company/company-preference-enhancement-label.enum";
+import { CompanyPreferenceCategory } from "../../../../enums/company/company-preference-category.enum";
+import { CompanyPreferenceJotformLabel } from "../../../../enums/company/company-preferences-jotform-label.enum";
+import { useEffectAsync } from "../../../../utils/react";
+import BaseCheckList from "../../../../components/forms/base-check-list";
+import BaseInput from "../../../../components/forms/base-input";
+import { JobEmploymentType } from "../../../../enums/jobs/job-employment-type.enum";
+import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
+import ViewModal from "../../../../components/view-details/view-modal";
+import BaseCheck from "../../../../components/forms/base-check";
+import { CompanyPreferenceAutoRecrutingLabel } from "../../../../enums/company/company-preferences-auto-recruiting-label.enum";
+import { CompanyPreferenceEnhancementLabel } from "../../../../enums/company/company-preference-enhancement-label.enum";
 
 export default function CompanyPreference() {
 	enum WhatsThisOptionsEnum {
@@ -226,7 +226,7 @@ export default function CompanyPreference() {
 
 	return (
 		<>
-			<PageLayout title="DIGITAL_HIRING_APPLICATION">
+			<PageLayout title="DIGITAL_HIRING_APPLICATION_AUTO_RECRUITING">
 				{showModal && (
 					<ViewModal
 						show={showModal}
@@ -335,7 +335,7 @@ export default function CompanyPreference() {
 				<BaseClickToCopyInput
 					label="DIGITAL_HIRING_APP_URL"
 					className="my-2 border p-3 rounded"
-					value={`${process.env.FRONTEND_BASE_URL ?? ""}form/digitalhiringapp/${user?.company?.id
+					value={`${process.env.FRONTEND_BASE_URL ?? ""}form/digitalhiringapp/${user?.company?.uuid_token
 						}`}
 					tooltipText={t("CLICK_TO_COPY")}
 				/>

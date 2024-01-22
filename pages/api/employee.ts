@@ -1,10 +1,10 @@
-import { EmployeeEmployerEntity } from './../../models/employee/employee-employer.entity';
-import { EmployeeDocumentType } from './../../enums/employee/employee-document-types.enum';
-import BaseApi from "./_baseApi";
-import { EmployeeEntity } from "../../models/employee/employee.entity";
 import { HireApplicantDto } from "../../models/applicant/hire-applicant.dto";
 import { DocumentEntity } from "../../models/documents/document.entity";
+import { EmployeeEntity } from "../../models/employee/employee.entity";
 import { SearchEmployeeDto } from '../../models/employee/search-employee.dto';
+import { EmployeeDocumentType } from './../../enums/employee/employee-document-types.enum';
+import { EmployeeEmployerEntity } from './../../models/employee/employee-employer.entity';
+import BaseApi from "./_baseApi";
 
 export default class EmployeeApi extends BaseApi {
 	baseUrl: string = "employee";

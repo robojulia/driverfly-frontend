@@ -54,7 +54,7 @@ export function OtherQueues() {
 
     return (
         <>
-			<h1 className={styles.carrierName}>{t("Other_queues")}</h1>
+			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("HAVE_ANY_ACTIVE_DRIVERS_LICENSE")}</h1>
             <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
             {form.values.CDL_NUMBER?.value?.length > 0 && (
                 <>

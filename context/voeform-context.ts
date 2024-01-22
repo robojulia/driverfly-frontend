@@ -1,15 +1,15 @@
 import { createContext } from "react";
-import { ApplicantEmployerEntity, ApplicantEntity, ApplicantVoeFormEntity } from "../models/applicant";
+import { ApplicantEmployerEntity, ApplicantEntity, ApplicantVoeEntity } from "../models/applicant";
 
 export type VoeFormContextType = {
 	state: {
 		applicant: ApplicantEntity;
 		employer: ApplicantEmployerEntity;
-		applicantVoe: ApplicantVoeFormEntity[];
+		voe: ApplicantVoeEntity;
 		steps: number;
 	};
 	method: {
-		updateApplicantVoe: (e?: any) => void;
+		updateVoe: (e?: any) => void;
 		stepNext: () => void;
 		stepBack: () => void;
 		jumpToStep: (step: number) => void;
@@ -18,13 +18,13 @@ export type VoeFormContextType = {
 
 const VoeFormContext = createContext<VoeFormContextType>({
 	state: {
-		applicant: null,
-		employer: null,
-		applicantVoe: [],
+		applicant: new ApplicantEntity(),
+		employer: new ApplicantEmployerEntity(),
+		voe: new ApplicantVoeEntity(),
 		steps: 0,
 	},
 	method: {
-		updateApplicantVoe: (e?: any) => { },
+		updateVoe: (e?: any) => { },
 		stepNext: () => { },
 		stepBack: () => { },
 		jumpToStep: (step: number) => { },

@@ -1,27 +1,25 @@
 import { useEffect, useState } from "react";
-import styles from "../../../../../styles/voe.module.css";
-import VoeFormContext from "../../../../../context/voeform-context";
 import { VoeFormPageControl } from "../../../../../components/forms/jotform/voe-form-pages";
+import VoeFormContext from "../../../../../context/voeform-context";
+import {
+	ApplicantEmployerEntity,
+	ApplicantEntity,
+	ApplicantVoeEntity,
+} from "../../../../../models/applicant";
+import styles from "../../../../../styles/voe.module.css";
 import ApplicantApi from "../../../../api/applicant";
-import { ApplicantEmployerEntity, ApplicantEntity, ApplicantVoeFormEntity } from "../../../../../models/applicant";
 
 export interface VoeFormProps {
 	applicant: ApplicantEntity;
-	employer: ApplicantEmployerEntity
-	
+	employer: ApplicantEmployerEntity;
+	voeData?: ApplicantVoeEntity;
 }
 
-export default function VoeForm({ applicant, employer }: VoeFormProps) {
+export default function VoeForm({ applicant, employer, voeData }: VoeFormProps) {
+	const [voe, setVoe] = useState<ApplicantVoeEntity>(new ApplicantVoeEntity());
 
-	const [applicantVoe, setApplicantVoe] = useState<ApplicantVoeFormEntity[]>([])
-
-	const updateApplicantVoe = (applicantVoeEntity: ApplicantVoeFormEntity) =>
-		setApplicantVoe((oldApx) => {
-			oldApx = oldApx?.filter((v) => v.type !== applicantVoeEntity.type);
-			return !!oldApx
-				? [...oldApx, { ...applicantVoeEntity }]
-				: [{ ...applicantVoeEntity }];
-		});
+	const updateVoe = (applicantVoeEntity: ApplicantVoeEntity) =>
+		setVoe({ ...voe, ...applicantVoeEntity });
 
 	const [steps, setSteps] = useState<number>(0);
 	const stepNext = (): void => setSteps(steps + 1);
@@ -29,12 +27,16 @@ export default function VoeForm({ applicant, employer }: VoeFormProps) {
 	const jumpToStep = (step: number): void => {
 		setSteps(step);
 	};
+
 	useEffect(() => {
-		console.log("from index", applicant);
-
-		// if (applicant.voeData) setApplicantVoe(applicant.voeData.filter(val => val?.employerId === employer?.id))
-
-	}, [employer]);
+		console.log("voe", voe);
+	}, [voe]);
+	useEffect(() => {
+		console.log("voeData", voeData);
+	}, [voeData]);
+	useEffect(() => {
+		setVoe(voeData)
+	}, [voeData]);
 
 	return (
 		<VoeFormContext.Provider
@@ -42,14 +44,14 @@ export default function VoeForm({ applicant, employer }: VoeFormProps) {
 				state: {
 					applicant,
 					employer,
-					applicantVoe,
+					voe,
 					steps,
 				},
 				method: {
-					updateApplicantVoe,
+					updateVoe,
 					stepNext,
 					stepBack,
-					jumpToStep
+					jumpToStep,
 				},
 			}}
 		>
@@ -68,17 +70,25 @@ export async function getServerSideProps({ query }) {
 	try {
 		const { applicant_uuid, employer_uuid } = query || {};
 
-		if (!!!applicant_uuid || !!!employer_uuid) return { notFound: true }
+		if (!!!applicant_uuid || !!!employer_uuid) return { notFound: true };
 
-		const applicantApi = new ApplicantApi()
+		const applicantApi = new ApplicantApi();
 
-		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid)
-		const employer: ApplicantEmployerEntity = await applicantApi.employer.getByUuidToken(employer_uuid)
+		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(
+			applicant_uuid
+		);
+		const employer: ApplicantEmployerEntity =
+			await applicantApi.employer.getByUuidToken(employer_uuid);
 
-		if (!!!applicant || !!!employer || applicant.id !== employer.applicant.id) return { notFound: true }
+		if (!!!applicant || !!!employer || applicant.id !== employer.applicant.id)
+			return { notFound: true };
 
-		return { props: { applicant, employer } }
+		const voeData = await applicantApi.voeform.fetch(applicant_uuid, employer_uuid)
+
+		return { props: { applicant, employer, voeData } };
 	} catch (error) {
-		return { notFound: true }
+		console.log("error", error.message);
+
+		return { notFound: true };
 	}
 }

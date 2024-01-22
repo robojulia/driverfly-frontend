@@ -47,7 +47,7 @@ export function HighestLevelEducation() {
 
 	return (
 		<>
-			<h1 className={styles.carrierName}>{t("TELL_ABOUT_YOUR_EDUCATION")}</h1>
+			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("TELL_ABOUT_YOUR_EDUCATION")}</h1>
 
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 		
