@@ -1215,7 +1215,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												)}].value.start_date`}
 												placeholder="DATE"
 												label="FROM"
-												max={`9999-12-31`}
+												max={new Date((new Date().getFullYear()), new Date().getMonth(), new Date().getDate()).toISOString().split("T")[0]}	
 												formik={form}
 											/>
 											<BaseInput
@@ -1228,7 +1228,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												placeholder="DATE"
 												required
 												label="TO"
-												max={`9999-12-31`}
+												max={new Date((new Date().getFullYear()), new Date().getMonth(), new Date().getDate()).toISOString().split("T")[0]}	
 												formik={form}
 											/>
 										</Row>
