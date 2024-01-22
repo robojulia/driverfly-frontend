@@ -58,7 +58,7 @@ export class EmployeeEntity {
 	emergency_contact_name?: string;
 	emergency_contact_number?: string;
 	emergency_contact_relationship?: string;
-	company: CompanyEntity;
+	company?: CompanyEntity;
 	hire_date?: string | Date;
 	manager?: CompanyManagerEntity;
 	documents?: DocumentEntity[] = [];

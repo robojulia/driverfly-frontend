@@ -1,4 +1,5 @@
 export enum ChattableType {
+    USER = "USER",
     APPLICANT = "APPLICANT",
-    USER = "USER"
+    EMPLOYEE = "EMPLOYEE",
 }

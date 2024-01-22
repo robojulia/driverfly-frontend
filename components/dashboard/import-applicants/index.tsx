@@ -337,7 +337,8 @@ const ImportApplicants = () => {
                     <InputGroup>
                         <div className="input-group-prepend">
                             <a
-                                href="../../../ApplicantsTemplate.xlsx.zip"
+                                download
+                                href="../../../ApplicantsTemplate.xlsx"
                                 // onClick={onDownloadClick}
                                 className="btn btn-md btn-primary pl-3"
                             >

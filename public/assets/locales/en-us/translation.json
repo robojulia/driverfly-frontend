@@ -2004,6 +2004,11 @@
     "DHA": "Lead from Digital Hiring App",
     "DIRECT_JOB_APPLY": "Driverfly Job Board"
   },
+  "ChattableType": {
+    "USER": "User (Driver)",
+    "APPLICANT": "Applicant",
+    "EMPLOYEE": "Employee"
+  },
   "SELECT_ONE_PLACEHOLDER": "Please Select One",
   "STATS": "Stats",
   "LEAD_ASSIGNMENT": "Lead Assignment",
