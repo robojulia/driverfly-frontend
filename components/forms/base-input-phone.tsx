@@ -57,6 +57,8 @@ function BaseInputPhone({ formik, required, className, label, handleBlur, placeh
 			append={append}
 		>
 			<PhoneInput
+				autoFormat
+				countryCodeEditable={false}
 				onlyCountries={onlyCountries}
 				isValid={!error}
 				inputProps={{
