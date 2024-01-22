@@ -76,6 +76,15 @@ const ImportApplicants = () => {
             ),
         }),
         validate: async (values) => {
+            values.items = values
+                ?.items
+                ?.filter((v) => Boolean(v.email)
+                    || Boolean(v.first_name)
+                    || Boolean(v.last_name)
+                    || Boolean(v.phone)
+                )
+            console.log("values validate", values);
+
             const errors = {};
 
             let lastProgress = 0;
@@ -100,6 +109,8 @@ const ImportApplicants = () => {
                         );
 
                     if (applicant.phone) {
+                        if (!applicant.phone.startsWith("+1")) applicant.phone = "+1 " + applicant.phone
+
                         if (matches.some((v) => v.company?.id != null))
                             rowError.phone = t(
                                 "{name}_ALREADY_EXISTS",
