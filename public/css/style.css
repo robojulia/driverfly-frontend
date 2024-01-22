@@ -849,6 +849,9 @@ input[type='range']::-webkit-slider-thumb {
     margin-bottom: 0px;
 }
 
+.contact-main{
+    background-color: #fafafa;
+}
 .contact-form {
     background-color: #fafafa;
     padding-bottom: 90px;
@@ -856,14 +859,20 @@ input[type='range']::-webkit-slider-thumb {
 
 .contact-infomation {
     background-color: #2da2af;
-    padding: 60px 35px 55px 30px;
+    /* padding: 60px 35px 55px 30px; */
     border-radius: 6px;
+    padding: 50% 5%;
+
 }
 
 .contact-infomation p {
     color: white;
     margin: 25px 0px 35px;
     line-height: 30px;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
 }
 
 .contact-inner {
@@ -1018,7 +1027,7 @@ input[type='range']::-webkit-slider-thumb {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    margin-top: 25px;
+    /* margin-top: 25px; */
 }
 
 .about-img {
@@ -1212,6 +1221,7 @@ img.who-we-img.img-fluid {
     /* background: #fafafa; */
     padding: 80px 0px ;
     height: 500px;
+
 }
 
 .custom-tst .item {
@@ -1322,7 +1332,9 @@ img.who-we-img.img-fluid {
 .partners {
     background: #f0f0f0;
     text-align: center;
-    padding: 40px 0px 75px;
+    width: 100%;
+    padding: 5% 0% !important;
+    overflow: none !important;
 }
 
 .partners h2 {
@@ -1549,6 +1561,11 @@ img.who-we-img.img-fluid {
 }
 
 /************************** DRIVER-SEC **********************/
+.about-driver-sec{
+    background-color: #FAFAFA !important;
+    margin: 0% !important;
+    padding-top: 5%;
+}
 .driver-sec {
     background-color: #FFFFFF;
     margin: 50px 0px 200px 0px;
@@ -1836,6 +1853,9 @@ img.who-we-img.img-fluid {
 
 .pb-170 {
     padding-bottom: 170px;
+}
+.about-testominial{
+    margin-top: 0px !important;
 }
 
 .about-testominial .owl-nav .disabled {
