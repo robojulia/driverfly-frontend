@@ -1,44 +1,42 @@
+import { useFormik } from "formik";
+import { useState } from "react";
 import {
     Col,
+    Dropdown,
+    InputGroup,
     ProgressBar,
     Row,
     Table,
-    InputGroup,
-    Dropdown,
 } from "react-bootstrap";
-import { toast } from "react-toastify";
-import { useFormik } from "formik";
-import * as yup from "yup";
-import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
-import {
-    TranslateInterface,
-    useTranslation,
-} from "../../../hooks/use-translation";
 import {
     Check,
     CheckCircle,
     ExclamationTriangle,
     XCircle,
 } from "react-bootstrap-icons";
-import { useState } from "react";
-import FileDownload from "js-file-download";
-import * as fileUtils from "../../../utils/file";
-import Switch from "../../controls/switch";
-import * as _style from "../../../public/components/styles/ImportApplicantsModule.module.css";
-import ApplicantApi from "../../../pages/api/applicant";
-import OverlyPopover from "../../popover/overly-popover";
-import { FormikInterface } from "../../../utils/formik";
+import { toast } from "react-toastify";
+import * as yup from "yup";
 import { SchemaDescription, SchemaObjectDescription } from "yup/lib/schema";
 import { LicenseRestrictions } from "../../../enums/applicants/applicant-license-restrictions-type.enum";
-import { matchEnum } from "../../../utils/enums.utils";
-import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
-import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
-import { EducationLevel } from "../../../enums/users/education-level.enum";
-import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
 import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
-import { ApplicantExperienceEntity } from "../../../models/applicant/applicant-experience.entity";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
-import * as XLSX from "xlsx";
+import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
+import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
+import { EducationLevel } from "../../../enums/users/education-level.enum";
+import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
+import {
+    TranslateInterface,
+    useTranslation,
+} from "../../../hooks/use-translation";
+import { ApplicantExperienceEntity } from "../../../models/applicant/applicant-experience.entity";
+import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
+import ApplicantApi from "../../../pages/api/applicant";
+import * as _style from "../../../public/components/styles/ImportApplicantsModule.module.css";
+import { matchEnum } from "../../../utils/enums.utils";
+import * as fileUtils from "../../../utils/file";
+import { FormikInterface } from "../../../utils/formik";
+import Switch from "../../controls/switch";
+import OverlyPopover from "../../popover/overly-popover";
 
 
 
@@ -78,6 +76,15 @@ const ImportApplicants = () => {
             ),
         }),
         validate: async (values) => {
+            values.items = values
+                ?.items
+                ?.filter((v) => Boolean(v.email)
+                    || Boolean(v.first_name)
+                    || Boolean(v.last_name)
+                    || Boolean(v.phone)
+                )
+            console.log("values validate", values);
+
             const errors = {};
 
             let lastProgress = 0;
@@ -102,6 +109,8 @@ const ImportApplicants = () => {
                         );
 
                     if (applicant.phone) {
+                        if (applicant.phone.length > 3 && !applicant.phone.startsWith("+1")) applicant.phone = "+1 " + applicant.phone
+
                         if (matches.some((v) => v.company?.id != null))
                             rowError.phone = t(
                                 "{name}_ALREADY_EXISTS",
@@ -303,23 +312,8 @@ const ImportApplicants = () => {
     console.log("headers", headers);
     console.log("headers data", headersData);
 
-    const onDownloadClick = (e) => {       
-        // FileDownload(
-        //     `${headers.join(",")}\n${headersData.join(",")}`,
-        //     'Import Applicants Template.xlsx',
-        //     );
-          // create workbook and worksheet
-
-        const filePath = '../../../Import Applicants Template.xlsx';
-        const workbook = XLSX.read(filePath, { type: 'buffer' });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        XLSX.utils.sheet_add_aoa(worksheet, [headers, headersData]);
-        XLSX.writeFile(workbook, 'Import Applicants Template.xlsx', { compression: true });
-
-     };
- 
-
-
+    const onDownloadClick = (e) => {
+    };
 
     const onClearClick = (e) => {
         form.resetForm();
@@ -353,13 +347,14 @@ const ImportApplicants = () => {
                 <Col sm="6" className="my-3">
                     <InputGroup>
                         <div className="input-group-prepend">
-                            <button
-                                type="button"
-                                onClick={onDownloadClick}
+                            <a
+                                download
+                                href="../../../ApplicantsTemplate.xlsx"
+                                // onClick={onDownloadClick}
                                 className="btn btn-md btn-primary pl-3"
                             >
                                 {t("DOWNLOAD_TEMPLATE")}
-                            </button>
+                            </a>
                         </div>
                         <input
                             onChange={onFileChange}
@@ -580,7 +575,8 @@ const ImportApplicants = () => {
                                 const findIcon = () => {
                                     if (meta.error) return <XCircle color="red" />;
 
-                                    if (warnings[i])
+                                    // if (Boolean(warnings[i]) && Boolean(Object.keys((warnings[i]))?.length))
+                                    if (Boolean(warnings[i]))
                                         return <ExclamationTriangle color="orange" />;
 
                                     return <Check color="green" />;

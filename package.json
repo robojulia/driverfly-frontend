@@ -20,7 +20,6 @@
     "chart.js": "^3.8.0",
     "chartjs-plugin-datalabels": "^2.2.0",
     "formik": "^2.2.9",
-    "js-file-download": "^0.4.12",
     "moment": "^2.29.1",
     "next": "^12.1.6",
     "path": "^0.12.7",
@@ -50,7 +49,6 @@
     "sass": "^1.45.1",
     "socket.io-client": "^2.3.1",
     "twilio-client": "^1.14.0",
-    "xlsx": "^0.18.5",
     "yup": "^0.32.11"
   },
   "devDependencies": {
