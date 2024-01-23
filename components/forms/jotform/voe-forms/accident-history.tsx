@@ -12,6 +12,8 @@ import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
 import BaseSelect from "../../base-select";
 import BaseTextArea from "../../base-text-area";
+import BaseRadio from "../../base-radio";
+import { PersonDriveMotor } from "../../../../enums/voe/person-drive-vehicle.enum";
 
 export function AccidentHistory() {
 	const {
@@ -78,9 +80,13 @@ export function AccidentHistory() {
 	}, [voe]);
 
 	useEffect(() => {
-		console.log("form values", form.values);
+		console.log("form values ===", form.values);
 		console.log("form eror", form.errors);
 	}, [form.values, form.errors]);
+
+	const radioOptions = [
+		{'YES' : true},{ 'NO' : false}
+	]
 
 	return (
 		<>
@@ -127,16 +133,25 @@ export function AccidentHistory() {
 					</div>
 				</Row>
 
-				<Row className={`${styles.align__text_left} ${styles.bold}`}>
+				{/* <Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseCheck
 						className="float-left col my-3"
 						name="did_drive_check"
-						label="VOE_DRIVER_QUES"
+						label="VOE_DRIVER_QUESTION"
 						formik={form}
 					/>
-				</Row>
+				</Row> */}
 
-				{form.values.did_drive_check ? (
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
+				<BaseRadio
+					className="float-left my-2 col"
+					label="VOE_DRIVER_QUESTION"
+					name="did_drive_check"
+					formik={form}
+					options={radioOptions}
+				/>
+				</Row>
+				{Boolean(form.values?.did_drive_check)  && (
 					<Row
 						className={`${styles.align__text_left} ${styles.bold} ${styles.paragraph}`}
 					>
@@ -147,8 +162,7 @@ export function AccidentHistory() {
 							formik={form}
 						/>
 					</Row>
-				) : null}
-
+				)}
 				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseCheck
 						className="float-left col my-2"
@@ -157,6 +171,16 @@ export function AccidentHistory() {
 						formik={form}
 					/>
 				</Row>
+{/* 
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
+				<BaseRadio
+					className="float-left my-2 col"
+					label="safety_performance"
+					name="SAFETY_PERFORMANCE_REPORT"
+					formik={form}
+					enumType={PersonDriveMotor}
+				/>
+				</Row> */}
 				<>
 					{Boolean(form?.values?.safety_performance) && (
 						<Row className={`${styles.align__text_left} ${styles.bold}`}>

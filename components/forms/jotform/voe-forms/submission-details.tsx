@@ -98,20 +98,22 @@ export function SubmissionDetails() {
 		form.setValues({
 			...form.values,
 			signature,
-			focal_person_name,
-			focal_person_title,
-			focal_person_phone,
-			focal_person_email,
+			focal_person_name: Boolean(voe.id) ? voe.focal_person_name : employer.manager_name,
+			focal_person_title : Boolean(voe.id) ? voe.focal_person_title : employer.title,
+			focal_person_phone : Boolean(voe.id) ? voe.focal_person_phone : employer.phone,
+			focal_person_email : Boolean(voe.id) ? voe.focal_person_email : employer.email,
 			signed_date,
 			allow_share
 		});
 		padRef?.current?.fromDataURL(signature)
-	}, [voe]);
+	}, [voe, employer]);
 
 	// useEffect(() => {
 	// 	console.log("form values", form.values);
 	// 	console.log("form eror", form.errors);
 	// }, [form.values, form.errors]);
+	console.log("VOE ===================================",voe);
+	console.log("EMPLOYER ===================================",employer);
 
 	return (
 		<>
@@ -119,36 +121,6 @@ export function SubmissionDetails() {
 
 			<ToastContainer />
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<Row className={`${styles.align__text_left}`}>
-					<Col md="10">
-						<h6 className={`${styles.bold} text-black ${styles.bold}`}>
-							{t("SIGNATURE")}
-						</h6>
-						<SignatureCanvas
-							name="signature"
-							ref={padRef}
-							onEnd={signatureEnd}
-							canvasProps={{
-								width: 720,
-								height: 200,
-								style: { border: "1px solid black" },
-								className: "sigCanvas",
-							}}
-						/>
-					</Col>
-					<Col
-						md="2"
-						className="d-flex align-self-center justify-content-center"
-					>
-						<button
-							type="button"
-							className="theme-secondary-btn"
-							onClick={clearSignatureCanvas}
-						>
-							{t("CLEAR")}
-						</button>
-					</Col>
-				</Row>
 				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseInput
 						className="my-3 float-left col-md-6"
@@ -161,6 +133,18 @@ export function SubmissionDetails() {
 						label="TITLE"
 						name="focal_person_title"
 						formik={form}
+					/>
+				</Row>
+
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
+					<BaseInput
+						className="my-3 float-left col"
+						label="company"
+						// name={`employer[${employer.name}]`}
+						value={employer.name}
+						type="text"
+						readOnly
+						// formik={form}
 					/>
 				</Row>
 				<Row className={`${styles.align__text_left} ${styles.bold}`}>
@@ -200,7 +184,36 @@ export function SubmissionDetails() {
 							formik={form}
 						/>
 					</OverlyPopover>
-
+				</Row>
+				<Row className={`${styles.align__text_left}`}>
+					<Col md="10">
+						<h6 className={`${styles.bold} text-black ${styles.bold}`}>
+							{t("SIGNATURE")}
+						</h6>
+						<SignatureCanvas
+							name="signature"
+							ref={padRef}
+							onEnd={signatureEnd}
+							canvasProps={{
+								width: 720,
+								height: 200,
+								style: { border: "1px solid black" },
+								className: "sigCanvas",
+							}}
+						/>
+					</Col>
+					<Col
+						md="2"
+						className="d-flex align-self-center justify-content-center"
+					>
+						<button
+							type="button"
+							className="theme-secondary-btn"
+							onClick={clearSignatureCanvas}
+						>
+							{t("CLEAR")}
+						</button>
+					</Col>
 				</Row>
 
 				<Row className="my-3">
