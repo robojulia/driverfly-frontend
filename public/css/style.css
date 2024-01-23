@@ -2507,7 +2507,7 @@ input[type=checkbox] {
     margin: 0 auto;
 }
 
-input[type='radio']:checked:after {
+/* input[type='radio']:checked:after {
     width: 16px;
     height: 16px;
     border-radius: 15px;
@@ -2519,7 +2519,7 @@ input[type='radio']:checked:after {
     display: inline-block;
     visibility: visible;
     border: 2px solid white;
-}
+} */
 
 /* Styling only for Firefox browser */
 @supports (-moz-appearance:none) {

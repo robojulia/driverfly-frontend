@@ -60,8 +60,8 @@ export function AccidentHistory() {
 			end_date,
 			drived_vehicle,
 			did_drive_check = Boolean(drived_vehicle) ? BooleanType.YES : BooleanType.NO,
-			safety_performance = false,
-			registered_accidents_details = false,
+			safety_performance ,
+			registered_accidents_details ,
 			accidents_reported_to_government,
 			reason_to_leave,
 		} = voe;
@@ -73,16 +73,16 @@ export function AccidentHistory() {
 			did_drive_check,
 			drived_vehicle,
 			safety_performance,
-			registered_accidents_details,
+			registered_accidents_details ,
 			accidents_reported_to_government,
 			reason_to_leave,
 		});
 	}, [voe]);
 
-	// useEffect(() => {
-	// 	console.log("form values ===", form.values);
-	// 	console.log("form eror", form.errors);
-	// }, [form.values, form.errors]);
+	useEffect(() => {
+		console.log("form values ===", form.values);
+		console.log("form eror", form.errors);
+	}, [form.values, form.errors]);
 
 	useEffect(() => {
 		if (form.values?.did_drive_check !== BooleanType.YES) form.setFieldValue("drived_vehicle", null)
@@ -140,6 +140,7 @@ export function AccidentHistory() {
 						formik={form}
 						labelPrefix="BooleanType"
 						enumType={BooleanType}
+						required
 					/>
 				</Row>
 				{form.values?.did_drive_check === BooleanType.YES && (
@@ -155,36 +156,33 @@ export function AccidentHistory() {
 					</Row>
 				)}
 				<Row className={`${styles.align__text_left} ${styles.bold}`}>
-					<BaseCheck
-						className="float-left col my-2"
-						name="safety_performance"
+					<BaseRadio
+						className="float-left my-2 col"
 						label="SAFETY_PERFORMANCE_REPORT"
+						name="safety_performance"
 						formik={form}
+						labelPrefix="BooleanType"
+						enumType={BooleanType}
+						required
 					/>
 				</Row>
-				{/* 
-				<Row className={`${styles.align__text_left} ${styles.bold}`}>
-				<BaseRadio
-					className="float-left my-2 col"
-					label="safety_performance"
-					name="SAFETY_PERFORMANCE_REPORT"
-					formik={form}
-					enumType={PersonDriveMotor}
-				/>
-				</Row> */}
 				<>
-					{Boolean(form?.values?.safety_performance) && (
+
+
+					{ form.values?.safety_performance === BooleanType.YES  && (
 						<Row className={`${styles.align__text_left} ${styles.bold}`}>
-							<BaseCheck
-								className="float-left col my-2"
-								name="registered_accidents_details"
+							<BaseRadio
+								className="float-left my-2 col"
 								label="ACCIDENT_REGISTER_DATA"
+								name="registered_accidents_details"
 								formik={form}
+								labelPrefix="BooleanType"
+								enumType={BooleanType}
 							/>
 						</Row>
 					)}
 
-					{Boolean(form?.values?.registered_accidents_details) && (
+					{form.values?.registered_accidents_details === BooleanType.YES  && (
 						<Row
 							className={`${styles.align__text_left} ${styles.bold} ${styles.paragraph}`}
 						>

@@ -17,7 +17,6 @@ function InlineLayout(
 	labelPrefix,
 	disabled
 ) {
-	console.log("options", options);
 
 	return (
 		<>
@@ -27,14 +26,14 @@ function InlineLayout(
 				return (
 					<div
 						key={i}
-						className={`form-check form-check-inline flex-row-reverse`}
+						className={`form-check form-check-inline flex-row`}
 					>
 						<label className="form-check-label">
 							{t((labelPrefix ? labelPrefix + "." : "") + v[labelKey])}
 						</label>
 						<input
 							disabled={disabled}
-							className={`form-check-input ${error ? "is-invalid" : ""}`}
+							className={`radio-btns ${error ? "is-invalid" : ""}`}
 							type="radio"
 							readOnly={readOnly}
 							value={v[valueKey]}
@@ -154,7 +153,7 @@ function BaseRadio({
 			{label && (
 				<span style={{ marginRight: "20px", color: "black" }}>
 					{t(label)}
-					{required ? "*" : ""}:
+					{required ? <span style={{color:'red'}}>*</span> : ""}:
 				</span>
 			)}
 			{cols
