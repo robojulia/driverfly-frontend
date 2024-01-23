@@ -2,6 +2,7 @@ import * as yup from "yup";
 import { ApplicantEmployerEntity } from "./applicant-employer.entity";
 import { ApplicantEntity } from "./applicant.entity";
 import { ReasonsForLeavingEmployment } from "../../enums/users/reasons-for-leaving-employment";
+import { BooleanType } from "../../enums/jotform/boolean-type.enum";
 
 export class ApplicantVoeEntity {
 	constructor() { }
@@ -20,7 +21,7 @@ export class ApplicantVoeEntity {
 	focal_person_email?: string;
 	signed_date?: Date;
 	signature?: string;
-	did_drive_check?: boolean;
+	did_drive_check?: BooleanType;
 	drived_vehicle?: string;
 	safety_performance?: boolean;
 	registered_accidents_details?: boolean;

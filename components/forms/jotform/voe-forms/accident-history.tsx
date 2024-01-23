@@ -4,16 +4,16 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import VoeFormContext, {
 	VoeFormContextType,
 } from "../../../../context/voeform-context";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 import { ReasonsForLeavingEmployment } from "../../../../enums/users/reasons-for-leaving-employment";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantVoeEntity } from "../../../../models/applicant/applicant-voe.entity";
 import styles from "../../../../styles/voe.module.css";
 import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
+import BaseRadio from "../../base-radio";
 import BaseSelect from "../../base-select";
 import BaseTextArea from "../../base-text-area";
-import BaseRadio from "../../base-radio";
-import { PersonDriveMotor } from "../../../../enums/voe/person-drive-vehicle.enum";
 
 export function AccidentHistory() {
 	const {
@@ -59,7 +59,7 @@ export function AccidentHistory() {
 			start_date,
 			end_date,
 			drived_vehicle,
-			did_drive_check = Boolean(drived_vehicle),
+			did_drive_check = Boolean(drived_vehicle) ? BooleanType.YES : BooleanType.NO,
 			safety_performance = false,
 			registered_accidents_details = false,
 			accidents_reported_to_government,
@@ -79,14 +79,14 @@ export function AccidentHistory() {
 		});
 	}, [voe]);
 
-	useEffect(() => {
-		console.log("form values ===", form.values);
-		console.log("form eror", form.errors);
-	}, [form.values, form.errors]);
+	// useEffect(() => {
+	// 	console.log("form values ===", form.values);
+	// 	console.log("form eror", form.errors);
+	// }, [form.values, form.errors]);
 
-	const radioOptions = [
-		{'YES' : true},{ 'NO' : false}
-	]
+	useEffect(() => {
+		if (form.values?.did_drive_check !== BooleanType.YES) form.setFieldValue("drived_vehicle", null)
+	}, [form.values.did_drive_check]);
 
 	return (
 		<>
@@ -132,26 +132,17 @@ export function AccidentHistory() {
 						/>
 					</div>
 				</Row>
-
-				{/* <Row className={`${styles.align__text_left} ${styles.bold}`}>
-					<BaseCheck
-						className="float-left col my-3"
-						name="did_drive_check"
-						label="VOE_DRIVER_QUESTION"
-						formik={form}
-					/>
-				</Row> */}
-
 				<Row className={`${styles.align__text_left} ${styles.bold}`}>
-				<BaseRadio
-					className="float-left my-2 col"
-					label="VOE_DRIVER_QUESTION"
-					name="did_drive_check"
-					formik={form}
-					options={radioOptions}
-				/>
+					<BaseRadio
+						className="float-left my-2 col"
+						label="VOE_DRIVER_QUESTION"
+						name="did_drive_check"
+						formik={form}
+						labelPrefix="BooleanType"
+						enumType={BooleanType}
+					/>
 				</Row>
-				{Boolean(form.values?.did_drive_check)  && (
+				{form.values?.did_drive_check === BooleanType.YES && (
 					<Row
 						className={`${styles.align__text_left} ${styles.bold} ${styles.paragraph}`}
 					>
@@ -171,7 +162,7 @@ export function AccidentHistory() {
 						formik={form}
 					/>
 				</Row>
-{/* 
+				{/* 
 				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 				<BaseRadio
 					className="float-left my-2 col"
