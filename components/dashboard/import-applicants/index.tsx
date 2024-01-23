@@ -109,7 +109,7 @@ const ImportApplicants = () => {
                         );
 
                     if (applicant.phone) {
-                        if (!applicant.phone.startsWith("+1")) applicant.phone = "+1 " + applicant.phone
+                        if (applicant.phone.length > 3 && !applicant.phone.startsWith("+1")) applicant.phone = "+1 " + applicant.phone
 
                         if (matches.some((v) => v.company?.id != null))
                             rowError.phone = t(
@@ -575,7 +575,8 @@ const ImportApplicants = () => {
                                 const findIcon = () => {
                                     if (meta.error) return <XCircle color="red" />;
 
-                                    if (warnings[i])
+                                    // if (Boolean(warnings[i]) && Boolean(Object.keys((warnings[i]))?.length))
+                                    if (Boolean(warnings[i]))
                                         return <ExclamationTriangle color="orange" />;
 
                                     return <Check color="green" />;
