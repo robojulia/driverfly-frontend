@@ -378,6 +378,7 @@ const ImportApplicants = () => {
                             </div>
                         )}
                     </InputGroup>
+                    <p className="small text-secondary">{t("DOWNLOAD_AND_SAVE_AS_CSV")}</p>
                 </Col>
                 <Col sm="6" className="my-3">
                     <div style={{ float: "right" }}>

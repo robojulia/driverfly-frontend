@@ -631,6 +631,7 @@
   "NON_MMEMBER": "Non Member",
   "APPLICANTS_PER_RECRUITER": "Applicants per recruiter",
   "UNASSIGNED": "Unassigned",
+  "DOWNLOAD_AND_SAVE_AS_CSV":"please download the file and then save as a .csv",
   "SMS_MESSAGES": "SMS Messages",
   "MESSAGES": "Messages",
   "STORED_FILES": "Stored Files",
