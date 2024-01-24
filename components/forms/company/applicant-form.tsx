@@ -176,7 +176,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		form.setValues(() => {
 			let values: ApplicantEntity;
 			let extras: ApplicantExtrasEntity[] = entity?.extras ?? [];
-   
+
 			if (
 				!extras?.find(
 					(v) => v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
@@ -870,104 +870,104 @@ export function ApplicantForm(props: ApplicantFormProps) {
 						)}
 					</Col>
 					<Col className="col-md-4 p-2 mt-2">
-					<ViewCard
+						<ViewCard
 							title="ANY_ACTIVE_DRIVERS_LICENSE"
 							actions={
 								<Button
-								// disabled={Boolean(entity?.is_hired)}
-								size="sm"
-								onClick={() => {
-									const extras = form.values?.extras || [];
-									form.setValues({
-									  ...form.values,
-									  extras: extras.map((item) =>
-										item.type === ApplicantExtras.CDL_NUMBER
-										  ? { ...item, value: [new CdlExtras(), ...(item.value || [])] }
-										  : item
-									  ),
-									});
-								  }}
-								  
-							>
-								<PlusCircle /> {t("ADD")}
-							</Button>
+									// disabled={Boolean(entity?.is_hired)}
+									size="sm"
+									onClick={() => {
+										const extras = form.values?.extras || [];
+										form.setValues({
+											...form.values,
+											extras: extras.map((item) =>
+												item.type === ApplicantExtras.CDL_NUMBER
+													? { ...item, value: [new CdlExtras(), ...(item.value || [])] }
+													: item
+											),
+										});
+									}}
+
+								>
+									<PlusCircle /> {t("ADD")}
+								</Button>
 							}
 						>
-					{form.values?.extras?.find(v => v.type === ApplicantExtras.CDL_NUMBER)?.value?.length > 0 && (
-                <>
-                    {form.values?.extras?.find(v => v.type === ApplicantExtras.CDL_NUMBER)?.value?.map((entity, i) => (
-						
-                        <Row key={i} className={` single-past-employer-items my-3`}>
-                            <BaseInput
-                                name={`extras[${form.values?.extras?.findIndex(
-									(v) => v.type == ApplicantExtras.CDL_NUMBER
-								)}].value[${i}].license_number`}
-                                className="col-md-4 my-3"
-                                placeholder="CDL_NUMBER_1"
-                                label="CDL_NUMBER"
-                                required
-                                formik={form}
-                            />
-                            <StateSelect
-                                className="col-md-4 my-3"
-                                name={`extras[${form.values?.extras?.findIndex(
-									(v) => v.type == ApplicantExtras.CDL_NUMBER
-								)}].value[${i}].state`}
-                                placeholder="STATE"
-                                label="CHOOSE"
-                                required
-                                formik={form}
-                            />
-                            <BaseInput
-                                className="col-md-4 my-3"
-                                type="date"
-                                name={`extras[${form.values?.extras?.findIndex(
-									(v) => v.type == ApplicantExtras.CDL_NUMBER
-								)}].value[${i}].date`}
-                                placeholder="expiration_date"
-                                label="DATE"
-                                required
-                                formik={form}
-                            />
+							{form.values?.extras?.find(v => v.type === ApplicantExtras.CDL_NUMBER)?.value?.length > 0 && (
+								<>
+									{form.values?.extras?.find(v => v.type === ApplicantExtras.CDL_NUMBER)?.value?.map((entity, i) => (
 
-                            <Button
-                                className="rounded-lg"
-                                variant="outline-danger close_btn w-25 mx-auto my-2"
-                                onClick={() =>
-                                    form.setValues({
-                                        ...form.values,
-										extras:[ ...form.values?.extras?.map((item) => {
-												if (item.type === ApplicantExtras.CDL_NUMBER) {
-												  return {
-													...item,
-													value: item.value?.filter(
-														(v, idx) => i != idx
-													),
-												  };
+										<Row key={i} className={` single-past-employer-items my-3`}>
+											<BaseInput
+												name={`extras[${form.values?.extras?.findIndex(
+													(v) => v.type == ApplicantExtras.CDL_NUMBER
+												)}].value[${i}].license_number`}
+												className="col-md-4 my-3"
+												placeholder="CDL_NUMBER_1"
+												label="CDL_NUMBER"
+												required
+												formik={form}
+											/>
+											<StateSelect
+												className="col-md-4 my-3"
+												name={`extras[${form.values?.extras?.findIndex(
+													(v) => v.type == ApplicantExtras.CDL_NUMBER
+												)}].value[${i}].state`}
+												placeholder="STATE"
+												label="CHOOSE"
+												required
+												formik={form}
+											/>
+											<BaseInput
+												className="col-md-4 my-3"
+												type="date"
+												name={`extras[${form.values?.extras?.findIndex(
+													(v) => v.type == ApplicantExtras.CDL_NUMBER
+												)}].value[${i}].date`}
+												placeholder="expiration_date"
+												label="DATE"
+												required
+												formik={form}
+											/>
+
+											<Button
+												className="rounded-lg"
+												variant="outline-danger close_btn w-25 mx-auto my-2"
+												onClick={() =>
+													form.setValues({
+														...form.values,
+														extras: [...form.values?.extras?.map((item) => {
+															if (item.type === ApplicantExtras.CDL_NUMBER) {
+																return {
+																	...item,
+																	value: item.value?.filter(
+																		(v, idx) => i != idx
+																	),
+																};
+															}
+															return item;
+														})]
+
+														// ...form.values?.extras.find(v => v.type == ApplicantExtras.CDL_NUMBER).value,
+														// value: form.values?.extras?.find(v => v.type == ApplicantExtras.CDL_NUMBER)?.value?.filter(
+														//     (v, idx) => i != idx
+														// ),
+														// }
+													})
 												}
-												return item;
-											  })]
+											>
+												<DashCircle /></Button>
+											<div className='Row' style={{ height: '3px', borderBottom: 'solid 2px #8d8c8c', marginTop: '0px' }}></div >
 
-											// ...form.values?.extras.find(v => v.type == ApplicantExtras.CDL_NUMBER).value,
-											// value: form.values?.extras?.find(v => v.type == ApplicantExtras.CDL_NUMBER)?.value?.filter(
-                                            //     (v, idx) => i != idx
-                                            // ),
-										// }
-                                    })
-                                }
-                            >
-                                <DashCircle /></Button>
-                            <div className='Row' style={{ height: '3px', borderBottom: 'solid 2px #8d8c8c', marginTop: '0px' }}></div >
-			
-                        </Row>
-                    ))}
+										</Row>
+									))}
 
-                </>
-            )}
- 
+								</>
+							)}
+
 						</ViewCard>
 					</Col>
-														
+
 				</Row>
 			</Row>
 			<Row>
@@ -1182,7 +1182,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												)}].value.start_date`}
 												placeholder="DATE"
 												label="FROM"
-												max={new Date((new Date().getFullYear()), new Date().getMonth(), new Date().getDate()).toISOString().split("T")[0]}	
+												max={new Date((new Date().getFullYear()), new Date().getMonth(), new Date().getDate()).toISOString().split("T")[0]}
 												formik={form}
 											/>
 											<BaseInput
@@ -1195,7 +1195,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												placeholder="DATE"
 												required
 												label="TO"
-												max={new Date((new Date().getFullYear()), new Date().getMonth(), new Date().getDate()).toISOString().split("T")[0]}	
+												max={new Date((new Date().getFullYear()), new Date().getMonth(), new Date().getDate()).toISOString().split("T")[0]}
 												formik={form}
 											/>
 										</Row>
