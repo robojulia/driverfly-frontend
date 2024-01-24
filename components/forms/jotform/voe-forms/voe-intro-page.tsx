@@ -7,7 +7,7 @@ import styles from "../../../../styles/voe.module.css";
 
 export function IntroPage() {
 	const {
-		state: { applicant, voe},
+		state: { applicant, voe, employer },
 		method: { stepNext },
 	}: VoeFormContextType = useContext(VoeFormContext);
 	const { t } = useTranslation();
@@ -22,6 +22,11 @@ export function IntroPage() {
 	return (
 		<Form onSubmit={form.handleSubmit}>
 			<h1 className={styles.carrierName}>{t("VERIFICATION_OF_EMPLOYMENT")}</h1>
+			<h4
+				className={`${styles.paragraph} ${styles.margin__top} p-1`}
+			>{employer?.name}
+			</h4>
+
 			<Row className="mt-3">
 				<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 					{t(
