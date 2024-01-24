@@ -46,7 +46,6 @@ import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
 import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
-import { BooleanType } from "../../../enums/jotform/boolean-type.enum";
 import { Status } from "../../../enums/status.enum";
 import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
 import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
@@ -61,7 +60,6 @@ import EmployeeApi from "../../../pages/api/employee";
 import { ReferralSourceApi } from "../../../pages/api/referral-source";
 import UserApi from "../../../pages/api/user";
 import { buildReferral } from "../../../utils/common";
-import ViewDetails from "../../view-details/view-details";
 import ViewModal from "../../view-details/view-modal";
 import { ReferralSourceForm } from "../admin/referral-source-form";
 import { JobForm } from "./job-form";
@@ -476,7 +474,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								// 	!protectedFields.license_number || Boolean(entity?.is_hired)
 								// }
 								/>
-								<BaseInput
+								{/* <BaseInput
 									className="col-12"
 									readOnly={Boolean(entity?.is_hired)}
 									label="expiration_date"
@@ -493,7 +491,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									type="date"
 									placeholder="expiration_date"
 									formik={form}
-								/>
+								/> */}
 								<Row className="px-3">
 									<BaseInput
 										className="col-6"
@@ -878,22 +876,18 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<Button
 								// disabled={Boolean(entity?.is_hired)}
 								size="sm"
-								onClick={() =>
+								onClick={() => {
+									const extras = form.values?.extras || [];
 									form.setValues({
-										...form.values,
-										extras: [
-										  ...form.values?.extras?.map((item) => {
-											if (item.type === ApplicantExtras.CDL_NUMBER) {
-											  return {
-												...item,
-												value: [new CdlExtras(), ...item.value],
-											  };
-											}
-											return item;
-										  }),
-										],
-									  })
-								}
+									  ...form.values,
+									  extras: extras.map((item) =>
+										item.type === ApplicantExtras.CDL_NUMBER
+										  ? { ...item, value: [new CdlExtras(), ...(item.value || [])] }
+										  : item
+									  ),
+									});
+								  }}
+								  
 							>
 								<PlusCircle /> {t("ADD")}
 							</Button>
