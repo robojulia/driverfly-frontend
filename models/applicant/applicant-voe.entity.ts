@@ -41,8 +41,9 @@ export class ApplicantVoeEntity {
 			position: yup.string().required().nullable(),
 			start_date: yup.date().required().nullable(),
 			end_date: yup.date().required().nullable(),
-			did_drive_check : yup.string().required().nullable(),
-			safety_performance : yup.string().required().nullable(),
+			did_drive_check : yup.mixed<BooleanType>().oneOf(Object.values(BooleanType)).required().nullable(),
+			safety_performance : yup.mixed<BooleanType>().oneOf(Object.values(BooleanType)).required().nullable(),
+			reason_to_leave:yup.mixed<ReasonsForLeavingEmployment>().oneOf(Object.values(ReasonsForLeavingEmployment)).required().nullable(),
 		});
 	}
 
