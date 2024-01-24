@@ -17,34 +17,26 @@ function InlineLayout(
 	labelPrefix,
 	disabled
 ) {
-
 	return (
 		<>
-			{options?.map((v, i) => {
-				console.log("options", labelKey);
-
-				return (
-					<div
-						key={i}
-						className={`form-check form-check-inline flex-row`}
-					>
-						<label className="form-check-label">
-							{t((labelPrefix ? labelPrefix + "." : "") + v[labelKey])}
-						</label>
-						<input
-							disabled={disabled}
-							className={`radio-btns ${error ? "is-invalid" : ""}`}
-							type="radio"
-							readOnly={readOnly}
-							value={v[valueKey]}
-							name={name}
-							onChange={onChange}
-							onBlur={handleBlur}
-							checked={value.includes(v[valueKey])}
-						/>
-					</div>
-				)
-			})}
+			{options?.map((v, i) => (
+				<div key={i} className={`form-check form-check-inline flex-row`}>
+					<label className="form-check-label">
+						{t((labelPrefix ? labelPrefix + "." : "") + v[labelKey])}
+					</label>
+					<input
+						disabled={disabled}
+						className={`radio-btns ${error ? "is-invalid" : ""}`}
+						type="radio"
+						readOnly={readOnly}
+						value={v[valueKey]}
+						name={name}
+						onChange={onChange}
+						onBlur={handleBlur}
+						checked={value == v[valueKey]}
+					/>
+				</div>
+			))}
 		</>
 	);
 }
@@ -81,7 +73,7 @@ function ColLayout(
 							name={name}
 							onChange={onChange}
 							onBlur={handleBlur}
-							checked={value.includes(v[valueKey])}
+							checked={value == v[valueKey]}
 						/>
 					</div>
 				</div>
@@ -95,7 +87,7 @@ export interface BaseRadioProps extends BaseControlProps {
 	labelKey?: string;
 	valueKey?: string;
 	labelPrefix?: string;
-	value?: string[];
+	value?: string | number | boolean;
 	cols?: string | number;
 	onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
@@ -141,19 +133,19 @@ function BaseRadio({
 		handleBlur = handleBlur || formik.handleBlur;
 	}
 	if (typeof enumType === "object") {
-		options = Object.entries(enumType).map(([key, value]) => ({
+		options = Object.entries(enumType)?.map(([key, value]) => ({
 			[valueKey]: value,
 			[labelKey]: value,
 		}));
 	}
-	if (!value) value = [];
+	// if (!value) value = [];
 
 	return (
 		<div className={className}>
 			{label && (
 				<span style={{ marginRight: "20px", color: "black" }}>
 					{t(label)}
-					{required ? <span style={{color:'red'}}>*</span> : ""}:
+					{required ? <span style={{ color: "red" }}>*</span> : ""}:
 				</span>
 			)}
 			{cols

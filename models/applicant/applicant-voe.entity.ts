@@ -23,8 +23,8 @@ export class ApplicantVoeEntity {
 	signature?: string;
 	did_drive_check?: BooleanType;
 	drived_vehicle?: string;
-	safety_performance?: BooleanType;
-	registered_accidents_details?: BooleanType;
+	safety_performance?: boolean;
+	registered_accidents_details?: boolean;
 	accidents_reported_to_government?: string;
 	allow_share?: boolean;
 	created_at?: Date;
@@ -41,9 +41,20 @@ export class ApplicantVoeEntity {
 			position: yup.string().required().nullable(),
 			start_date: yup.date().required().nullable(),
 			end_date: yup.date().required().nullable(),
-			did_drive_check : yup.mixed<BooleanType>().oneOf(Object.values(BooleanType)).required().nullable(),
-			safety_performance : yup.mixed<BooleanType>().oneOf(Object.values(BooleanType)).required().nullable(),
-			reason_to_leave:yup.mixed<ReasonsForLeavingEmployment>().oneOf(Object.values(ReasonsForLeavingEmployment)).required().nullable(),
+			did_drive_check: yup
+				.mixed<BooleanType>()
+				.oneOf(Object.values(BooleanType))
+				.required()
+				.nullable(),
+			safety_performance: yup.boolean().nullable(),
+			registered_accidents_details: yup
+				.boolean()
+				.nullable(),
+			reason_to_leave: yup
+				.mixed<ReasonsForLeavingEmployment>()
+				.oneOf(Object.values(ReasonsForLeavingEmployment))
+				.required()
+				.nullable(),
 		});
 	}
 
