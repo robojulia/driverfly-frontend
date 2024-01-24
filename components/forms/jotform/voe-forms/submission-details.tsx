@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import { useContext, useEffect, useRef } from "react";
-import { Button, Col, Form, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import SignatureCanvas from "react-signature-canvas";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,10 +13,10 @@ import ApplicantApi from "../../../../pages/api/applicant";
 import styles from "../../../../styles/voe.module.css";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { LoaderIcon } from "../../../loading/loader-icon";
+import OverlyPopover from "../../../popover/overly-popover";
+import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
 import BaseInputPhone from "../../base-input-phone";
-import BaseCheck from "../../base-check";
-import OverlyPopover from "../../../popover/overly-popover";
 
 export function SubmissionDetails() {
 	const {
@@ -87,6 +87,7 @@ export function SubmissionDetails() {
 
 	useEffect(() => {
 		const {
+			id,
 			signature,
 			focal_person_name,
 			focal_person_title,
@@ -98,10 +99,10 @@ export function SubmissionDetails() {
 		form.setValues({
 			...form.values,
 			signature,
-			focal_person_name: Boolean(voe.id) ? voe.focal_person_name : employer.manager_name,
-			focal_person_title : Boolean(voe.id) ? voe.focal_person_title : employer.title,
-			focal_person_phone : Boolean(voe.id) ? voe.focal_person_phone : employer.phone,
-			focal_person_email : Boolean(voe.id) ? voe.focal_person_email : employer.email,
+			focal_person_name: Boolean(id) ? focal_person_name : employer.manager_name,
+			focal_person_title: Boolean(id) ? focal_person_title : employer.title,
+			focal_person_phone: Boolean(id) ? focal_person_phone : employer.phone,
+			focal_person_email: Boolean(id) ? focal_person_email : employer.email,
 			signed_date,
 			allow_share
 		});
@@ -112,8 +113,8 @@ export function SubmissionDetails() {
 	// 	console.log("form values", form.values);
 	// 	console.log("form eror", form.errors);
 	// }, [form.values, form.errors]);
-	console.log("VOE ===================================",voe);
-	console.log("EMPLOYER ===================================",employer);
+	console.log("VOE ===================================", voe);
+	console.log("EMPLOYER ===================================", employer);
 
 	return (
 		<>
@@ -144,7 +145,7 @@ export function SubmissionDetails() {
 						value={employer.name}
 						type="text"
 						readOnly
-						// formik={form}
+					// formik={form}
 					/>
 				</Row>
 				<Row className={`${styles.align__text_left} ${styles.bold}`}>
