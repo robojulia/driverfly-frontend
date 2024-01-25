@@ -6,7 +6,7 @@ export class WorkedBeforeExtrasDto {
 	end_date: string | Date
 	static yupSchema() {
 		return yup.object({
-			start_date: yup.date().max(new Date()).required().nullable(),
+			start_date: yup.date().max(new Date()).nullable(),
 			end_date: yup.date()
 			.test({
 				test: (value, context) => {
@@ -19,7 +19,7 @@ export class WorkedBeforeExtrasDto {
 						message: 'END_DATE_MUST_BE_AFTER_START_DATE'
 					})
 				}
-			}).required().nullable(),
+			}).nullable(),
 		});
 	}
 }
