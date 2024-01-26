@@ -305,7 +305,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		today.getMonth(),
 		today.getDate()
 	)
-		.toISOString()
+		.toLocaleString('en-US',{ timeZone: 'America/New_York' })
 		.split("T")[0];
 
 	useEffect(() => {
@@ -498,7 +498,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										readOnly={Boolean(entity?.is_hired)}
 										label="expiration_date"
 										name="license_expiry"
-										min={(new Date(current_date.getFullYear(), current_date.getMonth() + 6, current_date.getDate())).toISOString().split("T")[0]}
+										min={(new Date(current_date.getFullYear(), current_date.getMonth() + 6, current_date.getDate())).toLocaleString('en-US',{ timeZone: 'America/New_York' }).split("T")[0]}
 										type="date"
 										placeholder="expiration_date"
 										formik={form}
