@@ -495,16 +495,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<Row className="">
 										{form.values?.extras?.find(v => v.type === ApplicantExtras.CDL_NUMBER)?.value?.map((entity, i) => (
 											<div key={i} className={`my-1`}>
-												<hr style={{
-													marginTop: '3%',
-													marginLeft: '8%',
-													width: '80%',
-													background: 'gray',
-													color: 'gray',
-													borderColor: 'gray',
-													height: '1px',
-												}}
-												/>
+												<div className='Row horizontalRow' ></div >
 												<BaseInput
 													name={`extras[${form.values?.extras?.findIndex(
 														(v) => v.type == ApplicantExtras.CDL_NUMBER
@@ -593,16 +584,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									</Row>
 								</Row>
 
-								<hr style={{
-									marginTop: '1%',
-									marginLeft: '8%',
-									width: '80%',
-									background: 'gray',
-									color: 'gray',
-									borderColor: 'gray',
-									height: '1px',
-								}}
-								/>
+								<div className='Row horizontalRow' ></div >
 								<Row className="px-3">
 									<BaseSelect
 										className="col-6"
