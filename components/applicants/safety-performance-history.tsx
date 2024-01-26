@@ -192,11 +192,12 @@ export default function SafetyPerformanceHistory({
                     )}
                     {Boolean(showResendButton) &&
                         Boolean(employer?.email) &&
-                        Boolean(employer?.can_contact) &&
+                        // Boolean(employer?.can_contact) ? (
                         Boolean(employer?.is_subject_to_fmcsrs) && (
                             <Button
+                                disabled={Boolean(employer?.can_contact) }  
                                 className="mr-2 w-100"
-                                onClick={() => resendVoeRequest(employer.id)}
+                                onClick={() => Boolean(employer?.can_contact)  && resendVoeRequest(employer.id)}
                             >
                                 <OverlyPopover
                                     str={
@@ -216,7 +217,8 @@ export default function SafetyPerformanceHistory({
                                     </>
                                 </OverlyPopover>
                             </Button>
-                        )}
+                        )
+                    }
                 </div>
             )}
         </>
@@ -242,6 +244,7 @@ export default function SafetyPerformanceHistory({
                 title="PAST_EMPLOYER"
             >
                 <ViewDataTable<ApplicantEmployerEntity>
+                    description='PAST_EMP_QDF_DESCRITION'
                     customStyles={{
                         headRow: {
                             style: {
