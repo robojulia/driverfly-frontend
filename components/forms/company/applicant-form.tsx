@@ -305,7 +305,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		today.getMonth(),
 		today.getDate()
 	)
-		.toLocaleString('en-US',{ timeZone: 'America/New_York' })
+		.toLocaleString('en-US', { timeZone: 'America/New_York' })
 		.split("T")[0];
 
 	useEffect(() => {
@@ -464,41 +464,21 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								</Row>
 							</Col>
 							<Col md="4" className="px-2">
+
 								<BaseInput
 									className="col-12"
 									label="driver's_license_number"
 									name="license_number"
 									placeholder="driver_license_number"
 									formik={form}
-								// readOnly={
-								// 	!protectedFields.license_number || Boolean(entity?.is_hired)
-								// }
 								/>
-								{/* <BaseInput
-									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
-									label="expiration_date"
-									name="license_expiry"
-									min={
-										new Date(
-											current_date.getFullYear(),
-											current_date.getMonth() + 6,
-											current_date.getDate()
-										)
-											.toISOString()
-											.split("T")[0]
-									}
-									type="date"
-									placeholder="expiration_date"
-									formik={form}
-								/> */}
 								<Row className="px-3">
 									<BaseInput
 										className="col-6"
 										readOnly={Boolean(entity?.is_hired)}
 										label="expiration_date"
 										name="license_expiry"
-										min={(new Date(current_date.getFullYear(), current_date.getMonth() + 6, current_date.getDate())).toLocaleString('en-US',{ timeZone: 'America/New_York' }).split("T")[0]}
+										min={(new Date(current_date.getFullYear(), current_date.getMonth() + 6, current_date.getDate())).toLocaleString('en-US', { timeZone: 'America/New_York' }).split("T")[0]}
 										type="date"
 										placeholder="expiration_date"
 										formik={form}
@@ -512,6 +492,99 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										formik={form}
 									/>
 								</Row>
+								<Row className="">
+									{form.values?.extras?.find(v => v.type === ApplicantExtras.CDL_NUMBER)?.value?.map((entity, i) => (
+										<div key={i} className={`my-1`}>
+											<div className='Row horizontalRow' ></div >
+											<BaseInput
+												name={`extras[${form.values?.extras?.findIndex(
+													(v) => v.type == ApplicantExtras.CDL_NUMBER
+												)}].value[${i}].license_number`}
+												className="col-12"
+												placeholder="CDL_NUMBER_1"
+												label="ADDTIONAL_LICENSE_NUMBER"
+												required
+												formik={form}
+											/>
+											<Row className="px-3">
+												<StateSelect
+													className="col-6"
+													name={`extras[${form.values?.extras?.findIndex(
+														(v) => v.type == ApplicantExtras.CDL_NUMBER
+													)}].value[${i}].state`}
+													placeholder="STATE"
+													label="CHOOSE"
+													required
+													formik={form}
+												/>
+												<BaseInput
+													className="col-6"
+													type="date"
+													name={`extras[${form.values?.extras?.findIndex(
+														(v) => v.type == ApplicantExtras.CDL_NUMBER
+													)}].value[${i}].date`}
+													placeholder="expiration_date"
+													label="DATE"
+													required
+													formik={form}
+												/>
+											</Row>
+											{/* <Button
+														className="rounded-lg"
+														variant="outline-danger close_btn w-25 mx-auto my-2"
+														onClick={() =>
+															form.setValues({
+																...form.values,
+																extras: [...form.values?.extras?.map((item) => {
+																	if (item.type === ApplicantExtras.CDL_NUMBER) {
+																		return {
+																			...item,
+																			value: item.value?.filter(
+																				(v, idx) => i != idx
+																			),
+																		};
+																	}
+																	return item;
+																})]
+
+																// ...form.values?.extras.find(v => v.type == ApplicantExtras.CDL_NUMBER).value,
+																// value: form.values?.extras?.find(v => v.type == ApplicantExtras.CDL_NUMBER)?.value?.filter(
+																//     (v, idx) => i != idx
+																// ),
+																// }
+															})
+														}
+													>
+														<DashCircle /></Button> */}
+
+										</div>
+									))}
+									<Row className="my-3">
+										<Col className="col-8"></Col>
+										<Button
+											// disabled={Boolean(entity?.is_hired)}
+											className="col-4 float-end"
+
+											size="sm"
+											onClick={() => {
+												const extras = form.values?.extras || [];
+												form.setValues({
+													...form.values,
+													extras: extras?.map((item) =>
+														item.type === ApplicantExtras.CDL_NUMBER
+															? { ...item, value: [new CdlExtras(), ...(item.value || [])] }
+															: item
+													),
+												});
+											}}
+
+										>
+											<PlusCircle /> {t("ADD_ANOTHER_STATE")}
+										</Button>
+									</Row>
+								</Row>
+
+								<div className='Row horizontalRow' ></div >
 								<Row className="px-3">
 									<BaseSelect
 										className="col-6"
@@ -679,7 +752,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			</Row>
 			<Row>
 				<Row>
-					<Col className="col-md-4 p-2 mt-2">
+					<Col className="col-md-6 p-2 mt-2">
 						<ViewCard
 							title="equipment_experience"
 							actions={
@@ -702,7 +775,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 						>
 							{form.values?.equipment_experience?.length > 0 && (
 								<>
-									{form.values?.equipment_experience.map((entity, i) => (
+									{form.values?.equipment_experience?.map((entity, i) => (
 										<Row key={i}>
 											<div className="col-md-6 mt-2">
 												<Col className="p-0">
@@ -769,7 +842,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							)}
 						</ViewCard>
 					</Col>
-					<Col md="4" className="px-2">
+					<Col md="6" className="px-2">
 						{form.values?.is_owner_operator && (
 							<Col xs="12" className="mt-3">
 								<ViewCard
@@ -868,104 +941,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								</ViewCard>
 							</Col>
 						)}
-					</Col>
-					<Col className="col-md-4 p-2 mt-2">
-						<ViewCard
-							title="ANY_ACTIVE_DRIVERS_LICENSE"
-							actions={
-								<Button
-									// disabled={Boolean(entity?.is_hired)}
-									size="sm"
-									onClick={() => {
-										const extras = form.values?.extras || [];
-										form.setValues({
-											...form.values,
-											extras: extras.map((item) =>
-												item.type === ApplicantExtras.CDL_NUMBER
-													? { ...item, value: [new CdlExtras(), ...(item.value || [])] }
-													: item
-											),
-										});
-									}}
-
-								>
-									<PlusCircle /> {t("ADD")}
-								</Button>
-							}
-						>
-							{form.values?.extras?.find(v => v.type === ApplicantExtras.CDL_NUMBER)?.value?.length > 0 && (
-								<>
-									{form.values?.extras?.find(v => v.type === ApplicantExtras.CDL_NUMBER)?.value?.map((entity, i) => (
-
-										<Row key={i} className={` single-past-employer-items my-3`}>
-											<BaseInput
-												name={`extras[${form.values?.extras?.findIndex(
-													(v) => v.type == ApplicantExtras.CDL_NUMBER
-												)}].value[${i}].license_number`}
-												className="col-md-4 my-3"
-												placeholder="CDL_NUMBER_1"
-												label="CDL_NUMBER"
-												required
-												formik={form}
-											/>
-											<StateSelect
-												className="col-md-4 my-3"
-												name={`extras[${form.values?.extras?.findIndex(
-													(v) => v.type == ApplicantExtras.CDL_NUMBER
-												)}].value[${i}].state`}
-												placeholder="STATE"
-												label="CHOOSE"
-												required
-												formik={form}
-											/>
-											<BaseInput
-												className="col-md-4 my-3"
-												type="date"
-												name={`extras[${form.values?.extras?.findIndex(
-													(v) => v.type == ApplicantExtras.CDL_NUMBER
-												)}].value[${i}].date`}
-												placeholder="expiration_date"
-												label="DATE"
-												required
-												formik={form}
-											/>
-
-											<Button
-												className="rounded-lg"
-												variant="outline-danger close_btn w-25 mx-auto my-2"
-												onClick={() =>
-													form.setValues({
-														...form.values,
-														extras: [...form.values?.extras?.map((item) => {
-															if (item.type === ApplicantExtras.CDL_NUMBER) {
-																return {
-																	...item,
-																	value: item.value?.filter(
-																		(v, idx) => i != idx
-																	),
-																};
-															}
-															return item;
-														})]
-
-														// ...form.values?.extras.find(v => v.type == ApplicantExtras.CDL_NUMBER).value,
-														// value: form.values?.extras?.find(v => v.type == ApplicantExtras.CDL_NUMBER)?.value?.filter(
-														//     (v, idx) => i != idx
-														// ),
-														// }
-													})
-												}
-											>
-												<DashCircle /></Button>
-											<div className='Row' style={{ height: '3px', borderBottom: 'solid 2px #8d8c8c', marginTop: '0px' }}></div >
-
-										</Row>
-									))}
-
-								</>
-							)}
-
-						</ViewCard>
 					</Col>
 
 				</Row>
@@ -1143,7 +1118,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							<Col>
 								<BaseCheck
 									className="my-3 col float-left p-0"
-									required
 									name={`extras[${form.values?.extras?.findIndex(
 										(v) => v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
 									)}].value`}
