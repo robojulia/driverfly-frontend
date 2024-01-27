@@ -35,6 +35,6 @@ export class JobOrientationEntity {
                     }
                     ).nullable(),
             },
-        );
+        ).nullable();
     }
 }
