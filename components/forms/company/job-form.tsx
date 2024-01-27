@@ -3,63 +3,67 @@ import { toast } from "react-toastify";
 
 import { Button, Col, InputGroup, Row } from "react-bootstrap";
 
-import { useEffect, useState } from "react";
 import { useFormik } from "formik";
+import { useEffect, useState } from "react";
 
+import { useAuth } from "../../../hooks/use-auth";
 import { useTranslation } from "../../../hooks/use-translation";
 import { useEffectAsync } from "../../../utils/react";
-import { useAuth } from "../../../hooks/use-auth";
 
-import { BaseFormProps } from "./base-form-props";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
-import { counts, year2Only, year3Only, year5Only, years } from "../../../utils/jobs";
+import {
+    counts,
+    year2Only,
+    year3Only,
+    year5Only,
+    years,
+} from "../../../utils/jobs";
+import { BaseFormProps } from "./base-form-props";
 
 import EntityForm from "../../layouts/page/entity-form";
 import ViewCard from "../../view-details/view-card";
 import ViewModal from "../../view-details/view-modal";
-import { VehicleForm } from "./vehicle-form";
-import { LocationForm } from "./location-form";
-import BaseInput from "../base-input";
-import BaseSelect from "../base-select";
-import BaseCheckList from "../base-check-list";
-import BaseTextArea from "../base-text-area";
 import BaseCheck from "../base-check";
+import BaseCheckList from "../base-check-list";
+import BaseInput from "../base-input";
 import BaseRange from "../base-range";
+import BaseSelect from "../base-select";
+import BaseTextArea from "../base-text-area";
+import { LocationForm } from "./location-form";
+import { VehicleForm } from "./vehicle-form";
 
 import JobApi from "../../../pages/api/job";
 import LocationApi from "../../../pages/api/location";
 import VehicleApi from "../../../pages/api/vehicle";
 
-import { JobEntity } from "../../../models/job/job.entity";
-import { LocationEntity } from "../../../models/company/location.entity";
-import { VehicleEntity } from "../../../models/company/vehicle.entity";
-import { JobGeography } from "../../../enums/jobs/job-geography.enum";
-import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
+import { JobBenefits } from "../../../enums/jobs/job-benefits.enum";
+import { JobDeliveryType } from "../../../enums/jobs/job-delivery-type.enum";
+import { JobDrugTestType } from "../../../enums/jobs/job-drug-test-type.enum";
 import { JobEmploymentType } from "../../../enums/jobs/job-employment-type.enum";
 import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
-import { JobDeliveryType } from "../../../enums/jobs/job-delivery-type.enum";
-import { JobTeamDriver } from "../../../enums/jobs/job-team-driver.enum";
+import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 import { JobPayFrequency } from "../../../enums/jobs/job-pay-frequency.enum";
 import { JobPayMethod } from "../../../enums/jobs/job-pay-method.enum";
-import { JobBenefits } from "../../../enums/jobs/job-benefits.enum";
-import { VehicleType } from "../../../enums/vehicles/vehicle-type.enum";
+import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
+import { JobTeamDriver } from "../../../enums/jobs/job-team-driver.enum";
+import { CriminalHistoryType } from "../../../enums/users/criminal-history-type.enum";
+import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
 import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
 import { EducationLevel } from "../../../enums/users/education-level.enum";
-import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
-import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
-import { JobDrugTestType } from "../../../enums/jobs/job-drug-test-type.enum";
-import { CriminalHistoryType } from "../../../enums/users/criminal-history-type.enum";
 import { MvrType } from "../../../enums/users/mvr-type.enum";
+import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
+import { VehicleType } from "../../../enums/vehicles/vehicle-type.enum";
+import { LocationEntity } from "../../../models/company/location.entity";
+import { VehicleEntity } from "../../../models/company/vehicle.entity";
+import { JobEntity } from "../../../models/job/job.entity";
 import { buildAddress } from "../../../utils/common";
+import BaseHoursInput from "../base-hours-input";
+import BaseMilesInput from "../base-miles-input";
 import BaseMoneyInput from "../base-money-input";
 import BasePercentInput from "../base-percent-input";
-import BaseMilesInput from "../base-miles-input";
-import BaseHoursInput from "../base-hours-input";
 import { BaseListRowControl } from "../lists/base-list-row-control";
 
-export interface JobFormProps extends BaseFormProps<JobEntity> {
-
-}
+export interface JobFormProps extends BaseFormProps<JobEntity> { }
 
 export function JobForm(props: JobFormProps) {
     const { t } = useTranslation();
@@ -67,36 +71,33 @@ export function JobForm(props: JobFormProps) {
 
     let { className, entity, onSaveComplete, onSaveError } = props;
 
-    const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
+    const [showConfirmationModal, setShowConfirmationModal] =
+        useState<boolean>(false);
 
     const [can, setCan] = useState({
         createLocation: false,
-        createVehicle: false
+        createVehicle: false,
     });
-
-    useEffect(() => {
-        setCan({
-            createLocation: hasPermission("CanCreateLocation"),
-            createVehicle: hasPermission("CanCreateVehicle"),
-        });
-    }, [user]);
 
     const form = useFormik({
         initialValues: new JobEntity(),
         validationSchema: JobEntity.yupSchema(),
         onSubmit: async (data) => {
             setShowConfirmationModal(true);
-        }
+        },
     });
 
     useEffect(() => {
-        if (entity && !form.dirty) form.setValues(entity)
+        form.setValues({
+            ...(entity || {}),
+            schedule: entity?.schedule || JobSchedule.OPEN_TO_NEGOTIATE,
+        });
     }, [entity]);
 
-    // useEffect(() => {
-    //     console.log("form.values", form.values)
-    //     console.log("form.errors", form.errors)
-    // }, [form.values, form.errors]);
+    useEffect(() => {
+        console.log("form.values", form.values);
+        console.log("form.errors", form.errors);
+    }, [form.values, form.errors]);
 
     const [locations, setLocations] = useState<LocationEntity[]>([]);
     const [vehicles, setVehicles] = useState<VehicleEntity[]>([]);
@@ -110,6 +111,10 @@ export function JobForm(props: JobFormProps) {
             const vehicleApi = new VehicleApi();
             setVehicles(await vehicleApi.list());
         }
+        setCan({
+            createLocation: hasPermission("CanCreateLocation"),
+            createVehicle: hasPermission("CanCreateVehicle"),
+        });
     }, [user]);
 
     function handleMaxYearsForMvrRequirementType(e, idx) {
@@ -134,7 +139,7 @@ export function JobForm(props: JobFormProps) {
         form.setFieldValue(label, {
             ...mvr_requirements,
             type: value,
-            max_years: max_years
+            max_years: max_years,
         });
     }
 
@@ -156,36 +161,42 @@ export function JobForm(props: JobFormProps) {
         switch (form.values.pay_method) {
             case JobPayMethod.RATE_PER_MILE:
                 /**
-                    -if rate per mile		
-                        Min Rate Per Mi	
-                        Max Rate Per Mi	
-                        Avg mi per week	
-                        Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                        Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                */
+                                    -if rate per mile		
+                                        Min Rate Per Mi	
+                                        Max Rate Per Mi	
+                                        Avg mi per week	
+                                        Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                                        Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                                */
                 min_percent = null;
                 max_percent = null;
                 min_hours = null;
                 max_hours = null;
                 min_salary = null;
                 max_salary = null;
-                min_weekly_pay = (min_miles >= 0 && min_rate >= 0 ? parseFloat((min_miles * min_rate).toFixed(2)) : min_weekly_pay);
-                max_weekly_pay = (max_miles >= 0 && max_rate >= 0 ? parseFloat((max_miles * max_rate).toFixed(2)) : max_weekly_pay);
+                min_weekly_pay =
+                    min_miles >= 0 && min_rate >= 0
+                        ? parseFloat((min_miles * min_rate).toFixed(2))
+                        : min_weekly_pay;
+                max_weekly_pay =
+                    max_miles >= 0 && max_rate >= 0
+                        ? parseFloat((max_miles * max_rate).toFixed(2))
+                        : max_weekly_pay;
                 break;
             case JobPayMethod.PERCENT_PER_MOVE:
             case JobPayMethod.PERCENT_PER_WEIGHT:
                 /*
-                -if % per move		
-                    Min % per move	
-                    Max % per move	
-                    Estimated maximum weekly pay	(manual entry)
-                    Estimated minimum weekly pay	(manual entry)
-                -if % weight		
-                    Min % per weight	
-                    Max % per weight	
-                    Estimated maximum weekly pay	(manual entry)
-                    Estimated minimum weekly pay	(manual entry)
-                */
+                                -if % per move		
+                                    Min % per move	
+                                    Max % per move	
+                                    Estimated maximum weekly pay	(manual entry)
+                                    Estimated minimum weekly pay	(manual entry)
+                                -if % weight		
+                                    Min % per weight	
+                                    Max % per weight	
+                                    Estimated maximum weekly pay	(manual entry)
+                                    Estimated minimum weekly pay	(manual entry)
+                                */
                 // noop
                 min_miles = null;
                 max_miles = null;
@@ -198,28 +209,34 @@ export function JobForm(props: JobFormProps) {
                 break;
             case JobPayMethod.HOURLY:
                 /*
-                -if hourly		
-                    Min $ per hr	
-                    Max $ per hr	
-                    Avg hrs per week	
-                    Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                    Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                */
+                                -if hourly		
+                                    Min $ per hr	
+                                    Max $ per hr	
+                                    Avg hrs per week	
+                                    Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                                    Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                                */
                 min_miles = null;
                 max_miles = null;
                 min_percent = null;
                 max_percent = null;
                 min_salary = null;
                 max_salary = null;
-                min_weekly_pay = (min_hours >= 0 && min_rate >= 0 ? parseFloat((min_hours * min_rate).toFixed(2)) : min_weekly_pay);
-                max_weekly_pay = (max_hours >= 0 && max_rate >= 0 ? parseFloat((max_hours * max_rate).toFixed(2)) : max_weekly_pay);
+                min_weekly_pay =
+                    min_hours >= 0 && min_rate >= 0
+                        ? parseFloat((min_hours * min_rate).toFixed(2))
+                        : min_weekly_pay;
+                max_weekly_pay =
+                    max_hours >= 0 && max_rate >= 0
+                        ? parseFloat((max_hours * max_rate).toFixed(2))
+                        : max_weekly_pay;
                 break;
             case JobPayMethod.SET_WEEKLY:
                 /*
-                -if set weekly		
-                    Estimated maximum weekly pay	(manual entry)
-                    Estimated minimum weekly pay	(manual entry)
-                */
+                                -if set weekly		
+                                    Estimated maximum weekly pay	(manual entry)
+                                    Estimated minimum weekly pay	(manual entry)
+                                */
                 min_miles = null;
                 max_miles = null;
                 min_percent = null;
@@ -233,12 +250,12 @@ export function JobForm(props: JobFormProps) {
                 break;
             case JobPayMethod.SALARY:
                 /*
-                -if salaried		
-                    Min annual salary	
-                    Max annual salary	
-                    Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                    Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                */
+                                -if salaried		
+                                    Min annual salary	
+                                    Max annual salary	
+                                    Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                                    Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                                */
                 min_miles = null;
                 max_miles = null;
                 min_percent = null;
@@ -247,8 +264,14 @@ export function JobForm(props: JobFormProps) {
                 max_hours = null;
                 min_rate = null;
                 max_rate = null;
-                min_weekly_pay = min_salary >= 0 ? parseFloat((min_salary / 52).toFixed(2)) : min_weekly_pay;
-                max_weekly_pay = max_salary >= 0 ? parseFloat((max_salary / 52).toFixed(2)) : min_weekly_pay;
+                min_weekly_pay =
+                    min_salary >= 0
+                        ? parseFloat((min_salary / 52).toFixed(2))
+                        : min_weekly_pay;
+                max_weekly_pay =
+                    max_salary >= 0
+                        ? parseFloat((max_salary / 52).toFixed(2))
+                        : min_weekly_pay;
                 break;
         }
 
@@ -265,7 +288,7 @@ export function JobForm(props: JobFormProps) {
             min_percent: min_percent,
             max_percent: max_percent,
             min_weekly_pay: min_weekly_pay,
-            max_weekly_pay: max_weekly_pay
+            max_weekly_pay: max_weekly_pay,
         });
 
         function getOrCurrent(field) {
@@ -283,8 +306,8 @@ export function JobForm(props: JobFormProps) {
                 ...form.values.required_skills,
                 {
                     type: null,
-                    years: null
-                }
+                    years: null,
+                },
             ],
         });
     }
@@ -306,8 +329,8 @@ export function JobForm(props: JobFormProps) {
                 ...form.values.required_equipment,
                 {
                     type: null,
-                    quantity: null
-                }
+                    quantity: null,
+                },
             ],
         });
     }
@@ -318,7 +341,9 @@ export function JobForm(props: JobFormProps) {
         const { name } = e.target;
         form.setValues({
             ...form.values,
-            required_equipment: form.values.required_equipment.filter((v, i) => i != name),
+            required_equipment: form.values.required_equipment.filter(
+                (v, i) => i != name
+            ),
         });
     }
 
@@ -331,8 +356,8 @@ export function JobForm(props: JobFormProps) {
                 {
                     type: null,
                     max_count: 0,
-                    max_years: 0
-                }
+                    max_years: 0,
+                },
             ],
         });
     }
@@ -355,8 +380,8 @@ export function JobForm(props: JobFormProps) {
                 {
                     type: null,
                     max_count: 0,
-                    max_years: 0
-                }
+                    max_years: 0,
+                },
             ],
         });
     }
@@ -373,7 +398,7 @@ export function JobForm(props: JobFormProps) {
     const maxRadius = {
         [JobGeography.LOCAL]: 100,
         [JobGeography.REGIONAL]: 1500,
-        [JobGeography.OTR]: 3000
+        [JobGeography.OTR]: 3000,
     };
 
     const onGeographyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -382,32 +407,25 @@ export function JobForm(props: JobFormProps) {
         form.setValues({
             ...form.values,
             geography: value as JobGeography,
-            max_applicant_radius: maxRadius[value]
-        })
-
-    }
+            max_applicant_radius: maxRadius[value],
+        });
+    };
 
     const [createVehicle, setCreateVehicle] = useState<boolean | number>(false);
 
     const onVehicleAdded = (vehicle: VehicleEntity) => {
         form.setFieldValue(`vehicles.${createVehicle}.id`, vehicle.id);
-        setVehicles([
-            ...vehicles,
-            vehicle
-        ]);
+        setVehicles([...vehicles, vehicle]);
         setCreateVehicle(false);
-    }
+    };
 
     const [createLocation, setCreateLocation] = useState(false);
 
     const onLocationAdded = (location: LocationEntity) => {
         form.setFieldValue(`location.id`, location.id);
-        setLocations([
-            ...locations,
-            location
-        ]);
+        setLocations([...locations, location]);
         setCreateLocation(false);
-    }
+    };
 
     const handleConfirmClick = async () => {
         try {
@@ -416,18 +434,20 @@ export function JobForm(props: JobFormProps) {
             const dto = {
                 ...form.values,
             };
-            if (dto.expiry_date) dto.expiry_date = new Date(dto.expiry_date).toISOString();
+            if (dto.expiry_date)
+                dto.expiry_date = new Date(dto.expiry_date).toISOString();
             // if (dto.orientation_start_at) dto.orientation_start_at = new Date(dto.orientation_start_at).toISOString();
             // if (dto.orientation_end_at) dto.orientation_end_at = new Date(dto.orientation_end_at).toISOString();
             if (dto.min_experience_in_months) {
                 dto.min_experience_in_years += dto.min_experience_in_months / 12;
             }
-            dto.min_years_experience = dto.min_experience_in_years ? parseFloat(dto.min_experience_in_years?.toFixed(2)) : 0
+            dto.min_years_experience = dto.min_experience_in_years
+                ? parseFloat(dto.min_experience_in_years?.toFixed(2))
+                : 0;
 
             if (entity?.id) {
                 job = await jobApi.update(entity.id, dto);
-            }
-            else {
+            } else {
                 job = await jobApi.create(dto);
                 // Navigate to the post page and pass the URL as a prop
                 // router.push({ pathname: '/dashboard/company/jobs/thank-you/', query: { id: job.id } });
@@ -435,18 +455,35 @@ export function JobForm(props: JobFormProps) {
 
             setShowConfirmationModal(false);
 
-            toast.success(t("Forms.SUCCESS_{action}_{name}", { action: !!entity?.id ? "Forms.UPDATED" : "Forms.CREATED", name: "JOB" }, { translateProps: true }));
+            toast.success(
+                t(
+                    "Forms.SUCCESS_{action}_{name}",
+                    {
+                        action: !!entity?.id ? "Forms.UPDATED" : "Forms.CREATED",
+                        name: "JOB",
+                    },
+                    { translateProps: true }
+                )
+            );
             if (onSaveComplete) onSaveComplete(job);
-        }
-        catch (e) {
+        } catch (e) {
             console.error("Unable to save job", e);
             globalAjaxExceptionHandler(e, {
-                formik: form, t: t, toast: toast,
-                defaultMessage: t("Forms.FAIL_{action}_{name}", { action: !!entity?.id ? "Forms.UPDATED" : "Forms.CREATED", name: "JOB" }, { translateProps: true })
+                formik: form,
+                t: t,
+                toast: toast,
+                defaultMessage: t(
+                    "Forms.FAIL_{action}_{name}",
+                    {
+                        action: !!entity?.id ? "Forms.UPDATED" : "Forms.CREATED",
+                        name: "JOB",
+                    },
+                    { translateProps: true }
+                ),
             });
             if (onSaveError) onSaveError(e);
         }
-    }
+    };
 
     return (
         <>
@@ -458,9 +495,7 @@ export function JobForm(props: JobFormProps) {
             >
                 <Row className="mt-1">
                     <Col lg="6" xl="4" className="p-0 px-lg-2">
-                        <ViewCard
-                            title="basic_details"
-                        >
+                        <ViewCard title="basic_details">
                             <BaseInput
                                 className="col-12 p-0 px-lg-2"
                                 label="title"
@@ -477,9 +512,17 @@ export function JobForm(props: JobFormProps) {
                                 placeholder
                                 formik={form}
                                 valueKey="id"
-                                createLabel={v => buildAddress(v)}
+                                createLabel={(v) => buildAddress(v)}
                                 options={locations}
-                                append={<Button variant="btn create_btn" disabled={!can.createLocation} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
+                                append={
+                                    <Button
+                                        variant="btn create_btn"
+                                        disabled={!can.createLocation}
+                                        onClick={() => setCreateLocation(true)}
+                                    >
+                                        <PlusCircle /> {t("CREATE")}
+                                    </Button>
+                                }
                             />
                             <BaseInput
                                 className="col-12 p-0 px-lg-2"
@@ -510,8 +553,7 @@ export function JobForm(props: JobFormProps) {
                                 labelPrefix="JobGeography"
                                 enumType={JobGeography}
                             />
-                            {
-                                form.values.geography &&
+                            {form.values.geography && (
                                 <BaseRange
                                     className="col-12 p-0 px-lg-2 fire-fox-cls"
                                     label="max_applicant_radius"
@@ -522,11 +564,12 @@ export function JobForm(props: JobFormProps) {
                                     max={maxRadius[form.values.geography]}
                                     formik={form}
                                 />
-                            }
+                            )}
 
                             <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                 <BaseSelect
-                                    className={`col-${form.values.schedule === JobSchedule.OTHER ? 6 : 12} p-0 px-lg-2`}
+                                    className={`col-${form.values.schedule === JobSchedule.OTHER ? 6 : 12
+                                        } p-0 px-lg-2`}
                                     label="SCHEDULE"
                                     name="schedule"
                                     required
@@ -535,8 +578,7 @@ export function JobForm(props: JobFormProps) {
                                     enumType={JobSchedule}
                                     formik={form}
                                 />
-                                {
-                                    form.values.schedule === JobSchedule.OTHER &&
+                                {form.values.schedule === JobSchedule.OTHER && (
                                     <BaseInput
                                         className="col-6"
                                         label="other_schedule"
@@ -545,7 +587,7 @@ export function JobForm(props: JobFormProps) {
                                         placeholder
                                         formik={form}
                                     />
-                                }
+                                )}
                             </Row>
                             <BaseSelect
                                 className="col-12 p-0 px-lg-2"
@@ -566,8 +608,7 @@ export function JobForm(props: JobFormProps) {
                                 enumType={JobEquipmentType}
                                 formik={form}
                             />
-                            {
-                                form.values.equipment_type.includes(JobEquipmentType.OTHER) &&
+                            {form.values.equipment_type?.includes(JobEquipmentType.OTHER) && (
                                 <BaseInput
                                     className="col-12 p-0 px-lg-2"
                                     required
@@ -576,7 +617,7 @@ export function JobForm(props: JobFormProps) {
                                     placeholder
                                     formik={form}
                                 />
-                            }
+                            )}
                             <BaseCheckList
                                 className="col-12 p-0 px-lg-2"
                                 label="DELIVERY_TYPE"
@@ -597,9 +638,7 @@ export function JobForm(props: JobFormProps) {
                         </ViewCard>
                     </Col>
                     <Col lg="6" xl="4" className="p-0 px-lg-2">
-                        <ViewCard
-                            title="BENEFITS"
-                        >
+                        <ViewCard title="BENEFITS">
                             <BaseSelect
                                 className="col-12 p-0 px-lg-2 mb-2"
                                 label="PAY_FREQUENCY"
@@ -619,32 +658,30 @@ export function JobForm(props: JobFormProps) {
                                 enumType={JobPayMethod}
                                 formik={form}
                             />
-                            {
-                                (form.values.pay_method === JobPayMethod.PERCENT_PER_MOVE ||
-                                    form.values.pay_method === JobPayMethod.PERCENT_PER_WEIGHT) &&
-                                <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
-                                    <BasePercentInput
-                                        className="col-6"
-                                        label="min_percent"
-                                        name="min_percent"
-                                        required
-                                        placeholder="10"
-                                        onChange={handlePayMethodUpdate}
-                                        formik={form}
-                                    />
-                                    <BasePercentInput
-                                        className="col-6"
-                                        label="max_percent"
-                                        name="max_percent"
-                                        required
-                                        placeholder="20"
-                                        onChange={handlePayMethodUpdate}
-                                        formik={form}
-                                    />
-                                </Row>
-                            }
-                            {
-                                form.values.pay_method === JobPayMethod.RATE_PER_MILE &&
+                            {(form.values.pay_method === JobPayMethod.PERCENT_PER_MOVE ||
+                                form.values.pay_method === JobPayMethod.PERCENT_PER_WEIGHT) && (
+                                    <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+                                        <BasePercentInput
+                                            className="col-6"
+                                            label="min_percent"
+                                            name="min_percent"
+                                            required
+                                            placeholder="10"
+                                            onChange={handlePayMethodUpdate}
+                                            formik={form}
+                                        />
+                                        <BasePercentInput
+                                            className="col-6"
+                                            label="max_percent"
+                                            name="max_percent"
+                                            required
+                                            placeholder="20"
+                                            onChange={handlePayMethodUpdate}
+                                            formik={form}
+                                        />
+                                    </Row>
+                                )}
+                            {form.values.pay_method === JobPayMethod.RATE_PER_MILE && (
                                 <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                     <BaseMilesInput
                                         className="col-6"
@@ -665,9 +702,8 @@ export function JobForm(props: JobFormProps) {
                                         formik={form}
                                     />
                                 </Row>
-                            }
-                            {
-                                form.values.pay_method === JobPayMethod.HOURLY &&
+                            )}
+                            {form.values.pay_method === JobPayMethod.HOURLY && (
                                 <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                     <BaseHoursInput
                                         className="col-6"
@@ -688,33 +724,31 @@ export function JobForm(props: JobFormProps) {
                                         formik={form}
                                     />
                                 </Row>
-                            }
-                            {
-                                (form.values.pay_method === JobPayMethod.RATE_PER_MILE ||
-                                    form.values.pay_method === JobPayMethod.HOURLY) &&
-                                <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
-                                    <BaseMoneyInput
-                                        className="col-6"
-                                        label="min_rate"
-                                        name="min_rate"
-                                        required
-                                        placeholder="0.50"
-                                        onChange={handlePayMethodUpdate}
-                                        formik={form}
-                                    />
-                                    <BaseMoneyInput
-                                        className="col-6"
-                                        label="max_rate"
-                                        name="max_rate"
-                                        required
-                                        placeholder="0.70"
-                                        onChange={handlePayMethodUpdate}
-                                        formik={form}
-                                    />
-                                </Row>
-                            }
-                            {
-                                (form.values.pay_method === JobPayMethod.SALARY) &&
+                            )}
+                            {(form.values.pay_method === JobPayMethod.RATE_PER_MILE ||
+                                form.values.pay_method === JobPayMethod.HOURLY) && (
+                                    <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+                                        <BaseMoneyInput
+                                            className="col-6"
+                                            label="min_rate"
+                                            name="min_rate"
+                                            required
+                                            placeholder="0.50"
+                                            onChange={handlePayMethodUpdate}
+                                            formik={form}
+                                        />
+                                        <BaseMoneyInput
+                                            className="col-6"
+                                            label="max_rate"
+                                            name="max_rate"
+                                            required
+                                            placeholder="0.70"
+                                            onChange={handlePayMethodUpdate}
+                                            formik={form}
+                                        />
+                                    </Row>
+                                )}
+                            {form.values.pay_method === JobPayMethod.SALARY && (
                                 <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                     <BaseMoneyInput
                                         className="col-6"
@@ -734,7 +768,7 @@ export function JobForm(props: JobFormProps) {
                                         formik={form}
                                     />
                                 </Row>
-                            }
+                            )}
                             <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                 <BaseMoneyInput
                                     className="col-md-6 p-0 px-lg-2"
@@ -763,8 +797,7 @@ export function JobForm(props: JobFormProps) {
                                 enumType={JobBenefits}
                                 formik={form}
                             />
-                            {
-                                form.values.benefits.includes(JobBenefits.OTHER) &&
+                            {form.values.benefits?.includes(JobBenefits.OTHER) && (
                                 <BaseInput
                                     className="col-12 p-0 px-lg-2"
                                     label="additional_benefits"
@@ -773,69 +806,95 @@ export function JobForm(props: JobFormProps) {
                                     placeholder
                                     formik={form}
                                 />
-                            }
+                            )}
                         </ViewCard>
                     </Col>
                     <Col lg="12" xl="4" className="p-0 px-lg-2">
                         <ViewCard
                             title="vehicle_info"
                             actions={
-                                (
-                                    <Button
-                                        variant="primary"
-                                        size="sm"
-                                        onClick={() => form.setFieldValue("vehicles", [
+                                <Button
+                                    variant="primary"
+                                    size="sm"
+                                    onClick={() =>
+                                        form.setFieldValue("vehicles", [
                                             ...(form.values.vehicles || []),
-                                            new VehicleEntity()
-                                        ])}>
-                                        <PlusCircle /> {t("ADD")}
-                                    </Button>
-                                )}
+                                            new VehicleEntity(),
+                                        ])
+                                    }
+                                >
+                                    <PlusCircle /> {t("ADD")}
+                                </Button>
+                            }
                         >
-                            {
-                                form.values.vehicles?.length > 0 &&
+                            {form.values.vehicles?.length > 0 &&
                                 form.values.vehicles.map((v, i) => (
                                     <BaseListRowControl
                                         key={i}
                                         index={i}
-                                        onRemoveClick={() => form.setFieldValue("vehicles", form.values.vehicles.filter((v, idx) => i != idx))}
+                                        onRemoveClick={() =>
+                                            form.setFieldValue(
+                                                "vehicles",
+                                                form.values.vehicles.filter((v, idx) => i != idx)
+                                            )
+                                        }
                                     >
                                         <BaseSelect
                                             className="mx-1"
                                             name={`vehicles.${i}.id`}
-                                            placeholder={t("SELECT_{name}", { name: "VEHICLE" }, { translateProps: true })}
+                                            placeholder={t(
+                                                "SELECT_{name}",
+                                                { name: "VEHICLE" },
+                                                { translateProps: true }
+                                            )}
                                             options={vehicles}
                                             valueKey="id"
-                                            createLabel={veh => {
-                                                const { type, type_other, make, model, transmission_type, year } = veh;
-                                                let label = type === VehicleType.OTHER ? type_other : t("VehicleType." + type);
+                                            createLabel={(veh) => {
+                                                const {
+                                                    type,
+                                                    type_other,
+                                                    make,
+                                                    model,
+                                                    transmission_type,
+                                                    year,
+                                                } = veh;
+                                                let label =
+                                                    type === VehicleType.OTHER
+                                                        ? type_other
+                                                        : t("VehicleType." + type);
 
                                                 if (make) label += ` / ${make}`;
 
                                                 if (model) label += ` / ${model}`;
 
-                                                if (transmission_type) label += ` / ${t(transmission_type)}`;
+                                                if (transmission_type)
+                                                    label += ` / ${t(transmission_type)}`;
 
                                                 if (year) label += ` / ${year}`;
                                                 return label; //`${()} / ${veh.make} / ${veh.model} / ${t(veh.transmission_type)} / ${veh.year}`
                                             }}
                                             formik={form}
-                                            append={<>
-                                                <Button variant="btn create_btn" disabled={!can.createVehicle} onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
-                                            </>}
+                                            append={
+                                                <>
+                                                    <Button
+                                                        variant="btn create_btn"
+                                                        disabled={!can.createVehicle}
+                                                        onClick={() => setCreateVehicle(i)}
+                                                    >
+                                                        <PlusCircle /> {t("CREATE")}
+                                                    </Button>
+                                                </>
+                                            }
                                         />
-                                    </BaseListRowControl>))
-                            }
-
+                                    </BaseListRowControl>
+                                ))}
                         </ViewCard>
                     </Col>
                 </Row>
                 <hr />
                 <Row>
                     <Col className="p-0 px-lg-2">
-                        <ViewCard
-                            title="DESCRIPTION"
-                        >
+                        <ViewCard title="DESCRIPTION">
                             <Row>
                                 <BaseTextArea
                                     className="col-md-12"
@@ -853,9 +912,7 @@ export function JobForm(props: JobFormProps) {
                 <hr />
                 <Row>
                     <Col className="p-0 px-lg-2">
-                        <ViewCard
-                            title="requirements"
-                        >
+                        <ViewCard title="requirements">
                             <Row>
                                 <Col md="6">
                                     <BaseSelect
@@ -869,7 +926,7 @@ export function JobForm(props: JobFormProps) {
                                     />
                                     <Row className="mt-1 p-3 ">
                                         <Col>
-                                            <label>{t('MIN_YEARS_EXPERIENCE')}</label>
+                                            <label>{t("MIN_YEARS_EXPERIENCE")}</label>
                                             <InputGroup className="flex-nowrap rounded d-block">
                                                 <BaseInput
                                                     className="col-md-6 d-inline-block p-0 mb-2"
@@ -878,7 +935,11 @@ export function JobForm(props: JobFormProps) {
                                                     required
                                                     min="0"
                                                     type="int"
-                                                    append={(<InputGroup.Text>{t('YEARS_SHORT')}</InputGroup.Text>)}
+                                                    append={
+                                                        <InputGroup.Text>
+                                                            {t("YEARS_SHORT")}
+                                                        </InputGroup.Text>
+                                                    }
                                                     formik={form}
                                                 />
                                                 <BaseInput
@@ -889,7 +950,11 @@ export function JobForm(props: JobFormProps) {
                                                     min="0"
                                                     max="11"
                                                     type="int"
-                                                    append={(<InputGroup.Text>{t('MONTHS_SHORT')}</InputGroup.Text>)}
+                                                    append={
+                                                        <InputGroup.Text>
+                                                            {t("MONTHS_SHORT")}
+                                                        </InputGroup.Text>
+                                                    }
                                                     formik={form}
                                                 />
                                             </InputGroup>
@@ -909,22 +974,24 @@ export function JobForm(props: JobFormProps) {
                                             title="REQUIRED_SKILLS"
                                             titleAs="span"
                                             variant="secondary"
-                                            actions={(
+                                            actions={
                                                 <Button
                                                     variant="primary"
                                                     size="sm"
-                                                    onClick={addRequiredSkills}>
+                                                    onClick={addRequiredSkills}
+                                                >
                                                     <PlusCircle /> {t("ADD")}
                                                 </Button>
-                                            )}
+                                            }
                                         >
                                             {form.values.required_skills?.length > 0 &&
-                                                form.values.required_skills.map((v, i) =>
-                                                (
+                                                form.values.required_skills.map((v, i) => (
                                                     <BaseListRowControl
                                                         key={i}
                                                         index={i}
-                                                        onRemoveClick={(idx, e) => removeRequiredSkill(idx, e)}
+                                                        onRemoveClick={(idx, e) =>
+                                                            removeRequiredSkill(idx, e)
+                                                        }
                                                     >
                                                         <BaseSelect
                                                             className="mx-1"
@@ -942,7 +1009,11 @@ export function JobForm(props: JobFormProps) {
                                                             required
                                                             min="0"
                                                             type="int"
-                                                            append={(<InputGroup.Text>{t('YEARS_SHORT')}</InputGroup.Text>)}
+                                                            append={
+                                                                <InputGroup.Text>
+                                                                    {t("YEARS_SHORT")}
+                                                                </InputGroup.Text>
+                                                            }
                                                             formik={form}
                                                         />
                                                         <BaseInput
@@ -953,15 +1024,17 @@ export function JobForm(props: JobFormProps) {
                                                             min="0"
                                                             max="11"
                                                             type="int"
-                                                            append={(<InputGroup.Text>{t('MONTHS_SHORT')}</InputGroup.Text>)}
+                                                            append={
+                                                                <InputGroup.Text>
+                                                                    {t("MONTHS_SHORT")}
+                                                                </InputGroup.Text>
+                                                            }
                                                             formik={form}
                                                         />
-                                                    </BaseListRowControl >)
-                                                )
-                                            }
-
-                                        </ViewCard >
-                                    </Col >
+                                                    </BaseListRowControl>
+                                                ))}
+                                        </ViewCard>
+                                    </Col>
                                     <BaseTextArea
                                         className="col-12"
                                         label="other_required_skills"
@@ -970,56 +1043,59 @@ export function JobForm(props: JobFormProps) {
                                         rows={1}
                                         formik={form}
                                     />
-                                    {
-                                        form.values.employment_type === JobEmploymentType.OWNER_OPERATOR &&
-                                        <Col xs="12" className="mt-1">
-                                            <ViewCard
-                                                title="REQUIRED_EQUIPMENT"
-                                                variant="secondary"
-                                                titleAs="span"
-                                                actions={(
-                                                    <Button
-                                                        variant="primary"
-                                                        size="sm"
-                                                        onClick={addRequiredEquipment}
-                                                    >
-                                                        <PlusCircle /> {t("ADD")}
-                                                    </Button>
-                                                )}
-                                            >
-                                                {
-                                                    form.values.required_equipment?.length > 0 &&
-                                                    form.values.required_equipment.map((v, i) => (
-                                                        <BaseListRowControl
-                                                            key={i}
-                                                            index={i}
-                                                            onRemoveClick={(idx, e) => removeRequiredEquipment(e)}
+                                    {form.values.employment_type ===
+                                        JobEmploymentType.OWNER_OPERATOR && (
+                                            <Col xs="12" className="mt-1">
+                                                <ViewCard
+                                                    title="REQUIRED_EQUIPMENT"
+                                                    variant="secondary"
+                                                    titleAs="span"
+                                                    actions={
+                                                        <Button
+                                                            variant="primary"
+                                                            size="sm"
+                                                            onClick={addRequiredEquipment}
                                                         >
-                                                            <BaseSelect
-                                                                className="mx-1"
-                                                                placeholder={t("SELECT_{name}", { name: "TYPE" }, { translateProps: true })}
-                                                                name={`required_equipment.${i}.type`}
-                                                                required
-                                                                labelPrefix="JobEquipmentType"
-                                                                enumType={JobEquipmentType}
-                                                                formik={form}
-                                                            />
-                                                            <BaseInput
-                                                                className="mr-1"
-                                                                placeholder="QUANTITY"
-                                                                name={`required_equipment.${i}.quantity`}
-                                                                required
-                                                                min="1"
-                                                                type="int"
-                                                                formik={form}
-                                                            />
-                                                        </BaseListRowControl>
-
-                                                    ))
-                                                }
-                                            </ViewCard>
-                                        </Col>
-                                    }
+                                                            <PlusCircle /> {t("ADD")}
+                                                        </Button>
+                                                    }
+                                                >
+                                                    {form.values.required_equipment?.length > 0 &&
+                                                        form.values.required_equipment.map((v, i) => (
+                                                            <BaseListRowControl
+                                                                key={i}
+                                                                index={i}
+                                                                onRemoveClick={(idx, e) =>
+                                                                    removeRequiredEquipment(e)
+                                                                }
+                                                            >
+                                                                <BaseSelect
+                                                                    className="mx-1"
+                                                                    placeholder={t(
+                                                                        "SELECT_{name}",
+                                                                        { name: "TYPE" },
+                                                                        { translateProps: true }
+                                                                    )}
+                                                                    name={`required_equipment.${i}.type`}
+                                                                    required
+                                                                    labelPrefix="JobEquipmentType"
+                                                                    enumType={JobEquipmentType}
+                                                                    formik={form}
+                                                                />
+                                                                <BaseInput
+                                                                    className="mr-1"
+                                                                    placeholder="QUANTITY"
+                                                                    name={`required_equipment.${i}.quantity`}
+                                                                    required
+                                                                    min="1"
+                                                                    type="int"
+                                                                    formik={form}
+                                                                />
+                                                            </BaseListRowControl>
+                                                        ))}
+                                                </ViewCard>
+                                            </Col>
+                                        )}
                                     <BaseCheckList
                                         className="col-12"
                                         label="special_endorsements"
@@ -1038,7 +1114,7 @@ export function JobForm(props: JobFormProps) {
                                         enumType={VehicleTransmissionType}
                                         formik={form}
                                     />
-                                </Col >
+                                </Col>
 
                                 <Col md="6">
                                     <BaseCheckList
@@ -1057,81 +1133,95 @@ export function JobForm(props: JobFormProps) {
                                         name="must_have_clean_mvr"
                                         formik={form}
                                     />
-                                    {
-                                        !form.values.must_have_clean_mvr &&
+                                    {!form.values.must_have_clean_mvr && (
                                         <Col className="mt-1" xs="12">
                                             <ViewCard
                                                 title="MVR_REQUIREMENTS"
                                                 variant="secondary"
                                                 titleAs="span"
-                                                actions={(
+                                                actions={
                                                     <Button
                                                         variant="primary"
                                                         size="sm"
-                                                        onClick={addMvrRequirement}>
+                                                        onClick={addMvrRequirement}
+                                                    >
                                                         <PlusCircle /> {t("ADD")}
                                                     </Button>
-                                                )}
+                                                }
                                             >
-                                                {
-                                                    form.values.mvr_requirements?.length > 0 &&
+                                                {form.values.mvr_requirements?.length > 0 && (
                                                     <>
                                                         <Row>
-                                                            <Col className="offset-1" xs="3">{t("MAX")}</Col>
+                                                            <Col className="offset-1" xs="3">
+                                                                {t("MAX")}
+                                                            </Col>
                                                             <Col xs="4">{t("TYPE")}</Col>
                                                             <Col xs="3">{t("within")}</Col>
                                                         </Row>
-                                                        {
-                                                            form.values.mvr_requirements.map((v, i) => (
-                                                                <BaseListRowControl
-                                                                    key={i}
-                                                                    index={i}
-                                                                    onRemoveClick={(idx, e) => removeMvrRequirement(idx, e)}
-                                                                >
-                                                                    <BaseSelect
-                                                                        className="mx-1"
-                                                                        placeholder={t("SELECT_{name}", { name: "MAX" }, { translateProps: true })}
-                                                                        name={`mvr_requirements.${i}.max_count`}
-                                                                        required
-                                                                        value={v.max_count}
-                                                                        options={counts}
-                                                                        formik={form}
-                                                                    />
-                                                                    <BaseSelect
-                                                                        className="mr-1"
-                                                                        placeholder="TYPE"
-                                                                        name={`mvr_requirements.${i}.type`}
-                                                                        required
-                                                                        labelPrefix="MvrType"
-                                                                        enumType={MvrType}
-                                                                        onChange={(e) => handleMaxYearsForMvrRequirementType(e, i)}
-                                                                        formik={form}
-                                                                    />
-                                                                    <BaseSelect
-                                                                        className="mr-1"
-                                                                        name={`mvr_requirements.${i}.max_years`}
-                                                                        required
-                                                                        value={v.max_years}
-                                                                        options={(() => {
-                                                                            switch (form.values.mvr_requirements[i].type) {
-                                                                                case MvrType.DUI: return year2Only;
-                                                                                case MvrType.MOVING_VIOLATION_NOT_AT_FAULT: return year3Only;
-                                                                                default: return year5Only;
-                                                                            }
-                                                                        })()}
-                                                                        append={<InputGroup.Text>{t('YEARS_SHORT')}</InputGroup.Text>}
-                                                                        formik={form}
-                                                                    />
-                                                                </BaseListRowControl>
-                                                            ))
-                                                        }
+                                                        {form.values.mvr_requirements.map((v, i) => (
+                                                            <BaseListRowControl
+                                                                key={i}
+                                                                index={i}
+                                                                onRemoveClick={(idx, e) =>
+                                                                    removeMvrRequirement(idx, e)
+                                                                }
+                                                            >
+                                                                <BaseSelect
+                                                                    className="mx-1"
+                                                                    placeholder={t(
+                                                                        "SELECT_{name}",
+                                                                        { name: "MAX" },
+                                                                        { translateProps: true }
+                                                                    )}
+                                                                    name={`mvr_requirements.${i}.max_count`}
+                                                                    required
+                                                                    value={v.max_count}
+                                                                    options={counts}
+                                                                    formik={form}
+                                                                />
+                                                                <BaseSelect
+                                                                    className="mr-1"
+                                                                    placeholder="TYPE"
+                                                                    name={`mvr_requirements.${i}.type`}
+                                                                    required
+                                                                    labelPrefix="MvrType"
+                                                                    enumType={MvrType}
+                                                                    onChange={(e) =>
+                                                                        handleMaxYearsForMvrRequirementType(e, i)
+                                                                    }
+                                                                    formik={form}
+                                                                />
+                                                                <BaseSelect
+                                                                    className="mr-1"
+                                                                    name={`mvr_requirements.${i}.max_years`}
+                                                                    required
+                                                                    value={v.max_years}
+                                                                    options={(() => {
+                                                                        switch (
+                                                                        form.values.mvr_requirements[i].type
+                                                                        ) {
+                                                                            case MvrType.DUI:
+                                                                                return year2Only;
+                                                                            case MvrType.MOVING_VIOLATION_NOT_AT_FAULT:
+                                                                                return year3Only;
+                                                                            default:
+                                                                                return year5Only;
+                                                                        }
+                                                                    })()}
+                                                                    append={
+                                                                        <InputGroup.Text>
+                                                                            {t("YEARS_SHORT")}
+                                                                        </InputGroup.Text>
+                                                                    }
+                                                                    formik={form}
+                                                                />
+                                                            </BaseListRowControl>
+                                                        ))}
                                                     </>
-                                                }
-
+                                                )}
                                             </ViewCard>
                                         </Col>
-
-                                    }
+                                    )}
                                     <BaseCheck
                                         className="col-12"
                                         label="accept_sap_graduates"
@@ -1144,71 +1234,79 @@ export function JobForm(props: JobFormProps) {
                                         name="must_have_clean_criminal_history"
                                         formik={form}
                                     />
-                                    {
-                                        !form.values.must_have_clean_criminal_history &&
+                                    {!form.values.must_have_clean_criminal_history && (
                                         <Col className="mt-1" xs="12">
                                             <ViewCard
                                                 title="CRIMINAL_HISTORY"
                                                 titleAs="span"
                                                 variant="secondary"
-                                                actions={(
+                                                actions={
                                                     <Button
                                                         variant="primary"
                                                         size="sm"
-                                                        onClick={addCriminalHistoryRequirement}>
+                                                        onClick={addCriminalHistoryRequirement}
+                                                    >
                                                         <PlusCircle /> {t("ADD")}
                                                     </Button>
-                                                )}
+                                                }
                                             >
-                                                {
-                                                    form.values.criminal_history?.length > 0 &&
+                                                {form.values.criminal_history?.length > 0 && (
                                                     <>
                                                         <Row>
-                                                            <Col className="offset-1" xs="3">{t("MAX")}</Col>
+                                                            <Col className="offset-1" xs="3">
+                                                                {t("MAX")}
+                                                            </Col>
                                                             <Col xs="4">{t("TYPE")}</Col>
                                                             <Col xs="3">{t("within")}</Col>
                                                         </Row>
-                                                        {
-                                                            form.values.criminal_history.map((v, i) => (
-                                                                <BaseListRowControl
-                                                                    key={i}
-                                                                    index={i}
-                                                                    onRemoveClick={(idx, e) => removeCriminalHistoryRequirement(idx, e)}
-                                                                >
-                                                                    <BaseSelect
-                                                                        className="mx-1"
-                                                                        name={`criminal_history.${i}.max_count`}
-                                                                        required
-                                                                        placeholder="MAX"
-                                                                        options={counts}
-                                                                        formik={form}
-                                                                    />
-                                                                    <BaseSelect
-                                                                        className="mr-1"
-                                                                        placeholder="TYPE"
-                                                                        name={`criminal_history.${i}.type`}
-                                                                        required
-                                                                        labelPrefix="CriminalHistoryType"
-                                                                        enumType={CriminalHistoryType}
-                                                                        formik={form}
-                                                                    />
-                                                                    <BaseSelect
-                                                                        className="mr-1"
-                                                                        name={`criminal_history.${i}.max_years`}
-                                                                        required
-                                                                        options={years}
-                                                                        append={form.getFieldMeta(`criminal_history.${i}.max_years`)?.value > 0 && <InputGroup.Text>{t('YEARS_SHORT')}</InputGroup.Text>}
-                                                                        formik={form}
-                                                                    />
-                                                                </BaseListRowControl>
-                                                            ))
-                                                        }
+                                                        {form.values.criminal_history.map((v, i) => (
+                                                            <BaseListRowControl
+                                                                key={i}
+                                                                index={i}
+                                                                onRemoveClick={(idx, e) =>
+                                                                    removeCriminalHistoryRequirement(idx, e)
+                                                                }
+                                                            >
+                                                                <BaseSelect
+                                                                    className="mx-1"
+                                                                    name={`criminal_history.${i}.max_count`}
+                                                                    required
+                                                                    placeholder="MAX"
+                                                                    options={counts}
+                                                                    formik={form}
+                                                                />
+                                                                <BaseSelect
+                                                                    className="mr-1"
+                                                                    placeholder="TYPE"
+                                                                    name={`criminal_history.${i}.type`}
+                                                                    required
+                                                                    labelPrefix="CriminalHistoryType"
+                                                                    enumType={CriminalHistoryType}
+                                                                    formik={form}
+                                                                />
+                                                                <BaseSelect
+                                                                    className="mr-1"
+                                                                    name={`criminal_history.${i}.max_years`}
+                                                                    required
+                                                                    options={years}
+                                                                    append={
+                                                                        form.getFieldMeta(
+                                                                            `criminal_history.${i}.max_years`
+                                                                        )?.value > 0 && (
+                                                                            <InputGroup.Text>
+                                                                                {t("YEARS_SHORT")}
+                                                                            </InputGroup.Text>
+                                                                        )
+                                                                    }
+                                                                    formik={form}
+                                                                />
+                                                            </BaseListRowControl>
+                                                        ))}
                                                     </>
-                                                }
-
+                                                )}
                                             </ViewCard>
                                         </Col>
-                                    }
+                                    )}
                                     <BaseTextArea
                                         className="col-12"
                                         label="other_safety_requirements"
@@ -1224,7 +1322,7 @@ export function JobForm(props: JobFormProps) {
                                         formik={form}
                                     />
 
-                                    {form.values.is_orientation_needed &&
+                                    {form.values.is_orientation_needed && (
                                         <Col className="mt-2" xs="12">
                                             <ViewCard
                                                 title="ORIENTATION_DETAILS"
@@ -1240,9 +1338,17 @@ export function JobForm(props: JobFormProps) {
                                                         placeholder
                                                         formik={form}
                                                         valueKey="id"
-                                                        createLabel={v => buildAddress(v)}
+                                                        createLabel={(v) => buildAddress(v)}
                                                         options={locations}
-                                                        append={<Button variant="outline-secondary create_btn" disabled={!can.createLocation} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
+                                                        append={
+                                                            <Button
+                                                                variant="outline-secondary create_btn"
+                                                                disabled={!can.createLocation}
+                                                                onClick={() => setCreateLocation(true)}
+                                                            >
+                                                                <PlusCircle /> {t("CREATE")}
+                                                            </Button>
+                                                        }
                                                     />
                                                 </Row>
                                                 <Row className="mx-1 my-3">
@@ -1267,47 +1373,51 @@ export function JobForm(props: JobFormProps) {
                                                 </Row>
                                             </ViewCard>
                                         </Col>
-                                    }
-
-                                </Col >
-                            </Row >
-                        </ViewCard >
-                    </Col >
-                </Row >
-
-            </EntityForm >
+                                    )}
+                                </Col>
+                            </Row>
+                        </ViewCard>
+                    </Col>
+                </Row>
+            </EntityForm>
             <ViewModal
-                title={t("CREATE_{name}", { name: "VEHICLE" }, { translateProps: true })}
+                title={t(
+                    "CREATE_{name}",
+                    { name: "VEHICLE" },
+                    { translateProps: true }
+                )}
                 show={typeof createVehicle === "number"}
                 onCloseClick={() => setCreateVehicle(false)}
             >
-                <VehicleForm
-                    onSaveComplete={onVehicleAdded}
-                />
+                <VehicleForm onSaveComplete={onVehicleAdded} />
             </ViewModal>
             <ViewModal
-                title={t("CREATE_{name}", { name: "TERMINAL" }, { translateProps: true })}
+                title={t(
+                    "CREATE_{name}",
+                    { name: "TERMINAL" },
+                    { translateProps: true }
+                )}
                 show={createLocation}
                 onCloseClick={() => setCreateLocation(false)}
             >
-                <LocationForm
-                    onSaveComplete={onLocationAdded}
-                />
+                <LocationForm onSaveComplete={onLocationAdded} />
             </ViewModal>
             <ViewModal
                 title="CONFIRMATION"
                 show={showConfirmationModal}
                 onCloseClick={() => setShowConfirmationModal(false)}
-                footer=
-                {
-                    <button type="button" className="btn btn-primary w-100 p-lg-3 p-5 mx-2" onClick={handleConfirmClick}>{t('CONFIRM')}</button>
+                footer={
+                    <button
+                        type="button"
+                        className="btn btn-primary w-100 p-lg-3 p-5 mx-2"
+                        onClick={handleConfirmClick}
+                    >
+                        {t("CONFIRM")}
+                    </button>
                 }
             >
-                <p className="m-3">
-                    {t('JOB_CREATION_CONFIRMATION')}
-                </p>
+                <p className="m-3">{t("JOB_CREATION_CONFIRMATION")}</p>
             </ViewModal>
         </>
     );
-
 }
