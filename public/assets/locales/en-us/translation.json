@@ -12,8 +12,8 @@
   "DRUG_TEST": "Drug Test",
   "DUI_AND_EQUIPEMENTS": "DUI And Equipments",
   "Other_queues": "Other Queues",
-  "HAVE_ANY_ACTIVE_DRIVERS_LICENSE":"Do you have any active driver's licenses in other states?",
-  "ANY_ACTIVE_DRIVERS_LICENSE":"Active driver's licenses in other states",
+  "HAVE_ANY_ACTIVE_DRIVERS_LICENSE": "Do you have any active driver's licenses in other states?",
+  "ANY_ACTIVE_DRIVERS_LICENSE": "Active driver's licenses in other states",
   "applied_jobs": "Applied Jobs",
   "apply": "Apply",
   "APPLY_NOW": "Apply Now",
@@ -196,6 +196,7 @@
   "ago": "ago",
   "BY": "by",
   "JobPayMethod": {
+    "OPEN_TO_NEGOTIATE": "Open to neggotiate",
     "RATE_PER_MILE": "Rate per mile",
     "PERCENT_PER_MOVE": "Percent per move",
     "HOURLY": "Hourly",
@@ -316,7 +317,7 @@
   "basic_details": "Basic Details",
   "authorized_to_work_in_us": "authorized to work in us",
   "driver_license_number": "Driver License Number",
-  "driver's_license_number":"Driver's License Number",
+  "driver's_license_number": "Driver's License Number",
   "License_Restrictions": "License Restrictions",
   "expiration_date": "Expiration Date",
   "cdl_experience": "CDL Experience",
@@ -329,7 +330,6 @@
   "years_experience": "Years Experience",
   "types_must_not_repeat": "Type must not repeat",
   "equipment_experience": "Equipment Experience",
-  
   "remove": "Remove",
   "more": "More",
   "Experience": "Experience",
@@ -444,6 +444,7 @@
   "friday": "Friday",
   "saturday": "Saturday",
   "JobSchedule": {
+    "OPEN_TO_NEGOTIATE": "Open to neggotiate",
     "MULTIPLE_WEEKS_ON_ROAD": "Multiple weeks on the road",
     "MOST_WEEKENDS_OFF": "Most weekends off",
     "WEEKENDS_OFF": "Weekends off",
@@ -631,7 +632,7 @@
   "NON_MMEMBER": "Non Member",
   "APPLICANTS_PER_RECRUITER": "Applicants per recruiter",
   "UNASSIGNED": "Unassigned",
-  "DOWNLOAD_AND_SAVE_AS_CSV":"please download the file and then save as a .csv",
+  "DOWNLOAD_AND_SAVE_AS_CSV": "please download the file and then save as a .csv",
   "SMS_MESSAGES": "SMS Messages",
   "MESSAGES": "Messages",
   "STORED_FILES": "Stored Files",
@@ -1834,7 +1835,7 @@
   "MM/YY": "mm/yyyy",
   "ACCIDENT_HISTORY": "Accident History",
   "VOE_DRIVER_QUES": "Did drive motor vehicle(s) for you?",
-  "VOE_DRIVER_QUESTION":"Did this person driver motor vehicles for you?",
+  "VOE_DRIVER_QUESTION": "Did this person driver motor vehicles for you?",
   "VOE_ATTEMPT_COUNT": "Attempts",
   "VOE_SUBMITTED": "Voe Submitted",
   "TYPE_OF_VEHICLE": "What type of vehicle?",
@@ -2255,5 +2256,5 @@
   "VERIFY_EMAIL_META_TITLE": "Verify Email Token - Securely Verify Your DriverFly Account",
   "VERIFY_EMAIL_META_DESC": "Securely verify your DriverFly account through an email token. Confirm your account and unlock a world of opportunities in trucking.",
   "NO_BIRTHDAYS_THIS_WEEK": "No Birthdays this week",
-  "ALREADY_WORKED_TO_COMPANY":"Already Worked in this Company"
+  "ALREADY_WORKED_TO_COMPANY": "Already Worked in this Company"
 }
