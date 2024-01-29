@@ -94,12 +94,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				(v) => v.value != undefined || v.value != null
 			);
 			const jobs = values.jobs || [];
-			if ("jobs" in values) delete values.jobs;
-
-			console.log(
-				values,
-				"Values in Formik +++++++++++++++++++++++++++++++++++++++"
-			);
+		
 			try {
 				if (entity?.id) {
 					values = await applicantApi.update(entity.id, {
@@ -313,6 +308,26 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		console.log("form.errors", form.errors);
 	}, [form.values, form.errors]);
 
+	useEffect(()=>{
+		!Boolean(form.values?.extras?.find(v => v.type === ApplicantExtras.ALREADY_APPLIED_TO_COMPANY)?.value) && setIsWorkedBefore(false);
+		
+		!isWorkedBefore && form.setValues({
+			...form.values, extras: form.values?.extras.map((extra) => {
+				if (extra.type === ApplicantExtras.ALREADY_WORKED_TO_COMPANY) {
+				  return {
+					...extra,
+					value: {
+					  ...extra.value,
+					  start_date: null,
+					  end_date: null
+					},
+				  };
+				}
+				return extra;  
+			  })
+		})
+ 
+	},[form.values.extras.find(v => v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY)])
 
 
 	return (
@@ -507,16 +522,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												formik={form}
 											/>
 											<Row className="px-3">
-												<StateSelect
-													className="col-6"
-													name={`extras[${form.values?.extras?.findIndex(
-														(v) => v.type == ApplicantExtras.CDL_NUMBER
-													)}].value[${i}].state`}
-													placeholder="STATE"
-													label="CHOOSE"
-													required
-													formik={form}
-												/>
 												<BaseInput
 													className="col-6"
 													type="date"
@@ -524,10 +529,21 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														(v) => v.type == ApplicantExtras.CDL_NUMBER
 													)}].value[${i}].date`}
 													placeholder="expiration_date"
-													label="DATE"
+													label="expiration_date"
 													required
 													formik={form}
 												/>
+												<StateSelect
+													className="col-6"
+													name={`extras[${form.values?.extras?.findIndex(
+														(v) => v.type == ApplicantExtras.CDL_NUMBER
+													)}].value[${i}].state`}
+													placeholder="STATE"
+													label="state_issued"
+													required
+													formik={form}
+												/>
+											
 											</Row>
 											{/* <Button
 														className="rounded-lg"
@@ -572,7 +588,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													...form.values,
 													extras: extras?.map((item) =>
 														item.type === ApplicantExtras.CDL_NUMBER
-															? { ...item, value: [new CdlExtras(), ...(item.value || [])] }
+															? { ...item, value: [ ...(item.value || []), new CdlExtras()] }
 															: item
 													),
 												});
@@ -1126,6 +1142,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								/>
 							</Col>
 						</Row>
+						
 						{Boolean(
 							form.values?.extras.find(
 								({ type }) =>
@@ -1137,7 +1154,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										<Col>
 											<BaseCheck
 												className="my-3 col float-left p-0"
-												required
 												name="is_worked_before"
 												label="WORKED_HERE_BEFORE"
 												checked={Boolean(isWorkedBefore)}
@@ -1167,7 +1183,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
 												)}].value.end_date`}
 												placeholder="DATE"
-												required
 												label="TO"
 												max={new Date((new Date().getFullYear()), new Date().getMonth(), new Date().getDate()).toISOString().split("T")[0]}
 												formik={form}
