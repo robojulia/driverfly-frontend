@@ -78,7 +78,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 	const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([]);
 
-	const [referralSources, setReferralSources] = useState<ReferralSourceEntity[]>([])
+	const [referralSources, setReferralSources] = useState<
+		ReferralSourceEntity[]
+	>([]);
 
 	const [protectedFields, setProtectedFields] = useState({
 		license_number: false,
@@ -162,7 +164,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 		const ref_list = await referralSourceApi.list();
 		setReferralSources(ref_list);
-
 	}, [user]);
 
 	useEffect(() => {
@@ -198,26 +199,35 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			}
 
 			extras = extras.filter(Boolean);
-			if (!extras?.find((v) => v.type == ApplicantExtras.ROUTES)) extras?.push({
-				...new ApplicantExtrasEntity(),
-				type: ApplicantExtras.ROUTES,
-			});
-			if (!extras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME)) extras?.push({
-				...new ApplicantExtrasEntity(),
-				type: ApplicantExtras.BUSINESS_NAME,
-			});
-			if (!extras?.find((v) => v.type == ApplicantExtras.DOT_NUMBER)) extras?.push({
-				...new ApplicantExtrasEntity(),
-				type: ApplicantExtras.DOT_NUMBER,
-			});
-			if (!extras?.find((v) => v.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD)) extras?.push({
-				...new ApplicantExtrasEntity(),
-				type: ApplicantExtras.AUTOMATED_RECRUITING_LEAD,
-			});
-			if (!extras?.find((v) => v.type == ApplicantExtras.CDL_NUMBER)) extras?.push({
-				...new ApplicantExtrasEntity(),
-				type: ApplicantExtras.CDL_NUMBER,
-			});
+			if (!extras?.find((v) => v.type == ApplicantExtras.ROUTES))
+				extras?.push({
+					...new ApplicantExtrasEntity(),
+					type: ApplicantExtras.ROUTES,
+				});
+			if (!extras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME))
+				extras?.push({
+					...new ApplicantExtrasEntity(),
+					type: ApplicantExtras.BUSINESS_NAME,
+				});
+			if (!extras?.find((v) => v.type == ApplicantExtras.DOT_NUMBER))
+				extras?.push({
+					...new ApplicantExtrasEntity(),
+					type: ApplicantExtras.DOT_NUMBER,
+				});
+			if (
+				!extras?.find(
+					(v) => v.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD
+				)
+			)
+				extras?.push({
+					...new ApplicantExtrasEntity(),
+					type: ApplicantExtras.AUTOMATED_RECRUITING_LEAD,
+				});
+			if (!extras?.find((v) => v.type == ApplicantExtras.CDL_NUMBER))
+				extras?.push({
+					...new ApplicantExtrasEntity(),
+					type: ApplicantExtras.CDL_NUMBER,
+				});
 			if (!!entity?.id) {
 				values = {
 					...entity,
@@ -281,12 +291,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 	const onLocationAdded = (referral: ReferralSourceEntity) => {
 		form.setFieldValue(`referralSource.id`, referral.id);
-		setReferralSources([
-			...referralSources,
-			referral
-		]);
+		setReferralSources([...referralSources, referral]);
 		setCreateReferral(false);
-	}
+	};
 
 	useEffectAsync(async () => {
 		const userApi = new UserApi();
@@ -300,7 +307,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		today.getMonth(),
 		today.getDate()
 	)
-		.toLocaleString('en-US', { timeZone: 'America/New_York' })
+		.toLocaleString("en-US", { timeZone: "America/New_York" })
 		.split("T")[0];
 
 	useEffect(() => {
@@ -308,27 +315,25 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		console.log("form.errors", form.errors);
 	}, [form.values, form.errors]);
 
-	useEffect(()=>{
-		!Boolean(form.values?.extras?.find(v => v.type === ApplicantExtras.ALREADY_APPLIED_TO_COMPANY)?.value) && setIsWorkedBefore(false);
-		
-		!isWorkedBefore && form.setValues({
-			...form.values, extras: form.values?.extras.map((extra) => {
-				if (extra.type === ApplicantExtras.ALREADY_WORKED_TO_COMPANY) {
-				  return {
-					...extra,
-					value: {
-					  ...extra.value,
-					  start_date: null,
-					  end_date: null
-					},
-				  };
-				}
-				return extra;  
-			  })
-		})
- 
-	},[form.values.extras.find(v => v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY)])
-
+	useEffect(() => {
+		!isWorkedBefore &&
+			form.setValues({
+				...form.values,
+				extras: form.values?.extras.map((extra) => {
+					if (extra.type === ApplicantExtras.ALREADY_WORKED_TO_COMPANY) {
+						return {
+							...extra,
+							value: {
+								...extra.value,
+								start_date: null,
+								end_date: null,
+							},
+						};
+					}
+					return extra;
+				}),
+			});
+	}, [isWorkedBefore]);
 
 	return (
 		<EntityForm
@@ -472,14 +477,20 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										placeholder
 										formik={form}
 										valueKey="id"
-										createLabel={v => buildReferral(v)}
+										createLabel={(v) => buildReferral(v)}
 										options={referralSources}
-										append={<Button variant="btn create_btn" onClick={() => setCreateReferral(true)}><PlusCircle /> {t("CREATE")}</Button>}
+										append={
+											<Button
+												variant="btn create_btn"
+												onClick={() => setCreateReferral(true)}
+											>
+												<PlusCircle /> {t("CREATE")}
+											</Button>
+										}
 									/>
 								</Row>
 							</Col>
 							<Col md="4" className="px-2">
-
 								<BaseInput
 									className="col-12"
 									label="driver's_license_number"
@@ -493,7 +504,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										readOnly={Boolean(entity?.is_hired)}
 										label="expiration_date"
 										name="license_expiry"
-										min={(new Date(current_date.getFullYear(), current_date.getMonth() + 6, current_date.getDate())).toLocaleString('en-US', { timeZone: 'America/New_York' }).split("T")[0]}
+										min={
+											new Date(
+												current_date.getFullYear(),
+												current_date.getMonth() + 6,
+												current_date.getDate()
+											)
+												.toLocaleString("en-US", {
+													timeZone: "America/New_York",
+												})
+												.split("T")[0]
+										}
 										type="date"
 										placeholder="expiration_date"
 										formik={form}
@@ -508,44 +529,45 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									/>
 								</Row>
 								<Row className="">
-									{form.values?.extras?.find(v => v.type === ApplicantExtras.CDL_NUMBER)?.value?.map((entity, i) => (
-										<div key={i} className={`my-1`}>
-											<div className='Row horizontalRow' ></div >
-											<BaseInput
-												name={`extras[${form.values?.extras?.findIndex(
-													(v) => v.type == ApplicantExtras.CDL_NUMBER
-												)}].value[${i}].license_number`}
-												className="col-12"
-												placeholder="CDL_NUMBER_1"
-												label="ADDTIONAL_LICENSE_NUMBER"
-												required
-												formik={form}
-											/>
-											<Row className="px-3">
+									{form.values?.extras
+										?.find((v) => v.type === ApplicantExtras.CDL_NUMBER)
+										?.value?.map((entity, i) => (
+											<div key={i} className={`my-1`}>
+												<div className="Row horizontalRow"></div>
 												<BaseInput
-													className="col-6"
-													type="date"
 													name={`extras[${form.values?.extras?.findIndex(
 														(v) => v.type == ApplicantExtras.CDL_NUMBER
-													)}].value[${i}].date`}
-													placeholder="expiration_date"
-													label="expiration_date"
+													)}].value[${i}].license_number`}
+													className="col-12"
+													placeholder="CDL_NUMBER_1"
+													label="ADDTIONAL_LICENSE_NUMBER"
 													required
 													formik={form}
 												/>
-												<StateSelect
-													className="col-6"
-													name={`extras[${form.values?.extras?.findIndex(
-														(v) => v.type == ApplicantExtras.CDL_NUMBER
-													)}].value[${i}].state`}
-													placeholder="STATE"
-													label="state_issued"
-													required
-													formik={form}
-												/>
-											
-											</Row>
-											{/* <Button
+												<Row className="px-3">
+													<BaseInput
+														className="col-6"
+														type="date"
+														name={`extras[${form.values?.extras?.findIndex(
+															(v) => v.type == ApplicantExtras.CDL_NUMBER
+														)}].value[${i}].date`}
+														placeholder="expiration_date"
+														label="expiration_date"
+														required
+														formik={form}
+													/>
+													<StateSelect
+														className="col-6"
+														name={`extras[${form.values?.extras?.findIndex(
+															(v) => v.type == ApplicantExtras.CDL_NUMBER
+														)}].value[${i}].state`}
+														placeholder="STATE"
+														label="state_issued"
+														required
+														formik={form}
+													/>
+												</Row>
+												{/* <Button
 														className="rounded-lg"
 														variant="outline-danger close_btn w-25 mx-auto my-2"
 														onClick={() =>
@@ -572,15 +594,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														}
 													>
 														<DashCircle /></Button> */}
-
-										</div>
-									))}
+											</div>
+										))}
 									<Row className="my-3">
 										<Col className="col-8"></Col>
 										<Button
 											// disabled={Boolean(entity?.is_hired)}
 											className="col-4 float-end"
-
 											size="sm"
 											onClick={() => {
 												const extras = form.values?.extras || [];
@@ -588,19 +608,24 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													...form.values,
 													extras: extras?.map((item) =>
 														item.type === ApplicantExtras.CDL_NUMBER
-															? { ...item, value: [ ...(item.value || []), new CdlExtras()] }
+															? {
+																...item,
+																value: [
+																	...(item.value || []),
+																	new CdlExtras(),
+																],
+															}
 															: item
 													),
 												});
 											}}
-
 										>
 											<PlusCircle /> {t("ADD_ANOTHER_STATE")}
 										</Button>
 									</Row>
 								</Row>
 
-								<div className='Row horizontalRow' ></div >
+								<div className="Row horizontalRow"></div>
 								<Row className="px-3">
 									<BaseSelect
 										className="col-6"
@@ -958,7 +983,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							</Col>
 						)}
 					</Col>
-
 				</Row>
 			</Row>
 			<Row>
@@ -1138,11 +1162,21 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										(v) => v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
 									)}].value`}
 									label="APPLIED_HERE_BEFORE"
+									onChange={({ target: { value } }) => {
+										form.setFieldValue(
+											`extras[${form.values?.extras?.findIndex(
+												(v) =>
+													v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
+											)}].value`,
+											value
+										);
+										if (!value) setIsWorkedBefore(false);
+									}}
 									formik={form}
 								/>
 							</Col>
 						</Row>
-						
+
 						{Boolean(
 							form.values?.extras.find(
 								({ type }) =>
@@ -1172,7 +1206,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												)}].value.start_date`}
 												placeholder="DATE"
 												label="FROM"
-												max={new Date((new Date().getFullYear()), new Date().getMonth(), new Date().getDate()).toISOString().split("T")[0]}
+												max={
+													new Date(
+														new Date().getFullYear(),
+														new Date().getMonth(),
+														new Date().getDate()
+													)
+														.toISOString()
+														.split("T")[0]
+												}
 												formik={form}
 											/>
 											<BaseInput
@@ -1184,7 +1226,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												)}].value.end_date`}
 												placeholder="DATE"
 												label="TO"
-												max={new Date((new Date().getFullYear()), new Date().getMonth(), new Date().getDate()).toISOString().split("T")[0]}
+												max={
+													new Date(
+														new Date().getFullYear(),
+														new Date().getMonth(),
+														new Date().getDate()
+													)
+														.toISOString()
+														.split("T")[0]
+												}
 												formik={form}
 											/>
 										</Row>
@@ -1564,13 +1614,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			</Row>
 
 			<ViewModal
-				title={t("CREATE_{name}", { name: "REFERRAL_SOURCE" }, { translateProps: true })}
+				title={t(
+					"CREATE_{name}",
+					{ name: "REFERRAL_SOURCE" },
+					{ translateProps: true }
+				)}
 				show={createReferral}
 				onCloseClick={() => setCreateReferral(false)}
 			>
-				<ReferralSourceForm
-					onSaveComplete={onLocationAdded}
-				/>
+				<ReferralSourceForm onSaveComplete={onLocationAdded} />
 			</ViewModal>
 
 			<ViewModal
