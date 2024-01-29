@@ -94,7 +94,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				(v) => v.value != undefined || v.value != null
 			);
 			const jobs = values.jobs || [];
-		
+			if ("jobs" in values) delete values.jobs;
 			try {
 				if (entity?.id) {
 					values = await applicantApi.update(entity.id, {
