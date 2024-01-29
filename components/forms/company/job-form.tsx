@@ -91,6 +91,7 @@ export function JobForm(props: JobFormProps) {
         form.setValues({
             ...(entity || {}),
             schedule: entity?.schedule || JobSchedule.OPEN_TO_NEGOTIATE,
+            pay_method: entity?.pay_method || JobPayMethod.OPEN_TO_NEGOTIATE,
         });
     }, [entity]);
 
