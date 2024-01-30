@@ -30,7 +30,12 @@ import { LoaderIcon } from "../loading/loader-icon";
 import ViewDetails from "../view-details/view-details";
 import ShowFormattedDate from "../jobs/show-formatted-date";
 import { BaseListRowControl } from "../forms/lists/base-list-row-control";
-import { Arrow90degRight, Send, SendPlus, SendPlusFill } from "react-bootstrap-icons";
+import {
+    Arrow90degRight,
+    Send,
+    SendPlus,
+    SendPlusFill,
+} from "react-bootstrap-icons";
 
 export default function SafetyPerformanceHistory({
     buttonClass,
@@ -155,18 +160,29 @@ export default function SafetyPerformanceHistory({
     const ButtonList = ({ employer, document, type }) => (
         <>
             {form?.values?.employer?.id != employer?.id && (
-                <div className="d-flex w-100 mt-2">
+                <div className="d-flex w-100 mt-2  ">
                     <ViewDocumentButton
                         document={document}
                         onClick={() => handleViewDocument(document.id, setPdf)}
                     />
                     {Boolean(canEditSafetyPerformance) && (
-                        <AddDocumentButton
-                            document={document}
-                            type={type}
-                            t={t}
-                            onClick={() => handleUpdateDocument(type, document?.id, employer)}
-                        />
+                        <OverlyPopover
+                            str={
+                                Boolean(!employer.can_contact) ?
+                                "NOT_AUTHORIZED_TO_COMMUNICATE" : 'ADD_DOCUMENT'
+                            }
+                            className="popover-class"
+                        >
+                            <AddDocumentButton
+                                disabled={!Boolean(employer?.can_contact)}
+                                document={document}
+                                type={type}
+                                t={t}
+                                onClick={() =>
+                                    handleUpdateDocument(type, document?.id, employer)
+                                }
+                            />
+                         </OverlyPopover>
                     )}
                     <DownloadDocumentButton
                         document={document}
@@ -194,16 +210,21 @@ export default function SafetyPerformanceHistory({
                         Boolean(employer?.email) &&
                         // Boolean(employer?.can_contact) ? (
                         Boolean(employer?.is_subject_to_fmcsrs) && (
-                            <Button
-                                disabled={Boolean(employer?.can_contact) }  
-                                className="mr-2 w-100"
-                                onClick={() => Boolean(employer?.can_contact)  && resendVoeRequest(employer.id)}
+                            <OverlyPopover
+                                str={
+                                    Boolean(employer.can_contact)
+                                        ? "RESEND_VOE"
+                                        : "NOT_AUTHORIZED_TO_COMMUNICATE"
+                                }
+                                className="popover-class"
+
                             >
-                                <OverlyPopover
-                                    str={
-                                        !Boolean(employer.can_contact)
-                                            ? "NOT_AUTHORIZED_TO_COMMUNICATE"
-                                            : "RESEND_VOE"
+                                <Button
+                                    disabled={!Boolean(employer?.can_contact)}
+                                    className="mr-2 w-100 "
+                                    onClick={() =>
+                                        Boolean(employer?.can_contact) &&
+                                        resendVoeRequest(employer.id)
                                     }
                                 >
                                     <>
@@ -215,10 +236,9 @@ export default function SafetyPerformanceHistory({
                                             )}
                                         />
                                     </>
-                                </OverlyPopover>
-                            </Button>
-                        )
-                    }
+                                </Button>
+                             </OverlyPopover>
+                        )}
                 </div>
             )}
         </>
@@ -244,11 +264,12 @@ export default function SafetyPerformanceHistory({
                 title="PAST_EMPLOYER"
             >
                 <ViewDataTable<ApplicantEmployerEntity>
-                    description='PAST_EMP_QDF_DESCRITION'
+                    description="PAST_EMP_QDF_DESCRITION"
                     customStyles={{
                         headRow: {
                             style: {
-                                background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                                background:
+                                    "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
                                 color: "white",
                             },
                         },
@@ -330,9 +351,13 @@ export default function SafetyPerformanceHistory({
                                     <ViewDetails
                                         default={t("NOT_ANSWERED")}
                                         obj={{
-                                            VOE_SUBMITTED: data.voe_submitted ? t('YES') : t('NO'),
-                                            AUTHORIZED_TO_COMMUNICATE: Boolean(data.can_contact) ? t('YES') : t('NO'),
-                                            SUBJECT_TO_FMCR: Boolean(data.is_subject_to_fmcsrs) ? t('YES') : t('NO'),
+                                            VOE_SUBMITTED: data.voe_submitted ? t("YES") : t("NO"),
+                                            AUTHORIZED_TO_COMMUNICATE: Boolean(data.can_contact)
+                                                ? t("YES")
+                                                : t("NO"),
+                                            SUBJECT_TO_FMCR: Boolean(data.is_subject_to_fmcsrs)
+                                                ? t("YES")
+                                                : t("NO"),
                                         }}
                                     />
                                 </Col>
@@ -341,13 +366,16 @@ export default function SafetyPerformanceHistory({
                                 <Col md={6}>
                                     <label>{t("VOE_ATTEMPT_COUNT")}</label>
                                     <ol className="list-group">
-                                        {data.voe_attempts?.length
-                                            ? data.voe_attempts.map((v, i) => (
+                                        {data.voe_attempts?.length ? (
+                                            data.voe_attempts.map((v, i) => (
                                                 <li className="list-group-item">
-                                                    <strong>{i + 1}</strong>: <ShowFormattedDate date={v} />
+                                                    <strong>{i + 1}</strong>:{" "}
+                                                    <ShowFormattedDate date={v} />
                                                 </li>
                                             ))
-                                            : <li className="list-group-item">0</li>}
+                                        ) : (
+                                            <li className="list-group-item">0</li>
+                                        )}
                                     </ol>
                                 </Col>
                             </Row>
