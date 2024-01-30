@@ -169,7 +169,7 @@ export default function SafetyPerformanceHistory({
                         <OverlyPopover
                             str={
                                 Boolean(!employer.can_contact) ?
-                                "NOT_AUTHORIZED_TO_COMMUNICATE" : 'ADD_DOCUMENT'
+                                "REQUESTING_OR_UPLOADING_NOT_AUTHORIZED_TO_COMMUNICATE" : 'ADD_DOCUMENT'
                             }
                             className="popover-class"
                         >

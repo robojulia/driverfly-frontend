@@ -86,7 +86,6 @@ export default function DQF(props: ViewApplicantDqfProps) {
     const handleUpdateDocument = async (type: ApplicantDqf, documentId?: number): Promise<void> => {
         form.setFieldValue("document", { type, id: documentId ?? null })
     }
-    console.log(applicant,"Applicant ===================");
 
     /* This is a functional component in TypeScript React that renders a list of buttons for a
     given document and type. It conditionally renders the buttons based on whether the document type
