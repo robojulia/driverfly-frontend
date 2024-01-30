@@ -1,0 +1,39 @@
+import { useState } from "react";
+import { Col } from "react-bootstrap";
+import { ApplicantSuggestedJobEntity } from "../../models/applicant";
+import ApplicantApi from "../../pages/api/applicant";
+import { ViewApplicantDetailProps } from "../../types/applicant/view-application-detail-props.type";
+import { useEffectAsync } from "../../utils/react";
+import ApplicantConsiderFor from "./applicant-consider-for";
+
+export interface ViewSuggestedJobs extends ViewApplicantDetailProps {
+    canEdit?: boolean;
+}
+
+export default function ViewSuggestedJobs({ applicant }: ViewSuggestedJobs) {
+    const [applicantSuggestedJobs, setApplicantSuggestedJobs] = useState<
+        ApplicantSuggestedJobEntity[]
+    >([]);
+
+    const applicantApi = new ApplicantApi();
+
+    useEffectAsync(async () => {
+        if (applicant?.id) {
+            const suggestedJobs = await applicantApi.suggestedJobs.get(applicant.id);
+            setApplicantSuggestedJobs(suggestedJobs);
+        }
+    }, [applicant?.id]);
+
+    return (
+        <>
+            {applicantSuggestedJobs && (
+                <Col md="12">
+                    <ApplicantConsiderFor
+                        applicant={applicant}
+                        applicantSuggestedJobs={applicantSuggestedJobs}
+                    />
+                </Col>
+            )}
+        </>
+    );
+}

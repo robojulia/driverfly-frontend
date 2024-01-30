@@ -6,10 +6,10 @@ import { BaseControlProps } from './base-control';
 function InlineLayout(t, options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix, disabled) {
   return (
     <>
-      {options.map((v, i) => (
+      {options?.map((v, i) => (
         <div key={i} className={`form-check form-check-inline flex-row-reverse`}>
           <label className="form-check-label">{t((labelPrefix ? labelPrefix + "." : "") + v[labelKey])}</label>
-          <input disabled={disabled} className={`form-check-input ${error ? "is-invalid" : ""}`} type="checkbox" readOnly={readOnly} value={v[valueKey]} name={name} onChange={onChange} onBlur={handleBlur} checked={value.includes(v[valueKey])} />
+          <input disabled={disabled} className={`form-check-input ${error ? "is-invalid" : ""}`} type="checkbox" readOnly={readOnly} value={v[valueKey]} name={name} onChange={onChange} onBlur={handleBlur} checked={value?.includes(v[valueKey])} />
         </div>
       ))}
     </>
@@ -19,13 +19,13 @@ function InlineLayout(t, options, value, name, labelKey, valueKey, onChange, han
 function ColLayout(t, options, cols, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix, disabled) {
   return (
     <div className='row mt-1'>
-      {options.map((v, i) => (
+      {options?.map((v, i) => (
         <div
           key={i}
           className={`col-md-${12 / cols}`}>
           <div className={`form-check form-check-inline flex-row-reverse`}>
             <label className="form-check-label">{t((labelPrefix ? labelPrefix + "." : "") + v[labelKey])}</label>
-            <input disabled={disabled} className={`form-check-input ${error ? "is-invalid" : ""}`} readOnly={readOnly} type="checkbox" value={v[valueKey]} name={name} onChange={onChange} onBlur={handleBlur} checked={value.includes(v[valueKey])} />
+            <input disabled={disabled} className={`form-check-input ${error ? "is-invalid" : ""}`} readOnly={readOnly} type="checkbox" value={v[valueKey]} name={name} onChange={onChange} onBlur={handleBlur} checked={value?.includes(v[valueKey])} />
           </div>
         </div>
       ))}
@@ -84,7 +84,7 @@ function BaseCheckList({
     handleBlur = handleBlur || formik.handleBlur;
   }
   if (typeof enumType === "object") {
-    options = Object.entries(enumType).map(([key, value]) => ({
+    options = Object.entries(enumType)?.map(([key, value]) => ({
       [valueKey]: value,
       [labelKey]: value
     }))

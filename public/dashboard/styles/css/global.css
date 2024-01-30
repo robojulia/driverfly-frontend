@@ -993,3 +993,10 @@ input[type='radio']:checked:after {
   visibility: visible;
   border: 2px solid white;
 }
+.horizontalRow{
+  border-bottom: 2px solid gray;
+  opacity: 0.7;
+  width: 80%;
+  margin: 2%;
+  margin-left: 8%;
+}
