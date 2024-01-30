@@ -1885,6 +1885,8 @@
   "BASIC_QUESTIONAIRE": "Basic Questionaire",
   "Authorize_to_Communicate": "Authorize to communicate",
   "NOT_AUTHORIZED_TO_COMMUNICATE": "You are not authorize to communicate by applicant",
+  "REQUESTING_OR_UPLOADING_NOT_AUTHORIZED_TO_COMMUNICATE":"Requesting or uploading a verification of employment request requires applicant’s authorization and the toggle switched to “On” under the Past Employer section of this profile.",
+  "ADD_DOCUMENT":"Add Document",
   "AUTHORIZED_TO_COMMUNICATE": "Authorize to communicate",
   "RESEND_VOE": "Resend VOE Email",
   "RESEND_VOE_SUCCESSFULL": "Request for VOE sent successfully",
@@ -2098,7 +2100,7 @@
     "MEDICAL_EXAMINERS_CERTIFICATE": "Medical Examiner’s Certificate",
     "PRE_EMPLOYMENT_DRUG_TEST": "Pre-employment Drug Test",
     "RECORD_OF_ATTEMPTS": "Record of Attempts (Safety Performance History)",
-    "SAFETY_PERFORMANCE_HISTORY": "Safety Performance History (Previous Employers)",
+    "SAFETY_PERFORMANCE_HISTORY": "Safety Performance History (Verification Of Employment)",
     "EMPLOYMENT_APPLICATION": "Employment Application",
     "DRIVERS_ROAD_TEST_CERTIFICATION": "Driver’s Road Test Certification (optional)"
   },
@@ -2155,6 +2157,7 @@
     "SKILL_PERFORMANCE_EVALUATION_CERTIFICATE": "Skill Performance Evaluation Certificate",
     "SIGNED_HOURS_OF_SERVICE_RECORD_STATEMENT": "Signed hours of service record statement(s)"
   },
+  "PAST_EMP_QDF_DESCRITION": "To send or add verification of employment documents from a company not listed below, you will need to first add them under the Past Employer section of this applicant’s profile.",
   "NO_JOB_TIED_WITH_APPLICANT": "No jobs tied up with this applicant! Click on EDIT to add jobs. ",
   "COMPLETED?": "Completed?",
   "ONBOARDING_CHECKLIST": "Onboarding Checklist",

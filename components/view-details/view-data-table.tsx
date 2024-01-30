@@ -27,6 +27,7 @@ export interface ViewTableProps<TElement> {
     subHeader?: ReactNode;
     noDataComponent?: ReactNode;
     customStyles?: TableStyles;
+    description?:string;
 }
 
 export interface ViewTableColumn<TElement> extends TableColumn<TElement> {
@@ -45,9 +46,9 @@ export default function ViewDataTable<TElement>(
     props: ViewTableProps<TElement>
 ) {
     const { t } = useTranslation();
-
+    
     // const storageApi = useStorage();
-
+    const description = props?.description;
     const storage = props.columnSettingKey
         ? useStatefulStorage<(string | number)[]>({
             type: "local",
@@ -140,7 +141,10 @@ export default function ViewDataTable<TElement>(
 
     const canHideColumns = hideable.size > 0;
 
-    return (
+    return (<>
+        {
+        description && <p className="small text-secondary">{t(description)}</p>
+        }    
         <DataTable<TElement>
             customStyles={props.customStyles}
             columns={columns
@@ -232,5 +236,7 @@ export default function ViewDataTable<TElement>(
             }
             data={items}
         />
+    </>
+
     );
 }
