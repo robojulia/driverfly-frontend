@@ -11,6 +11,7 @@ type ButtonProps = {
     onClick?: (...args: any) => any;
     className?: string;
     isLoading?: boolean | (() => boolean);
+    disabled?: boolean;
 };
 
 /**
@@ -24,12 +25,14 @@ export const AddDocumentButton = ({
     t,
     onClick,
     className,
+    disabled,
 }: ButtonProps) => (
     <>
         <Button
             type="button"
             className={className ?? "mr-2 w-100"}
             onClick={() => onClick(type, document?.id)}
+            disabled={disabled}
         >
             {document ? <Pen /> : t("ADD")}
         </Button>

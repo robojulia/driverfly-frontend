@@ -32,9 +32,9 @@ export default function Contact() {
             try {
                 const res = await contactApi.sendMail(dto);
                 toast.success(t("THANKS_FOR_CONTACTING_US"));
-
+                form.resetForm();
+                captchaRef.current.reset();
             } catch (e) {
-                console.log(e.response?.data?.recaptchaValue,"############################################################################");
                 if (e.response?.data?.recaptchaValue == "INVALID_RECAPTCHA_TOKEN")
                     captchaRef.current.reset();
 
@@ -50,22 +50,12 @@ export default function Contact() {
 
     const handleReCapchaChange = (token: string) => {
         const captchaValue = captchaRef.current.getValue();
-          if (!captchaValue) {
-            alert("Please verify the reCAPTCHA!");
-            } else {
-            // make form submission
-            alert("Form submission successful!");
-            form.setFieldValue("recaptchaValue", token || null);
-            console.log(token,"Recaptcha Value Token =================================================================");
-            }
+
+        // make form submission
+        form.setFieldValue("recaptchaValue", token || null);
     };
 
-    console.log("Secret Key ==== ", process.env.RECAPTCHA_SITE_KEY);
 
-
-    useEffect(()=>{
-        console.log("Form Values",form.values);
-    })
     return (
         <>
             <Head>

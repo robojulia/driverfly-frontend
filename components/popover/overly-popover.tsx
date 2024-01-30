@@ -14,6 +14,7 @@ export interface OverlyPopoverProps {
     icon?: ReactNode;
     slice_at?: number;
     readonly children?: string | React.ReactChildren | React.ReactChild;
+    className?: string;
 }
 
 export default function OverlyPopover({
@@ -25,7 +26,8 @@ export default function OverlyPopover({
     header,
     icon,
     slice_at,
-    children
+    children,
+    className
 }: OverlyPopoverProps) {
     const { t } = useTranslation();
     if (!str) return (<></>)
@@ -33,7 +35,7 @@ export default function OverlyPopover({
     const templateString = skipTranslate ? str : t((labelPrefix ? labelPrefix + "." : "") + str)
 
     const popover = (
-        <Popover id="popover-basic">
+        <Popover id="popover-basic tooltip-disabled">
             {
                 header &&
                 <Popover.Header as="h3">{header}</Popover.Header>
@@ -45,19 +47,22 @@ export default function OverlyPopover({
         </Popover>
     );
 
-    return <OverlayTrigger
-        trigger={trigger}
-        placement={placement ?? "bottom"}
-        delay={{ show: 250, hide: 400 }}
-        overlay={popover}
-    >
-        {children ?
-            <span>{children}</span>
-            :
-            <span >
-                {icon ?? null}
-                {slice_at && slice_at < templateString?.length ? `${templateString.slice(0, slice_at)}...` : templateString}
-            </span>
-        }
-    </OverlayTrigger>
+    return (
+        <div className={className}>
+            <OverlayTrigger
+                trigger={trigger}
+                placement={placement ?? "bottom"}
+                delay={{ show: 250, hide: 400 }}
+                overlay={popover}
+            >
+                {children ?
+                    <span>{children}</span>
+                    :
+                    <span >
+                        {icon ?? null}
+                        {slice_at && slice_at < templateString?.length ? `${templateString.slice(0, slice_at)}...` : templateString}
+                    </span>
+                }
+            </OverlayTrigger>
+        </div>);
 }
