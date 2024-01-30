@@ -69,7 +69,7 @@ export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
 export function ApplicantForm(props: ApplicantFormProps) {
 	let { className, entity, onSaveComplete, onSaveError } = props;
-	let { user, hasPermission, isSuperAdmin, isCompanyAdmin } = useAuth();
+	let { user, hasPermission, isSuperAdmin, isCompanyAdmin, company } = useAuth();
 	const { t } = useTranslation();
 	const router = useRouter();
 	const current_date = new Date();
