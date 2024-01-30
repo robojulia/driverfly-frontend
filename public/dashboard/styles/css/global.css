@@ -1000,3 +1000,7 @@ input[type='radio']:checked:after {
   margin: 2%;
   margin-left: 8%;
 }
+.popover-class{
+  margin-right: 8px;
+  width: 100% !important;
+}
