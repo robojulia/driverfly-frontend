@@ -1,10 +1,9 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { Button, Container, Dropdown } from "react-bootstrap";
 import { Gear, Search } from "react-bootstrap-icons";
-import DataTable, { TableColumn } from "react-data-table-component";
+import DataTable, { TableColumn, TableStyles } from "react-data-table-component";
 import {
     ExpandableRowsComponent,
-    TableStyles,
 } from "react-data-table-component/dist/src/DataTable/types";
 import {
     useStatefulStorage
@@ -26,9 +25,8 @@ export interface ViewTableProps<TElement> {
     hideSearch?: boolean;
     subHeader?: ReactNode;
     noDataComponent?: ReactNode;
-    // customStyles?: any;
     customStyles?: TableStyles;
-    description?:string;
+    description?: string;
 }
 
 export interface ViewTableColumn<TElement> extends TableColumn<TElement> {
@@ -47,7 +45,7 @@ export default function ViewDataTable<TElement>(
     props: ViewTableProps<TElement>
 ) {
     const { t } = useTranslation();
-    
+
     // const storageApi = useStorage();
     const description = props?.description;
     const storage = props.columnSettingKey
@@ -144,8 +142,8 @@ export default function ViewDataTable<TElement>(
 
     return (<>
         {
-        description && <p className="small text-secondary">{t(description)}</p>
-        }    
+            description && <p className="small text-secondary">{t(description)}</p>
+        }
         <DataTable<TElement>
             customStyles={props.customStyles}
             columns={columns
