@@ -117,7 +117,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				}
 
 				for (let i = 0; i < entity?.jobs?.length; i++) {
-					let job = entity.jobs[i];
+					let job = entity?.jobs[i];
 
 					if (!jobs.some((v) => v.job?.id === job.job.id)) {
 						await applicantApi.jobs.remove(values.id, job.job.id);
@@ -232,7 +232,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			if (!!entity?.id) {
 				values = {
 					...entity,
-					documents: entity.documents?.filter((v) =>
+					documents: entity?.documents?.filter((v) =>
 						Object.values(ApplicantDocumentType).includes(
 							v.type as ApplicantDocumentType
 						)
@@ -350,7 +350,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 					hide: !Boolean(form.values?.id) || Boolean(entity?.is_hired),
 					disabled: form.isSubmitting,
 					onClick: () =>
-						hireApplicantForm.setValues({ applicantId: entity.id }),
+						hireApplicantForm.setValues({ applicantId: entity?.id }),
 				},
 			]}
 		>
@@ -1479,7 +1479,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													labelPrefix="ApplicantDocumentType"
 													enumType={ApplicantDocumentType}
 													readOnly={
-														Boolean(!!entity.id && !entity.file_base64) ||
+														Boolean(!!entity?.id && !entity?.file_base64) ||
 														Boolean(props?.entity?.is_hired)
 													}
 													formik={form}
@@ -1563,8 +1563,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										return (
 											<tr key={i}>
 												<td>
-													{entity.id ? (
-														entity.job.title
+													{entity?.id ? (
+														entity?.job?.title
 													) : (
 														<BaseSelect
 															name={`jobs[${i}].job.id`}
