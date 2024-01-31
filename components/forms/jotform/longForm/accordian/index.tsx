@@ -21,7 +21,7 @@ import { ApplicantEntity } from "../../../../../models/applicant";
 
 export function AccordianPage() {
 	const {
-		state: { applicantExtras, applicant, jobs },
+		state: { applicantExtras, applicant, jobs, company },
 		method: { stepBack, updateApplicantExtras, stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 	const [showTab, setShowTab] = useState<boolean[]>([
@@ -48,7 +48,7 @@ export function AccordianPage() {
 						jobs,
 					});
 				} else {
-					response = await applicantApi.jotform.create({
+					response = await applicantApi.jotform.create(company.id, {
 						applicant,
 						applicantExtras: filtered_extras,
 						jobs,
@@ -111,7 +111,7 @@ export function AccordianPage() {
 				</div>
 			) : null}
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<h1 className={styles.carrierName}>{t("FORMS_TO_SIGNUP")}</h1>
+				<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("FORMS_TO_SIGNUP")}</h1>
 				<h6 className={`${styles.paragraph} my-3`}>{t("PLEASE_CLICK_EACH_ARROW")}</h6>
 				<button
 					type="button"

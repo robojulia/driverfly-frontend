@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import { ArcElement, Chart } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { useTranslation } from "../../hooks/use-translation";
 Chart.register(ArcElement);
@@ -28,10 +28,10 @@ export function PieChart(props: PieChartProps): JSX.Element {
 	const [chartKey, setChartKey] = useState(0);
 
 	const [backgroundColor, setBackgroundColor] = useState<string[]>([
-		"rgba(29, 67, 84)",
-		"rgba(92, 200, 196)",
-		"rgba(245, 192, 24)",
-		"rgba(90, 11, 11)",
+		"#37AEAF",
+		"#87F934",
+		"#F5BF19",
+		"#CDF4FF",
 	]);
 
 	useEffect(() => {
@@ -45,36 +45,61 @@ export function PieChart(props: PieChartProps): JSX.Element {
 		if (!props?.disableRerender) setChartKey((prevKey) => prevKey + 1);
 	}, [data]);
 
+
 	return (
-		<Doughnut
-			key={chartKey}
-			options={{
-				maintainAspectRatio: false,
-				responsive: true,
-				plugins: {
-					datalabels: {
-						color: function (context) {
-							var index = context.dataIndex;
-							var value = context.dataset.data[index];
-							return value === 0 ? "transparent" : "white";
+		<div className="chart-container">
+			<Doughnut
+				key={chartKey}
+				options={{
+					maintainAspectRatio: true,
+					responsive: true,
+					plugins: {
+						legend: {
+							maxWidth: 100,
+							position: 'right',
+							labels: {
+								boxWidth: 5,
+
+								// padding:  1, 
+								// boxWidth: 20, // Set the width of the legend color box
+								// boxHeight: 20, // Set the height of the legend color box
+							},
+
 						},
-						font: {
-							size: 18,
+						datalabels: {
+							color: function (context) {
+								var index = context.dataIndex;
+								var value = context.dataset.data[index];
+								return value === 0 ? "transparent" : "white";
+							},
+							font: {
+								size: 18,
+							},
 						},
+
+						// legend: {
+						// 	labels: {
+						// 	  font: {
+						// 		family:'Poppins'
+						// 		// size: , // Adjust the legend font size as needed
+						// 	  },
+						// 	},
+						//   },					
 					},
-				},
-			}}
-			data={{
-				labels: labels.map((v) => t(v)),
-				datasets: [
-					{
-						label: t(title),
-						data,
-						backgroundColor,
-						borderWidth: 1,
-					},
-				],
-			}}
-		/>
+				}}
+				data={{
+					labels: labels.map((v) => t(v)),
+					datasets: [
+						{
+							label: t(title),
+							data,
+							backgroundColor,
+							borderWidth: 0,
+						},
+					],
+				}}
+			/>
+
+		</div>
 	);
 }

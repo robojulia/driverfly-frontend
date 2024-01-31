@@ -3,7 +3,7 @@ import { ApplicantDocumentType } from "../../enums/applicants/applicant-document
 import { ApplicantDqf } from "../../enums/applicants/applicant-dqf-types.enum";
 import { ApplicantFormStatus } from "../../enums/applicants/applicant-form-status.enum";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
-import { ApplicantEmployerEntity } from "../../models/applicant";
+import { ApplicantEmployerEntity, ApplicantVoeEntity } from "../../models/applicant";
 import { ApplicantDacEntity } from "../../models/applicant/applicant-dac.entity";
 import { ApplicantJobEntity } from "../../models/applicant/applicant-job.entity";
 import { ApplicantNoteEntity } from "../../models/applicant/applicant-note.entity";
@@ -188,9 +188,10 @@ export default class ApplicantApi extends BaseApi {
 	jotform = {
 		baseUrl: () => `${this.baseUrl}/applicant-jotform`,
 		create: async (
+			companyId: number,
 			dto: UpsertApplicantJotformDto
 		): Promise<ApplicantEntity> => {
-			const { data } = await this.post(`${this.jotform.baseUrl()}?companyId=${dto?.applicant?.company?.id}`, dto);
+			const { data } = await this.post(`${this.jotform.baseUrl()}?companyId=${companyId}`, dto);
 			return data;
 		},
 		update: async (
@@ -225,9 +226,14 @@ export default class ApplicantApi extends BaseApi {
 	};
 
 	voeform = {
-		baseUrl: () => `${this.baseUrl}/applicant-voeform`,
-		create: async (dto: UpsertApplicantVoeformDto): Promise<any> => {
-			const { data } = await this.post(this.voeform.baseUrl(), dto);
+		baseUrl: () => `${this.baseUrl}/voe`,
+		submitVoe: async (dto: UpsertApplicantVoeformDto): Promise<any> => {
+			const { data } = await this.post(`${this.voeform.baseUrl()}/submit`, dto);
+			return data;
+		},
+		fetch: async (applicant_uuid: string, employer_uuid: string): Promise<ApplicantVoeEntity> => {
+			const { data } = await this.get(`${this.voeform.baseUrl()}/fetch/${applicant_uuid}/${employer_uuid}`);
+
 			return data;
 		},
 	};

@@ -94,6 +94,11 @@ const FullLayout = ({ children }) => {
 
 		},
 		{
+			pathname: "/dashboard/company/company-preferences",
+			icon: Sliders,
+			text: "DIGITAL_HIRING_APPLICATION",
+		},
+		{
 			pathname: "/dashboard/company/settings",
 			icon: GearFill,
 			text: "SETTINGS",
@@ -150,30 +155,26 @@ const FullLayout = ({ children }) => {
 					icon: QuestionCircleFill,
 					text: "SUPPORT",
 				},
+				// superadmin panel
 				{
-					pathname: "/dashboard/company/settings/company-preferences",
-					icon: Sliders,
-					text: "DIGITAL_HIRING_APPLICATION",
+					icon: Link45deg,
+					text: "REFERRALS",
+					// visible: isSuperAdmin,
+					items: [
+						{
+							pathname: "/dashboard/company/settings/admin/referral",
+							icon: PersonHearts,
+							text: "REFERRAL_SOURCES",
+							visible: isCompanyAdmin,
+							startsWith: true,
+						},
+					],
 				},
 			],
 
 		},
 
-		// superadmin panel
-		{
-			icon: Link45deg,
-			text: "REFERRALS",
-			// visible: isSuperAdmin,
-			items: [
-				{
-					pathname: "/dashboard/company/admin/referral",
-					icon: PersonHearts,
-					text: "REFERRAL_SOURCES",
-					visible: isCompanyAdmin,
-					startsWith: true,
-				},
-			],
-		},
+		
 
 	];
 	//  Code below is to set scroll to top on each child page
@@ -206,9 +207,9 @@ const FullLayout = ({ children }) => {
 						{/******** Sidebar **********/}
 						<Sidebar items={menuItems} />
 						{/********Content Area**********/}
-						<div className="header" ref={dashboardContainer}>
+						<div className="header dashboard-container" ref={dashboardContainer}>
 							{/********Middle Content**********/}
-							<Container className="p-4 wrapper" fluid>
+							<Container className="p-4 wrapper " fluid>
 								<div>{children}</div>
 							</Container>
 						</div>

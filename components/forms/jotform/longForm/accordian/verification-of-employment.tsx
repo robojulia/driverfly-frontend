@@ -26,7 +26,7 @@ function formatSSN(value: string) {
 export function VerificationOfEmployment({ form }: AccordianProps) {
 
     const {
-        state: { applicant, applicantExtras, companyPreferences },
+        state: { applicant, applicantExtras, companyPreferences, company },
         // method: { setApplicant, updateApplicantExtras },
     }: JotFormContextType = useContext(JotformContext);
 
@@ -186,7 +186,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                         {t(
                             "NEW_EMPLOYER_NAME_{company_name}",
-                            { company_name: applicant?.company?.name },
+                            { company_name: company?.name ?? applicant?.company?.name },
                             { translateProps: true }
                         )}
                     </p>

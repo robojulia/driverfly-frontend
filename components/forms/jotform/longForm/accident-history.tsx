@@ -59,7 +59,7 @@ export function AccidentHistory() {
 
 	return (
 		<>
-		<h1 className={styles.carrierName}>{t("MORE_ABOUT_ACCIDENTS")}</h1>
+		<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("MORE_ABOUT_ACCIDENTS")}</h1>
 
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.bold}>

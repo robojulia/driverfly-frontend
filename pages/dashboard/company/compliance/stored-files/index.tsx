@@ -1,127 +1,311 @@
-import { useEffect, useState } from "react";
-import React from "react";
-import { Eye, Plus, Send } from 'react-bootstrap-icons';
-import { Button, Row } from "react-bootstrap";
 import { useFormik } from "formik";
-import { toast } from 'react-toastify'
+import Link from "next/link";
+import { useState } from "react";
+import { Button, Row } from "react-bootstrap";
+import { CloudArrowDown, Eye, Plus, Send } from "react-bootstrap-icons";
+import { toast } from "react-toastify";
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
-import PageLayout from "../../../../../components/layouts/page/page-layout";
-import { useTranslation } from "../../../../../hooks/use-translation";
-import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
-import { useAuth } from "../../../../../hooks/use-auth";
-import { useEffectAsync } from "../../../../../utils/react";
-import ViewModal from "../../../../../components/view-details/view-modal";
-import FileInput from "../../../../../components/forms/file-input";
-import BaseSelect from "../../../../../components/forms/base-select";
-import ComplianceApi from "../../../../api/compliance";
-import { DocumentEntity } from "../../../../../models/documents/document.entity";
-import { StoredFileDto } from "../../../../../models/compiance/stored-file.dto";
-import { CompanyDocumentType } from "../../../../../enums/compliance/company-document-type.enum";
-import EntityForm from "../../../../../components/layouts/page/entity-form";
-import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
-import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
 import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
-import ApplicantApi from "../../../../api/applicant";
-import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
-import ViewPdf from "../../../../../components/view-details/view-pdf";
-import DocumentApi from "../../../../api/document";
-import { SendFileDto } from "../../../../../models/compiance/send-file.dto";
+import BaseSelect from "../../../../../components/forms/base-select";
+import FileInput from "../../../../../components/forms/file-input";
+import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
+import EntityForm from "../../../../../components/layouts/page/entity-form";
+import PageLayout from "../../../../../components/layouts/page/page-layout";
+import { TabbedLayout } from "../../../../../components/layouts/page/tabbed-layout";
 import OverlyPopover from "../../../../../components/popover/overly-popover";
+import ViewDataTable, {
+    getDataTableColumnKey,
+} from "../../../../../components/view-details/view-data-table";
+import ViewModal from "../../../../../components/view-details/view-modal";
+import ViewPdf from "../../../../../components/view-details/view-pdf";
+import { CompanyDocumentType } from "../../../../../enums/compliance/company-document-type.enum";
+import { useAuth } from "../../../../../hooks/use-auth";
+import { useTranslation } from "../../../../../hooks/use-translation";
+import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
+import { StoredFileDto } from "../../../../../models/compiance/stored-file.dto";
+import { DocumentEntity } from "../../../../../models/documents/document.entity";
+import { EmployeeEntity } from "../../../../../models/employee/employee.entity";
+import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
+import {
+    handleViewDocument
+} from "../../../../../utils/documents/button-actions";
+import { useEffectAsync } from "../../../../../utils/react";
+import ApplicantApi from "../../../../api/applicant";
+import ComplianceApi from "../../../../api/compliance";
+import EmployeeApi from "../../../../api/employee";
 
 export default function StoredFiles() {
-
-    const { user, hasPermission } = useAuth();
+    const { user } = useAuth();
     const { t } = useTranslation();
     const complianceApi = new ComplianceApi();
     const applicantApi = new ApplicantApi();
+    const employeeApi = new EmployeeApi();
 
-    // showFileUploadModel 
-    const [showFileUploadModel, setShowFileUploadModel] = useState<boolean>(false);
-    const openFileUploadModel = (): void => setShowFileUploadModel(true)
-    const closeFileUploadModel = (): void => setShowFileUploadModel(false)
+    // showFileUploadModel
+    const [showFileUploadModel, setShowFileUploadModel] =
+        useState<boolean>(false);
+    const openFileUploadModel = (): void => setShowFileUploadModel(true);
+    const closeFileUploadModel = (): void => setShowFileUploadModel(false);
 
-    const [documentId, setDocumentId] = useState<number>(null)
-    const resetDocumentId = (): void => setDocumentId(null)
+    const [documentId, setDocumentId] = useState<number>(null);
+    const resetDocumentId = (): void => setDocumentId(null);
 
-    const columnSettingKey = getDataTableColumnKey("company", user, "stored-files");
+    const columnSettingKey = getDataTableColumnKey(
+        "company",
+        user,
+        "stored-files"
+    );
 
-    const [files, setFiles] = useState<DocumentEntity[]>([])
-    const [applicants, setApplicants] = useState<ApplicantEntity[]>([])
+    const [files, setFiles] = useState<DocumentEntity[]>([]);
+    const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
+    const [employees, setEmployees] = useState<EmployeeEntity[]>([]);
 
-    useEffectAsync(async () => {
+    const [pdf, setPdf] = useState({});
 
-        const v = await complianceApi.filesList();
-        setFiles(v);
+    useEffectAsync(
+        async () => {
+            const v = await complianceApi.filesList();
+            setFiles(v);
 
-        const data = await applicantApi.list();
-        setApplicants(data)
+            const a = await applicantApi.list();
+            setApplicants(a);
 
-    }, [user], () => {
-        console.log("unloading page...")
-    });
-
-
-    //for multiple file selection
-
-    const [selectedRowsIds, setSelectedRowsIds] = useState<number[]>();
-
-    const handleSelectedRowsChange = ({ selectedRows }: any) => {
-
-        setSelectedRowsIds(selectedRows?.map(selectedRow => selectedRow?.id));
-    };
+            const e = await employeeApi.list();
+            setEmployees(e);
+        },
+        [user],
+        () => {
+            console.log("unloading page...");
+        }
+    );
 
     const form = useFormik({
         initialValues: new StoredFileDto(),
         validationSchema: StoredFileDto.yupSchema(),
+        validateOnBlur: false,
+        validateOnMount: false,
+        isInitialValid: true,
         onSubmit: async (data, { resetForm }) => {
             try {
-                await complianceApi.createFile(data)
-                    .then((entity: DocumentEntity) => {
-                        if (entity) {
-                            files.push(entity)
-                            files.sort((a, b) => (a.id - b.id))
-                            resetForm()
-                            closeFileUploadModel()
-                            toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
-                        }
-                    })
+                await complianceApi.createFile(data).then((entity: DocumentEntity) => {
+                    if (entity) {
+                        files.push(entity);
+                        files.sort((a, b) => a.id - b.id);
+                        resetForm();
+                        closeFileUploadModel();
+                        toast.success(t("DOCUMENT_UPLOAD_SUCCESS_MESSAGE"));
+                    }
+                });
             } catch (error) {
                 globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
             }
-        }
+        },
     });
 
-    const sendEmail = async (applicantIds: number[]): Promise<void> => {
-
+    const sendEmail = async (
+        entities: ApplicantEntity[] | EmployeeEntity[]
+    ): Promise<void> => {
         try {
             if (documentId)
-                await complianceApi.sendComplianceFile({ applicantIds, documentId })
-                    .then(res => {
-                        toast.success(t('DOCUMENT_SENT_SUCCESS_MESSAGE'))
-                        setTimeout(() => {
-                            resetDocumentId()
-                            setSelectedRowsIds(null)
-                        }, 1000)
-                    })
+                await complianceApi
+                    .sendComplianceFile({ documentId, entities })
+                    .then((res) => {
+                        toast.success(t("DOCUMENT_SENT_SUCCESS_MESSAGE"));
+                        resetDocumentId();
+                    });
         } catch (error) {
-            toast.error(t('DOCUMENT_SENT_FAILED_MESSAGE'))
+            toast.error(t("DOCUMENT_SENT_FAILED_MESSAGE"));
         }
+    };
+
+    function ApplicantListing() {
+        const [selectedRows, setSelectedRows] = useState<ApplicantEntity[]>();
+        const handleSelectedRowsChange = (arg: any) => {
+            setSelectedRows(
+                arg?.selectedRows?.map(({ email, first_name, last_name }) => ({
+                    email,
+                    first_name,
+                    last_name,
+                }))
+            );
+        };
+
+        return (
+            <>
+                <ViewDataTable<ApplicantEntity>
+                    subHeader={
+                        <div className="float-left pr-2">
+                            {Boolean(selectedRows?.length) && (
+                                <Button
+                                    className=" w-100"
+                                    onClick={() => sendEmail(selectedRows)}
+                                >
+                                    {t(
+                                        "selected_row_{count}",
+                                        { count: selectedRows?.length },
+                                        { translateProps: true }
+                                    )}
+                                </Button>
+                            )}
+                        </div>
+                    }
+                    enableSelectableRows={true}
+                    selectableRowChangeHandler={handleSelectedRowsChange}
+                    columnSettingKey={columnSettingKey}
+                    customStyles={{
+                        headRow: {
+                            style: {
+                                background:
+                                    "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                                color: "white",
+                            },
+                        },
+                    }}
+                    columns={[
+                        {
+                            id: "id",
+                            name: "ID",
+                            selector: (applicant) => applicant.id,
+                            hidable: false,
+                        },
+                        {
+                            name: "first_name",
+                            selector: (applicant) => applicant.first_name,
+                            hidable: false,
+                        },
+                        {
+                            name: "last_name",
+                            selector: (applicant) => applicant.last_name,
+                            hidable: false,
+                        },
+                        {
+                            name: "email",
+                            selector: (applicant) => applicant.email,
+                            hidable: false,
+                        },
+                        {
+                            cell: (applicant) =>
+                                !Boolean(selectedRows?.length) && (
+                                    <>
+                                        <Button
+                                            type="button"
+                                            onClick={() =>
+                                                sendEmail([
+                                                    {
+                                                        email: applicant.email,
+                                                        first_name: applicant.first_name,
+                                                        last_name: applicant.last_name,
+                                                    },
+                                                ])
+                                            }
+                                            className="theme-secondary-btn mr-2 px-4 py-1"
+                                        >
+                                            <Send />
+                                        </Button>
+                                    </>
+                                ),
+                        },
+                    ]}
+                    items={applicants}
+                />
+            </>
+        );
     }
 
-    const [pdf, setPdf] = useState({});
+    function EmployeeListing() {
+        const [selectedRows, setSelectedRows] = useState<EmployeeEntity[]>();
+        const handleSelectedRowsChange = (arg: any) => {
+            setSelectedRows(
+                arg?.selectedRows?.map(({ email, first_name, last_name }) => ({
+                    email,
+                    first_name,
+                    last_name,
+                }))
+            );
+        };
 
-    const viewDocumentClick = async (id, name) => {
-        const api = new DocumentApi();
-
-        const document = await api.getSignedUrl(id);
-
-        if (document) {
-            setPdf({
-                name: `${t(name)} (${document.name})`,
-                url: document.path
-            });
-        }
+        return (
+            <>
+                <ViewDataTable<EmployeeEntity>
+                    subHeader={
+                        <div className="float-left pr-2">
+                            {Boolean(selectedRows?.length) && (
+                                <Button
+                                    className=" w-100"
+                                    onClick={() => sendEmail(selectedRows)}
+                                >
+                                    {t(
+                                        "selected_row_{count}",
+                                        { count: selectedRows?.length },
+                                        { translateProps: true }
+                                    )}
+                                </Button>
+                            )}
+                        </div>
+                    }
+                    enableSelectableRows={true}
+                    selectableRowChangeHandler={handleSelectedRowsChange}
+                    columnSettingKey={columnSettingKey}
+                    customStyles={{
+                        headRow: {
+                            style: {
+                                background:
+                                    "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                                color: "white",
+                            },
+                        },
+                    }}
+                    columns={[
+                        {
+                            id: "id",
+                            name: "ID",
+                            selector: (employee) => employee.id,
+                            hidable: false,
+                        },
+                        {
+                            name: "first_name",
+                            selector: (employee) => employee.first_name,
+                            hidable: false,
+                        },
+                        {
+                            name: "last_name",
+                            selector: (employee) => employee.last_name,
+                            hidable: false,
+                        },
+                        {
+                            name: "email",
+                            selector: (employee) => employee.email,
+                            hidable: false,
+                        },
+                        {
+                            cell: (employee) =>
+                                !Boolean(selectedRows?.length) && (
+                                    <>
+                                        <Button
+                                            type="button"
+                                            onClick={() =>
+                                                sendEmail([
+                                                    {
+                                                        email: employee.email,
+                                                        first_name: employee.first_name,
+                                                        last_name: employee.last_name,
+                                                    },
+                                                ])
+                                            }
+                                            className="theme-secondary-btn mr-2 px-4 py-1"
+                                        >
+                                            <Send />
+                                        </Button>
+                                    </>
+                                ),
+                        },
+                    ]}
+                    items={employees}
+                />
+            </>
+        );
     }
+
     return (
         <PageLayout
             title="STORED_FILES"
@@ -137,8 +321,9 @@ export default function StoredFiles() {
                 customStyles={{
                     headRow: {
                         style: {
-                            background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
-                            color: "white"
+                            background:
+                                "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                            color: "white",
                         },
                     },
                 }}
@@ -148,38 +333,39 @@ export default function StoredFiles() {
                         name: "ID",
                         maxWidth: "20%",
                         minWidth: "20%",
-                        selector: file => file.id,
-                        hidable: false
+                        selector: (file) => file.id,
+                        hidable: false,
                     },
                     {
                         id: "file_name",
                         name: "file_name",
                         maxWidth: "25%",
                         minWidth: "25%",
-                        cell: file => <OverlyPopover str={file.name} slice_at={50} />,
-                        hidable: false
+                        cell: (file) => <OverlyPopover str={file.name} slice_at={50} />,
+                        hidable: false,
                     },
                     {
                         id: "type",
                         name: "type",
                         maxWidth: "20%",
                         minWidth: "20%",
-                        cell: file =>
-                        (<ShowEnumFromString
-                            popover
-                            labelPrefix="CompanyDocumentType"
-                            value={file.type}
-                            enumArray={CompanyDocumentType} />
+                        cell: (file, rowIndex, column) => (
+                            <ShowEnumFromString
+                                popover
+                                labelPrefix="CompanyDocumentType"
+                                value={file.type}
+                                enumArray={CompanyDocumentType}
+                            />
                         ),
-                        selector: file => file.type,
+                        selector: (file) => file.type,
                     },
                     {
                         id: "upload_date",
                         name: "upload_date",
                         maxWidth: "20%",
                         minWidth: "20%",
-                        selector: file => file.created_at,
-                        cell: file => <ShowFormattedDate date={file.created_at} />
+                        selector: (file) => file.created_at,
+                        cell: (file) => <ShowFormattedDate date={file.created_at} />,
                     },
                     {
                         maxWidth: "15%",
@@ -197,19 +383,31 @@ export default function StoredFiles() {
                                 >
                                     <Send />
                                 </button>
-                                <button
-                                    type="button"
-                                    className="theme-secondary-btn mr-0 px-4 py-2"
-                                    onClick={() => viewDocumentClick(file.id, file.name)}
-                                >
-                                    <Eye />
-                                </button>
+                                {file?.name?.includes(".doc") ? (
+                                    <Link href={file.path} legacyBehavior>
+                                        <button className="btn-success mr-0 px-4 py-2">
+                                            <CloudArrowDown />
+                                        </button>
+                                    </Link>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        className="theme-secondary-btn mr-0 px-4 py-2"
+                                        onClick={() =>
+                                            handleViewDocument(
+                                                file.id,
+                                                setPdf,
+                                                `${t("CompanyDocumentType." + file?.type)} (${file.name
+                                                })`
+                                            )
+                                        }
+                                    >
+                                        <Eye />
+                                    </button>
+                                )}
                             </>
-
                         ),
                     },
-
-
                 ]}
                 items={files}
             />
@@ -223,11 +421,7 @@ export default function StoredFiles() {
                 closeText="CANCEL"
                 title="UPLOAD_NEW_FILE"
             >
-                <EntityForm
-                    formik={form}
-                    className="mx-3"
-                    submitLabel="UPLOAD"
-                >
+                <EntityForm formik={form} className="mx-3" submitLabel="UPLOAD">
                     <Row>
                         <BaseSelect
                             className="col-12 my-3"
@@ -244,9 +438,10 @@ export default function StoredFiles() {
                             label={`UPLOAD_FILE`}
                             name={`file`}
                             required
-                            accept="application/pdf"
+                            allowedTypesFriendlyName="PDF, DOC, DOCX"
+                            accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                             documentType={"PDF"}
-                            allowedSizeInByte={3145728}
+                            allowedSizeInByte={5242880}
                             formik={form}
                         />
                     </Row>
@@ -260,75 +455,19 @@ export default function StoredFiles() {
                 onCloseClick={resetDocumentId}
                 closeText="CANCEL"
                 title="APPLICANTS"
-
             >
-                <>
-                    <div className="float-right pr-2">
-                        {
-                            Boolean(selectedRowsIds?.length) &&
-                            <Button className=" w-100" onClick={() => sendEmail(selectedRowsIds)}>
-                                {t("selected_row_{count}", { count: selectedRowsIds?.length }, { translateProps: true })}
-                            </Button>
-                        }
-                    </div>
-                    <ViewDataTable<ApplicantEntity>
-                        enableSelectableRows={true}
-                        selectableRowChangeHandler={handleSelectedRowsChange}
-                        columnSettingKey={columnSettingKey}
-                        customStyles={{
-                            headRow: {
-                                style: {
-                                    background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
-                                    color: "white"
-                                },
-                            },
-                        }}
-                        columns={[
-                            {
-                                id: "id",
-                                name: "ID",
-                                selector: applicant => applicant.id,
-                                hidable: false
-                            },
-                            {
-                                name: "first_name",
-                                selector: applicant => applicant.first_name,
-                                hidable: false
-                            },
-                            {
-                                name: "last_name",
-                                selector: applicant => applicant.last_name,
-                                hidable: false
-                            },
-                            {
-                                name: "email",
-                                selector: applicant => applicant.email,
-                                hidable: false
-                            },
-                            {
-                                cell: (applicant) => (
-                                    Boolean(!!!selectedRowsIds) && <>
-                                        <Button type="button" disabled={form.isSubmitting || !form.isValid || form.isValidating} onClick={() => sendEmail([applicant?.id])} className="theme-secondary-btn mr-2 px-4 py-1"><Send /></Button>
-                                    </>
-                                ),
-                            },
-
-
-                        ]}
-                        items={applicants}
-                    />
-                </>
+                <TabbedLayout
+                    items={{
+                        APPLICANT: <ApplicantListing />,
+                        EMPLOYEE: <EmployeeListing />,
+                    }}
+                    className="mt-0"
+                ></TabbedLayout>
             </ViewModal>
-
         </PageLayout>
-    )
-
-};
+    );
+}
 
 StoredFiles.getLayout = function getLayout(page) {
-    return (
-        <FullLayout>
-            {page}
-        </FullLayout>
-    )
-}
+    return <FullLayout>{page}</FullLayout>;
+};

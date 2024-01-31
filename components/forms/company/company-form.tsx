@@ -15,98 +15,102 @@ import BaseInput from "../base-input";
 import BaseTextArea from "../base-text-area";
 import FileInput from "../file-input";
 import { BaseFormProps } from "./base-form-props";
-import {  UncontrolledTooltip } from "reactstrap";
+import { UncontrolledTooltip } from "reactstrap";
 
 
-export interface CompanyFormProps extends BaseFormProps<CompanyEntity> {}
+export interface CompanyFormProps extends BaseFormProps<CompanyEntity> {
+	showClickToCopy?: boolean | (() => boolean);
+}
 
 export function CompanyForm(props: CompanyFormProps) {
-    const { user } = useAuth();
-    const { t } = useTranslation();
-    let { className, entity, onSaveComplete, onSaveError } = props;
+	const { user } = useAuth();
+	const { t } = useTranslation();
+	let { className, entity, onSaveComplete, onSaveError, showClickToCopy } = props;
 
-    const form = useFormik({
-        initialValues: new CompanyEntity(),
-        validationSchema: CompanyEntity.yupSchema(),
-        onSubmit: async (dto) => {
-            const api = new CompanyApi();
-            try {
-                let company = null;
-                if (entity?.id) {
-                    company = await api.update(entity.id, dto);
-                }
-                else {
-                    company = await api.create(dto);
-                }
-                formSuccess(t, !!entity?.id ? "update" : "create", "COMPANY");
-                if (onSaveComplete) onSaveComplete(company);
-            }
-            catch (e) {
-                console.error("Unable to save entity", e.response);
-                globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t });
+	const form = useFormik({
+		initialValues: new CompanyEntity(),
+		validationSchema: CompanyEntity.yupSchema(),
+		onSubmit: async (dto) => {
+			const api = new CompanyApi();
+			try {
+				let company = null;
+				if (entity?.id) {
+					company = await api.update(entity.id, dto);
+				}
+				else {
+					company = await api.create(dto);
+				}
+				formSuccess(t, !!entity?.id ? "update" : "create", "COMPANY");
+				if (onSaveComplete) onSaveComplete(company);
+			}
+			catch (e) {
+				console.error("Unable to save entity", e.response);
+				globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t });
 
-                if (onSaveError) onSaveError(e);
-            }
-        },
-    });
+				if (onSaveError) onSaveError(e);
+			}
+		},
+	});
 
-    useEffect(() => {
-      if (entity && !form.dirty)
-        form.setValues(entity);
-    }, [entity]);
+	useEffect(() => {
+		if (entity && !form.dirty)
+			form.setValues(entity);
+	}, [entity]);
 
-    return (
-        <EntityForm
-            className={className}
-            onSubmit={form.handleSubmit}
-            formik={form}
-            id={entity?.id}
-        >
-            <Row>
-              <BaseInput
-                className="col-12"
-                label={t("NAME")}
-                name={`name`}
-                required
-                placeholder={t("NAME")}
-                formik={form}
-                />
-              <BaseInput
-                className="col-12"
-                label={t("WEBSITE")}
-                name={`website`}
-                placeholder="http://www.example.com"
-                formik={form}
-                />
-             	<BaseClickToCopyInput
-                label="COMPANY_JOBS_PAGE"
-                className="rounded"
-                value={`${process.env.FRONTEND_BASE_URL ?? ""}employer/${user?.company?.id
-                  }?`}
-                tooltipText={t("CLICK_TO_COPY")}
-              />
-              <BaseTextArea
-                className="col-12"
-                label={t("ABOUT")}
-                name={`about`}
-                rows={3}
-                placeholder={t("ABOUT")}
-                formik={form}
-                />
-              <FileInput
-                className="col-12"
-                label={`photo_logo`}
-                id="imgpurpose"
-                name={`photo`}
-                accept="image/*"
-                allowedSizeInByte={3145728}
-                documentType={"PHOTO"}
-                formik={form}
-              />
-              <UncontrolledTooltip delay={0} placement="top" target="imgpurpose">
-                {t("IMAGE_PURPOSE")}
-              </UncontrolledTooltip>
-            </Row>
-        </EntityForm>
-    );
+	return (
+		<EntityForm
+			className={className}
+			onSubmit={form.handleSubmit}
+			formik={form}
+			id={entity?.id}
+		>
+			<Row>
+				<BaseInput
+					className="col-12"
+					label={t("NAME")}
+					name={`name`}
+					required
+					placeholder={t("NAME")}
+					formik={form}
+				/>
+				<BaseInput
+					className="col-12"
+					label={t("WEBSITE")}
+					name={`website`}
+					placeholder="http://www.example.com"
+					formik={form}
+				/>
+				{Boolean(showClickToCopy) &&
+					<BaseClickToCopyInput
+						label="COMPANY_JOBS_PAGE"
+						className="rounded"
+						value={`${process.env.FRONTEND_BASE_URL ?? ""}employer/${user?.company?.uuid_token
+							}`}
+						tooltipText={t("CLICK_TO_COPY")}
+					/>
+				}
+				<BaseTextArea
+					className="col-12"
+					label={t("ABOUT")}
+					name={`about`}
+					rows={3}
+					placeholder={t("ABOUT")}
+					formik={form}
+				/>
+				<FileInput
+					className="col-12"
+					label={`photo_logo`}
+					id="imgpurpose"
+					name={`photo`}
+					accept="image/*"
+					allowedSizeInByte={3145728}
+					documentType={"PHOTO"}
+					formik={form}
+				/>
+				<UncontrolledTooltip delay={0} placement="top" target="imgpurpose">
+					{t("IMAGE_PURPOSE")}
+				</UncontrolledTooltip>
+			</Row>
+		</EntityForm>
+	);
 }

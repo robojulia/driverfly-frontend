@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "../../hooks/use-translation";
 import { FormikInterface } from "../../utils/formik";
 import ReCAPTCHA from "react-google-recaptcha";
+import Head from "next/head";
 
 
 export interface BaseReCapchaProps {
@@ -25,7 +26,6 @@ function BaseReCapcha({
 }: BaseReCapchaProps) {
   const { t } = useTranslation();
   const key = process.env.RECAPTCHA_SITE_KEY
-
   if (formik) {
     /**
      * @type {import('formik').FieldMetaProps}
@@ -38,7 +38,8 @@ function BaseReCapcha({
   }
 
   return (
-    <div className={`${className || ""}`}>
+  <>
+    <div className={`${className || ""} `} >
       {label && (
         <>
           <label>{t(label)}:</label>
@@ -46,7 +47,7 @@ function BaseReCapcha({
         </>
       )}
       <ReCAPTCHA
-        className={`${error? "is-invalid" : ""}`}
+        className={`${error? "is-invalid" : ""} `}
         sitekey={key}
         onChange={onChange}
         ref={captchaRef}
@@ -55,6 +56,7 @@ function BaseReCapcha({
         <span className="text-danger small">{t(error)}</span>
       )}
     </div>
+  </>
   );
 }
 

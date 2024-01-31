@@ -200,6 +200,18 @@ h2 {
     position: relative;
 }
 
+@media (min-width:990px) and (max-width: 1320px){
+    .dashboard-nav-btns{
+        padding: 20px 0px !important;
+        height: 200px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+    .dashboard-nav-btns .left-child{
+        margin-left: 0px !important;
+    }
+}
+
 .navbar-nav a a {
     color: #fff !important;
     text-decoration: none !important;
@@ -837,6 +849,9 @@ input[type='range']::-webkit-slider-thumb {
     margin-bottom: 0px;
 }
 
+.contact-main{
+    background-color: #fafafa;
+}
 .contact-form {
     background-color: #fafafa;
     padding-bottom: 90px;
@@ -844,14 +859,20 @@ input[type='range']::-webkit-slider-thumb {
 
 .contact-infomation {
     background-color: #2da2af;
-    padding: 60px 35px 55px 30px;
+    /* padding: 60px 35px 55px 30px; */
     border-radius: 6px;
+    padding: 50% 5%;
+
 }
 
 .contact-infomation p {
     color: white;
     margin: 25px 0px 35px;
     line-height: 30px;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
 }
 
 .contact-inner {
@@ -983,7 +1004,6 @@ input[type='range']::-webkit-slider-thumb {
 }
 .how-it-work-sections{
     height: 300px !important;
-    border: 2px solid red;
 }
 
 .card-header {
@@ -1007,7 +1027,7 @@ input[type='range']::-webkit-slider-thumb {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    margin-top: 25px;
+    /* margin-top: 25px; */
 }
 
 .about-img {
@@ -1044,9 +1064,42 @@ input[type='range']::-webkit-slider-thumb {
 .how-it-work-sec {
     /* height: 1000px; */
     /* position: relative; */
-    padding: 50px 10px 50px 10px;
+    padding: 10px 10px 50px 10px;
 }
+@media (max-width : 410px) {
+    .how-it-work-sec {
+    padding: 100px 10px 50px 10px;
+    }
+    .driver-sec {
+        background-color: #FFFFFF;
+        margin: 50px 0px 50px 0px !important;
+    }   
 
+    .hire-driver-left-btns{
+        margin-top: 10px;
+        display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+        }
+ 
+}
+@media (min-width : 410px) and (max-width :996px){
+    .how-it-work-sec {
+    padding: 100px 10px 50px 10px;
+    }
+    .driver-sec {
+        background-color: #FFFFFF;
+        margin: 50px 0px 50px 0px !important;
+    }   
+
+    .hire-driver-left-btns{
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
+}
 .how-it-work-sec h3,
 .driver-sec h3 {
     text-align: center;
@@ -1144,13 +1197,20 @@ img.who-we-img.img-fluid {
     padding: 4% !important;
 }
 
-@media (max-width: 1400px){
+@media (min-width:700px) and (max-width: 1400px){
     .slide___3-Nqo {
-        padding: 7% !important;
+        height: max-content !important;
+        padding: 7% 0% !important;
+    }
+    /* horizontalSlider___281Ls carousel__slider carousel__slider--horizontal Slider__container */
+    .horizontalSlider___281Ls{
+        margin: -11% 0%;
+        padding: 8% 0% !important;
     }
 }
-@media (max-width: 500px){
+@media (max-width: 700px){
     .slide___3-Nqo {
+    height: 700px !important;
         padding: 100% !important;
     }
 }
@@ -1160,7 +1220,7 @@ img.who-we-img.img-fluid {
     background-color: #FAFAFA;
     /* background: #fafafa; */
     padding: 80px 0px ;
-    height: 500px !important;
+    height: 500px;
 
 }
 
@@ -1272,7 +1332,9 @@ img.who-we-img.img-fluid {
 .partners {
     background: #f0f0f0;
     text-align: center;
-    padding: 40px 0px 75px;
+    width: 100%;
+    padding: 5% 0% !important;
+    overflow: none !important;
 }
 
 .partners h2 {
@@ -1499,6 +1561,11 @@ img.who-we-img.img-fluid {
 }
 
 /************************** DRIVER-SEC **********************/
+.about-driver-sec{
+    background-color: #FAFAFA !important;
+    margin: 0% !important;
+    padding-top: 5%;
+}
 .driver-sec {
     background-color: #FFFFFF;
     margin: 50px 0px 200px 0px;
@@ -1787,6 +1854,9 @@ img.who-we-img.img-fluid {
 .pb-170 {
     padding-bottom: 170px;
 }
+.about-testominial{
+    margin-top: 0px !important;
+}
 
 .about-testominial .owl-nav .disabled {
     display: none !important;
@@ -1957,16 +2027,15 @@ li.link-wrapper>a.active {
 }
 
 .hire-driver-item {
+    justify-content:flex-end;
     width: 50%;
-    padding: 30px;
+    padding: 0 30px;
     line-height: 1;
     transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
 }
 
 .hire-driver-left {
     position: relative;
-    
-
 }
 
 .hire-driver-left::before {
@@ -2338,11 +2407,12 @@ input[type=checkbox] {
     position: absolute;
     height: 100%;
     width: 100%;
-    bottom:-360px; 
+    /* bottom: -330px;  */
   
     background: url(/img/design-bottom-border-small.png);
     background-repeat: no-repeat;
-    object-fit: cover;
+    background-size: cover;
+
 }
 @media (min-width: 1600px) {
     .signup-driver-section-border-bottom {
@@ -2352,27 +2422,28 @@ input[type=checkbox] {
 
 @media (max-width: 1600px) {
     .signup-driver-section-border-bottom {
-        bottom: -350px;
+        bottom: -360px;
     }
 }
 
 @media (max-width: 990px) {
     .signup-driver-section-border-bottom {
-        bottom: -930px;
+    background-size: cover;
+        height: 40%;    
+        bottom: -300px;
     }
 }
 
 @media (max-width: 770px) {
     .signup-driver-section-border-bottom {
-        bottom: -930px;
+        bottom: -1000px;
     }
 }
 @media (max-width: 768px) {
     .signup-driver-section-border-bottom {
-        bottom: -770px;
+        bottom: -240px;
     }
 }
-
 
 .signup-driver-section .signup-driver-left {
     background-color: #2EC7C3;
@@ -2404,26 +2475,36 @@ input[type=checkbox] {
     position: relative;
     background-color: #FAFAFA;
 }
-.motor-carrier-top-bg{
+.motor-carrier-top-bg {
+    position: relative;
     background-image: url("/img/motor-carrier-top-bg.png");
     background-position: center;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size:  cover;
     height: 100%;
     width: 100%;
 }
+
 .motor-carrier-bottom-bg
 {
     position: absolute;
     background: url("/img/motor-carrier-bottom-bg.png");
-    /* background-position: center; */
-    object-fit: cover;
+    background-position: center center;
     background-repeat: no-repeat;
-    background-size: cover;
-    height: 50%;
+    background-size: contain;
+    height: 100%;
     width: 100%;
     bottom: 0;
-    bottom: -215px;
+    bottom: -375px;
+}
+@media (max-width:1250px) {
+    .motor-carrier-bottom-bg
+    {
+        height: 100%;
+        width: 100%;
+        background-size: auto;
+
+    }
 }
 
 .motor-carrier {
@@ -2446,7 +2527,7 @@ input[type=checkbox] {
     margin: 0 auto;
 }
 
-input[type='radio']:checked:after {
+/* input[type='radio']:checked:after {
     width: 16px;
     height: 16px;
     border-radius: 15px;
@@ -2458,7 +2539,7 @@ input[type='radio']:checked:after {
     display: inline-block;
     visibility: visible;
     border: 2px solid white;
-}
+} */
 
 /* Styling only for Firefox browser */
 @supports (-moz-appearance:none) {
@@ -2492,6 +2573,17 @@ input[type='radio']:checked:after {
     }
 }
 
+
+[data-column-id="drivers_needed"].rdt_TableCol:hover  div{
+    overflow: visible !important;
+}[data-column-id="expiration_date"].rdt_TableCol:hover  div{
+    overflow: visible !important;
+}[data-column-id="employment_type"].rdt_TableCol:hover  div{
+    overflow: visible !important;
+}[data-column-id="delivery_type"].rdt_TableCol:hover  div{
+    overflow: visible !important;}
+
+
 /* End Styling only for Firefox browser */
 
 .single-past-employer-items {
@@ -2522,3 +2614,26 @@ button:active {
 .basic-single {
     z-index: 99999;
 }
+
+.dashboard_bday_box{
+    position: absolute;
+    right: 0;
+    margin-top: -4%;
+    margin-right: -15%;
+    padding: 4%;
+    font-family: 'Poppins';
+    background-color:#FFFFFF !important;
+    box-shadow: rgba(38, 90, 90, 0.393) 2px 5px 10px;
+    min-height: 120px ;
+    min-width: 350px;
+    border-radius: 25px;
+    z-index: 9999;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    overflow-y: auto;    
+}
+
+

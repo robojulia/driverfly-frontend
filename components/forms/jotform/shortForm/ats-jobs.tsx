@@ -69,7 +69,7 @@ export function AtsJobs() {
 
     return (
         <>
-        <h1 className={styles.carrierName}>{t("COMPANY_JOBS")}</h1>
+        <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("COMPANY_JOBS")}</h1>
             <Form
                 className={styles.align__text_left}
                 onSubmit={form.handleSubmit}

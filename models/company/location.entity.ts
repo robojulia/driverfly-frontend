@@ -27,13 +27,10 @@ export class LocationEntity {
 
     static yupConnectSchema(required?: boolean) {
         return yup.mixed().when({
-            is: v => {
-                console.log("form v", v);
-                return (v != null)
-            },
+            is: v => (v != null),
             then: yup.object({
                 id: yup.number().when({
-                    is: v => required,
+                    is: required,
                     then: yup.number().required().nullable(),
                     otherwise: yup.number().optional().nullable()
                 }).nullable()

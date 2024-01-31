@@ -33,6 +33,7 @@ export function ApplicantPieChart() {
 		(v) => `ApplicantPipelineChartLabel.${v}`
 	);
 
+	
 	return (
 		<PieChart
 			title="APPLICANTS"

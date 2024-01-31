@@ -15,7 +15,7 @@ export interface DriverApplicationProps {
 }
 export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationProps) {
 	const {
-		state: { applicant, applicantExtras, jobs },
+		state: { applicant, applicantExtras, jobs, company },
 		method: { setApplicant, updateApplicantExtras, stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 
@@ -92,11 +92,11 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit}>
-				<div className={styles.carrierName}>
+				<div className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
 					<h1>
 						{t(
 							"{COMPANY_NAME}",
-							{ COMPANY_NAME: applicant?.company?.name },
+							{ COMPANY_NAME: company?.name ?? applicant?.company?.name },
 							{ translateProps: true }
 						)}
 					</h1>
@@ -106,7 +106,7 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 				<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 					{t(
 						"{COMPANY_NAME}_MVR_AND_DMV_AUTHORIZATION",
-						{ COMPANY_NAME: applicant?.company?.name },
+						{ COMPANY_NAME: company?.name ?? applicant?.company?.name },
 						{ translateProps: true }
 					)}
 				</p>

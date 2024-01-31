@@ -53,7 +53,7 @@ export function UnableForJob() {
 
 	return (
 		<>
-		<h1 className={styles.carrierName}>{t("DISABLE_FOR_JOB")}</h1>
+		<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("DISABLE_FOR_JOB")}</h1>
 
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>

@@ -23,10 +23,9 @@
 
 .main_form,
 .main__voe_form {
-  min-height: 500px;
   min-width: 800px;
   max-width: 800px;
-  padding: 40px;
+  padding: 50px;
   border-radius: 14px;
   background-color: #fff;
   margin: 3rem 1rem;
@@ -51,10 +50,12 @@
 .carrierName {
   text-align: center;
   font-weight: 900;
-  color: rgb(90, 90, 90);
+  color: rgb(85, 85, 85);
   font-size: 24pt;
 }
-
+.jot_form_headers_font{
+  font-size: 28pt !important;
+}
 .heading__sty {
   font-size: 30px;
   font-weight: 900;
@@ -68,16 +69,16 @@
 .Application {
   text-align: center;
   margin-top: 2rem;
-  color: rgb(90, 90, 90);
+  color: rgb(85, 85, 85);
   font-size: 24pt;
 }
 
 .paragraph {
-  color: rgb(90, 90, 90);
+  color: rgb(85, 85, 85);
   text-align: center;
 }
 .titlechildren {
-  color: rgb(90, 90, 90);
+  color: rgb(85, 85, 85);
 }
 .radio {
   display: inline;

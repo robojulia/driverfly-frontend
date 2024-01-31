@@ -1,8 +1,8 @@
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { useTranslation } from "../../../../hooks/use-translation";
 import { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import Link from "next/link";
+import styles from "../../../../styles/digitalhiringapp.module.css";
+import { useTranslation } from "../../../../hooks/use-translation";
 
 export function ThankyouPage() {
     const { t } = useTranslation();
@@ -13,7 +13,7 @@ export function ThankyouPage() {
 
         <>
             <ToastContainer />
-		    <h1 className={styles.carrierName}>{t("THANK_YOU")}</h1>
+		    <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("THANK_YOU")}</h1>
 
             {/* <h6 className={styles.paragraph}>{t("SUBMITTED_YOUR_FORM")}</h6> */}
             <p className={styles.paragraph}>

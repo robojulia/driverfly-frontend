@@ -5,10 +5,12 @@ import { ApplicantEntity } from "../models/applicant/applicant.entity";
 import { JobEntity } from "../models/job/job.entity";
 import { CompanyPreferenceEntity } from "../models/company/company-preferences.entity";
 import { UtmReferral } from "../models/auth/utm-referral.interface";
+import { CompanyEntity } from "../models/company/company.entity";
 
 export type JotFormContextType = {
 	state: {
 		applicant?: ApplicantEntity;
+		company?: CompanyEntity;
 		jobs?: JobEntity[];
 		companyPreferences?: CompanyPreferenceEntity[];
 		applicantExtras?: ApplicantExtrasEntity[];

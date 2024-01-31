@@ -1,13 +1,13 @@
 import { useFormik } from "formik";
-import { useTranslation } from "../../../../hooks/use-translation";
-import { Form, Button, Col, Row } from "react-bootstrap";
-import VoeFormContext, { VoeFormContextType } from "../../../../context/voeform-context";
 import { useContext } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import VoeFormContext, { VoeFormContextType } from "../../../../context/voeform-context";
+import { useTranslation } from "../../../../hooks/use-translation";
 import styles from "../../../../styles/voe.module.css";
 
 export function IntroPage() {
 	const {
-		state: { applicant, applicantVoe },
+		state: { applicant, voe, employer },
 		method: { stepNext },
 	}: VoeFormContextType = useContext(VoeFormContext);
 	const { t } = useTranslation();
@@ -22,6 +22,11 @@ export function IntroPage() {
 	return (
 		<Form onSubmit={form.handleSubmit}>
 			<h1 className={styles.carrierName}>{t("VERIFICATION_OF_EMPLOYMENT")}</h1>
+			<h4
+				className={`${styles.paragraph} ${styles.margin__top} p-1`}
+			>{employer?.name}
+			</h4>
+
 			<Row className="mt-3">
 				<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 					{t(

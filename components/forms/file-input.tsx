@@ -11,6 +11,7 @@ import { BaseControlProps } from './base-control';
 export interface FileInputProps extends BaseControlProps {
     documentType?: string;
     accept?: string;
+    allowedTypesFriendlyName?: string;
     id?: string;
     handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
     placeholder?: string | boolean;
@@ -22,7 +23,7 @@ export interface FileInputProps extends BaseControlProps {
     hideView?: boolean | (() => boolean)
 }
 
-export default function FileInput({ documentType, formik, accept, required, className, label, handleBlur, placeholder, value, onChange, readOnly, name, id, touched, error, allowedSizeInByte, hideView }: FileInputProps) {
+export default function FileInput({ documentType, formik, accept, required, className, label, handleBlur, placeholder, value, onChange, readOnly, name, id, touched, error, allowedSizeInByte, hideView, allowedTypesFriendlyName }: FileInputProps) {
     const { t } = useTranslation();
     if (formik) {
         const meta = formik.getFieldMeta(name);
@@ -58,7 +59,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
 
         if (!!allowedSizeInByte && e.target.files[0].size >= allowedSizeInByte) {
             if (formik) {
-                formik.setFieldError(name, t('FILE_MUST_BE_OF_{size}_{unit}', { size: allowedSizeInByte / 1048576, unit: "MB" }))
+                formik.setFieldError(name, t('FILE_MUST_BE_OF_{size}_{unit}_{uploaded_size}', { size: allowedSizeInByte / 1048576, unit: "MB", uploaded_size: e.target.files[0].size / 1048576 }))
             } else {
                 alert(t('FILE_MUST_BE_OF_{size}_{unit}', { size: allowedSizeInByte / 1048576, unit: "MB" }))
             }
@@ -144,6 +145,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
         <>
             <div className={className}>
                 {label && <><label id={id}>{t(label)}{required ? "*" : ""}:</label><br /></>}
+                {allowedTypesFriendlyName && <span className='text-muted small'>{t("FILE_MUST_BE_OF_{types}", { types: allowedTypesFriendlyName })}</span>}
                 <InputGroup>
                     <input
                         accept={accept}
