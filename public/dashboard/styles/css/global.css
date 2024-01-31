@@ -1004,3 +1004,7 @@ input[type='radio']:checked:after {
   margin-right: 8px;
   width: 100% !important;
 }
+.link-background{
+  background-color: #00706c8a;
+  color: white !important;
+}
