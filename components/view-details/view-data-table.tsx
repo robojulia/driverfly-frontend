@@ -4,7 +4,7 @@ import { Gear, Search } from "react-bootstrap-icons";
 import DataTable, { TableColumn } from "react-data-table-component";
 import {
     ExpandableRowsComponent,
-    TableStyles,
+    // TableStyles,
 } from "react-data-table-component/dist/src/DataTable/types";
 import {
     useStatefulStorage
@@ -26,7 +26,7 @@ export interface ViewTableProps<TElement> {
     hideSearch?: boolean;
     subHeader?: ReactNode;
     noDataComponent?: ReactNode;
-    customStyles?: TableStyles;
+    customStyles?: any;
     description?:string;
 }
 
