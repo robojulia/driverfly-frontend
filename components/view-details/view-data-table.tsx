@@ -2,9 +2,9 @@ import React, { ReactNode, useEffect, useState } from "react";
 import { Button, Container, Dropdown } from "react-bootstrap";
 import { Gear, Search } from "react-bootstrap-icons";
 import DataTable, { TableColumn, TableStyles } from "react-data-table-component";
-import {
-    ExpandableRowsComponent,
-} from "react-data-table-component/dist/src/DataTable/types";
+// import {
+//     ExpandableRowsComponent,
+// } from "react-data-table-component/dist/src/DataTable/types";
 import {
     useStatefulStorage
 } from "../../hooks/use-stateful-storage";
@@ -21,7 +21,8 @@ export interface ViewTableProps<TElement> {
     preExpanded?: boolean | ((row: TElement) => boolean);
     enableSelectableRows?: boolean | (() => boolean);
     selectableRowChangeHandler?: (e?: any) => void;
-    expandableRowsComponent?: ExpandableRowsComponent<TElement>;
+    expandableRowsComponent?: any;
+    // expandableRowsComponent?: ExpandableRowsComponent<TElement>;
     hideSearch?: boolean;
     subHeader?: ReactNode;
     noDataComponent?: ReactNode;
