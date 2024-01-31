@@ -72,7 +72,7 @@ export function OtherQueues() {
                                 className="col-md-4 my-3"
                                 name={`CDL_NUMBER.value[${i}].state`}
                                 placeholder="STATE"
-                                label="CHOOSE"
+                                label="state_issued"
                                 required
                                 formik={form}
                             />
@@ -81,7 +81,7 @@ export function OtherQueues() {
                                 type="date"
                                 name={`CDL_NUMBER.value[${i}].date`}
                                 placeholder="expiration_date"
-                                label="DATE"
+                                label="expiration_date"
                                 required
                                 formik={form}
                             />
