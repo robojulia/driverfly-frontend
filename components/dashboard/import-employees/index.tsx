@@ -49,6 +49,13 @@ const ImportEmployees = () => {
                 .unique(t("{name}_must_be_unique_in_list", { name: "EMAIL" }, { translateProps: true }), "email", v => v.email),
         }),
         validate: async (values) => {
+            values.items = values
+                ?.items
+                ?.filter((v) => Boolean(v.email)
+                    || Boolean(v.first_name)
+                    || Boolean(v.last_name)
+                    || Boolean(v.phone)
+                )
             const errors = {};
 
             let lastProgress = 0;
