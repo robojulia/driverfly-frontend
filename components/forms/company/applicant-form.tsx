@@ -64,6 +64,7 @@ import ViewModal from "../../view-details/view-modal";
 import { ReferralSourceForm } from "../admin/referral-source-form";
 import { JobForm } from "./job-form";
 import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
+import { LicenseRestrictions } from "../../../enums/applicants/applicant-license-restrictions-type.enum";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
@@ -758,6 +759,16 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									labelPrefix="EducationLevel"
 									enumType={EducationLevel}
 								/>
+								<BaseCheckList
+                                    className="col-12 p-1 "
+                                    label="License_Restrictions"
+                                    name="license_restrictions"
+                                    labelPrefix="LicenseRestrictions"
+                                    enumType={LicenseRestrictions}
+                                    formik={form}
+                                    cols="2"
+                                />
+								
 								<Col xs="12" className="mt-2">
 									<ViewCard title="EMERGENCY_CONTACT">
 										<BaseInput
