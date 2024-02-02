@@ -277,6 +277,8 @@
     "V": "V (medical variance)",
     "OTHER":"Other"
   },
+  "OTHER_LICENSE_RESTRICTIONS":"Other Restrictions",
+  "OTHER_ENDORSEMENTS":"Other Endorsements",
   "BooleanType": {
     "YES": "Yes",
     "NO": "No"

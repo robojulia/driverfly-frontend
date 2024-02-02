@@ -749,6 +749,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									formik={form}
 									cols="2"
 								/>
+								{
+									form.values?.endorsements?.includes(DriverEndorsement.OTHER) &&
+									<BaseInput
+											className="col-12"
+											label="OTHER_ENDORSEMENTS"
+											required
+											name="endorsements_other"
+											placeholder
+											formik={form}
+										/>
+								}
 								<BaseSelect
 									className="col-12"
 									readOnly={Boolean(entity?.is_hired)}
@@ -768,6 +779,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
                                     formik={form}
                                     cols="2"
                                 />
+								{
+									form.values?.license_restrictions?.includes(LicenseRestrictions.OTHER) && 
+										<BaseInput
+											className="col-12"
+											label="OTHER_LICENSE_RESTRICTIONS"
+											required
+											name="license_restrictions_other"
+											placeholder
+											formik={form}
+										/>
+								}
 								
 								<Col xs="12" className="mt-2">
 									<ViewCard title="EMERGENCY_CONTACT">
