@@ -752,13 +752,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								{
 									form.values?.endorsements?.includes(DriverEndorsement.OTHER) &&
 									<BaseInput
-											className="col-12"
-											label="OTHER_ENDORSEMENTS"
-											required
-											name="endorsements_other"
-											placeholder
-											formik={form}
-										/>
+										className="col-12"
+										label="OTHER_ENDORSEMENTS"
+										required
+										name="endorsements_other"
+										placeholder
+										formik={form}
+									/>
 								}
 								<BaseSelect
 									className="col-12"
@@ -771,26 +771,26 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									enumType={EducationLevel}
 								/>
 								<BaseCheckList
-                                    className="col-12 p-1 "
-                                    label="License_Restrictions"
-                                    name="license_restrictions"
-                                    labelPrefix="LicenseRestrictions"
-                                    enumType={LicenseRestrictions}
-                                    formik={form}
-                                    cols="2"
-                                />
+									className="col-12 p-1 "
+									label="License_Restrictions"
+									name="license_restrictions"
+									labelPrefix="LicenseRestrictions"
+									enumType={LicenseRestrictions}
+									formik={form}
+									cols="2"
+								/>
 								{
-									form.values?.license_restrictions?.includes(LicenseRestrictions.OTHER) && 
-										<BaseInput
-											className="col-12"
-											label="OTHER_LICENSE_RESTRICTIONS"
-											required
-											name="license_restrictions_other"
-											placeholder
-											formik={form}
-										/>
+									form.values?.license_restrictions?.includes(LicenseRestrictions.OTHER) &&
+									<BaseInput
+										className="col-12"
+										label="OTHER_LICENSE_RESTRICTIONS"
+										required
+										name="license_restrictions_other"
+										placeholder
+										formik={form}
+									/>
 								}
-								
+
 								<Col xs="12" className="mt-2">
 									<ViewCard title="EMERGENCY_CONTACT">
 										<BaseInput
