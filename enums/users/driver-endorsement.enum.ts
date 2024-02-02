@@ -4,5 +4,6 @@ export enum DriverEndorsement {
     TANKERS = "TANKERS",
     DOUBLES_TRIPLES = "DOUBLES_TRIPLES",
     SCHOOL_BUS = "SCHOOL_BUS",
-    TWIC = "TWIC"
+    TWIC = "TWIC",
+    OTHER = "OTHER",
 }
