@@ -92,8 +92,8 @@ export function JobForm(props: JobFormProps) {
             ...(entity || {}),
             schedule: entity?.schedule || JobSchedule.OPEN_TO_NEGOTIATE,
             pay_method: entity?.pay_method || JobPayMethod.OPEN_TO_NEGOTIATE,
-            min_weekly_pay: Boolean(entity.min_weekly_pay) ? entity.min_weekly_pay : null,
-            max_weekly_pay: Boolean(entity.max_weekly_pay) ? entity.max_weekly_pay : null,
+            min_weekly_pay: Boolean(entity?.min_weekly_pay) ? entity.min_weekly_pay : null,
+            max_weekly_pay: Boolean(entity?.max_weekly_pay) ? entity.max_weekly_pay : null,
         });
     }, [entity]);
 
