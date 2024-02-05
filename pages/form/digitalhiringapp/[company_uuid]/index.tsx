@@ -14,11 +14,14 @@ import { CompanyPreferenceEntity } from "../../../../models/company/company-pref
 import { UtmReferral } from "../../../../models/auth/utm-referral.interface";
 
 export interface FullFormProps {
-	employer: CompanyEntity;
-	preferences: CompanyPreferenceEntity[];
+	employer?: CompanyEntity;
+	preferences?: CompanyPreferenceEntity[];
 	utm?: UtmReferral;
+	error?: any;
 }
-export default function FullForm({ employer, preferences, utm }: FullFormProps) {
+export default function FullForm({ employer, preferences, utm, error }: FullFormProps) {
+	console.log("error", error);
+
 
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
 	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
@@ -87,7 +90,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
 	try {
 		let companyId = String(query?.company_uuid); // { companyId } = query || {};
 		console.log("companyId", companyId);
-		
+
 
 		const utm: UtmReferral = {
 			utm_source: query?.utm_source as string ?? null,
@@ -118,6 +121,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
 		return { props: { employer, preferences, utm } }
 	} catch (error) {
 		console.error(`form/jotform: Exception when attempting to fetch details for companyId: ${query?.companyId}`, error.message);
+		return { props: { employer: new CompanyEntity(), preferences: [], error: error.message } }
 		return { notFound: true }
 	}
 }
