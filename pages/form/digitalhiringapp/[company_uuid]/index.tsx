@@ -14,14 +14,11 @@ import { CompanyPreferenceEntity } from "../../../../models/company/company-pref
 import { UtmReferral } from "../../../../models/auth/utm-referral.interface";
 
 export interface FullFormProps {
-	employer?: CompanyEntity;
-	preferences?: CompanyPreferenceEntity[];
+	employer: CompanyEntity;
+	preferences: CompanyPreferenceEntity[];
 	utm?: UtmReferral;
-	error?: any;
 }
-export default function FullForm({ employer, preferences, utm, error }: FullFormProps) {
-	console.log("error", error);
-
+export default function FullForm({ employer, preferences, utm }: FullFormProps) {
 
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
 	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
@@ -90,7 +87,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
 	try {
 		let companyId = String(query?.company_uuid); // { companyId } = query || {};
 		console.log("companyId", companyId);
-
+		
 
 		const utm: UtmReferral = {
 			utm_source: query?.utm_source as string ?? null,
@@ -111,9 +108,9 @@ export async function getServerSideProps({ query }: NextPageContext) {
 
 		if (employer?.status !== Status.ACTIVE) {
 			if (employer == null) {
-				console.error(`form/jotform: Employer ${query?.companyId} not found - does not exist`);
+				console.error(`form/jotform: Employer ${query?.company_uuid} not found - does not exist`);
 			} else {
-				console.error(`form/jotform: Employer ${query?.companyId} found, but status is not ACTIVE (status = ${employer?.status})`);
+				console.error(`form/jotform: Employer ${query?.company_uuid} found, but status is not ACTIVE (status = ${employer?.status})`);
 			}
 			return { notFound: true };
 		}
@@ -121,7 +118,6 @@ export async function getServerSideProps({ query }: NextPageContext) {
 		return { props: { employer, preferences, utm } }
 	} catch (error) {
 		console.error(`form/jotform: Exception when attempting to fetch details for companyId: ${query?.companyId}`, error.message);
-		return { props: { employer: new CompanyEntity(), preferences: [], error: error.message } }
 		return { notFound: true }
 	}
 }
