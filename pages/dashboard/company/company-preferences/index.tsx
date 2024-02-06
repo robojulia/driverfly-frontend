@@ -142,7 +142,7 @@ export default function CompanyPreference() {
 				);
 				setPreferences([...preferences, ...data]);
 				populateForm(data);
-				toast.success(t("successfully_updated_company_preferences"));
+				toast.success(t("SUCCESSFULLY_UPDATED_COMPANY_PREFERENCES"));
 			} catch (e) {
 				console.error("Unable to save preferences", e);
 				toast.error(t("unable_to_save_information"));
