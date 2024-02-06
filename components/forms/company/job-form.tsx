@@ -298,7 +298,7 @@ export function JobForm(props: JobFormProps) {
         });
 
         function getOrCurrent(field) {
-            const v = name === field ? value : form.values[field];
+            const v = name == field ? value : form.values[field];
             if (v != null && v != "") return parseFloat(v);
             // return v;
         }
@@ -574,7 +574,7 @@ export function JobForm(props: JobFormProps) {
 
                             <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                 <BaseSelect
-                                    className={`col-${form.values.schedule === JobSchedule.OTHER ? 6 : 12
+                                    className={`col-${form.values.schedule == JobSchedule.OTHER ? 6 : 12
                                         } p-0 px-lg-2`}
                                     label="SCHEDULE"
                                     name="schedule"
@@ -584,7 +584,7 @@ export function JobForm(props: JobFormProps) {
                                     enumType={JobSchedule}
                                     formik={form}
                                 />
-                                {form.values.schedule === JobSchedule.OTHER && (
+                                {form.values.schedule == JobSchedule.OTHER && (
                                     <BaseInput
                                         className="col-6"
                                         label="other_schedule"
@@ -664,8 +664,8 @@ export function JobForm(props: JobFormProps) {
                                 enumType={JobPayMethod}
                                 formik={form}
                             />
-                            {(form.values.pay_method === JobPayMethod.PERCENT_PER_MOVE ||
-                                form.values.pay_method === JobPayMethod.PERCENT_PER_WEIGHT) && (
+                            {(form.values.pay_method == JobPayMethod.PERCENT_PER_MOVE ||
+                                form.values.pay_method == JobPayMethod.PERCENT_PER_WEIGHT) && (
                                     <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                         <BasePercentInput
                                             className="col-6"
@@ -687,7 +687,7 @@ export function JobForm(props: JobFormProps) {
                                         />
                                     </Row>
                                 )}
-                            {form.values.pay_method === JobPayMethod.RATE_PER_MILE && (
+                            {form.values.pay_method == JobPayMethod.RATE_PER_MILE && (
                                 <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                     <BaseMilesInput
                                         className="col-6"
@@ -709,7 +709,7 @@ export function JobForm(props: JobFormProps) {
                                     />
                                 </Row>
                             )}
-                            {form.values.pay_method === JobPayMethod.HOURLY && (
+                            {form.values.pay_method == JobPayMethod.HOURLY && (
                                 <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                     <BaseHoursInput
                                         className="col-6"
@@ -731,8 +731,8 @@ export function JobForm(props: JobFormProps) {
                                     />
                                 </Row>
                             )}
-                            {(form.values.pay_method === JobPayMethod.RATE_PER_MILE ||
-                                form.values.pay_method === JobPayMethod.HOURLY) && (
+                            {(form.values.pay_method == JobPayMethod.RATE_PER_MILE ||
+                                form.values.pay_method == JobPayMethod.HOURLY) && (
                                     <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                         <BaseMoneyInput
                                             className="col-6"
@@ -754,7 +754,7 @@ export function JobForm(props: JobFormProps) {
                                         />
                                     </Row>
                                 )}
-                            {form.values.pay_method === JobPayMethod.SALARY && (
+                            {form.values.pay_method == JobPayMethod.SALARY && (
                                 <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                     <BaseMoneyInput
                                         className="col-6"
@@ -865,7 +865,7 @@ export function JobForm(props: JobFormProps) {
                                                     year,
                                                 } = veh;
                                                 let label =
-                                                    type === VehicleType.OTHER
+                                                    type == VehicleType.OTHER
                                                         ? type_other
                                                         : t("VehicleType." + type);
 
@@ -1392,7 +1392,7 @@ export function JobForm(props: JobFormProps) {
                     { name: "VEHICLE" },
                     { translateProps: true }
                 )}
-                show={typeof createVehicle === "number"}
+                show={typeof createVehicle == "number"}
                 onCloseClick={() => setCreateVehicle(false)}
             >
                 <VehicleForm onSaveComplete={onVehicleAdded} />

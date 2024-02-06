@@ -12,9 +12,9 @@ export interface Section1Props {
 export function VerificationOfEmploymentSection1({ applicant, employer }: Section1Props) {
 
     const { t } = useTranslation();
-    const social_security_number = applicant?.extras?.find(v => v?.type === ApplicantExtras?.EMPLOYEE_SS_OR_ID)
-    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION)
-    const date_VOE = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.APPLY_DATE)
+    const social_security_number = applicant?.extras?.find(v => v?.type == ApplicantExtras?.EMPLOYEE_SS_OR_ID)
+    const signature = applicant?.extras?.find(sign => sign?.type == ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION)
+    const date_VOE = applicant?.extras?.find(sign => sign?.type == ApplicantExtras.APPLY_DATE)
     useEffect(() => {
         console.log("employer from comp ", employer)
         console.log("applicant from comp ", applicant?.company?.users[0])

@@ -131,7 +131,7 @@ export default function ViewApplicant({ id }) {
 						values.id,
 						values
 					);
-					notes = applicant.notes.filter((v) => v.id !== note.id);
+					notes = applicant.notes.filter((v) => v.id != note.id);
 				} else {
 					note = await applicantApi.notes.create(applicant.id, values);
 				}
@@ -167,7 +167,7 @@ export default function ViewApplicant({ id }) {
 	};
 
 	const editNoteClick = (noteId: number) => {
-		let note = applicant.notes.find((v) => v.id === noteId);
+		let note = applicant.notes.find((v) => v.id == noteId);
 		addNoteForm.setValues({ id: noteId, text: note.text });
 		showNoteModal();
 	};
@@ -189,7 +189,7 @@ export default function ViewApplicant({ id }) {
 			const response = await applicantApi.notes.remove(applicant.id, noteId);
 
 			if (response.affected) {
-				const notes = applicant.notes.filter((v) => v.id !== noteId);
+				const notes = applicant.notes.filter((v) => v.id != noteId);
 				setApplicant({
 					...applicant,
 					notes: notes.sort((a, b) => b.id - a.id),

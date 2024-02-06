@@ -164,7 +164,7 @@ const ImportEmployees = () => {
                 onProgress: (p) => setProgress(p)
             });
 
-            if (contents.length > 0 && contents[0][0] === headers[0]) contents = contents.slice(1);
+            if (contents.length > 0 && contents[0][0] == headers[0]) contents = contents.slice(1);
 
             contents = contents.map(row => {
                 const entity = new EmployeeEntity();
@@ -308,7 +308,7 @@ const ImportEmployees = () => {
                                 <th className={style.frozen_col}>#</th>
                                 {
                                     headers.map(k => {
-                                        const text = `${k}${(schemaDescribe.fields[k] as SchemaDescription).tests.some(v => v.name === "required") ? "*" : ""}`;
+                                        const text = `${k}${(schemaDescribe.fields[k] as SchemaDescription).tests.some(v => v.name == "required") ? "*" : ""}`;
 
                                         switch (k) {
                                             // case "license_restrictions":
@@ -398,7 +398,7 @@ const ImportEmployees = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {typeof form.errors.items === "string" &&
+                            {typeof form.errors.items == "string" &&
                                 <tr>
                                     <td colSpan={headers.length + 2}>
                                         <span className="text-danger small">{form.errors.items}</span>
@@ -449,7 +449,7 @@ function guessControl(form: FormikInterface, schema, warnings: Record<string, st
     const meta = form.getFieldMeta(name);
 
     let value = meta.value;
-    if (desc.type === "boolean") {
+    if (desc.type == "boolean") {
         value = value ? t("YES") : t("NO")
     }
 
@@ -460,7 +460,7 @@ function guessControl(form: FormikInterface, schema, warnings: Record<string, st
             //         .map(v => {
             //             const key = `LicenseRestrictions.${v}`;
             //             const text = t(key);
-            //             if (key === text) return v;
+            //             if (key == text) return v;
 
             //             return text;
             //         });
@@ -470,7 +470,7 @@ function guessControl(form: FormikInterface, schema, warnings: Record<string, st
                     .map(v => {
                         const key = `VehicleTransmissionType.${v}`;
                         const text = t(key);
-                        if (key === text) return v;
+                        if (key == text) return v;
 
                         return text;
                     });
@@ -480,7 +480,7 @@ function guessControl(form: FormikInterface, schema, warnings: Record<string, st
                     .map(v => {
                         const key = `DriverEndorsement.${v}`;
                         const text = t(key);
-                        if (key === text) return v;
+                        if (key == text) return v;
 
                         return text;
                     });
@@ -489,14 +489,14 @@ function guessControl(form: FormikInterface, schema, warnings: Record<string, st
                 {
                     const key = `EducationLevel.${value}`;
                     const text = t(key);
-                    if (key !== text) value = text;
+                    if (key != text) value = text;
                 }
                 break;
             case "license_type":
                 {
                     const key = `DriverLicenseType.${value}`;
                     const text = t(key);
-                    if (key !== text) value = text;
+                    if (key != text) value = text;
                 }
                 break;
             case "equipment_experience":
@@ -504,7 +504,7 @@ function guessControl(form: FormikInterface, schema, warnings: Record<string, st
                     .map(v => {
                         const key = `JobEquipmentType.${v.type}`;
                         const text = t(key);
-                        if (key === text) return v;
+                        if (key == text) return v;
 
                         return text;
                     });

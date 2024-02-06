@@ -47,7 +47,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
                 const applicantDocumentUpload = await applicantApi.documents.create(applicantUser.id, document)
 
                 if (document.id) {
-                    applicantUser.documents = applicantUser.documents.filter(v => (v.id !== applicantDocumentUpload.id))
+                    applicantUser.documents = applicantUser.documents.filter(v => (v.id != applicantDocumentUpload.id))
                 }
                 applicantUser.documents.push(applicantDocumentUpload)
                 toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
@@ -115,7 +115,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
                                 {
                                     Object.values(ApplicantDqf)?.filter(v => v != ApplicantDqf.SAFETY_PERFORMANCE_HISTORY)?.map((value: ApplicantDqf, i) => {
 
-                                        const document: any = applicantUser?.documents?.find(v => (v.type === value))
+                                        const document: any = applicantUser?.documents?.find(v => (v.type == value))
                                         return (
                                             <tr key={i}>
                                                 <td colSpan={2}>
@@ -130,7 +130,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
 
                                                 <td colSpan={1} className="border border-2 w-50">
                                                     {
-                                                        (!form.values.document?.type || form.values.document?.type !== value)
+                                                        (!form.values.document?.type || form.values.document?.type != value)
                                                         && (
                                                             <div className="d-flex">
 
@@ -172,7 +172,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
                                                         )
                                                     }
 
-                                                    {(form.values?.document?.type === value)
+                                                    {(form.values?.document?.type == value)
                                                         && <Form onSubmit={form.handleSubmit} >
                                                             <FileInput
                                                                 name={`document`}
@@ -197,7 +197,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
                                 {
                                     Object.values(ApplicantOnBoardingChecklist).map((value: ApplicantOnBoardingChecklist, i) => {
 
-                                        const document: any = applicantUser?.documents?.find(v => (v.type === value))
+                                        const document: any = applicantUser?.documents?.find(v => (v.type == value))
                                         return (
                                             <tr key={i}>
                                                 <td colSpan={2}>
@@ -211,7 +211,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
                                                 </td>
                                                 {/* <td colSpan={1} className="dw-25">
                                                     {
-                                                        (!form.values.document?.type || form.values.document?.type !== value) &&
+                                                        (!form.values.document?.type || form.values.document?.type != value) &&
                                                         <div className="d-flex">
                                                             {document ? <a onClick={() => viewDocumentClick(document.id, document.name)} href='#' role="button" className="btn theme-primary-btn pt-2 mr-2"><Eye /></a> : null}
 
@@ -225,7 +225,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
                                                     }
 
                                                     {
-                                                        (form.values?.document?.type === value) &&
+                                                        (form.values?.document?.type == value) &&
                                                         <Form onSubmit={form.handleSubmit} >
                                                             <FileInput
                                                                 name={`document`}
@@ -247,7 +247,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
                                                 </td> */}
                                                 <td colSpan={1} className="border border-2 w-50">
                                                     {
-                                                        (!form.values.document?.type || form.values.document?.type !== value)
+                                                        (!form.values.document?.type || form.values.document?.type != value)
                                                         && (<div className="d-flex">
 
                                                             {/* It is checking
@@ -297,7 +297,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
                                                         </div>)
                                                     }
 
-                                                    {(form.values?.document?.type === value)
+                                                    {(form.values?.document?.type == value)
                                                         && <Form onSubmit={form.handleSubmit} >
                                                             <FileInput
                                                                 name={`document`}

@@ -97,8 +97,8 @@ export default function ViewVehicle({ id }) {
                             label: "PHOTO",
                             text: vehicle?.photo ? <img className="img-thumbnail" style={{maxWidth: "100px"}} src={vehicle.photo.path} /> : null
                         },
-                        TYPE: vehicle.type === VehicleType.OTHER ? vehicle.type_other : t(`VehicleType.${vehicle.type}`),
-                        TRAILER: vehicle.trailer_type === VehicleTrailerType.OTHER ? vehicle.trailer_type_other : (vehicle.trailer_type && t(`VehicleTrailerType.${vehicle.trailer_type}`) || ""),
+                        TYPE: vehicle.type == VehicleType.OTHER ? vehicle.type_other : t(`VehicleType.${vehicle.type}`),
+                        TRAILER: vehicle.trailer_type == VehicleTrailerType.OTHER ? vehicle.trailer_type_other : (vehicle.trailer_type && t(`VehicleTrailerType.${vehicle.trailer_type}`) || ""),
                         TRANSMISSION: vehicle.transmission_type ? t(`VehicleTransmissionType.` + vehicle.transmission_type) : null,
                         MAKE: vehicle.make,
                         MODEL: vehicle.model,
@@ -109,7 +109,7 @@ export default function ViewVehicle({ id }) {
                             text: vehicle.max_speed
                         },
                         ACCESSORIES: vehicle.accessories?.map((a, i) => (
-                            a === VehicleAccessory.OTHER && vehicle.accessory_other ?
+                            a == VehicleAccessory.OTHER && vehicle.accessory_other ?
                             vehicle.accessory_other : t(`VehicleAccessory.${a}`)
                             )
                         ),

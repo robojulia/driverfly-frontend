@@ -43,7 +43,7 @@ export function ConversationList(props: ConversationListProps) {
                         className="hover-grey rounded mt-1"
                         onClick={() => onItemClick(c)}
                         style={{
-                            backgroundColor: c?.id !== selected?.id ? "#fff" : "#eee",
+                            backgroundColor: c?.id != selected?.id ? "#fff" : "#eee",
                             cursor: "pointer",
 
                         }}

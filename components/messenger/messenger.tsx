@@ -265,7 +265,7 @@ export function Messenger(props) {
     const onConversationUpdated = (e: ConversationEntity) => {
         const newConversations = conversations
             .map((v) =>
-                v.id === e.id
+                v.id == e.id
                     ? {
                         ...v,
                         lastMessage: e.lastMessage,
@@ -283,8 +283,8 @@ export function Messenger(props) {
         if (e.chattable_id) {
             const existing = conversations.find(
                 (v) =>
-                    v.chattable_id === e.chattable_id &&
-                    v.chattable_type === e.chattable_type
+                    v.chattable_id == e.chattable_id &&
+                    v.chattable_type == e.chattable_type
             );
 
             if (existing) onConversationClick(existing);

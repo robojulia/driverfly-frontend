@@ -16,7 +16,7 @@ import { InappropriateApplicantFlag } from "../../enums/support/inappropriate-ap
 export default function FlagApplicant({ applicantId }) {
 
     const { user } = useAuth();
-    if (!!!user || user.company === null) return <></>;
+    if (!!!user || user.company == null) return <></>;
 
     const { t } = useTranslation();
     const supportApi = new SupportApi();
@@ -66,7 +66,7 @@ export default function FlagApplicant({ applicantId }) {
                             formik={form}
                         />
                         {
-                            form.values.type === InappropriateApplicantFlag.OTHER &&
+                            form.values.type == InappropriateApplicantFlag.OTHER &&
                             <BaseInput
                                 className="col-12 mt-3"
                                 label="other"

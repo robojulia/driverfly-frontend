@@ -79,13 +79,13 @@ function filterItems(values: SidebarItem[], hasPermission): SidebarItem[] {
     return values.map(i => {
         let { permissions, items, visible } = i;
 
-        if (visible === false) return null;
+        if (visible == false) return null;
 
         if (items) {
             items = filterItems(items, hasPermission);
             if (!items?.length) return null;
 
-            if (items.length === 1) return {
+            if (items.length == 1) return {
                 ...items[0],
                 text: i.text,
                 icon: i.icon,

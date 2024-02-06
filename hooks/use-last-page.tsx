@@ -21,7 +21,7 @@ export default function useLastPage() {
         // Set the previous path as the value of the current path.
         const prevPath = getItem(keys.CurrentPath, storageType);
         const currPath = router.asPath;
-        if (prevPath === currPath) return;
+        if (prevPath == currPath) return;
 
         if (prevPath)
             setItem(keys.PreviousPath, prevPath, storageType);

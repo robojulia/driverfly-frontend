@@ -20,7 +20,7 @@ export function useStatefulStorage<TElement>(props: StatefulStorageProps) : Stat
 
     if (!key) throw new Error("Unable to initialize stateful storage without key");
 
-    const isBrowser: boolean = ((): boolean => typeof window !== 'undefined')();
+    const isBrowser: boolean = ((): boolean => typeof window != 'undefined')();
     const storageApi: Storage = isBrowser ? window[`${type ?? 'session'}Storage`] : null;
 
     const EMPTY = "";
@@ -45,7 +45,7 @@ export function useStatefulStorage<TElement>(props: StatefulStorageProps) : Stat
     }, [ isBrowser ]);
 
     function onStorage(e: StorageEvent) {
-        if (e.key === key) {
+        if (e.key == key) {
             console.log("Received filtered storage event", e);
             setValue(e.newValue);
         }

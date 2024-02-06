@@ -198,7 +198,7 @@ const ImportApplicants = () => {
                 onProgress: (p) => setProgress(p),
             });
 
-            if (contents.length > 0 && contents[0][0] === headers[0])
+            if (contents.length > 0 && contents[0][0] == headers[0])
                 contents = contents.slice(1);
 
             contents = contents.map((row) => {
@@ -443,7 +443,7 @@ const ImportApplicants = () => {
                                 <th className={style.frozen_col}>#</th>
                                 {headers.map((k) => {
                                     const text = `${k}${(schemaDescribe.fields[k] as SchemaDescription).tests.some(
-                                        (v) => v.name === "required"
+                                        (v) => v.name == "required"
                                     )
                                         ? "*"
                                         : ""
@@ -561,7 +561,7 @@ const ImportApplicants = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {typeof form.errors.items === "string" && (
+                            {typeof form.errors.items == "string" && (
                                 <tr>
                                     <td colSpan={headers.length + 2}>
                                         <span className="text-danger small">
@@ -618,7 +618,7 @@ function guessControl(
     const meta = form.getFieldMeta(name);
 
     let value = meta.value;
-    if (desc.type === "boolean") {
+    if (desc.type == "boolean") {
         value = value ? t("YES") : t("NO");
     }
 
@@ -628,7 +628,7 @@ function guessControl(
                 value = value.map((v) => {
                     const key = `LicenseRestrictions.${v}`;
                     const text = t(key);
-                    if (key === text) return v;
+                    if (key == text) return v;
 
                     return text;
                 });
@@ -637,7 +637,7 @@ function guessControl(
                 value = value.map((v) => {
                     const key = `VehicleTransmissionType.${v}`;
                     const text = t(key);
-                    if (key === text) return v;
+                    if (key == text) return v;
 
                     return text;
                 });
@@ -646,7 +646,7 @@ function guessControl(
                 value = value.map((v) => {
                     const key = `DriverEndorsement.${v}`;
                     const text = t(key);
-                    if (key === text) return v;
+                    if (key == text) return v;
 
                     return text;
                 });
@@ -655,21 +655,21 @@ function guessControl(
                 {
                     const key = `EducationLevel.${value}`;
                     const text = t(key);
-                    if (key !== text) value = text;
+                    if (key != text) value = text;
                 }
                 break;
             case "license_type":
                 {
                     const key = `DriverLicenseType.${value}`;
                     const text = t(key);
-                    if (key !== text) value = text;
+                    if (key != text) value = text;
                 }
                 break;
             case "equipment_experience":
                 value = value.map((v) => {
                     const key = `JobEquipmentType.${v.type}`;
                     const text = t(key);
-                    if (key === text) return v;
+                    if (key == text) return v;
 
                     return text;
                 });

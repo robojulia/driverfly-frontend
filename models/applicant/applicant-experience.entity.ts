@@ -21,7 +21,7 @@ export class ApplicantExperienceEntity {
     }
 
     static key(entity: ApplicantExperienceEntity) {
-        if (entity.type === JobEquipmentType.OTHER) return `${entity.type}_${entity.type_other}`;
+        if (entity.type == JobEquipmentType.OTHER) return `${entity.type}_${entity.type_other}`;
 
         return entity.type;
     }

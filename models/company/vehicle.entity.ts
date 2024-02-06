@@ -30,7 +30,7 @@ export class VehicleEntity {
         return yup.object({
             type: (yup.string() as any).enum(VehicleType).required().nullable(),
             type_other: yup.string().when("type", {
-                is: (type) => type === VehicleType.OTHER,
+                is: (type) => type == VehicleType.OTHER,
                 then: yup.string().required().nullable()
             }).nullable(),
             trailer_type: (yup.string() as any).enum(VehicleTrailerType).nullable(),

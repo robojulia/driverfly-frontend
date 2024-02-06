@@ -24,7 +24,7 @@ export default function MissingDocuments({ entity }: MissingDocumentsProps) {
 		applicantExtrasEntity: ApplicantExtrasEntity
 	) =>
 		setApplicantExtras((oldApx) => {
-			oldApx = oldApx?.filter((v) => v?.type !== applicantExtrasEntity?.type);
+			oldApx = oldApx?.filter((v) => v?.type != applicantExtrasEntity?.type);
 			return !!oldApx
 				? [...oldApx, { ...applicantExtrasEntity }]
 				: [{ ...applicantExtrasEntity }];

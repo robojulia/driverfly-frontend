@@ -62,7 +62,7 @@ export default function ListActions({ id, options, onClick }: ListActionsProps) 
 					{filteredOptions.map((v, i) => {
 						let { icon: Cmp, label } = v;
 
-						if (typeof label === "function") label = label();
+						if (typeof label == "function") label = label();
 
 						return (
 							<MenuItem key={i} onClick={e => {
@@ -71,7 +71,7 @@ export default function ListActions({ id, options, onClick }: ListActionsProps) 
 								if (v.onClick) v.onClick(e);
 								if (onClick) onClick(e)
 							}}>
-								{Cmp && <Cmp style={{ marginRight: "5px" }} />} {typeof label === "string" ? t(label) : label}
+								{Cmp && <Cmp style={{ marginRight: "5px" }} />} {typeof label == "string" ? t(label) : label}
 							</MenuItem>);
 					})}
 				</Menu>

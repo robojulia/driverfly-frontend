@@ -52,9 +52,9 @@ export default function EntityForm(props: EntityFormProps) {
                         >
                             {/* {<IconComp style={{ marginRight: "5px" }} />} */}
                             {
-                                typeof label === "string"
+                                typeof label == "string"
                                     ? t(label)
-                                    : (typeof label === "function")
+                                    : (typeof label == "function")
                                         ? label()
                                         : label
                             }

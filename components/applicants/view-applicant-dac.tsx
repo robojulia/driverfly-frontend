@@ -19,7 +19,7 @@ const ViewApplicantDAC = ({ applicant }: ApplicantDacProps) => {
                 <tbody>
                     {
                         Object.values(ApplicantDac)?.map((value, i) => {
-                            const dac: ApplicantDacEntity = applicant?.dac?.find(v => (v?.type === value))
+                            const dac: ApplicantDacEntity = applicant?.dac?.find(v => (v?.type == value))
                             return (
                                 <tr key={i}>
                                     <td> {t(`ApplicantDac.${value}`)}</td>

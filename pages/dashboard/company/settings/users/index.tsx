@@ -63,7 +63,7 @@ export default function UserList() {
       await api.remove(id);
 
       setUsers(users.map(v => {
-        if (v.id === id) {
+        if (v.id == id) {
           return { ...v, status: Status.DELETED };
         }
 
@@ -82,7 +82,7 @@ export default function UserList() {
       await api.restore(id);
 
       setUsers(users.map(v => {
-        if (v.id === id) {
+        if (v.id == id) {
           return { ...v, status: Status.ACTIVE };
         }
 
@@ -95,8 +95,8 @@ export default function UserList() {
   }
 
   const tabs = {
-    [`Status.${Status.ACTIVE}`]: createUsersTable(users.filter((u) => u.id !== user.id && u.status === Status.ACTIVE)),
-    [`Status.${Status.DELETED}`]: createUsersTable(users.filter((u) => u.id !== user.id && u.status === Status.DELETED)),
+    [`Status.${Status.ACTIVE}`]: createUsersTable(users.filter((u) => u.id != user.id && u.status == Status.ACTIVE)),
+    [`Status.${Status.DELETED}`]: createUsersTable(users.filter((u) => u.id != user.id && u.status == Status.DELETED)),
   };
 
 
@@ -159,13 +159,13 @@ export default function UserList() {
             onClick: e => onDeleteClick(j.id),
             icon: TrashFill,
             label: "DELETE",
-            hide: !(can.deleteUser && j.status === Status.ACTIVE)
+            hide: !(can.deleteUser && j.status == Status.ACTIVE)
           },
           {
             onClick: e => onRestoreClick(j.id),
             icon: ArrowCounterclockwise,
             label: "RESTORE",
-            hide: !(can.deleteUser && j.status === Status.DELETED)
+            hide: !(can.deleteUser && j.status == Status.DELETED)
           }
         ])}
         items={users}

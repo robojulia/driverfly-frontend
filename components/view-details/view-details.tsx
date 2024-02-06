@@ -54,7 +54,7 @@ export default function ViewDetails(props: ViewDetailProps) {
 
     const resolveItem = (key: string, value: string | boolean | Date | ListValue, i: number) => {
         // coherse value into ListValue compatible type
-        if (value && typeof value === "object") {
+        if (value && typeof value == "object") {
             if (value instanceof Array) {
                 value = {
                     label: key,
@@ -80,20 +80,20 @@ export default function ViewDetails(props: ViewDetailProps) {
 
         // resolve display property
         if (isListValue(value)) {
-            if (typeof value.show === "function") {
+            if (typeof value.show == "function") {
                 value.show = value.show();
             }
 
-            if (value.show === false) return;
+            if (value.show == false) return;
 
-            if (typeof value.default === "function") {
+            if (typeof value.default == "function") {
                 value.default = value.default();
             }
 
             if (value.items) {
                 // nested table
                 const firstValue = value.items[0];
-                if (typeof firstValue === "object") {
+                if (typeof firstValue == "object") {
                     return (
                         <tr key={key}>
                             <td colSpan={2}>

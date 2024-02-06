@@ -53,13 +53,13 @@ export function Preferences() {
 
 	useEffect(() => {
 		const apx_routes = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.ROUTES
+			(v) => v.type == ApplicantExtras.ROUTES
 		);
 		const apx_w2 = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.REQUIRE_W2_EMPLOYMENT
+			(v) => v.type == ApplicantExtras.REQUIRE_W2_EMPLOYMENT
 		);
 		const apx_other = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.OTHER_ABSOLUTELY_REQUIREMENTS
+			(v) => v.type == ApplicantExtras.OTHER_ABSOLUTELY_REQUIREMENTS
 		);
 		form.setValues({
 			...form.values,

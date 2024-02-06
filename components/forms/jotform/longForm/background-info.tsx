@@ -41,7 +41,7 @@ export function BackgroundInfo() {
 	useEffect(() => {
 		const { birthdate, city, state, zip_code } = applicant;
 		const apx = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.LINE_ADDRESS
+			(v) => v.type == ApplicantExtras.LINE_ADDRESS
 		);
 		form.setValues({
 			...form.values,

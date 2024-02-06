@@ -194,7 +194,7 @@ postgraduate degree
                 data.experienceRequirements.push({
                     "@type": "OccupationalExperienceRequirements",
                     "monthsOfExperience": e.years * 12,
-                    "name": e.type === JobEquipmentType.OTHER ? job.required_skills_other : t(`JobEquipmentType.${e.type}`),
+                    "name": e.type == JobEquipmentType.OTHER ? job.required_skills_other : t(`JobEquipmentType.${e.type}`),
                     identifier: e.type
                 });
             });

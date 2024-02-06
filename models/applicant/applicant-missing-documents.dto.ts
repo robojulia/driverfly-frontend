@@ -15,7 +15,7 @@ export class ApplicantMissingDocumentsDto {
 			// 	// .unique("type")
 			// 	.test('unique-types', 'Each document type must be unique', value => {
 			// 		const types = value.map(doc => doc.type);
-			// 		return new Set(types).size === types.length;
+			// 		return new Set(types).size == types.length;
 			// 	})
 			// 	.min(1)
 			// 	.test('has-at-least-one', 'At least one document is required', value => value.length >= 1)

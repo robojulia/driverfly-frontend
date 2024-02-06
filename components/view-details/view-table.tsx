@@ -24,7 +24,7 @@ export default function ViewTable<T>(props: ViewTableProps<T>) {
         <Table bordered striped className={ViewTableStyle.view_table} >
             <thead>
                 <tr>
-                    {headerLabels?.map((label, i) => (<th key={i}>{label && typeof label === "string" ? t(label) : label}</th>))}
+                    {headerLabels?.map((label, i) => (<th key={i}>{label && typeof label == "string" ? t(label) : label}</th>))}
                 </tr>
             </thead>
 

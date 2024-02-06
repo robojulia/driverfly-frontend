@@ -180,8 +180,8 @@ export default function Applicants() {
                 <Col className='force-overflow p-0  '>
                     <FormGroup style={{ float: "right" }}>
                         <FormControlLabel
-                            control={<Switch value={viewMode === ViewMode.applicant ? ViewMode.job : ViewMode.applicant} checked={viewMode === ViewMode.job} onChange={onViewModeChange} />}
-                            label={t("VIEW_BY_{name}", { name: t(viewMode === ViewMode.applicant ? "JOB" : "APPLICANT") })}
+                            control={<Switch value={viewMode == ViewMode.applicant ? ViewMode.job : ViewMode.applicant} checked={viewMode == ViewMode.job} onChange={onViewModeChange} />}
+                            label={t("VIEW_BY_{name}", { name: t(viewMode == ViewMode.applicant ? "JOB" : "APPLICANT") })}
                         />
                     </FormGroup>
                     <Row>
@@ -203,8 +203,8 @@ export default function Applicants() {
                         </Col>)}
                     </Row>
 
-                    {viewMode === ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
-                    {viewMode === ViewMode.job && <JobView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                    {viewMode == ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                    {viewMode == ViewMode.job && <JobView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
                 </Col>
             </Row>
             <ViewModal
@@ -227,7 +227,7 @@ export default function Applicants() {
                             onChange={onStatusChange}
                         />
                         {
-                            applicantJobForm.values.status === ApplicantStatus.OTHER &&
+                            applicantJobForm.values.status == ApplicantStatus.OTHER &&
                             <BaseTextArea
                                 className="col-12"
                                 placeholder="STATUS"
@@ -238,7 +238,7 @@ export default function Applicants() {
                             />
                         }
                         {
-                            applicantJobForm.values.status === ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED &&
+                            applicantJobForm.values.status == ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED &&
                             <BaseCheckList
                                 className="col-12"
                                 label="REASON_CODES"
@@ -251,7 +251,7 @@ export default function Applicants() {
                             />
                         }
                         {
-                            applicantJobForm.values.status === ApplicantStatus.INACTIVE_CONTACTED_UNINTERESTED &&
+                            applicantJobForm.values.status == ApplicantStatus.INACTIVE_CONTACTED_UNINTERESTED &&
                             <BaseCheckList
                                 className="col-12"
                                 label="REASON_CODES"
@@ -264,7 +264,7 @@ export default function Applicants() {
                             />
                         }
                         {
-                            applicantJobForm.values.status === ApplicantStatus.INACTIVE_QUIT &&
+                            applicantJobForm.values.status == ApplicantStatus.INACTIVE_QUIT &&
                             <BaseCheckList
                                 className="col-12"
                                 label="REASON_CODES"
@@ -277,7 +277,7 @@ export default function Applicants() {
                             />
                         }
                         {
-                            applicantJobForm.values.status === ApplicantStatus.INACTIVE_FIRED &&
+                            applicantJobForm.values.status == ApplicantStatus.INACTIVE_FIRED &&
                             <BaseCheckList
                                 className="col-12"
                                 label="REASON_CODES"
@@ -329,13 +329,13 @@ function getApplicantStatus(applicantJob: ApplicantJobEntity, t: TranslateInterf
     switch (applicantJob.status) {
         case ApplicantStatus.OTHER: return applicantJob.status_other;
         case ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v === ApplicantReasonCodeNotQualified.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeNotQualified.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v == ApplicantReasonCodeNotQualified.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeNotQualified.${v}`)).join(", ")})`;
         case ApplicantStatus.INACTIVE_CONTACTED_UNINTERESTED:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v === ApplicantReasonCodeNotInterested.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeNotInterested.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v == ApplicantReasonCodeNotInterested.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeNotInterested.${v}`)).join(", ")})`;
         case ApplicantStatus.INACTIVE_QUIT:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v === ApplicantReasonCodeQuit.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeQuit.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v == ApplicantReasonCodeQuit.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeQuit.${v}`)).join(", ")})`;
         case ApplicantStatus.INACTIVE_FIRED:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v === ApplicantReasonCodeFired.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeFired.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v == ApplicantReasonCodeFired.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeFired.${v}`)).join(", ")})`;
         default:
             return t(`ApplicantStatus.${applicantJob.status}`);
     }
@@ -387,8 +387,8 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
 
     job.required_skills?.forEach(skill => {
         // cannot process OTHER type
-        if (skill.type !== JobEquipmentType.OTHER) {
-            const experience = applicant.equipment_experience.find(v => v.type === skill.type);
+        if (skill.type != JobEquipmentType.OTHER) {
+            const experience = applicant.equipment_experience.find(v => v.type == skill.type);
 
             if (!experience) {
                 results.meets_basic_qualifications = false;
@@ -424,7 +424,7 @@ function ApplicantView(props: ViewProps) {
             jobs: applicant.jobs?.map(aJob => {
                 const requirements = evaluateJobRequirements(applicant, aJob.job);
                 requirements.qualification_fail_reason = requirements.qualification_fail_reason.map(v => {
-                    if (typeof v === "string") return t(v);
+                    if (typeof v == "string") return t(v);
 
                     return t(v.key, { name: v.name }, { translateProps: true });
                 });
@@ -628,7 +628,7 @@ function JobView(props: ViewProps) {
 
             const requirements = evaluateJobRequirements(applicant, aJob.job);
             requirements.qualification_fail_reason = requirements.qualification_fail_reason.map(v => {
-                if (typeof v === "string") return t(v);
+                if (typeof v == "string") return t(v);
 
                 return t(v.key, { name: v.name }, { translateProps: true });
             });

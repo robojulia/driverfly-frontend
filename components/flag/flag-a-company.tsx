@@ -81,7 +81,7 @@ export default function FlagCompany({ companyId }) {
                                 formik={form}
                             />
                             {
-                                form.values.type === InappropriateCompanyFlag.OTHER &&
+                                form.values.type == InappropriateCompanyFlag.OTHER &&
                                 <BaseInput
                                     className="col-12 mt-3"
                                     label="other"

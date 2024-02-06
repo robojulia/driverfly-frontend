@@ -47,7 +47,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                 const employeeDocumentUpload = await employeeApi.documents.create(employee.id, document)
 
                 if (document.id) {
-                    employee.documents = employee.documents.filter(v => (v.id !== employeeDocumentUpload.id))
+                    employee.documents = employee.documents.filter(v => (v.id != employeeDocumentUpload.id))
                 }
                 employee.documents.push(employeeDocumentUpload)
                 toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
@@ -92,7 +92,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
     ViewDocumentHistory. If the type is SAFETY_PERFORMANCE_HISTORY, it renders the
     SafetyPerformanceHistory component instead of the buttons. */
     const ButtonList = ({ document, type }): JSX.Element =>
-        (!form.values.document?.type || form.values.document?.type !== type) && (
+        (!form.values.document?.type || form.values.document?.type != type) && (
             <div className="d-flex">
                 {type != EmployeeDocumentType.SAFETY_PERFORMANCE_HISTORY ? (
                     <>
@@ -175,7 +175,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                                 <tbody>
                                     {Object.values(EmployeeDocumentType).map((type: EmployeeDocumentType, i) => {
                                         /* Finding the document in the employee.documents array that has the same type. */
-                                        const document: DocumentEntity = employee?.documents?.find(v => (v.type === type))
+                                        const document: DocumentEntity = employee?.documents?.find(v => (v.type == type))
                                         return (
                                             <tr key={i}>
                                                 <td colSpan={2}>
@@ -192,7 +192,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                                                 </td>
                                                 <td colSpan={1} className="border border-2 w-50">
                                                     <ButtonList document={document} type={type} />
-                                                    {(form.values?.document?.type === type)
+                                                    {(form.values?.document?.type == type)
                                                         && <Form onSubmit={form.handleSubmit} >
                                                             <FileInput
                                                                 name={`document`}
@@ -221,7 +221,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                                     {props.showOnboarding
                                         && Object.values(EmployeeOnBoardingChecklist).map((type: EmployeeOnBoardingChecklist, i) => {
                                             /* Finding the document in the employee.documents array that has the same type. */
-                                            const document: DocumentEntity = employee?.documents?.find(v => (v.type === type))
+                                            const document: DocumentEntity = employee?.documents?.find(v => (v.type == type))
                                             return (
                                                 <tr key={i}>
                                                     <td colSpan={2}>
@@ -238,7 +238,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                                                     </td>
                                                     <td colSpan={1} className="border border-2 w-50">
                                                         <ButtonList document={document} type={type} />
-                                                        {(form.values?.document?.type === type)
+                                                        {(form.values?.document?.type == type)
                                                             && <Form onSubmit={form.handleSubmit} >
                                                                 <FileInput
                                                                     name={`document`}

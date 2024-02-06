@@ -41,11 +41,11 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
     };
     useEffect(() => {
         const apx_ss_id = applicantExtras?.find(
-            (v) => v.type === ApplicantExtras.EMPLOYEE_SS_OR_ID
+            (v) => v.type == ApplicantExtras.EMPLOYEE_SS_OR_ID
         );
 
         const apx_sign_voe_authorization = applicantExtras?.find(
-            (v) => v.type === ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION
+            (v) => v.type == ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION
         );
 
         if (apx_sign_voe_authorization)

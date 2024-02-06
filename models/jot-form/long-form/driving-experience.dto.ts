@@ -20,7 +20,7 @@ export class DrivingExperienceDto {
 			license_state: yup.string().required().oneOf(stateList.map(state => state.value)).nullable(),
 			license_number: yup.string()
 				.when("license_state", {
-					is: (value) => value === "AL",
+					is: (value) => value == "AL",
 					then: yup.string().max(8),
 				})
 				.required().nullable(),

@@ -29,7 +29,7 @@ export default function CompanyList() {
   useEffectAsync(async () => {
     const api = new CompanyApi();
     const v = await api.list({ withPhoto: true });
-    setCompanies(v.filter((u) => u.id !== company.id && u.status === Status.ACTIVE));
+    setCompanies(v.filter((u) => u.id != company.id && u.status == Status.ACTIVE));
   }, [company]);
 
   const onAddClick = (e: React.MouseEvent) => {

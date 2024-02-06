@@ -18,7 +18,7 @@ export function TranslationProvider(props: TranslationProviderProps) {
     const { user } = useAuth();
 
     if (user) {
-        if (i18n?.locales.some(v => v === user.language))
+        if (i18n?.locales.some(v => v == user.language))
             locale = user.language;
     }
 

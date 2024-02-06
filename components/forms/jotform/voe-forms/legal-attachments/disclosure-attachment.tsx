@@ -12,10 +12,10 @@ export default function DisclosureAttachment({ applicant }: DisclosureAttachment
         console.log("everything working herer");
 
     }, [])
-    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND)
+    const signature = applicant?.extras?.find(sign => sign?.type == ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND)
 
     const { t } = useTranslation();
-    const date = applicant?.extras?.find(d => d?.type === ApplicantExtras?.IMPORTANT_DISCLOSURE_BACKGROUND_DATE)
+    const date = applicant?.extras?.find(d => d?.type == ApplicantExtras?.IMPORTANT_DISCLOSURE_BACKGROUND_DATE)
 
     return (
         <form>

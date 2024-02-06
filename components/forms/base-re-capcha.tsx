@@ -52,7 +52,7 @@ function BaseReCapcha({
         onChange={onChange}
         ref={captchaRef}
       />
-      {error && typeof error === "string" && (
+      {error && typeof error == "string" && (
         <span className="text-danger small">{t(error)}</span>
       )}
     </div>

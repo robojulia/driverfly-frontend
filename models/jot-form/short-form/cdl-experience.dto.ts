@@ -22,7 +22,7 @@ export class CdlDto {
       years_cdl_experience: yup
         .number()
         .when("license_type", {
-          is: (value) => !!value && value !== DriverLicenseType.NO_CDL,
+          is: (value) => !!value && value != DriverLicenseType.NO_CDL,
           then: yup.number().moreThan(-1).required(),
         })
         .nullable(),

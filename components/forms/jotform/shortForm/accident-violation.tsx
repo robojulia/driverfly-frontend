@@ -57,7 +57,7 @@ export function AccidentViolation() {
 	}, []);
 	useEffect(() => {
 		console.log("applicant", applicant.license_type);
-		console.log("checkeeee", Boolean(applicant.license_type === DriverLicenseType.NO_CDL));
+		console.log("checkeeee", Boolean(applicant.license_type == DriverLicenseType.NO_CDL));
 
 		console.log("values", form.values);
 		console.log("error", form.errors);
@@ -107,7 +107,7 @@ export function AccidentViolation() {
 			</Row>
 				<Row >
 					{
-						Boolean(applicant.license_type === DriverLicenseType.NO_CDL) && (
+						Boolean(applicant.license_type == DriverLicenseType.NO_CDL) && (
 							<BaseCheck
 								className="col my-3"
 								name="authorized_to_work_in_us"

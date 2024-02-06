@@ -80,7 +80,7 @@ export async function getServerSideProps({ query }) {
 		const employer: ApplicantEmployerEntity =
 			await applicantApi.employer.getByUuidToken(employer_uuid);
 
-		if (!!!applicant || !!!employer || applicant.id !== employer.applicant.id)
+		if (!!!applicant || !!!employer || applicant.id != employer.applicant.id)
 			return { notFound: true };
 
 		const voeData = await applicantApi.voeform.fetch(applicant_uuid, employer_uuid)

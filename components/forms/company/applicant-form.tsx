@@ -120,7 +120,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				for (let i = 0; i < entity?.jobs?.length; i++) {
 					let job = entity?.jobs[i];
 
-					if (!jobs.some((v) => v.job?.id === job.job.id)) {
+					if (!jobs.some((v) => v.job?.id == job.job.id)) {
 						await applicantApi.jobs.remove(values.id, job.job.id);
 					}
 				}
@@ -322,7 +322,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			form.setValues({
 				...form.values,
 				extras: form.values?.extras.map((extra) => {
-					if (extra.type === ApplicantExtras.ALREADY_WORKED_TO_COMPANY) {
+					if (extra.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY) {
 						return {
 							...extra,
 							value: {
@@ -532,7 +532,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								</Row>
 								<Row className="">
 									{form.values?.extras
-										?.find((v) => v.type === ApplicantExtras.CDL_NUMBER)
+										?.find((v) => v.type == ApplicantExtras.CDL_NUMBER)
 										?.value?.map((entity, i) => (
 											<div key={i} className={`my-1`}>
 												<div className="Row horizontalRow"></div>
@@ -576,7 +576,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 															form.setValues({
 																...form.values,
 																extras: [...form.values?.extras?.map((item) => {
-																	if (item.type === ApplicantExtras.CDL_NUMBER) {
+																	if (item.type == ApplicantExtras.CDL_NUMBER) {
 																		return {
 																			...item,
 																			value: item.value?.filter(
@@ -609,7 +609,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												form.setValues({
 													...form.values,
 													extras: extras?.map((item) =>
-														item.type === ApplicantExtras.CDL_NUMBER
+														item.type == ApplicantExtras.CDL_NUMBER
 															? {
 																...item,
 																value: [
@@ -884,7 +884,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												formik={form}
 											/>
 										</div>
-										{entity.type === JobEquipmentType.OTHER && (
+										{entity.type == JobEquipmentType.OTHER && (
 											<div>
 												<BaseInput
 													readOnly={Boolean(props?.entity?.is_hired)}
@@ -983,7 +983,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													formik={form}
 												/>
 											</Col>
-											{entity.type === JobEquipmentType.OTHER && (
+											{entity.type == JobEquipmentType.OTHER && (
 												<Col xs="11">
 													<BaseInput
 														readOnly={Boolean(props?.entity?.is_hired)}
@@ -1055,7 +1055,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									return (
 										<Accordion
 											key={i}
-											defaultExpanded={i === 0 || !meta.touched || hasError}
+											defaultExpanded={i == 0 || !meta.touched || hasError}
 											expanded={hasError || undefined}
 										>
 											<AccordionSummary expandIcon={<ChevronUp />}>
@@ -1068,7 +1068,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														form.setValues({
 															...form.values,
 															employers: form.values?.employers?.filter(
-																(v, idx) => idx !== i
+																(v, idx) => idx != i
 															),
 														})
 													}
@@ -1215,7 +1215,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 						{Boolean(
 							form.values?.extras.find(
 								({ type }) =>
-									type === ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
+									type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
 							)?.value
 						) && (
 								<>

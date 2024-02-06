@@ -18,7 +18,7 @@ export default function BaseCheck({ formik, required, className, label, checked,
     const meta = formik.getFieldMeta(name);
 
     if (meta) {
-      checked = meta.value === true;
+      checked = meta.value == true;
       touched = meta.touched;
       error = meta.error;
     }
@@ -63,7 +63,7 @@ export default function BaseCheck({ formik, required, className, label, checked,
         {label && <label htmlFor={name} style={{ marginLeft: ".5em" }} className="form-check-label">{t(label)}{required ? <span className='text-danger'>*</span> : ""}</label>}
 
       </div>
-      {touched && error && (typeof error === "string") ? <span className="text-danger small">{t(error)}</span> : null}
+      {touched && error && (typeof error == "string") ? <span className="text-danger small">{t(error)}</span> : null}
     </div>
   )
 }

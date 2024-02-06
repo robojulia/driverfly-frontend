@@ -21,7 +21,7 @@ export function Loading(props: LoadingProps) {
             result = await result;
         }
 
-        setLoading(typeof result === "boolean" ? !result : false);
+        setLoading(typeof result == "boolean" ? !result : false);
     }, triggers || [], destructor);
 
     // todo: build spash screen

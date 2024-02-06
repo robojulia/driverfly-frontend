@@ -125,7 +125,7 @@ export class JobEntity {
                 schedule_other: yup
                     .string()
                     .when("schedule", {
-                        is: (v) => v === JobSchedule.OTHER,
+                        is: (v) => v == JobSchedule.OTHER,
                         then: yup.string().required().nullable(),
                     })
                     .nullable(),
@@ -152,22 +152,22 @@ export class JobEntity {
                 min_salary: yup
                     .number()
                     .when("pay_method", {
-                        is: (v) => v === JobPayMethod.SALARY,
+                        is: (v) => v == JobPayMethod.SALARY,
                         then: numberRangeStart("max_salary", 0).required(),
                     })
                     .when("pay_method", {
-                        is: (v) => v === JobPayMethod.OPEN_TO_NEGOTIATE,
+                        is: (v) => v == JobPayMethod.OPEN_TO_NEGOTIATE,
                         then: numberRangeStart("max_salary", 0).optional(),
                     })
                     .nullable(),
                 max_salary: yup
                     .number()
                     .when("pay_method", {
-                        is: (v) => v === JobPayMethod.SALARY,
+                        is: (v) => v == JobPayMethod.SALARY,
                         then: numberRangeEnd("min_salary", 0, true).required(),
                     })
                     .when("pay_method", {
-                        is: (v) => v === JobPayMethod.OPEN_TO_NEGOTIATE,
+                        is: (v) => v == JobPayMethod.OPEN_TO_NEGOTIATE,
                         then: numberRangeEnd("min_salary", 0, true).optional(),
                     })
                     .nullable(),
@@ -175,12 +175,12 @@ export class JobEntity {
                     .number()
                     .when("pay_method", {
                         is: (v) =>
-                            v === JobPayMethod.RATE_PER_MILE || v === JobPayMethod.HOURLY,
+                            v == JobPayMethod.RATE_PER_MILE || v == JobPayMethod.HOURLY,
                         then: numberRangeStart("max_rate", 0).required(),
                     })
                     .when("pay_method", {
                         is: (v) =>
-                            v === JobPayMethod.OPEN_TO_NEGOTIATE,
+                            v == JobPayMethod.OPEN_TO_NEGOTIATE,
                         then: numberRangeStart("max_rate", 0).optional(),
                     })
                     .nullable(),
@@ -188,34 +188,34 @@ export class JobEntity {
                     .number()
                     .when("pay_method", {
                         is: (v) =>
-                            v === JobPayMethod.RATE_PER_MILE || v === JobPayMethod.HOURLY,
+                            v == JobPayMethod.RATE_PER_MILE || v == JobPayMethod.HOURLY,
                         then: numberRangeEnd("min_rate", 0, true).required(),
                     })
                     .when("pay_method", {
                         is: (v) =>
-                            v === JobPayMethod.OPEN_TO_NEGOTIATE,
+                            v == JobPayMethod.OPEN_TO_NEGOTIATE,
                         then: numberRangeEnd("min_rate", 0, true).optional(),
                     })
                     .nullable(),
                 min_hours: yup
                     .number()
                     .when("pay_method", {
-                        is: (v) => v === JobPayMethod.HOURLY,
+                        is: (v) => v == JobPayMethod.HOURLY,
                         then: numberRangeStart("max_hours", 0).required(),
                     })
                     .when("pay_method", {
-                        is: (v) => v === JobPayMethod.OPEN_TO_NEGOTIATE,
+                        is: (v) => v == JobPayMethod.OPEN_TO_NEGOTIATE,
                         then: numberRangeStart("max_hours", 0).optional(),
                     })
                     .nullable(),
                 max_hours: yup
                     .number()
                     .when("pay_method", {
-                        is: (v) => v === JobPayMethod.HOURLY,
+                        is: (v) => v == JobPayMethod.HOURLY,
                         then: numberRangeEnd("min_hours", 0, true).required(),
                     })
                     .when("pay_method", {
-                        is: (v) => v === JobPayMethod.OPEN_TO_NEGOTIATE,
+                        is: (v) => v == JobPayMethod.OPEN_TO_NEGOTIATE,
                         then: numberRangeEnd("min_hours", 0, true).optional(),
                     })
                     .nullable(),
@@ -223,12 +223,12 @@ export class JobEntity {
                     .number()
                     .when("pay_method", {
                         is: (v) =>
-                            v === JobPayMethod.PERCENT_PER_MOVE ||
-                            v === JobPayMethod.PERCENT_PER_WEIGHT,
+                            v == JobPayMethod.PERCENT_PER_MOVE ||
+                            v == JobPayMethod.PERCENT_PER_WEIGHT,
                         then: numberRangeStart("max_percent", 0).required(),
                     })
                     .when("pay_method", {
-                        is: (v) => v === JobPayMethod.OPEN_TO_NEGOTIATE,
+                        is: (v) => v == JobPayMethod.OPEN_TO_NEGOTIATE,
                         then: numberRangeStart("max_percent", 0).optional(),
                     })
                     .nullable(),
@@ -236,41 +236,41 @@ export class JobEntity {
                     .number()
                     .when("pay_method", {
                         is: (v) =>
-                            v === JobPayMethod.PERCENT_PER_MOVE ||
-                            v === JobPayMethod.PERCENT_PER_WEIGHT,
+                            v == JobPayMethod.PERCENT_PER_MOVE ||
+                            v == JobPayMethod.PERCENT_PER_WEIGHT,
                         then: numberRangeEnd("min_percent", 0, true).required(),
                     })
                     .when("pay_method", {
-                        is: (v) => v === JobPayMethod.OPEN_TO_NEGOTIATE,
+                        is: (v) => v == JobPayMethod.OPEN_TO_NEGOTIATE,
                         then: numberRangeEnd("min_percent", 0, true).optional(),
                     })
                     .nullable(),
                 min_miles: yup
                     .number()
                     .when("pay_method", {
-                        is: (v) => v === JobPayMethod.RATE_PER_MILE,
+                        is: (v) => v == JobPayMethod.RATE_PER_MILE,
                         then: numberRangeStart("max_miles", 0).required(),
                     })
                     .when("pay_method", {
-                        is: (v) => v === JobPayMethod.OPEN_TO_NEGOTIATE,
+                        is: (v) => v == JobPayMethod.OPEN_TO_NEGOTIATE,
                         then: numberRangeStart("max_miles", 0).optional(),
                     })
                     .nullable(),
                 max_miles: yup
                     .number()
                     .when("pay_method", {
-                        is: (v) => v === JobPayMethod.RATE_PER_MILE,
+                        is: (v) => v == JobPayMethod.RATE_PER_MILE,
                         then: numberRangeEnd("min_miles", 0, true).required(),
                     })
                     .when("pay_method", {
-                        is: (v) => v === JobPayMethod.OPEN_TO_NEGOTIATE,
+                        is: (v) => v == JobPayMethod.OPEN_TO_NEGOTIATE,
                         then: numberRangeEnd("min_miles", 0, true).optional(),
                     })
                     .nullable(),
                 min_weekly_pay: yup
                     .number()
                     .when("pay_method", {
-                        is: (v) => v === JobPayMethod.OPEN_TO_NEGOTIATE,
+                        is: (v) => v == JobPayMethod.OPEN_TO_NEGOTIATE,
                         then: numberRangeStart("max_weekly_pay", 0).optional(),
                         otherwise: numberRangeStart("max_weekly_pay", 0).required()
                     })
@@ -278,7 +278,7 @@ export class JobEntity {
                 max_weekly_pay: yup
                     .number()
                     .when("pay_method", {
-                        is: (v) => v === JobPayMethod.OPEN_TO_NEGOTIATE,
+                        is: (v) => v == JobPayMethod.OPEN_TO_NEGOTIATE,
                         then: numberRangeEnd("min_weekly_pay", 0, true).optional(),
                         otherwise: numberRangeEnd("min_weekly_pay", 0, true).required()
                     })

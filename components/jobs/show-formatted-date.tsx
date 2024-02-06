@@ -40,5 +40,5 @@ export function formatDate(date: Date | string, hideTime?: boolean) {
         hour: !!!hideTime ? "2-digit" : undefined,
         minute: !!!hideTime ? "2-digit" : undefined,
     });
-    return formatter.format(typeof date === 'string' ? new Date(date) : date)
+    return formatter.format(typeof date == 'string' ? new Date(date) : date)
 }

@@ -46,7 +46,7 @@ export default function OtrJobsList() {
 
             <div className="results-count mt-4 ">
                 {t('SHOWING')} {
-                    pagingMeta.itemCount !== 0 &&
+                    pagingMeta.itemCount != 0 &&
                     <>
                         <span className="first">
                             {((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + 1}
@@ -114,7 +114,7 @@ export default function OtrJobsList() {
                 <div className="filter-outer mt-5">
 
                     {
-                        pagingMeta.totalPages !== 0 &&
+                        pagingMeta.totalPages != 0 &&
 
                         <ul className="pagination ">
                             {

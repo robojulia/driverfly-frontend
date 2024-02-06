@@ -132,7 +132,7 @@ function BaseRadio({
 		onChange = onChange || formik.handleChange;
 		handleBlur = handleBlur || formik.handleBlur;
 	}
-	if (typeof enumType === "object") {
+	if (typeof enumType == "object") {
 		options = Object.entries(enumType)?.map(([key, value]) => ({
 			[valueKey]: value,
 			[labelKey]: value,
@@ -178,7 +178,7 @@ function BaseRadio({
 					labelPrefix,
 					disabled
 				)}
-			{touched && error && typeof error === "string" ? (
+			{touched && error && typeof error == "string" ? (
 				<span className="text-danger small">{error}</span>
 			) : null}
 		</div>

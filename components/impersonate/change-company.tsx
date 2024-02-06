@@ -37,7 +37,7 @@ export default function ChangeCompany() {
             <Dropdown.Menu>
                 {user.company
                     .children
-                    .map((v, i) => (<Dropdown.Item key={v.id} onClick={e => onClick(e, v)}>{v.name} {v.id === user.company.id ? `(${t("CURRENT")})` : ""}</Dropdown.Item>))}
+                    .map((v, i) => (<Dropdown.Item key={v.id} onClick={e => onClick(e, v)}>{v.name} {v.id == user.company.id ? `(${t("CURRENT")})` : ""}</Dropdown.Item>))}
             </Dropdown.Menu>
         </Dropdown>
     </>);

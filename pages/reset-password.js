@@ -33,7 +33,7 @@ export default function ResetPassword({ passwordResetToken }) {
       passwordConfirm: yup.string().test({
         test: (value, context) => {
           const password = context.resolve(yup.ref("password"));
-          if (value === password) return true;
+          if (value == password) return true;
 
           return context.createError({
             path: context.path,

@@ -134,7 +134,7 @@ export default function Sharing() {
         const label_name = name.split('.')[0] || ''
         const label = t(`UserPreferenceSharingLabel.${form.values[label_name]?.label}`)
 
-        if (value === SharePreference.ALWAYS) {
+        if (value == SharePreference.ALWAYS) {
             setsharingValue({ name, value, label })
             openConfirmationModal()
         } else {

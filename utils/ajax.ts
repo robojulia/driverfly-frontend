@@ -46,7 +46,7 @@ function globalAjaxExceptionHandler(error: AjaxError, interfaces: { formik?: For
     if (response?.data) {
         const { data } = error.response;
 
-        if (typeof data === "string") {
+        if (typeof data == "string") {
             console.error(`globalAjaxExceptionHandler: encountered - ${data}`, response, error);
             if (toast) {
                 toast?.error(t(data));
@@ -54,7 +54,7 @@ function globalAjaxExceptionHandler(error: AjaxError, interfaces: { formik?: For
             }
         }
 
-        if (typeof data === "object") {
+        if (typeof data == "object") {
             // class-validator standard structure
             if (isClassValidatorError(data)) {
                 const { message } = data;
@@ -108,7 +108,7 @@ function globalAjaxExceptionHandler(error: AjaxError, interfaces: { formik?: For
                 value = value.error;
             }
 
-            if (typeof value === "string") {
+            if (typeof value == "string") {
                 const meta = formik?.getFieldMeta(key);
                 if (meta) {
                     const { setError, setTouched } = formik.getFieldHelpers(key);

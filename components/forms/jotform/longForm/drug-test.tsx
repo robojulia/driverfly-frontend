@@ -32,7 +32,7 @@ export function DrugTest() {
 
 	useEffect(() => {
 		const apx = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.DOT_REGULATION
+			(v) => v.type == ApplicantExtras.DOT_REGULATION
 		);
 		form.setValues({
 			...form.values,

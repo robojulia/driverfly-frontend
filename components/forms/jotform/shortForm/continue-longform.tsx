@@ -47,34 +47,34 @@ export function ContinueLongForm() {
 
 	const companyPrefferedEmploymentType: JobEmploymentType[] =
 		companyPreferences?.find(
-			({ label }) => label === CompanyPreferenceJotformLabel.EMPLOYMENT_TYPE
+			({ label }) => label == CompanyPreferenceJotformLabel.EMPLOYMENT_TYPE
 		)?.value ?? [];
 
 	const companyPrefferedCDL: DriverLicenseType[] =
 		companyPreferences?.find(
-			({ label }) => label === CompanyPreferenceJotformLabel.CDL_CLASS
+			({ label }) => label == CompanyPreferenceJotformLabel.CDL_CLASS
 		)?.value ?? [];
 
 	const companyPrefferedMinExperience: number =
 		companyPreferences?.find(
 			({ label }) =>
-				label === CompanyPreferenceJotformLabel.YEARS_CDL_EXPERIENCE
+				label == CompanyPreferenceJotformLabel.YEARS_CDL_EXPERIENCE
 		)?.value ?? 0;
 
 	const companyPrefferedAccidentCountLimit: number =
 		companyPreferences?.find(
-			({ label }) => label === CompanyPreferenceJotformLabel.MINIMUM_ACCIDENTS
+			({ label }) => label == CompanyPreferenceJotformLabel.MINIMUM_ACCIDENTS
 		)?.value ?? 0;
 
 	const companyPrefferedMinViolationLimit: number =
 		companyPreferences?.find(
 			({ label }) =>
-				label === CompanyPreferenceJotformLabel.MIN_MOVING_VIOLATIONS
+				label == CompanyPreferenceJotformLabel.MIN_MOVING_VIOLATIONS
 		)?.value ?? 0;
 
 	const companyPrefferedLocations: JobGeography[] =
 		companyPreferences?.find(
-			({ label }) => label === CompanyPreferenceJotformLabel.JOB_GEOGRAPHY
+			({ label }) => label == CompanyPreferenceJotformLabel.JOB_GEOGRAPHY
 		)?.value ?? [];
 
 	function applicantHasPreferredLocation(): boolean {

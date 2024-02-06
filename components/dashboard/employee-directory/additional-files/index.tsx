@@ -56,7 +56,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
 
                 if (document.id) {
                     employee.documents = employee.documents.filter(
-                        (v) => v.id !== employeeDocumentUpload.id
+                        (v) => v.id != employeeDocumentUpload.id
                     );
                 }
                 employee.documents.push(employeeDocumentUpload);
@@ -96,7 +96,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
         form.setFieldValue("document", { type, id: documentId ?? null });
 
     const ButtonList = ({ document, type }): JSX.Element =>
-        (!form.values.document?.type || form.values.document?.type !== type) && (
+        (!form.values.document?.type || form.values.document?.type != type) && (
             <div className="d-flex">
                 <ViewDocumentButton
                     document={document}
@@ -159,7 +159,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                     {Object.values(EmployeeAdditionalFilesEnum).map(
                                         (type: EmployeeAdditionalFilesEnum, i) => {
                                             const document: any = employee?.documents?.find(
-                                                (v) => v.type === type
+                                                (v) => v.type == type
                                             );
                                             return (
                                                 <tr key={i}>
@@ -171,7 +171,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                                     </td>
                                                     <td colSpan={1} className="border border-2 w-50">
                                                         <ButtonList document={document} type={type} />
-                                                        {form.values?.document?.type === type && (
+                                                        {form.values?.document?.type == type && (
                                                             <Form onSubmit={form.handleSubmit}>
                                                                 <FileInput
                                                                     name={`document`}

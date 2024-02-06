@@ -8,7 +8,7 @@ type UseStorageReturnValue = {
 const useStorage = (): UseStorageReturnValue => {
     const storageType = (type?: StorageType): 'localStorage' | 'sessionStorage' => `${type ?? 'session'}Storage`;
 
-    const isBrowser: boolean = ((): boolean => typeof window !== 'undefined')();
+    const isBrowser: boolean = ((): boolean => typeof window != 'undefined')();
 
     const getItem = (key: string, type?: StorageType): string => {
         return isBrowser ? window[storageType(type)][key] : '';

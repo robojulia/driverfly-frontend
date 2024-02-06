@@ -48,11 +48,11 @@ export default function JobVehicles({ job }: JobDetailProps) {
                         <Col lg="10">
                             <div className="ml-3">
                                 <span className="text-secondary">{t("TYPE")}: </span>
-                                {vehicle.type === VehicleType.OTHER ? vehicle.type_other : t(vehicle.type.toLowerCase())}
+                                {vehicle.type == VehicleType.OTHER ? vehicle.type_other : t(vehicle.type.toLowerCase())}
                             </div>
                             <div className="ml-3">
                                 <span className="text-secondary">{t("TRAILER")}: </span>
-                                {vehicle.trailer_type === VehicleTrailerType.OTHER ? vehicle.trailer_type_other : (vehicle.trailer_type && t(`VehicleTrailerType.${vehicle.trailer_type}`) || "")}
+                                {vehicle.trailer_type == VehicleTrailerType.OTHER ? vehicle.trailer_type_other : (vehicle.trailer_type && t(`VehicleTrailerType.${vehicle.trailer_type}`) || "")}
                             </div>
                             <div className="ml-3">
                                 <span className="text-secondary">{t("TRANSMISSION")}: </span>
@@ -73,7 +73,7 @@ export default function JobVehicles({ job }: JobDetailProps) {
                             <div className="ml-3">
                                 <span className="text-secondary">{t("ACCESSORIES")}: </span>
                                 {vehicle.accessories?.map((accessory) => (
-                                    accessory === VehicleAccessory.OTHER && vehicle.accessory_other ? vehicle.accessory_other : t(`VehicleAccessory.${accessory}`)
+                                    accessory == VehicleAccessory.OTHER && vehicle.accessory_other ? vehicle.accessory_other : t(`VehicleAccessory.${accessory}`)
                                 ))?.join(", ")}
                             </div>
                         </Col>

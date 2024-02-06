@@ -108,7 +108,7 @@ export default function ViewDataTable<TElement>(
     };
 
     // const onSearchKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    //     if (e.key === "Enter") onSearchClick();
+    //     if (e.key == "Enter") onSearchClick();
 
     // };
 
@@ -127,7 +127,7 @@ export default function ViewDataTable<TElement>(
         if (column.id && hideable.has(column.id)) {
             const newColumns = columns.map((v, i) => ({
                 ...v,
-                hide: v.id === column.id ? (v.hide ? 0 : 1) : v.hide,
+                hide: v.id == column.id ? (v.hide ? 0 : 1) : v.hide,
             }));
 
             storage?.setItem(
@@ -150,7 +150,7 @@ export default function ViewDataTable<TElement>(
                 .filter((v) => !v.hide)
                 .map((v) => ({
                     ...v,
-                    name: typeof v.name === "string" ? t(v.name) : v.name,
+                    name: typeof v.name == "string" ? t(v.name) : v.name,
                     // hide: v.id && hideable.has(`${v.id}`) && !visible.has(`${v.id}`) ? 1 : 0,
                     sortable: v.sortable || !!v.name,
                 }))}
@@ -163,7 +163,7 @@ export default function ViewDataTable<TElement>(
             expandableRowExpanded={(row) =>
                 !props.preExpanded
                     ? false
-                    : typeof props.preExpanded === "boolean"
+                    : typeof props.preExpanded == "boolean"
                         ? props.preExpanded
                         : props.preExpanded(row)
             }
@@ -210,9 +210,9 @@ export default function ViewDataTable<TElement>(
                                                             key={i}
                                                             onClick={() => onColumnHide(v)}
                                                         >
-                                                            {v.hide === 1 ? (
+                                                            {v.hide == 1 ? (
                                                                 <del>
-                                                                    {typeof v.name === "string"
+                                                                    {typeof v.name == "string"
                                                                         ? t(v.name)
                                                                         : v.name}
                                                                 </del>

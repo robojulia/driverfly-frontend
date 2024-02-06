@@ -29,7 +29,7 @@ export default function OfferedJobs() {
         if (user) {
             const api = new ApplicantApi();
             const data = await api.me.jobs();
-            setApplicantJobs(data.filter(v => v.status === ApplicantStatus.IN_PROCESS_OFFERED_JOB));
+            setApplicantJobs(data.filter(v => v.status == ApplicantStatus.IN_PROCESS_OFFERED_JOB));
         }
     }, [user]);
 

@@ -77,14 +77,14 @@ export default function VehicleList() {
 
   function getVehicleAccessories(v: VehicleEntity) {
     return v.accessories?.map((a, i) => (
-        a === VehicleAccessory.OTHER && v.accessory_other ?
+        a == VehicleAccessory.OTHER && v.accessory_other ?
         v.accessory_other : t(`VehicleAccessory.${a}`)
         )
     ).join(',');
   }
 
   function getVehicleType(v: VehicleEntity) {
-    return v.type === VehicleType.OTHER ? v.type_other : t(`VehicleType.${v.type}`);
+    return v.type == VehicleType.OTHER ? v.type_other : t(`VehicleType.${v.type}`);
 
   }
 
@@ -131,7 +131,7 @@ export default function VehicleList() {
           {
             id: "trailer",
             name: "TRAILER",
-            selector: v =>  v.trailer_type === VehicleTrailerType.OTHER ? v.trailer_type_other : (v.trailer_type && t(`VehicleTrailerType.${v.trailer_type}`) || "")
+            selector: v =>  v.trailer_type == VehicleTrailerType.OTHER ? v.trailer_type_other : (v.trailer_type && t(`VehicleTrailerType.${v.trailer_type}`) || "")
           },
           {
             id: "transmission",
