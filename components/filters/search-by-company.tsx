@@ -54,7 +54,7 @@ export default function SearchByCompany(props) {
             <label className={labelClassName || "heading-label my-4"}>
                 {label || t("COMPANY_NAME")}{" "}
             </label>
-            {/* <Select
+            <Select
                 ref={selectInputRef}
                 name="companyId"
                 styles={csutomStyles}
@@ -66,7 +66,7 @@ export default function SearchByCompany(props) {
                 // value={options.find(v => v?.value == filters?.companyId)}
                 defaultValue={filters?.companyId}
                 onChange={(v: any) => setFiltersByKeyValue("companyId", v?.value)}
-            /> */}
+            />
         </>
     );
 }
