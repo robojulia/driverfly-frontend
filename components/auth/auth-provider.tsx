@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useToken } from "../../hooks/use-auth";
 
 import { UserContext } from "../../context/user-context";
-import { UserGuard } from "./user-guard";
+import ErrorBoundary from "../ErrorBoundry";
 import { TranslationProvider } from "./translation-provider";
-import { ManyChatScript } from "../scripts/manychat/manychat";
+import { UserGuard } from "./user-guard";
 
 export interface AuthProviderProps {
     Component: React.ElementType;
@@ -30,10 +30,12 @@ export function AuthProvider(props: AuthProviderProps) {
         <UserContext.Provider value={userContext}>
             <TranslationProvider>
                 <UserGuard permissions={getPermissions}>
-                    <>
-                        {/* {!Boolean(userContext?.user?.id) && <ManyChatScript />} */}
-                        {getLayout(<Component {...pageProps} />)}
-                    </>
+                    <ErrorBoundary>
+                        <>
+                            {/* {!Boolean(userContext?.user?.id) && <ManyChatScript />} */}
+                            {getLayout(<Component {...pageProps} />)}
+                        </>
+                    </ErrorBoundary>
                 </UserGuard>
             </TranslationProvider>
         </UserContext.Provider>
