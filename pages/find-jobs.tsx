@@ -206,7 +206,7 @@ export default function FindJobs(props) {
 								<Sort />
 							</div>
 
-							<JobsList />
+							{/* <JobsList /> */}
 						</div>
 					</div>
 				</div>
