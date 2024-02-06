@@ -27,17 +27,17 @@ export function AuthProvider(props: AuthProviderProps) {
     const getLayout = (Component as any).getLayout || ((page) => page)
 
     return (
-        <UserContext.Provider value={userContext}>
-            <TranslationProvider>
-                <UserGuard permissions={getPermissions}>
-                    <ErrorBoundary>
+        <ErrorBoundary>
+            <UserContext.Provider value={userContext}>
+                <TranslationProvider>
+                    <UserGuard permissions={getPermissions}>
                         <>
                             {/* {!Boolean(userContext?.user?.id) && <ManyChatScript />} */}
                             {getLayout(<Component {...pageProps} />)}
                         </>
-                    </ErrorBoundary>
-                </UserGuard>
-            </TranslationProvider>
-        </UserContext.Provider>
+                    </UserGuard>
+                </TranslationProvider>
+            </UserContext.Provider>
+        </ErrorBoundary>
     );
 }
