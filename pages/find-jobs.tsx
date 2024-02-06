@@ -193,7 +193,7 @@ export default function FindJobs(props) {
 					key="desc"
 				/>
 			</Head>
-			{/* <div className="filter-sec">
+			<div className="filter-sec">
 				<div className="container">
 					<div className="row">
 						<div className="col-12 col-lg-3 lg-mt-0 mt-4">
@@ -210,7 +210,7 @@ export default function FindJobs(props) {
 						</div>
 					</div>
 				</div>
-			</div> */}
+			</div>
 		</JobContext.Provider>
 	);
 }
