@@ -162,64 +162,65 @@ export default function FindJobs(props) {
 	}, []);
 
 	return (
-		<JobContext.Provider
-			value={{
-				state: {
-					jobs,
-					pagingMeta,
-					filters,
-					location,
-					range,
-					searchQuery,
-				},
-				method: {
-					handleChange,
-					setFilters,
-					setLocation,
-					setRange,
-					setFiltersByKeyValue,
-					applyFilters: fetchJobs,
-					setSearchQuery,
-					handleReset,
-					handlePaging: setPagingMeta,
-				},
-			}}
-		>
-			<Head>
-				<title>{t("FIND_JOBS_META_TITLE")}</title>
-				<meta
-					name="description"
-					content={t("FIND_JOBS_META_DESC")}
-					key="desc"
-				/>
-			</Head>
-			<div className="filter-sec">
-				<div className="container">
-					<div className="row">
-						<div className="col-12 col-lg-3 lg-mt-0 mt-4">
-							<FilterResult />
-						</div>
-						<div className="col-md-9 outer pl-4 ">
-							<ResultCount />
+		<h1>Alive</h1>
+		// <JobContext.Provider
+		// 	value={{
+		// 		state: {
+		// 			jobs,
+		// 			pagingMeta,
+		// 			filters,
+		// 			location,
+		// 			range,
+		// 			searchQuery,
+		// 		},
+		// 		method: {
+		// 			handleChange,
+		// 			setFilters,
+		// 			setLocation,
+		// 			setRange,
+		// 			setFiltersByKeyValue,
+		// 			applyFilters: fetchJobs,
+		// 			setSearchQuery,
+		// 			handleReset,
+		// 			handlePaging: setPagingMeta,
+		// 		},
+		// 	}}
+		// >
+		// 	<Head>
+		// 		<title>{t("FIND_JOBS_META_TITLE")}</title>
+		// 		<meta
+		// 			name="description"
+		// 			content={t("FIND_JOBS_META_DESC")}
+		// 			key="desc"
+		// 		/>
+		// 	</Head>
+		// 	<div className="filter-sec">
+		// 		<div className="container">
+		// 			<div className="row">
+		// 				<div className="col-12 col-lg-3 lg-mt-0 mt-4">
+		// 					<FilterResult />
+		// 				</div>
+		// 				<div className="col-md-9 outer pl-4 ">
+		// 					<ResultCount />
 
-							<div className="filter-btn-groups mt-3">
-								<Sort />
-							</div>
+		// 					<div className="filter-btn-groups mt-3">
+		// 						<Sort />
+		// 					</div>
 
-							<JobsList />
-						</div>
-					</div>
-				</div>
-			</div>
-		</JobContext.Provider>
+		// 					<JobsList />
+		// 				</div>
+		// 			</div>
+		// 		</div>
+		// 	</div>
+		// </JobContext.Provider>
 	);
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
 	return {
 		props: {
-			// params: context.query,
-			params: {},
+			params: context.query,
+			// params: {},
 		},
 	};
 }
