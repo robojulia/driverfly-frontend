@@ -25,20 +25,19 @@ export default function SearchByCompany(props) {
     };
 
     useEffectAsync(
-        async () => {
-            // await companyApi
-            //     .keywordSearchQuery()
-            //     .then((data: Partial<CompanyEntity>[]) =>
-            //         setOptions(data?.map((v) => ({ value: v?.id, label: v?.name })) || [])
-            //     )
-            //     .catch((e) => console.error(e.message))
-        },
+        async () =>
+            await companyApi
+                .keywordSearchQuery()
+                .then((data: Partial<CompanyEntity>[]) =>
+                    setOptions(data?.map((v) => ({ value: v?.id, label: v?.name })) || [])
+                )
+                .catch((e) => console.error(e.message)),
         []
     );
 
     const csutomStyles: StylesConfig = {
-        control: (styles: any) => ({ ...styles, backgroundColor: "white" }),
-        option: (styles: any, { data, isDisabled, isFocused, isSelected }) => {
+        control: (styles:any) => ({ ...styles, backgroundColor: "white" }),
+        option: (styles:any, { data, isDisabled, isFocused, isSelected }) => {
             return {
                 ...styles,
                 zIndex: 9999,
@@ -55,7 +54,7 @@ export default function SearchByCompany(props) {
             <label className={labelClassName || "heading-label my-4"}>
                 {label || t("COMPANY_NAME")}{" "}
             </label>
-            <Select
+            {/* <Select
                 ref={selectInputRef}
                 name="companyId"
                 styles={csutomStyles}
@@ -67,7 +66,7 @@ export default function SearchByCompany(props) {
                 // value={options.find(v => v?.value == filters?.companyId)}
                 defaultValue={filters?.companyId}
                 onChange={(v: any) => setFiltersByKeyValue("companyId", v?.value)}
-            />
+            /> */}
         </>
     );
 }
