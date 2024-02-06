@@ -142,7 +142,7 @@ export default function CompanyPreference() {
 				);
 				setPreferences([...preferences, ...data]);
 				populateForm(data);
-				toast.success(t("successfully_saved_information"));
+				toast.success(t("successfully_updated_company_preferences"));
 			} catch (e) {
 				console.error("Unable to save preferences", e);
 				toast.error(t("unable_to_save_information"));
@@ -206,7 +206,7 @@ export default function CompanyPreference() {
 				value: !pref.value,
 			});
 		} else {
-			pref = await api.preferences.create(user?.company?.id, {
+			pref = await api.preferences.create(user?.company?.id, {	
 				category: CompanyPreferenceCategory.AUTO_RECRUITING,
 				label,
 				value: true,
