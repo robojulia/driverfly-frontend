@@ -362,7 +362,7 @@ export default function CompanyPreference() {
 					<BaseCheck
 						className="mt-2 col float-left"
 						name="is_current_employed"
-						disabled={!Boolean(isCompanyAdmin)}
+						// disabled={!Boolean(isCompanyAdmin)}
 						checked={Boolean(
 							preferences?.find(
 								(pref) =>
