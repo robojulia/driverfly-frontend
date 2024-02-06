@@ -55,7 +55,7 @@ export default function SearchByCompany(props) {
                 {label || t("COMPANY_NAME")}{" "}
             </label>
             <Select
-                ref={selectInputRef}
+                // ref={selectInputRef}
                 name="companyId"
                 styles={csutomStyles}
                 className="basic-single"
