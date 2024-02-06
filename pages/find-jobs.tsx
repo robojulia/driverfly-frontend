@@ -136,13 +136,13 @@ export default function FindJobs(props) {
 				});
 			});
 
-			// await jobApi
-			// 	.search({ ...(filters as any) })
-			// 	.then(({ items, meta }: Pagination<JobEntity>) => {
-			// 		console.log({ items, meta, filters });
-			// 		setJobs(items);
-			// 		setPagingMeta(meta);
-			// 	});
+			await jobApi
+				.search({ ...(filters as any) })
+				.then(({ items, meta }: Pagination<JobEntity>) => {
+					console.log({ items, meta, filters });
+					setJobs(items);
+					setPagingMeta(meta);
+				});
 		} catch (e) {
 			console.log("Error", e.message, e);
 			toast.error(t("FIND_JOB_ERROR_GENERAL"));
@@ -218,7 +218,8 @@ export default function FindJobs(props) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
 	return {
 		props: {
-			params: context.query,
+			// params: context.query,
+			params: {},
 		},
 	};
 }
