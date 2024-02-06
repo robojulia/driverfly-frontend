@@ -36,7 +36,7 @@ function MyApp({ Component, pageProps }) {
           Component={Component}
           pageProps={pageProps}
         />
-      </ErrorBoundary>
+      {/* </ErrorBoundary> */}
     </>
   );
 }
