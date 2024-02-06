@@ -1,22 +1,22 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import "react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css";
+import JobContext from "../../context/job-context";
+import { useTranslation } from "../../hooks/use-translation";
 import AreasCovered from "../filters/areas-covered";
 import Category from "../filters/category";
+import PostedDate from "../filters/date-posted";
 import EmploymentType from "../filters/employment-type";
+import Equipment from "../filters/equipment";
+import Range from "../filters/location/range";
+import MinimumYearsExperience from "../filters/minimum-years-experience";
 import MvrRequirement from "../filters/mvr-requirements";
 import PayStructure from "../filters/pay-structure";
-import PostedDate from "../filters/date-posted";
 import Schedule from "../filters/schedule";
 import Search from "../filters/search";
-import Equipment from "../filters/equipment";
+import SearchByCompany from "../filters/search-by-company";
 import SpecialEndorsementsRequired from "../filters/special-endorsements-required";
 import TypeOfDelivery from "../filters/type-of-delivery";
-import Range from "../filters/location/range";
-import { useTranslation } from "../../hooks/use-translation";
-import JobContext from "../../context/job-context";
 import TransmissionType from "../filters/vehicle-transmission-type";
-import MinimumYearsExperience from "../filters/minimum-years-experience";
-import SearchByCompany from "../filters/search-by-company";
 
 export default function FilterResults() {
 	const { t } = useTranslation();
@@ -38,14 +38,14 @@ export default function FilterResults() {
 					</button>
 				</div>
 				<form>
-					<Search state={state} method={method} />
-					< SearchByCompany state={state} method={method} />
+					{/* <Search state={state} method={method} /> */}
+					{/* < SearchByCompany state={state} method={method} /> */}
 					<div className="bs-example">
 						<div className="tab-content">
 							<div className="accordion bg-transparent" id="accordionExample">
 								<Category open={true} state={state} method={method} />
 								<PostedDate open={true} state={state} method={method} />
-								<Range open={true} state={state} method={method} />
+								{/* <Range open={true} state={state} method={method} /> */}
 								<AreasCovered open={true} state={state} method={method} />
 								<PayStructure state={state} method={method} />
 								<TypeOfDelivery state={state} method={method} />
