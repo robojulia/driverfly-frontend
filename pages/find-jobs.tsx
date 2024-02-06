@@ -197,7 +197,7 @@ export default function FindJobs(props) {
 				<div className="container">
 					<div className="row">
 						<div className="col-12 col-lg-3 lg-mt-0 mt-4">
-							<FilterResult />
+							{/* <FilterResult /> */}
 						</div>
 						<div className="col-md-9 outer pl-4 ">
 							<ResultCount />
@@ -206,7 +206,7 @@ export default function FindJobs(props) {
 								<Sort />
 							</div>
 
-							{/* <JobsList /> */}
+							<JobsList />
 						</div>
 					</div>
 				</div>
