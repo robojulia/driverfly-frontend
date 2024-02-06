@@ -56,12 +56,12 @@ export default function SearchByCompany(props) {
             </label>
             <Select
                 // ref={selectInputRef}
-                name="companyId"
-                styles={csutomStyles}
-                className="basic-single"
-                classNamePrefix="select"
-                isClearable={true}
-                isSearchable={true}
+                // name="companyId"
+                // styles={csutomStyles}
+                // className="basic-single"
+                // classNamePrefix="select"
+                // isClearable={true}
+                // isSearchable={true}
                 // options={options}
                 // value={options.find(v => v?.value == filters?.companyId)}
                 // defaultValue={filters?.companyId}
