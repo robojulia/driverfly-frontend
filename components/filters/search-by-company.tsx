@@ -25,19 +25,20 @@ export default function SearchByCompany(props) {
     };
 
     useEffectAsync(
-        async () =>
-            await companyApi
-                .keywordSearchQuery()
-                .then((data: Partial<CompanyEntity>[]) =>
-                    setOptions(data?.map((v) => ({ value: v?.id, label: v?.name })) || [])
-                )
-                .catch((e) => console.error(e.message)),
+        async () => {
+            // await companyApi
+            //     .keywordSearchQuery()
+            //     .then((data: Partial<CompanyEntity>[]) =>
+            //         setOptions(data?.map((v) => ({ value: v?.id, label: v?.name })) || [])
+            //     )
+            //     .catch((e) => console.error(e.message))
+        },
         []
     );
 
     const csutomStyles: StylesConfig = {
-        control: (styles:any) => ({ ...styles, backgroundColor: "white" }),
-        option: (styles:any, { data, isDisabled, isFocused, isSelected }) => {
+        control: (styles: any) => ({ ...styles, backgroundColor: "white" }),
+        option: (styles: any, { data, isDisabled, isFocused, isSelected }) => {
             return {
                 ...styles,
                 zIndex: 9999,
