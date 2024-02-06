@@ -39,13 +39,13 @@ export default function FilterResults() {
 				</div>
 				<form>
 					<Search state={state} method={method} />
-					< SearchByCompany state={state} method={method} />
+					{/* < SearchByCompany state={state} method={method} /> */}
 					<div className="bs-example">
 						<div className="tab-content">
 							<div className="accordion bg-transparent" id="accordionExample">
 								<Category open={true} state={state} method={method} />
 								<PostedDate open={true} state={state} method={method} />
-								{/* <Range open={true} state={state} method={method} /> */}
+								<Range open={true} state={state} method={method} />
 								<AreasCovered open={true} state={state} method={method} />
 								<PayStructure state={state} method={method} />
 								<TypeOfDelivery state={state} method={method} />
