@@ -1008,3 +1008,12 @@ input[type='radio']:checked:after {
   background-color: #00706c8a;
   color: white !important;
 }
+.newletter-btn{
+  height: 38px;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  margin-left: -5px;
+  z-index: 999;
+  border-radius: 0px 5px 5px 0px;
+}
