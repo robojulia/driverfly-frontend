@@ -312,6 +312,7 @@
   "UNRECOGNIZED_DOCUMENT_TYPE": "UNRECOGNIZED DOCUMENT TYPE",
   "DOCUMENT_TYPE": "Document type",
   "successfully_saved_information": "Successfully saved your information",
+  "SUCCESSFULLY_UPDATED_COMPANY_PREFERENCES":"Successfully updated company preferences",
   "EMPLOYEE_DELETED_SUCCESSFULLY": "Employee Deleted Successfully",
   "SUCCESSFULLY_MOVED_TO_PAST": "Moved to Past Employee Successfully",
   "UNABLE_TO_SAVE_INFORMATION": "Unable to save your information",
