@@ -1,4 +1,4 @@
-import React from "react"
+import React, { ErrorInfo } from "react"
 
 class ErrorBoundary extends React.Component<{}, { hasError: boolean }> {
   constructor(props) {
@@ -12,9 +12,9 @@ class ErrorBoundary extends React.Component<{}, { hasError: boolean }> {
 
     return { hasError: true }
   }
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // You can use your own error logging service here
-    console.log({ error, errorInfo })
+    console.log("Error is here ====", error.message, { error, errorInfo })
   }
   render() {
     // Check if the error is thrown
