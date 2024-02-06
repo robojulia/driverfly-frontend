@@ -23,6 +23,7 @@ import { bootstrapInit } from "../config/bootstrap";
 
 import { AuthProvider } from "../components/auth/auth-provider";
 import { ManyChatScript } from "../components/scripts/manychat/manychat";
+import ErrorBoundary from "../components/ErrorBoundry";
 
 function MyApp({ Component, pageProps }) {
 
@@ -31,11 +32,13 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      {/* <ManyChatScript /> */}
-      <AuthProvider
-        Component={Component}
-        pageProps={pageProps}
-      />
+      <ErrorBoundary>
+        {/* <ManyChatScript /> */}
+        <AuthProvider
+          Component={Component}
+          pageProps={pageProps}
+        />
+      </ErrorBoundary>
     </>
   );
 }
