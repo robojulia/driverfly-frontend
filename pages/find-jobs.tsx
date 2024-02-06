@@ -21,7 +21,7 @@ import { Pagination, PagingMeta } from '../types/pagination.type'
 
 export default function FindJobs(props) {
 
-    let { params } = props
+    let { params }: any = {}
 
     const router = useRouter()
     const jobApi = new JobApi()
@@ -97,15 +97,15 @@ export default function FindJobs(props) {
                 })
             }
         })
-        if (params.hasOwnProperty('keywords')) {
-            setSearchQuery(params.keywords)
+        if (params?.hasOwnProperty('keywords')) {
+            setSearchQuery(params?.keywords)
         }
-        if (params.hasOwnProperty('long') && params.hasOwnProperty('lat')) {
+        if (params?.hasOwnProperty('long') && params?.hasOwnProperty('lat')) {
             setFiltersByKeyValue("location", {
-                "place_name": params.place_name,
-                "lat": params.lat,
-                "long": params.long,
-                "range": params.range || 1500
+                "place_name": params?.place_name,
+                "lat": params?.lat,
+                "long": params?.long,
+                "range": params?.range || 1500
             });
         }
         params = {}
@@ -198,13 +198,13 @@ export default function FindJobs(props) {
     )
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-    return {
-        props: {
-            params: context.query
-        }
-    }
-}
+// export async function getServerSideProps(context: GetServerSidePropsContext) {
+//     return {
+//         props: {
+//             params: context.query
+//         }
+//     }
+// }
 
 FindJobs.getLayout = function getLayout(page) {
     return (
