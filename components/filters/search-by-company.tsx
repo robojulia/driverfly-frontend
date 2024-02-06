@@ -62,10 +62,10 @@ export default function SearchByCompany(props) {
                 classNamePrefix="select"
                 isClearable={true}
                 isSearchable={true}
-                options={options}
+                // options={options}
                 // value={options.find(v => v?.value == filters?.companyId)}
-                defaultValue={filters?.companyId}
-                onChange={(v: any) => setFiltersByKeyValue("companyId", v?.value)}
+                // defaultValue={filters?.companyId}
+                // onChange={(v: any) => setFiltersByKeyValue("companyId", v?.value)}
             />
         </>
     );
