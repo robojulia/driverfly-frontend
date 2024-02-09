@@ -33,7 +33,7 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
 
     const { t } = useTranslation();
     const [encourageModal, setEncourageModal] = React.useState(false)
-    const { user } = useAuth();
+    const { user, isCompanyAdmin } = useAuth();
 
     return (
         <section className="top-links-sec ort-general p-3 vehicle-img">
@@ -88,8 +88,8 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                         </div>
                     </Col>
                     <Col md={3}>
-                        {canApply && <JobApply setEncourageModal={setEncourageModal} job={job} />}
-                        {canSave && <SaveJob job={job} />}
+                        {!isCompanyAdmin && canApply && <JobApply setEncourageModal={setEncourageModal} job={job} />}
+                        {!isCompanyAdmin && canSave && <SaveJob job={job} />}
                     </Col>
                 </Row>
             </Container>
