@@ -1391,6 +1391,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										formik={form}
 									/>
 								)}
+								<BaseInput
+									className="col my-3"
+									readOnly={Boolean(entity?.is_hired)}
+									label="voilations_in_last_3_years"
+									name="moving_violations_count"
+									type="number"
+									step={1}
+									min={0}
+									placeholder="PLACEHOLDER_FOR_DIGITS"
+									formik={form}
+								/>
 							</Col>
 							<Col md="6">
 								<Row>
