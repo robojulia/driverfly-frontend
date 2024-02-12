@@ -42,7 +42,7 @@ export default function Sidebar(props: SidebarProps) {
     items = filterItems(items, hasPermission);
 
     let current = findLast(items, v => IsSelected(v, router.asPath));
-
+    if(current == null) router.back();
     if (!current) current = items[0];
 
     return (<>

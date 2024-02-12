@@ -39,7 +39,7 @@ const FullLayout = ({ children }) => {
 	const { t } = useTranslation();
 	const router = useRouter()
 
-	const { user, isSuperAdmin, isCompanyAdmin } = useAuth();
+	const { user, isSuperAdmin, company, isCompanyAdmin } = useAuth();
 
 	console.log("FullLayout", { user, isSuperAdmin, isCompanyAdmin })
 
@@ -115,8 +115,7 @@ const FullLayout = ({ children }) => {
 					text: "COMPANIES",
 					permissions: "CanViewCompany",
 					startsWith: true,
-					visible: isCompanyAdmin,
-
+					visible: isCompanyAdmin && Boolean(!company?.parent),
 				},
 				{
 					pathname: "/dashboard/company/settings/users",

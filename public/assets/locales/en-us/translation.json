@@ -151,7 +151,8 @@
     "WEEKENDS_OFF": "Weekends off",
     "HOME_EVERY_NIGHT": "Home every night",
     "HOME_EVERY_OTHER_NIGHT": "Home every other night",
-    "NIGHT_SHIFT": "Night shift"
+    "NIGHT_SHIFT": "Night shift",
+    "OPEN_TO_NEGOTIATE": "Open to neggotiate"
   },
   "OtherRequirementType": {
     "HEALTH_BENEFITS": "Health Benefits",
