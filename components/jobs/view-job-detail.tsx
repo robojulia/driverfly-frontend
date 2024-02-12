@@ -69,8 +69,8 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                                         {
                                             (!!!hideCompanyName && job.company?.name) &&
                                             <>
-                                                {t('BY')} <Link href={`/employer/${job.company?.id}`}>
-                                                    <span role="button" className="employer text-theme">{job.company?.name}</span>
+                                                {t('BY')} <Link href={`/employer/${job?.company?.uuid_token}`}>
+                                                    <span role="button" className="employer text-theme">{job?.company?.name}</span>
                                                 </Link>
                                             </>
                                         }
