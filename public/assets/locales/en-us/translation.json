@@ -275,10 +275,10 @@
     "M": "M (only Class B and C passenger vehicle or school bus)",
     "N": "N (only Class C passenger vehicle or school bus)",
     "V": "V (medical variance)",
-    "OTHER":"Other"
+    "OTHER": "Other"
   },
-  "OTHER_LICENSE_RESTRICTIONS":"Other Restrictions",
-  "OTHER_ENDORSEMENTS":"Other Endorsements",
+  "OTHER_LICENSE_RESTRICTIONS": "Other Restrictions",
+  "OTHER_ENDORSEMENTS": "Other Endorsements",
   "BooleanType": {
     "YES": "Yes",
     "NO": "No"
@@ -312,7 +312,7 @@
   "UNRECOGNIZED_DOCUMENT_TYPE": "UNRECOGNIZED DOCUMENT TYPE",
   "DOCUMENT_TYPE": "Document type",
   "successfully_saved_information": "Successfully saved your information",
-  "SUCCESSFULLY_UPDATED_COMPANY_PREFERENCES":"Successfully updated company preferences",
+  "SUCCESSFULLY_UPDATED_COMPANY_PREFERENCES": "Successfully updated company preferences",
   "EMPLOYEE_DELETED_SUCCESSFULLY": "Employee Deleted Successfully",
   "SUCCESSFULLY_MOVED_TO_PAST": "Moved to Past Employee Successfully",
   "UNABLE_TO_SAVE_INFORMATION": "Unable to save your information",
@@ -358,6 +358,7 @@
   "HAS_DUIS": "Has DUIs",
   "has_past_duis": "Do you have past DUI's?",
   "years_of_past_duis": "Years of past DUI's",
+  "NOT_VALID_YEAR": "Please enter valid Year",
   "criminal_history_last_3_years": "Criminal history in last 3 years",
   "MAX_MOVING_VIOLATIONS": "Maximum moving violations",
   "MIN_MOVING_VIOLATIONS": "Minimum moving violations",
@@ -538,7 +539,7 @@
     "DOUBLES_TRIPLES": "Doubles/Triples",
     "SCHOOL_BUS": "School Bus",
     "TWIC": "TWIC",
-    "OTHER":"Other"
+    "OTHER": "Other"
   },
   "hazmat": "Hazmat",
   "tankers": "Tankers",
@@ -633,7 +634,7 @@
   "drivers_needed": "Drivers Needed",
   "JOB_LISTINGS": "Job Listings",
   "APPLICANT": "Applicant",
-  "DISPATCH_FILES_TO":" Dispatch files to...",
+  "DISPATCH_FILES_TO": " Dispatch files to...",
   "IS_MMEMBER": "Is Member",
   "MMEMBER": "Member",
   "NON_MMEMBER": "Non Member",
@@ -1891,8 +1892,8 @@
   "BASIC_QUESTIONAIRE": "Basic Questionaire",
   "Authorize_to_Communicate": "Authorize to communicate",
   "NOT_AUTHORIZED_TO_COMMUNICATE": "You are not authorize to communicate by applicant",
-  "REQUESTING_OR_UPLOADING_NOT_AUTHORIZED_TO_COMMUNICATE":"Requesting or uploading a verification of employment request requires applicant’s authorization and the toggle switched to “On” under the Past Employer section of this profile.",
-  "ADD_DOCUMENT":"Add Document",
+  "REQUESTING_OR_UPLOADING_NOT_AUTHORIZED_TO_COMMUNICATE": "Requesting or uploading a verification of employment request requires applicant’s authorization and the toggle switched to “On” under the Past Employer section of this profile.",
+  "ADD_DOCUMENT": "Add Document",
   "AUTHORIZED_TO_COMMUNICATE": "Authorize to communicate",
   "RESEND_VOE": "Resend VOE Email",
   "RESEND_VOE_SUCCESSFULL": "Request for VOE sent successfully",
