@@ -88,8 +88,8 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                         </div>
                     </Col>
                     <Col md={3}>
-                        {!company.id && canApply && <JobApply setEncourageModal={setEncourageModal} job={job} />}
-                        {!company.id && canSave && <SaveJob job={job} />}
+                        {!company?.id && canApply && <JobApply setEncourageModal={setEncourageModal} job={job} />}
+                        {!company?.id && canSave && <SaveJob job={job} />}
                     </Col>
                 </Row>
             </Container>
