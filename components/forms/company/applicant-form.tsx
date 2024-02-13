@@ -65,6 +65,7 @@ import { ReferralSourceForm } from "../admin/referral-source-form";
 import { JobForm } from "./job-form";
 import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
 import { LicenseRestrictions } from "../../../enums/applicants/applicant-license-restrictions-type.enum";
+import ViewTable from "../../view-details/view-table";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
@@ -336,6 +337,14 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				}),
 			});
 	}, [isWorkedBefore]);
+
+
+	const accident_details = form.values?.extras?.find(
+		(ex) => ex?.type == ApplicantExtras.ACCIDENT_DETAILS
+	);
+	const violation_details = form.values?.extras?.find(
+		(ex) => ex?.type == ApplicantExtras.VIOLATION_DETAILS
+	);
 
 	return (
 		<EntityForm
@@ -1383,13 +1392,43 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									formik={form}
 								/>
 								{form.values?.accident_count > 0 && (
-									<BaseTextArea
-										className="col-12 mt-2"
-										readOnly={Boolean(entity?.is_hired)}
-										label="accident_details"
-										name="accident_details"
-										formik={form}
-									/>
+
+									<div className="col-12 mt-2">
+										<ViewCard title="ACCIDENT_DEAILS">
+											<ViewTable
+												type="ACCIDENT_DEAILS"
+												headers={{
+													at_fault: "at_fault",
+													date_of_accident: "date_of_accident",
+													dot_recordable: "dot_recordable",
+													location_of_accident: "location_of_accident",
+													nature_of_accident: "nature_of_accident",
+													number_of_fatalaties: "number_of_fatalaties",
+													number_of_injured: "number_of_injured",
+												}}
+												items={accident_details?.value?.map((a) => ({
+													at_fault: !!a?.at_fault ? `${t("YES")}` : `${t("NO")}`,
+													date_of_accident: a?.date_of_accident,
+													dot_recordable: !!a?.dot_recordable
+														? `${t("YES")}`
+														: `${t("NO")}`,
+													location_of_accident: a?.location_of_accident,
+													nature_of_accident: a?.nature_of_accident,
+													number_of_fatalaties: a?.number_of_fatalaties,
+													number_of_injured: a?.number_of_injured,
+												}))}
+											/>
+										</ViewCard>
+									</div>
+
+
+									// <BaseTextArea
+									// 	className="col-12 mt-2"
+									// 	readOnly={Boolean(entity?.is_hired)}
+									// 	label="accident_details"
+									// 	name="accident_details"
+									// 	formik={form}
+									// />
 								)}
 								<BaseInput
 									className="col my-3"
@@ -1402,6 +1441,28 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									placeholder="PLACEHOLDER_FOR_DIGITS"
 									formik={form}
 								/>
+								{
+									form.values?.moving_violations_count > 0 &&
+									<div className="col-12 mt-2">
+										<ViewCard title="VIOLATION_DETAILS">
+											<ViewTable
+												type="VIOLATION_DETAILS"
+												headers={{
+													charge: "charge",
+													date_of_violation: "DATE",
+													location: "location",
+													penalty: "penalty",
+												}}
+												items={violation_details?.value.map((v) => ({
+													charge: v?.charge,
+													date_of_violation: v?.date_of_violation,
+													location: v?.location,
+													penalty: v?.penalty,
+												}))}
+											/>
+										</ViewCard>
+									</div>
+								}
 							</Col>
 							<Col md="6">
 								<Row>
