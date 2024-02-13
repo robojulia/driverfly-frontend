@@ -209,16 +209,19 @@ const ImportApplicants = () => {
     }
 
     function validateFileContent(results): void {
-        const {
+        let {
             data,
             errors,
             meta: { fields },
         } = results;
         console.log("results", { data, errors, fields });
-        if (errors?.length) setCsvErrors(errors);
 
         const contents = data?.map((row, i) => {
             const entity = new ApplicantEntity();
+            if (!Object.values(row)?.some(Boolean)) {
+                errors = errors.filter(v => v.row != i)
+                return false;
+            }
 
             Object.entries(row)
                 ?.map(([key, value]: [string, any]) => {
@@ -321,7 +324,8 @@ const ImportApplicants = () => {
                 })
                 ?.filter(Boolean);
             return entity;
-        });
+        })?.filter(Boolean);
+        if (errors?.length) setCsvErrors(errors);
         form?.setValues({ items: contents }, true);
     }
 
@@ -431,8 +435,8 @@ const ImportApplicants = () => {
                     <br />
                     {Boolean(csvErrors.length) && (
                         <div className="text-warning" style={{ float: "left" }}>
-                            {csvErrors.map((error) => (
-                                <div className="text-bold small">
+                            {csvErrors.map((error, i) => (
+                                <div key={i} className="text-bold small">
                                     {error.message} at row {error.row + 1}
                                 </div>
                             ))}
