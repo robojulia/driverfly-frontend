@@ -216,115 +216,125 @@ const ImportApplicants = () => {
         } = results;
         console.log("results", { data, errors, fields });
 
-        const contents = data?.map((row, i) => {
-            const entity = new ApplicantEntity();
-            if (!Object.values(row)?.some(Boolean)) {
-                errors = errors.filter(v => v.row != i)
-                return false;
-            }
+        const contents = data
+            ?.map((row, i) => {
+                const entity = new ApplicantEntity();
+                if (!Object.values(row)?.some(Boolean)) {
+                    errors = errors.filter((v) => v.row != i);
+                    return false;
+                }
 
-            Object.entries(row)
-                ?.map(([key, value]: [string, any]) => {
-                    const fieldSchema = schemaDescribe.fields[key];
-                    if (!fieldSchema) return;
+                Object.entries(row)
+                    ?.map(([key, value]: [string, any]) => {
+                        const fieldSchema = schemaDescribe.fields[key];
+                        if (!fieldSchema) return;
 
-                    switch (fieldSchema?.type) {
-                        case "boolean":
-                            entity[key] =
-                                value.trim().toLowerCase().startsWith("y") ||
-                                value.toLowerCase().startsWith("t");
-                            break;
-                        case "array":
-                            entity[key] = value
-                                .split(",")
-                                ?.map((v) => v.trim())
-                                .filter((v) => !!v);
-                            break;
-                        default:
-                            entity[key] = value.trim();
-                    }
+                        switch (fieldSchema?.type) {
+                            case "boolean":
+                                entity[key] =
+                                    value.trim().toLowerCase().startsWith("y") ||
+                                    value.toLowerCase().startsWith("t");
+                                break;
+                            case "array":
+                                entity[key] = value
+                                    .split(",")
+                                    ?.map((v) => v.trim())
+                                    .filter((v) => !!v);
+                                break;
+                            default:
+                                entity[key] = value.trim();
+                        }
 
-                    switch (key) {
-                        case "license_restrictions":
-                            entity.license_restrictions = entity.license_restrictions
-                                .map((v, i, self) => {
-                                    if (!Object.values(LicenseRestrictions).includes(v)) {
-                                        entity.license_restrictions_other =
-                                            v + ", " + (entity.license_restrictions_other || "");
-                                        return LicenseRestrictions.OTHER;
-                                    }
-                                    return matchEnum(
+                        switch (key) {
+                            case "license_restrictions":
+                                entity.license_restrictions = entity.license_restrictions
+                                    .map((v, i, self) => {
+                                        if (!Object.values(LicenseRestrictions).includes(v)) {
+                                            entity.license_restrictions_other =
+                                                v + ", " + (entity.license_restrictions_other || "");
+                                            return LicenseRestrictions.OTHER;
+                                        }
+                                        return matchEnum(
+                                            v,
+                                            LicenseRestrictions,
+                                            "LicenseRestrictions",
+                                            t
+                                        );
+                                    })
+                                    ?.filter((v, i, self) => Boolean(v) && self.indexOf(v) == i);
+                                break;
+                            case "transmission_type":
+                                entity.transmission_type = entity.transmission_type.map((v) =>
+                                    matchEnum(
                                         v,
-                                        LicenseRestrictions,
-                                        "LicenseRestrictions",
+                                        VehicleTransmissionType,
+                                        "VehicleTransmissionType",
                                         t
-                                    );
-                                })
-                                ?.filter((v, i, self) => Boolean(v) && self.indexOf(v) == i);
-                            break;
-                        case "transmission_type":
-                            entity.transmission_type = entity.transmission_type.map((v) =>
-                                matchEnum(
-                                    v,
-                                    VehicleTransmissionType,
-                                    "VehicleTransmissionType",
+                                    )
+                                );
+                                break;
+                            case "endorsements":
+                                entity.endorsements = entity.endorsements
+                                    .map((v) => {
+                                        if (!Object.values(DriverEndorsement).includes(v)) {
+                                            entity.endorsements_other =
+                                                v + ", " + (entity.endorsements_other || "");
+                                            return DriverEndorsement.OTHER;
+                                        }
+                                        return matchEnum(
+                                            v,
+                                            DriverEndorsement,
+                                            "DriverEndorsement",
+                                            t
+                                        );
+                                    })
+                                    ?.filter((v, i, self) => Boolean(v) && self.indexOf(v) == i);
+                                break;
+                            case "highest_degree":
+                                entity.highest_degree = matchEnum(
+                                    entity.highest_degree,
+                                    EducationLevel,
+                                    "EducationLevel",
                                     t
-                                )
-                            );
-                            break;
-                        case "endorsements":
-                            entity.endorsements = entity.endorsements
-                                .map((v) => {
-                                    if (!Object.values(DriverEndorsement).includes(v)) {
-                                        entity.endorsements_other =
-                                            v + ", " + (entity.endorsements_other || "");
-                                        return DriverEndorsement.OTHER;
+                                );
+                                break;
+                            case "license_type":
+                                entity.license_type = matchEnum(
+                                    entity.license_type,
+                                    DriverLicenseType,
+                                    "DriverLicenseType",
+                                    t
+                                );
+                                break;
+                            case "equipment_experience":
+                                entity.equipment_experience = entity.equipment_experience.map(
+                                    (v) => {
+                                        const equipmentExperienceObject =
+                                            new ApplicantExperienceEntity();
+                                        equipmentExperienceObject.type = matchEnum(
+                                            v.toString(),
+                                            JobEquipmentType,
+                                            "JobEquipmentType",
+                                            t
+                                        );
+                                        return equipmentExperienceObject;
                                     }
-                                    return matchEnum(
-                                        v,
-                                        DriverEndorsement,
-                                        "DriverEndorsement",
-                                        t
-                                    );
-                                })
-                                ?.filter((v, i, self) => Boolean(v) && self.indexOf(v) == i);
-                            break;
-                        case "highest_degree":
-                            entity.highest_degree = matchEnum(
-                                entity.highest_degree,
-                                EducationLevel,
-                                "EducationLevel",
-                                t
-                            );
-                            break;
-                        case "license_type":
-                            entity.license_type = matchEnum(
-                                entity.license_type,
-                                DriverLicenseType,
-                                "DriverLicenseType",
-                                t
-                            );
-                            break;
-                        case "equipment_experience":
-                            entity.equipment_experience = entity.equipment_experience.map(
-                                (v) => {
-                                    const equipmentExperienceObject =
-                                        new ApplicantExperienceEntity();
-                                    equipmentExperienceObject.type = matchEnum(
-                                        v.toString(),
-                                        JobEquipmentType,
-                                        "JobEquipmentType",
-                                        t
-                                    );
-                                    return equipmentExperienceObject;
-                                }
-                            );
-                            break;
-                    }
-                })
-                ?.filter(Boolean);
-            return entity;
-        })?.filter(Boolean);
+                                );
+                                break;
+                        }
+                    })
+                    ?.filter(Boolean);
+
+                if (!entity.license_revoked) entity.license_revoked_details = "";
+                if (!entity.psp_violations) delete entity.psp_violations_details;
+                if (!entity.tickets) entity.tickets_details = "";
+                if (!entity.positive_drug_test) entity.positive_drug_test_details = "";
+                if (!entity.infractions) entity.infractions_details = "";
+                if (!entity.moving_violations) entity.moving_violations_details = "";
+
+                return entity;
+            })
+            ?.filter(Boolean);
         if (errors?.length) setCsvErrors(errors);
         form?.setValues({ items: contents }, true);
     }
