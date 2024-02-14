@@ -246,6 +246,9 @@ const ImportEmployees = () => {
                                     ?.map((v) => v.trim())
                                     .filter((v) => !!v);
                                 break;
+                            case "number":
+                                entity[key] = value != "" ? Number(value) : null;
+                                break;
                             default:
                                 entity[key] = value.trim();
                         }

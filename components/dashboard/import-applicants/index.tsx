@@ -1,3 +1,4 @@
+"use client";
 import { useFormik } from "formik";
 import Papa from "papaparse";
 import { useState } from "react";
@@ -297,19 +298,21 @@ const ImportApplicants = () => {
                                 );
                                 break;
                             case "equipment_experience":
-                                entity.equipment_experience = entity.equipment_experience.map(
-                                    (v) => {
-                                        const equipmentExperienceObject =
-                                            new ApplicantExperienceEntity();
-                                        equipmentExperienceObject.type = matchEnum(
-                                            v.toString(),
-                                            JobEquipmentType,
-                                            "JobEquipmentType",
-                                            t
-                                        );
-                                        return equipmentExperienceObject;
-                                    }
-                                )?.filter((v, i, self) => (Boolean(v) && self.indexOf(v) == i));
+                                entity.equipment_experience = entity.equipment_experience
+                                    ?.filter((v, i, self) => (Boolean(v) && self.indexOf(v) == i))
+                                    ?.map(
+                                        (v) => {
+                                            const equipmentExperienceObject =
+                                                new ApplicantExperienceEntity();
+                                            equipmentExperienceObject.type = matchEnum(
+                                                v.toString(),
+                                                JobEquipmentType,
+                                                "JobEquipmentType",
+                                                t
+                                            );
+                                            return equipmentExperienceObject;
+                                        }
+                                    )
                                 break;
                         }
                     })
