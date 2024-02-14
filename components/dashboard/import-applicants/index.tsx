@@ -309,7 +309,7 @@ const ImportApplicants = () => {
                                         );
                                         return equipmentExperienceObject;
                                     }
-                                );
+                                )?.filter((v, i, self) => (Boolean(v) && self.indexOf(v) == i));
                                 break;
                         }
                     })
