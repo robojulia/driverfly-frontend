@@ -224,7 +224,7 @@ export class ApplicantEntity {
 			first_name: yup.string().required().nullable().trim(),
 			last_name: yup.string().required().nullable().trim(),
 			phone: yup.string().nullable(),
-			email: yup.string().email().optional().nullable(),
+			email: yup.string().email().required().nullable(),
 			birthdate: yup.date().nullable(),
 			street: yup.string().nullable(),
 			city: yup.string().nullable(),
