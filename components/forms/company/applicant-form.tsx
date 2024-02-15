@@ -1402,6 +1402,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									placeholder="PLACEHOLDER_FOR_DIGITS"
 									formik={form}
 								/>
+								{form.values?.moving_violations_count > 0 && (
+									<BaseTextArea
+										className="col-12 mt-2"
+										readOnly={Boolean(entity?.is_hired)}
+										label="MOVING_VIOLATIONS_DETAILS"
+										name="moving_violations_details"
+										formik={form}
+									/>
+								)}
 							</Col>
 							<Col md="6">
 								<Row>

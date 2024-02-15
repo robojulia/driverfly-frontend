@@ -84,6 +84,16 @@ const ImportApplicants = () => {
             for (let i = 0; i < values.items?.length; i++) {
                 const applicant = values.items[i];
 
+                if (
+                    applicant.phone?.length > 3 &&
+                    !applicant.phone.startsWith("+1")
+                ) { applicant.phone = "+1 " + applicant.phone; }
+
+                if (
+                    applicant.emergency_contact_number?.length > 3 &&
+                    !applicant.emergency_contact_number.startsWith("+1")
+                ) { applicant.emergency_contact_number = "+1 " + applicant.emergency_contact_number; }
+
                 if (applicant.email) {
                     const rowError: { email?: string; phone?: string } = {};
                     const matches = await api.list({ email: applicant.email });
@@ -102,12 +112,6 @@ const ImportApplicants = () => {
                         );
 
                     if (applicant.phone) {
-                        if (
-                            applicant.phone?.length > 3 &&
-                            !applicant.phone.startsWith("+1")
-                        )
-                            applicant.phone = "+1 " + applicant.phone;
-
                         if (matches.some((v) => v.company?.id != null))
                             rowError.phone = t(
                                 "{name}_ALREADY_EXISTS",
@@ -304,12 +308,14 @@ const ImportApplicants = () => {
                                 );
                                 break;
                             case "license_type":
-                                entity.license_type = matchEnum(
-                                    entity.license_type,
-                                    DriverLicenseType,
-                                    "DriverLicenseType",
-                                    t
-                                );
+                                entity.license_type = !entity.license_type
+                                    ? DriverLicenseType.NO_CDL
+                                    : matchEnum(
+                                        entity.license_type,
+                                        DriverLicenseType,
+                                        "DriverLicenseType",
+                                        t
+                                    );
                                 break;
                             case "equipment_experience":
                                 entity.equipment_experience = entity.equipment_experience
