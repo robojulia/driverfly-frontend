@@ -10,7 +10,7 @@ export function matchEnum(str: string, enumObj: any, labelPrefix: string, t: Tra
         const translated = t(`${labelPrefix}.${key}`).toLowerCase();
         if (search == translated) return true;
 
-        if (translated.includes(search)) return true;
+        // if (translated.includes(search)) return true;
     });
 
     if (found) return found[1];
