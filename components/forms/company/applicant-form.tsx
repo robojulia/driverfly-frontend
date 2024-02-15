@@ -1442,7 +1442,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											className="col-12 mt-2"
 											readOnly={Boolean(entity?.is_hired)}
 											label="details"
-											name="violations_details"
+											name="psp_violations_details"
 											formik={form}
 										/>
 									)}
