@@ -38,6 +38,9 @@ import { FormikInterface } from "../../../utils/formik";
 import Switch from "../../controls/switch";
 import OverlyPopover from "../../popover/overly-popover";
 
+function unique<T>(value: T, index: number, self: T[]) {
+    return (Boolean(value) && self.indexOf(value) == index)
+}
 const ImportApplicants = () => {
     const style: any = _style;
 
@@ -232,6 +235,12 @@ const ImportApplicants = () => {
                                     ?.map((v) => v.trim())
                                     .filter((v) => !!v);
                                 break;
+                            case "number":
+                                entity[key] = value != "" ? Number(value) : null;
+                                break;
+                            case "date":
+                                entity[key] = value != "" ? (value) : null;
+                                break;
                             default:
                                 entity[key] = value.trim();
                         }
@@ -239,7 +248,8 @@ const ImportApplicants = () => {
                         switch (key) {
                             case "license_restrictions":
                                 entity.license_restrictions = entity.license_restrictions
-                                    .map((v, i, self) => {
+                                    ?.filter(unique)
+                                    ?.map((v, i, self) => {
                                         if (!Object.values(LicenseRestrictions).includes(v)) {
                                             entity.license_restrictions_other =
                                                 v + ", " + (entity.license_restrictions_other || "");
@@ -252,21 +262,25 @@ const ImportApplicants = () => {
                                             t
                                         );
                                     })
-                                    ?.filter((v, i, self) => Boolean(v) && self.indexOf(v) == i);
+                                    ?.filter(unique);
                                 break;
                             case "transmission_type":
-                                entity.transmission_type = entity.transmission_type.map((v) =>
-                                    matchEnum(
-                                        v,
-                                        VehicleTransmissionType,
-                                        "VehicleTransmissionType",
-                                        t
+                                entity.transmission_type = entity.transmission_type
+                                    ?.filter(unique)
+                                    ?.map((v) =>
+                                        matchEnum(
+                                            v,
+                                            VehicleTransmissionType,
+                                            "VehicleTransmissionType",
+                                            t
+                                        )
                                     )
-                                );
+                                    ?.filter(unique);
                                 break;
                             case "endorsements":
                                 entity.endorsements = entity.endorsements
-                                    .map((v) => {
+                                    ?.filter(unique)
+                                    ?.map((v) => {
                                         if (!Object.values(DriverEndorsement).includes(v)) {
                                             entity.endorsements_other =
                                                 v + ", " + (entity.endorsements_other || "");
@@ -279,7 +293,7 @@ const ImportApplicants = () => {
                                             t
                                         );
                                     })
-                                    ?.filter((v, i, self) => Boolean(v) && self.indexOf(v) == i);
+                                    ?.filter(unique);
                                 break;
                             case "highest_degree":
                                 entity.highest_degree = matchEnum(
@@ -299,20 +313,26 @@ const ImportApplicants = () => {
                                 break;
                             case "equipment_experience":
                                 entity.equipment_experience = entity.equipment_experience
-                                    ?.filter((v, i, self) => (Boolean(v) && self.indexOf(v) == i))
+                                    ?.filter(unique)
                                     ?.map(
                                         (v) => {
-                                            const equipmentExperienceObject =
-                                                new ApplicantExperienceEntity();
-                                            equipmentExperienceObject.type = matchEnum(
-                                                v.toString(),
-                                                JobEquipmentType,
-                                                "JobEquipmentType",
-                                                t
-                                            );
+                                            const equipmentExperienceObject = new ApplicantExperienceEntity();
+                                            if (!Object.values(JobEquipmentType).includes(v.toString() as JobEquipmentType)) {
+                                                equipmentExperienceObject.type_other =
+                                                    v + ", " + (equipmentExperienceObject.type_other || "");
+                                                equipmentExperienceObject.type = JobEquipmentType.OTHER;
+                                            } else {
+                                                equipmentExperienceObject.type = matchEnum(
+                                                    v.toString(),
+                                                    JobEquipmentType,
+                                                    "JobEquipmentType",
+                                                    t
+                                                );
+                                            }
                                             return equipmentExperienceObject;
                                         }
                                     )
+                                    ?.filter(unique);
                                 break;
                         }
                     })

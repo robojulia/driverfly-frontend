@@ -312,7 +312,7 @@ export class ApplicantEntity {
 			positive_drug_test: yup.bool().nullable(),
 			positive_drug_test_details: yup.string().nullable(),
 			equipment_experience: (
-				yup.array(ApplicantExperienceEntity.yupSchema()) as any
+				yup.array(ApplicantExperienceEntity.yupSchemaForImport()) as any
 			).unique("type", { mapper: ApplicantExperienceEntity.key }),
 			equipment_owned: (
 				yup.array(ApplicantEquipmentEntity.yupSchema()) as any
