@@ -1,7 +1,7 @@
-import Papa from "papaparse";
-
+"use client";
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import Papa from "papaparse";
+import { useState } from "react";
 import {
     Col,
     Dropdown,
@@ -21,7 +21,6 @@ import * as yup from "yup";
 import { SchemaDescription, SchemaObjectDescription } from "yup/lib/schema";
 import { LicenseRestrictions } from "../../../enums/applicants/applicant-license-restrictions-type.enum";
 import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
-import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
 import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
 import { EducationLevel } from "../../../enums/users/education-level.enum";
@@ -35,7 +34,6 @@ import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import ApplicantApi from "../../../pages/api/applicant";
 import * as _style from "../../../public/components/styles/ImportApplicantsModule.module.css";
 import { matchEnum } from "../../../utils/enums.utils";
-import * as fileUtils from "../../../utils/file";
 import { FormikInterface } from "../../../utils/formik";
 import Switch from "../../controls/switch";
 import OverlyPopover from "../../popover/overly-popover";
@@ -77,13 +75,6 @@ const ImportApplicants = () => {
             ),
         }),
         validate: async (values) => {
-            // values.items = values?.items?.filter(
-            //     (v) =>
-            //         Boolean(v.email) ||
-            //         Boolean(v.first_name) ||
-            //         Boolean(v.last_name) ||
-            //         Boolean(v.phone)
-            // );
             const errors = {};
 
             let lastProgress = 0;
@@ -307,19 +298,21 @@ const ImportApplicants = () => {
                                 );
                                 break;
                             case "equipment_experience":
-                                entity.equipment_experience = entity.equipment_experience.map(
-                                    (v) => {
-                                        const equipmentExperienceObject =
-                                            new ApplicantExperienceEntity();
-                                        equipmentExperienceObject.type = matchEnum(
-                                            v.toString(),
-                                            JobEquipmentType,
-                                            "JobEquipmentType",
-                                            t
-                                        );
-                                        return equipmentExperienceObject;
-                                    }
-                                );
+                                entity.equipment_experience = entity.equipment_experience
+                                    ?.filter((v, i, self) => (Boolean(v) && self.indexOf(v) == i))
+                                    ?.map(
+                                        (v) => {
+                                            const equipmentExperienceObject =
+                                                new ApplicantExperienceEntity();
+                                            equipmentExperienceObject.type = matchEnum(
+                                                v.toString(),
+                                                JobEquipmentType,
+                                                "JobEquipmentType",
+                                                t
+                                            );
+                                            return equipmentExperienceObject;
+                                        }
+                                    )
                                 break;
                         }
                     })

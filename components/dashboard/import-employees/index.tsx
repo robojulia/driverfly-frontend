@@ -1,7 +1,20 @@
 import { useFormik } from "formik";
+import Papa from "papaparse";
 import { useState } from "react";
-import { Col, Dropdown, InputGroup, ProgressBar, Row, Table } from "react-bootstrap";
-import { Check, CheckCircle, ExclamationTriangle, XCircle } from "react-bootstrap-icons";
+import {
+    Col,
+    Dropdown,
+    InputGroup,
+    ProgressBar,
+    Row,
+    Table,
+} from "react-bootstrap";
+import {
+    Check,
+    CheckCircle,
+    ExclamationTriangle,
+    XCircle,
+} from "react-bootstrap-icons";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 import { SchemaDescription, SchemaObjectDescription } from "yup/lib/schema";
@@ -12,7 +25,10 @@ import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum"
 import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
 import { EducationLevel } from "../../../enums/users/education-level.enum";
 import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
-import { TranslateInterface, useTranslation } from '../../../hooks/use-translation';
+import {
+    TranslateInterface,
+    useTranslation,
+} from "../../../hooks/use-translation";
 import { EmployeeExperienceEntity } from "../../../models/employee/employee-experience.entity";
 import { EmployeeEntity } from "../../../models/employee/employee.entity";
 import EmployeeApi from "../../../pages/api/employee";
@@ -20,7 +36,6 @@ import * as _style from "../../../public/components/styles/ImportApplicantsModul
 import { matchEnum } from "../../../utils/enums.utils";
 import * as fileUtils from "../../../utils/file";
 import { FormikInterface } from "../../../utils/formik";
-
 
 const ImportEmployees = () => {
     const style: any = _style;
@@ -32,6 +47,7 @@ const ImportEmployees = () => {
     const schemaDescribe = schema.describe();
 
     const [warnings, setWarnings] = useState({});
+    const [csvErrors, setCsvErrors] = useState([]);
 
     const api = new EmployeeApi();
     /**
@@ -40,22 +56,24 @@ const ImportEmployees = () => {
     const initialValues = [];
     const form = useFormik({
         initialValues: {
-            items: initialValues
+            items: initialValues,
         },
         validationSchema: yup.object({
-            items: (yup
-                .array(schema)
-                .min(1, t("PLEASE_UPLOAD_A_FILE_WITH_AT_LEAST_ONE_ROW")) as any)
-                .unique(t("{name}_must_be_unique_in_list", { name: "EMAIL" }, { translateProps: true }), "email", v => v.email),
+            items: (
+                yup
+                    .array(schema)
+                    .min(1, t("PLEASE_UPLOAD_A_FILE_WITH_AT_LEAST_ONE_ROW")) as any
+            ).unique(
+                t(
+                    "{name}_must_be_unique_in_list",
+                    { name: "EMAIL" },
+                    { translateProps: true }
+                ),
+                "email",
+                (v) => v.email
+            ),
         }),
         validate: async (values) => {
-            values.items = values
-                ?.items
-                ?.filter((v) => Boolean(v.email)
-                    || Boolean(v.first_name)
-                    || Boolean(v.last_name)
-                    || Boolean(v.phone)
-                )
             const errors = {};
 
             let lastProgress = 0;
@@ -63,25 +81,44 @@ const ImportEmployees = () => {
                 const employee = values.items[i];
 
                 if (employee.email) {
-                    const rowError: { email?: string, phone?: string } = {}
-                    const matches = await api.list({ email: employee.email })
+                    const rowError: { email?: string; phone?: string } = {};
+                    const matches = await api.list({ email: employee.email });
 
-                    if (matches.some(v => v.company?.id != null)) rowError.email = t("{name}_ALREADY_EXISTS", { name: "EMAIL" }, { translateProps: true });
-                    else if (matches.some(v => v.company == null)) rowError.email = t("{name}_ALREADY_EXISTS", { name: "EMAIL" }, { translateProps: true });
+                    if (matches.some((v) => v.company?.id != null))
+                        rowError.email = t(
+                            "{name}_ALREADY_EXISTS",
+                            { name: "EMAIL" },
+                            { translateProps: true }
+                        );
+                    else if (matches.some((v) => v.company == null))
+                        rowError.email = t(
+                            "{name}_ALREADY_EXISTS",
+                            { name: "EMAIL" },
+                            { translateProps: true }
+                        );
                     // else if (matches.some(v => v.company == null)) rowError.email = t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "EMAIL" }, { translateProps: true });
 
                     if (employee.phone) {
-                        if (matches.some(v => v.company?.id != null)) rowError.phone = t("{name}_ALREADY_EXISTS", { name: "PHONE" }, { translateProps: true });
-                        else if (matches.some(v => v.company == null)) rowError.phone = t("{name}_ALREADY_EXISTS", { name: "PHONE" }, { translateProps: true });
+                        if (matches.some((v) => v.company?.id != null))
+                            rowError.phone = t(
+                                "{name}_ALREADY_EXISTS",
+                                { name: "PHONE" },
+                                { translateProps: true }
+                            );
+                        else if (matches.some((v) => v.company == null))
+                            rowError.phone = t(
+                                "{name}_ALREADY_EXISTS",
+                                { name: "PHONE" },
+                                { translateProps: true }
+                            );
                         // else if (matches.some(v => v.company == null)) rowError.phone = t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "PHONE" }, { translateProps: true });
                     }
                     if (rowError) {
-                        errors[i] = rowError
+                        errors[i] = rowError;
                     }
                 }
 
-
-                let progress = Math.floor((i + 1) * 100 / values.items.length);
+                let progress = Math.floor(((i + 1) * 100) / values.items.length);
 
                 if (progress != lastProgress) {
                     setProgress(progress);
@@ -93,46 +130,50 @@ const ImportEmployees = () => {
             setWarnings(errors);
         },
         onSubmit: async (values) => {
-
             let lastProgress = 0;
 
             for (let i = 0; i < values.items.length; i++) {
                 let dto = values.items[i];
 
                 if (!!dto.birthdate) {
-                    dto.birthdate = (new Date(dto.birthdate)).toISOString()
+                    dto.birthdate = new Date(dto.birthdate).toISOString();
                 }
                 if (!!dto.hire_date) {
-                    dto.hire_date = (new Date(dto.hire_date)).toISOString()
+                    dto.hire_date = new Date(dto.hire_date).toISOString();
                 }
                 if (!!dto.license_expiry) {
-                    dto.license_expiry = (new Date(dto.license_expiry)).toISOString()
+                    dto.license_expiry = new Date(dto.license_expiry).toISOString();
                 }
 
                 try {
                     await api.create(dto);
-                }
-                catch (e) {
+                } catch (e) {
                     console.log("error saving applicant", i, e.response);
                     form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
                     if (e?.response?.data?.job) {
-                        toast.error(t(e?.response?.data?.job?.message, {
-                            jobId: e?.response?.data?.job?.id
-                        }))
+                        toast.error(
+                            t(e?.response?.data?.job?.message, {
+                                jobId: e?.response?.data?.job?.id,
+                            })
+                        );
                     } else if (e?.response?.data?.user) {
-                        toast.error(t(e?.response?.data?.user?.message, {
-                            managerId: e?.response?.data?.user?.id
-                        }))
+                        toast.error(
+                            t(e?.response?.data?.user?.message, {
+                                managerId: e?.response?.data?.user?.id,
+                            })
+                        );
                     } else if (e?.response?.data?.user) {
-                        toast.error(t(e?.response?.data?.user?.message, {
-                            email: e?.response?.data?.user?.email
-                        }))
-                    } else toast.error(t("unable_to_save_information"))
+                        toast.error(
+                            t(e?.response?.data?.user?.message, {
+                                email: e?.response?.data?.user?.email,
+                            })
+                        );
+                    } else toast.error(t("unable_to_save_information"));
 
                     return;
                 }
 
-                let progress = Math.floor((i + 1) * 100 / values.items.length);
+                let progress = Math.floor(((i + 1) * 100) / values.items.length);
 
                 if (progress != lastProgress) {
                     setProgress(progress);
@@ -143,110 +184,200 @@ const ImportEmployees = () => {
             toast.success(t("successfully_saved_information"));
 
             setTimeout(onClearClick, 2000);
-        }
+        },
     });
-
 
     const [progress, setProgress] = useState(0);
 
     const [fileName, setFileName] = useState("");
 
     /**
-     * 
-     * @param {React.ChangeEvent<HTMLInputElement>} e 
+     *
+     * @param {React.ChangeEvent<HTMLInputElement>} e
      */
-    const onFileChange = async (e) => {
-        const { target: { files: [file], value } } = e;
+    async function onFileChange(e: React.ChangeEvent<HTMLInputElement>): Promise<void> {
+        const {
+            target: {
+                files: [file], value,
+            },
+        } = e;
         setFileName(value);
+        setCsvErrors([]);
 
         if (file) {
-            let contents = await fileUtils.readCSV(file, {
-                onProgress: (p) => setProgress(p)
+            await Papa.parse(file, {
+                header: true,
+                skipEmptyLines: true,
+                complete: validateFileContent,
             });
-
-            if (contents.length > 0 && contents[0][0] == headers[0]) contents = contents.slice(1);
-
-            contents = contents.map(row => {
-                const entity = new EmployeeEntity();
-
-                row.forEach((col, i) => {
-                    const header = headers[i];
-
-                    const desc = schemaDescribe.fields[header];
-                    if (col) {
-                        switch (desc?.type) {
-                            case "boolean": entity[header] = col.trim().toLowerCase().startsWith("y") || col.toLowerCase().startsWith("t"); break;
-                            case "array": entity[header] = col.split(",").map(v => v.trim()).filter(v => !!v); break;
-                            default: entity[header] = col.trim();
-                        }
-
-                        switch (header) {
-                            // case "license_restrictions":
-                            //     entity.license_restrictions = entity.license_restrictions.map(v => matchEnum(v, LicenseRestrictions, "LicenseRestrictions", t));
-                            //     break;
-                            case "transmission_type":
-                                entity.transmission_type = entity.transmission_type.map(v => matchEnum(v, VehicleTransmissionType, "VehicleTransmissionType", t));
-                                break;
-                            case "endorsements":
-                                entity.endorsements = entity.endorsements.map(v => matchEnum(v, DriverEndorsement, "DriverEndorsement", t));
-                                break;
-                            case "highest_degree":
-                                entity.highest_degree = matchEnum(entity.highest_degree, EducationLevel, "EducationLevel", t);
-                                break;
-                            case "license_type":
-                                entity.license_type = matchEnum(entity.license_type, DriverLicenseType, "DriverLicenseType", t);
-                                break;
-                            case "equipment_experience":
-                                entity.equipment_experience = entity.equipment_experience.map(v => {
-                                    const equipmentExperienceObject = new EmployeeExperienceEntity();
-                                    equipmentExperienceObject.type = matchEnum(v.toString(), JobEquipmentType, "JobEquipmentType", t);
-                                    return equipmentExperienceObject;
-                                });
-                        }
-                    }
-                });
-                return entity;
-            });
-            console.log("sdsdsdsdsd", contents)
-            form?.setValues({ items: contents }, true);
         }
     }
 
-    const headers = Object
-        .keys(schemaDescribe.fields)
-        .filter(v => {
-            switch (v) {
-                case "equipment_owned":
-                case "employers":
-                case "documents":
-                case "jobs":
-                    return false;
-                default: return true;
-            }
-        });//Object.keys(new ApplicantEntity());
+    function validateFileContent(results): void {
+        let {
+            data,
+            errors,
+            meta: { fields },
+        } = results;
+        console.log("results", { data, errors, fields });
 
-    const onDownloadClick = (e) => {
+        const contents = data
+            ?.map((row, i) => {
+                const entity = new EmployeeEntity();
+                if (!Object.values(row)?.some(Boolean)) {
+                    errors = errors.filter((v) => v.row != i);
+                    return false;
+                }
+
+                Object.entries(row)
+                    ?.map(([key, value]: [string, any]) => {
+                        const fieldSchema = schemaDescribe.fields[key];
+                        if (!fieldSchema) return;
+
+                        switch (fieldSchema?.type) {
+                            case "boolean":
+                                entity[key] =
+                                    value.trim().toLowerCase().startsWith("y") ||
+                                    value.toLowerCase().startsWith("t");
+                                break;
+                            case "array":
+                                entity[key] = value
+                                    .split(",")
+                                    ?.map((v) => v.trim())
+                                    .filter((v) => !!v);
+                                break;
+                            case "number":
+                                entity[key] = value != "" ? Number(value) : null;
+                                break;
+                            default:
+                                entity[key] = value.trim();
+                        }
+
+                        switch (key) {
+                            // case "license_restrictions":
+                            // entity.license_restrictions = entity.license_restrictions
+                            //     .map((v, i, self) => {
+                            //         if (!Object.values(LicenseRestrictions).includes(v)) {
+                            //             entity.license_restrictions_other =
+                            //                 v + ", " + (entity.license_restrictions_other || "");
+                            //             return LicenseRestrictions.OTHER;
+                            //         }
+                            //         return matchEnum(
+                            //             v,
+                            //             LicenseRestrictions,
+                            //             "LicenseRestrictions",
+                            //             t
+                            //         );
+                            //     })
+                            //     ?.filter((v, i, self) => Boolean(v) && self.indexOf(v) == i);
+                            // break;
+                            case "transmission_type":
+                                entity.transmission_type = entity.transmission_type.map((v) =>
+                                    matchEnum(
+                                        v,
+                                        VehicleTransmissionType,
+                                        "VehicleTransmissionType",
+                                        t
+                                    )
+                                );
+                                break;
+                            case "endorsements":
+                                entity.endorsements = entity.endorsements
+                                    .map((v) => {
+                                        // if (!Object.values(DriverEndorsement).includes(v)) {
+                                        //     entity.endorsements_other =
+                                        //         v + ", " + (entity.endorsements_other || "");
+                                        //     return DriverEndorsement.OTHER;
+                                        // }
+                                        return matchEnum(
+                                            v,
+                                            DriverEndorsement,
+                                            "DriverEndorsement",
+                                            t
+                                        );
+                                    })
+                                    ?.filter((v, i, self) => Boolean(v) && self.indexOf(v) == i);
+                                break;
+                            case "highest_degree":
+                                entity.highest_degree = matchEnum(
+                                    entity.highest_degree,
+                                    EducationLevel,
+                                    "EducationLevel",
+                                    t
+                                );
+                                break;
+                            case "license_type":
+                                entity.license_type = matchEnum(
+                                    entity.license_type,
+                                    DriverLicenseType,
+                                    "DriverLicenseType",
+                                    t
+                                );
+                                break;
+                            case "equipment_experience":
+                                entity.equipment_experience = entity.equipment_experience.map(
+                                    (v) => {
+                                        const equipmentExperienceObject =
+                                            new EmployeeExperienceEntity();
+                                        equipmentExperienceObject.type = matchEnum(
+                                            v.toString(),
+                                            JobEquipmentType,
+                                            "JobEquipmentType",
+                                            t
+                                        );
+                                        return equipmentExperienceObject;
+                                    }
+                                );
+                                break;
+                        }
+                    })
+                    ?.filter(Boolean);
+                return entity;
+            })
+            ?.filter(Boolean);
+        if (errors?.length) setCsvErrors(errors);
+        form?.setValues({ items: contents }, true);
     }
+
+    const headers = Object.keys(schemaDescribe.fields).filter((v) => {
+        switch (v) {
+            case "equipment_owned":
+            case "employers":
+            case "documents":
+            case "jobs":
+                return false;
+            default:
+                return true;
+        }
+    }); //Object.keys(new ApplicantEntity());
 
     const onClearClick = (e) => {
         form.resetForm();
         setFileName("");
         setProgress(0);
-    }
+        setCsvErrors([]);
+    };
 
     const [onlyErrors, setOnlyErrors] = useState(false);
 
     /**
-     * 
-     * @param {React.ChangeEvent<HTMLInputElement>} e 
+     *
+     * @param {React.ChangeEvent<HTMLInputElement>} e
      */
     const onOnlyErrorsChange = (e) => {
         setOnlyErrors(e.target.checked);
-    }
+    };
 
     const canUpload = !fileName && !form.isValidating && !form.isSubmitting;
-    const canImport = form.isValid && !form.isValidating && !form.isSubmitting && form.values.items.length > 0;
-    const canClear = (form.values.items.length > 0 || fileName) && !form.isValidating && !form.isSubmitting;
+    const canImport =
+        form.isValid &&
+        !form.isValidating &&
+        !form.isSubmitting &&
+        form.values.items.length > 0;
+    const canClear =
+        (form.values.items.length > 0 || fileName) &&
+        !form.isValidating &&
+        !form.isSubmitting;
     return (
         <>
             <Row>
@@ -258,30 +389,71 @@ const ImportEmployees = () => {
                                 href="../../../../EmployeeTemplate.xlsx"
                                 type="button"
                                 // onClick={onDownloadClick}
-                                className="btn btn-md btn-primary pl-3">{t("DOWNLOAD_TEMPLATE")}</a>
+                                className="btn btn-md btn-primary pl-3"
+                            >
+                                {t("DOWNLOAD_TEMPLATE")}
+                            </a>
                         </div>
-                        <input onChange={onFileChange} disabled={!canUpload} className="form-control" type="file" accept=".csv" value={fileName} id="formFile" />
-                        {
-                            !!fileName &&
+                        <input
+                            onChange={onFileChange}
+                            disabled={!canUpload}
+                            className="form-control"
+                            type="file"
+                            accept=".csv"
+                            value={fileName}
+                            id="formFile"
+                        />
+                        {!!fileName && (
                             <div className="input-group-append">
-                                <button type="button" disabled={!canClear} onClick={onClearClick} className="btn btn-md btn-danger">{t("CLEAR")}</button>
+                                <button
+                                    type="button"
+                                    disabled={!canClear}
+                                    onClick={onClearClick}
+                                    className="btn btn-md btn-danger"
+                                >
+                                    {t("CLEAR")}
+                                </button>
                             </div>
-                        }
+                        )}
                     </InputGroup>
                 </Col>
                 <Col sm="6" className="my-3">
                     <div style={{ float: "right" }}>
-                        <button type="button" disabled={!canImport} onClick={form.submitForm} className={`btn btn-md btn-primary`}>{t("IMPORT")}</button>
+                        <button
+                            type="button"
+                            disabled={!canImport}
+                            onClick={form.submitForm}
+                            className={`btn btn-md btn-primary`}
+                        >
+                            {t("IMPORT")}
+                        </button>
                     </div>
                 </Col>
             </Row>
             <Row>
                 <Col>
                     <div style={{ float: "left" }}>
-                        {!form.isValid && <span className="text-danger small">{t("ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE")}</span>}
+                        {!form.isValid && (
+                            <div className="text-danger small">
+                                {t("ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE")}
+                            </div>
+                        )}
                     </div>
+                    <br />
+                    {Boolean(csvErrors.length) && (
+                        <div className="text-warning" style={{ float: "left" }}>
+                            {csvErrors.map((error, i) => (
+                                <div key={i} className="text-bold small">
+                                    {error.message} at row {error.row + 1}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                     <div className="text-nowrap" style={{ float: "right" }}>
-                        <OverlyPopover skipTranslate={false} str={"ONLY_DISPLAY_ERRORS_EXPLANATION"}>
+                        <OverlyPopover
+                            skipTranslate={false}
+                            str={"ONLY_DISPLAY_ERRORS_EXPLANATION"}
+                        >
                             <Switch
                                 label={"ONLY_DISPLAY_ERRORS"}
                                 readOnly={!canClear}
@@ -292,165 +464,204 @@ const ImportEmployees = () => {
                     </div>
                 </Col>
             </Row>
-            {progress > 0 && progress < 100 &&
+            {progress > 0 && progress < 100 && (
                 <Row>
                     <Col>
-                        <ProgressBar variant="primary" min={0} max={100} now={progress} label={`${progress}%`} striped animated />
+                        <ProgressBar
+                            variant="primary"
+                            min={0}
+                            max={100}
+                            now={progress}
+                            label={`${progress}%`}
+                            striped
+                            animated
+                        />
                     </Col>
                 </Row>
-            }
+            )}
             <Row>
                 <Col className={`p-0 ${style.table_wrapper_overflowX}`}>
                     <Table striped bordered hover className={style.table_overflowX}>
                         <thead>
                             <tr>
-                                <th className={style.frozen_col}><CheckCircle /></th>
+                                <th className={style.frozen_col}>
+                                    <CheckCircle />
+                                </th>
                                 <th className={style.frozen_col}>#</th>
-                                {
-                                    headers.map(k => {
-                                        const text = `${k}${(schemaDescribe.fields[k] as SchemaDescription).tests.some(v => v.name == "required") ? "*" : ""}`;
+                                {headers.map((k) => {
+                                    const text = `${k}${(schemaDescribe.fields[k] as SchemaDescription).tests.some(
+                                        (v) => v.name == "required"
+                                    )
+                                        ? "*"
+                                        : ""
+                                        }`;
 
-                                        switch (k) {
-                                            // case "license_restrictions":
-                                            //     return (
-                                            //         <th>
-                                            //             <Dropdown>
-                                            //                 <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
-                                            //                 <Dropdown.Menu>
-                                            //                     {Object.values(LicenseRestrictions).map(v => {
-                                            //                         return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
-                                            //                     })}
-                                            //                 </Dropdown.Menu>
-                                            //             </Dropdown>
-                                            //         </th>
-                                            //     );
-                                            case "transmission_type":
-                                                return (
-                                                    <th>
-                                                        <Dropdown>
-                                                            <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
-                                                            <Dropdown.Menu>
-                                                                {Object.values(VehicleTransmissionType).map(v => {
-                                                                    return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
-                                                                })}
-                                                            </Dropdown.Menu>
-                                                        </Dropdown>
-                                                    </th>
-                                                );
-                                            case "endorsements":
-                                                return (
-                                                    <th>
-                                                        <Dropdown>
-                                                            <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
-                                                            <Dropdown.Menu>
-                                                                {Object.values(DriverEndorsement).map(v => {
-                                                                    return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
-                                                                })}
-                                                            </Dropdown.Menu>
-                                                        </Dropdown>
-                                                    </th>
-                                                );
-                                            case "highest_degree":
-                                                return (
-                                                    <th>
-                                                        <Dropdown>
-                                                            <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
-                                                            <Dropdown.Menu>
-                                                                {Object.values(EducationLevel).map(v => {
-                                                                    return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
-                                                                })}
-                                                            </Dropdown.Menu>
-                                                        </Dropdown>
-                                                    </th>
-                                                );
-                                            case "license_type":
-                                                return (
-                                                    <th>
-                                                        <Dropdown>
-                                                            <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
-                                                            <Dropdown.Menu>
-                                                                {Object.values(DriverLicenseType).map(v => {
-                                                                    return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
-                                                                })}
-                                                            </Dropdown.Menu>
-                                                        </Dropdown>
-                                                    </th>
-                                                );
-                                            case "equipment_experience":
-                                                return (
-                                                    <th>
-                                                        <Dropdown>
-                                                            <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
-                                                            <Dropdown.Menu>
-                                                                {Object.values(JobEquipmentType).map(v => {
-                                                                    return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
-                                                                })}
-                                                            </Dropdown.Menu>
-                                                        </Dropdown>
-                                                    </th>
-                                                );
-                                            default:
-                                                return (<th>{text}</th>);
-                                        }
-
-                                    })
-                                }
+                                    switch (k) {
+                                        // case "license_restrictions":
+                                        //     return (
+                                        //         <th>
+                                        //             <Dropdown>
+                                        //                 <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
+                                        //                 <Dropdown.Menu>
+                                        //                     {Object.values(LicenseRestrictions).map(v => {
+                                        //                         return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
+                                        //                     })}
+                                        //                 </Dropdown.Menu>
+                                        //             </Dropdown>
+                                        //         </th>
+                                        //     );
+                                        case "transmission_type":
+                                            return (
+                                                <th>
+                                                    <Dropdown>
+                                                        <Dropdown.Toggle variant="light">
+                                                            {text}
+                                                        </Dropdown.Toggle>
+                                                        <Dropdown.Menu>
+                                                            {Object.values(VehicleTransmissionType).map(
+                                                                (v) => {
+                                                                    return (
+                                                                        <Dropdown.ItemText>{v}</Dropdown.ItemText>
+                                                                    );
+                                                                }
+                                                            )}
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                                </th>
+                                            );
+                                        case "endorsements":
+                                            return (
+                                                <th>
+                                                    <Dropdown>
+                                                        <Dropdown.Toggle variant="light">
+                                                            {text}
+                                                        </Dropdown.Toggle>
+                                                        <Dropdown.Menu>
+                                                            {Object.values(DriverEndorsement).map((v) => {
+                                                                return (
+                                                                    <Dropdown.ItemText>{v}</Dropdown.ItemText>
+                                                                );
+                                                            })}
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                                </th>
+                                            );
+                                        case "highest_degree":
+                                            return (
+                                                <th>
+                                                    <Dropdown>
+                                                        <Dropdown.Toggle variant="light">
+                                                            {text}
+                                                        </Dropdown.Toggle>
+                                                        <Dropdown.Menu>
+                                                            {Object.values(EducationLevel).map((v) => {
+                                                                return (
+                                                                    <Dropdown.ItemText>{v}</Dropdown.ItemText>
+                                                                );
+                                                            })}
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                                </th>
+                                            );
+                                        case "license_type":
+                                            return (
+                                                <th>
+                                                    <Dropdown>
+                                                        <Dropdown.Toggle variant="light">
+                                                            {text}
+                                                        </Dropdown.Toggle>
+                                                        <Dropdown.Menu>
+                                                            {Object.values(DriverLicenseType).map((v) => {
+                                                                return (
+                                                                    <Dropdown.ItemText>{v}</Dropdown.ItemText>
+                                                                );
+                                                            })}
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                                </th>
+                                            );
+                                        case "equipment_experience":
+                                            return (
+                                                <th>
+                                                    <Dropdown>
+                                                        <Dropdown.Toggle variant="light">
+                                                            {text}
+                                                        </Dropdown.Toggle>
+                                                        <Dropdown.Menu>
+                                                            {Object.values(JobEquipmentType).map((v) => {
+                                                                return (
+                                                                    <Dropdown.ItemText>{v}</Dropdown.ItemText>
+                                                                );
+                                                            })}
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                                </th>
+                                            );
+                                        default:
+                                            return <th>{text}</th>;
+                                    }
+                                })}
                             </tr>
                         </thead>
                         <tbody>
-                            {typeof form.errors.items == "string" &&
+                            {typeof form.errors.items == "string" && (
                                 <tr>
                                     <td colSpan={headers.length + 2}>
-                                        <span className="text-danger small">{form.errors.items}</span>
+                                        <span className="text-danger small">
+                                            {form.errors.items}
+                                        </span>
                                     </td>
                                 </tr>
-                            }
-                            {form
-                                .values
-                                .items
-                                .map((v, i) => {
+                            )}
+                            {form.values.items.map((v, i) => {
+                                const meta = form.getFieldMeta(`items.${i}`);
 
-                                    const meta = form.getFieldMeta(`items.${i}`);
+                                const findIcon = () => {
+                                    if (meta.error) return <XCircle color="red" />;
 
-                                    const findIcon = () => {
-                                        if (meta.error) return (<XCircle color="red" />);
+                                    if (warnings[i])
+                                        return <ExclamationTriangle color="orange" />;
 
-                                        if (warnings[i]) return (<ExclamationTriangle color="orange" />);
+                                    return <Check color="green" />;
+                                };
 
-                                        return (<Check color="green" />);
-                                    }
+                                if (onlyErrors && !meta.error) return null;
 
-                                    if (onlyErrors && !meta.error) return null;
-
-                                    return (
-                                        <tr className={onlyErrors && !meta.error ? `d-none` : ""}>
-                                            <td className={style.frozen_col}>{findIcon()}</td>
-                                            <td className={style.frozen_col}>{i + 1}</td>
-                                            {headers.map(h => (
-                                                <td>
-                                                    {guessControl(form, schema, warnings[i], h, i, t)}
-                                                </td>))}
-                                        </tr>);
-                                })}
+                                return (
+                                    <tr className={onlyErrors && !meta.error ? `d-none` : ""}>
+                                        <td className={style.frozen_col}>{findIcon()}</td>
+                                        <td className={style.frozen_col}>{i + 1}</td>
+                                        {headers.map((h) => (
+                                            <td>
+                                                {guessControl(form, schema, warnings[i], h, i, t)}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </Table>
                 </Col>
             </Row>
-
         </>
     );
 };
 
-function guessControl(form: FormikInterface, schema, warnings: Record<string, string>, header: string, index: number, t: TranslateInterface) {
-
-
+function guessControl(
+    form: FormikInterface,
+    schema,
+    warnings: Record<string, string>,
+    header: string,
+    index: number,
+    t: TranslateInterface
+) {
     const desc: SchemaObjectDescription = schema.fields[header];
     const name = `items.${index}.${header}`;
     const meta = form.getFieldMeta(name);
 
     let value = meta.value;
     if (desc.type == "boolean") {
-        value = value ? t("YES") : t("NO")
+        value = value ? t("YES") : t("NO");
     }
 
     if (value) {
@@ -466,24 +677,22 @@ function guessControl(form: FormikInterface, schema, warnings: Record<string, st
             //         });
             //     break;
             case "transmission_type":
-                value = value
-                    .map(v => {
-                        const key = `VehicleTransmissionType.${v}`;
-                        const text = t(key);
-                        if (key == text) return v;
+                value = value.map((v) => {
+                    const key = `VehicleTransmissionType.${v}`;
+                    const text = t(key);
+                    if (key == text) return v;
 
-                        return text;
-                    });
+                    return text;
+                });
                 break;
             case "endorsements":
-                value = value
-                    .map(v => {
-                        const key = `DriverEndorsement.${v}`;
-                        const text = t(key);
-                        if (key == text) return v;
+                value = value.map((v) => {
+                    const key = `DriverEndorsement.${v}`;
+                    const text = t(key);
+                    if (key == text) return v;
 
-                        return text;
-                    });
+                    return text;
+                });
                 break;
             case "highest_degree":
                 {
@@ -500,14 +709,13 @@ function guessControl(form: FormikInterface, schema, warnings: Record<string, st
                 }
                 break;
             case "equipment_experience":
-                value = value
-                    .map(v => {
-                        const key = `JobEquipmentType.${v.type}`;
-                        const text = t(key);
-                        if (key == text) return v;
+                value = value.map((v) => {
+                    const key = `JobEquipmentType.${v.type}`;
+                    const text = t(key);
+                    if (key == text) return v;
 
-                        return text;
-                    });
+                    return text;
+                });
                 break;
         }
     }
@@ -516,42 +724,45 @@ function guessControl(form: FormikInterface, schema, warnings: Record<string, st
         return (
             <>
                 <ul itemType="circle">
-                    {
-                        value.map((v, i) => {
-                            const error = meta.error ? meta.error[i] : null;
+                    {value.map((v, i) => {
+                        const error = meta.error ? meta.error[i] : null;
 
-                            if (error) {
-                                return (<li>
+                        if (error) {
+                            return (
+                                <li>
                                     {v}
                                     <br />
                                     <span className="text-danger small">{error}</span>
-                                </li>);
-                            }
+                                </li>
+                            );
+                        }
 
-                            return (<li>{v}</li>)
-                        })
-                    }
+                        return <li>{v}</li>;
+                    })}
                 </ul>
             </>
         );
-
     }
 
     if (meta.error) {
         const errorString = JSON.stringify(meta.error);
-        return <>
-            <span>{value}</span>
-            <br />
-            <span className="text-danger small">{errorString}</span>
-        </>;
+        return (
+            <>
+                <span>{value}</span>
+                <br />
+                <span className="text-danger small">{errorString}</span>
+            </>
+        );
     }
 
     if (warnings && warnings[header]) {
-        return (<>
-            <span>{value}</span>
-            <br />
-            <span className="text-warning small">{warnings[header]}</span>
-        </>);
+        return (
+            <>
+                <span>{value}</span>
+                <br />
+                <span className="text-warning small">{warnings[header]}</span>
+            </>
+        );
     }
     return value;
 }

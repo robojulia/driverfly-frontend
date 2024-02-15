@@ -1346,7 +1346,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 																		placeholder="YEAR"
 																		type="int"
 																		required
-																		min={new Date().getFullYear() - 5}
+																		min={1900}
 																		max={new Date().getFullYear()}
 																		formik={form}
 																	/>
