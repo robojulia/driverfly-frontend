@@ -102,6 +102,12 @@ const ImportEmployees = () => {
                     // else if (matches.some(v => v.company == null)) rowError.email = t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "EMAIL" }, { translateProps: true });
 
                     if (employee.phone) {
+                        if (
+                            employee.phone?.length > 3 &&
+                            !employee.phone.startsWith("+1")
+                        )
+                            employee.phone = "+1 " + employee.phone;
+
                         if (matches.some((v) => v.company?.id != null))
                             rowError.phone = t(
                                 "{name}_ALREADY_EXISTS",
