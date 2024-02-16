@@ -1183,10 +1183,22 @@ input[type='range']::-webkit-slider-thumb {
     line-height: 28px;
     margin-bottom: 25px;
 }
+.who-we-img{
+    height: 700px !important;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* justify-content: sp; */
+}
 
-img.who-we-img.img-fluid {
-    width: 100%;
-    margin-bottom: 20px;
+.who-we-img img{
+    object-fit: contain;
+    height: 90%;
+    margin: 0% 5%;
+    /* position: absolute; */
+    /* background-position: center center; */
+    /* margin-bottom: 20px; */
 }
 
 .who-we-outer h3 {
