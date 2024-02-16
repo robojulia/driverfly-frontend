@@ -59,10 +59,10 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 	useEffect(() => {
 		const { first_name, last_name } = applicant;
 		const apx = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.APPLY_DATE
+			(v) => v.type == ApplicantExtras.APPLY_DATE
 		);
 		const apx_sign = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.SIGNATURE
+			(v) => v.type == ApplicantExtras.SIGNATURE
 		);
 
 		if (apx_sign) padRef?.current?.fromDataURL(apx_sign?.value)

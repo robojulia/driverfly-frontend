@@ -45,7 +45,7 @@ export const DashboardStats = () => {
             (acc, a) => {
                 if (a?.current_application_status?.startsWith("NEW_")) {
                     acc.TOTAL_LEADS.value++;
-                    if (moment(a?.created_at).isoWeek() === currentWeek) {
+                    if (moment(a?.created_at).isoWeek() == currentWeek) {
                         acc.NEW_LEADS.value++;
                     }
                 }
@@ -64,7 +64,7 @@ export const DashboardStats = () => {
                     icon: totalHiresIcon,
                 },
                 TOTAL_ACTIVE_EMPLOYEE: {
-                    value: employees?.filter((v) => v?.status === EmployeeStatus.ACTIVE)
+                    value: employees?.filter((v) => v?.status == EmployeeStatus.ACTIVE)
                         ?.length,
                     link: "/dashboard/company/compliance/employee-directory",
                     icon: totalEmployeesIcon,
@@ -99,7 +99,7 @@ export const DashboardStats = () => {
                 stats.EMPLOYEE_BIRTHDAYS.value++;
                 const isDuplicate = birthdayDetails?.some((itm) => {
                     return (
-                        itm.birthdate === a.birthdate && itm.first_name === a.first_name
+                        itm.birthdate == a.birthdate && itm.first_name == a.first_name
                     );
                 });
                 if (!isDuplicate) setBirthdayDetails((prevVal) => [...prevVal, a]);

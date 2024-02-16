@@ -6,7 +6,7 @@
 function calculateAge(birthday) { // birthday is a date
     if (!birthday) return;
 
-    if (typeof birthday === "string")
+    if (typeof birthday == "string")
         birthday = new Date(birthday);
 
     var ageDifMs = Date.now() - birthday;
@@ -24,8 +24,8 @@ function calculateAge(birthday) { // birthday is a date
 function dateRange(start_at, end_at, default_end_at) {
     let range = "";
 
-    if (start_at && typeof start_at === "string") start_at = new Date(start_at);
-    if (end_at && typeof end_at === "string") end_at = new Date(end_at);
+    if (start_at && typeof start_at == "string") start_at = new Date(start_at);
+    if (end_at && typeof end_at == "string") end_at = new Date(end_at);
 
     if (start_at && end_at) return `${start_at.toDateString()} - ${end_at.toDateString()}`;
     

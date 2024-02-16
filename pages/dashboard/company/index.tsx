@@ -64,7 +64,7 @@ export default function Dashboard() {
             setEmployees(e);
             const j = (await jobApi.list())?.filter(
                 (job) =>
-                    job?.status === Status.ACTIVE &&
+                    job?.status == Status.ACTIVE &&
                     new Date(job?.expiry_date) >= todayDate
             );
             setJobs(j);

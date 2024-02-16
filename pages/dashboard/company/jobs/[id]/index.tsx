@@ -34,7 +34,7 @@ export default function ViewJob({ id }) {
 
             const data = await api.getById(+id);
 
-            if (!data || data.company.id !== company?.id) {
+            if (!data || data.company.id != company?.id) {
                 toast.error(t("UNABLE_TO_FIND_{name}", { name: t("JOB") }));
                 goBack();
                 return;

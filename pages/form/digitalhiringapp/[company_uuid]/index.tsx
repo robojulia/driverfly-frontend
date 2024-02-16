@@ -25,7 +25,7 @@ export default function FullForm({ employer, preferences, utm }: FullFormProps) 
 	const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>([]);
 	const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
 		setApplicantExtras((oldApx) => {
-			oldApx = oldApx?.filter((v) => (v.type !== applicantExtrasEntity?.type));
+			oldApx = oldApx?.filter((v) => (v.type != applicantExtrasEntity?.type));
 			return !!oldApx
 				? [...oldApx, { ...applicantExtrasEntity }]
 				: [{ ...applicantExtrasEntity }];
@@ -87,7 +87,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
 	try {
 		let companyId = String(query?.company_uuid); // { companyId } = query || {};
 		console.log("companyId", companyId);
-		
+
 
 		const utm: UtmReferral = {
 			utm_source: query?.utm_source as string ?? null,
@@ -106,11 +106,11 @@ export async function getServerSideProps({ query }: NextPageContext) {
 		const employer: CompanyEntity = await companyApi.employer.getByUUId(companyId);
 		const preferences: CompanyPreferenceEntity[] = await companyApi.preferences.list(employer.id)
 
-		if (employer?.status !== Status.ACTIVE) {
+		if (employer?.status != Status.ACTIVE) {
 			if (employer == null) {
-				console.error(`form/jotform: Employer ${query?.companyId} not found - does not exist`);
+				console.error(`form/jotform: Employer ${query?.company_uuid} not found - does not exist`);
 			} else {
-				console.error(`form/jotform: Employer ${query?.companyId} found, but status is not ACTIVE (status = ${employer?.status})`);
+				console.error(`form/jotform: Employer ${query?.company_uuid} found, but status is not ACTIVE (status = ${employer?.status})`);
 			}
 			return { notFound: true };
 		}

@@ -33,7 +33,7 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
 
     const { t } = useTranslation();
     const [encourageModal, setEncourageModal] = React.useState(false)
-    const { user } = useAuth();
+    const { user, company } = useAuth();
 
     return (
         <section className="top-links-sec ort-general p-3 vehicle-img">
@@ -69,8 +69,8 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                                         {
                                             (!!!hideCompanyName && job.company?.name) &&
                                             <>
-                                                {t('BY')} <Link href={`/employer/${job.company?.id}`}>
-                                                    <span role="button" className="employer text-theme">{job.company?.name}</span>
+                                                {t('BY')} <Link href={`/employer/${job?.company?.uuid_token}`}>
+                                                    <span role="button" className="employer text-theme">{job?.company?.name}</span>
                                                 </Link>
                                             </>
                                         }
@@ -88,8 +88,8 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                         </div>
                     </Col>
                     <Col md={3}>
-                        {canApply && <JobApply setEncourageModal={setEncourageModal} job={job} />}
-                        {canSave && <SaveJob job={job} />}
+                        {!company?.id && canApply && <JobApply setEncourageModal={setEncourageModal} job={job} />}
+                        {!company?.id && canSave && <SaveJob job={job} />}
                     </Col>
                 </Row>
             </Container>

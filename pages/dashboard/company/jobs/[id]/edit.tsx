@@ -46,7 +46,7 @@ export default function EditJob({ id }) {
                 entity.min_experience_in_years = Math.floor(entity.min_years_experience);
             }
 
-            if (entity && entity.company.id === user.company?.id) setJob(entity);
+            if (entity && entity.company.id == user.company?.id) setJob(entity);
             else {
                 toast.error(t("UNABLE_TO_FIND_{name}", { name: "JOB" }, { translateProps: true }));
                 goBack();

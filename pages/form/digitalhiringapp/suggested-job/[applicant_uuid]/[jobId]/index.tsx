@@ -39,7 +39,7 @@ export default function SuggestedJobs({
         applicantExtrasEntity: ApplicantExtrasEntity
     ) =>
         setApplicantExtras((oldApx) => {
-            oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity?.type);
+            oldApx = oldApx?.filter((v) => v.type != applicantExtrasEntity?.type);
             return !!oldApx
                 ? [...oldApx, { ...applicantExtrasEntity }]
                 : [{ ...applicantExtrasEntity }];

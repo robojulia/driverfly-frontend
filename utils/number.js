@@ -8,7 +8,7 @@ var currencyFormatter = new Intl.NumberFormat(undefined, {
 });
 
 function toCurrency(num) {
-    if (typeof num === "string") num = parseFloat(num);
+    if (typeof num == "string") num = parseFloat(num);
 
     if (num == null || isNaN(num)) {
         return "";

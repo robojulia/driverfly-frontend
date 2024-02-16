@@ -51,7 +51,7 @@ const Breadcrumb = () => {
             <li key={breadcrumb.href}>
               < CaretRightFill className='mx-2 align-text-bottom' />
               {
-                i === breadcrumbs.length - 1
+                i == breadcrumbs.length - 1
                 ?
                     t(str)
                 :

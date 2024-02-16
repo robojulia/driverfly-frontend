@@ -378,13 +378,13 @@ export default function ThirdPartyResources() {
     useEffect(() => {
         // filter for audience (drivers vs companies)
         let fr = resources.filter(v => {
-            if (audience === "drivers") {
+            if (audience == "drivers") {
                 return v.for_drivers;
             }
-            if (audience === "companies") {
+            if (audience == "companies") {
                 return v.for_companies;
             }
-            if (audience === "oo") {
+            if (audience == "oo") {
                 return v.for_oo;
             }
             return true;
@@ -392,7 +392,7 @@ export default function ThirdPartyResources() {
 
         // filter for resource type
         fr = fr.filter(v => {
-            return (resourceType === "All" || resourceType === v.type);
+            return (resourceType == "All" || resourceType == v.type);
         });
 
         setFilteredResources(fr);
@@ -445,10 +445,10 @@ export default function ThirdPartyResources() {
                             // only show types for the chosen audience type
                             types.map(function (obj, id) {
                                 if (
-                                    audience === "all" ||
-                                    (audience === "drivers" && obj.for_drivers) ||
-                                    (audience === "oo" && obj.for_oo) ||
-                                    (audience === "companies" && obj.for_companies)
+                                    audience == "all" ||
+                                    (audience == "drivers" && obj.for_drivers) ||
+                                    (audience == "oo" && obj.for_oo) ||
+                                    (audience == "companies" && obj.for_companies)
                                 ) {
                                     return (
                                         <div className={resource.resource_type_button}>

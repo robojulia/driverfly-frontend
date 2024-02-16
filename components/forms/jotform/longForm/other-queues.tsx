@@ -42,7 +42,7 @@ export function OtherQueues() {
     useEffect(() => {
         console.log("applicant extras", applicantExtras);
         const apx_cdl = applicantExtras?.find(
-            (v) => v.type === ApplicantExtras.CDL_NUMBER
+            (v) => v.type == ApplicantExtras.CDL_NUMBER
         );
         form.setValues({
             ...form.values,

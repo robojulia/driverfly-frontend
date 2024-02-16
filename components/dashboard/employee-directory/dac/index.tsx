@@ -28,7 +28,7 @@ export default function DAC({ applicant }: DacTabProps) {
 
                 if (values.id) {
                     dac = await applicantApi.dac.update(applicant.id, values.id, values)
-                    applicant.dac = applicant.dac.filter(v => (v.id !== dac.id))
+                    applicant.dac = applicant.dac.filter(v => (v.id != dac.id))
                 } else {
                     dac = await applicantApi.dac.create(applicant.id, values)
                 }
@@ -59,14 +59,14 @@ export default function DAC({ applicant }: DacTabProps) {
                     <tbody>
                         {
                             Object.values(ApplicantDac).map((value: ApplicantDac, i) => {
-                                const dac: ApplicantDacEntity = applicant?.dac?.find(v => (v.type === value))
+                                const dac: ApplicantDacEntity = applicant?.dac?.find(v => (v.type == value))
                                 return (
                                     <tr key={i}>
                                         <td> {t(`ApplicantDac.${value}`)}</td>
                                         <td>
                                             <div className="w-100">
                                                 {
-                                                    (form.values.type !== value) ? (
+                                                    (form.values.type != value) ? (
                                                         <div className="d-flex justify-content-between">
                                                             <BaseCheck
                                                                 readOnly

@@ -91,9 +91,9 @@ const ProjectTables = () => {
                   </td>
                   <td>{tdata.project}</td>
                   <td>
-                    {tdata.status === "pending" ? (
+                    {tdata.status == "pending" ? (
                       <span className="p-2 bg-danger rounded-circle d-inline-block ms-3" />
-                    ) : tdata.status === "holt" ? (
+                    ) : tdata.status == "holt" ? (
                       <span className="p-2 bg-warning rounded-circle d-inline-block ms-3" />
                     ) : (
                       <span className="p-2 bg-success rounded-circle d-inline-block ms-3" />

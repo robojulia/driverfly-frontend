@@ -19,7 +19,7 @@ export default function When(props: { date: Date|string }) {
     if (days > 1) {
         when = date.toLocaleString();
     }
-    else if (days === 1) {
+    else if (days == 1) {
         when = t("YESTERDAY");
     }
     else if (hrs > 0) {

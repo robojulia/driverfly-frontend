@@ -70,7 +70,7 @@ export function PieChart(props: PieChartProps): JSX.Element {
 							color: function (context) {
 								var index = context.dataIndex;
 								var value = context.dataset.data[index];
-								return value === 0 ? "transparent" : "white";
+								return value == 0 ? "transparent" : "white";
 							},
 							font: {
 								size: 18,

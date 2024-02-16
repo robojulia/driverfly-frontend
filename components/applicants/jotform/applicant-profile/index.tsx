@@ -17,62 +17,62 @@ export default function ApplicantExtrasDetails({
 }: ApplicantSafetyBackgroundProps) {
 	const { t } = useTranslation();
 	const authToCommunicate = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.AUTHORIZE_TO_COMMUNICATE
+		(ex) => ex?.type == ApplicantExtras.AUTHORIZE_TO_COMMUNICATE
 	);
 	const hear_about_us = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.HEAR_ABOUT_US
+		(ex) => ex?.type == ApplicantExtras.HEAR_ABOUT_US
 	);
 	const job_apply_date = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.APPLY_DATE
+		(ex) => ex?.type == ApplicantExtras.APPLY_DATE
 	);
 	const qualified_for_manual_transmission = applicant.transmission_type.includes(
 		VehicleTransmissionType.MANUAL
 	);
 
 	const past_license_suspension = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.PAST_LICENSE_SUSPENSION
+		(ex) => ex?.type == ApplicantExtras.PAST_LICENSE_SUSPENSION
 	);
 	const unable_to_perform_job = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
+		(ex) => ex?.type == ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
 	);
 	const convicted_of_felony = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.CONVICTED_OF_FELONY
+		(ex) => ex?.type == ApplicantExtras.CONVICTED_OF_FELONY
 	);
 	const dot_regulation = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.DOT_REGULATION
+		(ex) => ex?.type == ApplicantExtras.DOT_REGULATION
 	);
 
 	const lineAdress = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.LINE_ADDRESS
+		(ex) => ex?.type == ApplicantExtras.LINE_ADDRESS
 	);
 	const cdl_details = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.CDL_NUMBER
+		(ex) => ex?.type == ApplicantExtras.CDL_NUMBER
 	);
 	const routes = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.ROUTES
+		(ex) => ex?.type == ApplicantExtras.ROUTES
 	);
 	const other_requirement = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.OTHER_ABSOLUTELY_REQUIREMENTS
+		(ex) => ex?.type == ApplicantExtras.OTHER_ABSOLUTELY_REQUIREMENTS
 	);
 	const w2_employment = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.REQUIRE_W2_EMPLOYMENT
+		(ex) => ex?.type == ApplicantExtras.REQUIRE_W2_EMPLOYMENT
 	);
 
 	const accident_details = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.ACCIDENT_DETAILS
+		(ex) => ex?.type == ApplicantExtras.ACCIDENT_DETAILS
 	);
 	const violation_details = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.VIOLATION_DETAILS
+		(ex) => ex?.type == ApplicantExtras.VIOLATION_DETAILS
 	);
 	const current_employer = applicant.employers.find(v => !!v.is_current)
 
 	const past_employers = applicant.employers.filter(v => !!!v.is_current);
 
 	const already_applied = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
+		(ex) => ex?.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
 	);
 	const already_worked_here = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.ALREADY_WORKED_TO_COMPANY
+		(ex) => ex?.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
 	);
 
 	return (

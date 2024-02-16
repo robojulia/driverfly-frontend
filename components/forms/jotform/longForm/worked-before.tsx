@@ -34,10 +34,10 @@ export function WorkedBefore() {
 
 	useEffect(() => {
 		const apx = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
+			(v) => v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
 		);
 		const apx_worked_before = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.ALREADY_WORKED_TO_COMPANY
+			(v) => v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
 		);
 		form.setValues({
 			...form.values,

@@ -67,7 +67,7 @@ export default function FindSchools(props) {
     const prototype = Object.getPrototypeOf(element);
     const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value').set;
 
-    if (valueSetter && valueSetter !== prototypeValueSetter) {
+    if (valueSetter && valueSetter != prototypeValueSetter) {
       prototypeValueSetter.call(element, value);
     } else {
       valueSetter.call(element, value);
@@ -77,15 +77,15 @@ export default function FindSchools(props) {
   const setFiltersForQuery = async () => {
     Object.keys(params).map(key => {
       let inputs = document.getElementsByName(key);
-      if (inputs[0].tagName.toLowerCase() !== "input") {
+      if (inputs[0].tagName.toLowerCase() != "input") {
         return
       }
-      if (inputs[0].type.toLowerCase() === "text") {
+      if (inputs[0].type.toLowerCase() == "text") {
         setNativeValue(inputs[0], params[key]);
       }
-      if (inputs[0].type.toLowerCase() === "radio") {
+      if (inputs[0].type.toLowerCase() == "radio") {
         inputs.forEach(input => {
-          if (input.value === params[key]) {
+          if (input.value == params[key]) {
             input.checked = true;
           }
         })
@@ -185,7 +185,7 @@ export default function FindSchools(props) {
                   </tbody>
                 </Table>
                 {
-                  pagingMeta.totalPages !== 0 &&
+                  pagingMeta.totalPages != 0 &&
 
                   <ul className="pagination">
                     {

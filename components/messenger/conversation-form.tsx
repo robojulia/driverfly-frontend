@@ -237,7 +237,7 @@ export function ConversationForm(props: ConversationFormProps) {
                                 onChange={onConversationToChangeProxy}
                                 minLength={3}
                             />
-                            {typeof form.errors?.chattable_id === "string" && (
+                            {typeof form.errors?.chattable_id == "string" && (
                                 <span className="text-danger small">
                                     {t(form.errors.chattable_id)}
                                 </span>
@@ -259,7 +259,7 @@ export function ConversationForm(props: ConversationFormProps) {
                                 key={m.id}
                                 conversation={entity}
                                 message={m}
-                                showHeader={m.direction !== a[i - 1]?.direction}
+                                showHeader={m.direction != a[i - 1]?.direction}
                                 lastMessageRef={
                                     i == entity.messages.length - 1 ? lastMessage : null
                                 }

@@ -33,7 +33,7 @@ export function PastSuspension() {
 
 	useEffect(() => {
 		const apx = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.PAST_LICENSE_SUSPENSION
+			(v) => v.type == ApplicantExtras.PAST_LICENSE_SUSPENSION
 		);
 		form.setValues({
 			...form.values,

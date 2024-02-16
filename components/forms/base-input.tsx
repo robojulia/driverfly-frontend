@@ -34,11 +34,11 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
     handleBlur = handleBlur || formik.handleBlur;
   }
 
-  if (type === "date" && typeof(value) === "string" && value?.includes("T")) {
+  if (type == "date" && typeof(value) == "string" && value?.includes("T")) {
     value = value.split("T")[0];
   }
 
-  if (type === "int" || type === "integer") {
+  if (type == "int" || type == "integer") {
     type = "number";
     step = 1;
     onKeyDown = onKeyDown ||
@@ -47,28 +47,28 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
        */
       function (e) {
         // prevent negative if the min value is set to 0
-        if (min != null && +min >= 0 && e.key === "-") e.preventDefault();
+        if (min != null && +min >= 0 && e.key == "-") e.preventDefault();
 
-        if (e.key === ".") {
+        if (e.key == ".") {
           e.preventDefault();
         }
 
       };
   }
-  else if (type === "number") {
+  else if (type == "number") {
     onKeyDown = onKeyDown ||
       /**
        * @param {React.KeyboardEvent<HTMLInputElement>} e
        */
       function (e) {
         // prevent negative if the min value is set to 0
-        if (min != null && +min >= 0 && e.key === "-") e.preventDefault();
-        // if (e.key !== "-" && e.key !== "." && isNaN(+e.key)) e.preventDefault();
+        if (min != null && +min >= 0 && e.key == "-") e.preventDefault();
+        // if (e.key != "-" && e.key != "." && isNaN(+e.key)) e.preventDefault();
         if (["e", "E", "+"].includes(e.key)) e.preventDefault();
       };
   }
 
-  if (type === "number") {
+  if (type == "number") {
     let currentOnChange = onChange;
 
     /**
@@ -103,7 +103,7 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
         min={min}
         max={max}
         step={step}
-        placeholder={t(placeholder === true ? label || name : (placeholder || "").toString())}
+        placeholder={t(placeholder == true ? label || name : (placeholder || "").toString())}
         value={value == null ? "" : value}
         onChange={onChange}
         onKeyDown={onKeyDown}

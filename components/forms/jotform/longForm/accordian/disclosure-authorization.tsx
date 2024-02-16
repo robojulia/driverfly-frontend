@@ -26,11 +26,11 @@ export function DisclosureAuthorization({ form }: AccordianProps) {
 
     useEffect(() => {
         const apx_disclosure_date = applicantExtras?.find(
-            (v) => v.type === ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE
+            (v) => v.type == ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE
         );
 
         const apx_sign_disclosure = applicantExtras?.find(
-            (v) => v.type === ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION
+            (v) => v.type == ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION
         );
 
         if (apx_sign_disclosure) canvasRef?.current?.fromDataURL(apx_sign_disclosure?.value)

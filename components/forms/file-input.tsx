@@ -139,7 +139,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
     }
 
     // only supported views for right now.
-    const canView = accept === "application/pdf" || accept?.startsWith("image/");
+    const canView = accept == "application/pdf" || accept?.startsWith("image/");
 
     return (
         <>
@@ -152,7 +152,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
                         onBlur={handleBlur}
                         type={value?.name ? "text" : "file"}
                         value={value?.name || ""}
-                        placeholder={t(placeholder === true ? label || name : (placeholder || "").toString())}
+                        placeholder={t(placeholder == true ? label || name : (placeholder || "").toString())}
                         disabled={!!value?.name}
                         onChange={formattedOnChange}
                         readOnly={readOnly}
@@ -174,9 +174,9 @@ export default function FileInput({ documentType, formik, accept, required, clas
                         </div>
                     }
                 </InputGroup>
-                {touched && error ? <span className="text-danger small">{typeof error === "string" ? t(error) : JSON.stringify(error)}</span> : null}
+                {touched && error ? <span className="text-danger small">{typeof error == "string" ? t(error) : JSON.stringify(error)}</span> : null}
             </div>
-            {accept === "application/pdf" &&
+            {accept == "application/pdf" &&
                 <ViewPdf name={value?.name} url={viewDoc} onCloseClick={close} />}
             {accept.startsWith("image/") &&
                 <ViewModal show={!!viewDoc} title={value?.name} onCloseClick={close}>

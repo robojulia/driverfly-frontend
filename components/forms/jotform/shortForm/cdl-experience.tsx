@@ -46,10 +46,10 @@ export function CdlExperience() {
 		const { license_type, years_cdl_experience, is_owner_operator } = applicant;
 
 		const apx_business_name = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.BUSINESS_NAME
+			(v) => v.type == ApplicantExtras.BUSINESS_NAME
 		);
 		const apx_dot_number = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.DOT_NUMBER
+			(v) => v.type == ApplicantExtras.DOT_NUMBER
 		);
 		form.setValues({
 			license_type: license_type || null,

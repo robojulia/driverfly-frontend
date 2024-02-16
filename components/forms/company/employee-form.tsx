@@ -378,7 +378,7 @@ export function EmployeeForm(props: EmployeeFormProps) {
 															/>
 														</div >
 														{
-															entity.type === JobEquipmentType.OTHER &&
+															entity.type == JobEquipmentType.OTHER &&
 															<div >
 																<BaseInput
 																	className="my-2"
@@ -454,7 +454,7 @@ export function EmployeeForm(props: EmployeeFormProps) {
 																/>
 															</Col>
 															{
-																entity.type === JobEquipmentType.OTHER &&
+																entity.type == JobEquipmentType.OTHER &&
 																<Col xs="11">
 																	<BaseInput
 																		name={`equipment_owned[${i}].type_other`}

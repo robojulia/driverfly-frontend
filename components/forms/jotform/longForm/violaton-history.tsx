@@ -44,7 +44,7 @@ export function ViolationHistory() {
 		console.log("extrasss", applicantExtras);
 
 		const apx_detail = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.VIOLATION_DETAILS
+			(v) => v.type == ApplicantExtras.VIOLATION_DETAILS
 		);
 		form.setValues({
 			...form.values,

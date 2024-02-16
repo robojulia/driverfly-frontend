@@ -122,7 +122,7 @@ export default function Index() {
                     <li className="nav-item" key="feature">
                         <a
                             href="#profile"
-                            className={`nav-link ${showTab !== 'feature' ? 'active' : ''}`}
+                            className={`nav-link ${showTab != 'feature' ? 'active' : ''}`}
                             data-toggle="tab"
                             onClick={() => {
                                 setShowTab('feature')
@@ -134,7 +134,7 @@ export default function Index() {
                     <li className="nav-item" key="recent">
                         <a
                             href="#profile"
-                            className={`nav-link ${showTab !== 'recent' ? 'active' : ''}`}
+                            className={`nav-link ${showTab != 'recent' ? 'active' : ''}`}
                             data-toggle="tab"
                             onClick={() => {
                                 setShowTab('recent')
@@ -145,7 +145,7 @@ export default function Index() {
                     </li>
                 </ul>
                 {
-                    showTab === 'feature' ? < Featured />
+                    showTab == 'feature' ? < Featured />
                         :
                         < Recent />
                 }

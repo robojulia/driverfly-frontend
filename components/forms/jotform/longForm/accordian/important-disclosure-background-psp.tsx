@@ -27,11 +27,11 @@ export function ImportantDisclosureBackgroundPsp({ form }: AccordianProps) {
     };
     useEffect(() => {
         const apx_background_date = applicantExtras?.find(
-            (v) => v.type === ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
+            (v) => v.type == ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
         );
 
         const apx_sign_important_background = applicantExtras?.find(
-            (v) => v.type === ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND
+            (v) => v.type == ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND
         );
 
         if (apx_sign_important_background) canvasRef?.current?.fromDataURL(apx_sign_important_background?.value)

@@ -5,12 +5,12 @@ export function matchEnum(str: string, enumObj: any, labelPrefix: string, t: Tra
 
     const found = options.find(([key, value]) => {
         const search = str.toLowerCase();
-        if (search === key.toLowerCase() || search === `${value}`.toLowerCase()) return true;
+        if (search == key.toLowerCase() || search == `${value}`.toLowerCase()) return true;
 
         const translated = t(`${labelPrefix}.${key}`).toLowerCase();
-        if (search === translated) return true;
+        if (search == translated) return true;
 
-        if (translated.includes(search)) return true;
+        // if (translated.includes(search)) return true;
     });
 
     if (found) return found[1];

@@ -32,7 +32,7 @@ export function FelonyConviction() {
 
 	useEffect(() => {
 		const apx = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.CONVICTED_OF_FELONY
+			(v) => v.type == ApplicantExtras.CONVICTED_OF_FELONY
 		);
 		form.setValues({
 			...form.values,

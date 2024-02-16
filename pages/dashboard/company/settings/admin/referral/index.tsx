@@ -78,7 +78,7 @@ export default function ReferralList({ host }: { host: string }) {
 			const entity = await api.remove(id);
 
 			setReferralSources(referralSources.map(v => {
-				if (v.id === entity.id) return entity;
+				if (v.id == entity.id) return entity;
 
 				return v;
 			}));
@@ -95,7 +95,7 @@ export default function ReferralList({ host }: { host: string }) {
 			const entity = await api.restore(id);
 
 			setReferralSources(referralSources.map(v => {
-				if (v.id === entity.id) return entity;
+				if (v.id == entity.id) return entity;
 
 				return v;
 			}));
@@ -151,7 +151,7 @@ export default function ReferralList({ host }: { host: string }) {
 					{
 						id: "createdAt",
 						name: "CREATED_AT",
-						selector: v => (typeof v.createdAt === "string" ? new Date(v.createdAt) : v.createdAt).toLocaleString(),
+						selector: v => (typeof v.createdAt == "string" ? new Date(v.createdAt) : v.createdAt).toLocaleString(),
 					},
 				]}
 				actions={v => ([
@@ -169,16 +169,16 @@ export default function ReferralList({ host }: { host: string }) {
 						onClick: e => onDeleteClick(v.id),
 						icon: TrashFill,
 						label: "DELETE",
-						hide: status === Status.DELETED
+						hide: status == Status.DELETED
 					},
 					{
 						onClick: e => onRestoreClick(v.id),
 						icon: ArrowCounterclockwise,
 						label: "RESTORE",
-						hide: status === Status.ACTIVE
+						hide: status == Status.ACTIVE
 					},
 				])}
-				items={referralSources.filter(v => v.status === status)}
+				items={referralSources.filter(v => v.status == status)}
 			/>
 		);
 	}

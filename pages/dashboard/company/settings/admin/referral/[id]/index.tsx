@@ -100,13 +100,13 @@ export default function ViewReferral({ id, host }) {
             actions={
                 (<ButtonGroup>
                     {
-                        entity.status === Status.ACTIVE &&
+                        entity.status == Status.ACTIVE &&
                         <DeleteButton
                             onDelete={onDeleteClick}
                         />
                     }
                     {
-                        entity.status === Status.DELETED &&
+                        entity.status == Status.DELETED &&
                         <RestoreButton
                             onRestore={onRestoreClick}
                         />
@@ -132,7 +132,7 @@ export default function ViewReferral({ id, host }) {
                             MEDIUM: entity.medium,
                             URL: entity.code ? ReferralSourceEntity.getReferralUrl(host, entity, user?.company?.uuid_token) : null,
                             REFERRALS: entity.referrals,
-                            CREATED_AT: (typeof entity.createdAt === "string" ? new Date(entity.createdAt) : entity.createdAt)?.toLocaleString()
+                            CREATED_AT: (typeof entity.createdAt == "string" ? new Date(entity.createdAt) : entity.createdAt)?.toLocaleString()
                         }}
                     />
                 </Col>

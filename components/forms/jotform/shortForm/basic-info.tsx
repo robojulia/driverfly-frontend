@@ -52,7 +52,7 @@ export function BasicInfo() {
 
 	useEffect(() => {
 		const apx = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.AUTHORIZE_TO_COMMUNICATE
+			(v) => v.type == ApplicantExtras.AUTHORIZE_TO_COMMUNICATE
 		);
 		form.setValues({
 			...form.values,

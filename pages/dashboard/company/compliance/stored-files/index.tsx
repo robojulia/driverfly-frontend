@@ -454,12 +454,12 @@ export default function StoredFiles() {
                 show={!!documentId}
                 onCloseClick={resetDocumentId}
                 closeText="CANCEL"
-                title="APPLICANTS"
+                title="DISPATCH_FILES_TO"
             >
                 <TabbedLayout
                     items={{
-                        APPLICANT: <ApplicantListing />,
-                        EMPLOYEE: <EmployeeListing />,
+                        APPLICANTS: <ApplicantListing />,
+                        EMPLOYEES: <EmployeeListing />,
                     }}
                     className="mt-0"
                 ></TabbedLayout>

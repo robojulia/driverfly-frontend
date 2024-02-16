@@ -121,7 +121,7 @@ export function DuiAndEquipment() {
                                             formik={form}
                                         />
                                     </div>
-                                    {entity.type === JobEquipmentType.OTHER && (
+                                    {entity.type == JobEquipmentType.OTHER && (
                                         <div>
                                             <BaseInput
                                                 className="my-2"

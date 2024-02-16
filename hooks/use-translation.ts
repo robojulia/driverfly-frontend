@@ -25,7 +25,7 @@ export function useTranslation (ns?: string) {
             if (translationObj) translationObj = translationObj[p];
         });
 
-        if (typeof translationObj === "string") {
+        if (typeof translationObj == "string") {
             translatedText = translationObj;
 
             if (props) {

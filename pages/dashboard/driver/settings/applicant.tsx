@@ -372,7 +372,7 @@ export default function Applicant() {
                                                                 />
                                                             </Col>
                                                             {
-                                                                entity.type === JobEquipmentType.OTHER &&
+                                                                entity.type == JobEquipmentType.OTHER &&
                                                                 <Col xs="11">
                                                                     <BaseInput
                                                                         name={`equipment_experience[${i}].type_other`}
@@ -442,7 +442,7 @@ export default function Applicant() {
                                                                     />
                                                                 </Col>
                                                                 {
-                                                                    entity.type === JobEquipmentType.OTHER &&
+                                                                    entity.type == JobEquipmentType.OTHER &&
                                                                     <Col xs="11">
                                                                         <BaseInput
                                                                             name={`equipment_owned[${i}].type_other`}
@@ -497,7 +497,7 @@ export default function Applicant() {
                             return (
                                 <Accordion
                                     key={i}
-                                    defaultExpanded={i === 0 || !meta.touched || hasError}
+                                    defaultExpanded={i == 0 || !meta.touched || hasError}
                                     expanded={hasError || undefined}
                                 >
                                     <AccordionSummary
@@ -509,7 +509,7 @@ export default function Applicant() {
                                             variant="danger"
                                             onClick={v => form.setValues({
                                                 ...form.values,
-                                                employers: form.values.employers.filter((v, idx) => idx !== i),
+                                                employers: form.values.employers.filter((v, idx) => idx != i),
                                             })}
                                         >
                                             <XCircle /> {t("REMOVE")}
@@ -836,7 +836,7 @@ export default function Applicant() {
                     <ViewCard
                         title="UPLOADED_DOCUMENTS"
                         actions={<Button size='sm'
-                            disabled={form.values.documents?.length === Object.keys(ApplicantDocumentType).length}
+                            disabled={form.values.documents?.length == Object.keys(ApplicantDocumentType).length}
                             onClick={() => form.setValues({
                                 ...form.values,
                                 documents: [

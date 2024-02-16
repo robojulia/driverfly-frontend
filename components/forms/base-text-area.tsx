@@ -53,7 +53,7 @@ function BaseTextArea({ formik, required, className, maxLength, label, rows, pla
       after={maxLength > 0 && <span className="text-info float-right small">{t("{number}_CHARACTERS_REMAINING", { number: remaining.toString() })}</span>}
       >
       <textarea
-        placeholder={t(placeholder === true ? label || name : (placeholder || "").toString())}
+        placeholder={t(placeholder == true ? label || name : (placeholder || "").toString())}
         value={value || ""}
         rows={rows}
         maxLength={maxLength}

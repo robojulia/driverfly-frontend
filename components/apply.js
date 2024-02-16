@@ -65,10 +65,10 @@ export default function JobApply({ job, setEncourageModal }) {
                         if (preferences.length > 0) {
                             applicant.documents = applicant.documents.filter(
                                 (document) => !preferences.some(
-                                    (preference) => preference.label === document.type && preference.value === SharePreference.NEVER
+                                    (preference) => preference.label == document.type && preference.value == SharePreference.NEVER
                                 )
                             );
-                        } else applicant.documents = applicant.documents?.filter((document) => document.type === ApplicantDocumentType.RESUME);
+                        } else applicant.documents = applicant.documents?.filter((document) => document.type == ApplicantDocumentType.RESUME);
 
                         apply_form.setValues({
                             ...apply_form.values,
@@ -78,7 +78,7 @@ export default function JobApply({ job, setEncourageModal }) {
                 }
             }
             catch (e) {
-                if (e.response?.status === 401) {
+                if (e.response?.status == 401) {
                     return;
                 }
                 throw e;
@@ -122,7 +122,7 @@ export default function JobApply({ job, setEncourageModal }) {
                 }
             >
                 <form onSubmit={apply_form.handleSubmit}>
-                    {typeof apply_form.errors.job === "string" &&
+                    {typeof apply_form.errors.job == "string" &&
                         <Row>
                             <span className='text-danger'>{apply_form.errors.job}</span>
                         </Row>
@@ -165,7 +165,7 @@ export default function JobApply({ job, setEncourageModal }) {
                         />
                     </Row>
                     <Row>
-                        {user !== null ?
+                        {user != null ?
                             <BaseSelect
                                 className="col-12 mt-3"
                                 label="highest_degree"
@@ -191,7 +191,7 @@ export default function JobApply({ job, setEncourageModal }) {
                             <ViewCard
                                 title="DOCUMENTS"
                                 actions={<Button size='sm'
-                                    disabled={apply_form.values.documents?.length === Object.keys(ApplicantDocumentType).length}
+                                    disabled={apply_form.values.documents?.length == Object.keys(ApplicantDocumentType).length}
                                     onClick={() => apply_form.setValues({
                                         ...apply_form.values,
                                         documents: [

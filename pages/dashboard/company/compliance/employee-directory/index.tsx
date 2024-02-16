@@ -302,8 +302,8 @@ export default function EmployeeDirectory() {
                             <span className="p-4">{t("VIEW_BY_{name}", { name:  "PAST_EMPLOYEE"   }, { translateProps: true })}</span>
                             <FormControlLabel
                                 control={<Switch
-                                    value={viewMode === ViewModeType.EMPLOYEE ? ViewModeType.EMPLOYEE : ViewModeType.PAST_EMPLOYEE}
-                                    checked={viewMode === ViewModeType.EMPLOYEE}
+                                    value={viewMode == ViewModeType.EMPLOYEE ? ViewModeType.EMPLOYEE : ViewModeType.PAST_EMPLOYEE}
+                                    checked={viewMode == ViewModeType.EMPLOYEE}
                                     onChange={onViewModeChange} />}
                                     label=''
                             />
@@ -394,7 +394,7 @@ export default function EmployeeDirectory() {
                         </Col>
                         <Col md="12" className="mt-2">
                             {
-                                moveToPastForm.values.status === EmployeeStatus.QUIT &&
+                                moveToPastForm.values.status == EmployeeStatus.QUIT &&
                                 <BaseCheckList
                                     className="col-12"
                                     label="REASON_CODES"
@@ -407,7 +407,7 @@ export default function EmployeeDirectory() {
                                 />
                             }
                             {
-                                moveToPastForm.values.status === EmployeeStatus.FIRED &&
+                                moveToPastForm.values.status == EmployeeStatus.FIRED &&
                                 <BaseCheckList
                                     className="col-12"
                                     label="REASON_CODES"

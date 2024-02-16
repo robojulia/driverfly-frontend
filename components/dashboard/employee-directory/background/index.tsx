@@ -39,7 +39,7 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 							<strong><h5>{t(`${employee?.first_name} ${employee?.last_name}`)}</h5></strong>
 						</Col>
 						{
-							!!!(employee.status === EmployeeStatus.FIRED || employee.status === EmployeeStatus.QUIT) ? <Col>
+							!!!(employee.status == EmployeeStatus.FIRED || employee.status == EmployeeStatus.QUIT) ? <Col>
 								<Button onClick={onEditClick} className="float-right">
 									{t("EDIT")}
 								</Button>

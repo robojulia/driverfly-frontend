@@ -66,10 +66,10 @@ export function HearAbout() {
 
 	useEffect(() => {
 		const apx = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.HEAR_ABOUT_US
+			(v) => v.type == ApplicantExtras.HEAR_ABOUT_US
 		);
 		const apx_referal_name = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.REFERAL_NAME
+			(v) => v.type == ApplicantExtras.REFERAL_NAME
 		);
 		form.setValues({
 			...form.values,
@@ -109,7 +109,7 @@ export function HearAbout() {
 					/>
 				</Row>
 
-				{form.values?.HEAR_ABOUT_US?.value === HearAboutUsType.REFERRAL && (
+				{form.values?.HEAR_ABOUT_US?.value == HearAboutUsType.REFERRAL && (
 					<Row className={styles.bold}>
 						<BaseInput
 							className="col mb-4"

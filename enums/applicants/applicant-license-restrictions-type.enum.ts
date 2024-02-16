@@ -6,6 +6,6 @@ export enum LicenseRestrictions {
     M_ONLY_CLASS_B_AND_C_PASSENGER_VEHICLE_OR_SCHOOL_BUS = 'M',
     N_ONLY_CLASS_C_PASSENGER_VEHICLE_OR_SCHOOL_BUS = 'N',
     V_MEDICAL_VARIANCE = 'V',
-
+    OTHER = 'OTHER',
 }
   

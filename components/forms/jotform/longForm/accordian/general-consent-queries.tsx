@@ -24,10 +24,10 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
     };
     useEffect(() => {
         const apx_sign = applicantExtras?.find(
-            (v) => v.type === ApplicantExtras.SIGNATURE_GENERAL_CONSENT
+            (v) => v.type == ApplicantExtras.SIGNATURE_GENERAL_CONSENT
         );
         const apx_general_consent = applicantExtras?.find(
-            (v) => v.type === ApplicantExtras.GENERAL_CONSENT
+            (v) => v.type == ApplicantExtras.GENERAL_CONSENT
         );
         if (apx_sign) canvasRef?.current?.fromDataURL(apx_sign?.value)
 
@@ -42,7 +42,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
 
         });
     }, [applicant]);
-    const apply_date = applicantExtras?.find(v => v.type === ApplicantExtras.APPLY_DATE)
+    const apply_date = applicantExtras?.find(v => v.type == ApplicantExtras.APPLY_DATE)
 
 
     return (

@@ -20,9 +20,18 @@ export class ApplicantExperienceEntity {
         });
     }
 
-    static key(entity: ApplicantExperienceEntity) {
-        if (entity.type === JobEquipmentType.OTHER) return `${entity.type}_${entity.type_other}`;
+    static yupSchemaForImport() {
+        return yup.object({
+            type: (yup.string() as any).enum(JobEquipmentType).required().nullable(),
+            type_other: yup.string().nullable(),
+            years: yup.number().min(1).nullable(),
+            months: yup.number().min(0).max(11).nullable()
+        });
+    }
 
-        return entity.type;
+    static key(entity: ApplicantExperienceEntity) {
+        if (entity?.type == JobEquipmentType.OTHER) return `${entity.type}_${entity.type_other}`;
+
+        return entity?.type;
     }
 }

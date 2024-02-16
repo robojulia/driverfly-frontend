@@ -1,28 +1,27 @@
-import "../public/css/owl.carousel.css";
-import "../public/css/owl.theme.default.min.css";
-import "../public/css/style.css";
-import "../public/css/responsive.css";
-import "../public/dashboard/styles/css/global.css";
 import "../public/css/buttons/buttons.css";
 import "../public/css/cards/cards.css";
 import "../public/css/links/links.css";
+import "../public/css/owl.carousel.css";
+import "../public/css/owl.theme.default.min.css";
+import "../public/css/responsive.css";
+import "../public/css/style.css";
+import "../public/dashboard/styles/css/global.css";
 
 // init bootstrap
-import "bootstrap/dist/css/bootstrap.css";
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import "bootstrap/dist/css/bootstrap.css";
 import "../public/bootstrap/css/bootstrap.min.css";
 
 // init fontawsome
 import '@fortawesome/fontawesome-free/css/all.css';
 
 // set up chart JS
-import { yupInit } from "../config/yup";
-import { chartJsInit } from "../config/chartjs";
 import { bootstrapInit } from "../config/bootstrap";
+import { chartJsInit } from "../config/chartjs";
 
 
+import ErrorBoundary from "../components/ErrorBoundry";
 import { AuthProvider } from "../components/auth/auth-provider";
-import { ManyChatScript } from "../components/scripts/manychat/manychat";
 
 function MyApp({ Component, pageProps }) {
 
@@ -31,11 +30,13 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      {/* <ManyChatScript /> */}
-      <AuthProvider
-        Component={Component}
-        pageProps={pageProps}
-      />
+      {/* <ErrorBoundary> */}
+        {/* <ManyChatScript /> */}
+        <AuthProvider
+          Component={Component}
+          pageProps={pageProps}
+        />
+      {/* </ErrorBoundary> */}
     </>
   );
 }

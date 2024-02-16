@@ -40,7 +40,7 @@ export default function Combobox(props: ComboboxProps) {
         const query = value?.toLowerCase() || "";
 
         if (query.length >= minLength) {
-            let opts = typeof options === "function" ? options(query) : options;
+            let opts = typeof options == "function" ? options(query) : options;
 
             if (opts instanceof Promise) opts = await opts;
 
@@ -142,7 +142,7 @@ export default function Combobox(props: ComboboxProps) {
             <Dropdown className={style.form_combobox} show={state.show}>
                 <FormControl name={name} onChange={onInputChange} onFocus={onInputFocus} onBlur={onInputBlur} type="text" placeholder={t(minLength > 1 ? "TYPE_AT_LEAST_{num}_CHARACTERS_TO_SEE_OPTIONS" : "START_TYPING_TO_SEE_OPTIONS", { num: minLength.toString() })} value={state.query} autoComplete="off" />
                 <Dropdown.Menu className="w-100">
-                    {state.options?.length === 0 && <span className="text-warning small">{t("NO_MATCHING_RESULTS")}</span>}
+                    {state.options?.length == 0 && <span className="text-warning small">{t("NO_MATCHING_RESULTS")}</span>}
                     {state.options?.map((o, i) =>
                     (
                         o && <a key={i} href="#" className={`dropdown-item ${style.form_combobox_item}`} onClick={e => onOptionClick(e, o.value)}>

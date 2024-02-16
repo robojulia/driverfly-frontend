@@ -74,7 +74,7 @@ export function VehicleForm(props: VehicleFormProps) {
         >
             <Row className="mt-2">
                 <BaseSelect
-                    className={`col-${form.values.type === VehicleType.OTHER ? 3 : 6}`}
+                    className={`col-${form.values.type == VehicleType.OTHER ? 3 : 6}`}
                     name="type"
                     label="TYPE"
                     placeholder="TYPE"
@@ -84,7 +84,7 @@ export function VehicleForm(props: VehicleFormProps) {
                     formik={form}
                 />
                 {
-                    form.values.type === VehicleType.OTHER &&
+                    form.values.type == VehicleType.OTHER &&
                     <BaseInput
                         className="col-3"
                         name="type_other"
@@ -95,7 +95,7 @@ export function VehicleForm(props: VehicleFormProps) {
                     />
                 }
                 <BaseSelect
-                    className={`col-${form.values.trailer_type === VehicleTrailerType.OTHER ? 3 : 6}`}
+                    className={`col-${form.values.trailer_type == VehicleTrailerType.OTHER ? 3 : 6}`}
                     label="TRAILER_TYPE"
                     name="trailer_type"
                     placeholder="TRAILER_TYPE"
@@ -104,7 +104,7 @@ export function VehicleForm(props: VehicleFormProps) {
                     formik={form}
                 />
                 {
-                    form.values.trailer_type === VehicleTrailerType.OTHER &&
+                    form.values.trailer_type == VehicleTrailerType.OTHER &&
                     <BaseInput
                         className="col-3"
                         name="trailer_type_other"

@@ -1,4 +1,6 @@
+"use client";
 import { useFormik } from "formik";
+import Papa from "papaparse";
 import { useState } from "react";
 import {
     Col,
@@ -19,7 +21,6 @@ import * as yup from "yup";
 import { SchemaDescription, SchemaObjectDescription } from "yup/lib/schema";
 import { LicenseRestrictions } from "../../../enums/applicants/applicant-license-restrictions-type.enum";
 import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
-import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
 import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
 import { EducationLevel } from "../../../enums/users/education-level.enum";
@@ -33,23 +34,24 @@ import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import ApplicantApi from "../../../pages/api/applicant";
 import * as _style from "../../../public/components/styles/ImportApplicantsModule.module.css";
 import { matchEnum } from "../../../utils/enums.utils";
-import * as fileUtils from "../../../utils/file";
 import { FormikInterface } from "../../../utils/formik";
 import Switch from "../../controls/switch";
 import OverlyPopover from "../../popover/overly-popover";
 
-
-
+function unique<T>(value: T, index: number, self: T[]) {
+    return (Boolean(value) && self.indexOf(value) == index)
+}
 const ImportApplicants = () => {
     const style: any = _style;
 
     const { t } = useTranslation();
 
-    const schema = ApplicantEntity.yupSchema();
+    const schema = ApplicantEntity.yupSchemaForImportApplicants();
 
     const schemaDescribe = schema.describe();
 
     const [warnings, setWarnings] = useState({});
+    const [csvErrors, setCsvErrors] = useState([]);
 
     const api = new ApplicantApi();
     /**
@@ -76,20 +78,21 @@ const ImportApplicants = () => {
             ),
         }),
         validate: async (values) => {
-            values.items = values
-                ?.items
-                ?.filter((v) => Boolean(v.email)
-                    || Boolean(v.first_name)
-                    || Boolean(v.last_name)
-                    || Boolean(v.phone)
-                )
-            console.log("values validate", values);
-
             const errors = {};
 
             let lastProgress = 0;
-            for (let i = 0; i < values.items.length; i++) {
+            for (let i = 0; i < values.items?.length; i++) {
                 const applicant = values.items[i];
+
+                if (
+                    applicant.phone?.length > 3 &&
+                    !applicant.phone.startsWith("+1")
+                ) { applicant.phone = "+1 " + applicant.phone; }
+
+                if (
+                    applicant.emergency_contact_number?.length > 3 &&
+                    !applicant.emergency_contact_number.startsWith("+1")
+                ) { applicant.emergency_contact_number = "+1 " + applicant.emergency_contact_number; }
 
                 if (applicant.email) {
                     const rowError: { email?: string; phone?: string } = {};
@@ -109,8 +112,6 @@ const ImportApplicants = () => {
                         );
 
                     if (applicant.phone) {
-                        if (applicant.phone.length > 3 && !applicant.phone.startsWith("+1")) applicant.phone = "+1 " + applicant.phone
-
                         if (matches.some((v) => v.company?.id != null))
                             rowError.phone = t(
                                 "{name}_ALREADY_EXISTS",
@@ -129,7 +130,7 @@ const ImportApplicants = () => {
                     }
                 }
 
-                let progress = Math.floor(((i + 1) * 100) / values.items.length);
+                let progress = Math.floor(((i + 1) * 100) / values.items?.length);
 
                 if (progress != lastProgress) {
                     setProgress(progress);
@@ -143,7 +144,7 @@ const ImportApplicants = () => {
         onSubmit: async (values) => {
             let lastProgress = 0;
 
-            for (let i = 0; i < values.items.length; i++) {
+            for (let i = 0; i < values.items?.length; i++) {
                 let dto = values.items[i];
 
                 if (!!dto.birthdate) {
@@ -162,7 +163,7 @@ const ImportApplicants = () => {
                     return;
                 }
 
-                let progress = Math.floor(((i + 1) * 100) / values.items.length);
+                let progress = Math.floor(((i + 1) * 100) / values.items?.length);
 
                 if (progress != lastProgress) {
                     setProgress(progress);
@@ -184,7 +185,9 @@ const ImportApplicants = () => {
      *
      * @param {React.ChangeEvent<HTMLInputElement>} e
      */
-    const onFileChange = async (e) => {
+    async function onFileChange(
+        e: React.ChangeEvent<HTMLInputElement>
+    ): Promise<void> {
         const {
             target: {
                 files: [file],
@@ -192,60 +195,109 @@ const ImportApplicants = () => {
             },
         } = e;
         setFileName(value);
+        setCsvErrors([]);
 
         if (file) {
-            let contents = await fileUtils.readCSV(file, {
-                onProgress: (p) => setProgress(p),
+            await Papa.parse(file, {
+                header: true,
+                skipEmptyLines: true,
+                complete: validateFileContent,
             });
+        }
+    }
 
-            if (contents.length > 0 && contents[0][0] === headers[0])
-                contents = contents.slice(1);
+    function validateFileContent(results): void {
+        let {
+            data,
+            errors,
+            meta: { fields },
+        } = results;
+        console.log("results", { data, errors, fields });
 
-            contents = contents.map((row) => {
+        const contents = data
+            ?.map((row, i) => {
                 const entity = new ApplicantEntity();
+                if (!Object.values(row)?.some(Boolean)) {
+                    errors = errors.filter((v) => v.row != i);
+                    return false;
+                }
 
-                row.forEach((col, i) => {
-                    const header = headers[i];
+                Object.entries(row)
+                    ?.map(([key, value]: [string, any]) => {
+                        const fieldSchema = schemaDescribe.fields[key];
+                        if (!fieldSchema) return;
 
-                    const desc = schemaDescribe.fields[header];
-                    if (col) {
-                        switch (desc.type) {
+                        switch (fieldSchema?.type) {
                             case "boolean":
-                                entity[header] =
-                                    col.trim().toLowerCase().startsWith("y") ||
-                                    col.toLowerCase().startsWith("t");
+                                entity[key] =
+                                    value.trim().toLowerCase().startsWith("y") ||
+                                    value.toLowerCase().startsWith("t");
                                 break;
                             case "array":
-                                entity[header] = col
+                                entity[key] = value
                                     .split(",")
-                                    .map((v) => v.trim())
+                                    ?.map((v) => v.trim())
                                     .filter((v) => !!v);
                                 break;
+                            case "number":
+                                entity[key] = value != "" ? Number(value) : null;
+                                break;
+                            case "date":
+                                entity[key] = value != "" ? (value) : null;
+                                break;
                             default:
-                                entity[header] = col.trim();
+                                entity[key] = value.trim();
                         }
 
-                        switch (header) {
+                        switch (key) {
                             case "license_restrictions":
-                                entity.license_restrictions = entity.license_restrictions.map(
-                                    (v) =>
-                                        matchEnum(v, LicenseRestrictions, "LicenseRestrictions", t)
-                                );
+                                entity.license_restrictions = entity.license_restrictions
+                                    ?.filter(unique)
+                                    ?.map((v, i, self) => {
+                                        if (!Object.values(LicenseRestrictions).includes(v)) {
+                                            entity.license_restrictions_other =
+                                                v + ", " + (entity.license_restrictions_other || "");
+                                            return LicenseRestrictions.OTHER;
+                                        }
+                                        return matchEnum(
+                                            v,
+                                            LicenseRestrictions,
+                                            "LicenseRestrictions",
+                                            t
+                                        );
+                                    })
+                                    ?.filter(unique);
                                 break;
                             case "transmission_type":
-                                entity.transmission_type = entity.transmission_type.map((v) =>
-                                    matchEnum(
-                                        v,
-                                        VehicleTransmissionType,
-                                        "VehicleTransmissionType",
-                                        t
+                                entity.transmission_type = entity.transmission_type
+                                    ?.filter(unique)
+                                    ?.map((v) =>
+                                        matchEnum(
+                                            v,
+                                            VehicleTransmissionType,
+                                            "VehicleTransmissionType",
+                                            t
+                                        )
                                     )
-                                );
+                                    ?.filter(unique);
                                 break;
                             case "endorsements":
-                                entity.endorsements = entity.endorsements.map((v) =>
-                                    matchEnum(v, DriverEndorsement, "DriverEndorsement", t)
-                                );
+                                entity.endorsements = entity.endorsements
+                                    ?.filter(unique)
+                                    ?.map((v) => {
+                                        if (!Object.values(DriverEndorsement).includes(v)) {
+                                            entity.endorsements_other =
+                                                v + ", " + (entity.endorsements_other || "");
+                                            return DriverEndorsement.OTHER;
+                                        }
+                                        return matchEnum(
+                                            v,
+                                            DriverEndorsement,
+                                            "DriverEndorsement",
+                                            t
+                                        );
+                                    })
+                                    ?.filter(unique);
                                 break;
                             case "highest_degree":
                                 entity.highest_degree = matchEnum(
@@ -256,37 +308,55 @@ const ImportApplicants = () => {
                                 );
                                 break;
                             case "license_type":
-                                entity.license_type = matchEnum(
-                                    entity.license_type,
-                                    DriverLicenseType,
-                                    "DriverLicenseType",
-                                    t
-                                );
+                                entity.license_type = !entity.license_type
+                                    ? DriverLicenseType.NO_CDL
+                                    : matchEnum(
+                                        entity.license_type,
+                                        DriverLicenseType,
+                                        "DriverLicenseType",
+                                        t
+                                    );
                                 break;
                             case "equipment_experience":
-                                entity.equipment_experience = entity.equipment_experience.map(
-                                    (v) => {
-                                        const equipmentExperienceObject =
-                                            new ApplicantExperienceEntity();
-                                        equipmentExperienceObject.type = matchEnum(
-                                            v.toString(),
-                                            JobEquipmentType,
-                                            "JobEquipmentType",
-                                            t
-                                        );
-                                        return equipmentExperienceObject;
-                                    }
-                                );
+                                entity.equipment_experience = entity.equipment_experience
+                                    ?.filter(unique)
+                                    ?.map(
+                                        (v) => {
+                                            const equipmentExperienceObject = new ApplicantExperienceEntity();
+                                            if (!Object.values(JobEquipmentType).includes(v.toString() as JobEquipmentType)) {
+                                                equipmentExperienceObject.type_other =
+                                                    v + ", " + (equipmentExperienceObject.type_other || "");
+                                                equipmentExperienceObject.type = JobEquipmentType.OTHER;
+                                            } else {
+                                                equipmentExperienceObject.type = matchEnum(
+                                                    v.toString(),
+                                                    JobEquipmentType,
+                                                    "JobEquipmentType",
+                                                    t
+                                                );
+                                            }
+                                            return equipmentExperienceObject;
+                                        }
+                                    )
+                                    ?.filter(unique);
                                 break;
                         }
-                    }
-                });
-                return entity;
-            });
+                    })
+                    ?.filter(Boolean);
 
-            form.setValues({ items: contents }, true);
-        }
-    };
+                if (!entity.license_revoked) entity.license_revoked_details = "";
+                if (!entity.psp_violations) delete entity.psp_violations_details;
+                if (!entity.tickets) entity.tickets_details = "";
+                if (!entity.positive_drug_test) entity.positive_drug_test_details = "";
+                if (!entity.infractions) entity.infractions_details = "";
+                if (!entity.moving_violations) entity.moving_violations_details = "";
+
+                return entity;
+            })
+            ?.filter(Boolean);
+        if (errors?.length) setCsvErrors(errors);
+        form?.setValues({ items: contents }, true);
+    }
 
     const headers: string[] = Object.keys(schemaDescribe.fields).filter((v) => {
         switch (v) {
@@ -300,25 +370,11 @@ const ImportApplicants = () => {
         }
     }); //Object.keys(new ApplicantEntity());
 
-    const headersData: string[] = headers?.map(
-        (h) =>
-        ({
-            license_type: DriverLicenseType.CDL_CLASS_A,
-            preferred_location: `"${JobGeography.LOCAL},${JobGeography.OTR},${JobGeography.REGIONAL}"`,
-            transmission_type: VehicleTransmissionType.AUTOMATIC,
-        }[h] || "")
-    );
-
-    console.log("headers", headers);
-    console.log("headers data", headersData);
-
-    const onDownloadClick = (e) => {
-    };
-
     const onClearClick = (e) => {
         form.resetForm();
         setFileName("");
         setProgress(0);
+        setCsvErrors([]);
     };
 
     const [onlyErrors, setOnlyErrors] = useState(false);
@@ -336,11 +392,12 @@ const ImportApplicants = () => {
         form.isValid &&
         !form.isValidating &&
         !form.isSubmitting &&
-        form.values.items.length > 0;
+        form.values.items?.length > 0;
     const canClear =
-        (form.values.items.length > 0 || fileName) &&
+        (form.values.items?.length > 0 || fileName) &&
         !form.isValidating &&
         !form.isSubmitting;
+
     return (
         <>
             <Row>
@@ -378,7 +435,9 @@ const ImportApplicants = () => {
                             </div>
                         )}
                     </InputGroup>
-                    <p className="small text-secondary">{t("DOWNLOAD_AND_SAVE_AS_CSV")}</p>
+                    <p className="small text-secondary">
+                        {t("DOWNLOAD_AND_SAVE_AS_CSV")}
+                    </p>
                 </Col>
                 <Col sm="6" className="my-3">
                     <div style={{ float: "right" }}>
@@ -397,11 +456,21 @@ const ImportApplicants = () => {
                 <Col>
                     <div style={{ float: "left" }}>
                         {!form.isValid && (
-                            <span className="text-danger small">
+                            <div className="text-danger small">
                                 {t("ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE")}
-                            </span>
+                            </div>
                         )}
                     </div>
+                    <br />
+                    {Boolean(csvErrors.length) && (
+                        <div className="text-warning" style={{ float: "left" }}>
+                            {csvErrors.map((error, i) => (
+                                <div key={i} className="text-bold small">
+                                    {error.message} at row {error.row + 1}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                     <div className="text-nowrap" style={{ float: "right" }}>
                         <OverlyPopover
                             skipTranslate={false}
@@ -441,9 +510,9 @@ const ImportApplicants = () => {
                                     <CheckCircle />
                                 </th>
                                 <th className={style.frozen_col}>#</th>
-                                {headers.map((k) => {
+                                {headers?.map((k, i) => {
                                     const text = `${k}${(schemaDescribe.fields[k] as SchemaDescription).tests.some(
-                                        (v) => v.name === "required"
+                                        (v) => v.name == "required"
                                     )
                                         ? "*"
                                         : ""
@@ -452,33 +521,39 @@ const ImportApplicants = () => {
                                     switch (k) {
                                         case "license_restrictions":
                                             return (
-                                                <th>
+                                                <th key={i}>
                                                     <Dropdown>
                                                         <Dropdown.Toggle variant="light">
                                                             {text}
                                                         </Dropdown.Toggle>
                                                         <Dropdown.Menu>
-                                                            {Object.values(LicenseRestrictions).map((v) => {
-                                                                return (
-                                                                    <Dropdown.ItemText>{v}</Dropdown.ItemText>
-                                                                );
-                                                            })}
+                                                            {Object.values(LicenseRestrictions)?.map(
+                                                                (v, j) => {
+                                                                    return (
+                                                                        <Dropdown.ItemText key={j}>
+                                                                            {v}
+                                                                        </Dropdown.ItemText>
+                                                                    );
+                                                                }
+                                                            )}
                                                         </Dropdown.Menu>
                                                     </Dropdown>
                                                 </th>
                                             );
                                         case "transmission_type":
                                             return (
-                                                <th>
+                                                <th key={i}>
                                                     <Dropdown>
                                                         <Dropdown.Toggle variant="light">
                                                             {text}
                                                         </Dropdown.Toggle>
                                                         <Dropdown.Menu>
-                                                            {Object.values(VehicleTransmissionType).map(
-                                                                (v) => {
+                                                            {Object.values(VehicleTransmissionType)?.map(
+                                                                (v, j) => {
                                                                     return (
-                                                                        <Dropdown.ItemText>{v}</Dropdown.ItemText>
+                                                                        <Dropdown.ItemText key={j}>
+                                                                            {v}
+                                                                        </Dropdown.ItemText>
                                                                     );
                                                                 }
                                                             )}
@@ -488,15 +563,17 @@ const ImportApplicants = () => {
                                             );
                                         case "endorsements":
                                             return (
-                                                <th>
+                                                <th key={i}>
                                                     <Dropdown>
                                                         <Dropdown.Toggle variant="light">
                                                             {text}
                                                         </Dropdown.Toggle>
                                                         <Dropdown.Menu>
-                                                            {Object.values(DriverEndorsement).map((v) => {
+                                                            {Object.values(DriverEndorsement)?.map((v, j) => {
                                                                 return (
-                                                                    <Dropdown.ItemText>{v}</Dropdown.ItemText>
+                                                                    <Dropdown.ItemText key={j}>
+                                                                        {v}
+                                                                    </Dropdown.ItemText>
                                                                 );
                                                             })}
                                                         </Dropdown.Menu>
@@ -505,15 +582,17 @@ const ImportApplicants = () => {
                                             );
                                         case "highest_degree":
                                             return (
-                                                <th>
+                                                <th key={i}>
                                                     <Dropdown>
                                                         <Dropdown.Toggle variant="light">
                                                             {text}
                                                         </Dropdown.Toggle>
                                                         <Dropdown.Menu>
-                                                            {Object.values(EducationLevel).map((v) => {
+                                                            {Object.values(EducationLevel)?.map((v, j) => {
                                                                 return (
-                                                                    <Dropdown.ItemText>{v}</Dropdown.ItemText>
+                                                                    <Dropdown.ItemText key={j}>
+                                                                        {v}
+                                                                    </Dropdown.ItemText>
                                                                 );
                                                             })}
                                                         </Dropdown.Menu>
@@ -522,15 +601,17 @@ const ImportApplicants = () => {
                                             );
                                         case "license_type":
                                             return (
-                                                <th>
+                                                <th key={i}>
                                                     <Dropdown>
                                                         <Dropdown.Toggle variant="light">
                                                             {text}
                                                         </Dropdown.Toggle>
                                                         <Dropdown.Menu>
-                                                            {Object.values(DriverLicenseType).map((v) => {
+                                                            {Object.values(DriverLicenseType)?.map((v, j) => {
                                                                 return (
-                                                                    <Dropdown.ItemText>{v}</Dropdown.ItemText>
+                                                                    <Dropdown.ItemText key={j}>
+                                                                        {v}
+                                                                    </Dropdown.ItemText>
                                                                 );
                                                             })}
                                                         </Dropdown.Menu>
@@ -539,15 +620,17 @@ const ImportApplicants = () => {
                                             );
                                         case "equipment_experience":
                                             return (
-                                                <th>
+                                                <th key={i}>
                                                     <Dropdown>
                                                         <Dropdown.Toggle variant="light">
                                                             {text}
                                                         </Dropdown.Toggle>
                                                         <Dropdown.Menu>
-                                                            {Object.values(JobEquipmentType).map((v) => {
+                                                            {Object.values(JobEquipmentType)?.map((v, j) => {
                                                                 return (
-                                                                    <Dropdown.ItemText>{v}</Dropdown.ItemText>
+                                                                    <Dropdown.ItemText key={j}>
+                                                                        {v}
+                                                                    </Dropdown.ItemText>
                                                                 );
                                                             })}
                                                         </Dropdown.Menu>
@@ -555,28 +638,28 @@ const ImportApplicants = () => {
                                                 </th>
                                             );
                                         default:
-                                            return <th>{text}</th>;
+                                            return <th key={i}>{text}</th>;
                                     }
                                 })}
                             </tr>
                         </thead>
                         <tbody>
-                            {typeof form.errors.items === "string" && (
+                            {typeof form.errors.items == "string" && (
                                 <tr>
-                                    <td colSpan={headers.length + 2}>
+                                    <td colSpan={headers?.length + 2}>
                                         <span className="text-danger small">
                                             {form.errors.items}
                                         </span>
                                     </td>
                                 </tr>
                             )}
-                            {form.values.items.map((v, i) => {
+                            {form.values.items?.map((v, i) => {
                                 const meta = form.getFieldMeta(`items.${i}`);
 
                                 const findIcon = () => {
                                     if (meta.error) return <XCircle color="red" />;
 
-                                    // if (Boolean(warnings[i]) && Boolean(Object.keys((warnings[i]))?.length))
+                                    // if (Boolean(warnings[i]) && Boolean(Object.keys((warnings[i]))??.length))
                                     if (Boolean(warnings[i]))
                                         return <ExclamationTriangle color="orange" />;
 
@@ -586,11 +669,14 @@ const ImportApplicants = () => {
                                 if (onlyErrors && !meta.error) return null;
 
                                 return (
-                                    <tr className={onlyErrors && !meta.error ? `d-none` : ""}>
+                                    <tr
+                                        key={i}
+                                        className={onlyErrors && !meta.error ? `d-none` : ""}
+                                    >
                                         <td className={style.frozen_col}>{findIcon()}</td>
                                         <td className={style.frozen_col}>{i + 1}</td>
-                                        {headers.map((h) => (
-                                            <td>
+                                        {headers?.map((h, j) => (
+                                            <td key={j}>
                                                 {guessControl(form, schema, warnings[i], h, i, t)}
                                             </td>
                                         ))}
@@ -618,35 +704,35 @@ function guessControl(
     const meta = form.getFieldMeta(name);
 
     let value = meta.value;
-    if (desc.type === "boolean") {
+    if (desc.type == "boolean") {
         value = value ? t("YES") : t("NO");
     }
 
     if (value) {
         switch (header) {
             case "license_restrictions":
-                value = value.map((v) => {
+                value = value?.map((v) => {
                     const key = `LicenseRestrictions.${v}`;
                     const text = t(key);
-                    if (key === text) return v;
+                    if (key == text) return v;
 
                     return text;
                 });
                 break;
             case "transmission_type":
-                value = value.map((v) => {
+                value = value?.map((v) => {
                     const key = `VehicleTransmissionType.${v}`;
                     const text = t(key);
-                    if (key === text) return v;
+                    if (key == text) return v;
 
                     return text;
                 });
                 break;
             case "endorsements":
-                value = value.map((v) => {
+                value = value?.map((v) => {
                     const key = `DriverEndorsement.${v}`;
                     const text = t(key);
-                    if (key === text) return v;
+                    if (key == text) return v;
 
                     return text;
                 });
@@ -655,21 +741,21 @@ function guessControl(
                 {
                     const key = `EducationLevel.${value}`;
                     const text = t(key);
-                    if (key !== text) value = text;
+                    if (key != text) value = text;
                 }
                 break;
             case "license_type":
                 {
                     const key = `DriverLicenseType.${value}`;
                     const text = t(key);
-                    if (key !== text) value = text;
+                    if (key != text) value = text;
                 }
                 break;
             case "equipment_experience":
-                value = value.map((v) => {
+                value = value?.map((v) => {
                     const key = `JobEquipmentType.${v.type}`;
                     const text = t(key);
-                    if (key === text) return v;
+                    if (key == text) return v;
 
                     return text;
                 });
@@ -681,12 +767,12 @@ function guessControl(
         return (
             <>
                 <ul itemType="circle">
-                    {value.map((v, i) => {
+                    {value?.map((v, i) => {
                         const error = meta.error ? meta.error[i] : null;
 
                         if (error) {
                             return (
-                                <li>
+                                <li key={i}>
                                     {v}
                                     <br />
                                     <span className="text-danger small">{error}</span>
@@ -694,7 +780,7 @@ function guessControl(
                             );
                         }
 
-                        return <li>{v}</li>;
+                        return <li key={i}>{v}</li>;
                     })}
                 </ul>
             </>

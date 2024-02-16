@@ -140,14 +140,14 @@ export function AccidentHistory() {
 						enumType={BooleanType}
 						onChange={({ target: { value } }) => {
 							form.setFieldValue("did_drive_check", value);
-							if (value !== BooleanType.YES)
+							if (value != BooleanType.YES)
 								form.setFieldValue("drived_vehicle", null);
 						}}
 						required
 					/>
 				</Row>
 
-				{form.values?.did_drive_check === BooleanType.YES && (
+				{form.values?.did_drive_check == BooleanType.YES && (
 					<Row
 						className={`${styles.align__text_left} ${styles.bold} ${styles.paragraph}`}
 					>

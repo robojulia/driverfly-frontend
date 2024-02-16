@@ -49,7 +49,7 @@ export default function DQF(props: ViewApplicantDqfProps) {
                 const applicantDocumentUpload = await applicantApi.documents.create(applicant.id, document)
 
                 if (document.id) {
-                    applicant.documents = applicant.documents.filter(v => (v.id !== applicantDocumentUpload.id))
+                    applicant.documents = applicant.documents.filter(v => (v.id != applicantDocumentUpload.id))
                 }
                 applicant.documents.push(applicantDocumentUpload)
                 toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
@@ -95,7 +95,7 @@ export default function DQF(props: ViewApplicantDqfProps) {
     SafetyPerformanceHistory component instead of the buttons. */
     const ButtonList = ({ document, type }) => (
         <>
-            {(!form.values.document?.type || form.values.document?.type !== type)
+            {(!form.values.document?.type || form.values.document?.type != type)
                 && (<div className="d-flex">
                     {type != ApplicantDqf.SAFETY_PERFORMANCE_HISTORY
                         ? (<>
@@ -177,7 +177,7 @@ export default function DQF(props: ViewApplicantDqfProps) {
                         <tbody>
                             {Object.values(ApplicantDqf).map((type: ApplicantDqf, i) => {
                                 /* Finding the document in the applicant.documents array that has the same type. */
-                                const document: DocumentEntity = applicant?.documents?.find(v => (v.type === type))
+                                const document: DocumentEntity = applicant?.documents?.find(v => (v.type == type))
                                 return (
                                     <tr key={i}>
                                         <td colSpan={2}>
@@ -194,7 +194,7 @@ export default function DQF(props: ViewApplicantDqfProps) {
                                         </td>
                                         <td colSpan={1} className="border border-2 w-50">
                                             <ButtonList document={document} type={type} />
-                                            {(form.values?.document?.type === type)
+                                            {(form.values?.document?.type == type)
                                                 && <Form onSubmit={form.handleSubmit} >
                                                     <FileInput
                                                         name={`document`}
@@ -223,7 +223,7 @@ export default function DQF(props: ViewApplicantDqfProps) {
                             {props.showOnboarding
                                 && Object.values(ApplicantOnBoardingChecklist).map((type: ApplicantOnBoardingChecklist, i) => {
                                     /* Finding the document in the applicant.documents array that has the same type. */
-                                    const document: DocumentEntity = applicant?.documents?.find(v => (v.type === type))
+                                    const document: DocumentEntity = applicant?.documents?.find(v => (v.type == type))
                                     return (
                                         <tr key={i}>
                                             <td colSpan={2}>
@@ -240,7 +240,7 @@ export default function DQF(props: ViewApplicantDqfProps) {
                                             </td>
                                             <td colSpan={1} className="border border-2 w-50">
                                                 <ButtonList document={document} type={type} />
-                                                {(form.values?.document?.type === type)
+                                                {(form.values?.document?.type == type)
                                                     && <Form onSubmit={form.handleSubmit} >
                                                         <FileInput
                                                             name={`document`}

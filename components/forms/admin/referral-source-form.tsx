@@ -38,7 +38,7 @@ export function ReferralSourceForm(props: ReferralSourceFormProps) {
             if (dto?.code && referralCodeRef?.current != entity?.code) {
                 referralCodeRef.current = entity?.code;
 
-                const existing = (await referralSourceApi.list())?.find((v) => v?.code === dto?.code);
+                const existing = (await referralSourceApi.list())?.find((v) => v?.code == dto?.code);
 
                 if (existing && dto.id !== existing.id) {
                     form.setFieldError("code", t("ALREADY_EXISTS"));

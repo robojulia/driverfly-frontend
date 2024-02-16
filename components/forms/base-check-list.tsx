@@ -83,7 +83,7 @@ function BaseCheckList({
     onChange = onChange || formik.handleChange
     handleBlur = handleBlur || formik.handleBlur;
   }
-  if (typeof enumType === "object") {
+  if (typeof enumType == "object") {
     options = Object.entries(enumType)?.map(([key, value]) => ({
       [valueKey]: value,
       [labelKey]: value
@@ -97,7 +97,7 @@ function BaseCheckList({
       {cols ?
         ColLayout(t, options, +cols, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix, disabled)
         : InlineLayout(t, options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix, disabled)}
-      {touched && error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
+      {touched && error && (typeof error == "string") ? <span className="text-danger small">{error}</span> : null}
     </div>
   )
 }

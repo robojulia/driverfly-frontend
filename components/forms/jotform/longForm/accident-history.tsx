@@ -46,7 +46,7 @@ export function AccidentHistory() {
 
 	useEffect(() => {
 		const apx = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.ACCIDENT_DETAILS
+			(v) => v.type == ApplicantExtras.ACCIDENT_DETAILS
 		);
 		form.setValues({
 			...form.values,

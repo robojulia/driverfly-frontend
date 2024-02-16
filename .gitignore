@@ -9,3 +9,5 @@ package-lock.json
 .env
 
 .netlify
+# Sentry Config File
+.sentryclirc

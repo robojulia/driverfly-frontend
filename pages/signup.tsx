@@ -137,7 +137,7 @@ export default function Signup() {
 								labelPrefix="SignUpRole"
 								enumType={SignUpRole}
 							/>
-							{form.values.role === SignUpRole.COMPANY && (
+							{form.values.role == SignUpRole.COMPANY && (
 								<BaseInput
 									className="col-12 mt-1"
 									label="COMPANY_NAME"
@@ -217,7 +217,7 @@ export default function Signup() {
 								placeholder
 								formik={form}
 							/>
-							{form.values.role === SignUpRole.COMPANY && (
+							{form.values.role == SignUpRole.COMPANY && (
 								<BaseCheck
 									className="col-12 mt-1 py-2"
 									label="MANAGE_MULTIPLE_COMPANIES"
@@ -225,7 +225,7 @@ export default function Signup() {
 									formik={form}
 								/>
 							)}
-							{form.values.role === SignUpRole.COMPANY && (
+							{form.values.role == SignUpRole.COMPANY && (
 								<BaseInput
 									className="col-12 mt-1"
 									label="INVITE_CODE"
@@ -235,7 +235,7 @@ export default function Signup() {
 									formik={form}
 								/>
 							)}
-							{!isReferred && form.values.role === SignUpRole.COMPANY && (
+							{!isReferred && form.values.role == SignUpRole.COMPANY && (
 								<>
 									<BaseSelect
 										className="col-12 mt-1"
@@ -269,7 +269,7 @@ export default function Signup() {
 											},
 										]}
 									/>
-									{form.values.utm_source === "rep" && (
+									{form.values.utm_source == "rep" && (
 										<BaseInput
 											className="col-12 mt-1"
 											label="utm_campaign.REFERRAL_CODE"
@@ -278,7 +278,7 @@ export default function Signup() {
 											formik={form}
 										/>
 									)}
-									{form.values.utm_source === "other" && (
+									{form.values.utm_source == "other" && (
 										<BaseTextArea
 											className="col-12 mt-1"
 											label="utm_content.DETAILS_OPTIONAL"

@@ -33,7 +33,7 @@ export function UnableForJob() {
 
 	useEffect(() => {
 		const apx = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
+			(v) => v.type == ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
 		);
 		form.setValues({
 			...form.values,

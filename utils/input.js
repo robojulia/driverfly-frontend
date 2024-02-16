@@ -1,5 +1,5 @@
 function preventNegative(e) {
-    if (e.key === "-") e.preventDefault();
+    if (e.key == "-") e.preventDefault();
 }
 
 function positiveInt(e) {

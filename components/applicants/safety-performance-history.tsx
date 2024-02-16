@@ -142,9 +142,9 @@ export default function SafetyPerformanceHistory({
                 await applicantApi.employer.sendVoeRequest(applicant?.id, employerId);
 
             const updatedEmployers: ApplicantEmployerEntity[] = [
-                ...employers.filter((v) => v.id !== employerId),
+                ...employers.filter((v) => v.id != employerId),
                 {
-                    ...employers.find((v) => v.id === employerId), // Find the employer to update
+                    ...employers.find((v) => v.id == employerId), // Find the employer to update
                     voe_attempts: response.voe_attempts, // Update the 'voe_attempts' property
                 },
             ];

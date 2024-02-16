@@ -30,7 +30,7 @@ export default function Search(props) {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const keyDownHandler = ({ target: { value }, code }: any) => {
-        if (code === 'Enter') {
+        if (code == 'Enter') {
             setClose()
             if (searchQuery != value) setSearchQuery(value)
         }

@@ -32,7 +32,7 @@ export function TabbedLayout(props: TabbedLayoutProps) {
         .map(([key, value]) => {
             if (isTabbedLayoutItem(value)) return {
                 ...value,
-                hidden: typeof value.hidden === "function" ? value.hidden(value.id, value) : value.hidden,
+                hidden: typeof value.hidden == "function" ? value.hidden(value.id, value) : value.hidden,
                 id: value.id || key,
                 title: t(value.title || key)
             } as TabbedLayoutItem;
@@ -43,7 +43,7 @@ export function TabbedLayout(props: TabbedLayoutProps) {
                 item: value
             } as TabbedLayoutItem;
         })
-        .filter(value => value.hidden !== true);
+        .filter(value => value.hidden != true);
     
     return (
         <Tabs id={id} className={className}>

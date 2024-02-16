@@ -33,7 +33,7 @@ export default function ViewModal(props: ViewModalProps) {
                 <div className="d-flex align-items-center">
                     {props.title && (
                         <h4 className="modal-title font-weight-normal">
-                            {typeof props.title === "string" ? t(props.title) : props.title}
+                            {typeof props.title == "string" ? t(props.title) : props.title}
                         </h4>
                     )}
                     {props.header}

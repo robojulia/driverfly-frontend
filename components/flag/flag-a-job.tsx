@@ -86,7 +86,7 @@ export default function FlagJob({ jobId }) {
                                 formik={form}
                             />
                             {
-                                form.values.type === InappropriateJobFlag.OTHER &&
+                                form.values.type == InappropriateJobFlag.OTHER &&
                                 <BaseInput
                                     className="col-12 mt-3"
                                     label="other"

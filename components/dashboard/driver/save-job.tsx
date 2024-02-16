@@ -35,7 +35,7 @@ export default function SaveJob({ job, wrapperClassName, spanClassName }: SaveJo
     useEffectAsync(async (): Promise<void> => {
         await savedJobApi.getByJobId(job.id)
             .then(data => !!data)
-            .catch(error => (!!!(error?.response?.status === 404)))
+            .catch(error => (!!!(error?.response?.status == 404)))
             .then(saved => saved ? setSaved() : setUnsaved())
             .then(() => stopLoading())
     }, [])
@@ -52,7 +52,7 @@ export default function SaveJob({ job, wrapperClassName, spanClassName }: SaveJo
     const markSaved = async (): Promise<void> => {
         await savedJobApi.saveJob(job.id)
             .then(data => !!data)
-            .catch((error) => (!!!(error?.response?.status === 404)))
+            .catch((error) => (!!!(error?.response?.status == 404)))
             .then(saved => showMessage(saved, 'SAVED'))
             .then(saved => saved ? setSaved() : setUnsaved())
     }
@@ -60,7 +60,7 @@ export default function SaveJob({ job, wrapperClassName, spanClassName }: SaveJo
     const markUnsaved = async (): Promise<void> => {
         await savedJobApi.remove(job.id)
             .then(data => true)
-            .catch((error) => ((error?.response?.status === 404) && false))
+            .catch((error) => ((error?.response?.status == 404) && false))
             .then(unsaved => showMessage(unsaved, 'UNSAVED'))
             .then(unsaved => unsaved ? setUnsaved() : setSaved())
     }

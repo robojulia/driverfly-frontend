@@ -37,7 +37,7 @@ function BaseSelect({ append, prepend, formik, required, className, enumType, op
     handleBlur = handleBlur || formik.handleBlur;
   }
 
-  if (typeof enumType === "object") {
+  if (typeof enumType == "object") {
     options = Object.entries(enumType)?.map(([key, value]) => ({
       [valueKey]: value,
       [labelKey]: value
@@ -47,7 +47,7 @@ function BaseSelect({ append, prepend, formik, required, className, enumType, op
     if (showOptions?.length) options = options?.filter(v => showOptions.includes(v.value))
 
   }
-  else if (options && options.length > 0 && typeof options[0] !== "object") {
+  else if (options && options.length > 0 && typeof options[0] != "object") {
     options = options?.map(v => ({
       [valueKey]: v,
       [labelKey]: v
@@ -102,7 +102,7 @@ function BaseSelect({ append, prepend, formik, required, className, enumType, op
         name={name?.toString()}
         className={`form-select ${error ? "is-invalid" : ""}`}
       >
-        {placeholder && <option value="">{placeholder === true ? t("SELECT_{name}", { name: `${label || name}` }, { translateProps: true }) : t(placeholder.toString())}</option>}
+        {placeholder && <option value="">{placeholder == true ? t("SELECT_{name}", { name: `${label || name}` }, { translateProps: true }) : t(placeholder.toString())}</option>}
         {options && options?.map((v, i) => (<option key={i} value={v[valueKey]}>{t(labelPrefix ? `${labelPrefix}.${v[labelKey]}` : v[labelKey])}</option>))}
       </select>
     </BaseControl>

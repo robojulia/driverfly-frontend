@@ -1,5 +1,5 @@
 function isBrowser() {
-    return typeof window !== "undefined";
+    return typeof window != "undefined";
 }
 function buildAddress(props?: {
     street?: string;
@@ -27,7 +27,7 @@ function generateUUID() {
     // Public Domain/MIT
     var d = new Date().getTime(); //Timestamp
     var d2 =
-        (typeof performance !== "undefined" &&
+        (typeof performance != "undefined" &&
             performance.now &&
             performance.now() * 1000) ||
         0; //Time in microseconds since page-load or 0 if unsupported
@@ -42,7 +42,7 @@ function generateUUID() {
             r = (d2 + r) % 16 | 0;
             d2 = Math.floor(d2 / 16);
         }
-        return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+        return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
     });
 }
 function buildArrayQueryString(key: string, array: any[]): string {

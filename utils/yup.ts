@@ -71,7 +71,7 @@ function unique(thisObj, list, field, options, message) {
 unique.addTest = function (field, options, message) {
   const { t } = useTranslation();
   
-  if (typeof options === "string") {
+  if (typeof options == "string") {
     message = options;
     options = null;
   }

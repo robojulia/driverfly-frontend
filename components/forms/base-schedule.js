@@ -95,7 +95,7 @@ export default function BaseSchedule({
           <input className="form-control w-25" type="number" value={state.to} />
         </div>
         <input type="hidden" value={JSON.stringify(state)} />
-        {touched && error && typeof error === "string" ? (
+        {touched && error && typeof error == "string" ? (
           <span className="text-danger small">{error}</span>
         ) : null}
       </div>

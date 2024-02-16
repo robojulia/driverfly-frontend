@@ -40,7 +40,7 @@ export async function getServerSideProps({ query }) {
 		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid);
 		const employer: ApplicantEmployerEntity = await applicantApi.employer.getByUuidToken(employer_uuid);
 
-		if (!!!applicant || !!!employer || applicant.id !== employer?.applicant?.id) return { notFound: true }
+		if (!!!applicant || !!!employer || applicant.id != employer?.applicant?.id) return { notFound: true }
 
 		return { props: { applicant, employer } }
 	} catch (error) {
