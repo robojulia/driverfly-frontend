@@ -1391,6 +1391,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									<>
 										<div className="col-12 mt-2">
 											<ViewCard title="ACCIDENT_DEAILS">
+										<BaseTextArea
+											className="col-12 mt-2"
+											readOnly={Boolean(entity?.is_hired)}
+											label="accident_details"
+											name="accident_details"
+											formik={form}
+										/>
 												{form.values?.extras?.find(ex => ex.type == ApplicantExtras.ACCIDENT_DETAILS)?.value.map((entity, i) => (
 													<Row className="pl-0 single-past-employer-items my-1" key={i}>
 														<div className="col-md-12 mt-2">
@@ -1516,6 +1523,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									form.values?.moving_violations_count > 0 &&
 									<div className="col-12 mt-2">
 										<ViewCard title="VIOLATION_DETAILS">
+										<BaseTextArea
+										className="col-12 mt-2"
+										readOnly={Boolean(entity?.is_hired)}
+										label="MOVING_VIOLATIONS_DETAILS"
+										name="moving_violations_details"
+										formik={form}
+										/>
 											{form.values?.extras[form.values?.extras?.findIndex(v => v.type == ApplicantExtras.VIOLATION_DETAILS)]?.value?.length > 0 && (
 												<>
 													{form.values?.extras[form.values?.extras?.findIndex(v => v.type == ApplicantExtras.VIOLATION_DETAILS)].value.map((entity, i) => (
