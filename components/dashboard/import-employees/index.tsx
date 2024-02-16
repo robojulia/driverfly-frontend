@@ -34,8 +34,11 @@ import { EmployeeEntity } from "../../../models/employee/employee.entity";
 import EmployeeApi from "../../../pages/api/employee";
 import * as _style from "../../../public/components/styles/ImportApplicantsModule.module.css";
 import { matchEnum } from "../../../utils/enums.utils";
-import * as fileUtils from "../../../utils/file";
 import { FormikInterface } from "../../../utils/formik";
+
+function unique<T>(value: T, index: number, self: T[]) {
+    return (Boolean(value) && self.indexOf(value) == index)
+}
 
 const ImportEmployees = () => {
     const style: any = _style;
@@ -80,6 +83,20 @@ const ImportEmployees = () => {
             for (let i = 0; i < values.items.length; i++) {
                 const employee = values.items[i];
 
+                if (
+                    employee.phone?.length > 3 &&
+                    !employee.phone.startsWith("+1")
+                ) {
+                    employee.phone = "+1 " + employee.phone;
+                }
+
+                if (
+                    employee.emergency_contact_number?.length > 3 &&
+                    !employee.emergency_contact_number.startsWith("+1")
+                ) {
+                    employee.emergency_contact_number = "+1 " + employee.emergency_contact_number;
+                }
+
                 if (employee.email) {
                     const rowError: { email?: string; phone?: string } = {};
                     const matches = await api.list({ email: employee.email });
@@ -99,6 +116,7 @@ const ImportEmployees = () => {
                     // else if (matches.some(v => v.company == null)) rowError.email = t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "EMAIL" }, { translateProps: true });
 
                     if (employee.phone) {
+
                         if (matches.some((v) => v.company?.id != null))
                             rowError.phone = t(
                                 "{name}_ALREADY_EXISTS",
@@ -249,6 +267,9 @@ const ImportEmployees = () => {
                             case "number":
                                 entity[key] = value != "" ? Number(value) : null;
                                 break;
+                            case "date":
+                                entity[key] = value != "" ? (value) : null;
+                                break;
                             default:
                                 entity[key] = value.trim();
                         }
@@ -272,18 +293,22 @@ const ImportEmployees = () => {
                             //     ?.filter((v, i, self) => Boolean(v) && self.indexOf(v) == i);
                             // break;
                             case "transmission_type":
-                                entity.transmission_type = entity.transmission_type.map((v) =>
-                                    matchEnum(
-                                        v,
-                                        VehicleTransmissionType,
-                                        "VehicleTransmissionType",
-                                        t
+                                entity.transmission_type = entity.transmission_type
+                                    ?.filter(unique)
+                                    ?.map((v) =>
+                                        matchEnum(
+                                            v,
+                                            VehicleTransmissionType,
+                                            "VehicleTransmissionType",
+                                            t
+                                        )
                                     )
-                                );
+                                    ?.filter(unique);
                                 break;
                             case "endorsements":
                                 entity.endorsements = entity.endorsements
-                                    .map((v) => {
+                                    ?.filter(unique)
+                                    ?.map((v) => {
                                         // if (!Object.values(DriverEndorsement).includes(v)) {
                                         //     entity.endorsements_other =
                                         //         v + ", " + (entity.endorsements_other || "");
@@ -296,7 +321,7 @@ const ImportEmployees = () => {
                                             t
                                         );
                                     })
-                                    ?.filter((v, i, self) => Boolean(v) && self.indexOf(v) == i);
+                                    ?.filter(unique);
                                 break;
                             case "highest_degree":
                                 entity.highest_degree = matchEnum(
@@ -307,27 +332,37 @@ const ImportEmployees = () => {
                                 );
                                 break;
                             case "license_type":
-                                entity.license_type = matchEnum(
-                                    entity.license_type,
-                                    DriverLicenseType,
-                                    "DriverLicenseType",
-                                    t
-                                );
+                                entity.license_type = !entity.license_type
+                                    ? DriverLicenseType.NO_CDL
+                                    : matchEnum(
+                                        entity.license_type,
+                                        DriverLicenseType,
+                                        "DriverLicenseType",
+                                        t
+                                    );
                                 break;
                             case "equipment_experience":
-                                entity.equipment_experience = entity.equipment_experience.map(
-                                    (v) => {
-                                        const equipmentExperienceObject =
-                                            new EmployeeExperienceEntity();
-                                        equipmentExperienceObject.type = matchEnum(
-                                            v.toString(),
-                                            JobEquipmentType,
-                                            "JobEquipmentType",
-                                            t
-                                        );
-                                        return equipmentExperienceObject;
-                                    }
-                                );
+                                entity.equipment_experience = entity.equipment_experience
+                                    ?.filter(unique)
+                                    ?.map(
+                                        (v) => {
+                                            const equipmentExperienceObject = new EmployeeExperienceEntity();
+                                            if (!Object.values(JobEquipmentType).includes(v.toString() as JobEquipmentType)) {
+                                                equipmentExperienceObject.type_other =
+                                                    v + ", " + (equipmentExperienceObject.type_other || "");
+                                                equipmentExperienceObject.type = JobEquipmentType.OTHER;
+                                            } else {
+                                                equipmentExperienceObject.type = matchEnum(
+                                                    v.toString(),
+                                                    JobEquipmentType,
+                                                    "JobEquipmentType",
+                                                    t
+                                                );
+                                            }
+                                            return equipmentExperienceObject;
+                                        }
+                                    )
+                                    ?.filter(unique);
                                 break;
                         }
                     })
