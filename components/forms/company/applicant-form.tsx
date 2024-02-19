@@ -73,7 +73,8 @@ export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
 export function ApplicantForm(props: ApplicantFormProps) {
 	let { className, entity, onSaveComplete, onSaveError } = props;
-	let { user, hasPermission, isSuperAdmin, isCompanyAdmin, company } = useAuth();
+	let { user, hasPermission, isSuperAdmin, isCompanyAdmin, company } =
+		useAuth();
 	const { t } = useTranslation();
 	const router = useRouter();
 	const current_date = new Date();
@@ -340,8 +341,456 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			});
 	}, [isWorkedBefore]);
 
+	function DUI() {
+		return (
+			<>
+				<BaseCheck
+					className="col-12 mt-2"
+					disabled={Boolean(entity?.is_hired)}
+					label="HAS_DUIS"
+					name="has_past_dui"
+					formik={form}
+				/>
+				{form.values?.has_past_dui && (
+					<Col xs="12" className="mt-2">
+						<ViewCard
+							title="PAST_DUIS"
+							actions={
+								<Button
+									disabled={Boolean(entity?.is_hired)}
+									size="sm"
+									onClick={() =>
+										form.setValues({
+											...form.values,
+											dui_years: [...(form.values?.dui_years || []), ""],
+										})
+									}
+								>
+									<PlusCircle /> {t("ADD")}
+								</Button>
+							}
+						>
+							{form.values?.dui_years?.length > 0 && (
+								<Table striped>
+									<thead>
+										<tr>
+											<th colSpan={2}>{t("YEAR")}</th>
+										</tr>
+									</thead>
+									<tbody>
+										{form.values?.dui_years?.map((entity, i) => (
+											<tr key={i}>
+												<td className="w-100">
+													<BaseInput
+														name={`dui_years[${i}]`}
+														readOnly={Boolean(props?.entity?.is_hired)}
+														placeholder="YEAR"
+														type="int"
+														required
+														min={1900}
+														max={new Date().getFullYear()}
+														formik={form}
+													/>
+												</td>
+												<td>
+													<a
+														href="#"
+														onClick={() =>
+															form.setValues({
+																...form.values,
+																dui_years: form.values?.dui_years?.filter(
+																	(v, idx) => i != idx
+																),
+															})
+														}
+													>
+														<DashCircle color="red" />
+													</a>
+												</td>
+											</tr>
+										))}
+									</tbody>
+								</Table>
+							)}
+						</ViewCard>
+					</Col>
+				)}
+			</>
+		);
+	}
+	function Accidents() {
+		return (
+			<>
+				<BaseInput
+					className="col-12 mt-2"
+					readOnly={Boolean(entity?.is_hired)}
+					label="accidents_last_5_years"
+					name="accident_count"
+					type="int"
+					min="0"
+					formik={form}
+					placeholder="PLACEHOLDER_FOR_DIGITS"
+				/>
+				{form.values.accident_count > 0 && (
+					<div className="col-12 mt-2">
+						<ViewCard
+							title="ACCIDENT_DEAILS"
+							actions={
+								form?.values?.accident_count > 0 &&
+								form?.values?.accident_count >
+								(
+									form.values.extras?.find(
+										(x) => x.type == ApplicantExtras.ACCIDENT_DETAILS
+									)?.value || []
+								)?.length && (
+									<Button
+										className="w-100 py-2"
+										size="sm"
+										onClick={() => {
+											const accident_details_ex =
+												form.values.extras?.find(
+													({ type }) => type == ApplicantExtras.ACCIDENT_DETAILS
+												) ||
+												new ApplicantExtrasEntity(
+													ApplicantExtras.ACCIDENT_DETAILS
+												);
+											form.setValues({
+												...form.values,
+												extras: [
+													...(form.values?.extras?.filter(
+														({ type }) =>
+															type != ApplicantExtras.ACCIDENT_DETAILS
+													) || []),
+													{
+														...accident_details_ex,
+														value: [
+															...(accident_details_ex?.value || []),
+															new AccidentHistoryEntity(),
+														],
+													},
+												],
+											});
+										}}
+									>
+										<PlusCircle /> {t("ADD")}
+									</Button>
+								)
+							}
+						>
+							<BaseTextArea
+								// className="col-12 mt-2"
+								readOnly={Boolean(entity?.is_hired)}
+								label="accident_details"
+								name="accident_details"
+								formik={form}
+							/>
+							{form.values?.extras
+								?.find((ex) => ex.type == ApplicantExtras.ACCIDENT_DETAILS)
+								?.value?.map((accident_details_ex, i) => (
+									<Row className="pl-0 single-past-employer-items my-1" key={i}>
+										<div className="col-md-12 mt-2">
+											<Row className={""}>
+												<BaseInput
+													className="col-md-6 my-3"
+													name={`extras[${form.values?.extras.findIndex(
+														(ex) => ex.type === ApplicantExtras.ACCIDENT_DETAILS
+													)}].value[${i}].date_of_accident`}
+													label="DATE"
+													type="date"
+													formik={form}
+													required
+													max={new Date().toISOString().split("T")[0]}
+												/>
+												<BaseInput
+													className="col-md-6 my-3"
+													name={`extras[${form.values?.extras.findIndex(
+														(ex) => ex.type === ApplicantExtras.ACCIDENT_DETAILS
+													)}].value[${i}].nature_of_accident`}
+													label="LABEL_ACCIDENT_NATURE"
+													formik={form}
+													required
+												/>
+												<BaseInput
+													className="col-md-6 my-3"
+													name={`extras[${form.values?.extras.findIndex(
+														(ex) => ex.type === ApplicantExtras.ACCIDENT_DETAILS
+													)}].value[${i}].location_of_accident`}
+													label="LABEL_ACCIDENT_LOCATION"
+													formik={form}
+													required
+												/>
+												<BaseInput
+													className="col-md-6 my-3"
+													name={`extras[${form.values?.extras.findIndex(
+														(ex) => ex.type === ApplicantExtras.ACCIDENT_DETAILS
+													)}].value[${i}].number_of_fatalaties`}
+													label="LABEL_ACCIDENT_FATALITIES"
+													formik={form}
+													required
+												/>
+												<BaseInput
+													className="col-md-6 mt-2"
+													name={`extras[${form.values?.extras.findIndex(
+														(ex) => ex.type === ApplicantExtras.ACCIDENT_DETAILS
+													)}].value[${i}].number_of_injured`}
+													label="LABEL_ACCIDENT_INJURED"
+													formik={form}
+													required
+												/>
+												<BaseCheck
+													className="col-md-6 mt-5"
+													name={`extras[${form.values?.extras.findIndex(
+														(ex) => ex.type === ApplicantExtras.ACCIDENT_DETAILS
+													)}].value[${i}].dot_recordable`}
+													label="LABEL_ACCIDENT_DOT"
+													formik={form}
+												/>
 
+												<BaseCheck
+													className="col-md-12 mt-4"
+													name={`extras[${form.values?.extras.findIndex(
+														(ex) => ex.type === ApplicantExtras.ACCIDENT_DETAILS
+													)}].value[${i}].at_fault`}
+													label="LABEL_ACCIDENT_FAULT"
+													formik={form}
+												/>
+												<Button
+													className="rounded-lg"
+													variant="outline-danger close_btn w-25 mx-auto my-2"
+													onClick={() =>
+														form.setValues({
+															...form.values,
+															extras: [
+																...form.values?.extras?.map((ex) =>
+																	ex.type == ApplicantExtras.ACCIDENT_DETAILS
+																		? {
+																			...ex,
+																			value: [
+																				...ex?.value?.filter(
+																					(val, idx) => idx != i
+																				),
+																			],
+																		}
+																		: ex
+																),
+															],
+														})
+													}
+												>
+													<DashCircle />
+												</Button>
+												<div
+													className="Row"
+													style={{
+														height: "1px",
+														borderBottom: "solid 1px #8d8c8c",
+														marginTop: "15px",
+														width: "80%",
+														marginLeft: "10%",
+													}}
+												></div>
+											</Row>
+										</div>
+									</Row>
+								))}
+						</ViewCard>
+					</div>
+				)}
+			</>
+		);
+	}
+	function Violations() {
+		return (
+			<>
+				<BaseInput
+					className="col my-3"
+					readOnly={Boolean(entity?.is_hired)}
+					label="voilations_in_last_3_years"
+					name="moving_violations_count"
+					type="number"
+					step={1}
+					min={0}
+					placeholder="PLACEHOLDER_FOR_DIGITS"
+					formik={form}
+				/>
+				{form.values?.moving_violations_count > 0 && (
+					<div className="col-12 mt-2">
+						<ViewCard title="VIOLATION_DETAILS">
+							<BaseTextArea
+								className="col-12 mt-2"
+								readOnly={Boolean(entity?.is_hired)}
+								label="MOVING_VIOLATIONS_DETAILS"
+								name="moving_violations_details"
+								formik={form}
+							/>
+							{form.values?.extras[
+								form.values?.extras?.findIndex(
+									(v) => v.type == ApplicantExtras.VIOLATION_DETAILS
+								)
+							]?.value?.length > 0 && (
+									<>
+										{form.values?.extras[
+											form.values?.extras?.findIndex(
+												(v) => v.type == ApplicantExtras.VIOLATION_DETAILS
+											)
+										].value.map((entity, i) => (
+											<Row key={i} className="single-past-employer-items my-3 ">
+												<div className="col-md-12 mt-2">
+													<Row className={""}>
+														<BaseInput
+															className="col-md-6 mt-3"
+															name={`extras[${form.values?.extras?.findIndex(
+																(ex) =>
+																	ex.type === ApplicantExtras.VIOLATION_DETAILS
+															)}].value[${i}].date_of_violation`}
+															label="VIOLATION_DATE"
+															type="date"
+															formik={form}
+															max={new Date().toISOString().split("T")[0]}
+															required
+														/>
+														<BaseInput
+															className="col-md-6 mt-3"
+															name={`extras[${form.values?.extras?.findIndex(
+																(ex) =>
+																	ex.type === ApplicantExtras.VIOLATION_DETAILS
+															)}].value[${i}].location`}
+															label="location"
+															formik={form}
+															required
+														/>
 
+														<BaseInput
+															className="col-md-6 mt-3"
+															name={`extras[${form.values?.extras?.findIndex(
+																(ex) =>
+																	ex.type === ApplicantExtras.VIOLATION_DETAILS
+															)}].value[${i}].charge`}
+															label="CHARGE"
+															formik={form}
+															required
+														/>
+														<BaseInput
+															className="col-md-6 mt-3"
+															name={`extras[${form.values?.extras?.findIndex(
+																(ex) =>
+																	ex.type === ApplicantExtras.VIOLATION_DETAILS
+															)}].value[${i}].penalty`}
+															label="PENALTY"
+															formik={form}
+															required
+														/>
+														<Button
+															className="rounded-lg"
+															variant="outline-danger close_btn w-25 mx-auto my-2"
+															onClick={() =>
+																form.setValues({
+																	...form.values,
+																	extras: [
+																		...form.values?.extras?.map((ex) =>
+																			ex.type ===
+																				ApplicantExtras.VIOLATION_DETAILS
+																				? {
+																					...ex,
+																					value: [
+																						...form.values?.extras
+																							?.find(
+																								(v) =>
+																									v.type ===
+																									ApplicantExtras.VIOLATION_DETAILS
+																							)
+																							.value?.filter(
+																								(val, idx) => idx != i
+																							),
+																					],
+																				}
+																				: ex
+																		),
+																	],
+																})
+															}
+														>
+															<DashCircle />
+														</Button>
+														<div
+															className="Row"
+															style={{
+																height: "1px",
+																borderBottom: "solid 1px #8d8c8c",
+																marginTop: "15px",
+																width: "80%",
+																marginLeft: "10%",
+															}}
+														></div>
+													</Row>
+												</div>
+											</Row>
+										))}
+									</>
+								)}
+							{Boolean(form?.values?.moving_violations_count > 0) &&
+								Boolean(
+									form?.values?.moving_violations_count >
+									(
+										form?.values?.extras[
+											form.values?.extras.findIndex(
+												(v) => v.type == ApplicantExtras.VIOLATION_DETAILS
+											)
+										]?.value ?? []
+									).length
+								) && (
+									<Row>
+										<div className="mt-4 float-left d-flex justify-left px-3">
+											<Button
+												className="w-100 py-2"
+												size="sm"
+												onClick={() => {
+													let check = false;
+
+													form.setValues({
+														...form.values,
+														extras: form.values?.extras?.map((itm) => {
+															if (
+																itm.type == ApplicantExtras.VIOLATION_DETAILS
+															) {
+																check = true;
+																return {
+																	...itm,
+																	value: [
+																		...(itm.value || []),
+																		new ApplicantExtrasEntity(),
+																	],
+																};
+															}
+															return itm;
+														}),
+													});
+													!check &&
+														form.setValues({
+															...form.values,
+															extras: [
+																...form.values?.extras,
+																{
+																	...new ApplicantExtrasEntity(
+																		ApplicantExtras.VIOLATION_DETAILS
+																	),
+																	value: [{ ...new VioalationExtrasEntity() }],
+																},
+															],
+														});
+												}}
+											>
+												<PlusCircle /> {t("TITLE_ADD_VIOLATION_DETAILS")}
+											</Button>
+										</div>
+									</Row>
+								)}
+						</ViewCard>
+					</div>
+				)}
+			</>
+		);
+	}
 	return (
 		<EntityForm
 			id={entity?.id}
@@ -754,17 +1203,18 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									formik={form}
 									cols="2"
 								/>
-								{
-									form.values?.endorsements?.includes(DriverEndorsement.OTHER) &&
-									<BaseInput
-										className="col-12"
-										label="OTHER_ENDORSEMENTS"
-										required
-										name="endorsements_other"
-										placeholder
-										formik={form}
-									/>
-								}
+								{form.values?.endorsements?.includes(
+									DriverEndorsement.OTHER
+								) && (
+										<BaseInput
+											className="col-12"
+											label="OTHER_ENDORSEMENTS"
+											required
+											name="endorsements_other"
+											placeholder
+											formik={form}
+										/>
+									)}
 								<BaseSelect
 									className="col-12"
 									readOnly={Boolean(entity?.is_hired)}
@@ -784,17 +1234,18 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									formik={form}
 									cols="2"
 								/>
-								{
-									form.values?.license_restrictions?.includes(LicenseRestrictions.OTHER) &&
-									<BaseInput
-										className="col-12"
-										label="OTHER_LICENSE_RESTRICTIONS"
-										required
-										name="license_restrictions_other"
-										placeholder
-										formik={form}
-									/>
-								}
+								{form.values?.license_restrictions?.includes(
+									LicenseRestrictions.OTHER
+								) && (
+										<BaseInput
+											className="col-12"
+											label="OTHER_LICENSE_RESTRICTIONS"
+											required
+											name="license_restrictions_other"
+											placeholder
+											formik={form}
+										/>
+									)}
 
 								<Col xs="12" className="mt-2">
 									<ViewCard title="EMERGENCY_CONTACT">
@@ -1219,8 +1670,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 						{Boolean(
 							form.values?.extras.find(
-								({ type }) =>
-									type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
+								({ type }) => type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
 							)?.value
 						) && (
 								<>
@@ -1296,81 +1746,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									name="can_pass_drug_test"
 									formik={form}
 								/>
-								<BaseCheck
-									className="col-12 mt-2"
-									disabled={Boolean(entity?.is_hired)}
-									label="HAS_DUIS"
-									name="has_past_dui"
-									formik={form}
-								/>
-								{form.values?.has_past_dui && (
-									<Col xs="12" className="mt-2">
-										<ViewCard
-											title="PAST_DUIS"
-											actions={
-												<Button
-													disabled={Boolean(entity?.is_hired)}
-													size="sm"
-													onClick={() =>
-														form.setValues({
-															...form.values,
-															dui_years: [
-																...(form.values?.dui_years || []),
-																"",
-															],
-														})
-													}
-												>
-													<PlusCircle /> {t("ADD")}
-												</Button>
-											}
-										>
-											{form.values?.dui_years?.length > 0 && (
-												<Table striped>
-													<thead>
-														<tr>
-															<th colSpan={2}>{t("YEAR")}</th>
-														</tr>
-													</thead>
-													<tbody>
-														{form.values?.dui_years?.map((entity, i) => (
-															<tr key={i}>
-																<td className="w-100">
-																	<BaseInput
-																		name={`dui_years[${i}]`}
-																		readOnly={Boolean(props?.entity?.is_hired)}
-																		placeholder="YEAR"
-																		type="int"
-																		required
-																		min={1900}
-																		max={new Date().getFullYear()}
-																		formik={form}
-																	/>
-																</td>
-																<td>
-																	<a
-																		href="#"
-																		onClick={() =>
-																			form.setValues({
-																				...form.values,
-																				dui_years:
-																					form.values?.dui_years?.filter(
-																						(v, idx) => i != idx
-																					),
-																			})
-																		}
-																	>
-																		<DashCircle color="red" />
-																	</a>
-																</td>
-															</tr>
-														))}
-													</tbody>
-												</Table>
-											)}
-										</ViewCard>
-									</Col>
-								)}
+								<DUI />
 								<BaseTextArea
 									className="col-12 mt-2"
 									readOnly={Boolean(entity?.is_hired)}
@@ -1378,286 +1754,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									name="criminal_history"
 									formik={form}
 								/>
-								<BaseInput
-									className="col-12 mt-2"
-									readOnly={Boolean(entity?.is_hired)}
-									label="accidents_last_5_years"
-									name="accident_count"
-									type="int"
-									min="0"
-									formik={form}
-								/>
-								{form.values.accident_count > 0 && (
-									<>
-										<div className="col-12 mt-2">
-											<ViewCard title="ACCIDENT_DEAILS">
-												<BaseTextArea
-													className="col-12 mt-2"
-													readOnly={Boolean(entity?.is_hired)}
-													label="accident_details"
-													name="accident_details"
-													formik={form}
-												/>
-												{form.values?.extras?.find(ex => ex.type == ApplicantExtras.ACCIDENT_DETAILS)?.value.map((entity, i) => (
-													<Row className="pl-0 single-past-employer-items my-1" key={i}>
-														<div className="col-md-12 mt-2">
-															<Row className={''}>
-																<BaseInput
-																	className="col-md-6 my-3"
-																	name={`extras[${form.values?.extras.findIndex(ex => ex.type === ApplicantExtras.ACCIDENT_DETAILS)}].value[${i}].date_of_accident`}
-																	label="DATE"
-																	type="date"
-																	formik={form}
-																	required
-																	max={new Date().toISOString().split("T")[0]}
-
-																/>
-																<BaseInput
-																	className="col-md-6 my-3"
-																	name={`extras[${form.values?.extras.findIndex(ex => ex.type === ApplicantExtras.ACCIDENT_DETAILS)}].value[${i}].nature_of_accident`}
-																	label="LABEL_ACCIDENT_NATURE"
-																	formik={form}
-																	required
-																/>
-																<BaseInput
-																	className="col-md-6 my-3"
-																	name={`extras[${form.values?.extras.findIndex(ex => ex.type === ApplicantExtras.ACCIDENT_DETAILS)}].value[${i}].location_of_accident`}
-																	label="LABEL_ACCIDENT_LOCATION"
-																	formik={form}
-																	required
-																/>
-																<BaseInput
-																	className="col-md-6 my-3"
-																	name={`extras[${form.values?.extras.findIndex(ex => ex.type === ApplicantExtras.ACCIDENT_DETAILS)}].value[${i}].number_of_fatalaties`}
-																	label="LABEL_ACCIDENT_FATALITIES"
-																	formik={form}
-																	required
-																/>
-																<BaseInput
-																	className="col-md-6 mt-2"
-																	name={`extras[${form.values?.extras.findIndex(ex => ex.type === ApplicantExtras.ACCIDENT_DETAILS)}].value[${i}].number_of_injured`}
-																	label="LABEL_ACCIDENT_INJURED"
-																	formik={form}
-																	required
-																/>
-																<BaseCheck
-																	className="col-md-6 mt-5"
-																	name={`extras[${form.values?.extras.findIndex(ex => ex.type === ApplicantExtras.ACCIDENT_DETAILS)}].value[${i}].dot_recordable`}
-																	label="LABEL_ACCIDENT_DOT"
-																	formik={form}
-																/>
-
-																<BaseCheck
-																	className="col-md-12 mt-4"
-																	name={`extras[${form.values?.extras.findIndex(ex => ex.type === ApplicantExtras.ACCIDENT_DETAILS)}].value[${i}].at_fault`}
-																	label="LABEL_ACCIDENT_FAULT"
-																	formik={form}
-																/>
-																<Button
-																	className="rounded-lg"
-																	variant="outline-danger close_btn w-25 mx-auto my-2"
-																	onClick={
-																		() =>
-																			form.setValues({
-																				...form.values,
-																				extras: [...form.values?.extras?.map(ex =>
-																					ex.type === ApplicantExtras.ACCIDENT_DETAILS
-																						? {
-																							...ex, value: [
-																								...form.values?.extras?.find(v => v.type === ApplicantExtras.ACCIDENT_DETAILS).value?.filter((val, idx) => idx != i)
-																							]
-																						}
-																						: ex
-																				)
-																				]
-																			})
-																	}
-																>
-																	<DashCircle />
-																</Button>
-																<div className='Row' style={{ height: '1px', borderBottom: 'solid 1px #8d8c8c', marginTop: '15px', width: '80%', marginLeft: '10%' }}></div >
-															</Row>
-														</div>
-													</Row>
-												))}
-												{(
-													Boolean(form?.values?.accident_count > 0)
-													&& Boolean(form?.values?.accident_count > (form.values?.extras[form.values.extras.findIndex(v => v.type == ApplicantExtras.ACCIDENT_DETAILS)]?.value ?? []).length)
-												) && (
-														<Row>
-															<div className="mt-4 float-left d-flex justify-left">
-																<Button
-																	className="w-100 py-2"
-																	size="sm"
-																	onClick={() => {
-																		let check = false;
-																		console.log("Before Update:", form.values?.extras);
-																		form.setValues({
-																			...form.values,
-																			extras: form.values?.extras?.map((item): any => {
-																				if (item.type === ApplicantExtras.ACCIDENT_DETAILS) {
-																					check = true;
-																					return {
-																						...item,
-																						value: [...(item.value || []), new ApplicantExtrasEntity()],
-																					}
-																				}
-																				return item
-																			}
-																			),
-																		});
-																		!check && form.setValues({
-																			...form.values,
-																			extras: [...form.values?.extras, {
-																				...new ApplicantExtrasEntity(ApplicantExtras.ACCIDENT_DETAILS),
-																				value: [
-																					{ ...new AccidentHistoryEntity() }
-																				]
-																			}]
-																		})
-																	}}
-																>
-																	<PlusCircle /> {t("TITLE_ADD_ACCIDENT_DETAILS")}
-																</Button>
-															</div>
-														</Row>
-													)}
-											</ViewCard>
-										</div>
-									</>
-								)}
-
-
-								<BaseInput
-									className="col my-3"
-									readOnly={Boolean(entity?.is_hired)}
-									label="voilations_in_last_3_years"
-									name="moving_violations_count"
-									type="number"
-									step={1}
-									min={0}
-									placeholder="PLACEHOLDER_FOR_DIGITS"
-									formik={form}
-								/>
-								{
-									form.values?.moving_violations_count > 0 &&
-									<div className="col-12 mt-2">
-										<ViewCard title="VIOLATION_DETAILS">
-											<BaseTextArea
-												className="col-12 mt-2"
-												readOnly={Boolean(entity?.is_hired)}
-												label="MOVING_VIOLATIONS_DETAILS"
-												name="moving_violations_details"
-												formik={form}
-											/>
-											{form.values?.extras[form.values?.extras?.findIndex(v => v.type == ApplicantExtras.VIOLATION_DETAILS)]?.value?.length > 0 && (
-												<>
-													{form.values?.extras[form.values?.extras?.findIndex(v => v.type == ApplicantExtras.VIOLATION_DETAILS)].value.map((entity, i) => (
-														<Row key={i} className="single-past-employer-items my-3 ">
-															<div className="col-md-12 mt-2">
-																<Row className={""}>
-																	<BaseInput
-																		className="col-md-6 mt-3"
-																		name={`extras[${form.values?.extras?.findIndex(ex => ex.type === ApplicantExtras.VIOLATION_DETAILS)}].value[${i}].date_of_violation`}
-																		label="VIOLATION_DATE"
-																		type="date"
-																		formik={form}
-																		max={new Date().toISOString().split("T")[0]}
-																		required
-																	/>
-																	<BaseInput
-																		className="col-md-6 mt-3"
-																		name={`extras[${form.values?.extras?.findIndex(ex => ex.type === ApplicantExtras.VIOLATION_DETAILS)}].value[${i}].location`}
-																		label="location"
-																		formik={form}
-																		required
-																	/>
-
-																	<BaseInput
-																		className="col-md-6 mt-3"
-																		name={`extras[${form.values?.extras?.findIndex(ex => ex.type === ApplicantExtras.VIOLATION_DETAILS)}].value[${i}].charge`}
-																		label="CHARGE"
-																		formik={form}
-																		required
-																	/>
-																	<BaseInput
-																		className="col-md-6 mt-3"
-																		name={`extras[${form.values?.extras?.findIndex(ex => ex.type === ApplicantExtras.VIOLATION_DETAILS)}].value[${i}].penalty`}
-																		label="PENALTY"
-																		formik={form}
-																		required
-																	/>
-																	<Button
-																		className="rounded-lg"
-																		variant="outline-danger close_btn w-25 mx-auto my-2"
-																		onClick={
-																			() =>
-																				form.setValues({
-																					...form.values,
-																					extras: [...form.values?.extras?.map(ex =>
-																						ex.type === ApplicantExtras.VIOLATION_DETAILS
-																							? {
-																								...ex, value: [
-																									...form.values?.extras?.find(v => v.type === ApplicantExtras.VIOLATION_DETAILS).value?.filter((val, idx) => idx != i)
-																								]
-																							}
-																							: ex
-																					)
-																					]
-																				})
-																		}
-																	>
-																		<DashCircle />
-																	</Button>
-																	<div className='Row' style={{ height: '1px', borderBottom: 'solid 1px #8d8c8c', marginTop: '15px', width: '80%', marginLeft: '10%' }}></div >
-																</Row>
-															</div>
-														</Row>
-													))}
-												</>
-											)}
-											{(
-												Boolean(form?.values?.moving_violations_count > 0)
-												&& Boolean(form?.values?.moving_violations_count > (form?.values?.extras[form.values?.extras.findIndex(v => v.type == ApplicantExtras.VIOLATION_DETAILS)]?.value ?? []).length)
-											) && (
-													<Row>
-														<div className="mt-4 float-left d-flex justify-left px-3">
-															<Button
-																className="w-100 py-2"
-																size="sm"
-																onClick={() => {
-																	let check = false;
-
-																	form.setValues({
-																		...form.values,
-																		extras: form.values?.extras?.map(itm => {
-																			if (itm.type == ApplicantExtras.VIOLATION_DETAILS) {
-																				check = true;
-																				return {
-																					...itm, value: [...(itm.value || []), new ApplicantExtrasEntity()]
-																				}
-																			}
-																			return itm;
-																		})
-																	})
-																	!check && form.setValues({
-																		...form.values,
-																		extras: [...form.values?.extras, {
-																			...new ApplicantExtrasEntity(ApplicantExtras.VIOLATION_DETAILS),
-																			value: [{ ...new VioalationExtrasEntity() }]
-																		}
-																		]
-																	})
-																}}
-															>
-																<PlusCircle /> {t("TITLE_ADD_VIOLATION_DETAILS")}
-															</Button>
-														</div>
-													</Row>
-												)}
-										</ViewCard>
-									</div>
-								}
+								<Accidents />
+								<Violations />
 							</Col>
 							<Col md="6">
 								<Row>
