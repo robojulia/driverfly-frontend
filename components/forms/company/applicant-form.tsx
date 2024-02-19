@@ -1391,13 +1391,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									<>
 										<div className="col-12 mt-2">
 											<ViewCard title="ACCIDENT_DEAILS">
-										<BaseTextArea
-											className="col-12 mt-2"
-											readOnly={Boolean(entity?.is_hired)}
-											label="accident_details"
-											name="accident_details"
-											formik={form}
-										/>
+												<BaseTextArea
+													className="col-12 mt-2"
+													readOnly={Boolean(entity?.is_hired)}
+													label="accident_details"
+													name="accident_details"
+													formik={form}
+												/>
 												{form.values?.extras?.find(ex => ex.type == ApplicantExtras.ACCIDENT_DETAILS)?.value.map((entity, i) => (
 													<Row className="pl-0 single-past-employer-items my-1" key={i}>
 														<div className="col-md-12 mt-2">
@@ -1453,6 +1453,28 @@ export function ApplicantForm(props: ApplicantFormProps) {
 																	label="LABEL_ACCIDENT_FAULT"
 																	formik={form}
 																/>
+																<Button
+																	className="rounded-lg"
+																	variant="outline-danger close_btn w-25 mx-auto my-2"
+																	onClick={
+																		() =>
+																			form.setValues({
+																				...form.values,
+																				extras: [...form.values?.extras?.map(ex =>
+																					ex.type === ApplicantExtras.ACCIDENT_DETAILS
+																						? {
+																							...ex, value: [
+																								...form.values?.extras?.find(v => v.type === ApplicantExtras.ACCIDENT_DETAILS).value?.filter((val, idx) => idx != i)
+																							]
+																						}
+																						: ex
+																				)
+																				]
+																			})
+																	}
+																>
+																	<DashCircle />
+																</Button>
 																<div className='Row' style={{ height: '1px', borderBottom: 'solid 1px #8d8c8c', marginTop: '15px', width: '80%', marginLeft: '10%' }}></div >
 															</Row>
 														</div>
@@ -1474,12 +1496,10 @@ export function ApplicantForm(props: ApplicantFormProps) {
 																			...form.values,
 																			extras: form.values?.extras?.map((item): any => {
 																				if (item.type === ApplicantExtras.ACCIDENT_DETAILS) {
-																					{
-																						check = true;
-																						return {
-																							...item,
-																							value: [...(item.value || []), new ApplicantExtrasEntity()],
-																						}
+																					check = true;
+																					return {
+																						...item,
+																						value: [...(item.value || []), new ApplicantExtrasEntity()],
 																					}
 																				}
 																				return item
@@ -1523,13 +1543,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									form.values?.moving_violations_count > 0 &&
 									<div className="col-12 mt-2">
 										<ViewCard title="VIOLATION_DETAILS">
-										<BaseTextArea
-										className="col-12 mt-2"
-										readOnly={Boolean(entity?.is_hired)}
-										label="MOVING_VIOLATIONS_DETAILS"
-										name="moving_violations_details"
-										formik={form}
-										/>
+											<BaseTextArea
+												className="col-12 mt-2"
+												readOnly={Boolean(entity?.is_hired)}
+												label="MOVING_VIOLATIONS_DETAILS"
+												name="moving_violations_details"
+												formik={form}
+											/>
 											{form.values?.extras[form.values?.extras?.findIndex(v => v.type == ApplicantExtras.VIOLATION_DETAILS)]?.value?.length > 0 && (
 												<>
 													{form.values?.extras[form.values?.extras?.findIndex(v => v.type == ApplicantExtras.VIOLATION_DETAILS)].value.map((entity, i) => (
@@ -1567,6 +1587,28 @@ export function ApplicantForm(props: ApplicantFormProps) {
 																		formik={form}
 																		required
 																	/>
+																	<Button
+																		className="rounded-lg"
+																		variant="outline-danger close_btn w-25 mx-auto my-2"
+																		onClick={
+																			() =>
+																				form.setValues({
+																					...form.values,
+																					extras: [...form.values?.extras?.map(ex =>
+																						ex.type === ApplicantExtras.VIOLATION_DETAILS
+																							? {
+																								...ex, value: [
+																									...form.values?.extras?.find(v => v.type === ApplicantExtras.VIOLATION_DETAILS).value?.filter((val, idx) => idx != i)
+																								]
+																							}
+																							: ex
+																					)
+																					]
+																				})
+																		}
+																	>
+																		<DashCircle />
+																	</Button>
 																	<div className='Row' style={{ height: '1px', borderBottom: 'solid 1px #8d8c8c', marginTop: '15px', width: '80%', marginLeft: '10%' }}></div >
 																</Row>
 															</div>
@@ -1603,7 +1645,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 																		extras: [...form.values?.extras, {
 																			...new ApplicantExtrasEntity(ApplicantExtras.VIOLATION_DETAILS),
 																			value: [{ ...new VioalationExtrasEntity() }]
-																			}
+																		}
 																		]
 																	})
 																}}
