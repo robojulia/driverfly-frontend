@@ -4,6 +4,8 @@ import { PieChart } from "../pie-chart";
 
 export function ApplicantPieChart() {
 	const { state } = useContext(DashboardChartContext);
+	const newLocal = " State and data for the chart ..................";
+	console.log(state,newLocal);
 	const fetchData = () => {
 		let leads = 0;
 		let inProcess = 0;
@@ -16,12 +18,12 @@ export function ApplicantPieChart() {
 				if (v.current_application_status?.startsWith("IN_PROCESS_")) {
 					inProcess++
 				}
-				if (v.current_application_status?.startsWith("COMPLETED_")) {
-					hired++
-				}
+				// if (v.current_application_status?.startsWith("COMPLETED_") || v.current_application_status?.startsWith("ACTIVE_")) {
+				// 	hired++
+				// }
 			}
 		});
-
+		hired = state?.employees?.length;
 		return [leads, inProcess, hired];
 	};
 
