@@ -1,5 +1,6 @@
 import * as yup from "yup";
 import "../../../../utils/yup";
+import moment from "moment";
 
 export class CdlExtras {
   license_number: string;
@@ -8,7 +9,10 @@ export class CdlExtras {
 
   static yupSchema() {
     return yup.object({
-      date: yup.date().required().nullable(),
+      date: yup.date().typeError("INVALID_DATE").min(
+        moment().endOf("day").add(0.5, "years"),
+        "LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
+      ).required().nullable(),
       state: yup.string().required().nullable(),
       license_number: yup.string().required().nullable(),
     });
