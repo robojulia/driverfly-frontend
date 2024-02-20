@@ -17,7 +17,7 @@ import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.e
 
 export function ContinueLongForm() {
 	const {
-		state: { applicant },
+		state: { applicant, company },
 		method: { stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 
@@ -108,7 +108,7 @@ export function ContinueLongForm() {
 				<Row>
 					<h1 className={styles.carrierName}>
 						{t("{company_name}_THANKS", {
-							company_name: applicant?.company?.name,
+							company_name: applicant?.company?.name || company.name,
 						})}
 					</h1>
 				</Row>
@@ -121,7 +121,7 @@ export function ContinueLongForm() {
 							{t(
 								"{company_name}_REQUIRES_{cdl_category}",
 								{
-									company_name: applicant?.company?.name,
+									company_name: applicant?.company?.name || company.name,
 									cdl_category: companyPrefferedCDL
 										?.map((v) => t(`DriverLicenseType.${v}`))
 										?.join(", "),
@@ -139,7 +139,7 @@ export function ContinueLongForm() {
 								{t(
 									"{company_name}_PREFERED_MIN_CDL_EXPERIENCE_VALIDATION_{preffered_experience}",
 									{
-										company_name: applicant?.company?.name,
+										company_name: applicant?.company?.name || company.name,
 										preffered_experience: companyPrefferedMinExperience,
 									}
 								)}
@@ -168,7 +168,7 @@ export function ContinueLongForm() {
 								{t(
 									"{company_name}_PREFERED_MIN_ACCIDENT_COUNT_{preffered_accident_count}",
 									{
-										company_name: applicant?.company?.name,
+										company_name: applicant?.company?.name || company.name,
 										preffered_accident_count:
 											companyPrefferedAccidentCountLimit,
 									}
@@ -200,7 +200,7 @@ export function ContinueLongForm() {
 								{t(
 									"{company_name}_PREFERED_MIN_VIOLATION_COUNT_{preffered_violation_count}",
 									{
-										company_name: applicant?.company?.name,
+										company_name: applicant?.company?.name || company.name,
 										preffered_violation_count:
 											companyPrefferedMinViolationLimit,
 									}
@@ -232,7 +232,7 @@ export function ContinueLongForm() {
 								{t(
 									"{company_name}_PREFERED_ROUTES_VALIDATION_{preffered_routes}",
 									{
-										company_name: applicant?.company?.name,
+										company_name: applicant?.company?.name || company.name,
 										preffered_routes: companyPrefferedLocations
 											?.map((v) => t(`JobGeography.${v}`))
 											?.join(", "),
@@ -268,7 +268,7 @@ export function ContinueLongForm() {
 								className={`${styles.paragraph} ${styles.margin__top} text-warning p-1`}
 							>
 								{t("{company_name}_OWNER_OPERATOR_VALIDATION", {
-									company_name: applicant?.company?.name,
+									company_name: applicant?.company?.name || company.name,
 								})}
 							</h4>
 							<h6
@@ -278,7 +278,7 @@ export function ContinueLongForm() {
 							</h6>
 							<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
 								{t("{{company_name}}_OWNER_OPERATOR_VALIDATION_LONG", {
-									company_name: applicant?.company?.name,
+									company_name: applicant?.company?.name || company.name,
 								})}
 							</h6>
 						</>
@@ -296,7 +296,7 @@ export function ContinueLongForm() {
 									className={`${styles.paragraph} ${styles.margin__top} text-warning p-1`}
 								>
 									{t("{company_name}_W2_VALIDATION", {
-										company_name: applicant?.company?.name,
+										company_name: applicant?.company?.name || company.name,
 									})}
 								</h4>
 							</>

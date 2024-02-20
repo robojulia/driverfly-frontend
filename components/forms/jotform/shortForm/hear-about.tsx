@@ -1,19 +1,20 @@
 import { useFormik } from "formik";
-import { toast } from "react-toastify";
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import BaseSelect from "../../base-select";
-import { useTranslation } from "../../../../hooks/use-translation";
-import { HearAboutUsDto } from "../../../../models/jot-form/short-form/hear-about.dto";
+import { toast } from "react-toastify";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
-import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
-import styles from "../../../../styles/digitalhiringapp.module.css";
 import { HearAboutUsType } from "../../../../enums/jotform/hear-about-type.enum";
-import BaseInput from "../../base-input";
+import { useTranslation } from "../../../../hooks/use-translation";
+import { ApplicantEntity } from "../../../../models/applicant";
+import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import { HearAboutUsDto } from "../../../../models/jot-form/short-form/hear-about.dto";
 import ApplicantApi from "../../../../pages/api/applicant";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { LoaderIcon } from "../../../loading/loader-icon";
+import BaseInput from "../../base-input";
+import BaseSelect from "../../base-select";
 
 export function HearAbout() {
 	const {
@@ -37,16 +38,26 @@ export function HearAbout() {
 						{ ...REFERAL_NAME },
 					]).filter(v => !!v?.value)
 
-					const data = await applicantApi.jotform.create(company.id, {
-						applicant,
-						applicantExtras: filteredExtras,
-						jobs,
-						utm
-					});
-					setApplicantExtras(data?.extras)
+					let response: ApplicantEntity;
+					if (applicant?.id) {
+						response = await applicantApi.jotform.update(applicant.id, {
+							applicant,
+							applicantExtras: filteredExtras,
+							jobs,
+							utm
+						});
+					} else {
+						response = await applicantApi.jotform.create(company.id, {
+							applicant,
+							applicantExtras: filteredExtras,
+							jobs,
+							utm
+						});
+					}
+					setApplicantExtras(response?.extras)
 					setApplicant({
 						...applicant,
-						...data
+						...response
 					});
 
 					stepNext();
