@@ -141,7 +141,7 @@ export class EmployeeEntity {
 				.unique().nullable(),
 			reason_codes_other: yup.string().when("reason_codes", {
 				is: v => v && v.includes("OTHER"),
-				then: yup.string().required().nullable(),
+				then: yup.string().trim().required().nullable(),
 			}).nullable(),
 
 		});
