@@ -26,7 +26,9 @@ export class VehicleEntity {
     created_at: string | Date;
     last_updated_at?: string | Date;
 
+    
     static yupSchema() {
+  
         return yup.object({
             type: (yup.string() as any).enum(VehicleType).required().nullable(),
             type_other: yup.string().when("type", {
@@ -45,6 +47,10 @@ export class VehicleEntity {
             photo: yup.mixed().when({
                 is: v => !!v,
                 then: DocumentEntity.yupSchema()
+                    .test('supportedImageTypes', 'Invalid image type', (value : any) => {
+                      return !value || ['image/jpeg','image/png', 'image/gif'].includes(value?.mime_type);
+                    })
+                    .nullable(),
             }).optional(),
             accessories: yup.array(
                 (yup.string() as any).enum(VehicleAccessory)
