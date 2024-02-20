@@ -109,22 +109,20 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                     </Row>
                 </Container>
             </div>
-            {user == null && encourageModal == true &&
-                <ViewModal
-                    show={true}
-                    closeText="CANCEL"
-                    title="DRIVERFLY"
-                >
-                    <Row>
-                        <p>
-                            {t('GET_REGISTERED_MESSAGE')}
-                            <Link href="/signup">
-                                <a className='ml-1 primary '>{t("SIGN_UP")}</a>
-                            </Link>
-                        </p>
-                    </Row>
-                </ViewModal>
-            }
+            <ViewModal
+                show={user == null && encourageModal == true}
+                closeText="CANCEL"
+                title="DRIVERFLY"
+            >
+                <Row>
+                    <p>
+                        {t('GET_REGISTERED_MESSAGE')}
+                        <Link href="/signup">
+                            <a className='ml-1 primary '>{t("SIGN_UP")}</a>
+                        </Link>
+                    </p>
+                </Row>
+            </ViewModal>
         </section>
     )
 }

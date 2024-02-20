@@ -20,6 +20,7 @@ export function BasicInfo() {
 		state: { applicant, applicantExtras },
 		method: { setApplicant, updateApplicantExtras, stepNext, stepBack, setApplicantExtras },
 	}: JotFormContextType = useContext(JotformContext);
+	console.log("applicant", applicant);
 
 	const { t } = useTranslation();
 
@@ -69,7 +70,7 @@ export function BasicInfo() {
 	}, []);
 	return (
 		<>
-            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("basic_info")}</h1>
+			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("basic_info")}</h1>
 
 			<Form
 				className={styles.align__text_left}
