@@ -16,6 +16,8 @@ import { DocumentEntity } from '../documents/document.entity';
 import { JobEntity } from '../job/job.entity';
 import { EmployeeEquipmentEntity } from './employee-equipment.entity';
 import { EmployeeExperienceEntity } from './employee-experience.entity';
+import { useTranslation } from "../../hooks/use-translation";
+
 
 export class EmployeeEntity {
 	id?: number;
@@ -126,22 +128,24 @@ export class EmployeeEntity {
 	}
 
 	static yupSchemaForMarking() {
+		const { t } = useTranslation();
+
 		return yup.object({
 			id: yup.number().required().nullable(),
 			status: (yup.string() as any).enum(EmployeeStatus).required().nullable(),
 			reason_codes: (yup.array(yup.string())
 				.when("status", {
 					is: EmployeeStatus.QUIT,
-					then: yup.array((yup.string() as any).enum(EmployeeReasonCodeQuit)).min(1, "SELECT_ONE_PLACEHOLDER").nullable()
+					then: yup.array((yup.string() as any).enum(EmployeeReasonCodeQuit)).min(1, t("SELECT_ONE_PLACEHOLDER")).nullable()
 				})
 				.when("status", {
 					is: EmployeeStatus.FIRED,
-					then: yup.array((yup.string() as any).enum(EmployeeReasonCodeFired)).min(1, "SELECT_ONE_PLACEHOLDER").nullable()
+					then: yup.array((yup.string() as any).enum(EmployeeReasonCodeFired)).min(1, t("SELECT_ONE_PLACEHOLDER")).nullable()
 				}) as any)
 				.unique().nullable(),
 			reason_codes_other: yup.string().when("reason_codes", {
 				is: v => v && v.includes("OTHER"),
-				then: yup.string().required().nullable(),
+				then: yup.string().trim().required().nullable(),
 			}).nullable(),
 
 		});

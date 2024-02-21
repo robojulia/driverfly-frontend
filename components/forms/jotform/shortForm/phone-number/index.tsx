@@ -1,35 +1,41 @@
-import React, { useEffect, useContext, useState } from "react";
-import { Button, Col, Row, Form } from "react-bootstrap";
 import { useFormik } from "formik";
-import OtpInputField from 'react-otp-input';
-import { toast, ToastContainer } from "react-toastify";
-import styles from "../../../../../styles/digitalhiringapp.module.css";
-import BaseInputPhone from "../../../base-input-phone";
+import { useContext, useEffect, useState } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import OtpInputField from "react-otp-input";
+import { ToastContainer, toast } from "react-toastify";
+import JotformContext, {
+    JotFormContextType,
+} from "../../../../../context/jotform-context";
+import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
+import { MessageStatus } from "../../../../../enums/conversation/message-status.enum";
 import { useTranslation } from "../../../../../hooks/use-translation";
-import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
+import { ApplicantOTPEntity } from "../../../../../models/applicant/applicant-otp.entity";
+import { PhoneNumberDto } from "../../../../../models/jot-form/short-form/phone-number.dto";
 import ApplicantApi from "../../../../../pages/api/applicant";
+import styles from "../../../../../styles/digitalhiringapp.module.css";
+import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import { LoaderIcon } from "../../../../loading/loader-icon";
 import ViewModal from "../../../../view-details/view-modal";
-import { PhoneNumberDto } from "../../../../../models/jot-form/short-form/phone-number.dto";
-import { ApplicantOTPEntity } from "../../../../../models/applicant/applicant-otp.entity";
-import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
-import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
+import BaseInputPhone from "../../../base-input-phone";
 import { socketInitializer } from "./socketInitializer";
-import { MessageStatus } from "../../../../../enums/conversation/message-status.enum";
-
 
 export function PhoneNumber() {
     const {
         state: { applicant },
-        method: { setApplicant, stepNext, stepBack, setApplicantExtras },
+        method: {
+            setApplicant,
+            stepNext,
+            stepBack,
+            // setApplicantExtras
+        },
     }: JotFormContextType = useContext(JotformContext);
 
     const { t } = useTranslation();
-    const [openModal, setOpenModal] = useState<boolean>(false)
-    const [otp, setOtp] = useState<string>('')
-    const [showOtpField, seShowtOtpField] = useState<boolean>(false)
-    const [otpApplicant, setOtpApplicant] = useState<ApplicantOTPEntity>(null)
-    const [otpException, setOtpException] = useState<boolean>(false)
+    const [openModal, setOpenModal] = useState<boolean>(false);
+    const [otp, setOtp] = useState<string>("");
+    const [showOtpField, seShowtOtpField] = useState<boolean>(false);
+    const [otpApplicant, setOtpApplicant] = useState<ApplicantOTPEntity>(null);
+    const [otpException, setOtpException] = useState<boolean>(false);
 
     const form = useFormik({
         initialValues: new PhoneNumberDto(),
@@ -37,12 +43,14 @@ export function PhoneNumber() {
         onSubmit: async (values, { setErrors }) => {
             try {
                 const { phone } = values;
-                const applicantApi = new ApplicantApi()
+                const applicantApi = new ApplicantApi();
                 // const applicantEmailExists = await applicantApi.searchByPublic({ email })
-                const applicantPhoneExists = await applicantApi.searchByPublic({ phone })
+                const applicantPhoneExists = await applicantApi.searchByPublic({
+                    phone,
+                });
 
                 if (applicantPhoneExists) {
-                    setOpenModal(true)
+                    setOpenModal(true);
                     // } else if (applicantPhoneExists) {
                     // 	setErrors({ phone: 'ALREADY_EXISTS' })
                 } else {
@@ -69,45 +77,46 @@ export function PhoneNumber() {
         });
     }, []);
 
-
     const verifyOTP = async () => {
-        const applicantApi = new ApplicantApi()
+        const applicantApi = new ApplicantApi();
 
-        const applicantId = otpApplicant?.applicantId
+        const applicantId = otpApplicant?.applicantId;
 
         try {
-            const applicantExistingProfile = await applicantApi.verifyOTP({ applicantId, otp })
-            setApplicant(applicantExistingProfile)
-            setOpenModal(false)
-            stepNext()
-
+            const applicantExistingProfile = await applicantApi.verifyOTP({
+                applicantId,
+                otp,
+            });
+            setApplicant(applicantExistingProfile);
+            setOpenModal(false);
+            stepNext();
         } catch (error) {
             globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
-            setOtpException(true)
+            setOtpException(true);
         }
-    }
+    };
 
     const handleLeavePreviousProfile = () => {
-        setOpenModal(false)
-        stepNext()
-    }
+        setOpenModal(false);
+        stepNext();
+    };
 
     const onCloseClick = () => {
-        setOpenModal(false)
-    }
+        setOpenModal(false);
+    };
 
     const requestOTP = async () => {
-        setOtpException(false)
-        const applicantApi = new ApplicantApi()
-        const { phone } = form.values
+        setOtpException(false);
+        const applicantApi = new ApplicantApi();
+        const { phone } = form.values;
         try {
-            const OTPresponse = await applicantApi.requestOTP({ phone })
-            setOtpApplicant(OTPresponse)
-            seShowtOtpField(true)
+            const OTPresponse = await applicantApi.requestOTP({ phone });
+            setOtpApplicant(OTPresponse);
+            seShowtOtpField(true);
         } catch (error) {
-            console.log("errors", error)
+            console.log("errors", error);
         }
-    }
+    };
     useEffect(() => {
         const typesToExclude = [
             ApplicantExtras.SIGNATURE,
@@ -118,12 +127,10 @@ export function PhoneNumber() {
         ];
 
         const filteredSignature = applicant?.extras.filter(
-            v => !typesToExclude.includes(v.type)
+            (v) => !typesToExclude.includes(v.type)
         );
-        if (!!applicant?.extras) setApplicantExtras([...filteredSignature])
-
-    }, [applicant])
-
+        // if (!!applicant?.extras) setApplicantExtras([...filteredSignature])
+    }, [applicant]);
 
     useEffect(() => {
         if (
@@ -142,14 +149,10 @@ export function PhoneNumber() {
                         if (Boolean(error_message)) {
                             toast.error(t("UNABLE_TO_SEND_OTP"));
                         }
-                        if (
-                            status == MessageStatus.SENT
-                        ) {
+                        if (status == MessageStatus.SENT) {
                             toast(t("OTP_MESSAGES_SENT"));
                         }
-                        if (
-                            status == MessageStatus.DELIVERED
-                        ) {
+                        if (status == MessageStatus.DELIVERED) {
                             toast.success(t("OTP_MESSAGES_DELIVERED"));
                         }
                     }
@@ -161,7 +164,9 @@ export function PhoneNumber() {
     return (
         <>
             <ToastContainer />
-            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("phone")}</h1>
+            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
+                {t("phone")}
+            </h1>
             <ViewModal
                 show={openModal}
                 title="NUMBER_ALREADY_EXISTS"
@@ -170,51 +175,50 @@ export function PhoneNumber() {
                 footer={
                     <Row className="mt-5 w-100">
                         <Col>
-                            <Button className="float-right" onClick={handleLeavePreviousProfile}>
+                            <Button
+                                className="float-right"
+                                onClick={handleLeavePreviousProfile}
+                            >
                                 {t("NO")}
                             </Button>
                         </Col>
 
                         <Col>
-                            {
-                                showOtpField ? (
-                                    <Button
-                                        onClick={verifyOTP}
-                                        className="float-left theme-secondary-btn"
-                                    >
-                                        {t("SUBMIT")}
-                                    </Button>
-                                ) : (
-
-                                    <Button
-                                        onClick={requestOTP}
-                                        className="float-left theme-secondary-btn"
-                                    >
-                                        {t("PROCEED")}
-                                    </Button>
-                                )
-                            }
+                            {showOtpField ? (
+                                <Button
+                                    onClick={verifyOTP}
+                                    className="float-left theme-secondary-btn"
+                                >
+                                    {t("SUBMIT")}
+                                </Button>
+                            ) : (
+                                <Button
+                                    onClick={requestOTP}
+                                    className="float-left theme-secondary-btn"
+                                >
+                                    {t("PROCEED")}
+                                </Button>
+                            )}
                         </Col>
                     </Row>
                 }
             >
                 <div>
-
                     {showOtpField ? (
                         <>
                             <h5 className="text-center">{t("OTP_MESSAGES")}</h5>
                             <div className="w-100 d-flex justify-content-center mt-4 mb-4">
                                 <OtpInputField
                                     inputStyle={{
-                                        width: '40px',
-                                        height: '40px',
-                                        margin: '8px',
-                                        borderRadius: '4px',
-                                        border: '1px solid #ccc',
-                                        fontSize: '24px',
-                                        fontWeight: 'bold',
-                                        textAlign: 'center',
-                                        color: '#000',
+                                        width: "40px",
+                                        height: "40px",
+                                        margin: "8px",
+                                        borderRadius: "4px",
+                                        border: "1px solid #ccc",
+                                        fontSize: "24px",
+                                        fontWeight: "bold",
+                                        textAlign: "center",
+                                        color: "#000",
                                     }}
                                     renderInput={(props) => <input {...props} />}
                                     value={otp}
@@ -223,17 +227,28 @@ export function PhoneNumber() {
                                     numInputs={6}
                                     renderSeparator={<span>-</span>}
                                 />
-
                             </div>
-                            {
-                                otpException && <p className="text-center">{t("OTP_EXCEPTION_MESSAGE")}<a role="button" className="text-primary" onClick={requestOTP}>{t("RESEND")}</a></p>
-                            }
+                            {otpException && (
+                                <p className="text-center">
+                                    {t("OTP_EXCEPTION_MESSAGE")}
+                                    <a
+                                        role="button"
+                                        className="text-primary"
+                                        onClick={requestOTP}
+                                    >
+                                        {t("RESEND")}
+                                    </a>
+                                </p>
+                            )}
                         </>
                     ) : (
                         <>
-                            <h3 className="text-center text-warning">{t("ALREADY_AN_APPLICANT")}</h3>
-                            <h5 className="text-center">{t("DO_YOU_WISH_TO_PROCEED_WITH_PREVIOUS_PROFILE")}</h5>
-
+                            <h3 className="text-center text-warning">
+                                {t("ALREADY_AN_APPLICANT")}
+                            </h3>
+                            <h5 className="text-center">
+                                {t("DO_YOU_WISH_TO_PROCEED_WITH_PREVIOUS_PROFILE")}
+                            </h5>
                         </>
                     )}
                 </div>

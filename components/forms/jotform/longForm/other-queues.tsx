@@ -21,6 +21,8 @@ export function OtherQueues() {
     }: JotFormContextType = useContext(JotformContext);
 
     const { t } = useTranslation();
+	const current_date = new Date();
+
 
     const form = useFormik({
         initialValues: new OtherQueuesDto(),
@@ -81,6 +83,7 @@ export function OtherQueues() {
                                 type="date"
                                 name={`CDL_NUMBER.value[${i}].date`}
                                 placeholder="expiration_date"
+                                min={(new Date(current_date.getFullYear(), current_date.getMonth() + 6, current_date.getDate())).toISOString().split("T")[0]}
                                 label="expiration_date"
                                 required
                                 formik={form}

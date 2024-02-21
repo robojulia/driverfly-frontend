@@ -57,8 +57,8 @@ export default function About() {
 
       <div className="who-we-serve-sec">
         <div className="container-fluid">
-          <div className="row">
-            <div className="col-md-8">
+          <div className="d-flex flex-column">
+            <div className="col-md-12">
               <h2>Who We Serve</h2>
               <div className="row">
                 <div className="col">
@@ -95,12 +95,21 @@ export default function About() {
               </div>
             </div>
 
-            <div className="col-sm-12 col-md-4 who-we-outer">
-              <img
-                src="img/mockup-of-a-man-with-a-crewneck-t-shirt-leaning-on-a-truck-29466-1.png"
-                alt=""
-                className="who-we-img img-fluid"
-              />
+            <div className="col-sm-12 col-md-12 who-we-outer">
+              <div className="who-we-img ">
+                <img
+                  src="img/mockup-of-a-man-with-a-crewneck-t-shirt-leaning-on-a-truck-29466-1.png"
+                  alt=""
+                  className=""
+                />
+                <img
+                  src="img/mockup-man-siting-with-df-shirt.png"
+                  alt=""
+                  className=""
+                />
+
+              </div>
+              <div className="d-flex w-100  justify-content-center text-center">
               <div className="who-we-serve-inner mb-3">
                 <h3>{t("NOT_SURE_WHRE_TO_START?")}</h3>
                 <p>{t("WITH_OVER_400+_CLIENTS_ACROSS_THE_US")}</p>
@@ -109,6 +118,8 @@ export default function About() {
                     {t("CONTACT_US")}
                   </button>
                 </Link>
+              </div>
+
               </div>
             </div>
           </div>

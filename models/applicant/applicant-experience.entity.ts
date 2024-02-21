@@ -1,6 +1,6 @@
 import * as yup from "yup";
-import "../../utils/yup";
 import { JobEquipmentType } from "../../enums/jobs/job-equipment-type.enum";
+import "../../utils/yup";
 
 export class ApplicantExperienceEntity {
     type?: JobEquipmentType;
@@ -15,7 +15,7 @@ export class ApplicantExperienceEntity {
                 is: JobEquipmentType.OTHER,
                 then: yup.string().required().nullable()
             }).nullable(),
-            years: yup.number().min(1).nullable(),
+            years: yup.number().min(1).max(100).nullable(),
             months: yup.number().min(0).max(11).nullable()
         });
     }
@@ -24,7 +24,7 @@ export class ApplicantExperienceEntity {
         return yup.object({
             type: (yup.string() as any).enum(JobEquipmentType).required().nullable(),
             type_other: yup.string().nullable(),
-            years: yup.number().min(1).nullable(),
+            years: yup.number().min(1).max(100).nullable(),
             months: yup.number().min(0).max(11).nullable()
         });
     }
