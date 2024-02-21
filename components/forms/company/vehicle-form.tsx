@@ -31,7 +31,7 @@ export function VehicleForm(props: VehicleFormProps) {
     const { t } = useTranslation();
     let { className, entity, onSaveComplete, onSaveError } = props;
 
-    const action = !!entity?.id ? "Forms.UPDATED" : "Forms.CREATED";
+    const action = !!entity?.id ? "Forms.UPDATED" : "Forms.CREATE/ADD";
 
     const form = useFormik({
         initialValues: new VehicleEntity(),
