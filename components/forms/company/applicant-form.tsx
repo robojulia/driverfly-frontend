@@ -791,6 +791,28 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			</>
 		);
 	}
+
+	useEffect(() => {
+		const hasZeroValue = Boolean(
+		  form.values?.extras?.find(
+			(v) => v.type === ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
+		  )?.value === 0
+		);
+	  
+		if (hasZeroValue) {
+		  form.setFieldValue(
+			'extras',
+			form.values?.extras?.map((v) =>
+			  v.type === ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
+				? { ...v, value: false }
+				: v
+			)
+		  );
+		}
+	  }, [form.values]);
+
+ 
+
 	return (
 		<EntityForm
 			id={entity?.id}
