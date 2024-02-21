@@ -531,6 +531,7 @@ export default function Applicant() {
                                                 className="col-6 p-1"
                                                 name={`employers[${i}].start_at`}
                                                 label="DATES_EMPLOYED"
+                                                max={new Date().toISOString().split("T")[0]}
                                                 type="date"
                                                 formik={form}
                                             />
