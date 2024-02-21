@@ -1311,6 +1311,7 @@
   "Forms": {
     "SAVED": "saved",
     "CREATED": "created",
+    "CREATE/ADD":"Create/Add",
     "UPDATED": "updated",
     "DELETED": "deleted",
     "SAVE": "save",
