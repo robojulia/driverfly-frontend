@@ -34,7 +34,7 @@ export default function EntityForm(props: EntityFormProps) {
     const action = t(props.submitLabel ?? (id ? "UPDATE" : "CREATE"));
 
     if (formik) {
-        canSubmit = !formik.isValidating && !formik.isSubmitting && formik.isValid;
+        canSubmit = !formik.isValidating && !formik.isSubmitting;
         if (!onSubmit) onSubmit = formik.handleSubmit;
     }
 
