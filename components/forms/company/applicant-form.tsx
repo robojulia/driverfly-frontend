@@ -186,7 +186,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				extras?.push({
 					...new ApplicantExtrasEntity(),
 					type: ApplicantExtras.ALREADY_APPLIED_TO_COMPANY,
-					value: 0,
+					value: false,
 				});
 			} else {
 				extras?.push({
