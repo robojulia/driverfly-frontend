@@ -198,7 +198,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			const ALREADY_WORKED_TO_COMPANY = extras?.find(
 				(v) => v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
 			)
-			if (!ALREADY_WORKED_TO_COMPANY.id) {
+			if (!ALREADY_WORKED_TO_COMPANY?.id) {
 				setIsWorkedBefore(false);
 				extras?.push({
 					...new ApplicantExtrasEntity(),
