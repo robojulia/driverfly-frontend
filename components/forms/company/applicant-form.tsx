@@ -179,22 +179,26 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			let values: ApplicantEntity;
 			let extras: ApplicantExtrasEntity[] = entity?.extras ?? [];
 
-			if (
-				!extras?.find(
-					(v) => v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
-				)
+			const ALREADY_APPLIED_TO_COMPANY = extras?.find(
+				(v) => v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
 			)
+			if (!ALREADY_APPLIED_TO_COMPANY?.id) {
 				extras?.push({
 					...new ApplicantExtrasEntity(),
 					type: ApplicantExtras.ALREADY_APPLIED_TO_COMPANY,
 					value: 0,
 				});
+			} else {
+				extras?.push({
+					...ALREADY_APPLIED_TO_COMPANY,
+					value: Boolean(ALREADY_APPLIED_TO_COMPANY.value),
+				});
+			}
 
-			if (
-				!extras?.find(
-					(v) => v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
-				)
-			) {
+			const ALREADY_WORKED_TO_COMPANY = extras?.find(
+				(v) => v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
+			)
+			if (!ALREADY_WORKED_TO_COMPANY.id) {
 				setIsWorkedBefore(false);
 				extras?.push({
 					...new ApplicantExtrasEntity(),
@@ -791,6 +795,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			</>
 		);
 	}
+
 	return (
 		<EntityForm
 			id={entity?.id}
