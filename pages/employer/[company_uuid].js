@@ -13,23 +13,12 @@ import { useEffect, useState } from "react";
 
 export default function CompanyDetail({ company, jobs, jobCount }) {
 	const { t } = useTranslation();
-	const jobApi = new JobApi();
-	const [com_jobs, setComJobs] = useState([]);
 
 	const regex = `([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)`
 	const validAbout = !!!(company.about?.match(regex))
+	console.log("jobs", jobs);
 
-	useEffect(async () => {
-		try {
-			const companyJobs = await jobApi.search(company?.id)
-			setComJobs(companyJobs)
-		}
-		catch (e) {
-			console.log(e);
-		}
-	}, [])
  
-
 	return (
 		<>
 			<FlagCompany companyId={company.id} />
@@ -124,7 +113,7 @@ export default function CompanyDetail({ company, jobs, jobCount }) {
 									<p style={{ fontSize: '22px', fontWeight: 'lighter', color: 'white' }}>{t("ACTIVE_JOB_LISTINGS")}</p>
 								</div>
 							</div>
-							<CompanyJob jobs={com_jobs?.items} />
+							<CompanyJob jobs={jobs} />
 							{!!jobCount && (
 								<Link href={`/find-jobs?companyId=${company.id}`}>
 									<a className="text-dark text-center text-decoration-none">
@@ -153,7 +142,7 @@ export async function getServerSideProps(context) {
 
 		const company = await companyApi.employer.getByUUId(companyId);
 		const jobCount = await companyApi.employer.getJobCount(company?.id) ?? 0;
-		const { items } = await jobApi.search({ companyId, take: 3 });
+		const  { items }  = await jobApi.search(companyId);
 		console.log("items", items);
 
 		if (!!!company) return { notFound: true };
