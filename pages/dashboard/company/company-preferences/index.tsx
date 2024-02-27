@@ -282,20 +282,32 @@ export default function CompanyPreference() {
 						show={showAutoRecruitingModal}
 						onCloseClick={() => setShowAutoRecruitingModal(false)}
 						closeText="CANCEL"
+						modalHeaderClass="border-0 pt-2 pb-0 px-4"
+						noCloseBtn
+						centered
+						modalBodyClass="pt-0"
 					>
 						<div>
-							<h2 className="text-center">{t("AUTO_RECRUITING")}</h2>
-							<p className="text-center">{t("LOOKING_TO_SCALE_UP")}</p>
+							<h3 className="text-center" style={{color:"#335665", fontWeight:"bolder"}}>{t("AUTO_RECRUITING")}</h3>
+							<p className="text-center" style={{fontSize:'larger', fontStyle:"italic"}}>{t("LOOKING_TO_SCALE_UP")}</p>
 							<p>{t("AUTO_RECRUITING_TEXT_1")}</p>
-							<p>{t("AUTO_RECRUITING_TEXT_2")}</p>
-							<p>{t("AUTO_RECRUITING_TEXT_3")}</p>
+							<ul >
+								<li style={{listStyleType: "circle"}}>
+									<p><b>{t("AUTO_RECRUITING_TEXT_2_TITLE")}</b>{t("AUTO_RECRUITING_TEXT_2")}</p>
+								</li>
+								<li style={{listStyleType: "circle"}}>
+									<p><b>{t("AUTO_RECRUITING_TEXT_3_TITLE")}</b>{t("AUTO_RECRUITING_TEXT_3")}</p>
+								</li>
+							</ul>
 							<p>{t("AUTO_RECRUITING_TEXT_4")}</p>
-							<p className="text-center">
+							<p className="text-left mt-5">
 								<span> {t("REFER_BACK_PROGRAM_TEXT_3_PART_1")}</span>
 								<span> </span>
-								<span className="text-primary">
-									{t("REFER_BACK_PROGRAM_TEXT_3_PART_2")}
-								</span>
+								<Link href={""}>
+									<a style={{color:'#33acb9', textDecoration:"underline"}}>
+										{t("REFER_BACK_PROGRAM_TEXT_3_PART_2")}
+									</a>
+								</Link>
 								<span>{t("REFER_BACK_PROGRAM_TEXT_3_PART_3")}</span>
 							</p>
 						</div>

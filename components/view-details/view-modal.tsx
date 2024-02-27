@@ -13,6 +13,10 @@ export interface ViewModalProps {
     onCloseClick?: () => void;
     readonly children?: React.ReactChildren | React.ReactChild;
     className?: string;
+    noCloseBtn?: boolean;
+    modalHeaderClass?: string;
+    modalBodyClass?: string;
+    centered?:boolean;
 }
 
 export default function ViewModal(props: ViewModalProps) {
@@ -28,8 +32,10 @@ export default function ViewModal(props: ViewModalProps) {
     }
 
     return (
-        <Modal show={show} size={props.size} onHide={props.onCloseClick ?? hideModelHandler} className={props.className}>
-            <Modal.Header className="justify-content-between">
+        <Modal show={show} size={props.size} onHide={props.onCloseClick ?? hideModelHandler} className={props.className} 
+        centered={props.centered}
+        >
+            <Modal.Header className={`justify-content-between ${props?.modalHeaderClass}`}>
                 <div className="d-flex align-items-center">
                     {props.title && (
                         <h4 className="modal-title font-weight-normal">
@@ -38,13 +44,16 @@ export default function ViewModal(props: ViewModalProps) {
                     )}
                     {props.header}
                 </div>
-                <Button style={{ backgroundColor: "grey", color: "white" }} variant="theme-general-btn" onClick={props.onCloseClick ?? hideModelHandler}>
-                    <XLg /> {t(props.closeText || "CLOSE")}
-                </Button>
+                {
+                    props?.noCloseBtn ? <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={props.onCloseClick ?? hideModelHandler}>
+                        <span aria-hidden="true">&times;</span>
+                    </button> :
+                        <Button style={{ backgroundColor: "grey", color: "white" }} variant="theme-general-btn" onClick={props.onCloseClick ?? hideModelHandler}>
+                            <XLg /> {t(props.closeText || "CLOSE")}
+                        </Button>
+                }
             </Modal.Header>
-
-            <Modal.Body>{props.children}</Modal.Body>
-
+            <Modal.Body className={`${props?.modalBodyClass}`}>{props.children}</Modal.Body>
             {
                 props.footer &&
                 <Modal.Footer>
