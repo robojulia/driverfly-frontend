@@ -1,7 +1,7 @@
 import * as yup from "yup";
-import "../../../../utils/yup";
+import "../../utils/yup";
 
-export class AccidentHistoryEntity {
+export class ApplicantAccidentEntity {
     date_of_accident?: string | Date;
     nature_of_accident?: string;
     number_of_injured?: number;
