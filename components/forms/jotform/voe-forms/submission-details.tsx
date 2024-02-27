@@ -113,8 +113,7 @@ export function SubmissionDetails() {
 	// 	console.log("form values", form.values);
 	// 	console.log("form eror", form.errors);
 	// }, [form.values, form.errors]);
-	console.log("VOE ===================================", voe);
-	console.log("EMPLOYER ===================================", employer);
+ 
 
 	return (
 		<>
@@ -152,6 +151,7 @@ export function SubmissionDetails() {
 					<BaseInputPhone
 						className="my-3 float-left col-md-6"
 						label="PHONE"
+						required
 						name="focal_person_phone"
 						formik={form}
 					/>
@@ -169,6 +169,7 @@ export function SubmissionDetails() {
 						label="DATE"
 						name="signed_date"
 						type="date"
+						required
 						formik={form}
 					/>
 				</Row>
