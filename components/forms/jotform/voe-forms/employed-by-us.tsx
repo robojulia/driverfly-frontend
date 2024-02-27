@@ -66,7 +66,6 @@ export function EmployedByUs() {
 			<Row>
 				<BaseCheck
 					className="mt-3 mb-3"
-					required
 					name="was_employed"
 					label={t(
 						"{applicantName}_EMPLOYED_BY_US",
