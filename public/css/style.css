@@ -523,6 +523,10 @@ li:hover ul {
     border-radius: 5px;
     margin-bottom: 30px;
 }
+/* .view_job_btnP{
+    text-decoration: none !important;
+
+} */
 
 #remember {
     width: 20px;
@@ -2362,6 +2366,7 @@ p {
 .custom-trucker-title {
     font-size: 25px;
     margin: 0;
+    font-weight: 600;
     line-height: 60px;
 }
 
@@ -2374,6 +2379,8 @@ p {
     color: #fff;
 }
 
+
+
 .custom-trucker-follow-btn:hover {
     border-color: #c4c4c4;
     background-color: #c4c4c4;
@@ -2383,8 +2390,19 @@ p {
     width: 200px;
     height: 45px;
     border-radius: 4px;
+    background: #1D4354 !important;
+    color: #fff;
+    transition: all ease-in-out 0.3s;
 }
-
+.custom-trucker-review-btn:hover{
+    box-shadow:  8px 8px 15px #0d35463b;
+}
+.apply_job_btn{
+    width: 120px;
+    height: 45px;
+    background: #1D4354 !important;
+    color: #fff;
+}
 .social-profile-sec {
     padding: 15px;
     margin-bottom: 15px;
@@ -2392,6 +2410,7 @@ p {
     display: flex;
     align-items: baseline;
     border-radius: 4px;
+    gap: 17%;
 }
 
 /*

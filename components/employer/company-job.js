@@ -4,50 +4,64 @@ import { StarFill, GeoAlt, CalendarDate, CurrencyDollar } from 'react-bootstrap-
 import { useTranslation } from '../../hooks/use-translation';
 import { buildAddress } from '../../utils/common';
 import timeSince from '../../utils/timeSince';
+import { useRouter } from 'next/router';
+import CompanyPhoto from '../jobs/company-photo';
 export default function CompanyJob({ jobs }) {
 
   const { t } = useTranslation();
-
+  const router = useRouter();
 
   return (
     <div>
       {
-        jobs &&
-        jobs.slice(0, 2).map((job, index) => (
-          <div key={index} className="media mt-2 shadow-sm">
-            <Link href={`/jobs/${job.id}/${job.slug}`}>
+        jobs ?
+          jobs?.slice(0, 3)?.map((job, index) => (
+            <div key={index} className="media mt-2 shadow-sm">
+              <div className="col-md-3  col-lg-3 col-sm-3 text-center  bg-white rounded">
+                <CompanyPhoto
+                  className="img-fluid rounded-start"
+                  company={job?.company}
+                />
+              </div>
               <div className="media-body" role='button'>
-                <h4 className="mt-0 text-dark">
+                <h3 className="mt-0" style={{ color: "#212529", fontWeight: "600", fontSize: '23px' }}>
                   {job.title}
-                </h4>
+                </h3>
                 <div className="job-metas">
                   <div className="job-location">
-                    <span className='text-muted align-middle'>
+                    <p>
+                      {job?.description && job?.description}
+                    </p>
+                    {/* <span className='text-muted align-middle'>
                       {
                         job.location &&
                         <>
                           {buildAddress(job.location, { street: false, zip_code: false })}
                         </>
                       }
-                    </span>
-                    <span className='text-muted ml-5 align-middle'>
-                      <CalendarDate color="#C5C5C5" className='mr-2' />
+                    </span> */}
+                    <span className='text-muted align-middle'>
+                      <CalendarDate color="#979797" className='mr-2' />
                       {
                         job.created_at &&
-                        <>
-                          {t('posted')} {timeSince(job.created_at)} {t('ago')}
-                        </>
+                        <span style={{ color: "#979797" }}>
+                          {t('posted')} {(job.created_at.split("T")[0].split("-").join("/"))}
+                        </span>
                       }
                     </span>
-                    <span className='text-muted d-block'>
+                    {/* <span className='text-muted d-block'>
                       <p>< CurrencyDollar className="mr-1" />{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} {t('per week')}</p>
-                    </span>
+                    </span> */}
                   </div>
                 </div>
               </div>
-            </Link>
+              <button type="button" className="apply_job_btn" onClick={() => router.push(`/jobs/${job.id}/${job.slug}`)}>
+                {t("view_job")}
+              </button>
+            </div>
+          )) : <div className='d-flex justify-content-center'>
+            <h5 className='text-secondary'>{t("NO_JOBS_FOUND")}</h5>
           </div>
-        ))
       }
     </div>
   )
