@@ -67,6 +67,7 @@ import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
 import ViewModal from "../../view-details/view-modal";
 import { ReferralSourceForm } from "../admin/referral-source-form";
 import { JobForm } from "./job-form";
+import { AccidentHistory } from "../jotform/voe-forms";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
@@ -442,35 +443,21 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								form?.values?.accident_count > 0 &&
 								form?.values?.accident_count >
 								(
-									form.values.extras?.find(
-										(x) => x.type == ApplicantExtras.ACCIDENT_DETAILS
-									)?.value || []
+									form.values.accident_history || []
 								)?.length && (
 									<Button
 										className="w-100 py-2"
 										size="sm"
 										onClick={() => {
 											const accident_details_ex =
-												form.values.extras?.find(
-													({ type }) => type == ApplicantExtras.ACCIDENT_DETAILS
-												) ||
+												form.values.accident_history ||
 												new ApplicantExtrasEntity(
 													ApplicantExtras.ACCIDENT_DETAILS
 												);
 											form.setValues({
 												...form.values,
-												extras: [
-													...(form.values?.extras?.filter(
-														({ type }) =>
-															type != ApplicantExtras.ACCIDENT_DETAILS
-													) || []),
-													{
-														...accident_details_ex,
-														value: [
-															...(accident_details_ex?.value || []),
-															new ApplicantAccidentEntity(),
-														],
-													},
+												accident_history: [
+													...(form.values?.accident_history || []), {...new ApplicantAccidentEntity()}
 												],
 											});
 										}}
@@ -487,17 +474,14 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								name="accident_details"
 								formik={form}
 							/>
-							{form.values?.extras
-								?.find((ex) => ex.type == ApplicantExtras.ACCIDENT_DETAILS)
-								?.value?.map((accident_details_ex, i) => (
+							{form.values?.accident_history?.map((accident_details_ex, i) => (
+								console.log("Index in iteration ", i),
 									<Row className="pl-0 single-past-employer-items my-1" key={i}>
 										<div className="col-md-12 mt-2">
 											<Row className={""}>
 												<BaseInput
 													className="col-md-6 my-3"
-													name={`extras[${form.values?.extras.findIndex(
-														(ex) => ex.type === ApplicantExtras.ACCIDENT_DETAILS
-													)}].value[${i}].date_of_accident`}
+													name={`accident_history[${i}].date_of_accident`}
 													label="DATE"
 													type="date"
 													formik={form}
@@ -506,54 +490,42 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												/>
 												<BaseInput
 													className="col-md-6 my-3"
-													name={`extras[${form.values?.extras.findIndex(
-														(ex) => ex.type === ApplicantExtras.ACCIDENT_DETAILS
-													)}].value[${i}].nature_of_accident`}
+													name={`accident_history[${i}].nature_of_accident`}
 													label="LABEL_ACCIDENT_NATURE"
 													formik={form}
 													required
 												/>
 												<BaseInput
 													className="col-md-6 my-3"
-													name={`extras[${form.values?.extras.findIndex(
-														(ex) => ex.type === ApplicantExtras.ACCIDENT_DETAILS
-													)}].value[${i}].location_of_accident`}
+													name={`accident_history[${i}].location_of_accident`}
 													label="LABEL_ACCIDENT_LOCATION"
 													formik={form}
 													required
 												/>
 												<BaseInput
 													className="col-md-6 my-3"
-													name={`extras[${form.values?.extras.findIndex(
-														(ex) => ex.type === ApplicantExtras.ACCIDENT_DETAILS
-													)}].value[${i}].number_of_fatalaties`}
+													name={`accident_history[${i}].number_of_fatalaties`}
 													label="LABEL_ACCIDENT_FATALITIES"
 													formik={form}
 													required
 												/>
 												<BaseInput
 													className="col-md-6 mt-2"
-													name={`extras[${form.values?.extras.findIndex(
-														(ex) => ex.type === ApplicantExtras.ACCIDENT_DETAILS
-													)}].value[${i}].number_of_injured`}
+													name={`accident_history[${i}].number_of_injured`}
 													label="LABEL_ACCIDENT_INJURED"
 													formik={form}
 													required
 												/>
 												<BaseCheck
 													className="col-md-6 mt-5"
-													name={`extras[${form.values?.extras.findIndex(
-														(ex) => ex.type === ApplicantExtras.ACCIDENT_DETAILS
-													)}].value[${i}].dot_recordable`}
+													name={`accident_history[${i}].dot_recordable`}
 													label="LABEL_ACCIDENT_DOT"
 													formik={form}
 												/>
 
 												<BaseCheck
 													className="col-md-12 mt-4"
-													name={`extras[${form.values?.extras.findIndex(
-														(ex) => ex.type === ApplicantExtras.ACCIDENT_DETAILS
-													)}].value[${i}].at_fault`}
+													name={`accident_history[${i}].at_fault`}
 													label="LABEL_ACCIDENT_FAULT"
 													formik={form}
 												/>
@@ -561,23 +533,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													className="rounded-lg"
 													variant="outline-danger close_btn w-25 mx-auto my-2"
 													onClick={() =>
-														form.setValues({
-															...form.values,
-															extras: [
-																...form.values?.extras?.map((ex) =>
-																	ex.type == ApplicantExtras.ACCIDENT_DETAILS
-																		? {
-																			...ex,
-																			value: [
-																				...ex?.value?.filter(
-																					(val, idx) => idx != i
-																				),
-																			],
-																		}
-																		: ex
-																),
-															],
-														})
+														form.setFieldValue(
+															"accident_history", [...form.values?.accident_history?.filter((ex, indx) => indx !== i)]
+														)
 													}
 												>
 													<DashCircle />
@@ -626,26 +584,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								name="moving_violations_details"
 								formik={form}
 							/>
-							{form.values?.extras[
-								form.values?.extras?.findIndex(
-									(v) => v.type == ApplicantExtras.VIOLATION_DETAILS
-								)
-							]?.value?.length > 0 && (
+							{form.values?.moving_violation_history?.length > 0 && (
 									<>
-										{form.values?.extras[
-											form.values?.extras?.findIndex(
-												(v) => v.type == ApplicantExtras.VIOLATION_DETAILS
-											)
-										].value.map((entity, i) => (
+										{form.values?.moving_violation_history?.map((entity, i) => (
 											<Row key={i} className="single-past-employer-items my-3 ">
 												<div className="col-md-12 mt-2">
 													<Row className={""}>
 														<BaseInput
 															className="col-md-6 mt-3"
-															name={`extras[${form.values?.extras?.findIndex(
-																(ex) =>
-																	ex.type === ApplicantExtras.VIOLATION_DETAILS
-															)}].value[${i}].date_of_violation`}
+															name={`moving_violation_history[${i}].date_of_violation`}
 															label="VIOLATION_DATE"
 															type="date"
 															formik={form}
@@ -654,10 +601,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														/>
 														<BaseInput
 															className="col-md-6 mt-3"
-															name={`extras[${form.values?.extras?.findIndex(
-																(ex) =>
-																	ex.type === ApplicantExtras.VIOLATION_DETAILS
-															)}].value[${i}].location`}
+															name={`moving_violation_history[${i}].location`}
 															label="location"
 															formik={form}
 															required
@@ -665,20 +609,14 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 														<BaseInput
 															className="col-md-6 mt-3"
-															name={`extras[${form.values?.extras?.findIndex(
-																(ex) =>
-																	ex.type === ApplicantExtras.VIOLATION_DETAILS
-															)}].value[${i}].charge`}
+															name={`moving_violation_history[${i}].charge`}
 															label="CHARGE"
 															formik={form}
 															required
 														/>
 														<BaseInput
 															className="col-md-6 mt-3"
-															name={`extras[${form.values?.extras?.findIndex(
-																(ex) =>
-																	ex.type === ApplicantExtras.VIOLATION_DETAILS
-															)}].value[${i}].penalty`}
+															name={`moving_violation_history[${i}].penalty`}
 															label="PENALTY"
 															formik={form}
 															required
@@ -687,30 +625,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 															className="rounded-lg"
 															variant="outline-danger close_btn w-25 mx-auto my-2"
 															onClick={() =>
-																form.setValues({
-																	...form.values,
-																	extras: [
-																		...form.values?.extras?.map((ex) =>
-																			ex.type ===
-																				ApplicantExtras.VIOLATION_DETAILS
-																				? {
-																					...ex,
-																					value: [
-																						...form.values?.extras
-																							?.find(
-																								(v) =>
-																									v.type ===
-																									ApplicantExtras.VIOLATION_DETAILS
-																							)
-																							.value?.filter(
-																								(val, idx) => idx != i
-																							),
-																					],
-																				}
-																				: ex
-																		),
-																	],
-																})
+																form.setFieldValue(
+																	"moving_violation_history", [...form.values?.moving_violation_history?.filter((ex, indx) => indx !== i)]
+																)
 															}
 														>
 															<DashCircle />
@@ -735,11 +652,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								Boolean(
 									form?.values?.moving_violations_count >
 									(
-										form?.values?.extras[
-											form.values?.extras.findIndex(
-												(v) => v.type == ApplicantExtras.VIOLATION_DETAILS
-											)
-										]?.value ?? []
+										form?.values?.moving_violation_history ?? []
 									).length
 								) && (
 									<Row>
@@ -747,40 +660,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											<Button
 												className="w-100 py-2"
 												size="sm"
-												onClick={() => {
-													let check = false;
+												onClick={() => { 
 
 													form.setValues({
 														...form.values,
-														extras: form.values?.extras?.map((itm) => {
-															if (
-																itm.type == ApplicantExtras.VIOLATION_DETAILS
-															) {
-																check = true;
-																return {
-																	...itm,
-																	value: [
-																		...(itm.value || []),
-																		new ApplicantExtrasEntity(),
-																	],
-																};
-															}
-															return itm;
-														}),
+														moving_violation_history: [
+															...(form.values?.moving_violation_history || []), {...new ApplicantMovingViolationEntity()}
+														],
 													});
-													!check &&
-														form.setValues({
-															...form.values,
-															extras: [
-																...form.values?.extras,
-																{
-																	...new ApplicantExtrasEntity(
-																		ApplicantExtras.VIOLATION_DETAILS
-																	),
-																	value: [{ ...new ApplicantMovingViolationEntity() }],
-																},
-															],
-														});
+													 
 												}}
 											>
 												<PlusCircle /> {t("TITLE_ADD_VIOLATION_DETAILS")}

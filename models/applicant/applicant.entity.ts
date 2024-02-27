@@ -186,6 +186,8 @@ export class ApplicantEntity {
 				.nullable(),
 			criminal_history: yup.string().nullable(),
 			accident_count: yup.number().min(0).nullable(),
+			accident_history :yup.array(ApplicantAccidentEntity.yupSchema()).nullable(),
+			moving_violation_history :yup.array(ApplicantMovingViolationEntity.yupSchema()).nullable(),
 			accident_details: yup.string().nullable(),
 			license_revoked: yup.bool().nullable(),
 			license_revoked_details: yup.string().nullable(),
