@@ -39,7 +39,7 @@ export default function CompanyPhoto(props) {
 
     return <>
         <img
-            className={props.className}
+            className={`${props.className}`}
             style={props.style}
             src={photo}
             alt="Company Image" />
