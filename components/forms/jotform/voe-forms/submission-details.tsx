@@ -191,7 +191,7 @@ export function SubmissionDetails() {
 					<Col md="10">
 						<h6 className={`${styles.bold} text-black ${styles.bold}`}>
 							{t("SIGNATURE")}
-							<label style={{color:'red'}}>*</label>
+							<label className="text-danger">*</label>
 						</h6>
 						<SignatureCanvas
 							name="signature"
@@ -204,6 +204,11 @@ export function SubmissionDetails() {
 								className: "sigCanvas",
 							}}
 						/>
+						{Boolean(form?.errors?.signature) && (
+                            <p className={`h6 text-danger  ${styles.align__text_left}`}>
+                                <em>{t("ERROR_SIGNS_REQUIRED")}</em>
+                            </p>
+                        )}
 					</Col>
 					<Col
 						md="2"
