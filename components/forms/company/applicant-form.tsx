@@ -41,6 +41,7 @@ import { JobEntity } from "../../../models/job/job.entity";
 
 import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
 import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
+import { LicenseRestrictions } from "../../../enums/applicants/applicant-license-restrictions-type.enum";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
 import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
 import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
@@ -52,6 +53,8 @@ import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum
 import { EducationLevel } from "../../../enums/users/education-level.enum";
 import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
 import { ApplicantExtrasEntity } from "../../../models/applicant";
+import { ApplicantAccidentEntity } from "../../../models/applicant/applicant-accidentr.entity";
+import { ApplicantMovingViolationEntity } from "../../../models/applicant/applicant-moving-violation.entity";
 import { HireApplicantDto } from "../../../models/applicant/hire-applicant.dto";
 import { CdlExtras } from "../../../models/jot-form/long-form/cdl-object/index.dto";
 import { ReferralSourceEntity } from "../../../models/referral-source/referral-source.entity";
@@ -60,14 +63,10 @@ import EmployeeApi from "../../../pages/api/employee";
 import { ReferralSourceApi } from "../../../pages/api/referral-source";
 import UserApi from "../../../pages/api/user";
 import { buildReferral } from "../../../utils/common";
+import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
 import ViewModal from "../../view-details/view-modal";
 import { ReferralSourceForm } from "../admin/referral-source-form";
 import { JobForm } from "./job-form";
-import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
-import { LicenseRestrictions } from "../../../enums/applicants/applicant-license-restrictions-type.enum";
-import ViewTable from "../../view-details/view-table";
-import { AccidentHistoryEntity } from "../../../models/jot-form/long-form/accident-last-5-years/index.dto";
-import { VioalationExtrasEntity } from "../../../models/jot-form/long-form/violaton-history/index.dto";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
@@ -469,7 +468,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														...accident_details_ex,
 														value: [
 															...(accident_details_ex?.value || []),
-															new AccidentHistoryEntity(),
+															new ApplicantAccidentEntity(),
 														],
 													},
 												],
@@ -778,7 +777,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 																	...new ApplicantExtrasEntity(
 																		ApplicantExtras.VIOLATION_DETAILS
 																	),
-																	value: [{ ...new VioalationExtrasEntity() }],
+																	value: [{ ...new ApplicantMovingViolationEntity() }],
 																},
 															],
 														});

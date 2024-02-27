@@ -1,11 +1,11 @@
 import * as yup from "yup";
 import { ApplicantExtras } from "../../enums/applicants/applicant-extras.enum";
 import { OtherRequirementType } from "../../enums/users/other-requirements.enum";
-import { AccidentHistoryEntity } from "../jot-form/long-form/accident-last-5-years/index.dto";
+import { ApplicantAccidentEntity } from "../applicant/applicant-accidentr.entity";
 import { AccordianExtras } from "../jot-form/long-form/accordian-info/index.dto";
 import { BackgroundInfoLineAddress } from "../jot-form/long-form/backgorund-info/index.dto";
 import { CdlExtras } from "../jot-form/long-form/cdl-object/index.dto";
-import { VioalationExtrasEntity } from "../jot-form/long-form/violaton-history/index.dto";
+import { ApplicantMovingViolationEntity } from "../applicant/applicant-moving-violation.entity";
 import { WorkedBeforeExtrasDto } from "../jot-form/long-form/worked-before/index.dto";
 import { BooleanTypeExtra } from "../../enums/jotform/bool-and-not-sure.enum";
 import { JobSchedule } from "../../enums/jobs/job-schedule.enum";
@@ -30,11 +30,11 @@ export class ApplicantExtrasEntity {
 				})
 				.when("type", {
 					is: ApplicantExtras.ACCIDENT_DETAILS,
-					then: yup.array(AccidentHistoryEntity.yupSchema()),
+					then: yup.array(ApplicantAccidentEntity.yupSchema()),
 				})
 				.when("type", {
 					is: ApplicantExtras.VIOLATION_DETAILS,
-					then: yup.array(VioalationExtrasEntity.yupSchema()),
+					then: yup.array(ApplicantMovingViolationEntity.yupSchema()),
 				})
 				.when("type", {
 					is: ApplicantExtras.APPLY_DATE,
