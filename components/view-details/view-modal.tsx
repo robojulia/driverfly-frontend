@@ -14,8 +14,8 @@ export interface ViewModalProps {
     readonly children?: React.ReactChildren | React.ReactChild;
     className?: string;
     noCloseBtn?: boolean;
-    modalHeaderClass?: string;
-    modalBodyClass?: string;
+    headerClass?: string;
+    bodyClass?: string;
     centered?:boolean;
 }
 
@@ -35,7 +35,7 @@ export default function ViewModal(props: ViewModalProps) {
         <Modal show={show} size={props.size} onHide={props.onCloseClick ?? hideModelHandler} className={props.className} 
         centered={props.centered}
         >
-            <Modal.Header className={`justify-content-between ${props?.modalHeaderClass}`}>
+            <Modal.Header className={`justify-content-between ${props?.headerClass}`}>
                 <div className="d-flex align-items-center">
                     {props.title && (
                         <h4 className="modal-title font-weight-normal">
@@ -53,7 +53,7 @@ export default function ViewModal(props: ViewModalProps) {
                         </Button>
                 }
             </Modal.Header>
-            <Modal.Body className={`${props?.modalBodyClass}`}>{props.children}</Modal.Body>
+            <Modal.Body className={`${props?.bodyClass}`}>{props.children}</Modal.Body>
             {
                 props.footer &&
                 <Modal.Footer>

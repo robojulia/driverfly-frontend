@@ -282,10 +282,10 @@ export default function CompanyPreference() {
 						show={showAutoRecruitingModal}
 						onCloseClick={() => setShowAutoRecruitingModal(false)}
 						closeText="CANCEL"
-						modalHeaderClass="border-0 pt-2 pb-0 px-4"
+						headerClass="border-0 pt-2 pb-0 px-4"
 						noCloseBtn
 						centered
-						modalBodyClass="pt-0"
+						bodyClass="pt-0"
 					>
 						<div>
 							<h3 className="text-center" style={{color:"#335665", fontWeight:"bolder"}}>{t("AUTO_RECRUITING")}</h3>
