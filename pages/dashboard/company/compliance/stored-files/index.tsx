@@ -83,10 +83,11 @@ export default function StoredFiles() {
     console.log("applicants : => ",applicants);
 
     const handleDeleteFile = async (fileId) => {
-        const f = await complianceApi.remove(fileId);
+        const res = await complianceApi.removeFile(fileId);
+        setFiles(files?.filter( itm => itm.id !== fileId))
         console.log("Response from Delete File => : ", fileId);
+        console.log("Response from res => : ", res);
         // setFiles(f);
-
     }
     const form = useFormik({
         initialValues: new StoredFileDto(),
