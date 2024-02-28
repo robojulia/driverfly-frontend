@@ -449,11 +449,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										className="w-100 py-2"
 										size="sm"
 										onClick={() => {
-											const accident_details_ex =
-												form.values.accident_history ||
-												new ApplicantExtrasEntity(
-													ApplicantExtras.ACCIDENT_DETAILS
-												);
 											form.setValues({
 												...form.values,
 												accident_history: [
@@ -475,7 +470,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								formik={form}
 							/>
 							{form.values?.accident_history?.map((accident_details_ex, i) => (
-								console.log("Index in iteration ", i),
 									<Row className="pl-0 single-past-employer-items my-1" key={i}>
 										<div className="col-md-12 mt-2">
 											<Row className={""}>
@@ -574,108 +568,101 @@ export function ApplicantForm(props: ApplicantFormProps) {
 					placeholder="PLACEHOLDER_FOR_DIGITS"
 					formik={form}
 				/>
-				{form.values?.moving_violations_count > 0 && (
+					{form.values.moving_violations_count > 0 && (
 					<div className="col-12 mt-2">
-						<ViewCard title="VIOLATION_DETAILS">
+						<ViewCard
+							title="VIOLATION_DETAILS"
+							actions={
+								form?.values?.moving_violations_count > 0 &&
+								form?.values?.moving_violations_count >
+								(
+									form.values.moving_violation_history || []
+								)?.length && (
+									<Button
+										className="w-100 py-2"
+										size="sm"
+										onClick={() => {
+											form.setValues({
+												...form.values,
+												moving_violation_history: [
+													...(form.values?.moving_violation_history || []), {...new ApplicantMovingViolationEntity()}
+												],
+											});
+										}}
+									>
+										<PlusCircle /> {t("ADD")}
+									</Button>
+								)
+							}
+						>
 							<BaseTextArea
-								className="col-12 mt-2"
+								// className="col-12 mt-2"
 								readOnly={Boolean(entity?.is_hired)}
-								label="MOVING_VIOLATIONS_DETAILS"
+								label="VIOLATION_DETAILS"
 								name="moving_violations_details"
 								formik={form}
 							/>
-							{form.values?.moving_violation_history?.length > 0 && (
-									<>
-										{form.values?.moving_violation_history?.map((entity, i) => (
-											<Row key={i} className="single-past-employer-items my-3 ">
-												<div className="col-md-12 mt-2">
-													<Row className={""}>
-														<BaseInput
-															className="col-md-6 mt-3"
-															name={`moving_violation_history[${i}].date_of_violation`}
-															label="VIOLATION_DATE"
-															type="date"
-															formik={form}
-															max={new Date().toISOString().split("T")[0]}
-															required
-														/>
-														<BaseInput
-															className="col-md-6 mt-3"
-															name={`moving_violation_history[${i}].location`}
-															label="location"
-															formik={form}
-															required
-														/>
+								{form.values?.moving_violation_history?.map((entity, i) => (
+									console.log("moving_violations_details => :",form.values?.moving_violation_history),
+									<Row key={i} className="single-past-employer-items my-3 ">
+										<div className="col-md-12 mt-2">
+											<Row className={""}>
+												<BaseInput
+													className="col-md-6 mt-3"
+													name={`moving_violation_history[${i}].date_of_violation`}
+													label="VIOLATION_DATE"
+													type="date"
+													formik={form}
+													max={new Date().toISOString().split("T")[0]}
+													required
+												/>
+												<BaseInput
+													className="col-md-6 mt-3"
+													name={`moving_violation_history[${i}].location`}
+													label="location"
+													formik={form}
+													required
+												/>
 
-														<BaseInput
-															className="col-md-6 mt-3"
-															name={`moving_violation_history[${i}].charge`}
-															label="CHARGE"
-															formik={form}
-															required
-														/>
-														<BaseInput
-															className="col-md-6 mt-3"
-															name={`moving_violation_history[${i}].penalty`}
-															label="PENALTY"
-															formik={form}
-															required
-														/>
-														<Button
-															className="rounded-lg"
-															variant="outline-danger close_btn w-25 mx-auto my-2"
-															onClick={() =>
-																form.setFieldValue(
-																	"moving_violation_history", [...form.values?.moving_violation_history?.filter((ex, indx) => indx !== i)]
-																)
-															}
-														>
-															<DashCircle />
-														</Button>
-														<div
-															className="Row"
-															style={{
-																height: "1px",
-																borderBottom: "solid 1px #8d8c8c",
-																marginTop: "15px",
-																width: "80%",
-																marginLeft: "10%",
-															}}
-														></div>
-													</Row>
-												</div>
+												<BaseInput
+													className="col-md-6 mt-3"
+													name={`moving_violation_history[${i}].charge`}
+													label="CHARGE"
+													formik={form}
+													required
+												/>
+												<BaseInput
+													className="col-md-6 mt-3"
+													name={`moving_violation_history[${i}].penalty`}
+													label="PENALTY"
+													formik={form}
+													required
+												/>
+												<Button
+													className="rounded-lg"
+													variant="outline-danger close_btn w-25 mx-auto my-2"
+													onClick={() =>
+														form.setFieldValue(
+															"moving_violation_history", [...form.values?.moving_violation_history?.filter((ex, indx) => indx !== i)]
+														)
+													}
+												>
+													<DashCircle />
+												</Button>
+												<div
+													className="Row"
+													style={{
+														height: "1px",
+														borderBottom: "solid 1px #8d8c8c",
+														marginTop: "15px",
+														width: "80%",
+														marginLeft: "10%",
+													}}
+												></div>
 											</Row>
-										))}
-									</>
-								)}
-							{Boolean(form?.values?.moving_violations_count > 0) &&
-								Boolean(
-									form?.values?.moving_violations_count >
-									(
-										form?.values?.moving_violation_history ?? []
-									).length
-								) && (
-									<Row>
-										<div className="mt-4 float-left d-flex justify-left px-3">
-											<Button
-												className="w-100 py-2"
-												size="sm"
-												onClick={() => { 
-
-													form.setValues({
-														...form.values,
-														moving_violation_history: [
-															...(form.values?.moving_violation_history || []), {...new ApplicantMovingViolationEntity()}
-														],
-													});
-													 
-												}}
-											>
-												<PlusCircle /> {t("TITLE_ADD_VIOLATION_DETAILS")}
-											</Button>
 										</div>
 									</Row>
-								)}
+								))}
 						</ViewCard>
 					</div>
 				)}
