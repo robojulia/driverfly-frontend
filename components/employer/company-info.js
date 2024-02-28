@@ -6,8 +6,6 @@ import Link from "next/link";
 export default function CompanyInfo({ company, jobCount }) {
     const { t } = useTranslation();
 
-
-    console.log("Company prop in  Company info tab : ", company);
     return (
         <div className='col-md-4 col-lg-4 col-sm-12 px-5'>
             <div className='py-4'>
