@@ -136,11 +136,11 @@ export class EmployeeEntity {
 			reason_codes: (yup.array(yup.string())
 				.when("status", {
 					is: EmployeeStatus.QUIT,
-					then: yup.array((yup.string() as any).enum(EmployeeReasonCodeQuit)).min(1, t("SELECT_ONE_PLACEHOLDER")).nullable()
+					then: yup.array((yup.string() as any).enum(EmployeeReasonCodeQuit)).min(1, t("SELECT_THE_REASON")).nullable()
 				})
 				.when("status", {
 					is: EmployeeStatus.FIRED,
-					then: yup.array((yup.string() as any).enum(EmployeeReasonCodeFired)).min(1, t("SELECT_ONE_PLACEHOLDER")).nullable()
+					then: yup.array((yup.string() as any).enum(EmployeeReasonCodeFired)).min(1, t("SELECT_THE_REASON")).nullable()
 				}) as any)
 				.unique().nullable(),
 			reason_codes_other: yup.string().when("reason_codes", {
