@@ -1,20 +1,19 @@
 import { useFormik } from "formik";
-import { useContext, useEffect } from "react";
-import { Button, Col, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
+import React, { useContext, useEffect } from "react";
+import { Button, Col, Row } from "react-bootstrap";
+import BaseSelect from "../../base-select";
+import { useTranslation } from "../../../../hooks/use-translation";
+import { HearAboutUsDto } from "../../../../models/jot-form/short-form/hear-about.dto";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
-import { HearAboutUsType } from "../../../../enums/jotform/hear-about-type.enum";
-import { useTranslation } from "../../../../hooks/use-translation";
-import { ApplicantEntity } from "../../../../models/applicant";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
-import { HearAboutUsDto } from "../../../../models/jot-form/short-form/hear-about.dto";
-import ApplicantApi from "../../../../pages/api/applicant";
 import styles from "../../../../styles/digitalhiringapp.module.css";
+import { HearAboutUsType } from "../../../../enums/jotform/hear-about-type.enum";
+import BaseInput from "../../base-input";
+import ApplicantApi from "../../../../pages/api/applicant";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { LoaderIcon } from "../../../loading/loader-icon";
-import BaseInput from "../../base-input";
-import BaseSelect from "../../base-select";
 
 export function HearAbout() {
 	const {
@@ -38,26 +37,16 @@ export function HearAbout() {
 						{ ...REFERAL_NAME },
 					]).filter(v => !!v?.value)
 
-					let response: ApplicantEntity;
-					if (applicant?.id) {
-						response = await applicantApi.jotform.update(applicant.id, {
-							applicant,
-							applicantExtras: filteredExtras,
-							jobs,
-							utm
-						});
-					} else {
-						response = await applicantApi.jotform.create(company.id, {
-							applicant,
-							applicantExtras: filteredExtras,
-							jobs,
-							utm
-						});
-					}
-					setApplicantExtras(response?.extras)
+					const data = await applicantApi.jotform.create(company.id, {
+						applicant,
+						applicantExtras: filteredExtras,
+						jobs,
+						utm
+					});
+					setApplicantExtras(data?.extras)
 					setApplicant({
 						...applicant,
-						...response
+						...data
 					});
 
 					stepNext();
@@ -77,10 +66,10 @@ export function HearAbout() {
 
 	useEffect(() => {
 		const apx = applicantExtras?.find(
-			(v) => v.type == ApplicantExtras.HEAR_ABOUT_US
+			(v) => v.type === ApplicantExtras.HEAR_ABOUT_US
 		);
 		const apx_referal_name = applicantExtras?.find(
-			(v) => v.type == ApplicantExtras.REFERAL_NAME
+			(v) => v.type === ApplicantExtras.REFERAL_NAME
 		);
 		form.setValues({
 			...form.values,
@@ -120,7 +109,7 @@ export function HearAbout() {
 					/>
 				</Row>
 
-				{form.values?.HEAR_ABOUT_US?.value == HearAboutUsType.REFERRAL && (
+				{form.values?.HEAR_ABOUT_US?.value === HearAboutUsType.REFERRAL && (
 					<Row className={styles.bold}>
 						<BaseInput
 							className="col mb-4"
