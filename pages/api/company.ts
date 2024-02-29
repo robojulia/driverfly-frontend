@@ -4,6 +4,7 @@ import { FindManyOptions } from "../../models/general/find-many-options.dto";
 import { CompanyPreferenceCategory } from "../../enums/company/company-preference-category.enum";
 import { CompanyPreferenceEntity } from "../../models/company/company-preferences.entity";
 import { CompanyManagerEntity } from "../../models/company/company-manager.entity";
+import { LocationEntity } from "../../models/company/location.entity";
 
 export default class CompanyApi extends BaseApi {
     baseUrl: string = "companies"
@@ -60,8 +61,13 @@ export default class CompanyApi extends BaseApi {
 
             return data;
         },
-        getByUUId: async (company_uuid: string, withJobs?: boolean): Promise<CompanyEntity> => {            
+        getByUUId: async (company_uuid: string, withJobs?: boolean): Promise<CompanyEntity> => {
             const { data } = await this.get(`${this.employer.baseUrl}/fetch/${company_uuid}?withJobs=${Boolean(withJobs)}`);
+
+            return data;
+        },
+        getTerminals: async (companyId: string): Promise<LocationEntity[]> => {
+            const { data } = await this.get(`${this.employer.baseUrl}/${companyId}/terminals`);
 
             return data;
         },
