@@ -20,8 +20,8 @@ export default function CompanyInfo({ company, jobCount, terminals }) {
                 <p style={{ fontSize: "22px", fontWeight: '200' }}>{t("TERMINALS")}</p>
             {
                 terminals?.map(location =>{
-                    <>
-                    <p style={{ fontSize: "15px", fontWeight: '400' }}>{location}</p>
+                   return <>
+                    <p style={{ fontSize: "15px", fontWeight: '400' }}>{location?.city}, {location?.street}, {location?.zip_code}</p>
                     </>
                 })
             }
