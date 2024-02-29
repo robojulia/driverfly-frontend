@@ -200,8 +200,8 @@ postgraduate degree
             });
         }
 
-        if (data.experienceRequirements.length == 0) delete data.experienceRequirements;
-        else if (data.experienceRequirements.length == 1) data.experienceRequirements = data.experienceRequirements[0];
+        if (data.experienceRequirements?.length == 0) delete data.experienceRequirements;
+        else if (data.experienceRequirements?.length == 1) data.experienceRequirements = data.experienceRequirements[0];
     }
 
 

@@ -1,14 +1,14 @@
+import Link from "next/link";
 import { Col, Row } from "react-bootstrap";
 import { VehicleAccessory } from "../../enums/vehicles/vehicle-accessory.enum";
 import { VehicleTrailerType } from "../../enums/vehicles/vehicle-trailer-type.enum";
 import { VehicleType } from "../../enums/vehicles/vehicle-type.enum";
+import { useAuth } from '../../hooks/use-auth';
 import { useTranslation } from "../../hooks/use-translation";
+import { VehicleEntity } from "../../models/company/vehicle.entity";
+import { JobDetailProps } from "../../types/job/job-detail-props.type";
 import ViewCard from "../view-details/view-card";
 import VehiclePhoto from "./vehicle-photo";
-import { useAuth } from '../../hooks/use-auth'
-import { VehicleEntity } from "../../models/company/vehicle.entity";
-import Link from "next/link";
-import { JobDetailProps } from "../../types/job/job-detail-props.type";
 
 export default function JobVehicles({ job }: JobDetailProps) {
     const { t } = useTranslation();
@@ -19,7 +19,7 @@ export default function JobVehicles({ job }: JobDetailProps) {
 
     const vehicles: VehicleEntity[] = job.vehicles.filter((vehicle, i) => (user || (!user && vehicle.is_public)))
 
-    if (!!!vehicles || !!!vehicles.length)
+    if (!!!vehicles || !!!vehicles?.length)
         return <>
             <div className="shadow-lg single-job-items p-4 m-1 mb-5">
                 <p className="m-0 blockquote">

@@ -1,21 +1,20 @@
-import Link from 'next/link'
+import Link from 'next/link';
+import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import { ArrowRight, CurrencyDollar } from "react-bootstrap-icons"
+import { ArrowRight, CurrencyDollar } from "react-bootstrap-icons";
+import { useAuth } from '../../hooks/use-auth';
 import { useTranslation } from '../../hooks/use-translation';
+import { ViewJobDetailProps } from '../../types/job/view-job-detail-props.type';
 import { buildAddress } from '../../utils/common';
 import JobApply from '../apply';
 import SaveJob from '../dashboard/driver/save-job';
+import FlagJob from '../flag/flag-a-job';
 import JobDescription from '../job-description/job-description';
 import JonInformation from '../job-information-sidebar/job-information';
-import SocilShare from '../share-link/share-link';
-import CompanyPhoto from './company-photo';
-import ShowFormattedDate from './show-formatted-date';
-import JobVehicles from './job-vehicles';
-import React from 'react';
 import ViewModal from '../view-details/view-modal';
-import { useAuth } from '../../hooks/use-auth'
-import FlagJob from '../flag/flag-a-job';
-import { ViewJobDetailProps } from '../../types/job/view-job-detail-props.type';
+import CompanyPhoto from './company-photo';
+import JobVehicles from './job-vehicles';
+import ShowFormattedDate from './show-formatted-date';
 
 export default function ViewJobDetail(props: ViewJobDetailProps) {
 

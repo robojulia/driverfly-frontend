@@ -95,7 +95,7 @@ export default function FindJobs(props) {
 		typeof params == "object" &&
 			Object.keys(params)?.map((key) => {
 				let inputs: any = document.getElementsByName(key);
-				if (!inputs.length) {
+				if (!inputs?.length) {
 					return;
 				}
 				if (inputs[0].tagName.toLowerCase() != "input") {

@@ -76,7 +76,7 @@ export default function JobApply({ job, setEncourageModal }) {
                     applicant.documents = applicant.documents.filter(v => Object.values(ApplicantDocumentType).includes(v.type as ApplicantDocumentType))
                     if (applicant) {
                         const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
-                        if (preferences.length > 0) {
+                        if (preferences?.length > 0) {
                             applicant.documents = applicant.documents.filter(
                                 (document) => !preferences.some(
                                     (preference) => preference.label == document.type && preference.value == SharePreference.NEVER
@@ -255,7 +255,7 @@ export default function JobApply({ job, setEncourageModal }) {
                                 <ViewCard
                                     title="DOCUMENTS"
                                     actions={<Button size='sm'
-                                        disabled={apply_form.values.documents?.length == Object.keys(ApplicantDocumentType).length}
+                                        disabled={apply_form.values.documents?.length == Object.keys(ApplicantDocumentType)?.length}
                                         onClick={() => apply_form.setValues({
                                             ...apply_form.values,
                                             documents: [

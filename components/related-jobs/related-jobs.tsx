@@ -1,11 +1,10 @@
-import timeSince from "../../utils/timeSince"
-import Link from "next/link"
-import { useTranslation } from "../../hooks/use-translation"
-import CompanyPhoto from "../jobs/company-photo";
-import { CurrencyDollar } from 'react-bootstrap-icons';
-import { buildAddress } from "../../utils/common";
-import { JobEntity } from "../../models/job/job.entity";
+import Link from "next/link";
 import { Col, Row } from "react-bootstrap";
+import { CurrencyDollar } from 'react-bootstrap-icons';
+import { useTranslation } from "../../hooks/use-translation";
+import { JobEntity } from "../../models/job/job.entity";
+import { buildAddress } from "../../utils/common";
+import CompanyPhoto from "../jobs/company-photo";
 import ShowFormattedDate from "../jobs/show-formatted-date";
 
 export interface RelatedJobsProps {
@@ -25,8 +24,8 @@ export default function RelatedJobs({ jobs, jobLink, hideCompanyName, jobLinkSlu
             <Row className="mt-3">
                 <Col>
                     {
-                        jobs.length > 0 ?
-                            jobs.map((job, index) => (
+                        jobs?.length > 0 ?
+                            jobs?.map((job, index) => (
                                 <div key={index} className="media align-items-center ">
                                     <CompanyPhoto className="d-flex mr-4 truck-img" company={job.company} />
                                     <div className="media-body">
