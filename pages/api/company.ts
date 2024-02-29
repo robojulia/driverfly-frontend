@@ -66,7 +66,7 @@ export default class CompanyApi extends BaseApi {
 
             return data;
         },
-        getTerminals: async (companyId: string): Promise<LocationEntity[]> => {
+        getTerminals: async (companyId: number): Promise<LocationEntity[]> => {
             const { data } = await this.get(`${this.employer.baseUrl}/${companyId}/terminals`);
 
             return data;
