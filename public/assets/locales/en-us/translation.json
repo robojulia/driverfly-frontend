@@ -2029,6 +2029,7 @@
     "EMPLOYEE": "Employee"
   },
   "SELECT_ONE_PLACEHOLDER": "Please Select One",
+  "SELECT_THE_REASON":"Please select the reason",
   "STATS": "Stats",
   "LEAD_ASSIGNMENT": "Lead Assignment",
   "LEAD_ASSIGNMENT_HELP_TEXT": "Who’s handling what.",
