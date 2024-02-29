@@ -11,6 +11,11 @@ export default function CompanyJob({ jobs }) {
   const { t } = useTranslation();
   const router = useRouter();
 
+  const USdateFormatter = (date) =>{
+    const formattedDate = new Date(date);
+    return (formattedDate.getMonth() + 1 + '/' + formattedDate.getDate() + '/' + formattedDate.getFullYear());
+  }
+
   return (
     <div>
       {
@@ -29,8 +34,8 @@ export default function CompanyJob({ jobs }) {
                 </h3>
                 <div className="job-metas">
                   <div className="job-location">
-                    <p>
-                      {job?.description && job?.description}
+                    <p className='pr-4 text-justify'>
+                      {job?.description.slice(0,170)}
                     </p>
                     {/* <span className='text-muted align-middle'>
                       {
@@ -40,12 +45,12 @@ export default function CompanyJob({ jobs }) {
                         </>
                       }
                     </span> */}
-                    <span className='text-muted align-middle'>
+                    <span className='d-flex align-items-center'>
                       <CalendarDate color="#979797" className='mr-2' />
                       {
                         job.created_at &&
                         <span style={{ color: "#979797" }}>
-                          {t('posted')} {(job.created_at.split("T")[0].split("-").join("/"))}
+                          {t('DATE_POSTED')} {USdateFormatter(job.created_at.split("T")[0].split("-").join("/"))}
                         </span>
                       }
                     </span>
