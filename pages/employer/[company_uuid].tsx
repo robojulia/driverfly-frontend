@@ -1,4 +1,4 @@
-import { ArrowRight, Bell, Facebook, Telephone, Instagram, Twitter, Linkedin } from "react-bootstrap-icons";
+import { ArrowRight, Facebook, Instagram, Linkedin, Telephone, Twitter } from "react-bootstrap-icons";
 import CompanyInfo from "../../components/employer/company-info";
 import CompanyJob from "../../components/employer/company-job";
 import { PublicLayout } from "../../components/layouts/public-layout";
@@ -9,15 +9,20 @@ import Link from "next/link";
 import FlagCompany from "../../components/flag/flag-a-company";
 import CompanyPhoto from "../../components/jobs/company-photo";
 import JobApi from "../api/job";
-import { useEffect, useState } from "react";
+import { JobEntity } from "../../models/job/job.entity";
+import { Pagination } from "../../types/pagination.type";
+ 
 
-export default function CompanyDetail({ company, jobs, jobCount }) {
+
+export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 	const { t } = useTranslation();
-
+ 
 	const regex = `([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)`
 	const validAbout = !!!(company.about?.match(regex))
 
- 
+	 
+
+	console.log("Company getting  : ",company);
 	return (
 		<>
 			<FlagCompany companyId={company.id} />
@@ -57,16 +62,10 @@ export default function CompanyDetail({ company, jobs, jobCount }) {
 						<div className="col-md-4  col-lg-4 col-sm-12 px-5">
 							<div>
 								<div className="my-3">
-									{
-										company?.phone ? <button type="button" className="custom-trucker-follow-btn">
+										<button type="button" className="custom-trucker-follow-btn">
 											<Telephone color="#fff" className="mx-2" size={20} />
 											{company?.phone}
-										</button> :
-											<button type="button" className="custom-trucker-follow-btn">
-												<Bell color="#fff" className="mx-2" size={20} />
-												{t("FOLLOW_US")}
-											</button>
-									}
+										</button>
 								</div>
 								<div>
 									<button type="button" className="custom-trucker-review-btn">
@@ -121,7 +120,7 @@ export default function CompanyDetail({ company, jobs, jobCount }) {
 								</Link>
 							)}
 						</div>
-						<CompanyInfo company={company} jobCount={jobCount} />
+						<CompanyInfo company={company} jobCount={jobCount} terminals={termonals}/>
 
 					</div>
 				</div>
@@ -141,12 +140,12 @@ export async function getServerSideProps(context) {
 
 		const company = await companyApi.employer.getByUUId(companyId);
 		const jobCount = await companyApi.employer.getJobCount(company?.id) ?? 0;
-		const  { items }  = await jobApi.search(companyId);
-		console.log("items", items);
+		const termonals = await companyApi.employer.getTerminals(company?.id) ;
+		const  { items  }: any = await jobApi.search({companyId : company.id});
 
 		if (!!!company) return { notFound: true };
 
-		return { props: { company, jobs: items, jobCount } };
+		return { props: { company, jobs: items, jobCount, termonals } };
 	} catch (error) {
 		console.error("Exception is here:", error);
 		return { props: { company: [], jobs: [] } };
