@@ -1217,6 +1217,7 @@
     "OTHER": "Other"
   },
   "DOCUMENT_UPLOAD_SUCCESS_MESSAGE": "Your document has been uploaded successfully",
+  "DOCUMENT_DELETED_SUCCESS_MESSAGE": "Your document has been deleted successfully",
   "DOCUMENT_SENT_SUCCESS_MESSAGE": "Document sent successfully",
   "DOCUMENT_SENT_FAILED_MESSAGE": "Could not sent Document",
   "YEARS": "Years",
@@ -2035,6 +2036,7 @@
     "EMPLOYEE": "Employee"
   },
   "SELECT_ONE_PLACEHOLDER": "Please Select One",
+  "SELECT_THE_REASON":"Please select the reason",
   "STATS": "Stats",
   "LEAD_ASSIGNMENT": "Lead Assignment",
   "LEAD_ASSIGNMENT_HELP_TEXT": "Who’s handling what.",

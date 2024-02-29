@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import Link from "next/link";
 import { useState } from "react";
 import { Button, Row } from "react-bootstrap";
-import { CloudArrowDown, Eye, Plus, Send } from "react-bootstrap-icons";
+import { CloudArrowDown, Eye, Plus, Send, Trash } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
@@ -33,6 +33,8 @@ import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
 import ComplianceApi from "../../../../api/compliance";
 import EmployeeApi from "../../../../api/employee";
+import { DeleteDocumentButton } from "../../../../../components/documents/buttons";
+import { LoaderIcon } from "../../../../../components/loading/loader-icon";
 
 export default function StoredFiles() {
     const { user } = useAuth();
@@ -40,15 +42,22 @@ export default function StoredFiles() {
     const complianceApi = new ComplianceApi();
     const applicantApi = new ApplicantApi();
     const employeeApi = new EmployeeApi();
-
+    
     // showFileUploadModel
-    const [showFileUploadModel, setShowFileUploadModel] =
-        useState<boolean>(false);
+    const [showFileUploadModel, setShowFileUploadModel] =  useState<boolean>(false);
+    const [confirmationModal, setConfirmationModal] = useState<any>({
+        value:false,
+        fileId : null,
+    });
+    const [documentId, setDocumentId] = useState<number>(null);
+
     const openFileUploadModel = (): void => setShowFileUploadModel(true);
     const closeFileUploadModel = (): void => setShowFileUploadModel(false);
-
-    const [documentId, setDocumentId] = useState<number>(null);
+    
     const resetDocumentId = (): void => setDocumentId(null);
+    // const confirmationModalToggle = (id) => setConfirmationModal({value : !confirmationModal.value, fileId : id ? id : null});
+
+    console.log("confirmationModal values : => ", confirmationModal);
 
     const columnSettingKey = getDataTableColumnKey(
         "company",
@@ -66,10 +75,9 @@ export default function StoredFiles() {
         async () => {
             const v = await complianceApi.filesList();
             setFiles(v);
-
             const a = await applicantApi.list();
             setApplicants(a);
-
+            
             const e = await employeeApi.list();
             setEmployees(e);
         },
@@ -79,6 +87,12 @@ export default function StoredFiles() {
         }
     );
 
+    const handleDeleteFile = async (fileId) => {
+        await complianceApi.removeFile(fileId);
+        setFiles(files?.filter( itm => itm.id !== fileId))
+        setConfirmationModal({value : !confirmationModal.value, fileId: null})
+        toast.success(t("DOCUMENT_DELETED_SUCCESS_MESSAGE"))
+    }
     const form = useFormik({
         initialValues: new StoredFileDto(),
         validationSchema: StoredFileDto.yupSchema(),
@@ -396,7 +410,7 @@ export default function StoredFiles() {
                                         onClick={() =>
                                             handleViewDocument(
                                                 file.id,
-                                                setPdf,
+                                                setPdf, 
                                                 `${t("CompanyDocumentType." + file?.type)} (${file.name
                                                 })`
                                             )
@@ -405,6 +419,12 @@ export default function StoredFiles() {
                                         <Eye />
                                     </button>
                                 )}
+                                <div className="p-2 ">
+                                    <button className="btn btn-danger py-1 px-3 "
+                                        type="button"
+                                        onClick={()=>setConfirmationModal({value : !confirmationModal.value, fileId: file.id})}
+                                    ><Trash /></button>
+                                </div>
                             </>
                         ),
                     },
@@ -447,9 +467,23 @@ export default function StoredFiles() {
                     </Row>
                 </EntityForm>
             </ViewModal>
+            {/* Modal for deleting document */}
+            <ViewModal
+                title="CONFIRMATION"
+                show={confirmationModal.value}
+                onCloseClick={()=>setConfirmationModal({value : !confirmationModal?.value, fileId: null})}
+                size='sm'
+            >
+                <div className="d-flex flex-column align-items-center justify-content-between w-100 gap-5">
+                    <h2>{t("ARE_YOU_SURE_YOU_WANT_TO_DELETE")}</h2>
+                    <div className="gap-4 d-flex justify-content-between">
+                        <button type="button" onClick={()=> handleDeleteFile(confirmationModal?.fileId)} className="btn btn-danger px-5">{t("yes")}</button>
+                        <button type="button" onClick={()=>setConfirmationModal({value : !confirmationModal?.value, fileId: null})} className="theme-secondary-btn  px-5">{t("no")}</button>
+                    </div>
+                </div>
+            </ViewModal>
 
             {/* Model for send email */}
-
             <ViewModal
                 show={!!documentId}
                 onCloseClick={resetDocumentId}
