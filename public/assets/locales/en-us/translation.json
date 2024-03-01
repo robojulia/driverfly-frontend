@@ -364,6 +364,7 @@
   "has_past_duis": "Do you have past DUI's?",
   "years_of_past_duis": "Years of past DUI's",
   "NOT_VALID_YEAR": "Please enter valid Year",
+  "NOT_A_VALID_ADDRESS": "Please enter valid Address",
   "criminal_history_last_3_years": "Criminal history in last 3 years",
   "MAX_MOVING_VIOLATIONS": "Maximum moving violations",
   "MIN_MOVING_VIOLATIONS": "Minimum moving violations",
