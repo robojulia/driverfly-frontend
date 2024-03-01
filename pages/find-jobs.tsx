@@ -95,7 +95,7 @@ export default function FindJobs(props) {
 		typeof params == "object" &&
 			Object.keys(params)?.map((key) => {
 				let inputs: any = document.getElementsByName(key);
-				if (!inputs.length) {
+				if (!inputs?.length) {
 					return;
 				}
 				if (inputs[0].tagName.toLowerCase() != "input") {
@@ -128,13 +128,13 @@ export default function FindJobs(props) {
 
 	const fetchJobs = async (): Promise<void> => {
 		try {
-			navigator.geolocation.getCurrentPosition(function (position) {
-				setFiltersByKeyValue("location", {
-					lat: position.coords.latitude,
-					long: position.coords.longitude,
-					range: 1500,
-				});
-			});
+			// navigator.geolocation.getCurrentPosition(function (position) {
+			// 	setFiltersByKeyValue("location", {
+			// 		lat: position.coords.latitude,
+			// 		long: position.coords.longitude,
+			// 		range: 1500,
+			// 	});
+			// });
 
 			await jobApi
 				.search({ ...(filters as any) })

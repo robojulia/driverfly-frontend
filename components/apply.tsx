@@ -50,7 +50,7 @@ export default function JobApply({ job, setEncourageModal }) {
             dto.years_cdl_experience = Number(dto.years_cdl_experience);
             dto.moving_violations_count = Number(dto.moving_violations_count);
             dto.accident_count = Number(dto.accident_count);
-            dto.extras = [{ ...new ApplicantExtrasEntity(ApplicantExtras.HEAR_ABOUT_US), value: HearAboutUsType.JOB_BOARD }]
+            dto.extras = [...dto.extras, { ...new ApplicantExtrasEntity(ApplicantExtras.HEAR_ABOUT_US), value: HearAboutUsType.JOB_BOARD }]
 
             try {
                 const response = await jobApi.apply(job.id, dto);
@@ -76,7 +76,7 @@ export default function JobApply({ job, setEncourageModal }) {
                     applicant.documents = applicant.documents.filter(v => Object.values(ApplicantDocumentType).includes(v.type as ApplicantDocumentType))
                     if (applicant) {
                         const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
-                        if (preferences.length > 0) {
+                        if (preferences?.length > 0) {
                             applicant.documents = applicant.documents.filter(
                                 (document) => !preferences.some(
                                     (preference) => preference.label == document.type && preference.value == SharePreference.NEVER
@@ -96,6 +96,7 @@ export default function JobApply({ job, setEncourageModal }) {
             applicant.years_cdl_experience = 0;
             applicant.moving_violations_count = 0;
             applicant.accident_count = 0;
+            applicant.extras = [new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE)]
         }
         console.log({ applicant });
 
@@ -254,7 +255,7 @@ export default function JobApply({ job, setEncourageModal }) {
                                 <ViewCard
                                     title="DOCUMENTS"
                                     actions={<Button size='sm'
-                                        disabled={apply_form.values.documents?.length == Object.keys(ApplicantDocumentType).length}
+                                        disabled={apply_form.values.documents?.length == Object.keys(ApplicantDocumentType)?.length}
                                         onClick={() => apply_form.setValues({
                                             ...apply_form.values,
                                             documents: [
@@ -356,7 +357,9 @@ export default function JobApply({ job, setEncourageModal }) {
                                 required
                                 labelPrefix="BooleanPreferenceType"
                                 enumType={BooleanTypeExtra}
-                                name="AUTHORIZE_TO_COMMUNICATE.value"
+                                name={`extras[${apply_form.values?.extras?.findIndex(
+                                    (v) => v.type == ApplicantExtras.AUTHORIZE_TO_COMMUNICATE
+                                )}].value`}
                                 placeholder="CHOOSE"
                                 label={t("{company_name}_SMS_EMAIL_AUTHORIZATION_NAUTILIUS", { company_name: job?.company?.name }, { translateProps: true })}
                                 formik={apply_form}

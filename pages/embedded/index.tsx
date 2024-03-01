@@ -111,13 +111,13 @@ export default function Embedded({ filterType, companyId }: EmbeddedCdlFiltersPr
 
     const fetchJobs = async (): Promise<void> => {
         try {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                setFiltersByKeyValue("location", {
-                    "lat": position.coords.latitude,
-                    "long": position.coords.longitude,
-                    "range": 1500
-                });
-            });
+            // navigator.geolocation.getCurrentPosition(function (position) {
+            //     setFiltersByKeyValue("location", {
+            //         "lat": position.coords.latitude,
+            //         "long": position.coords.longitude,
+            //         "range": 1500
+            //     });
+            // });
 
             await jobApi.search({ ...filters as any })
                 .then(({ items, meta }: Pagination<JobEntity>) => {

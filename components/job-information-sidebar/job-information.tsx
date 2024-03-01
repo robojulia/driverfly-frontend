@@ -1,11 +1,11 @@
-import { useTranslation } from "../../hooks/use-translation";
-import { MvrType } from "../../enums/users/mvr-type.enum";
-import ShowEnumFromString from "../enum-filters/show-enum-from-string"
-import { useContext } from "react"
+import { useContext } from "react";
+import { BlockquoteLeft, CalendarRange, CashCoin, ClockFill, CollectionFill, CurrencyDollar, ExplicitFill, GearFill, GearWideConnected, GeoAltFill, Joystick, PersonBadgeFill, PersonWorkspace, Truck, Wallet2 } from 'react-bootstrap-icons';
 import jobDetailContext from "../../context/job-detail-context";
-import { CurrencyDollar, GeoAltFill, ClockFill, PersonWorkspace, Wallet2, Truck, GearFill, PersonBadgeFill, CashCoin, BlockquoteLeft, GearWideConnected, CollectionFill, ExplicitFill, Joystick, CalendarRange } from 'react-bootstrap-icons';
-import ShowFormattedDate from "../jobs/show-formatted-date";
+import { MvrType } from "../../enums/users/mvr-type.enum";
+import { useTranslation } from "../../hooks/use-translation";
 import { JobDetailProps } from "../../types/job/job-detail-props.type";
+import ShowEnumFromString from "../enum-filters/show-enum-from-string";
+import ShowFormattedDate from "../jobs/show-formatted-date";
 
 export default function JonInformation({ job }: JobDetailProps) {
 

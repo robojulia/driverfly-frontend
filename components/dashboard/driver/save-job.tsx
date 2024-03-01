@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { BookmarkCheckFill, BookmarkPlus } from "react-bootstrap-icons"
+import { useState } from 'react';
+import { BookmarkCheckFill, BookmarkPlus } from "react-bootstrap-icons";
+import { toast } from 'react-toastify';
 import { useAuth } from '../../../hooks/use-auth';
 import { useTranslation } from '../../../hooks/use-translation';
 import SavedJobApi from '../../../pages/api/saved-job';
-import { toast } from 'react-toastify';
-import { useEffectAsync } from '../../../utils/react';
 import { JobDetailProps } from '../../../types/job/job-detail-props.type';
+import { useEffectAsync } from '../../../utils/react';
 
 export interface SaveJobProps extends JobDetailProps {
 

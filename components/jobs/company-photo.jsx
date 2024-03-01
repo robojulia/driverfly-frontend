@@ -3,7 +3,7 @@ import DocumentApi from "../../pages/api/document";
 
 export default function CompanyPhoto(props) {
 
-    const [photo, setPhoto] = useState("/driverfly-logo-square.png")
+    const [photo, setPhoto] = useState("/truck-icon-DriverFly.png")
     const documentApi = new DocumentApi();
 
     const fetchVehiclephoto = async () => {
@@ -31,7 +31,7 @@ export default function CompanyPhoto(props) {
             .then(async (status) => {
                 if ((!status) && props.company?.photo) {
                     await documentApi.getPhoto(props.company.photo.id)
-                        .then(file => setPhoto(file.path || "/driverfly-logo-square.png"))
+                        .then(file => setPhoto(file.path || "/truck-icon-DriverFly.png"))
                         .catch(error => console.error("error", error))
                 }
             })
@@ -39,7 +39,7 @@ export default function CompanyPhoto(props) {
 
     return <>
         <img
-            className={props.className}
+            className={`${props.className}`}
             style={props.style}
             src={photo}
             alt="Company Image" />

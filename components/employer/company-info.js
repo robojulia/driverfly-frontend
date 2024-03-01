@@ -1,46 +1,38 @@
 import React from 'react'
-import { Facebook, Twitter, Instagram, FilePost } from 'react-bootstrap-icons'
+import { Facebook, Twitter, Instagram, FilePost, Linkedin } from 'react-bootstrap-icons'
 import { useTranslation } from '../../hooks/use-translation';
+import Link from "next/link";
 
-export default function CompanyInfo({ company, jobCount }) {
+export default function CompanyInfo({ company, jobCount, terminals }) {
     const { t } = useTranslation();
-    const regex = `([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)`
-    const validAbout = !!!(company.about?.match(regex))
-
+    console.log("Terminals : ",terminals);
     return (
-        <div className='my-4'>
-            <div className='row'>
-                <div className='col-md-8 col-sm-12 col-lg-8'>
-                    <div className='social-profile-sec'>
-                        <h6>{t('SOCIAL_PROFILE')}:</h6>
-                        <div className="hvr-float-shadow mx-2 ">
-                            <a target="_blank">
-                                < Facebook color=' #b6b6b6' size={25} />
-                            </a>
-                        </div>
-                        <div className="hvr-float-shadow mx-2">
-                            <a target="_blank">
-                                < Twitter color=' #b6b6b6' size={25} />
-                            </a>
-                        </div>
-                        <div className="hvr-float-shadow mx-2">
-                            <a target="_blank">
-                                < Instagram color=' #b6b6b6' size={25} />
-                            </a>
-                        </div>
-                    </div>
-                    <div className='my-3'>
-                        {
-                            validAbout && company.about
-                        }
-                    </div>
-                </div>
-                <div className='col-md-4 col-lg-4 col-sm-12'>
-                    <h1 className='display-5 fs-4  fw-light lh-lg'> {t('EMPLOYER_LOCATION')}</h1>
+        <div className='col-md-4 col-lg-4 col-sm-12 px-5'>
+            <div className='py-4'>
+                <p style={{ fontSize: "22px", fontWeight: 'lighter' }}>{t("WEBSITE_")}</p>
+                <Link href={company?.website} className='text-danger' style={{ textDecoration: 'none', color: 'text-secondary' }}>{company?.website}</Link>
+            </div>
+            <div className='py-4'>
+                <p style={{ fontSize: "22px", fontWeight: 'lighter' }}>{t("HEADQUATERS")}</p>
+                <p style={{ fontSize: "15px", fontWeight: '400' }}>123 Happy Lane, Dallas, TX 70025</p>
+            </div>
+            <div className='py-4'>
+                <p style={{ fontSize: "22px", fontWeight: '200' }}>{t("TERMINALS")}</p>
+            {
+                terminals?.map(location =>{
+                    <>
+                    <p style={{ fontSize: "15px", fontWeight: '400' }}>{location}</p>
+                    </>
+                })
+            }
+            </div>
+           
+
+            {/* <h1 className='display-5 fs-4  fw-light lh-lg'> {t('EMPLOYER_LOCATION')}</h1>
                     <h1 className='display-5 fs-4  fw-light lh-lg'> {t('COMPANY_INFORMATION')}</h1>
                     <div style={{
                         backgroundColor: '#fafafa',
-                        padding: '25px'
+                        padding: '5px'
                     }}>
                         <div className='d-flex align-items-center mb-3' >
                             <div className='mr-2'>
@@ -53,9 +45,7 @@ export default function CompanyInfo({ company, jobCount }) {
 
                         </div>
 
-                    </div>
-                </div>
-            </div>
+                    </div> */}
         </div>
     )
 }

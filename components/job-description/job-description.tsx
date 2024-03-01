@@ -17,7 +17,7 @@ export default function JobDescription({ job }: JobDetailProps) {
                     <p>{job?.description_short}</p>
                     <p>{job?.description}</p>
                 </div>
-                {job?.benefits.length > 0 && (
+                {job?.benefits?.length > 0 && (
                     <div className=" p-3 mb-5  rounded mt-3">
                         <h3 className="border-bottom py-1 mb-4">{t("BENEFITS")}</h3>
                         <p>
@@ -30,12 +30,12 @@ export default function JobDescription({ job }: JobDetailProps) {
                         </p>
                     </div>
                 )}
-                {(job?.required_skills.length > 0 || job?.required_skills_other) && (
+                {(job?.required_skills?.length > 0 || job?.required_skills_other) && (
                     <div className=" p-3 mb-5  rounded mt-3">
                         <h3 className="border-bottom py-1 mb-4">{t("REQUIRED_SKILLS")}</h3>
                         <ul className="p-0">
                             {job?.required_skills &&
-                                job?.required_skills.map((item, index) => (
+                                job?.required_skills?.map((item, index) => (
                                     <li className="row px-0" key={index}>
                                         <div className="col-md-3">
                                             <ShowEnumFromString

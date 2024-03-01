@@ -16,6 +16,7 @@ import { DocumentEntity } from "../documents/document.entity";
 import { EmployeeEntity } from "../employee/employee.entity";
 import { ReferralSourceEntity } from "../referral-source/referral-source.entity";
 import { UserEntity } from "../user/user.entity";
+import { ApplicantAccidentEntity } from "./applicant-accidentr.entity";
 import { ApplicantJobStatusHistoryEntity } from "./applicant-job-status-history.entity";
 import { ApplicantVoeEntity } from "./applicant-voe.entity";
 import {
@@ -27,6 +28,7 @@ import {
 	ApplicantJobEntity,
 	ApplicantNoteEntity
 } from "./index";
+import { ApplicantMovingViolationEntity } from "./applicant-moving-violation.entity";
 
 
 export class ApplicantEntity {
@@ -107,6 +109,8 @@ export class ApplicantEntity {
 	utm?: UtmReferral;
 	// referralSourceId?: number;
 	referralSource?: ReferralSourceEntity;
+	accident_history?: ApplicantAccidentEntity[];
+	moving_violation_history?: ApplicantMovingViolationEntity[];
 
 	static yupSchema() {
 		return yup.object({

@@ -1,10 +1,7 @@
-import { SendFileDto } from './../../models/compiance/send-file.dto';
-import { JobEntity } from "../../models/job/job.entity";
-import BaseApi from "./_baseApi";
-import { ApplicantEntity } from "../../models/applicant/applicant.entity";
-import { SearchJobsDto } from "../../models/job/search-jobs-dto";
-import { DocumentEntity } from "../../models/documents/document.entity";
 import { StoredFileDto } from "../../models/compiance/stored-file.dto";
+import { DocumentEntity } from "../../models/documents/document.entity";
+import { SendFileDto } from './../../models/compiance/send-file.dto';
+import BaseApi from "./_baseApi";
 
 export default class ComplianceApi extends BaseApi {
     baseUrl: string = "compliance";
@@ -20,8 +17,8 @@ export default class ComplianceApi extends BaseApi {
 
         return data;
     }
-    async remove(id: number): Promise<void> {
-        await this.delete(`${this.baseUrl}/${id}`);
+    async removeFile(id: number): Promise<void> {
+        await this.delete(`${this.baseUrl}/files/${id}`);
     }
     async sendComplianceFile(dto: SendFileDto): Promise<void> {
         const { data } = await this.post(this.baseUrl + "/send-file", dto);
