@@ -36,7 +36,7 @@ export default function FeaturedJobs() {
                     <div className="tab-content">
                         <div className="tab-pane fade show active" id="home">
                             <Row>
-                                {jobs.length > 0 && jobs.map((job, index) => (
+                                {jobs?.length > 0 && jobs.map((job, index) => (
                                     <Col md="6" key={job.id}>
                                         <div className="media align-items-center single-job-items ">
                                             <CompanyPhoto className="d-flex mr-4 truck-img border-0" job={job} company={job.company} />
@@ -44,7 +44,7 @@ export default function FeaturedJobs() {
                                                 <h6 className="featured-jobs-heading">{t("FEATURED_JOBS")}</h6>
                                                 <Link href={`/jobs/${job.id}/${job.slug}`}>
                                                     <a className='text-decoration-none '>
-                                                        <h4 className="mt-10"> {job.title.length > 30 ? job.title.slice(0, 30) + '...' : job.title}</h4>
+                                                        <h4 className="mt-10"> {job.title?.length > 30 ? job.title.slice(0, 30) + '...' : job.title}</h4>
                                                     </a>
                                                 </Link>
                                                 <div className="job-metas">

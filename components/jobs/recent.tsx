@@ -44,7 +44,7 @@ export default function RecentJobs() {
                                                 <h6>{t("RECENT_JOBS")}</h6>
                                                 <Link href={`/jobs/${job.id}/${job.slug}`}>
                                                     <a className='text-decoration-none '>
-                                                        <h4 className="mt-0"> {job.title.length > 30 ? job.title.slice(0, 30) + '...' : job.title}</h4>
+                                                        <h4 className="mt-0"> {job.title?.length > 30 ? job.title.slice(0, 30) + '...' : job.title}</h4>
                                                     </a>
                                                 </Link>
                                                 <div className="job-metas">
