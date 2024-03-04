@@ -1,30 +1,30 @@
 import { useFormik } from "formik";
-import { toast } from "react-toastify";
-import { Row, Col, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
-import * as yup from "yup";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Button, Col, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
+import { toast } from "react-toastify";
+import * as yup from "yup";
 
 import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
-import PageLayout from "../../../../components/layouts/page/page-layout";
-import { useTranslation } from "../../../../hooks/use-translation";
 import BaseClickToCopyInput from "../../../../components/forms/base-click-to-copy-input";
+import PageLayout from "../../../../components/layouts/page/page-layout";
 import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
 import { useAuth } from "../../../../hooks/use-auth";
-import CompanyApi from "../../../api/company";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { CompanyPreferenceEntity } from "../../../../models/company/company-preferences.entity";
+import CompanyApi from "../../../api/company";
 
-import { CompanyPreferenceCategory } from "../../../../enums/company/company-preference-category.enum";
-import { CompanyPreferenceJotformLabel } from "../../../../enums/company/company-preferences-jotform-label.enum";
-import { useEffectAsync } from "../../../../utils/react";
+import BaseCheck from "../../../../components/forms/base-check";
 import BaseCheckList from "../../../../components/forms/base-check-list";
 import BaseInput from "../../../../components/forms/base-input";
+import ViewModal from "../../../../components/view-details/view-modal";
+import { CompanyPreferenceCategory } from "../../../../enums/company/company-preference-category.enum";
+import { CompanyPreferenceEnhancementLabel } from "../../../../enums/company/company-preference-enhancement-label.enum";
+import { CompanyPreferenceAutoRecrutingLabel } from "../../../../enums/company/company-preferences-auto-recruiting-label.enum";
+import { CompanyPreferenceJotformLabel } from "../../../../enums/company/company-preferences-jotform-label.enum";
 import { JobEmploymentType } from "../../../../enums/jobs/job-employment-type.enum";
 import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
-import ViewModal from "../../../../components/view-details/view-modal";
-import BaseCheck from "../../../../components/forms/base-check";
-import { CompanyPreferenceAutoRecrutingLabel } from "../../../../enums/company/company-preferences-auto-recruiting-label.enum";
-import { CompanyPreferenceEnhancementLabel } from "../../../../enums/company/company-preference-enhancement-label.enum";
+import { useEffectAsync } from "../../../../utils/react";
 
 export default function CompanyPreference() {
 	enum WhatsThisOptionsEnum {
@@ -36,6 +36,7 @@ export default function CompanyPreference() {
 
 	const [showModal, setShowModal] = useState<boolean>(false);
 	const [showReferModal, setShowReferModal] = useState<boolean>(false);
+	const [lipboard, setClipBoard] =  useState<boolean>(false);
 	const [showAutoRecruitingModal, setShowAutoRecruitingModal] =
 		useState<boolean>(false);
 
@@ -223,7 +224,7 @@ export default function CompanyPreference() {
 	const tooltipReferBack = (
 		<Tooltip id="my-tooltip">{t("TOOLTIP_REFER_BACK")}</Tooltip>
 	);
-
+	
 	return (
 		<>
 			<PageLayout title="DIGITAL_HIRING_APPLICATION_AUTO_RECRUITING">
