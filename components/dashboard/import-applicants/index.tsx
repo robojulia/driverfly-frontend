@@ -250,6 +250,11 @@ const ImportApplicants = () => {
                         }
 
                         switch (key) {
+                            case "can_pass_drug_test":
+                                if (value == "") {
+                                    entity.can_pass_drug_test = true;
+                                }
+                                break;
                             case "license_restrictions":
                                 entity.license_restrictions = entity.license_restrictions
                                     ?.filter(unique)
