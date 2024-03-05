@@ -603,7 +603,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								formik={form}
 							/>
 								{form.values?.moving_violation_history?.map((entity, i) => (
-									console.log("moving_violations_details => :",form.values?.moving_violation_history),
 									<Row key={i} className="single-past-employer-items my-3 ">
 										<div className="col-md-12 mt-2">
 											<Row className={""}>

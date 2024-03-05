@@ -1,18 +1,23 @@
 import * as yup from "yup";
 import { ApplicantExtrasEntity } from "../../applicant/applicant-extras.entity";
+import { ApplicantEntity } from "../../applicant";
+import { ApplicantMovingViolationEntity } from "../../applicant/applicant-moving-violation.entity";
+
 
 export class ViolationHistoryDto {
-	VIOLATION_DETAILS?: ApplicantExtrasEntity;
+	moving_violation_history?: ApplicantMovingViolationEntity[];
 	moving_violations_count?: number;
+
 	static yupSchema() {
 		return yup.object({
-			VIOLATION_DETAILS: ApplicantExtrasEntity.yupSchema(),
+			moving_violation_history: yup.array().of(ApplicantMovingViolationEntity.yupSchema()),
+
 			moving_violations_count: yup.number()
 				.required()
 				.when(
-					'VIOLATION_DETAILS',
-					(VIOLATION_DETAILS: ApplicantExtrasEntity, schema) =>
-						schema.min(VIOLATION_DETAILS?.value?.length ?? 0)
+					'moving_violation_history',
+					(moving_violation_history: ApplicantMovingViolationEntity[], schema) =>
+						schema.min(moving_violation_history?.length ?? 0)
 							.required()
 							.nullable()
 				)
