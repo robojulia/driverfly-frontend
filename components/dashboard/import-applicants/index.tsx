@@ -255,6 +255,54 @@ const ImportApplicants = () => {
                                     entity.can_pass_drug_test = true;
                                 }
                                 break;
+                            case "moving_violations_count":
+                            case "moving_violations_details":
+                            case "moving_violations":
+                                if (!!entity.moving_violations_count || entity.moving_violations_count > 0) {
+                                    entity.moving_violations = true;
+                                } else {
+                                    entity.moving_violations = false;
+                                    entity.moving_violations_details = null;
+                                }
+                                break;
+                            case "accident_count":
+                            case "accident_details":
+                                if (!!!entity.accident_count) {
+                                    entity.accident_details = null;
+                                }
+                                break;
+                            case "license_revoked":
+                            case "license_revoked_details":
+                                if (!!!entity.license_revoked) {
+                                    entity.license_revoked_details = null;
+                                }
+                                break;
+                            case "psp_violations":
+                            case "psp_violations_details":
+                                if (!!!entity.psp_violations) {
+                                    entity.psp_violations_details = null;
+                                }
+                                break;
+                            case "tickets_count":
+                            case "tickets_details":
+                            case "tickets":
+                                if (!!entity.tickets_count || entity.tickets_count > 0) {
+                                    entity.tickets = true;
+                                } else {
+                                    entity.tickets = false;
+                                    entity.tickets_details = null;
+                                }
+                                break;
+                            case "infractions_count":
+                            case "infractions_details":
+                            case "infractions":
+                                if (!!entity.infractions_count || entity.infractions_count > 0) {
+                                    entity.infractions = true;
+                                } else {
+                                    entity.infractions = false;
+                                    entity.infractions_details = null;
+                                }
+                                break;
                             case "license_restrictions":
                                 entity.license_restrictions = entity.license_restrictions
                                     ?.filter(unique)
