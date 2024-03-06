@@ -261,6 +261,7 @@ const ImportApplicants = () => {
                                 if (!!entity.moving_violations_count || entity.moving_violations_count > 0) {
                                     entity.moving_violations = true;
                                 } else {
+                                    entity.moving_violations_count = 0;
                                     entity.moving_violations = false;
                                     entity.moving_violations_details = null;
                                 }
@@ -268,6 +269,7 @@ const ImportApplicants = () => {
                             case "accident_count":
                             case "accident_details":
                                 if (!!!entity.accident_count) {
+                                    entity.accident_count = 0;
                                     entity.accident_details = null;
                                 }
                                 break;
@@ -287,6 +289,7 @@ const ImportApplicants = () => {
                             case "tickets_details":
                             case "tickets":
                                 if (!!entity.tickets_count || entity.tickets_count > 0) {
+                                    entity.tickets_count = 0;
                                     entity.tickets = true;
                                 } else {
                                     entity.tickets = false;
@@ -297,6 +300,7 @@ const ImportApplicants = () => {
                             case "infractions_details":
                             case "infractions":
                                 if (!!entity.infractions_count || entity.infractions_count > 0) {
+                                    entity.infractions_count = 0;
                                     entity.infractions = true;
                                 } else {
                                     entity.infractions = false;

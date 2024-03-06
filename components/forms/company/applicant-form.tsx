@@ -738,6 +738,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									className="col-12"
 									readOnly={Boolean(entity?.is_hired)}
 									label="PHONE"
+									required
 									name="phone"
 									placeholder="PHONE"
 									formik={form}
@@ -746,7 +747,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									className="col-12"
 									readOnly={Boolean(entity?.is_hired)}
 									label="EMAIL"
-									required
 									type="email"
 									name="email"
 									placeholder="EMAIL"
