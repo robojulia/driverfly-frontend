@@ -146,6 +146,7 @@ export default function Call() {
     };
 
     const openCallDialog = async (entity) => {
+        console.log("Emp/Applicant getting to call : ->", entity);
         setloading(true);
         await setupTwilio();
         setIdentity(entity);
