@@ -8,7 +8,7 @@ import { JobDetailProps } from "../../../types/job/job-detail-props.type";
 import { Pagination } from "../../../types/pagination.type";
 import JobApi from "../../api/job";
 
-export default function Detail({ job, relatedJobs }: JobDetailProps) {
+export default function Detail({ job, relatedJobs, quick_apply }: JobDetailProps) {
 
   const { t } = useTranslation();
 
@@ -16,6 +16,7 @@ export default function Detail({ job, relatedJobs }: JobDetailProps) {
     <>
       <StructuredData type="JobPosting" data={StructuredData.JobPosting(job, t)} />
       <ViewJobDetail
+        quick_apply={quick_apply}
         job={job}
         relatedJobs={< RelatedJobs jobs={relatedJobs} jobLink="jobs" hideCompanyName={false} jobLinkSlugable={true} />}
         canApply={true}
@@ -27,9 +28,11 @@ export default function Detail({ job, relatedJobs }: JobDetailProps) {
     </>
   )
 }
-export async function getServerSideProps(context) {
+export async function getServerSideProps({ params, query }) {
   try {
-    const jobId = context.params?.jobId;
+    const { jobId } = params;
+    const { quick_apply } = query;
+
     if (!!!jobId)
       return { notFound: true }
 
@@ -39,7 +42,7 @@ export async function getServerSideProps(context) {
 
     const { items } = await new JobApi().search({ exclude: { jobId: jobId }, companyId: job.company?.id, take: 3 }) as Pagination<JobEntity>;
     return {
-      props: { job: job, relatedJobs: items }
+      props: { job: job, relatedJobs: items, quick_apply: quick_apply || null }
     }
   } catch (error) {
     console.error("Exception is here:", error);
