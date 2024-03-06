@@ -185,7 +185,13 @@ export class ApplicantEntity {
 				)
 				.nullable(),
 			criminal_history: yup.string().nullable(),
-			accident_count: yup.number().min(0).nullable(),
+			accident_count: yup.number().required().when(
+				'accident_history', (accident_history : ApplicantAccidentEntity[] , schema) => 
+					schema.min(accident_history?.length ?? 0)
+					.required().nullable()
+			).nullable(),
+			accident_history :yup.array(ApplicantAccidentEntity.yupSchema()).nullable(),
+			moving_violation_history :yup.array(ApplicantMovingViolationEntity.yupSchema()).nullable(),
 			accident_details: yup.string().nullable(),
 			license_revoked: yup.bool().nullable(),
 			license_revoked_details: yup.string().nullable(),
@@ -199,7 +205,10 @@ export class ApplicantEntity {
 			infractions_count: yup.number().min(0).nullable(),
 			infractions_details: yup.string().nullable(),
 			moving_violations: yup.bool().nullable(),
-			moving_violations_count: yup.number().min(0).nullable(),
+			moving_violations_count: yup.number().required().when(
+				'moving_violation_history', (moving_violation_history:ApplicantMovingViolationEntity[], schema) =>
+				schema.min(moving_violation_history?.length ?? 0).required().nullable()
+			).nullable(),
 			moving_violations_details: yup.string().nullable(),
 
 			positive_drug_test: yup.bool().nullable(),
