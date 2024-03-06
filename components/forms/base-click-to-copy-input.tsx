@@ -17,8 +17,6 @@ export default function BaseClickToCopyInput({
 }: BaseClickToCopyInputProps) {
 	const [linkCopied, setLinkCopied] = useState<string>(tooltipText);
 	const { t } = useTranslation();
-
-
 	async function isClipboardContentEqual() {
 		try {
 			const clipboardContent = await navigator.clipboard.readText(); 
@@ -36,6 +34,10 @@ export default function BaseClickToCopyInput({
 		}
 	};
 	document.addEventListener('copy', isClipboardContentEqual);
+	document.addEventListener('visibilitychange', async ()=> {
+	if (!document.hidden) await isClipboardContentEqual();
+	});
+
 	
 	return (
 		<BaseInput
