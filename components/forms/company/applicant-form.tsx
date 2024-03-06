@@ -67,7 +67,6 @@ import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
 import ViewModal from "../../view-details/view-modal";
 import { ReferralSourceForm } from "../admin/referral-source-form";
 import { JobForm } from "./job-form";
-import { AccidentHistory } from "../jotform/voe-forms";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
@@ -96,7 +95,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 	const form = useFormik({
 		initialValues: new ApplicantEntity(),
-		validationSchema: ApplicantEntity.yupSchema(),
+		validationSchema: ApplicantEntity.yupSchemaForApplicantForm(),
 		onSubmit: async (values) => {
 			values.extras = values.extras?.filter(
 				(v) => v.value != undefined || v.value != null
@@ -452,7 +451,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											form.setValues({
 												...form.values,
 												accident_history: [
-													...(form.values?.accident_history || []), {...new ApplicantAccidentEntity()}
+													...(form.values?.accident_history || []), { ...new ApplicantAccidentEntity() }
 												],
 											});
 										}}
@@ -470,84 +469,84 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								formik={form}
 							/>
 							{form.values?.accident_history?.map((accident_details_ex, i) => (
-									<Row className="pl-0 single-past-employer-items my-1" key={i}>
-										<div className="col-md-12 mt-2">
-											<Row className={""}>
-												<BaseInput
-													className="col-md-6 my-3"
-													name={`accident_history[${i}].date_of_accident`}
-													label="DATE"
-													type="date"
-													formik={form}
-													required
-													max={new Date().toISOString().split("T")[0]}
-												/>
-												<BaseInput
-													className="col-md-6 my-3"
-													name={`accident_history[${i}].nature_of_accident`}
-													label="LABEL_ACCIDENT_NATURE"
-													formik={form}
-													required
-												/>
-												<BaseInput
-													className="col-md-6 my-3"
-													name={`accident_history[${i}].location_of_accident`}
-													label="LABEL_ACCIDENT_LOCATION"
-													formik={form}
-													required
-												/>
-												<BaseInput
-													className="col-md-6 my-3"
-													name={`accident_history[${i}].number_of_fatalaties`}
-													label="LABEL_ACCIDENT_FATALITIES"
-													formik={form}
-													required
-												/>
-												<BaseInput
-													className="col-md-6 mt-2"
-													name={`accident_history[${i}].number_of_injured`}
-													label="LABEL_ACCIDENT_INJURED"
-													formik={form}
-													required
-												/>
-												<BaseCheck
-													className="col-md-6 mt-5"
-													name={`accident_history[${i}].dot_recordable`}
-													label="LABEL_ACCIDENT_DOT"
-													formik={form}
-												/>
+								<Row className="pl-0 single-past-employer-items my-1" key={i}>
+									<div className="col-md-12 mt-2">
+										<Row className={""}>
+											<BaseInput
+												className="col-md-6 my-3"
+												name={`accident_history[${i}].date_of_accident`}
+												label="DATE"
+												type="date"
+												formik={form}
+												required
+												max={new Date().toISOString().split("T")[0]}
+											/>
+											<BaseInput
+												className="col-md-6 my-3"
+												name={`accident_history[${i}].nature_of_accident`}
+												label="LABEL_ACCIDENT_NATURE"
+												formik={form}
+												required
+											/>
+											<BaseInput
+												className="col-md-6 my-3"
+												name={`accident_history[${i}].location_of_accident`}
+												label="LABEL_ACCIDENT_LOCATION"
+												formik={form}
+												required
+											/>
+											<BaseInput
+												className="col-md-6 my-3"
+												name={`accident_history[${i}].number_of_fatalaties`}
+												label="LABEL_ACCIDENT_FATALITIES"
+												formik={form}
+												required
+											/>
+											<BaseInput
+												className="col-md-6 mt-2"
+												name={`accident_history[${i}].number_of_injured`}
+												label="LABEL_ACCIDENT_INJURED"
+												formik={form}
+												required
+											/>
+											<BaseCheck
+												className="col-md-6 mt-5"
+												name={`accident_history[${i}].dot_recordable`}
+												label="LABEL_ACCIDENT_DOT"
+												formik={form}
+											/>
 
-												<BaseCheck
-													className="col-md-12 mt-4"
-													name={`accident_history[${i}].at_fault`}
-													label="LABEL_ACCIDENT_FAULT"
-													formik={form}
-												/>
-												<Button
-													className="rounded-lg"
-													variant="outline-danger close_btn w-25 mx-auto my-2"
-													onClick={() =>
-														form.setFieldValue(
-															"accident_history", [...form.values?.accident_history?.filter((ex, indx) => indx !== i)]
-														)
-													}
-												>
-													<DashCircle />
-												</Button>
-												<div
-													className="Row"
-													style={{
-														height: "1px",
-														borderBottom: "solid 1px #8d8c8c",
-														marginTop: "15px",
-														width: "80%",
-														marginLeft: "10%",
-													}}
-												></div>
-											</Row>
-										</div>
-									</Row>
-								))}
+											<BaseCheck
+												className="col-md-12 mt-4"
+												name={`accident_history[${i}].at_fault`}
+												label="LABEL_ACCIDENT_FAULT"
+												formik={form}
+											/>
+											<Button
+												className="rounded-lg"
+												variant="outline-danger close_btn w-25 mx-auto my-2"
+												onClick={() =>
+													form.setFieldValue(
+														"accident_history", [...form.values?.accident_history?.filter((ex, indx) => indx !== i)]
+													)
+												}
+											>
+												<DashCircle />
+											</Button>
+											<div
+												className="Row"
+												style={{
+													height: "1px",
+													borderBottom: "solid 1px #8d8c8c",
+													marginTop: "15px",
+													width: "80%",
+													marginLeft: "10%",
+												}}
+											></div>
+										</Row>
+									</div>
+								</Row>
+							))}
 						</ViewCard>
 					</div>
 				)}
@@ -568,7 +567,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 					placeholder="PLACEHOLDER_FOR_DIGITS"
 					formik={form}
 				/>
-					{form.values.moving_violations_count > 0 && (
+				{form.values.moving_violations_count > 0 && (
 					<div className="col-12 mt-2">
 						<ViewCard
 							title="VIOLATION_DETAILS"
@@ -585,7 +584,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											form.setValues({
 												...form.values,
 												moving_violation_history: [
-													...(form.values?.moving_violation_history || []), {...new ApplicantMovingViolationEntity()}
+													...(form.values?.moving_violation_history || []), { ...new ApplicantMovingViolationEntity() }
 												],
 											});
 										}}
@@ -602,66 +601,66 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								name="moving_violations_details"
 								formik={form}
 							/>
-								{form.values?.moving_violation_history?.map((entity, i) => (
-									<Row key={i} className="single-past-employer-items my-3 ">
-										<div className="col-md-12 mt-2">
-											<Row className={""}>
-												<BaseInput
-													className="col-md-6 mt-3"
-													name={`moving_violation_history[${i}].date_of_violation`}
-													label="VIOLATION_DATE"
-													type="date"
-													formik={form}
-													max={new Date().toISOString().split("T")[0]}
-													required
-												/>
-												<BaseInput
-													className="col-md-6 mt-3"
-													name={`moving_violation_history[${i}].location`}
-													label="location"
-													formik={form}
-													required
-												/>
+							{form.values?.moving_violation_history?.map((entity, i) => (
+								<Row key={i} className="single-past-employer-items my-3 ">
+									<div className="col-md-12 mt-2">
+										<Row className={""}>
+											<BaseInput
+												className="col-md-6 mt-3"
+												name={`moving_violation_history[${i}].date_of_violation`}
+												label="VIOLATION_DATE"
+												type="date"
+												formik={form}
+												max={new Date().toISOString().split("T")[0]}
+												required
+											/>
+											<BaseInput
+												className="col-md-6 mt-3"
+												name={`moving_violation_history[${i}].location`}
+												label="location"
+												formik={form}
+												required
+											/>
 
-												<BaseInput
-													className="col-md-6 mt-3"
-													name={`moving_violation_history[${i}].charge`}
-													label="CHARGE"
-													formik={form}
-													required
-												/>
-												<BaseInput
-													className="col-md-6 mt-3"
-													name={`moving_violation_history[${i}].penalty`}
-													label="PENALTY"
-													formik={form}
-													required
-												/>
-												<Button
-													className="rounded-lg"
-													variant="outline-danger close_btn w-25 mx-auto my-2"
-													onClick={() =>
-														form.setFieldValue(
-															"moving_violation_history", [...form.values?.moving_violation_history?.filter((ex, indx) => indx !== i)]
-														)
-													}
-												>
-													<DashCircle />
-												</Button>
-												<div
-													className="Row"
-													style={{
-														height: "1px",
-														borderBottom: "solid 1px #8d8c8c",
-														marginTop: "15px",
-														width: "80%",
-														marginLeft: "10%",
-													}}
-												></div>
-											</Row>
-										</div>
-									</Row>
-								))}
+											<BaseInput
+												className="col-md-6 mt-3"
+												name={`moving_violation_history[${i}].charge`}
+												label="CHARGE"
+												formik={form}
+												required
+											/>
+											<BaseInput
+												className="col-md-6 mt-3"
+												name={`moving_violation_history[${i}].penalty`}
+												label="PENALTY"
+												formik={form}
+												required
+											/>
+											<Button
+												className="rounded-lg"
+												variant="outline-danger close_btn w-25 mx-auto my-2"
+												onClick={() =>
+													form.setFieldValue(
+														"moving_violation_history", [...form.values?.moving_violation_history?.filter((ex, indx) => indx !== i)]
+													)
+												}
+											>
+												<DashCircle />
+											</Button>
+											<div
+												className="Row"
+												style={{
+													height: "1px",
+													borderBottom: "solid 1px #8d8c8c",
+													marginTop: "15px",
+													width: "80%",
+													marginLeft: "10%",
+												}}
+											></div>
+										</Row>
+									</div>
+								</Row>
+							))}
 						</ViewCard>
 					</div>
 				)}

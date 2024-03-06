@@ -172,7 +172,6 @@ export default function JobApply({ job, setEncourageModal }) {
                         <Row>
                             <BaseInput
                                 readOnly={user && !user.company ? true : false}
-                                required
                                 type="email"
                                 className=" col-md-6 mt-3"
                                 label="email"
@@ -181,6 +180,7 @@ export default function JobApply({ job, setEncourageModal }) {
                                 formik={user?.company ? null : apply_form}
                             />
                             <BaseInputPhone
+                                required
                                 className=" col-md-6 mt-3"
                                 label="contact_number"
                                 placeholder="contact_number"
