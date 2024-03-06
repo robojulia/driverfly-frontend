@@ -344,6 +344,18 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			});
 	}, [isWorkedBefore]);
 
+	useEffect(() => {
+		const errorKeys = Object.keys(form.errors);
+
+		if (!!errorKeys.length && form.submitCount > 0) {
+			const firstElement = document.querySelector(`#${errorKeys[0]}`) as HTMLElement;
+
+			if (firstElement !== document.activeElement) {
+				firstElement?.focus();
+			}
+		}
+	}, [form.submitCount])
+
 	function DUI() {
 		return (
 			<>
