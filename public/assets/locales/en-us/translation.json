@@ -1114,6 +1114,7 @@
   "CATEGORY": "Category",
   "POST_DATE": "Post Date",
   "PAY_FREQUENCY": "Pay Frequency",
+  "PLEASE_ENTER_A_VALID_NAME": "Please enter valid name",
   "yup": {
     "type": {
       "date": "date, it must be in the format MM/dd/yyyy (eg. 01/12/2014)",
