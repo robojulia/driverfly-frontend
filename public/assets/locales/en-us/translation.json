@@ -332,6 +332,7 @@
   "ADDTIONAL_LICENSE_NUMBER": "Additional Driver’s License Number",
   "License_Restrictions": "License Restrictions",
   "expiration_date": "Expiration Date",
+  "LICENSE_EXPIRY":"License Expiry",
   "cdl_experience": "CDL Experience",
   "cdl_type": "CDL Type",
   "years_cdl_experience": "Years of CDL Experience",
