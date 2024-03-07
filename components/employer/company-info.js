@@ -2,9 +2,12 @@ import React from 'react'
 import { Facebook, Twitter, Instagram, FilePost, Linkedin } from 'react-bootstrap-icons'
 import { useTranslation } from '../../hooks/use-translation';
 import Link from "next/link";
+import { buildAddress } from '../../utils/common';
+
 
 export default function CompanyInfo({ company, jobCount, terminals }) {
     const { t } = useTranslation();
+    console.log("Terminals || ",terminals);
     return (
         <div className='col-md-4 col-lg-4 col-sm-12 px-5'>
             <div className='py-4'>
@@ -19,7 +22,7 @@ export default function CompanyInfo({ company, jobCount, terminals }) {
                 <p style={{ fontSize: "22px", fontWeight: '200' }}>{t("TERMINALS")}</p>
             {
                 terminals?.map((location, index) => {
-                         return  <p style={{ fontSize: "15px", fontWeight: '400' }}>{location?.city}, {location?.state}, {location?.zip_code}</p>
+                         return  <div key={index}><p style={{ fontSize: "15px", fontWeight: '400' }}>{buildAddress(location)}</p></div>
                 })
             }
             </div>
