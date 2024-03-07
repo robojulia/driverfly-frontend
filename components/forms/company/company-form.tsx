@@ -84,7 +84,7 @@ export function CompanyForm(props: CompanyFormProps) {
 					<BaseClickToCopyInput
 						label="COMPANY_JOBS_PAGE"
 						className="rounded"
-						value={`${process.env.FRONTEND_BASE_URL ?? ""}employer/${user?.company?.uuid_token
+						value={`${process.env.FRONTEND_BASE_URL ?? ""}employer/${user?.company?.slug
 							}`}
 						tooltipText={t("CLICK_TO_COPY")}
 					/>

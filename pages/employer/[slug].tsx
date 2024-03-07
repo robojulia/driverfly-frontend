@@ -11,18 +11,18 @@ import CompanyPhoto from "../../components/jobs/company-photo";
 import JobApi from "../api/job";
 import { JobEntity } from "../../models/job/job.entity";
 import { Pagination } from "../../types/pagination.type";
- 
+
 
 
 export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 	const { t } = useTranslation();
- 
+
 	const regex = `([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)`
 	const validAbout = !!!(company.about?.match(regex))
 
-	 
 
-	console.log("Company getting  : ",company);
+
+	console.log("Company getting  : ", company);
 	return (
 		<>
 			<FlagCompany companyId={company.id} />
@@ -62,10 +62,10 @@ export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 						<div className="col-md-4  col-lg-4 col-sm-12 px-5">
 							<div>
 								<div className="my-3">
-										<button type="button" className="custom-trucker-follow-btn">
-											<Telephone color="#fff" className="mx-2" size={20} />
-											{company?.phone}
-										</button>
+									<button type="button" className="custom-trucker-follow-btn">
+										<Telephone color="#fff" className="mx-2" size={20} />
+										{company?.phone}
+									</button>
 								</div>
 								<div>
 									<button type="button" className="custom-trucker-review-btn">
@@ -120,7 +120,7 @@ export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 								</Link>
 							)}
 						</div>
-						<CompanyInfo company={company} jobCount={jobCount} terminals={termonals}/>
+						<CompanyInfo company={company} jobCount={jobCount} terminals={termonals} />
 
 					</div>
 				</div>
@@ -131,17 +131,18 @@ export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 
 export async function getServerSideProps(context) {
 	try {
-		const companyId = context.params?.company_uuid || false;
+		const slug = context.params?.slug || false;
 
-		if (!!!companyId) return { notFound: true };
+		if (!!!slug) return { notFound: true };
 
 		const companyApi = new CompanyApi();
 		const jobApi = new JobApi();
 
-		const company = await companyApi.employer.getByUUId(companyId);
+		const company = await companyApi.employer.getBySlug(slug);
+		if (!!!company) return { notFound: true };
 		const jobCount = await companyApi.employer.getJobCount(company?.id) ?? 0;
-		const termonals = await companyApi.employer.getTerminals(company?.id) ;
-		const  { items  }: any = await jobApi.search({companyId : company.id});
+		const termonals = await companyApi.employer.getTerminals(company?.id);
+		const { items }: any = await jobApi.search({ companyId: company.id });
 
 		if (!!!company) return { notFound: true };
 

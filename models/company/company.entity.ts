@@ -13,6 +13,7 @@ export class CompanyEntity {
 	photo?: DocumentEntity;
 	status?: Status;
 	uuid_token?: string;
+	slug?: string;
 
 	users?: UserEntity[];
 	parent?: CompanyEntity;
