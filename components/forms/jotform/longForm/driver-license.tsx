@@ -13,6 +13,8 @@ import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-do
 import { DocumentsDto } from "../../../../models/jot-form/long-form/documents.dto";
 import BaseCheck from "../../base-check";
 import { CameraComponent } from "./camera";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 export function DriverLicense() {
 	const {
@@ -27,23 +29,48 @@ export function DriverLicense() {
 		v?.type != ApplicantDocumentType.DRIVERS_LICENSE;
 
 	const { t } = useTranslation();
+	const router = useRouter();
+	const missingDocRouteActive = router.route.includes('longform/[applicant_uuid]/missing-document');
+
 	const form = useFormik({
 		initialValues: new DocumentsDto(),
 		validationSchema: DocumentsDto.yupSchema(),
 		onSubmit: (values, { resetForm }) => {
 			const { document } = values;
 
-			if (!!document?.file_base64) {
-				const documents: DocumentEntity[] =
-					applicant?.documents?.filter(isNotDriverLicense) || [];
-				setApplicant({
-					...applicant,
-					documents: [...documents, { ...document }],
-				});
+			if(missingDocRouteActive && document?.name)
+			{
+				if (!!document?.file_base64) {
+					const documents: DocumentEntity[] =
+						applicant?.documents?.filter(isNotDriverLicense) || [];
+					setApplicant({
+						...applicant,
+						documents: [...documents, { ...document }],
+					});
+				}
+	
+				// resetForm();
+				stepNext();
+			}
+			else{
+				toast.error(t("MUST_ADD_FILE"))
+			}
+			if(!missingDocRouteActive)
+			{
+				if (!!document?.file_base64) {
+					const documents: DocumentEntity[] =
+						applicant?.documents?.filter(isNotDriverLicense) || [];
+					setApplicant({
+						...applicant,
+						documents: [...documents, { ...document }],
+					});
+				}
+	
+				// resetForm();
+				stepNext();
 			}
 
-			// resetForm();
-			stepNext();
+			
 		},
 		onReset: (values) => {
 			stepBack();
