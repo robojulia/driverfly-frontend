@@ -1903,6 +1903,7 @@
   "{company_name}_DRUG_TEST_DOT": "Please be honest as {{company_name}} will require you to take a drug test, and as per DOT regulations, you will be required to go through SAP training if you fail it",
   "TYPE_CDL_CLASS": "CDL Class Type",
   "{name}_carrier": "{{name}}",
+  "MUST_ADD_FILE":"Must add file",
   "BACK": "Back",
   "NEXT": "Next",
   "CLICK_TO_COPY": "Click to copy",

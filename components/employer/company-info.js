@@ -5,7 +5,6 @@ import Link from "next/link";
 
 export default function CompanyInfo({ company, jobCount, terminals }) {
     const { t } = useTranslation();
-    console.log("Terminals : ",terminals);
     return (
         <div className='col-md-4 col-lg-4 col-sm-12 px-5'>
             <div className='py-4'>
@@ -16,13 +15,11 @@ export default function CompanyInfo({ company, jobCount, terminals }) {
                 <p style={{ fontSize: "22px", fontWeight: 'lighter' }}>{t("HEADQUATERS")}</p>
                 <p style={{ fontSize: "15px", fontWeight: '400' }}>123 Happy Lane, Dallas, TX 70025</p>
             </div>
-            <div className='py-4'>
+            <div>
                 <p style={{ fontSize: "22px", fontWeight: '200' }}>{t("TERMINALS")}</p>
             {
-                terminals?.map(location =>{
-                    <>
-                    <p style={{ fontSize: "15px", fontWeight: '400' }}>{location}</p>
-                    </>
+                terminals?.map((location, index) => {
+                         return  <p style={{ fontSize: "15px", fontWeight: '400' }}>{location?.city}, {location?.state}, {location?.zip_code}</p>
                 })
             }
             </div>

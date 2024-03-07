@@ -67,9 +67,9 @@ export function SubmitMissingDocuments() {
 		<>
 			<ToastContainer />
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<Row>
-					<h3 className={`text-black ${styles.bold}`}>{t("SUBMIT_THIS_FORM")}</h3>
-				</Row>
+				<div className="d-flex justify-content-center">
+					<h3 className={`text-black  ${styles.bold}`} >{t("SUBMIT_THIS_FORM")}</h3>
+				</div>
 				<Row className="mt-3">
 					<Col>
 						<Button className="float-right" type="reset">
