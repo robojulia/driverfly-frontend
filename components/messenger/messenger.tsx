@@ -174,7 +174,7 @@ export function Messenger(props) {
 
     async function fetchConversations() {
         const c = await conversationApi.list();
-        setConversations(c);
+        setConversations(c.reverse());
     }
 
     useEffectAsync(async () => {
