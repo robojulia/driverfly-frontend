@@ -89,6 +89,10 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                     </Col>
                     <Col md={3}>
                         {!!quick_apply
+<<<<<<< HEAD
+=======
+                        
+>>>>>>> 6d6a0503 (DRIV-1395 | QA changes)
                             ? <div className="ort-btn mt-lg-4 mt-0">
                                 <Link href={`/form/digitalhiringapp/suggested-job/${quick_apply}/${job.id}`}>
                                     <button type="button" className="btn theme-primary-btn" > {t('QUICK_APPLY')}<ArrowRight /></button>
