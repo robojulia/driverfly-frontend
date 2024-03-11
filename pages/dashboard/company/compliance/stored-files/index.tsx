@@ -478,7 +478,7 @@ export default function StoredFiles() {
             >
                 <div className="d-flex flex-column align-items-center justify-content-between w-100 gap-5" 
                 style={{ background:'1D4345'}}>
-                    <h2>{t("ARE_YOU_SURE_YOU_WANT_TO_FILE")}</h2>
+                    <h2>{t("ARE_YOU_SURE_YOU_WANT_TO_DELETE_FILE")}</h2>
                     <div className="gap-4 d-flex justify-content-between">
                         <button type="button" onClick={()=> {handleDeleteFile(confirmationModal?.fileId), setDeleteBtnDisableStatus(true)}} disabled={deleteBtnDisableStatus} className="btn btn-danger px-5">{t("yes")}</button>
                         <button type="button" onClick={()=>setConfirmationModal({value : !confirmationModal?.value, fileId: null})} className="theme-primary-btn btn-block btn-theme px-5">{t("no")}</button>
