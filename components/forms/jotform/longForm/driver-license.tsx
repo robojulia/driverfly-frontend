@@ -31,7 +31,7 @@ export function DriverLicense() {
 	const { t } = useTranslation();
 	const router = useRouter();
 	const missingDocRouteActive = router.route.includes('longform/[applicant_uuid]/missing-document');
-	const dhaRouteActive  = router.route.includes('digitalhiringapp/[company_uuid]')
+	const dhaRouteActive  = router.route.includes('digitalhiringapp/[slug]')
 
 
 	const form = useFormik({
