@@ -23,6 +23,8 @@ export function MedicalCard() {
 	const isNotMedicalCard = (v: DocumentEntity): boolean => v.type != ApplicantDocumentType.MEDICAL_CARD;
 	const router = useRouter();
 	const missingDocRouteActive = router.route.includes('longform/[applicant_uuid]/missing-document')
+	const dhaRouteActive  = router.route.includes('digitalhiringapp/[company_uuid]')
+
 	const { t } = useTranslation();
 	const form = useFormik({
 		initialValues: new DocumentsDto(),
@@ -30,7 +32,19 @@ export function MedicalCard() {
 		onSubmit: (values, { resetForm }) => {
 			const { document } = values;
 
-			if(missingDocRouteActive && document?.name)
+			if(missingDocRouteActive && document.name && !dhaRouteActive)
+			{
+				if (!!document.file_base64) {
+					const documents: DocumentEntity[] = applicant.documents?.filter(isNotMedicalCard)
+					setApplicant({
+						...applicant,
+						documents: [...documents, { ...document }],
+					});
+				}
+				resetForm();
+				stepNext();
+			}
+			else if(dhaRouteActive && !missingDocRouteActive)
 			{
 				if (!!document.file_base64) {
 					const documents: DocumentEntity[] = applicant.documents?.filter(isNotMedicalCard)
@@ -44,19 +58,6 @@ export function MedicalCard() {
 			}
 			else{
 				toast.error(t("MUST_ADD_FILE"))
-			}
-			if(!missingDocRouteActive)
-			{
-				if (!!document.file_base64) {
-					const documents: DocumentEntity[] = applicant.documents?.filter(isNotMedicalCard)
-					setApplicant({
-						...applicant,
-						documents: [...documents, { ...document }],
-					});
-				}
-	
-				resetForm();
-				stepNext();
 			}
 		},
 		onReset: (values) => {
