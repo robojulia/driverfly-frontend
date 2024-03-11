@@ -9,10 +9,6 @@ import Link from "next/link";
 import FlagCompany from "../../components/flag/flag-a-company";
 import CompanyPhoto from "../../components/jobs/company-photo";
 import JobApi from "../api/job";
-import { JobEntity } from "../../models/job/job.entity";
-import { Pagination } from "../../types/pagination.type";
-
-
 
 export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 	const { t } = useTranslation();

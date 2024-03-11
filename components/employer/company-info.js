@@ -1,13 +1,11 @@
-import React from 'react'
-import { Facebook, Twitter, Instagram, FilePost, Linkedin } from 'react-bootstrap-icons'
-import { useTranslation } from '../../hooks/use-translation';
 import Link from "next/link";
+import { useTranslation } from '../../hooks/use-translation';
 import { buildAddress } from '../../utils/common';
 
 
 export default function CompanyInfo({ company, jobCount, terminals }) {
     const { t } = useTranslation();
-    console.log("Terminals || ",terminals);
+    console.log("Terminals || ", terminals);
     return (
         <div className='col-md-4 col-lg-4 col-sm-12 px-5'>
             <div className='py-4'>
@@ -20,13 +18,13 @@ export default function CompanyInfo({ company, jobCount, terminals }) {
             </div>
             <div>
                 <p style={{ fontSize: "22px", fontWeight: '200' }}>{t("TERMINALS")}</p>
-            {
-                terminals?.map((location, index) => {
-                         return  <div key={index}><p style={{ fontSize: "15px", fontWeight: '400' }}>{buildAddress(location)}</p></div>
-                })
-            }
+                {
+                    terminals?.map((location, index) => {
+                        return <div key={index}><p style={{ fontSize: "15px", fontWeight: '400' }}>{buildAddress(location)}</p></div>
+                    })
+                }
             </div>
-           
+
 
             {/* <h1 className='display-5 fs-4  fw-light lh-lg'> {t('EMPLOYER_LOCATION')}</h1>
                     <h1 className='display-5 fs-4  fw-light lh-lg'> {t('COMPANY_INFORMATION')}</h1>
