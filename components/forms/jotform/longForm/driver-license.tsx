@@ -31,6 +31,8 @@ export function DriverLicense() {
 	const { t } = useTranslation();
 	const router = useRouter();
 	const missingDocRouteActive = router.route.includes('longform/[applicant_uuid]/missing-document');
+	const dhaRouteActive  = router.route.includes('digitalhiringapp/[company_uuid]')
+
 
 	const form = useFormik({
 		initialValues: new DocumentsDto(),
@@ -38,7 +40,20 @@ export function DriverLicense() {
 		onSubmit: (values, { resetForm }) => {
 			const { document } = values;
 
-			if(missingDocRouteActive && document?.name)
+			if(missingDocRouteActive && document.name && !dhaRouteActive)
+			{
+				if (!!document?.file_base64) {
+					const documents: DocumentEntity[] =
+						applicant?.documents?.filter(isNotDriverLicense) || [];
+					setApplicant({
+						...applicant,
+						documents: [...documents, { ...document }],
+					});
+				}	
+				// resetForm();
+				stepNext();
+			}
+			else if(dhaRouteActive && !missingDocRouteActive)
 			{
 				if (!!document?.file_base64) {
 					const documents: DocumentEntity[] =
@@ -48,26 +63,11 @@ export function DriverLicense() {
 						documents: [...documents, { ...document }],
 					});
 				}
-	
 				// resetForm();
 				stepNext();
 			}
 			else{
 				toast.error(t("MUST_ADD_FILE"))
-			}
-			if(!missingDocRouteActive)
-			{
-				if (!!document?.file_base64) {
-					const documents: DocumentEntity[] =
-						applicant?.documents?.filter(isNotDriverLicense) || [];
-					setApplicant({
-						...applicant,
-						documents: [...documents, { ...document }],
-					});
-				}
-	
-				// resetForm();
-				stepNext();
 			}
 
 			
