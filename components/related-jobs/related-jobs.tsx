@@ -44,7 +44,7 @@ export default function RelatedJobs({ jobs, jobLink, hideCompanyName, jobLinkSlu
                                             {
                                                 (!!!hideCompanyName && job.company?.name) &&
                                                 <>
-                                                    {t('by')} <Link href={`/employer/${job.company?.id}`}>
+                                                    {t('by')} <Link href={`/employer/${job.company?.slug}`}>
                                                         <span role="button" className="employer text-theme">{job.company?.name}</span>
                                                     </Link>
                                                 </>

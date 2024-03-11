@@ -348,7 +348,7 @@ export default function CompanyPreference() {
 				<BaseClickToCopyInput
 					label="DIGITAL_HIRING_APP_URL"
 					className="my-2 border p-3 rounded  link-background"
-					value={`${process.env.FRONTEND_BASE_URL ?? ""}form/digitalhiringapp/${user?.company?.uuid_token
+					value={`${process.env.FRONTEND_BASE_URL ?? ""}form/digitalhiringapp/${user?.company?.slug
 						}`}
 					tooltipText={t("CLICK_TO_COPY")}
 				/>
