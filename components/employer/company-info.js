@@ -10,7 +10,9 @@ export default function CompanyInfo({ company, jobCount, terminals }) {
         <div className='col-md-4 col-lg-4 col-sm-12 px-5'>
             <div className='py-4'>
                 <p style={{ fontSize: "22px", fontWeight: 'lighter' }}>{t("WEBSITE_")}</p>
-                <Link href={company?.website} className='text-danger' style={{ textDecoration: 'none', color: 'text-secondary' }}>{company?.website}</Link>
+                {company?.website &&
+                    <Link href={company?.website} className='text-danger' style={{ textDecoration: 'none', color: 'text-secondary' }}>{company?.website}</Link>
+                }
             </div>
             <div className='py-4'>
                 <p style={{ fontSize: "22px", fontWeight: 'lighter' }}>{t("HEADQUATERS")}</p>
