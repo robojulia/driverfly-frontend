@@ -14,6 +14,12 @@ export class CompanyEntity {
 	status?: Status;
 	uuid_token?: string;
 	slug?: string;
+	location?: string;
+	phone?: string;
+	facebook?: string;
+	instagram?: string;
+	linkedin?: string;
+	twitter?: string;
 
 	users?: UserEntity[];
 	parent?: CompanyEntity;
