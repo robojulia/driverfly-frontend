@@ -43,6 +43,14 @@ export class CompanyEntity {
 					}
 				}),
 			website: yup.string().url().nullable(),
+
+			phone: yup.string().nullable(),
+			location: yup.string().optional().nullable(),
+			facebook : yup.string().url().nullable(),
+			instagram : yup.string().url().nullable(),
+			linkedin : yup.string().url().nullable(),
+			twitter : yup.string().url().nullable(),
+
 			photo: yup.mixed().when({
 				is: v => !!v,
 				then: DocumentEntity.yupSchema()
