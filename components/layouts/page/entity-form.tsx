@@ -37,9 +37,10 @@ export default function EntityForm(props: EntityFormProps) {
         canSubmit = !formik.isValidating && !formik.isSubmitting;
         if (!onSubmit) onSubmit = formik.handleSubmit;
     }
-
+    
     return (
         <Form className={className} onSubmit={onSubmit}>
+            {children}
             <Row>
                 <Col xs="12" className="text-end">
                     {props.actions?.map(({ icon: IconComp, label, className, disabled, onClick, hide }, index) => (
@@ -66,7 +67,6 @@ export default function EntityForm(props: EntityFormProps) {
                     </Button>
                 </Col>
             </Row>
-            {children}
         </Form>
     );
 }
