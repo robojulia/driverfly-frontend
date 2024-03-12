@@ -751,6 +751,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									readOnly={Boolean(entity?.is_hired)}
 									label="PHONE"
 									name="phone"
+									required
 									placeholder="PHONE"
 									formik={form}
 								/>
