@@ -16,6 +16,9 @@ import BaseTextArea from "../base-text-area";
 import FileInput from "../file-input";
 import { BaseFormProps } from "./base-form-props";
 import { UncontrolledTooltip } from "reactstrap";
+import {  Facebook, Instagram, Linkedin, Telephone, Twitter } from "react-bootstrap-icons";
+import BaseInputPhone from "../base-input-phone";
+
 
 
 export interface CompanyFormProps extends BaseFormProps<CompanyEntity> {
@@ -75,6 +78,13 @@ export function CompanyForm(props: CompanyFormProps) {
 				/>
 				<BaseInput
 					className="col-12"
+					label={t("HEADQUATERS")}
+					name={`location`}
+					placeholder={t("ADD_HEADQUATERS_LOCATION")}
+					formik={form}
+				/>
+				<BaseInput
+					className="col-12"
 					label={t("WEBSITE")}
 					name={`website`}
 					placeholder="http://www.example.com"
@@ -110,6 +120,54 @@ export function CompanyForm(props: CompanyFormProps) {
 				<UncontrolledTooltip delay={0} placement="top" target="imgpurpose">
 					{t("IMAGE_PURPOSE")}
 				</UncontrolledTooltip>
+
+				<BaseInputPhone
+					className="col-3"
+					label="PHONE"
+					name="phone"
+					placeholder="PHONE"
+					formik={form}
+				/>
+ 
+				<p className="mt-3" >{t("SOCIAL_MEDIA_LINKS")}</p>
+				<div className="p-0 d-flex justify-content-start ">
+					<div className="col-3">
+						<BaseInput
+						className=""
+						label={t("FACEBOOK")}
+						name={`facebook`}
+						placeholder="http://www.facebook.com"
+						formik={form}
+						/>
+					</div>
+					<div className="col-3">
+						<BaseInput
+							className=""
+							label={t("INSTAGRAM")}
+							name={`instagram`}
+							placeholder="http://www.instagram.com"
+							formik={form}
+						/>
+					</div>
+					<div className="col-3">
+						<BaseInput
+							className=""
+							label={t("LINKEDIN")}
+							name={`linkedin`}
+							placeholder="http://www.linkedin.com"
+							formik={form}
+						/>
+					</div>
+					<div className="col-3">
+						<BaseInput
+							className=""
+							label={t("TWITTER")}
+							name={`twitter`}
+							placeholder="http://www.twitter.com"
+							formik={form}
+						/>
+					</div>
+				</div>
 			</Row>
 		</EntityForm>
 	);
