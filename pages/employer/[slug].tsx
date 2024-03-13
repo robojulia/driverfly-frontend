@@ -16,9 +16,6 @@ export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 	const regex = `([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)`
 	const validAbout = !!!(company.about?.match(regex))
 
-
-
-	console.log("Company getting  : ", company);
 	return (
 		<>
 			<FlagCompany companyId={company.id} />
