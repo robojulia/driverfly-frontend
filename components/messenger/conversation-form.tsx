@@ -218,7 +218,7 @@ export function ConversationForm(props: ConversationFormProps) {
 
     return (
         <Card>
-            <Card.Header>
+            <Card.Header style={{cursor:"default", color:'black'}} >
                 {(() => {
                     if (entity.id) return (
                         <>
