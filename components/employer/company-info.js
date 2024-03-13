@@ -16,13 +16,13 @@ export default function CompanyInfo({ company, jobCount, terminals }) {
             </div>
             <div className='py-4'>
                 <p style={{ fontSize: "22px", fontWeight: 'lighter' }}>{t("HEADQUATERS")}</p>
-                <p style={{ fontSize: "15px", fontWeight: '400' }}>123 Happy Lane, Dallas, TX 70025</p>
+                <p style={{ fontSize: "15px", fontWeight: '400' }}>{company?.location}</p>
             </div>
             <div>
                 <p style={{ fontSize: "22px", fontWeight: '200' }}>{t("TERMINALS")}</p>
                 {
-                    terminals?.map((location, index) => {
-                        return <div key={index}><p style={{ fontSize: "15px", fontWeight: '400' }}>{buildAddress(location)}</p></div>
+                    terminals?.map((terminal, index) => {
+                        return <div key={index}><p style={{ fontSize: "15px", fontWeight: '400' }}>{buildAddress(terminal)}</p></div>
                     })
                 }
             </div>
