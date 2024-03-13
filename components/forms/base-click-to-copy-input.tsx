@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Clipboard } from 'react-bootstrap-icons';
 import { useTranslation } from '../../hooks/use-translation';
@@ -17,12 +17,10 @@ export default function BaseClickToCopyInput({
 }: BaseClickToCopyInputProps) {
 	const [linkCopied, setLinkCopied] = useState<string>(tooltipText);
 	const { t } = useTranslation();
-
-
-	async function isClipboardContentEqual(value) {
+	async function isClipboardContentEqual() {
 		try {
-			const clipboardContent = await navigator.clipboard.readText();
-			return clipboardContent === value;
+			const clipboardContent = await navigator.clipboard.readText(); 
+			setLinkCopied((prevState) => Boolean(clipboardContent === value) ? t("COPIED") : tooltipText )
 		} catch (error) {
 			return false;
 		}
@@ -30,16 +28,17 @@ export default function BaseClickToCopyInput({
 	const copyToClipboard = async () => {
 		try {
 			await navigator.clipboard.writeText(value);
-
-			const isClipboardContainsValue = await isClipboardContentEqual(value);
-			isClipboardContainsValue ? setLinkCopied(t("COPIED")) : setLinkCopied(tooltipText);
+			await isClipboardContentEqual();
 		} catch (error) {
 			console.error('Unable to copy text to clipboard', error);
 		}
 	};
+	document.addEventListener('copy', isClipboardContentEqual);
+	document.addEventListener('visibilitychange', async ()=> {
+	if (!document.hidden) await isClipboardContentEqual();
+	});
 
-
-
+	
 	return (
 		<BaseInput
 			prepend={
@@ -48,7 +47,7 @@ export default function BaseClickToCopyInput({
 					delay={{ show: 50, hide: 400 }}
 					overlay={
 						<Tooltip>
-							{Boolean(linkCopied !== tooltipText) ? linkCopied : tooltipText}
+							{linkCopied}
 						</Tooltip>
 					}
 				>

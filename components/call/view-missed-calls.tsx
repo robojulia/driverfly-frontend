@@ -25,12 +25,15 @@ export default function ViewMissedCalls(props: ViewMissedCallsProps) {
     const fetchLogs = async () => {
         if (!!show) {
             setloading(true)
-            await twilioApi.getMissedCall()
+            const callsData = await twilioApi.getMissedCall()
                 .then((data) => {
                     setLogs(data)
                     setloading(false)
+                    console.log("Calls list Success : ");
                 })
-                .catch(error => console.log(error?.response?.data?.message))
+                .catch(error => console.log("Calls list error : ",error?.response?.data?.message))
+
+                console.log("Calls List :",callsData);
         } else {
             setLogs([])
         }

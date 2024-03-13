@@ -23,8 +23,8 @@ export default function JobsList() {
 
             <CompanyPhoto className="d-flex mr-4 truck-img" job={job} company={job.company} />
             <div className="media-body">
-              <Link href={`/jobs/${job.id}/${job.slug}`}>
-                <a className='text-decoration-none '>
+              <Link href={`/jobs/${job.id}/${job.slug}`} >
+                <a className='text-decoration-none' target="_blank">
                   <h4 className="mt-0 text-blue">
                     {job.title}
                   </h4>
@@ -39,7 +39,7 @@ export default function JobsList() {
                 } {
                   job?.company?.name &&
                   <>
-                    {t('by')} <Link href={`/employer/${job.company?.id}`}>
+                    {t('by')} <Link href={`/employer/${job.company?.slug}`}>
                       <span role="button" className="employer text-theme">{job.company?.name}</span></Link>
                   </>
                 }
@@ -64,8 +64,8 @@ export default function JobsList() {
               </div>
 
             </div>
-            <Link href={`/jobs/${job.id}/${job.slug}`}>
-              <button type="button" className="theme-primary-btn-outline">{t('view_job')}</button>
+            <Link href={`/jobs/${job.id}/${job.slug}`} legacyBehavior blank> 
+              <a target='_blank' className="theme-primary-btn-outline text-decoration-none">{t('view_job')}</a>
             </Link>
 
           </div>

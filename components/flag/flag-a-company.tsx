@@ -1,17 +1,17 @@
 import { useFormik } from "formik";
-import { toast } from 'react-toastify'
-import { globalAjaxExceptionHandler } from "../../utils/ajax";
-import { useTranslation } from "../../hooks/use-translation";
-import BaseInput from "../forms/base-input";
-import { useAuth } from '../../hooks/use-auth'
-import { Row, Button, Col } from "react-bootstrap";
-import ViewModal from "../view-details/view-modal";
-import { FlagFill, Link } from "react-bootstrap-icons";
 import { useState } from "react";
-import BaseSelect from "../forms/base-select";
+import { Button, Col, Row } from "react-bootstrap";
+import { FlagFill, Link } from "react-bootstrap-icons";
+import { toast } from 'react-toastify';
 import { InappropriateCompanyFlag } from "../../enums/support/inappropriate-company-flag.enum";
-import SupportApi from "../../pages/api/support";
+import { useAuth } from '../../hooks/use-auth';
+import { useTranslation } from "../../hooks/use-translation";
 import { FlagInappropriateCompanyDto } from "../../models/support/flag-inappropriate-company.dto";
+import SupportApi from "../../pages/api/support";
+import { globalAjaxExceptionHandler } from "../../utils/ajax";
+import BaseInput from "../forms/base-input";
+import BaseSelect from "../forms/base-select";
+import ViewModal from "../view-details/view-modal";
 
 export default function FlagCompany({ companyId }) {
     const { user } = useAuth();

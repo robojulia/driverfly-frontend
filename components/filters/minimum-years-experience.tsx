@@ -30,16 +30,23 @@ export default function MinimumYearsExperience(props: SearchJobFilterProps) {
             [name]: value ? parseInt(value) : 0
         })
 
+    useEffect(() =>{
+        setMinimumExperience({
+            months: Math.round((min_years_experience % 1) * 12),
+            years: Math.floor(min_years_experience)
+        })
+    
+    },[min_years_experience])
+        
 
     useEffect(() => {
         let minExperience: number = 0;
-        if (minimumExperience.months) {
-            minExperience = minimumExperience.years + (minimumExperience.months / 12);
+        if (minimumExperience?.months) {
+            minExperience = minimumExperience?.years + (minimumExperience?.months / 12);
         }
         else {
-            minExperience = minimumExperience.years;
+            minExperience = minimumExperience?.years;
         }
-
         setFiltersByKeyValue('min_years_experience', minExperience?.toFixed(2))
 
     }, [minimumExperience])
@@ -52,7 +59,7 @@ export default function MinimumYearsExperience(props: SearchJobFilterProps) {
                         <BaseInput
                             className="col-md-6 d-inline-block p-0 mb-2"
                             placeholder="5"
-                            value={minimumExperience.years}
+                            value={minimumExperience?.years}
                             name="years"
                             required
                             min="0"
@@ -68,7 +75,7 @@ export default function MinimumYearsExperience(props: SearchJobFilterProps) {
                             min="0"
                             max="11"
                             type="int"
-                            value={minimumExperience.months}
+                            value={minimumExperience?.months}
                             append={(<InputGroup.Text>{t('MONTHS_SHORT')}</InputGroup.Text>)}
                             onChange={handleChange}
                         />

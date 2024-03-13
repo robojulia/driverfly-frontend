@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import { GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import "react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css";
 import { toast } from "react-toastify";
 import FilterResult from "../components/filter-results/filter-results";
@@ -59,6 +59,7 @@ export default function FindJobs(props) {
 		resetFilters();
 		resetLocation();
 		resetRange();
+	 
 	};
 
 	const setFiltersByKeyValue = (key: string, value: any): void => {
@@ -160,6 +161,12 @@ export default function FindJobs(props) {
 			toast.error(t("FIND_JOB_ERROR_GENERAL"));
 		}
 	}, []);
+
+	useEffect(() => {
+		if(filters.min_years_experience){
+			console.log("Minimum years of experience : ",filters.min_years_experience);
+		}
+	},[filters]);
 
 	return (
 		<JobContext.Provider

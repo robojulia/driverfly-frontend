@@ -1,17 +1,13 @@
-import Link from 'next/link';
-import React from 'react'
-import { StarFill, GeoAlt, CalendarDate, CurrencyDollar } from 'react-bootstrap-icons';
-import { useTranslation } from '../../hooks/use-translation';
-import { buildAddress } from '../../utils/common';
-import timeSince from '../../utils/timeSince';
 import { useRouter } from 'next/router';
+import { CalendarDate } from 'react-bootstrap-icons';
+import { useTranslation } from '../../hooks/use-translation';
 import CompanyPhoto from '../jobs/company-photo';
 export default function CompanyJob({ jobs }) {
 
   const { t } = useTranslation();
   const router = useRouter();
 
-  const USdateFormatter = (date) =>{
+  const USdateFormatter = (date) => {
     const formattedDate = new Date(date);
     return (formattedDate.getMonth() + 1 + '/' + formattedDate.getDate() + '/' + formattedDate.getFullYear());
   }
@@ -35,7 +31,7 @@ export default function CompanyJob({ jobs }) {
                 <div className="job-metas">
                   <div className="job-location">
                     <p className='pr-4 text-justify'>
-                      {job?.description.slice(0,170)}
+                      {job?.description.slice(0, 170)}
                     </p>
                     {/* <span className='text-muted align-middle'>
                       {

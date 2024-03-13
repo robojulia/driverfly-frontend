@@ -11,6 +11,8 @@ import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-do
 import { DocumentEntity } from "../../../../models/documents/document.entity";
 import { CameraComponent } from './camera'
 import BaseCheck from "../../base-check";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 export function MedicalCard() {
 	const {
 		state: { applicant },
@@ -19,6 +21,9 @@ export function MedicalCard() {
 
 	const isMedicalCard = (v: DocumentEntity): boolean => v.type == ApplicantDocumentType.MEDICAL_CARD;
 	const isNotMedicalCard = (v: DocumentEntity): boolean => v.type != ApplicantDocumentType.MEDICAL_CARD;
+	const router = useRouter();
+	const missingDocRouteActive = router.route.includes('longform/[applicant_uuid]/missing-document')
+	const dhaRouteActive  = router.route.includes('digitalhiringapp/[slug]')
 
 	const { t } = useTranslation();
 	const form = useFormik({
@@ -27,16 +32,33 @@ export function MedicalCard() {
 		onSubmit: (values, { resetForm }) => {
 			const { document } = values;
 
-			if (!!document.file_base64) {
-				const documents: DocumentEntity[] = applicant.documents?.filter(isNotMedicalCard)
-				setApplicant({
-					...applicant,
-					documents: [...documents, { ...document }],
-				});
+			if(missingDocRouteActive && document.name && !dhaRouteActive)
+			{
+				if (!!document.file_base64) {
+					const documents: DocumentEntity[] = applicant.documents?.filter(isNotMedicalCard)
+					setApplicant({
+						...applicant,
+						documents: [...documents, { ...document }],
+					});
+				}
+				resetForm();
+				stepNext();
 			}
-
-			resetForm();
-			stepNext();
+			else if(dhaRouteActive && !missingDocRouteActive)
+			{
+				if (!!document.file_base64) {
+					const documents: DocumentEntity[] = applicant.documents?.filter(isNotMedicalCard)
+					setApplicant({
+						...applicant,
+						documents: [...documents, { ...document }],
+					});
+				}
+				resetForm();
+				stepNext();
+			}
+			else{
+				toast.error(t("MUST_ADD_FILE"))
+			}
 		},
 		onReset: (values) => {
 			stepBack();

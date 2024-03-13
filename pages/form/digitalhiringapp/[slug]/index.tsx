@@ -1,17 +1,16 @@
 import { NextPageContext } from "next";
 import { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { ApplicantEntity, ApplicantExtrasEntity } from "../../../../models/applicant";
-import JotformContext from "../../../../context/jotform-context";
 import { getFullFormPages, getFullFormStyle } from "../../../../components/forms/jotform/jotform-pages";
-import CompanyApi from "../../../api/company";
+import JotformContext from "../../../../context/jotform-context";
 import { Status } from "../../../../enums/status.enum";
-import { CompanyEntity } from "../../../../models/company/company.entity";
-import BaseInput from "../../../../components/forms/base-input";
-import { JobEntity } from "../../../../models/job/job.entity";
-import { CompanyPreferenceEntity } from "../../../../models/company/company-preferences.entity";
+import { ApplicantEntity, ApplicantExtrasEntity } from "../../../../models/applicant";
 import { UtmReferral } from "../../../../models/auth/utm-referral.interface";
+import { CompanyPreferenceEntity } from "../../../../models/company/company-preferences.entity";
+import { CompanyEntity } from "../../../../models/company/company.entity";
+import { JobEntity } from "../../../../models/job/job.entity";
+import styles from "../../../../styles/digitalhiringapp.module.css";
+import CompanyApi from "../../../api/company";
 
 export interface FullFormProps {
 	employer: CompanyEntity;
@@ -85,9 +84,7 @@ export default function FullForm({ employer, preferences, utm }: FullFormProps) 
 
 export async function getServerSideProps({ query }: NextPageContext) {
 	try {
-		let companyId = String(query?.company_uuid); // { companyId } = query || {};
-		console.log("companyId", companyId);
-
+		let slug = String(query?.slug); // { companyId } = query || {};
 
 		const utm: UtmReferral = {
 			utm_source: query?.utm_source as string ?? null,
@@ -97,20 +94,20 @@ export async function getServerSideProps({ query }: NextPageContext) {
 			referral_name: query?.referral_name as string ?? null,
 		};
 
-		if (!companyId) {
-			console.error(`form/jotform: Unable to fetch details for companyId: ${query?.companyId}`);
+		if (!slug) {
+			console.error(`form/jotform: Unable to fetch details for companyId: ${query?.slug}`);
 			return { notFound: true }
 		}
 
 		const companyApi = new CompanyApi();
-		const employer: CompanyEntity = await companyApi.employer.getByUUId(companyId);
+		const employer: CompanyEntity = await companyApi.employer.getBySlug(slug);
 		const preferences: CompanyPreferenceEntity[] = await companyApi.preferences.list(employer.id)
 
 		if (employer?.status != Status.ACTIVE) {
 			if (employer == null) {
-				console.error(`form/jotform: Employer ${query?.company_uuid} not found - does not exist`);
+				console.error(`form/jotform: Employer ${query?.slug} not found - does not exist`);
 			} else {
-				console.error(`form/jotform: Employer ${query?.company_uuid} found, but status is not ACTIVE (status = ${employer?.status})`);
+				console.error(`form/jotform: Employer ${query?.slug} found, but status is not ACTIVE (status = ${employer?.status})`);
 			}
 			return { notFound: true };
 		}

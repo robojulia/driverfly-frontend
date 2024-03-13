@@ -61,6 +61,7 @@ function BaseTextArea({ formik, required, className, maxLength, label, rows, pla
         onBlur={handleBlur}
         readOnly={readOnly}
         name={name}
+        id={name}
         className={`form-control ${error ? "is-invalid" : ""}`}
        />
     </BaseControl>
