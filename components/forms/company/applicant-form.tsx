@@ -277,7 +277,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				const employeeApi = new EmployeeApi();
 				await employeeApi.hire(values);
 				resetForm();
-				formSuccess(t, "hired", "STATUS");
+				toast.success(t("STATUS_UPDATED_SUCCESSFULLY"))
+				// formSuccess(t, "STATUS_UPDATED_SUCCESSFULLY", "STATUS");
 				routeToEmployees();
 			} catch (e) {
 				globalAjaxExceptionHandler(e, {
