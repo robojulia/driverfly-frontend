@@ -30,6 +30,7 @@ export class SignUpDto {
 					is: SignUpRole.COMPANY,
 					then: yup.string().trim().required().nullable(),
 				})
+				.trim()
 				.nullable(),
 			first_name: yup.string().trim().required().nullable(),
 			last_name: yup.string().trim().required().nullable(),
