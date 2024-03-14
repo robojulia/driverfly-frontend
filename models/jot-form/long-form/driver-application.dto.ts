@@ -11,12 +11,12 @@ export class DriverApplicationDto {
     return yup.object({
       first_name: yup
         .string()
-        .matches(/^[A-Za-z ]*$/, "Please enter valid name")
+        // .matches(/^[A-Za-z ]*$/, "PLEASE_ENTER_A_VALID_NAME")
         .required()
         .nullable(),
       last_name: yup
         .string()
-        .matches(/^[A-Za-z ]*$/, "Please enter valid name")
+        // .matches(/^[A-Za-z ]*$/, "PLEASE_ENTER_A_VALID_NAME")
         .required()
         .nullable(),
       APPLY_DATE: ApplicantExtrasEntity.yupSchema(),

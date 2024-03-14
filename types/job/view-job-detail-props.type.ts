@@ -1,6 +1,7 @@
 import { JobEntity } from "../../models/job/job.entity";
 
 export type ViewJobDetailProps = {
+    quick_apply?: string;
     className?: string;
     job: JobEntity;
     relatedJobs?: React.ReactNode;

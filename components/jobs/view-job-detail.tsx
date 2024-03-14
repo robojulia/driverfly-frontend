@@ -27,7 +27,8 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
         hideVehicles,
         viewAllJobsLink,
         hideCompanyName,
-        hideSocialLinks
+        hideSocialLinks,
+        quick_apply
     } = props
 
     const { t } = useTranslation();
@@ -68,7 +69,7 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                                         {
                                             (!!!hideCompanyName && job.company?.name) &&
                                             <>
-                                                {t('BY')} <Link href={`/employer/${job?.company?.uuid_token}`}>
+                                                {t('BY')} <Link href={`/employer/${job?.company?.slug}`}>
                                                     <span role="button" className="employer text-theme">{job?.company?.name}</span>
                                                 </Link>
                                             </>
@@ -87,7 +88,14 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                         </div>
                     </Col>
                     <Col md={3}>
-                        {!company?.id && canApply && <JobApply setEncourageModal={setEncourageModal} job={job} />}
+                        {!!quick_apply
+                            ? <div className="ort-btn mt-lg-4 mt-0">
+                                <Link href={`/form/digitalhiringapp/suggested-job/${quick_apply}/${job.id}`}>
+                                    <button type="button" className="btn theme-primary-btn" > {t('QUICK_APPLY')}<ArrowRight /></button>
+                                </Link>
+                            </div>
+                            : !company?.id && canApply && <JobApply setEncourageModal={setEncourageModal} job={job} />
+                        }
                         {!company?.id && canSave && <SaveJob job={job} />}
                     </Col>
                 </Row>

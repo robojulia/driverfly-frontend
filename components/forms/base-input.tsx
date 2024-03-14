@@ -109,6 +109,7 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
         onKeyDown={onKeyDown}
         readOnly={readOnly}
         name={name}
+        id={name}
         className={`form-control ${error ? "is-invalid" : ""}`}
       />
     </BaseControl>

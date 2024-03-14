@@ -16,7 +16,7 @@ export default function CreateApplicant() {
 
     return (
         <ChildPageLayout
-            title={t("CREATE_{name}", { name: "APPLICANT" }, { translateProps: true })}
+            title={t("ADD_{name}", { name: "APPLICANT" }, { translateProps: true })}
             backPath={backPath}
             >
             <ApplicantForm

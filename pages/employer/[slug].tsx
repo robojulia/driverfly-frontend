@@ -9,20 +9,15 @@ import Link from "next/link";
 import FlagCompany from "../../components/flag/flag-a-company";
 import CompanyPhoto from "../../components/jobs/company-photo";
 import JobApi from "../api/job";
-import { JobEntity } from "../../models/job/job.entity";
-import { Pagination } from "../../types/pagination.type";
- 
-
 
 export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 	const { t } = useTranslation();
- 
+
 	const regex = `([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)`
 	const validAbout = !!!(company.about?.match(regex))
 
-	 
+	console.log("Company Data : ",company);
 
-	console.log("Company getting  : ",company);
 	return (
 		<>
 			<FlagCompany companyId={company.id} />
@@ -62,10 +57,10 @@ export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 						<div className="col-md-4  col-lg-4 col-sm-12 px-5">
 							<div>
 								<div className="my-3">
-										<button type="button" className="custom-trucker-follow-btn">
-											<Telephone color="#fff" className="mx-2" size={20} />
-											{company?.phone}
-										</button>
+									<button type="button" className="custom-trucker-follow-btn">
+										<Telephone color="#fff" className="mx-2" size={20} />
+										{company?.phone}
+									</button>
 								</div>
 								<div>
 									<button type="button" className="custom-trucker-review-btn">
@@ -85,23 +80,23 @@ export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 								<h6>{t('SOCIAL_PROFILE')}:</h6>
 								<div>
 									<div className="hvr-float-shadow mx-3 ">
-										<a target="_blank">
-											< Facebook color=' #b6b6b6' size={25} />
+										<a target="_blank" href={company?.facebook}>
+											< Facebook color='#316FF6' size={25} />
 										</a>
 									</div>
 									<div className="hvr-float-shadow mx-3">
-										<a target="_blank">
-											< Instagram color=' #b6b6b6' size={25} />
+										<a target="_blank" href={company?.instagram}>
+											< Instagram color=' #962fbf' size={25} />
 										</a>
 									</div>
 									<div className="hvr-float-shadow mx-3">
-										<a target="_blank">
-											< Linkedin color=' #b6b6b6' size={25} />
+										<a target="_blank" href={company?.linkedin}>
+											< Linkedin color=' #0077B5' size={25} />
 										</a>
 									</div>
 									<div className="hvr-float-shadow mx-3">
-										<a target="_blank">
-											< Twitter color=' #b6b6b6' size={25} />
+										<a target="_blank" href={company?.twitter}>
+											< Twitter color=' #1DA1F2' size={25} />
 										</a>
 									</div>
 								</div>
@@ -120,7 +115,7 @@ export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 								</Link>
 							)}
 						</div>
-						<CompanyInfo company={company} jobCount={jobCount} terminals={termonals}/>
+						<CompanyInfo company={company} jobCount={jobCount} terminals={termonals} />
 
 					</div>
 				</div>
@@ -131,17 +126,18 @@ export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 
 export async function getServerSideProps(context) {
 	try {
-		const companyId = context.params?.company_uuid || false;
+		const slug = context.params?.slug || false;
 
-		if (!!!companyId) return { notFound: true };
+		if (!!!slug) return { notFound: true };
 
 		const companyApi = new CompanyApi();
 		const jobApi = new JobApi();
 
-		const company = await companyApi.employer.getByUUId(companyId);
+		const company = await companyApi.employer.getBySlug(slug);
+		if (!!!company) return { notFound: true };
 		const jobCount = await companyApi.employer.getJobCount(company?.id) ?? 0;
-		const termonals = await companyApi.employer.getTerminals(company?.id) ;
-		const  { items  }: any = await jobApi.search({companyId : company.id});
+		const termonals = await companyApi.employer.getTerminals(company?.id);
+		const { items }: any = await jobApi.search({ companyId: company.id });
 
 		if (!!!company) return { notFound: true };
 

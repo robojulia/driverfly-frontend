@@ -198,7 +198,7 @@ export default function Applicant() {
                                 />
                                 <BaseInput
                                     className="col-12 p-1 "
-                                    label="expiration_date"
+                                    label="LICENSE_EXPIRY"
                                     name="license_expiry"
                                     type="date"
                                     placeholder="expiration_date"

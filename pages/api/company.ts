@@ -61,8 +61,13 @@ export default class CompanyApi extends BaseApi {
 
             return data;
         },
-        getByUUId: async (company_uuid: string, withJobs?: boolean): Promise<CompanyEntity> => {
-            const { data } = await this.get(`${this.employer.baseUrl}/fetch/${company_uuid}?withJobs=${Boolean(withJobs)}`);
+        // getByUUId: async (company_uuid: string, withJobs?: boolean): Promise<CompanyEntity> => {
+        //     const { data } = await this.get(`${this.employer.baseUrl}/fetch/${company_uuid}?withJobs=${Boolean(withJobs)}`);
+
+        //     return data;
+        // },
+        getBySlug: async (slug: string, withJobs?: boolean): Promise<CompanyEntity> => {
+            const { data } = await this.get(`${this.employer.baseUrl}/fetch/${slug}?withJobs=${Boolean(withJobs)}`);
 
             return data;
         },

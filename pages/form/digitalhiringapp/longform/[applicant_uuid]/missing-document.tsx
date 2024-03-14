@@ -10,6 +10,8 @@ import {
 	getMissingDocumentsPages,
 } from "../../../../../components/forms/jotform/jotform-pages";
 import ApplicantApi from "../../../../api/applicant";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export interface MissingDocumentsProps {
 	entity: ApplicantEntity;
@@ -29,6 +31,7 @@ export default function MissingDocuments({ entity }: MissingDocumentsProps) {
 				? [...oldApx, { ...applicantExtrasEntity }]
 				: [{ ...applicantExtrasEntity }];
 		});
+
 
 	const [steps, setSteps] = useState<number>(0);
 	const stepNext = (): void => setSteps(steps + 1);
@@ -50,6 +53,7 @@ export default function MissingDocuments({ entity }: MissingDocumentsProps) {
 				},
 			}}
 		>
+			<ToastContainer />
 			<div className={styles.container}>
 				<div className={styles.main}>
 					<div className={styles.main_form} style={getLongFormStyle(steps)}>

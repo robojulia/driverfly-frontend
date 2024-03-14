@@ -67,7 +67,10 @@ export default function Range(props: SearchJobFilterProps) {
                 isLoading={isLoading}
                 labelKey="place_name"
                 minLength={1}
-                onChange={value => setLocation(value[0])}
+                onChange={value => {
+                    setLocation(value[0])
+                    if (range == null) setRange(50)
+                }}
                 onSearch={handleSearch}
                 onInputChange={handleSearch}
                 options={options}

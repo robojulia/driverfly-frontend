@@ -31,6 +31,18 @@ export default function JonInformation({ job }: JobDetailProps) {
                                 </div>
                             </div>
                         </li>
+                        
+                         <li>
+                            <div className="icon">
+                                < CalendarRange />
+                            </div>
+                            <div className="details">
+                                <div className="text">{t('EXPIRATION')}</div>
+                                <div className="value text-muted">
+                                    <ShowFormattedDate date={job.expiry_date} />
+                                </div>
+                            </div>
+                        </li>
 
                         {/* OFFERED_SALARY START */}
                         <li>

@@ -9,6 +9,7 @@ export interface BaseControlProps {
   required?: boolean;
   className?: string;
   label?: string;
+  id?: string;
   children?: JSX.Element | JSX.Element[];
   touched?: boolean;
   error?: string;

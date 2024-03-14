@@ -1,32 +1,32 @@
-import React from 'react'
-import { Facebook, Twitter, Instagram, FilePost, Linkedin } from 'react-bootstrap-icons'
-import { useTranslation } from '../../hooks/use-translation';
 import Link from "next/link";
+import { useTranslation } from '../../hooks/use-translation';
+import { buildAddress } from '../../utils/common';
+
 
 export default function CompanyInfo({ company, jobCount, terminals }) {
     const { t } = useTranslation();
-    console.log("Terminals : ",terminals);
+    console.log("Terminals || ", terminals);
     return (
         <div className='col-md-4 col-lg-4 col-sm-12 px-5'>
             <div className='py-4'>
                 <p style={{ fontSize: "22px", fontWeight: 'lighter' }}>{t("WEBSITE_")}</p>
-                <Link href={company?.website} className='text-danger' style={{ textDecoration: 'none', color: 'text-secondary' }}>{company?.website}</Link>
+                {company?.website &&
+                    <Link href={company?.website} className='text-danger' style={{ textDecoration: 'none', color: 'text-secondary' }}>{company?.website}</Link>
+                }
             </div>
             <div className='py-4'>
                 <p style={{ fontSize: "22px", fontWeight: 'lighter' }}>{t("HEADQUATERS")}</p>
-                <p style={{ fontSize: "15px", fontWeight: '400' }}>123 Happy Lane, Dallas, TX 70025</p>
+                <p style={{ fontSize: "15px", fontWeight: '400' }}>{company?.location}</p>
             </div>
-            <div className='py-4'>
+            <div>
                 <p style={{ fontSize: "22px", fontWeight: '200' }}>{t("TERMINALS")}</p>
-            {
-                terminals?.map(location =>{
-                   return <>
-                    <p style={{ fontSize: "15px", fontWeight: '400' }}>{location?.city}, {location?.street}, {location?.zip_code}</p>
-                    </>
-                })
-            }
+                {
+                    terminals?.map((terminal, index) => {
+                        return <div key={index}><p style={{ fontSize: "15px", fontWeight: '400' }}>{buildAddress(terminal)}</p></div>
+                    })
+                }
             </div>
-           
+
 
             {/* <h1 className='display-5 fs-4  fw-light lh-lg'> {t('EMPLOYER_LOCATION')}</h1>
                     <h1 className='display-5 fs-4  fw-light lh-lg'> {t('COMPANY_INFORMATION')}</h1>
