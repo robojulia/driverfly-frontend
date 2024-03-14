@@ -81,22 +81,22 @@ export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 								<div>
 									<div className="hvr-float-shadow mx-3 ">
 										<a target="_blank" href={company?.facebook}>
-											< Facebook color=' #b6b6b6' size={25} />
+											< Facebook color='#316FF6' size={25} />
 										</a>
 									</div>
 									<div className="hvr-float-shadow mx-3">
 										<a target="_blank" href={company?.instagram}>
-											< Instagram color=' #b6b6b6' size={25} />
+											< Instagram color=' #962fbf' size={25} />
 										</a>
 									</div>
 									<div className="hvr-float-shadow mx-3">
 										<a target="_blank" href={company?.linkedin}>
-											< Linkedin color=' #b6b6b6' size={25} />
+											< Linkedin color=' #0077B5' size={25} />
 										</a>
 									</div>
 									<div className="hvr-float-shadow mx-3">
 										<a target="_blank" href={company?.twitter}>
-											< Twitter color=' #b6b6b6' size={25} />
+											< Twitter color=' #1DA1F2' size={25} />
 										</a>
 									</div>
 								</div>
