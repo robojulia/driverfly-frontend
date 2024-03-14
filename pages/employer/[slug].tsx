@@ -16,9 +16,8 @@ export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 	const regex = `([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)`
 	const validAbout = !!!(company.about?.match(regex))
 
+	console.log("Company Data : ",company);
 
-
-	console.log("Company getting  : ", company);
 	return (
 		<>
 			<FlagCompany companyId={company.id} />
@@ -81,22 +80,22 @@ export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 								<h6>{t('SOCIAL_PROFILE')}:</h6>
 								<div>
 									<div className="hvr-float-shadow mx-3 ">
-										<a target="_blank">
+										<a target="_blank" href={company?.facebook}>
 											< Facebook color=' #b6b6b6' size={25} />
 										</a>
 									</div>
 									<div className="hvr-float-shadow mx-3">
-										<a target="_blank">
+										<a target="_blank" href={company?.instagram}>
 											< Instagram color=' #b6b6b6' size={25} />
 										</a>
 									</div>
 									<div className="hvr-float-shadow mx-3">
-										<a target="_blank">
+										<a target="_blank" href={company?.linkedin}>
 											< Linkedin color=' #b6b6b6' size={25} />
 										</a>
 									</div>
 									<div className="hvr-float-shadow mx-3">
-										<a target="_blank">
+										<a target="_blank" href={company?.twitter}>
 											< Twitter color=' #b6b6b6' size={25} />
 										</a>
 									</div>

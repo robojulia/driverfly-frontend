@@ -277,7 +277,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				const employeeApi = new EmployeeApi();
 				await employeeApi.hire(values);
 				resetForm();
-				formSuccess(t, "hired", "STATUS");
+				toast.success(t("STATUS_UPDATED_SUCCESSFULLY"))
+				// formSuccess(t, "STATUS_UPDATED_SUCCESSFULLY", "STATUS");
 				routeToEmployees();
 			} catch (e) {
 				globalAjaxExceptionHandler(e, {
@@ -750,8 +751,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									className="col-12"
 									readOnly={Boolean(entity?.is_hired)}
 									label="PHONE"
-									required
 									name="phone"
+									required
 									placeholder="PHONE"
 									formik={form}
 								/>
@@ -1202,14 +1203,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								{form.values?.equipment_experience?.map((entity, i) => (
 									<Row key={i}>
 										<div className="col-md-6 mt-2">
-											<Col className="p-0">
+											<Col className="p-0  ">
 												<strong>{t("TYPE")}</strong>
+												<span className="p-0 text-danger">*</span>
 											</Col>
-
 											<BaseSelect
 												readOnly={Boolean(props?.entity?.is_hired)}
 												name={`equipment_experience[${i}].type`}
 												placeholder="TYPE"
+												required
 												labelPrefix="JobEquipmentType"
 												enumType={JobEquipmentType}
 												formik={form}
@@ -1219,7 +1221,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											<Col className="p-0">
 												<strong>{t("YEARS")}</strong>
 											</Col>
-
 											<BaseInput
 												readOnly={Boolean(props?.entity?.is_hired)}
 												name={`equipment_experience[${i}].years`}
@@ -1292,10 +1293,12 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<>
 									<Row className="d-sm-none d-md-flex">
 										<Col>
-											<strong>{t("TYPE")}</strong>
+											<strong>{t("TYPE")}</strong> 
+											<span className="p-0 text-danger">*</span>
 										</Col>
 										<Col>
 											<strong>{t("QUANTITY")}</strong>
+											<span className="p-0 text-danger">*</span>
 										</Col>
 									</Row>
 									{form.values?.equipment_owned?.map((entity, i) => (
@@ -1325,6 +1328,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													placeholder="QUANTITY"
 													type="int"
 													min="1"
+													required
 													formik={form}
 												/>
 											</Col>
@@ -1335,6 +1339,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														name={`equipment_owned[${i}].type_other`}
 														placeholder="TYPE"
 														formik={form}
+														required
 													/>
 												</Col>
 											)}

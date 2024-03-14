@@ -31,7 +31,7 @@ export default function EntityForm(props: EntityFormProps) {
 
     let { id, canSubmit, forbidSubmit, formik, className, onSubmit, children } = props;
 
-    const action = t(props.submitLabel ?? (id ? "UPDATE" : "CREATE"));
+    const action = t(props.submitLabel ?? (id ? "UPDATE" : "ADD"));
 
     if (formik) {
         canSubmit = !formik.isValidating && !formik.isSubmitting;

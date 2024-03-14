@@ -14,6 +14,12 @@ export class CompanyEntity {
 	status?: Status;
 	uuid_token?: string;
 	slug?: string;
+	location?: string;
+	phone?: string;
+	facebook?: string;
+	instagram?: string;
+	linkedin?: string;
+	twitter?: string;
 
 	users?: UserEntity[];
 	parent?: CompanyEntity;
@@ -22,7 +28,7 @@ export class CompanyEntity {
 	static yupSchema() {
 		const { t } = useTranslation()
 		return yup.object({
-			name: yup.string().required().nullable().max(255),
+			name: yup.string().required().nullable().max(255).trim(),
 			about: yup.string().nullable().max(255)
 				.test({
 					test: (value, context) => {
@@ -37,6 +43,14 @@ export class CompanyEntity {
 					}
 				}),
 			website: yup.string().url().nullable(),
+
+			phone: yup.string().nullable(),
+			location: yup.string().optional().nullable(),
+			facebook : yup.string().url().nullable(),
+			instagram : yup.string().url().nullable(),
+			linkedin : yup.string().url().nullable(),
+			twitter : yup.string().url().nullable(),
+
 			photo: yup.mixed().when({
 				is: v => !!v,
 				then: DocumentEntity.yupSchema()

@@ -614,6 +614,9 @@
   "MAX_COUNT": "Max Count",
   "{val1}_{val2}": "{{val1}} {{val2}}",
   "FACEBOOK": "Facebook",
+  "INSTAGRAM":"Instagram",
+  "LINKEDIN":"Linkedin",
+  "TWITTER":"Twitter",
   "none": "None",
   "CriminalHistoryType": {
     "FELONY": "Felony",
@@ -865,6 +868,7 @@
   "ALL_CATEGORIES": "All Categories",
   "ALL_TYPES": "All Types",
   "STATUS": "Status",
+  "STATUS_UPDATED_SUCCESSFULLY":"Status Updated Successfully",
   "MEETS_BASIC_QUALIFICATIONS": "Meets Basic Qualifications?",
   "REASONS_IF_NO": "Reason(s) (if no)",
   "YES": "Yes",
@@ -1080,6 +1084,7 @@
   "WEBSITE": "Website",
   "WEBSITE_": "WEBSITE",
   "HEADQUATERS": "Headquarters",
+  "ADD_HEADQUATERS_LOCATION":"Add Headquaters Location",
   "COMPANY_JOBS_PAGE": "Company Job Page",
   "JOBS_APPLIED_TO_WITH_YOU": "Jobs Applied To With You",
   "UPLOADED_DOCUMENTS": "Uploaded Documents",
@@ -2296,5 +2301,6 @@
   "VERIFY_EMAIL_META_TITLE": "Verify Email Token - Securely Verify Your DriverFly Account",
   "VERIFY_EMAIL_META_DESC": "Securely verify your DriverFly account through an email token. Confirm your account and unlock a world of opportunities in trucking.",
   "NO_BIRTHDAYS_THIS_WEEK": "No Birthdays this week",
-  "ALREADY_WORKED_TO_COMPANY": "Already Worked in this Company"
+  "ALREADY_WORKED_TO_COMPANY": "Already Worked in this Company",
+  "SOCIAL_MEDIA_LINKS":"Social Media Links"
 }

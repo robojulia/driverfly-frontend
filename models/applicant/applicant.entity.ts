@@ -114,8 +114,8 @@ export class ApplicantEntity {
 
 	static yupSchema() {
 		return yup.object({
-			first_name: yup.string().required().matches(/^[A-Za-z ]*$/, "PLEASE_ENTER_A_VALID_NAME").nullable().trim(),
-			last_name: yup.string().required().matches(/^[A-Za-z ]*$/, "PLEASE_ENTER_A_VALID_NAME").nullable().trim(),
+			first_name: yup.string().required().nullable().trim(),
+			last_name: yup.string().required().nullable().trim(),
 			phone: yup.string().nullable(),
 			email: yup.string().email().required().nullable(),
 			birthdate: yup.date().nullable(),
@@ -234,8 +234,8 @@ export class ApplicantEntity {
 
 	static yupSchemaForApplicantForm() {
 		return yup.object({
-			first_name: yup.string().required().matches(/^[A-Za-z ]*$/, "PLEASE_ENTER_A_VALID_NAME").nullable().trim(),
-			last_name: yup.string().required().matches(/^[A-Za-z ]*$/, "PLEASE_ENTER_A_VALID_NAME").nullable().trim(),
+			first_name: yup.string().required().nullable().trim(),
+			last_name: yup.string().required().nullable().trim(),
 			phone: yup.string().required().test({
 				test: (value, context) => {
 					console.log("value?.length", value?.length);
@@ -363,8 +363,8 @@ export class ApplicantEntity {
 
 	static yupSchemaForApplyForm() {
 		return yup.object({
-			first_name: yup.string().required().matches(/^[A-Za-z ]*$/, "PLEASE_ENTER_A_VALID_NAME").nullable().trim(),
-			last_name: yup.string().required().matches(/^[A-Za-z ]*$/, "PLEASE_ENTER_A_VALID_NAME").nullable().trim(),
+			first_name: yup.string().required().nullable().trim(),
+			last_name: yup.string().required().nullable().trim(),
 			phone: yup.string().nullable(),
 			email: yup.string().email().required().nullable(),
 			birthdate: yup.date().nullable(),
@@ -474,8 +474,8 @@ export class ApplicantEntity {
 
 	static yupSchemaForImportApplicants() {
 		return yup.object({
-			first_name: yup.string().required().matches(/^[A-Za-z ]*$/, "PLEASE_ENTER_A_VALID_NAME").nullable().trim(),
-			last_name: yup.string().required().matches(/^[A-Za-z ]*$/, "PLEASE_ENTER_A_VALID_NAME").nullable().trim(),
+			first_name: yup.string().required().nullable().trim(),
+			last_name: yup.string().required().nullable().trim(),
 			phone: yup.string().required().nullable(),
 			email: yup.string().email().nullable(),
 			birthdate: yup.date().nullable(),
