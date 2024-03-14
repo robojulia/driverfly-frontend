@@ -100,6 +100,7 @@ function BaseSelect({ append, prepend, formik, required, className, enumType, op
         onBlur={handleBlur}
         disabled={readOnly}
         name={name?.toString()}
+        id={name?.toString()}
         className={`form-select ${error ? "is-invalid" : ""}`}
       >
         {placeholder && <option value="">{placeholder == true ? t("SELECT_{name}", { name: `${label || name}` }, { translateProps: true }) : t(placeholder.toString())}</option>}
