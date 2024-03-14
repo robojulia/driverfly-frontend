@@ -24,6 +24,7 @@ export interface EntityFormProps {
     actions?: FormActionOptions[];
     submitLabel?: string;
     forbidSubmit?: boolean;
+    actionButtonDown?: boolean;
 }
 
 export default function EntityForm(props: EntityFormProps) {
@@ -37,36 +38,73 @@ export default function EntityForm(props: EntityFormProps) {
         canSubmit = !formik.isValidating && !formik.isSubmitting;
         if (!onSubmit) onSubmit = formik.handleSubmit;
     }
-
+    
     return (
         <Form className={className} onSubmit={onSubmit}>
-            <Row>
-                <Col xs="12" className="text-end">
-                    {props.actions?.map(({ icon: IconComp, label, className, disabled, onClick, hide }, index) => (
-                        (!hide && <Button
-                            key={index}
-                            type="button"
-                            className={`${className} mr-2`}
-                            disabled={disabled}
-                            onClick={onClick}
-                        >
-                            {/* {<IconComp style={{ marginRight: "5px" }} />} */}
-                            {
-                                typeof label == "string"
-                                    ? t(label)
-                                    : (typeof label == "function")
-                                        ? label()
-                                        : label
-                            }
-                        </Button>)
-                    ))}
+            {
+                props?.actionButtonDown ? (<>
+                    {children}
+                    <Row>
+                        <Col xs="12" className="text-end">
+                            {props.actions?.map(({ icon: IconComp, label, className, disabled, onClick, hide }, index) => (
+                                (!hide && <Button
+                                    key={index}
+                                    type="button"
+                                    className={`${className} mr-2`}
+                                    disabled={disabled}
+                                    onClick={onClick}
+                                >
+                                    {/* {<IconComp style={{ marginRight: "5px" }} />} */}
+                                    {
+                                        typeof label == "string"
+                                            ? t(label)
+                                            : (typeof label == "function")
+                                                ? label()
+                                                : label
+                                    }
+                                </Button>)
+                            ))}
 
-                    <Button type="submit" className="theme-secondary-btn" disabled={canSubmit == null || !!!canSubmit || forbidSubmit}>
-                        <LoaderIcon isLoading={!!formik?.isSubmitting} /> {action}
-                    </Button>
-                </Col>
-            </Row>
-            {children}
+                            <Button type="submit" className="theme-secondary-btn" disabled={canSubmit == null || !!!canSubmit || forbidSubmit}>
+                                <LoaderIcon isLoading={!!formik?.isSubmitting} /> {action}
+                            </Button>
+                        </Col>
+                    </Row>
+                </>
+
+                ) : (
+                    <>
+                        <Row>
+                            <Col xs="12" className="text-end">
+                                {props.actions?.map(({ icon: IconComp, label, className, disabled, onClick, hide }, index) => (
+                                    (!hide && <Button
+                                        key={index}
+                                        type="button"
+                                        className={`${className} mr-2`}
+                                        disabled={disabled}
+                                        onClick={onClick}
+                                    >
+                                        {/* {<IconComp style={{ marginRight: "5px" }} />} */}
+                                        {
+                                            typeof label == "string"
+                                                ? t(label)
+                                                : (typeof label == "function")
+                                                    ? label()
+                                                    : label
+                                        }
+                                    </Button>)
+                                ))}
+
+                                <Button type="submit" className="theme-secondary-btn" disabled={canSubmit == null || !!!canSubmit || forbidSubmit}>
+                                    <LoaderIcon isLoading={!!formik?.isSubmitting} /> {action}
+                                </Button>
+                            </Col>
+                        </Row>
+                        {children}
+                    </>
+
+                )
+            }
         </Form>
     );
 }
