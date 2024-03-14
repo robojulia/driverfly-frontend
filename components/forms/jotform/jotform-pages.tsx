@@ -36,6 +36,7 @@ import { ThankyouPage } from "./thankyou-screen";
 import { AtsJobs } from "./shortForm/ats-jobs";
 import { TransmissionAndEndorsement } from "./shortForm/transmission-and-endorsement";
 import { DuiAndEquipment } from "./shortForm/dui-and-equipment";
+import { AlreadyAppliedPage } from "./already-applied";
 
 const getFullFormPages = (step: number): JSX.Element =>
 ({
@@ -114,7 +115,8 @@ const getSuggestedJobPages = (step: number, jobId?: number): JSX.Element =>
 	0: <DriverApplication isAutoRecruitmentLead={Boolean(jobId)} />,
 	1: <WorkedBefore />,
 	2: <AccordianPage />,
-	3: <ThankyouPage />
+	3: <ThankyouPage />,
+	4: <AlreadyAppliedPage />
 }[step]);
 const getLongFormStyle = (step: number): CSSProperties | undefined =>
 	({}[step]);
