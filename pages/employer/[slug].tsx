@@ -57,16 +57,16 @@ export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 						<div className="col-md-4  col-lg-4 col-sm-12 px-5">
 							<div>
 								<div className="my-3">
-									<button type="button" className="custom-trucker-follow-btn">
+									<button type="button" className="custom-trucker-follow-btn .active:color-white" >
 										<Telephone color="#fff" className="mx-2" size={20} />
 										{company?.phone}
 									</button>
 								</div>
-								<div>
+								{/* <div>
 									<button type="button" className="custom-trucker-review-btn">
 										{t("APPLY_TODAY")}
 									</button>
-								</div>
+								</div> */}
 							</div>
 						</div>
 					</div>
