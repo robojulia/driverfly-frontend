@@ -38,6 +38,10 @@ export default function Combobox(props: ComboboxProps) {
         const { value } = e.target;
 
         const query = value?.toLowerCase() || "";
+        setState({
+            ...state,
+            query: query,
+        });
 
         if (query.length >= minLength) {
             let opts = typeof options == "function" ? options(query) : options;
