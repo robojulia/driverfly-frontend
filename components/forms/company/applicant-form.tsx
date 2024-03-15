@@ -1459,7 +1459,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														readOnly={Boolean(entity?.is_hired)}
 														label="EMAIL"
 														type="email"
-														name="email"
+														name={`employers[${i}].email`}
 														placeholder="EMAIL"
 														formik={form}
 													/>
