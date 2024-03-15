@@ -25,7 +25,7 @@ export default function TermsAndPolicies2() {
                 </div>
             </div>
             <div className="container my-5 privacy__policies__container">
-                <h2 className="my-4">Privacy & Cookies Policy </h2>
+                <h2 className="my-4">Privacy &amp;Cookies Policy </h2>
                 <p className="text-secondary">
                     Your privacy and the security and confidentiality of your data are
                     very important to us. You’ve placed your trust in us by using our
@@ -35,13 +35,13 @@ export default function TermsAndPolicies2() {
                 </p>
                 <p className="text-secondary">
                     This website is owned and operated by DriverFly Inc. (“DriverFly”).
-                    This Privacy & Cookies Policy explains how we collect, use, share, and
+                    This Privacy &amp;Cookies Policy explains how we collect, use, share, and
                     process personal data through the DriverFly website, the DriverFly
                     mobile site, our iPhone, Android and other mobile applications and any
                     other online communications and interfaces (the “site”).
                 </p>
                 <p className="text-secondary">
-                    Please read the Privacy & Cookies policy below to learn about our
+                    Please read the Privacy &amp;Cookies policy below to learn about our
                     practices. By visiting the site, you acknowledge that you have read
                     and understand the practices described in this policy.
                 </p>
@@ -230,7 +230,7 @@ export default function TermsAndPolicies2() {
                         business partners, which hold such Personal Data on our behalf. Our
                         contracts with our business partners offering these services require
                         them to maintain such Personal Data in accordance with this Privacy
-                        & Cookies Policy. Please refer to the websites of business partners
+                        &amp;Cookies Policy. Please refer to the websites of business partners
                         for their Privacy Policies and other information.
                     </p>
                     <p className="text-secondary">
@@ -243,14 +243,14 @@ export default function TermsAndPolicies2() {
                         functions, they may not use it for other purposes. DriverFly
                         requires these vendors to enter into confidentiality agreements and
                         to agree to act in a manner consistent with the relevant principles
-                        articulated in this Privacy & Cookies Policy. In some instances, we
+                        articulated in this Privacy &amp;Cookies Policy. In some instances, we
                         utilize service provider platforms to help us provide certain
-                        services, such as career service providers. This Privacy & Cookies
+                        services, such as career service providers. This Privacy &amp;Cookies
                         Policy governs the collection and use of your Personal Data even
                         though you are on a third-party website. In these instances, you
-                        will always know whose Privacy & Cookies Policy governs the
+                        will always know whose Privacy &amp;Cookies Policy governs the
                         collection and use of your Personal Data by clicking on the Privacy
-                        & Cookies Policy link provided.
+                        &amp;Cookies Policy link provided.
                     </p>
                     <p className="text-secondary">
                         <b>Future Business Transfers</b>: Our business is constantly
@@ -261,7 +261,7 @@ export default function TermsAndPolicies2() {
                         merger, sale of assets or otherwise, and Personal Data may be
                         transferred as part of such a transaction. In such cases, the
                         acquiring company would be required to honor the privacy promises in
-                        this Privacy & Cookies Policy or obtain your consent to any material
+                        this Privacy &amp;Cookies Policy or obtain your consent to any material
                         changes to how your Personal Data will be handled.
                     </p>
                     <p className="text-secondary">
@@ -437,7 +437,7 @@ export default function TermsAndPolicies2() {
                         </li>
                         <li>
                             <b>Controlling Cookies</b>: You have a choice over the use of
-                            cookies as described in this Privacy & Cookies Policy. Our site is
+                            cookies as described in this Privacy &amp;Cookies Policy. Our site is
                             not currently configured to respond to Do Not Track signals. If
                             you would rather we do not use DriverFly cookies when you visit
                             us, please configure your specific browser settings to reject
@@ -711,4 +711,4 @@ export default function TermsAndPolicies2() {
 
 TermsAndPolicies2.getLayout = function getLayout(page) {
     return <PublicLayout title="privacy_policy">{page}</PublicLayout>;
-}; F
+}; 
