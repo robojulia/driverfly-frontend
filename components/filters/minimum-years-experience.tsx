@@ -30,14 +30,12 @@ export default function MinimumYearsExperience(props: SearchJobFilterProps) {
             [name]: value ? parseInt(value) : 0
         })
 
-    useEffect(() =>{
+    useEffect(() => {
         setMinimumExperience({
-            months: Math.round((min_years_experience % 1) * 12),
-            years: Math.floor(min_years_experience)
+            months: min_years_experience ? Math.round((min_years_experience % 1) * 12) : null,
+            years: min_years_experience ? Math.floor(min_years_experience) : null
         })
-    
-    },[min_years_experience])
-        
+    }, [min_years_experience])
 
     useEffect(() => {
         let minExperience: number = 0;

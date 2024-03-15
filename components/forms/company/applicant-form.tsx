@@ -346,14 +346,28 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	}, [isWorkedBefore]);
 
 	useEffect(() => {
-		const errorKeys = Object.keys(form.errors);
+		try {
+			const errorKeys = Object.keys(form.errors);
 
-		if (!!errorKeys.length && form.submitCount > 0) {
-			const firstElement = document.querySelector(`#${errorKeys[0]}`) as HTMLElement;
+			if (!!errorKeys.length && form.submitCount > 0) {
 
-			if (firstElement !== document.activeElement) {
-				firstElement?.focus();
+				const errorKey = errorKeys[0];
+				let id: string;
+
+				if (typeof form.errors[errorKey] == "object" && form.errors[errorKey]?.length > 0) {
+					id = (`${errorKey}[0].${Object.keys(form.errors[errorKey][0])[0]}`);
+				} else {
+					id = (`${errorKey}`);
+				}
+
+				const firstElement = document.getElementById(id);
+
+				if (firstElement !== document.activeElement) {
+					firstElement?.focus();
+				}
 			}
+		} catch (error) {
+			console.error(error.message);
 		}
 	}, [form.submitCount])
 
@@ -1293,7 +1307,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<>
 									<Row className="d-sm-none d-md-flex">
 										<Col>
-											<strong>{t("TYPE")}</strong> 
+											<strong>{t("TYPE")}</strong>
 											<span className="p-0 text-danger">*</span>
 										</Col>
 										<Col>
@@ -1438,6 +1452,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														label="NAME"
 														required
 														placeholder="COMPANY_NAME"
+														formik={form}
+													/>
+													<BaseInput
+														className="col-12"
+														readOnly={Boolean(entity?.is_hired)}
+														label="EMAIL"
+														type="email"
+														name={`employers[${i}].email`}
+														placeholder="EMAIL"
 														formik={form}
 													/>
 													<BaseInput

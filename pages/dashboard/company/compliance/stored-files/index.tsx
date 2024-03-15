@@ -443,7 +443,7 @@ export default function StoredFiles() {
                 closeText="CANCEL"
                 title="UPLOAD_NEW_FILE"
             >
-                <EntityForm formik={form} className="mx-3" submitLabel="UPLOAD">
+                <EntityForm formik={form} className="mx-3" submitLabel="UPLOAD" actionButtonDown>
                     <Row>
                         <BaseSelect
                             className="col-12 my-3"

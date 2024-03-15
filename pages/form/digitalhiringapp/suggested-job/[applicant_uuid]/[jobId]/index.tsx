@@ -45,7 +45,7 @@ export default function SuggestedJobs({
                 : [{ ...applicantExtrasEntity }];
         });
 
-    const [steps, setSteps] = useState<number>(0);
+    const [steps, setSteps] = useState<number>(entity?.jobs?.some(j => j?.job?.id == job?.id) ? 4 : 0);
     const stepNext = (): void => setSteps(steps + 1);
     const stepBack = (): void => setSteps(steps - 1);
 
