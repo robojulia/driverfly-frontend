@@ -50,7 +50,7 @@ export default function Combobox(props: ComboboxProps) {
 
             setState({
                 ...state,
-                query: query,
+                // query: query,
                 show: true,
                 value: null,
                 options: opts
@@ -82,7 +82,7 @@ export default function Combobox(props: ComboboxProps) {
             setState({
                 ...state,
                 show: false,
-                query: query,
+                // query: query,
                 value: null,
                 options: []
             });
