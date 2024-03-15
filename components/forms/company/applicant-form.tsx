@@ -1455,6 +1455,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<BaseInput
+														className="col-12"
+														readOnly={Boolean(entity?.is_hired)}
+														label="EMAIL"
+														type="email"
+														name="email"
+														placeholder="EMAIL"
+														formik={form}
+													/>
+													<BaseInput
 														readOnly={Boolean(entity?.is_hired)}
 														className="col-6"
 														name={`employers[${i}].start_at`}
