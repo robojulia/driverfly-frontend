@@ -45,7 +45,7 @@ export default function ShowEnumFromString(props: ShowEnumFromStringProps): JSX.
                 delay={{ show: 250, hide: 400 }}
                 overlay={overlay}
             >
-                <span >{templateString.slice(0, 7)}...</span>
+                <span >{templateString}</span>
             </OverlayTrigger >
             : <>{templateString}</>
     )
