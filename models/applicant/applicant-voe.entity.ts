@@ -40,7 +40,7 @@ export class ApplicantVoeEntity {
 		return yup.object({
 			position: yup.string().required().nullable(),
 			start_date: yup.date().required().nullable(),
-			end_date: yup.date().required().nullable(),
+			end_date: yup.date().optional().nullable(),
 			did_drive_check: yup
 				.mixed<BooleanType>()
 				.oneOf(Object.values(BooleanType))
