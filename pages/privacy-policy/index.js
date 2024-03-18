@@ -27,20 +27,26 @@ export default function TermsAndPolicies2() {
             <div className="container my-5 privacy__policies__container">
                 <h2 className="my-4">Privacy &amp; Cookies Policy </h2>
                 <p className="text-secondary">
-                    Your privacy and the security and confidentiality of your data are very important to us. You’ve placed your trust in us by using our services. We value that trust. We are committed to protecting and safeguarding any personal data that you give us. We want you to understand how we use your data and your rights regarding that data.
-                </p>
+                    Your privacy and the security and confidentiality of your data are very important to us.
+                    You’ve placed your trust in us by using our services. We value that trust. We are
+                    committed to protecting and safeguarding any personal data that you give us. We want
+                    you to understand how we use your data and your rights regarding that data.</p>
                 <p className="text-secondary">
-                    This website is owned and operated by DriverFly Inc. (“DriverFly”). This Privacy &amp; Cookies Policy explains how we collect, use, share, and process personal data through the DriverFly website, the DriverFly mobile site, our iPhone, Android and other mobile applications and any other online communications and interfaces (the “site”).
-                </p>
+                    This website is owned and operated by DriverFly Inc. (“DriverFly”). This Privacy & Cookies
+                    Policy explains how we collect, use, share, and process personal data through the
+                    DriverFly website, the DriverFly mobile site, our iPhone, Android and other mobile
+                    applications and any other online communications and interfaces (the “site”).</p>
                 <p className="text-secondary">
-                    Please read the Privacy &amp; Cookies policy below to learn about our practices. By visiting the site, you acknowledge that you have read and understand the practices described in this policy.
-                </p>
+                    Please read the Privacy & Cookies policy below to learn about our practices. By visiting
+                    the site, you acknowledge that you have read and understand the practices described in
+                    this policy.                </p>
                 <p className="text-secondary">
                     1. Our Collection of Your Personal Data
                 </p>
                 <p className="text-secondary">
-                    In order to provide you with our online driver recruiting software and services, we must collect personally identifiable information (“Personal Data”). We may collect the following categories of Personal Data you provide to us while you are using the site:
-                </p>
+                    In order to provide you with our online driver recruiting software and services, we must
+                    collect personally identifiable information (“Personal Data”). We may collect the following
+                    categories of Personal Data you provide to us while you are using the site:                </p>
                 <div>
                     <ol>
                         <li>
@@ -54,8 +60,10 @@ export default function TermsAndPolicies2() {
                                 <li>Date of birth</li>
                                 <li>Gender</li>
                                 <li>
-                                    Username and password for our site and any other information you may choose to provide either directly or through your use of social media sign-in features (such as Facebook Connect) or as may be required to fulfill the requested service; and
-                                </li>
+                                    Username and password for our site and any other information you may
+                                    choose to provide either directly or through your use of social media sign-in
+                                    features (such as Facebook Connect) or as may be required to fulfill the
+                                    requested service; and                                </li>
                                 <li>IP address</li>
                             </ol>
                         </li>
@@ -106,8 +114,8 @@ export default function TermsAndPolicies2() {
                         </li>
                     </ol>
                     <p className="text-secondary">
-                        In addition, we may receive certain categories of Personal Data listed above from sources other than you, specifically from the following categories of sources:
-                    </p>
+                        In addition, we may receive certain categories of Personal Data listed above from sources
+                        other than you, specifically from the following categories of sources:                    </p>
                     <ol>
                         <li>
                             Third party applications (including, but not limited to Facebook and Google) that you use for single sign-on
@@ -122,15 +130,20 @@ export default function TermsAndPolicies2() {
                     <ol>
                         <li> Protecting Your Personal Data</li>
                     </ol>
-                    <p className="text-secondary">
-                        Protecting your Personal Data is a top priority at DriverFly. We employ technical, administrative and physical safeguards that are designed to prevent unauthorized access, maintain data accuracy, and to ensure correct use of Personal Data. If you have reason to believe that your interaction with us is no longer secure (e.g., if you feel that the security of any account you might have with us has been compromised), please contact us immediately as detailed in the “Contact Us” section of this Privacy &amp; Cookies Policy.
-                    </p>
+                    <p className="text-secondary">Protecting your Personal Data is a top priority at DriverFly. We employ technical,
+                        administrative and physical safeguards that are designed to prevent unauthorized access,
+                        maintain data accuracy, and to ensure correct use of Personal Data. If you have reason
+                        to believe that your interaction with us is no longer secure (e.g., if you feel that the security
+                        of any account you might have with us has been compromised), please contact us
+                        immediately as detailed in the “Contact Us” section of this Privacy & Cookies Policy.</p>
                     <ol>
                         <li> Use of Your Personal Data</li>
                     </ol>
                     <p className="text-secondary">
-                        We use Personal Data to provide you with services, to build features that will make the services easier to use, and to contact you. This includes a faster website experience, better customer support, timely notice of new services and special offers, and more relevant content.
-                    </p>
+                        We use Personal Data to provide you with services, to build features that will make the
+                        services easier to use, and to contact you. This includes a faster website experience,
+                        better customer support, timely notice of new services and special offers, and more
+                        relevant content.                    </p>
                     <p className="text-secondary">
                         Our legal basis to use your data, where one is required to be provided by applicable law, is as follows:
                     </p>
@@ -147,8 +160,21 @@ export default function TermsAndPolicies2() {
                         (d) necessary for legitimate interests such as marketing that you have not previously objected to receiving.
                     </p>
                     <p className="text-secondary">
-                        In general, you need to provide the Personal Data in order to create or apply for jobs and otherwise enter into a transaction with us, for us to provide you with driver recruiting services, and as may be required for our compliance purposes in connection with such transactions, except in limited instances when we indicate that certain information is voluntary. Not providing Personal Data may prevent us from providing you with requested information and carrying out transactions. However, you can always exercise control over our use of Personal Data for direct marketing and you can control the use of cookies on our site by contacting legal@DriverFly.co.
-                    </p>
+                        In general, you need to provide the Personal Data in order to create or apply for jobs and
+                        otherwise enter into a transaction with us, for us to provide you with driver recruiting
+                        services, and as may be required for our compliance purposes in connection with such
+                        transactions, except in limited instances when we indicate that certain information is
+                        voluntary. Not providing Personal Data may prevent us from providing you with requested
+                        information and carrying out transactions. However, you can always exercise control over
+                        our use of Personal Data for direct marketing and you can control the use of cookies on
+                        our site by contacting legal@DriverFly.co.In general, you need to provide the Personal Data in order to create or apply for jobs and
+                        otherwise enter into a transaction with us, for us to provide you with driver recruiting
+                        services, and as may be required for our compliance purposes in connection with such
+                        transactions, except in limited instances when we indicate that certain information is
+                        voluntary. Not providing Personal Data may prevent us from providing you with requested
+                        information and carrying out transactions. However, you can always exercise control over
+                        our use of Personal Data for direct marketing and you can control the use of cookies on
+                        our site by contacting legal@DriverFly.co.                    </p>
                     <p className="text-secondary">
                         We also use your Personal Data as described in the “Sharing Your Personal Data” section below.
                     </p>
@@ -165,13 +191,20 @@ export default function TermsAndPolicies2() {
                         <b>Suppliers</b>: We may share your Personal Data with motor carriers or other involved third parties. Please refer to the websites of third-party suppliers for their Privacy Policies.
                     </p>
                     <p className="text-secondary">
-                        <b>Business Partners</b>: In order to provide you with certain services, we may share your Personal Data with our business partners, or require that you transact directly with a business partner. When you provide Personal Data in connection with these types of services, you are providing such Personal Data to those business partners, which hold such Personal Data on our behalf. Our contracts with our business partners offering these services require them to maintain such Personal Data in accordance with this Privacy &amp; Cookies Policy. Please refer to the websites of business partners for their Privacy Policies and other information.
+                        <b>Business Partners</b>: In order to provide you with certain services, we may share your
+                        Personal Data with our business partners, or require that you transact directly with a
+                        business partner. When you provide Personal Data in connection with these types of
+                        services, you are providing such Personal Data to those business partners, which hold
+                        such Personal Data on our behalf. Our contracts with our business partners offering these
+                        services require them to maintain such Personal Data in accordance with this Privacy &
+                        Cookies Policy. Please refer to the websites of business partners for their Privacy Policies
+                        and other information.
                     </p>
                     <p className="text-secondary">
-                        <b>DriverFly’s Agents and Vendors</b>: Many of the operations we perform require us to hire other companies to help us. Examples of such operations include sending and delivering postal mail and email, analyzing data we collect, marketing our services, handling credit card transactions and providing customer service. While the companies we engage have access to Personal Data to perform their functions, they may not use it for other purposes. DriverFly requires these vendors to enter into confidentiality agreements and to agree to act in a manner consistent with the relevant principles articulated in this Privacy &amp; Cookies Policy. In some instances, we utilize service provider platforms to help us provide certain services, such as career service providers. This Privacy &amp; Cookies Policy governs the collection and use of your Personal Data even though you are on a third-party website. In these instances, you will always know whose Privacy &amp; Cookies Policy governs the collection and use of your Personal Data by clicking on the Privacy &amp; Cookies Policy link provided.
+                        <b>DriverFly’s Agents and Vendors</b>: Many of the operations we perform require us to hire other companies to help us. Examples of such operations include sending and delivering postal mail and email, analyzing data we collect, marketing our services, handling credit card transactions and providing customer service. While the companies we engage have access to Personal Data to perform their functions, they may not use it for other purposes. DriverFly requires these vendors to enter into confidentiality agreements and to agree to act in a manner consistent with the relevant principles articulated in this Privacy & Cookies Policy. In some instances, we utilize service provider platforms to help us provide certain services, such as career service providers. This Privacy & Cookies Policy governs the collection and use of your Personal Data even though you are on a third-party website. In these instances, you will always know whose Privacy & Cookies Policy governs the collection and use of your Personal Data by clicking on the Privacy & Cookies Policy link provided.
                     </p>
                     <p className="text-secondary">
-                        <b>Future Business Transfers</b>: Our business is constantly changing. As part of that process, DriverFly may sell or buy other companies, and Personal Data may be transferred as part of these transactions. It is also possible that DriverFly, or substantially all of its assets, may be acquired by another company, whether by merger, sale of assets or otherwise, and Personal Data may be transferred as part of such a transaction. In such cases, the acquiring company would be required to honor the privacy promises in this Privacy &amp; Cookies Policy or obtain your consent to any material changes to how your Personal Data will be handled.
+                        <b>Future Business Transfers</b>: Our business is constantly changing. As part of that process, DriverFly may sell or buy other companies, and Personal Data may be transferred as part of these transactions. It is also possible that DriverFly, or substantially all of its assets, may be acquired by another company, whether by merger, sale of assets or otherwise, and Personal Data may be transferred as part of such a transaction. In such cases, the acquiring company would be required to honor the privacy promises in this Privacy & Cookies Policy or obtain your consent to any material changes to how your Personal Data will be handled.
                     </p>
                     <p className="text-secondary">
                         <b>Compliance with Law and Other Disclosures</b>: DriverFly reserves the right to release Personal Data in order to comply with applicable law or to comply with a judicial proceeding, court order, or legal process served on us: We may also release Personal Data to enforce or apply Terms and Conditions applicable to the services, to protect us or others against fraudulent or inappropriate activities, or to otherwise protect the rights, property or safety of DriverFly, our affiliated companies, our customers, or others.
@@ -186,8 +219,7 @@ export default function TermsAndPolicies2() {
                         </li>
                     </ol>
                     <p className="text-secondary">
-                        As explained above, you may choose not to provide us with Personal Data; however, doing so may prevent us from providing you with requested information and carrying out transactions.
-                    </p>
+                        As explained above, you may choose not to provide us with Personal Data; however, doing so may prevent us from providing you with requested information and carrying out transactions.                    </p>
                     <p className="text-secondary">
                         <b>
                             You have control regarding our use of your Personal Data for direct marketing.
@@ -203,8 +235,7 @@ export default function TermsAndPolicies2() {
                         Cookies and similar tracking technologies, such as beacons, scripts, and tags, are small bits of code, usually stored on a user’s computer hard drive or device, which enable a website to “personalize” itself for each user by remembering information about the user’s visit to the website.
                     </p>
                     <p className="text-secondary">
-                        The site uses cookies to store your preferences, display content based upon what you view to personalize your visit, analyze trends, administer the site, track users’ movements around the site, serve targeted advertising and gather demographic information about our user base as a whole. On mobile websites and mobile apps, we may use Anonymous Device IDs and/or Advertiser Identifiers in a manner similar to our use of cookies on our websites. Although these activities involve developing an understanding of you as a user, we use this information for the purposes described. Given the nature of our site and services as an applicant tracking software solution and job board, and the limited amount of Personal Data we obtain about you, this activity does not produce legal effects for you nor otherwise does it significantly affect you. More detailed information about our use of cookies and how to opt-out of advertising and certain other cookies is provided below.
-                    </p>
+                        The site uses cookies to store your preferences, display content based upon what you view to personalize your visit, analyze trends, administer the site, track users’ movements around the site, serve targeted advertising and gather demographic information about our user base as a whole. On mobile websites and mobile apps, we may use Anonymous Device IDs and/or Advertiser Identifiers in a manner similar to our use of cookies on our websites. Although these activities involve developing an understanding of you as a user, we use this information for the purposes described. Given the nature of our site and services as an applicant tracking software solution and job board, and the limited amount of Personal Data we obtain about you, this activity does not produce legal effects for you nor otherwise does it significantly affect you. More detailed information about our use of cookies and how to opt-out of advertising and certain other cookies is provided below.                    </p>
                     <p className="text-secondary">
                         <b>DriverFly Cookies (First Party Cookies)</b>: We use our cookies to improve your web-browsing experience. For example, we use a cookie to reduce the time it takes for you to submit company job information or driver application data by storing prior submission data. We will also use a cookie to keep track of your search criteria while you are engaging in any of DriverFly’s corresponding services. DriverFly cookies are associated with your Personal Data. However, no third party may use the information we collect through DriverFly cookies for their own purposes.
                     </p>
@@ -234,7 +265,7 @@ export default function TermsAndPolicies2() {
                             .
                         </li>
                         <li>
-                            <b>Controlling Cookies</b>: You have a choice over the use of cookies as described in this Privacy &amp; Cookies Policy. Our site is not currently configured to respond to Do Not Track signals. If you would rather we do not use DriverFly cookies when you visit us, please configure your specific browser settings to reject cookies.
+                            <b>Controlling Cookies</b>: You have a choice over the use of cookies as described in this Privacy & Cookies Policy. Our site is not currently configured to respond to Do Not Track signals. If you would rather we do not use DriverFly cookies when you visit us, please configure your specific browser settings to reject cookies.
                         </li>
                     </ol>
                     <p className="text-secondary">
@@ -256,7 +287,7 @@ export default function TermsAndPolicies2() {
                             </a>.
                         </li>
                         <li>
-                            To generally (i.e. not just for this Site) opt-out of receiving personalized ads from third party advertisers and ad networks who are members of the Network Advertising Initiative (NAI) or who follow the Digital Advertising Alliance’s (DAA) Self-Regulatory Principles for Online Behavioral Advertising visit the opt-out pages on the NAI website and DAA website or <a target={"blank"} href="https://preferences-mgr.truste.com/">
+                            To generally (i.e. not just for this Site) opt-out of receiving personalized ads from third party advertisers and ad networks who are members of the Network Advertising Initiative (NAI) or who follow the Digital Advertising Alliance’s (DAA) Self-Regulatory Principles for Online Behavioral Advertising visit the opt-out pages on the NAI website and DAA website or click here. If you are located in the European Union, please <a target={"blank"} href="https://preferences-mgr.truste.com/">
                                 click here
                             </a>. If you are located in the European Union, please <a target={"blank"} href="https://www.youronlinechoices.eu/">
                                 click here
@@ -275,8 +306,7 @@ export default function TermsAndPolicies2() {
                         </li>
                     </ol>
                     <p className="text-secondary">
-                        Please keep in mind that without cookies you may not have access to certain features on the site, including access to your profile or account and certain personalized content. Removing all cookies from your computer could also affect your subsequent visits to certain web sites, including this site, by requiring that, for example, you enter your login name when you return to that website.
-                    </p>
+                        Please keep in mind that without cookies you may not have access to certain features on the site, including access to your profile or account and certain personalized content. Removing all cookies from your computer could also affect your subsequent visits to certain web sites, including this site, by requiring that, for example, you enter your login name when you return to that website.                    </p>
                     <p className="text-secondary">
                         <b>Mobile Devices</b>
                     </p>
@@ -312,23 +342,18 @@ export default function TermsAndPolicies2() {
                         </li>
                     </ol>
                     <p className="text-secondary">
-                        DriverFly understands that you may want to change, access or delete your Personal Data. You may do so by accessing your profile or by reaching out to legal@DriverFly.co. To protect your privacy and security, we will need to verify your identity before acting on a request. In most circumstances, we will then answer your request within 30 days of verification. If you have created a profile on any of the services available on the site, your email address and password are required in order to access your profile information.
-                    </p>
+                        DriverFly understands that you may want to change, access or delete your Personal Data. You may do so by accessing your profile or by reaching out to legal@DriverFly.co. To protect your privacy and security, we will need to verify your identity before acting on a request. In most circumstances, we will then answer your request within 30 days of verification. If you have created a profile on any of the services available on the site, your email address and password are required in order to access your profile information.                    </p>
                     <p className="text-secondary">
-                        Depending on the jurisdiction where you reside, you may have specific rights under local legislation to: (i) request access to your Personal Data; (ii) request rectification of your Personal Data; (iii) request erasure of your Personal Data; (iv) request restriction of processing of your Personal Data; (v) request data portability; and (vi) object to the processing of your Personal Data, including opting out of certain sharing of your Personal Data or processing of your Personal Data for marketing purposes. You may also have the right to request from us the Personal Data from or about you that we have “sold” (as such term is defined under applicable law) or disclosed for a business purpose within the past 12 months. Please contact legal@DriverFly.co if you would like to exercise such rights. You may also have the right to lodge a complaint with a supervisory authority. Please note that, in order to provide appropriate security to your information, we may require additional data points or information from you in order to verify your identity prior to completing certain requests related to your Personal Data (e.g., requiring the matching of two or three data points provided by you with information maintained by DriverFly).
-                    </p>
+                        Depending on the jurisdiction where you reside, you may have specific rights under local legislation to: (i) request access to your Personal Data; (ii) request rectification of your Personal Data; (iii) request erasure of your Personal Data; (iv) request restriction of processing of your Personal Data; (v) request data portability; and (vi) object to the processing of your Personal Data, including opting out of certain sharing of your Personal Data or processing of your Personal Data for marketing purposes. You may also have the right to request from us the Personal Data from or about you that we have “sold” (as such term is defined under applicable law) or disclosed for a business purpose within the past 12 months. Please contact legal@DriverFly.co if you would like to exercise such rights. You may also have the right to lodge a complaint with a supervisory authority. Please note that, in order to provide appropriate security to your information, we may require additional data points or information from you in order to verify your identity prior to completing certain requests related to your Personal Data (e.g., requiring the matching of two or three data points provided by you with information maintained by DriverFly).                    </p>
                     <p className="text-secondary">
-                        We will retain your information for as long as your account is active or as needed to provide you services. In addition, we will retain and use your information as necessary to comply with our legal obligations, resolve disputes, and enforce our agreements.
-                    </p>
+                        We will retain your information for as long as your account is active or as needed to provide you services. In addition, we will retain and use your information as necessary to comply with our legal obligations, resolve disputes, and enforce our agreements.                    </p>
                     <ol>
                         <li> Cross-Border Data Transfer</li>
                     </ol>
                     <p className="text-secondary">
-                        Our site is operated in the United States. If you are located outside the US, your Personal Data will be transferred to the US, a jurisdiction that may not provide an equivalent level of protection as your home jurisdiction. The cross-border transfer to the US is necessary for the conclusion or performance of your transaction, and/or for the establishment, exercise, and defense of legal claims. To the extent the provision of your Personal Data is not necessary for those purposes, or as otherwise permitted by local law, your use of the site or provision of any Personal Data constitutes your consent to the cross-border transfer of Personal Data and the other activities identified in this Privacy &amp; Cookies Policy.
-                    </p>
+                        Our site is operated in the United States. If you are located outside the US, your Personal Data will be transferred to the US, a jurisdiction that may not provide an equivalent level of protection as your home jurisdiction. The cross-border transfer to the US is necessary for the conclusion or performance of your transaction, and/or for the establishment, exercise, and defense of legal claims. To the extent the provision of your Personal Data is not necessary for those purposes, or as otherwise permitted by local law, your use of the site or provision of any Personal Data constitutes your consent to the cross-border transfer of Personal Data and the other activities identified in this Privacy & Cookies Policy.                    </p>
                     <p className="text-secondary">
-                        We take appropriate steps and have put safeguards in place to help ensure that your Personal Data remains protected in keeping with this Privacy &amp; Cookies Policy. For example, DriverFly enters into data transfer agreements which incorporate strict data transfer terms, such as the European Commission’s Standard Contractual Clauses, and require that a contract partner protect the Personal Data they process in accordance with applicable data protection law. DriverFly also participates in the EU-U.S. and Swiss-U.S. Privacy Shield Frameworks for Personal Data received in the United States from the European Union (“EU”) and Switzerland about customers and visitors to this site from the EU and Switzerland. While the European Court of Justice has held that the EU – U.S. Privacy Shield Framework is no longer “adequate” for the transfer of personal data from the EU to the U.S., DriverFly continues to abide by the privacy principles and other requirements of EU – U.S. Privacy Shield Framework with respect to personal data we collect in the U.S. from data subjects in the European Union.
-                    </p>
+                        We take appropriate steps and have put safeguards in place to help ensure that your Personal Data remains protected in keeping with this Privacy & Cookies Policy. For example, DriverFly enters into data transfer agreements which incorporate strict data transfer terms, such as the European Commission’s Standard Contractual Clauses, and require that a contract partner protect the Personal Data they process in accordance with applicable data protection law. DriverFly also participates in the EU-U.S. and Swiss-U.S. Privacy Shield Frameworks for Personal Data received in the United States from the European Union (“EU”) and Switzerland about customers and visitors to this site from the EU and Switzerland. While the European Court of Justice has held that the EU – U.S. Privacy Shield Framework is no longer “adequate” for the transfer of personal data from the EU to the U.S., DriverFly continues to abide by the privacy principles and other requirements of EU – U.S. Privacy Shield Framework with respect to personal data we collect in the U.S. from data subjects in the European Union.                    </p>
                     <ol>
                         <li> Age Restrictions</li>
                     </ol>
@@ -339,26 +364,22 @@ export default function TermsAndPolicies2() {
                         <li> Links to Other Websites and Third Party Services</li>
                     </ol>
                     <p className="text-secondary">
-                        Our site contains links to other websites or services that are not owned or controlled by us, including links to websites of vendors, advertisers, sponsors, and partners. This Privacy &amp; Cookies Policy only applies to information collected by our site. We have no control over these third-party websites, and your use of third-party websites and features are subject to privacy policies posted on those websites. We are not responsible or liable for the privacy or business practices of any third-party websites linked to our site or third-party social media feature or functionality offered on our site, such as Facebook, Google Plus, Twitter, and YouTube. Your use of third parties’ websites linked to our sites is at your own risk, so we encourage you to read the privacy policies of any linked third-party websites when you leave one of our sites, link into our site from another website or through a sign-in feature (for example, Facebook Connect or an Open ID provider), or utilize a third-party social media feature or functionality available on our site.
-                    </p>
+                        Our site contains links to other websites or services that are not owned or controlled by us, including links to websites of vendors, advertisers, sponsors, and partners. This Privacy & Cookies Policy only applies to information collected by our site. We have no control over these third-party websites, and your use of third-party websites and features are subject to privacy policies posted on those websites. We are not responsible or liable for the privacy or business practices of any third-party websites linked to our site or third-party social media feature or functionality offered on our site, such as Facebook, Google Plus, Twitter, and YouTube. Your use of third parties’ websites linked to our sites is at your own risk, so we encourage you to read the privacy policies of any linked third-party websites when you leave one of our sites, link into our site from another website or through a sign-in feature (for example, Facebook Connect or an Open ID provider), or utilize a third-party social media feature or functionality available on our site.                    </p>
                     <ol>
                         <li> California Residents – Your California Privacy Rights</li>
                     </ol>
                     <p className="text-secondary">
-                        Pursuant to the California Consumer Privacy Act, California residents have the right to opt-out of the “sale” of your Personal Data, as detailed above. To exercise this right, contact legal@DriverFly.co. To protect your privacy and security, we will need to verify your identity before acting on a request. Please also refer to the options available for directly managing cookies and similar technologies on your desktop of mobile device, as described above.
-                    </p>
+                        Pursuant to the California Consumer Privacy Act, California residents have the right to opt-out of the “sale” of your Personal Data, as detailed above. To exercise this right, contact legal@DriverFly.co. To protect your privacy and security, we will need to verify your identity before acting on a request. Please also refer to the options available for directly managing cookies and similar technologies on your desktop of mobile device, as described above.                    </p>
                     <ol>
                         <li> Changes to the Privacy &amp; Cookies Policy</li>
                     </ol>
                     <p className="text-secondary">
-                        DriverFly may revise this Privacy &amp; Cookies Policy to reflect changes in the law, our Personal Data collection and use practices, the features of our site, or advancements in technology. If we make any material changes, we will notify you by email (sent to the email address specified in your account) or through a prominent notice on the site prior to the change becoming effective.
-                    </p>
+                        DriverFly may revise this Privacy & Cookies Policy to reflect changes in the law, our Personal Data collection and use practices, the features of our site, or advancements in technology. If we make any material changes, we will notify you by email (sent to the email address specified in your account) or through a prominent notice on the site prior to the change becoming effective.                    </p>
                     <ol>
                         <li> How to Contact Us</li>
                     </ol>
                     <p className="text-secondary">
-                        Should you have any questions, or to exercise you rights as detailed above, please contact us at legal@DriverFly.co.
-                    </p>
+                        Should you have any questions, or to exercise you rights as detailed above, please contact us at legal@DriverFly.co.                    </p>
                     <p className="text-secondary"></p>
                     <p className="text-secondary"></p>
                     <p className="text-secondary"></p>
