@@ -124,7 +124,7 @@ export function SubmissionDetails() {
 				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseInput
 						className="my-3 float-left col-md-6"
-						label="FULL_NAME"
+						label="MY_NAME"
 						name="focal_person_name"
 						formik={form}
 					/>
