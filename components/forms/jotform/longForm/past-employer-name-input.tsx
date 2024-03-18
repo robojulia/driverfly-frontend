@@ -1,11 +1,11 @@
-import CreatableSelect from "react-select/creatable";
-import { StylesConfig } from "react-select";
 import { useState } from "react";
-import { ApplicantEmployerEntity } from "../../../../models/applicant";
-import { useEffectAsync } from "../../../../utils/react";
-import ApplicantApi from "../../../../pages/api/applicant";
-import BaseControl, { BaseControlProps } from "../../base-control";
+import { StylesConfig } from "react-select";
+import CreatableSelect from "react-select/creatable";
 import { useTranslation } from "../../../../hooks/use-translation";
+import { ApplicantEmployerEntity } from "../../../../models/applicant";
+import ApplicantApi from "../../../../pages/api/applicant";
+import { useEffectAsync } from "../../../../utils/react";
+import BaseControl, { BaseControlProps } from "../../base-control";
 
 export interface PastEmployerNameInputProps extends BaseControlProps {
 	index?: number;
@@ -59,22 +59,22 @@ export function PastEmployerNameInput({
 	}
 
 	const csutomStyles: StylesConfig = {
-		placeholder: (styles:any, { isFocused }) => ({
+		placeholder: (styles: any, { isFocused }) => ({
 			...styles,
 			color: "black",
 			fontWeight: "lighter"
 		}),
-		clearIndicator: (styles:any, { isFocused }) => ({
+		clearIndicator: (styles: any, { isFocused }) => ({
 			...styles,
 			color: "black",
 			borderColor: error ? "red" : isFocused ? "#2ec8c4" : "#4ca7a8",
 		}),
-		container: (styles:any, { isFocused }) => ({
+		container: (styles: any, { isFocused }) => ({
 			...styles,
 			width: "100%",
 			borderColor: error ? "red" : isFocused ? "#2ec8c4" : "#4ca7a8",
 		}),
-		control: (styles:any, { isFocused, menuIsOpen }) => ({
+		control: (styles: any, { isFocused, menuIsOpen }) => ({
 			...styles,
 			backgroundColor: "white",
 			color: "black",
@@ -84,7 +84,7 @@ export function PastEmployerNameInput({
 					? "#2ec8c4"
 					: "#4ca7a8",
 		}),
-		option: (styles:any, { data, isDisabled, isFocused, isSelected }) => {
+		option: (styles: any, { data, isDisabled, isFocused, isSelected }) => {
 			return {
 				...styles,
 				zIndex: 9999,
