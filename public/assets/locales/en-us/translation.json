@@ -1281,6 +1281,7 @@
   "TYPE_AT_LEAST_{num}_CHARACTERS_TO_SEE_OPTIONS": "Type at least {{num}} characters to see options",
   "NO_MATCHING_RESULTS": "No matching results",
   "CONVERSATIONS": "Conversations",
+  "HIDE_CONVERSATIONS": "Hide Conversations",
   "MESSAGE": "Message",
   "SEND": "Send",
   "JUST_NOW": "Just now",

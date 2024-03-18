@@ -1,4 +1,4 @@
-import { XCircle, XCircleFill } from "react-bootstrap-icons";
+import { XCircle, Archive } from "react-bootstrap-icons";
 import { useTranslation } from "../../hooks/use-translation";
 import { ConversationEntity } from "../../models/conversation/conversation.entity";
 import When from "../view-details/when";
@@ -51,7 +51,9 @@ export function ConversationList(props: ConversationListProps) {
                         <ConversationListItem entity={c} />
                     </Col>
                     {onItemDelete && (
-                        <XCircleFill role="button" color="red" onClick={(e) => onItemDelete(c)} />
+                        <OverlyPopover str="HIDE_CONVERSATIONS" placement="right-start">
+                            <Archive className="ml-1 mt-2" role="button" color="red" onClick={(e) => onItemDelete(c)} />
+                        </OverlyPopover>
                     )}
                 </li>
             ))}
