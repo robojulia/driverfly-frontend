@@ -273,7 +273,7 @@ export default function TermsAndPolicies2() {
                     </p>
                     <ol>
                         <li>
-                            To opt-out of ad targeting cookies set by Google and double click on our Site, click here <a
+                            To opt-out of ad targeting cookies set by Google and double click on our Site, click here : <a
                                 target={"blank"}
                                 href="https://www.google.com/settings/u/0/ads?hl=en"
                             >
@@ -282,7 +282,7 @@ export default function TermsAndPolicies2() {
                             .
                         </li>
                         <li>
-                            To disable the display of advertisements served by Criteo, click here <a target={"blank"} href="https://www.criteo.com/privacy/">
+                            To disable the display of advertisements served by Criteo, click here : <a target={"blank"} href="https://www.criteo.com/privacy/">
                                 https://www.criteo.com/privacy/
                             </a>.
                         </li>
@@ -361,7 +361,7 @@ export default function TermsAndPolicies2() {
                         You must be 18 years or older to use the site.
                     </p>
                     <ol>
-                        <li> Links to Other Websites and Third Party Services</li>
+                        <li> Links to Other Websites and Third-Party Services</li>
                     </ol>
                     <p className="text-secondary">
                         Our site contains links to other websites or services that are not owned or controlled by us, including links to websites of vendors, advertisers, sponsors, and partners. This Privacy & Cookies Policy only applies to information collected by our site. We have no control over these third-party websites, and your use of third-party websites and features are subject to privacy policies posted on those websites. We are not responsible or liable for the privacy or business practices of any third-party websites linked to our site or third-party social media feature or functionality offered on our site, such as Facebook, Google Plus, Twitter, and YouTube. Your use of third parties’ websites linked to our sites is at your own risk, so we encourage you to read the privacy policies of any linked third-party websites when you leave one of our sites, link into our site from another website or through a sign-in feature (for example, Facebook Connect or an Open ID provider), or utilize a third-party social media feature or functionality available on our site.                    </p>
