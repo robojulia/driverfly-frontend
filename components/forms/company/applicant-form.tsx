@@ -1444,7 +1444,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												</span>
 											</AccordionSummary>
 											<AccordionDetails>
-												<Row>
+												<Row> 
 													<BaseInput
 														readOnly={Boolean(entity?.is_hired)}
 														className="col-12"

@@ -3,6 +3,7 @@ import { ApplicantEmployerEntity } from "./applicant-employer.entity";
 import { ApplicantEntity } from "./applicant.entity";
 import { ReasonsForLeavingEmployment } from "../../enums/users/reasons-for-leaving-employment";
 import { BooleanType } from "../../enums/jotform/boolean-type.enum";
+ 
 
 export class ApplicantVoeEntity {
 	constructor() { }
@@ -36,11 +37,14 @@ export class ApplicantVoeEntity {
 		});
 	}
 
-	static yupSchemaAccidentHistory() {
+	static yupSchemaAccidentHistory({ employer }) {
 		return yup.object({
 			position: yup.string().required().nullable(),
 			start_date: yup.date().required().nullable(),
-			end_date: yup.date().optional().nullable(),
+			end_date: yup.date().when({
+				is: v => !employer.is_current,
+				then : yup.date().required().nullable()
+			}),
 			did_drive_check: yup
 				.mixed<BooleanType>()
 				.oneOf(Object.values(BooleanType))

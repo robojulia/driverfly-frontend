@@ -16,14 +16,14 @@ import BaseTextArea from "../../base-text-area";
 
 export function AccidentHistory() {
 	const {
-		state: { voe, applicant },
+		state: { voe, applicant, employer },
 		method: { stepNext, stepBack, updateVoe },
 	}: VoeFormContextType = useContext(VoeFormContext);
 
 	const { t } = useTranslation();
 	const form = useFormik({
 		initialValues: new ApplicantVoeEntity(),
-		validationSchema: ApplicantVoeEntity.yupSchemaAccidentHistory(),
+		validationSchema: ApplicantVoeEntity.yupSchemaAccidentHistory({ employer }),
 		onSubmit: ({
 			position,
 			start_date,
