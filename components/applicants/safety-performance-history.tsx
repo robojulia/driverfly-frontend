@@ -214,7 +214,7 @@ export default function SafetyPerformanceHistory({
                                 str={
                                     Boolean(employer.can_contact)
                                         ? "RESEND_VOE"
-                                        : "NOT_AUTHORIZED_TO_COMMUNICATE"
+                                        : "REQUESTING_OR_UPLOADING_NOT_AUTHORIZED_TO_COMMUNICATE"
                                 }
                                 className="popover-class"
 
