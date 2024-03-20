@@ -109,10 +109,11 @@ export function SubmissionDetails() {
 		padRef?.current?.fromDataURL(signature)
 	}, [voe, employer]);
 
-	// useEffect(() => {
-	// 	console.log("form values", form.values);
-	// 	console.log("form eror", form.errors);
-	// }, [form.values, form.errors]);
+	useEffect(() => {
+		console.log("form values", form.values);
+		console.log("form eror", form.errors);
+		form.setFieldValue("signed_date",new Date().toISOString().split("T")[0])
+	}, [form.values, form.errors]);
  
 
 	return (
@@ -168,6 +169,7 @@ export function SubmissionDetails() {
 						className="my-3 float-left col"
 						label="DATE"
 						name="signed_date"
+						
 						type="date"
 						required
 						formik={form}
