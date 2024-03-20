@@ -30,7 +30,9 @@ export default function VehiclePhoto({ vehicle, style, className }) {
 
         {showVehiclePhoto == true &&
             <ViewModal show={!!photo} title={vehicle.photo?.name} onCloseClick={closeVehiclePhoto}>
-                <img className="img-thumbnail" src={photo} />
+                <div className="d-flex justify-content-center">
+                    <img className="img-thumbnail" src={photo}/>
+                </div>
             </ViewModal>
         }
     </>
