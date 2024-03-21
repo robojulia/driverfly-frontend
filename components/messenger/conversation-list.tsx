@@ -51,7 +51,7 @@ export function ConversationList(props: ConversationListProps) {
                         <ConversationListItem entity={c} />
                     </Col>
                     {onItemDelete && (
-                        <OverlyPopover str="HIDE_CONVERSATIONS" placement="right-start">
+                        <OverlyPopover str="DELETE_CONVERSATIONS" placement="right-start">
                             <Archive className="ml-1 mt-2" role="button" color="red" onClick={(e) => onItemDelete(c)} />
                         </OverlyPopover>
                     )}

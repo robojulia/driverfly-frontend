@@ -152,10 +152,12 @@ export class ApplicantEntity {
 				.nullable(),
 			license_restrictions_other: yup
 				.string()
-				.when("license_restrictions", {
-					is: v => v && v.includes(LicenseRestrictions.OTHER),
-					then: yup.string().trim().required(),
-				}).nullable(),
+				// .when("license_restrictions", {
+				// 	is: v => v && v.includes(LicenseRestrictions.OTHER),
+				// 	then: yup.string().trim().required(),
+				// })
+				.trim()
+				.nullable(),
 			can_pass_drug_test: yup.bool().nullable(),
 			is_owner_operator: yup.bool().nullable(),
 			transmission_type: yup
@@ -166,10 +168,12 @@ export class ApplicantEntity {
 				.nullable(),
 			endorsements_other: yup
 				.string()
-				.when("endorsements", {
-					is: v => v && v.includes(DriverEndorsement.OTHER),
-					then: yup.string().trim().required(),
-				}).nullable(),
+				.trim()
+				// .when("endorsements", {
+				// 	is: v => v && v.includes(DriverEndorsement.OTHER),
+				// 	then: yup.string().trim().required(),
+				// })
+				.nullable(),
 			highest_degree: (yup.string() as any).enum(EducationLevel).nullable(),
 			authorized_to_work_in_us: yup.bool().nullable(),
 			emergency_contact_name: yup.string().nullable(),
@@ -281,10 +285,12 @@ export class ApplicantEntity {
 				.nullable(),
 			license_restrictions_other: yup
 				.string()
-				.when("license_restrictions", {
-					is: v => v && v.includes(LicenseRestrictions.OTHER),
-					then: yup.string().trim().required(),
-				}).nullable(),
+				.trim()
+				// .when("license_restrictions", {
+				// 	is: v => v && v.includes(LicenseRestrictions.OTHER),
+				// 	then: yup.string().trim().required(),
+				// })
+				.nullable(),
 			can_pass_drug_test: yup.bool().nullable(),
 			is_owner_operator: yup.bool().nullable(),
 			transmission_type: yup
@@ -295,10 +301,12 @@ export class ApplicantEntity {
 				.nullable(),
 			endorsements_other: yup
 				.string()
-				.when("endorsements", {
-					is: v => v && v.includes(DriverEndorsement.OTHER),
-					then: yup.string().trim().required(),
-				}).nullable(),
+				.trim()
+				// .when("endorsements", {
+				// 	is: v => v && v.includes(DriverEndorsement.OTHER),
+				// 	then: yup.string().trim().required(),
+				// })
+				.nullable(),
 			highest_degree: (yup.string() as any).enum(EducationLevel).nullable(),
 			authorized_to_work_in_us: yup.bool().nullable(),
 			emergency_contact_name: yup.string().nullable(),
@@ -401,10 +409,12 @@ export class ApplicantEntity {
 				.nullable(),
 			license_restrictions_other: yup
 				.string()
-				.when("license_restrictions", {
-					is: v => v && v.includes(LicenseRestrictions.OTHER),
-					then: yup.string().trim().required(),
-				}).nullable(),
+				.trim()
+				// .when("license_restrictions", {
+				// 	is: v => v && v.includes(LicenseRestrictions.OTHER),
+				// 	then: yup.string().trim().required(),
+				// })
+				.nullable(),
 			is_owner_operator: yup.bool().nullable(),
 			transmission_type: yup
 				.array((yup.string() as any).enum(VehicleTransmissionType))
@@ -414,10 +424,12 @@ export class ApplicantEntity {
 				.nullable(),
 			endorsements_other: yup
 				.string()
-				.when("endorsements", {
-					is: v => v && v.includes(DriverEndorsement.OTHER),
-					then: yup.string().trim().required(),
-				}).nullable(),
+				.trim()
+				// .when("endorsements", {
+				// 	is: v => v && v.includes(DriverEndorsement.OTHER),
+				// 	then: yup.string().trim().required(),
+				// })
+				.nullable(),
 			highest_degree: (yup.string() as any).enum(EducationLevel).nullable(),
 			emergency_contact_name: yup.string().nullable(),
 			emergency_contact_number: yup.string().nullable(),
@@ -512,10 +524,12 @@ export class ApplicantEntity {
 				.nullable(),
 			license_restrictions_other: yup
 				.string()
-				.when("license_restrictions", {
-					is: v => v && v.includes(LicenseRestrictions.OTHER),
-					then: yup.string().trim().required(),
-				}).nullable(),
+				.trim()
+				// .when("license_restrictions", {
+				// 	is: v => v && v.includes(LicenseRestrictions.OTHER),
+				// 	then: yup.string().trim().required(),
+				// })
+				.nullable(),
 			can_pass_drug_test: yup.bool().nullable(),
 			is_owner_operator: yup.bool().nullable(),
 			transmission_type: yup
@@ -526,10 +540,12 @@ export class ApplicantEntity {
 				.nullable(),
 			endorsements_other: yup
 				.string()
-				.when("endorsements", {
-					is: v => v && v.includes(DriverEndorsement.OTHER),
-					then: yup.string().trim().required(),
-				}).nullable(),
+				.trim()
+				// .when("endorsements", {
+				// 	is: v => v && v.includes(DriverEndorsement.OTHER),
+				// 	then: yup.string().trim().required(),
+				// })
+				.nullable(),
 			highest_degree: (yup.string() as any).enum(EducationLevel).nullable(),
 			authorized_to_work_in_us: yup.bool().nullable(),
 			emergency_contact_name: yup.string().nullable(),

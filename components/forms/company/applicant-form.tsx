@@ -72,8 +72,7 @@ export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
 export function ApplicantForm(props: ApplicantFormProps) {
 	let { className, entity, onSaveComplete, onSaveError } = props;
-	let { user, hasPermission, isSuperAdmin, isCompanyAdmin, company } =
-		useAuth();
+	let { user, isSuperAdmin, isCompanyAdmin, company } = useAuth();
 	const { t } = useTranslation();
 	const router = useRouter();
 	const current_date = new Date();
@@ -82,16 +81,19 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	const referralSourceApi = new ReferralSourceApi();
 
 	const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([]);
-
 	const [referralSources, setReferralSources] = useState<
 		ReferralSourceEntity[]
 	>([]);
-
-	const [protectedFields, setProtectedFields] = useState({
-		license_number: false,
-		social_security_number: false,
-	});
+	// const [protectedFields, setProtectedFields] = useState({
+	// 	license_number: false,
+	// 	social_security_number: false,
+	// });
 	const [isWorkedBefore, setIsWorkedBefore] = useState<boolean>(false);
+	const [jobs, setJobs] = useState<JobEntity[]>([]);
+	const [jobHired, setJobHired] = useState<ApplicantJobEntity>(null);
+	const [createJob, setCreateJob] = useState<boolean>(false);
+	const [canCreateReferral, setCanCreateReferral] = useState<boolean>();
+	const [createReferral, setCreateReferral] = useState<boolean>(false);
 
 	const form = useFormik({
 		initialValues: new ApplicantEntity(),
@@ -152,15 +154,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		},
 	});
 
-	const [jobs, setJobs] = useState<JobEntity[]>([]);
-
 	useEffectAsync(async () => {
-		setProtectedFields({
-			license_number: hasPermission("CanViewApplicant.license_number"),
-			social_security_number: hasPermission(
-				"CanViewApplicant.social_security_number"
-			),
-		});
+		// setProtectedFields({
+		// 	license_number: hasPermission("CanViewApplicant.license_number"),
+		// 	social_security_number: hasPermission(
+		// 		"CanViewApplicant.social_security_number"
+		// 	),
+		// });
 
 		const api = new JobApi();
 		const jobs = await api.list();
@@ -173,6 +173,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 	useEffect(() => {
 		// console.log("entity", entity);
+		setCanCreateReferral(!!!entity?.referralSource?.id && !!user?.company_admin)
 
 		form.setValues(() => {
 			let values: ApplicantEntity;
@@ -257,8 +258,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		});
 	}, [entity]);
 
-	const [jobHired, setJobHired] = useState<ApplicantJobEntity>(null);
-
 	useEffect(() => {
 		setJobHired(
 			form.values?.jobs?.find((j) => j?.status?.startsWith("COMPLETED")) ?? null
@@ -290,16 +289,12 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		},
 	});
 
-	const [createJob, setCreateJob] = useState<boolean>(false);
-
 	const onJobAdded = (job: JobEntity) => {
 		setJobs([...jobs, job]);
 		setCreateJob(false);
 	};
 
-	const [createReferral, setCreateReferral] = useState(false);
-
-	const onLocationAdded = (referral: ReferralSourceEntity) => {
+	const onReferralAdded = (referral: ReferralSourceEntity) => {
 		form.setFieldValue(`referralSource.id`, referral.id);
 		setReferralSources([...referralSources, referral]);
 		setCreateReferral(false);
@@ -813,8 +808,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										formik={form}
 									/>
 									<BaseCheck
+										readOnly
 										className="col-12 my-2"
-										disabled={Boolean(entity?.is_hired)}
+										disabled
 										label="AUTOMATED_RECRUITING_LEAD"
 										name={`extras[${form.values?.extras?.findIndex(
 											(v) => v.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD
@@ -822,6 +818,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										formik={form}
 									/>
 									<BaseSelect
+										readOnly
 										className="col-12 p-0 px-lg-2"
 										label="LEAD_TYPE"
 										labelPrefix="ApplicantType"
@@ -831,6 +828,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										enumType={ApplicantType}
 									/>
 									<BaseSelect
+										readOnly={!canCreateReferral}
 										className="col-12 p-0 px-lg-2"
 										label="REFERRAL_SOURCE"
 										name="referralSource.id"
@@ -841,6 +839,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										options={referralSources}
 										append={
 											<Button
+												disabled={!canCreateReferral}
 												variant="btn create_btn"
 												onClick={() => setCreateReferral(true)}
 											>
@@ -1939,7 +1938,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				show={createReferral}
 				onCloseClick={() => setCreateReferral(false)}
 			>
-				<ReferralSourceForm onSaveComplete={onLocationAdded} />
+				<ReferralSourceForm onSaveComplete={onReferralAdded} />
 			</ViewModal>
 
 			<ViewModal

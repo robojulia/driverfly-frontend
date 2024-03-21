@@ -1,36 +1,35 @@
-import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
-import { Row, Col } from "react-bootstrap";
-import { toast } from "react-toastify";
-import { TranslateInterface, useTranslation } from "../../../../hooks/use-translation";
-import { FormGroup, FormControlLabel, Switch } from '@mui/material';
-import { EyeFill, PencilFill } from 'react-bootstrap-icons';
-import ApplicantApi from "../../../api/applicant";
-import React, { useEffect, useState } from 'react';
+import { FormControlLabel, FormGroup, Switch } from '@mui/material';
+import { useFormik } from "formik";
+import Link from "next/link";
 import { NextRouter, useRouter } from 'next/router';
-import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
-import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
-import { JobEntity } from '../../../../models/job/job.entity';
-import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
-import * as numbers from "../../../../utils/number";
-import { Button, ButtonGroup } from "react-bootstrap";
-import PageLayout from "../../../../components/layouts/page/page-layout";
-import { useEffectAsync } from "../../../../utils/react";
-import ViewDataTable from "../../../../components/view-details/view-data-table";
-import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";
-import { useAuth } from "../../../../hooks/use-auth";
+import React, { useState } from 'react';
+import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
+import { EyeFill, PencilFill } from 'react-bootstrap-icons';
+import { toast } from "react-toastify";
+import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
+import BaseCheckList from "../../../../components/forms/base-check-list";
 import BaseSelect from "../../../../components/forms/base-select";
 import BaseTextArea from "../../../../components/forms/base-text-area";
-import { buildAddress } from "../../../../utils/common";
-import ViewModal from "../../../../components/view-details/view-modal";
-import { useFormik } from "formik";
-import BaseCheckList from "../../../../components/forms/base-check-list";
-import { ApplicantReasonCodeFired, ApplicantReasonCodeNotInterested, ApplicantReasonCodeNotQualified, ApplicantReasonCodeQuit } from "../../../../enums/applicants/applicant-reason-codes.enum";
-import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
-import OverlyPopover from "../../../../components/popover/overly-popover";
-import Link from "next/link";
 import ShowFormattedDate from "../../../../components/jobs/show-formatted-date";
+import PageLayout from "../../../../components/layouts/page/page-layout";
+import OverlyPopover from "../../../../components/popover/overly-popover";
+import ViewDataTable from "../../../../components/view-details/view-data-table";
+import ViewModal from "../../../../components/view-details/view-modal";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { ApplicantReasonCodeFired, ApplicantReasonCodeNotInterested, ApplicantReasonCodeNotQualified, ApplicantReasonCodeQuit } from "../../../../enums/applicants/applicant-reason-codes.enum";
+import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
+import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
 import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
+import { useAuth } from "../../../../hooks/use-auth";
+import { TranslateInterface, useTranslation } from "../../../../hooks/use-translation";
+import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";
+import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
+import { JobEntity } from '../../../../models/job/job.entity';
+import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
+import { buildAddress } from "../../../../utils/common";
+import * as numbers from "../../../../utils/number";
+import { useEffectAsync } from "../../../../utils/react";
+import ApplicantApi from "../../../api/applicant";
 
 const ViewMode = {
     job: "job",
@@ -67,8 +66,15 @@ export default function Applicants() {
         const api = new ApplicantApi();
 
         const data = await api.list({
-            jobId: (jobId as any) as number,
-            status: applicantStatus
+            jobId: jobId as any as number,
+            status: applicantStatus,
+            without: [
+                // "jobs",
+                // "equipment_experience",
+                // "assignedUser",
+                "applicant_dac",
+                "applicant_extras",
+            ],
         });
 
         setApplicants(data);
@@ -388,7 +394,7 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
     job.required_skills?.forEach(skill => {
         // cannot process OTHER type
         if (skill.type != JobEquipmentType.OTHER) {
-            const experience = applicant.equipment_experience.find(v => v.type == skill.type);
+            const experience = applicant?.equipment_experience?.find(v => v.type == skill.type);
 
             if (!experience) {
                 results.meets_basic_qualifications = false;
@@ -755,7 +761,7 @@ function JobView(props: ViewProps) {
                     {
                         id: "date_added",
                         name: "DATE_ADDED",
-                        selector: aJob => aJob.applicant.created_at,
+                        selector: aJob => aJob?.applicant?.created_at,
                         cell: aJob => (
                             <ShowFormattedDate date={aJob.applicant.created_at} />
                         ),
@@ -763,7 +769,7 @@ function JobView(props: ViewProps) {
                     },
                     {
                         name: "ASSIGNED_TO",
-                        selector: aJob => aJob.applicant.assignedUser?.name || t("NONE"),
+                        selector: aJob => aJob?.applicant?.assignedUser?.name || t("NONE"),
                         hidable: false,
                     },
                     {
