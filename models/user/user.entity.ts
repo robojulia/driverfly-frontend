@@ -36,6 +36,9 @@ export class UserEntity {
     refreshToken?: string;
     jwtRefresh?: JwtRefreshTokenPayload;
 
+    super_admin?: boolean;
+    company_admin?: boolean;
+
     static yupSchema() {
         return yup.object({
             first_name: yup.string().required().nullable(),
