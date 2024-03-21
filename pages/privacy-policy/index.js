@@ -167,14 +167,7 @@ export default function TermsAndPolicies2() {
                         voluntary. Not providing Personal Data may prevent us from providing you with requested
                         information and carrying out transactions. However, you can always exercise control over
                         our use of Personal Data for direct marketing and you can control the use of cookies on
-                        our site by contacting legal@DriverFly.co.In general, you need to provide the Personal Data in order to create or apply for jobs and
-                        otherwise enter into a transaction with us, for us to provide you with driver recruiting
-                        services, and as may be required for our compliance purposes in connection with such
-                        transactions, except in limited instances when we indicate that certain information is
-                        voluntary. Not providing Personal Data may prevent us from providing you with requested
-                        information and carrying out transactions. However, you can always exercise control over
-                        our use of Personal Data for direct marketing and you can control the use of cookies on
-                        our site by contacting legal@DriverFly.co.                    </p>
+                        our site by contacting legal@DriverFly.co.</p>
                     <p className="text-secondary">
                         We also use your Personal Data as described in the “Sharing Your Personal Data” section below.
                     </p>
