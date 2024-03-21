@@ -173,7 +173,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 	useEffect(() => {
 		// console.log("entity", entity);
-		setCanCreateReferral(!!!entity?.referralSource?.id)
+		setCanCreateReferral(!!!entity?.referralSource?.id && !!user?.company_admin)
 
 		form.setValues(() => {
 			let values: ApplicantEntity;
