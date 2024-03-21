@@ -167,14 +167,7 @@ export default function TermsAndPolicies2() {
                         voluntary. Not providing Personal Data may prevent us from providing you with requested
                         information and carrying out transactions. However, you can always exercise control over
                         our use of Personal Data for direct marketing and you can control the use of cookies on
-                        our site by contacting legal@DriverFly.co.In general, you need to provide the Personal Data in order to create or apply for jobs and
-                        otherwise enter into a transaction with us, for us to provide you with driver recruiting
-                        services, and as may be required for our compliance purposes in connection with such
-                        transactions, except in limited instances when we indicate that certain information is
-                        voluntary. Not providing Personal Data may prevent us from providing you with requested
-                        information and carrying out transactions. However, you can always exercise control over
-                        our use of Personal Data for direct marketing and you can control the use of cookies on
-                        our site by contacting legal@DriverFly.co.                    </p>
+                        our site by contacting legal@DriverFly.co.</p>
                     <p className="text-secondary">
                         We also use your Personal Data as described in the “Sharing Your Personal Data” section below.
                     </p>
@@ -210,7 +203,7 @@ export default function TermsAndPolicies2() {
                         <b>Compliance with Law and Other Disclosures</b>: DriverFly reserves the right to release Personal Data in order to comply with applicable law or to comply with a judicial proceeding, court order, or legal process served on us: We may also release Personal Data to enforce or apply Terms and Conditions applicable to the services, to protect us or others against fraudulent or inappropriate activities, or to otherwise protect the rights, property or safety of DriverFly, our affiliated companies, our customers, or others.
                     </p>
                     <p className="text-secondary">
-                        <b>Sharing your Personal Data for other purposes</b>: As described below in the section on Our Policy on Cookies and Other Tracking Technologies we may share internet or other electronic network activity information about you, as well as general geolocation data based on IP address, with third party cookie providers we use on our Sites which may use this data for purposes other than strictly operational purposes. In certain jurisdictions, such sharing may be considered a “sale” of your Personal Data and you may have the right under applicable law to opt-out of or object to such sharing
+                        <b>Sharing your Personal Data for other purposes</b>: As described below in the section on Our Policy on Cookies and Other Tracking Technologies we may share internet or other electronic network activity information about you, as well as general geolocation data based on IP address, with third party cookie providers we use on our Sites which may use this data for purposes other than strictly operational purposes. In certain jurisdictions, such sharing may be considered a “sale” of your Personal Data and you may have the right under applicable law to opt-out of or object to such sharing.
                     </p>
                     <ol>
                         <li>
@@ -273,7 +266,7 @@ export default function TermsAndPolicies2() {
                     </p>
                     <ol>
                         <li>
-                            To opt-out of ad targeting cookies set by Google and double click on our Site, click here : <a
+                            To opt-out of ad targeting cookies set by Google and double click on our Site, click here: <a
                                 target={"blank"}
                                 href="https://www.google.com/settings/u/0/ads?hl=en"
                             >
@@ -282,14 +275,12 @@ export default function TermsAndPolicies2() {
                             .
                         </li>
                         <li>
-                            To disable the display of advertisements served by Criteo, click here : <a target={"blank"} href="https://www.criteo.com/privacy/">
+                            To disable the display of advertisements served by Criteo, click here: <a target={"blank"} href="https://www.criteo.com/privacy/">
                                 https://www.criteo.com/privacy/
                             </a>.
                         </li>
                         <li>
-                            To generally (i.e. not just for this Site) opt-out of receiving personalized ads from third party advertisers and ad networks who are members of the Network Advertising Initiative (NAI) or who follow the Digital Advertising Alliance’s (DAA) Self-Regulatory Principles for Online Behavioral Advertising visit the opt-out pages on the NAI website and DAA website or click here. If you are located in the European Union, please <a target={"blank"} href="https://preferences-mgr.truste.com/">
-                                click here
-                            </a>. If you are located in the European Union, please <a target={"blank"} href="https://www.youronlinechoices.eu/">
+                            To generally (i.e. not just for this Site) opt-out of receiving personalized ads from third party advertisers and ad networks who are members of the Network Advertising Initiative (NAI) or who follow the Digital Advertising Alliance’s (DAA) Self-Regulatory Principles for Online Behavioral Advertising visit the opt-out pages on the NAI website and DAA website or <a target={"blank"} href="https://preferences-mgr.truste.com/">click here</a>. If you are located in the European Union, please <a target={"blank"} href="https://www.youronlinechoices.eu/">
                                 click here
                             </a> to opt out.
                         </li>
@@ -320,7 +311,7 @@ export default function TermsAndPolicies2() {
                     </p>
                     <ol>
                         <li>
-                            Android Users (version 2.3 and above): To use the “opt-out of interest-based advertising” option, follow the instructions provided by Google here <a
+                            Android Users (version 2.3 and above): To use the “opt-out of interest-based advertising” option, follow the instructions provided by Google here: <a
                                 target={"blank"}
                                 href="https://support.google.com/googleplay/answer/3405269"
                             >
@@ -332,7 +323,7 @@ export default function TermsAndPolicies2() {
                                 target={"blank"}
                                 href="https://support.apple.com/en-us/HT202074"
                             >
-                                Apple Support Center{" "}
+                                Apple Support Center
                             </a>. You can also use the tools available at https://youradchoices.com/appchoices and https://www.networkadvertising.org/mobile-choice to control cookies and similar technologies on your mobile device.
                         </li>
                     </ol>
@@ -342,9 +333,9 @@ export default function TermsAndPolicies2() {
                         </li>
                     </ol>
                     <p className="text-secondary">
-                        DriverFly understands that you may want to change, access or delete your Personal Data. You may do so by accessing your profile or by reaching out to legal@DriverFly.co. To protect your privacy and security, we will need to verify your identity before acting on a request. In most circumstances, we will then answer your request within 30 days of verification. If you have created a profile on any of the services available on the site, your email address and password are required in order to access your profile information.                    </p>
+                        DriverFly understands that you may want to change, access or delete your Personal Data. You may do so by accessing your profile or by reaching out to legal@DriverFly.co. To protect your privacy and security, we will need to verify your identity before acting on a request. In most circumstances, we will then answer your request within 30 days of verification. If you have created a profile on any of the services available on the site, your email address and password are required in order to access your profile information.</p>
                     <p className="text-secondary">
-                        Depending on the jurisdiction where you reside, you may have specific rights under local legislation to: (i) request access to your Personal Data; (ii) request rectification of your Personal Data; (iii) request erasure of your Personal Data; (iv) request restriction of processing of your Personal Data; (v) request data portability; and (vi) object to the processing of your Personal Data, including opting out of certain sharing of your Personal Data or processing of your Personal Data for marketing purposes. You may also have the right to request from us the Personal Data from or about you that we have “sold” (as such term is defined under applicable law) or disclosed for a business purpose within the past 12 months. Please contact legal@DriverFly.co if you would like to exercise such rights. You may also have the right to lodge a complaint with a supervisory authority. Please note that, in order to provide appropriate security to your information, we may require additional data points or information from you in order to verify your identity prior to completing certain requests related to your Personal Data (e.g., requiring the matching of two or three data points provided by you with information maintained by DriverFly).                    </p>
+                        Depending on the jurisdiction where you reside, you may have specific rights under local legislation to: (i) request access to your Personal Data; (ii) request rectification of your Personal Data; (iii) request erasure of your Personal Data; (iv) request restriction of processing of your Personal Data; (v) request data portability; and (vi) object to the processing of your Personal Data, including opting out of certain sharing of your Personal Data or processing of your Personal Data for marketing purposes. You may also have the right to request from us the Personal Data from or about you that we have “sold” (as such term is defined under applicable law) or disclosed for a business purpose within the past 12 months. Please contact legal@DriverFly.co if you would like to exercise such rights. You may also have the right to lodge a complaint with a supervisory authority. Please note that, in order to provide appropriate security to your information, we may require additional data points or information from you in order to verify your identity prior to completing certain requests related to your Personal Data (e.g., requiring the matching of two or three data points provided by you with information maintained by DriverFly).</p>
                     <p className="text-secondary">
                         We will retain your information for as long as your account is active or as needed to provide you services. In addition, we will retain and use your information as necessary to comply with our legal obligations, resolve disputes, and enforce our agreements.                    </p>
                     <ol>
@@ -379,7 +370,7 @@ export default function TermsAndPolicies2() {
                         <li> How to Contact Us</li>
                     </ol>
                     <p className="text-secondary">
-                        Should you have any questions, or to exercise you rights as detailed above, please contact us at legal@DriverFly.co.                    </p>
+                        Should you have any questions, or to exercise you rights as detailed above, please contact us at legal@DriverFly.co.</p>
                     <p className="text-secondary"></p>
                     <p className="text-secondary"></p>
                     <p className="text-secondary"></p>
