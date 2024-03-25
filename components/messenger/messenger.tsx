@@ -1,30 +1,29 @@
 import { CancelTokenSource } from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Container, Navbar, Row } from "react-bootstrap";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import { Plus } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
+import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
 import { ChattableType } from "../../enums/conversation/chattable-type.enum";
 import { UserPreferenceCategory } from "../../enums/users/user-preference-category.enum";
 import { UserPreferenceCommunicationLabel } from "../../enums/users/user-preferences-communication-label.enum";
 import { useAuth } from "../../hooks/use-auth";
 import { useTranslation } from "../../hooks/use-translation";
+import { ApplicantEntity } from "../../models/applicant";
+import { ConversationMessageEntity } from "../../models/conversation/conversation-message.entity";
 import {
     ConversationEntity,
     CreateConversationDto,
 } from "../../models/conversation/conversation.entity";
 import { UserPreferenceEntity } from "../../models/user/user-preference.entity";
+import ApplicantApi from "../../pages/api/applicant";
 import { ConversationApi } from "../../pages/api/conversation";
 import UserApi from "../../pages/api/user";
 import { useEffectAsync } from "../../utils/react";
 import { ComboboxItem } from "../controls/combobox";
 import { ConversationForm } from "./conversation-form";
-import { ConversationList, ConversationListItem } from "./conversation-list";
-import { ApplicantEntity } from "../../models/applicant";
-import ApplicantApi from "../../pages/api/applicant";
-import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
+import { ConversationList } from "./conversation-list";
 import { messengerSocketInitializer } from "./socketInitializer";
-import { ConversationMessageEntity } from "../../models/conversation/conversation-message.entity";
-import { CardBody } from "reactstrap";
 
 export interface MessengerProps {
     getOptions?: (

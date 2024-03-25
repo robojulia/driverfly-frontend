@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import Select, { StylesConfig } from "react-select";
 import { useTranslation } from "../../hooks/use-translation";
+import { CompanyEntity } from "../../models/company/company.entity";
 import CompanyApi from "../../pages/api/company";
 import { useEffectAsync } from "../../utils/react";
-import { CompanyEntity } from "../../models/company/company.entity";
 
 export default function SearchByCompany(props) {
     const {
@@ -36,8 +36,8 @@ export default function SearchByCompany(props) {
     );
 
     const csutomStyles: StylesConfig = {
-        control: (styles:any) => ({ ...styles, backgroundColor: "white" }),
-        option: (styles:any, { data, isDisabled, isFocused, isSelected }) => {
+        control: (styles: any) => ({ ...styles, backgroundColor: "white" }),
+        option: (styles: any, { data, isDisabled, isFocused, isSelected }) => {
             return {
                 ...styles,
                 zIndex: 9999,

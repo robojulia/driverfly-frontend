@@ -1,14 +1,14 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { Form, Button, Col, Row } from "react-bootstrap";
-import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
-import BaseInput from "../../base-input";
+import { useContext, useEffect, useRef } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import SignatureCanvas from "react-signature-canvas";
-import { DriverApplicationDto } from "../../../../models/jot-form/long-form/driver-application.dto";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import { DriverApplicationDto } from "../../../../models/jot-form/long-form/driver-application.dto";
+import styles from "../../../../styles/digitalhiringapp.module.css";
+import BaseInput from "../../base-input";
 
 export interface DriverApplicationProps {
 	isAutoRecruitmentLead?: boolean | (() => boolean)
@@ -80,11 +80,10 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 				: new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
 			first_name: first_name || null,
 			last_name: last_name || null,
-			AUTOMATED_RECRUITING_LEAD: Boolean(isAutoRecruitmentLead) ? {
-				type: ApplicantExtras.AUTOMATED_RECRUITING_LEAD,
-				value: true
-			} : new ApplicantExtrasEntity(ApplicantExtras.AUTOMATED_RECRUITING_LEAD)
-
+			AUTOMATED_RECRUITING_LEAD: {
+				... new ApplicantExtrasEntity(ApplicantExtras.AUTOMATED_RECRUITING_LEAD),
+				value: Boolean(isAutoRecruitmentLead),
+			},
 		});
 
 	}, [applicant]);
