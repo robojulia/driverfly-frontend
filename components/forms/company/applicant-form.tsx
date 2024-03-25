@@ -174,7 +174,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	useEffect(() => {
 		// console.log("entity", entity);
 		setCanCreateReferral(!!!entity?.referralSource?.id && !!user?.company_admin)
-
+		setReferralSources(referralSources.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id))
 		form.setValues(() => {
 			let values: ApplicantEntity;
 			let extras: ApplicantExtrasEntity[] = entity?.extras ?? [];
@@ -838,8 +838,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										createLabel={(v) => buildReferral(v)}
 										options={referralSources}
 										append={
+											canCreateReferral &&
 											<Button
-												disabled={!canCreateReferral}
 												variant="btn create_btn"
 												onClick={() => setCreateReferral(true)}
 											>
