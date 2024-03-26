@@ -171,10 +171,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		setReferralSources(ref_list);
 	}, [user]);
 
+	useEffectAsync(async () => {
+		if (!!referralSources?.length && !!entity?.id) {
+			setReferralSources(referralSources.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id))
+		}
+	}, [user, entity]);
+
 	useEffect(() => {
 		// console.log("entity", entity);
 		setCanCreateReferral(!!!entity?.referralSource?.id && !!user?.company_admin)
-		setReferralSources(referralSources.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id))
 		form.setValues(() => {
 			let values: ApplicantEntity;
 			let extras: ApplicantExtrasEntity[] = entity?.extras ?? [];
