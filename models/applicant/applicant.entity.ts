@@ -123,7 +123,7 @@ export class ApplicantEntity {
 			city: yup.string().nullable(),
 			state: yup.string().nullable(),
 			zip_code: yup.string().nullable(),
-			license_number: yup.string().nullable(),
+			license_number: yup.string().trim().nullable(),
 			license_expiry: yup.date().typeError("INVALID_DATE")
 				.test({
 					test: (value, context) => {
@@ -142,7 +142,10 @@ export class ApplicantEntity {
 				})
 				.nullable(),
 			license_state: yup.string().nullable(),
-			license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
+			license_type: yup.string().when('license_number', {
+				is: license_number => !!license_number,
+				then: (yup.string() as any).required().enum(DriverLicenseType)
+			}).nullable(),
 			years_cdl_experience: yup.number().min(0).nullable(),
 			preferred_location: yup
 				.array((yup.string() as any).enum(JobGeography))
