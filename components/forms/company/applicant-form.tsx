@@ -172,6 +172,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	}, [user]);
 
 	useEffectAsync(async () => {
+		console.log("referralSources", referralSources?.length, entity?.id, referralSources?.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id));
+
 		if (!!referralSources?.length && !!entity?.id) {
 			setReferralSources(referralSources.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id))
 		}
