@@ -65,15 +65,15 @@ export function OtherQueues() {
                             <BaseInput
                                 name={`CDL_NUMBER.value[${i}].license_number`}
                                 className="col-md-4 my-3"
-                                placeholder="CDL_NUMBER_1"
-                                label="CDL_NUMBER"
+                                placeholder="driver's_license_number"
+                                label="driver's_license_number"
                                 required
                                 formik={form}
                             />
                             <StateSelect
                                 className="col-md-4 my-3"
                                 name={`CDL_NUMBER.value[${i}].state`}
-                                placeholder="STATE"
+                                placeholder="SELECT_STATE"
                                 label="state_issued"
                                 required
                                 formik={form}
