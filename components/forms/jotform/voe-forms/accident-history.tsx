@@ -23,7 +23,7 @@ export function AccidentHistory() {
 	const { t } = useTranslation();
 	const form = useFormik({
 		initialValues: new ApplicantVoeEntity(),
-		validationSchema: ApplicantVoeEntity.yupSchemaAccidentHistory({ employer }),
+		validationSchema: ApplicantVoeEntity.yupSchemaAccidentHistory(),
 		onSubmit: ({
 			position,
 			start_date,

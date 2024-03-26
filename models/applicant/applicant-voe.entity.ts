@@ -37,14 +37,11 @@ export class ApplicantVoeEntity {
 		});
 	}
 
-	static yupSchemaAccidentHistory({ employer }) {
+	static yupSchemaAccidentHistory() {
 		return yup.object({
 			position: yup.string().required().nullable(),
 			start_date: yup.date().required().nullable(),
-			end_date: yup.date().when({
-				is: v => !employer.is_current,
-				then : yup.date().required().nullable()
-			}),
+			end_date: yup.date().required().nullable(),
 			did_drive_check: yup
 				.mixed<BooleanType>()
 				.oneOf(Object.values(BooleanType))
