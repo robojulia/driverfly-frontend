@@ -177,7 +177,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		if (!!referralSources?.length && !!entity?.id) {
 			setReferralSources(referralSources.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id))
 		}
-	}, [user, entity]);
+	}, [canCreateReferral]);
 
 	useEffect(() => {
 		// console.log("entity", entity);
