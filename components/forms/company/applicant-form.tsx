@@ -171,13 +171,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		setReferralSources(ref_list);
 	}, [user]);
 
-	useEffectAsync(async () => {
-		console.log("referralSources", referralSources?.length, entity?.id, referralSources?.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id));
-
-		if (!!referralSources?.length && !!entity?.id) {
-			setReferralSources(referralSources.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id))
-		}
-	}, [canCreateReferral]);
 
 	useEffect(() => {
 		// console.log("entity", entity);
@@ -845,7 +838,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										formik={form}
 										valueKey="id"
 										createLabel={(v) => buildReferral(v)}
-										options={referralSources}
+										options={(!!referralSources?.length && !!entity?.id) ? referralSources.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id) : referralSources}
 										append={
 											canCreateReferral &&
 											<Button
