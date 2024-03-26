@@ -278,7 +278,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				resetForm();
 				toast.success(t("STATUS_UPDATED_SUCCESSFULLY"))
 				// formSuccess(t, "STATUS_UPDATED_SUCCESSFULLY", "STATUS");
-				routeToEmployees();
+				setTimeout(() => {
+					routeToEmployees();
+				}, 1000);
 			} catch (e) {
 				globalAjaxExceptionHandler(e, {
 					formik: hireApplicantForm,
