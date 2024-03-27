@@ -67,7 +67,6 @@ import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
 import ViewModal from "../../view-details/view-modal";
 import { ReferralSourceForm } from "../admin/referral-source-form";
 import { JobForm } from "./job-form";
-import { NULL } from "sass";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
