@@ -211,11 +211,14 @@ export default function Applicants() {
                             >{t("CLEAR")}</button>
                         </Col>)}
                     </Row>
-                    {loading && <div className="spinner-border" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>}
-                    {viewMode == ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
-                    {viewMode == ViewMode.job && <JobView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                    {loading
+                        ? <div className="spinner-border mt-3 ml-1" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                        : <>
+                            {viewMode == ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                            {viewMode == ViewMode.job && <JobView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                        </>}
                 </Col>
             </Row>
             <ViewModal

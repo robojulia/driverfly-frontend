@@ -838,7 +838,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										formik={form}
 										valueKey="id"
 										createLabel={(v) => buildReferral(v)}
-										options={(!!referralSources?.length && !!entity?.id) ? referralSources.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id) : referralSources}
+										options={(!!referralSources?.length) ? referralSources.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id) : referralSources}
 										append={
 											canCreateReferral &&
 											<Button
