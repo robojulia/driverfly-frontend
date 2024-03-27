@@ -175,7 +175,7 @@ export default function Applicants() {
                         canCreate &&
                         <ButtonGroup size="sm" style={{ float: "right" }}>
                             <Button variant="primary" onClick={() => router.push("/dashboard/company/applicants/create")}>
-                                + {t("ADD")}
+                                + {t("ADD_AN_APPLICANT")}
                             </Button>
                             <Button variant="" className="theme-general-btn" onClick={() => router.push("/dashboard/company/applicants/import")}>
                                 + {t("IMPORT_APPLICANTS")}
