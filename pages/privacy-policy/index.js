@@ -324,8 +324,7 @@ export default function TermsAndPolicies2() {
                                 href="https://support.apple.com/en-us/HT202074"
                             >
                                 Apple Support Center
-                            </a>. You can also use the tools available at <a href="https://youradchoices.com/appchoices" target="blank">https://youradchoices.com/appchoices</a> and
-                            <a href="https://www.networkadvertising.org/mobile-choice" target="blank">https://www.networkadvertising.org/mobile-choice</a> to control cookies and similar technologies on your mobile device.
+                            </a>. You can also use the tools available at <a href="https://youradchoices.com/appchoices" target="blank">https://youradchoices.com/appchoices</a> and <a href="https://www.networkadvertising.org/mobile-choice" target="blank">https://www.networkadvertising.org/mobile-choice</a> to control cookies and similar technologies on your mobile device.
                         </li>
                     </ol>
                     <ol>

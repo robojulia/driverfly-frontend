@@ -171,10 +171,10 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		setReferralSources(ref_list);
 	}, [user]);
 
+
 	useEffect(() => {
 		// console.log("entity", entity);
 		setCanCreateReferral(!!!entity?.referralSource?.id && !!user?.company_admin)
-		setReferralSources(referralSources.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id))
 		form.setValues(() => {
 			let values: ApplicantEntity;
 			let extras: ApplicantExtrasEntity[] = entity?.extras ?? [];
@@ -278,7 +278,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				resetForm();
 				toast.success(t("STATUS_UPDATED_SUCCESSFULLY"))
 				// formSuccess(t, "STATUS_UPDATED_SUCCESSFULLY", "STATUS");
-				routeToEmployees();
+				setTimeout(() => {
+					routeToEmployees();
+				}, 1000);
 			} catch (e) {
 				globalAjaxExceptionHandler(e, {
 					formik: hireApplicantForm,
@@ -836,7 +838,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										formik={form}
 										valueKey="id"
 										createLabel={(v) => buildReferral(v)}
-										options={referralSources}
+										options={(!!referralSources?.length) ? referralSources.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id) : referralSources}
 										append={
 											canCreateReferral &&
 											<Button
@@ -883,7 +885,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										readOnly={Boolean(entity?.is_hired)}
 										label="state_issued"
 										name="license_state"
-										placeholder="state_issued"
+										placeholder="SELECT_STATE"
 										formik={form}
 									/>
 								</Row>
@@ -898,7 +900,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														(v) => v.type == ApplicantExtras.CDL_NUMBER
 													)}].value[${i}].license_number`}
 													className="col-12"
-													placeholder="CDL_NUMBER_1"
+													placeholder="driver's_license_number"
 													label="ADDTIONAL_LICENSE_NUMBER"
 													required
 													formik={form}
@@ -920,7 +922,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														name={`extras[${form.values?.extras?.findIndex(
 															(v) => v.type == ApplicantExtras.CDL_NUMBER
 														)}].value[${i}].state`}
-														placeholder="STATE"
+														placeholder="SELECT_STATE"
 														label="state_issued"
 														required
 														formik={form}
@@ -979,7 +981,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												});
 											}}
 										>
-											<PlusCircle /> {t("ADD_ANOTHER_STATE")}
+											<PlusCircle /> {t("ADD_ANOTHER_LICENSE")}
 										</Button>
 									</Row>
 								</Row>
@@ -989,7 +991,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									<BaseSelect
 										className="col-6"
 										readOnly={Boolean(entity?.is_hired)}
-										label="CDL_CLASS"
+										required={Boolean(form.values?.license_number)}
+										label="CDL_TYPE"
 										name="license_type"
 										placeholder
 										labelPrefix="DriverLicenseType"

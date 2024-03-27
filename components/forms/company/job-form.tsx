@@ -416,6 +416,8 @@ export function JobForm(props: JobFormProps) {
             max_applicant_radius: maxRadius[value],
         });
     };
+    console.log("number", Number("2.02"));
+    
 
     const [createVehicle, setCreateVehicle] = useState<boolean | number>(false);
 
