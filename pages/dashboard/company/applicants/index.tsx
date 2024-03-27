@@ -59,10 +59,12 @@ export default function Applicants() {
 
     if (!ViewMode[`${viewMode}`]) viewMode = ViewMode.applicant;
 
+    const [loading, setLoading] = useState<boolean>(true);
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
     const [applicantStatus, setApplicantStatus] = useState<ApplicantStatus | null>(null);
 
     useEffectAsync(async () => {
+        setLoading(true)
         const api = new ApplicantApi();
 
         const data = await api.list({
@@ -78,6 +80,7 @@ export default function Applicants() {
         });
 
         setApplicants(data);
+        setLoading(false)
     }, [user, jobId, viewMode, applicantStatus]);
 
     const onViewClick = (id: number) => {
@@ -172,7 +175,7 @@ export default function Applicants() {
                         canCreate &&
                         <ButtonGroup size="sm" style={{ float: "right" }}>
                             <Button variant="primary" onClick={() => router.push("/dashboard/company/applicants/create")}>
-                                + {t("ADD")}
+                                + {t("ADD_AN_APPLICANT")}
                             </Button>
                             <Button variant="" className="theme-general-btn" onClick={() => router.push("/dashboard/company/applicants/import")}>
                                 + {t("IMPORT_APPLICANTS")}
@@ -208,9 +211,14 @@ export default function Applicants() {
                             >{t("CLEAR")}</button>
                         </Col>)}
                     </Row>
-
-                    {viewMode == ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
-                    {viewMode == ViewMode.job && <JobView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                    {loading
+                        ? <div className="spinner-border mt-3 ml-1" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                        : <>
+                            {viewMode == ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                            {viewMode == ViewMode.job && <JobView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                        </>}
                 </Col>
             </Row>
             <ViewModal
