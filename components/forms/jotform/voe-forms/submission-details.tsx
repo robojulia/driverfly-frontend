@@ -116,7 +116,6 @@ export function SubmissionDetails() {
 	useEffect(() => {
 		console.log("form values", form.values);
 		console.log("form eror", form.errors);
-		form.setFieldValue("signed_date",new Date().toISOString().split("T")[0])
 	}, [form.values, form.errors]);
  
 
