@@ -85,6 +85,10 @@ export function SubmissionDetails() {
 		form.setFieldValue("signature", signatureValue);
 	};
 
+	const getCurrentDate = ():any => {
+		return new Date().toISOString().split("T")[0];
+	}
+
 	useEffect(() => {
 		const {
 			id,
@@ -103,16 +107,16 @@ export function SubmissionDetails() {
 			focal_person_title: Boolean(id) ? focal_person_title : employer.title,
 			focal_person_phone: Boolean(id) ? focal_person_phone : employer.phone,
 			focal_person_email: Boolean(id) ? focal_person_email : employer.email,
-			signed_date,
+			signed_date : Boolean(signed_date) ? signed_date : getCurrentDate(),
 			allow_share
 		});
 		padRef?.current?.fromDataURL(signature)
 	}, [voe, employer]);
 
-	// useEffect(() => {
-	// 	console.log("form values", form.values);
-	// 	console.log("form eror", form.errors);
-	// }, [form.values, form.errors]);
+	useEffect(() => {
+		console.log("form values", form.values);
+		console.log("form eror", form.errors);
+	}, [form.values, form.errors]);
  
 
 	return (
@@ -168,6 +172,7 @@ export function SubmissionDetails() {
 						className="my-3 float-left col"
 						label="DATE"
 						name="signed_date"
+						
 						type="date"
 						required
 						formik={form}

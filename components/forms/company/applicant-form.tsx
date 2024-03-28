@@ -84,6 +84,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	const [referralSources, setReferralSources] = useState<
 		ReferralSourceEntity[]
 	>([]);
+	const [curentCompanyCheck, setCurentCompanyCheck] = useState<ApplicantEmployerEntity>();
 	// const [protectedFields, setProtectedFields] = useState({
 	// 	license_number: false,
 	// 	social_security_number: false,
@@ -307,6 +308,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		const data = await userApi.list();
 		setCompanyUsers(data?.filter((u) => u.status == Status.ACTIVE));
 	}, []);
+
+	const currentCompanyCheckBox = (employerId) => {
+		return curentCompanyCheck?.is_current ? (Boolean(employerId?.id !== curentCompanyCheck?.id)) : false
+	}
+
+	useEffect(()=>{
+		const currentCompanyExists = form.values?.employers?.find((e) => e.is_current);
+		setCurentCompanyCheck(currentCompanyExists)
+	},[form.values])
 
 	const today = new Date();
 	const OldThan18Year = new Date(
@@ -1446,7 +1456,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												</span>
 											</AccordionSummary>
 											<AccordionDetails>
-												<Row>
+												<Row> 
 													<BaseInput
 														readOnly={Boolean(entity?.is_hired)}
 														className="col-12"
@@ -1474,16 +1484,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														max={new Date().toISOString().split("T")[0]}
 														formik={form}
 													/>
-
-													<BaseInput
+													{
+														((curentCompanyCheck?.id != form.values?.employers[i]?.id) || !form.values?.employers[i]?.is_current ) && <BaseInput
 														className="col-6"
 														readOnly={Boolean(entity?.is_hired)}
+														required
 														name={`employers[${i}].end_at`}
-														label="THROUGH_OPTIONAL"
+														label="THROUGH"
 														type="date"
 														formik={form}
 													/>
-
+													}
 													<BaseInput
 														className="col-12"
 														readOnly={Boolean(entity?.is_hired)}
@@ -1530,6 +1541,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														name={`employers[${i}].phone`}
 														label="PHONE"
 														placeholder="PHONE"
+														formik={form}
+													/>
+													<BaseCheck
+														className="col-12 mt-2"
+														disabled={currentCompanyCheckBox(form.values?.employers[i])}
+														name={`employers[${i}].is_current`}
+														label="CURRENT_COMPANY"
 														formik={form}
 													/>
 													<BaseCheck
