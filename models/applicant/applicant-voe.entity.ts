@@ -3,6 +3,7 @@ import { ApplicantEmployerEntity } from "./applicant-employer.entity";
 import { ApplicantEntity } from "./applicant.entity";
 import { ReasonsForLeavingEmployment } from "../../enums/users/reasons-for-leaving-employment";
 import { BooleanType } from "../../enums/jotform/boolean-type.enum";
+ 
 
 export class ApplicantVoeEntity {
 	constructor() { }

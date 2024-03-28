@@ -16,7 +16,7 @@ import BaseTextArea from "../../base-text-area";
 
 export function AccidentHistory() {
 	const {
-		state: { voe, applicant },
+		state: { voe, applicant, employer },
 		method: { stepNext, stepBack, updateVoe },
 	}: VoeFormContextType = useContext(VoeFormContext);
 
