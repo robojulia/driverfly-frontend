@@ -166,7 +166,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                                     <td colSpan={2}>
                                                         {t(`EmployeeAdditionalFilesEnum.${type}`)}
                                                     </td>
-                                                    <td colSpan={2}>
+                                                    <td colSpan={2} className="w-25">
                                                         <UpdatedAt document={document} type={type} />
                                                     </td>
                                                     <td colSpan={1} className="border border-2 w-50">

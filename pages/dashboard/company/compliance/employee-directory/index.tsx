@@ -154,11 +154,13 @@ export default function EmployeeDirectory() {
         const data: ViewTableColumn<EmployeeEntity>[] = [
             {
                 id: "id",
+                width: "8%",
                 name: "ID",
                 selector: data => data?.id,
             },
             {
                 id: "name",
+                width:"15%",
                 name: 'NAME',
                 cell: data => <span
                     role="button"
@@ -169,16 +171,18 @@ export default function EmployeeDirectory() {
             {
                 id: "phone",
                 name: 'PHONE',
+                width:"15%",
                 selector: data => data?.phone,
                 cell: data => (<OverlyPopover
                     skipTranslate
-                    slice_at={10}
+                    // slice_at={10}
                     str={data?.phone}
                 />),
             },
             {
                 id: "email",
                 name: 'EMAIL',
+                width:"15%",
                 selector: data => data?.email,
                 cell: data => (<OverlyPopover
                     skipTranslate
@@ -187,6 +191,7 @@ export default function EmployeeDirectory() {
                 />),
             },
             {
+                width:"15%",
                 id: "jobTitle",
                 name: 'job_title',
                 selector: data => data?.job?.title,
@@ -205,6 +210,7 @@ export default function EmployeeDirectory() {
             },
             {
                 id: "status",
+                width:"8%",
                 name: 'STATUS',
                 selector: data => data?.status,
                 cell: data =>
@@ -256,6 +262,7 @@ export default function EmployeeDirectory() {
                 />),
             });
         } else {
+                
         }
 
         return data
@@ -331,7 +338,12 @@ export default function EmployeeDirectory() {
 
             {/* TabbedLayout modal component with items passed as a prop `tabs` */}
             <ViewModal title="VIEW_DETAILS" show={!!(modalAction?.type == "VIEW")} onCloseClick={resetModalAction} size='xl' >
-                <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
+               <>
+                    {
+                        <h2>{modalAction?.entity?.first_name +" "+ modalAction?.entity?.last_name}</h2>
+                    }
+                    <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
+                </>
             </ViewModal>
 
             {/* modal that displays a table for confirming trash action */}

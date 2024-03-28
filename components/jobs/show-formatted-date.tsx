@@ -24,7 +24,7 @@ export default function ShowFormattedDate({ date, labelPrefix, labelPostfix, hid
     }
 
     return (
-        <span className={className}>
+        <span className={`${className}`}>
             {labelPrefix && t(labelPrefix)}&nbsp;
             {displayDate}&nbsp;
             {labelPostfix && t(labelPostfix)}&nbsp;
