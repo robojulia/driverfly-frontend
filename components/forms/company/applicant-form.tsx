@@ -6,6 +6,7 @@ import { Button, Col, Row, Table } from "react-bootstrap";
 import {
 	ChevronUp,
 	DashCircle,
+	Pass,
 	PlusCircle,
 	XCircle,
 } from "react-bootstrap-icons";
@@ -67,6 +68,7 @@ import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
 import ViewModal from "../../view-details/view-modal";
 import { ReferralSourceForm } from "../admin/referral-source-form";
 import { JobForm } from "./job-form";
+import ShowEnumFromString from "../../enum-filters/show-enum-from-string";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
@@ -84,6 +86,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	const [referralSources, setReferralSources] = useState<
 		ReferralSourceEntity[]
 	>([]);
+	const [curentCompanyCheck, setCurentCompanyCheck] = useState<ApplicantEmployerEntity>();
 	// const [protectedFields, setProtectedFields] = useState({
 	// 	license_number: false,
 	// 	social_security_number: false,
@@ -251,6 +254,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			} else {
 				values = {
 					...new ApplicantEntity(),
+					type: ApplicantType.COMPANY,
 					extras,
 				};
 			}
@@ -307,6 +311,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		const data = await userApi.list();
 		setCompanyUsers(data?.filter((u) => u.status == Status.ACTIVE));
 	}, []);
+
+	const currentCompanyCheckBox = (employerId) => {
+		return curentCompanyCheck?.is_current ? (Boolean(employerId?.id !== curentCompanyCheck?.id)) : false
+	}
+
+	useEffect(()=>{
+		const currentCompanyExists = form.values?.employers?.find((e) => e.is_current);
+		setCurentCompanyCheck(currentCompanyExists)
+	},[form.values])
 
 	const today = new Date();
 	const OldThan18Year = new Date(
@@ -819,15 +832,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										)}].value`}
 										formik={form}
 									/>
-									<BaseSelect
+									<BaseInput
 										readOnly
 										className="col-12 p-0 px-lg-2"
 										label="LEAD_TYPE"
-										labelPrefix="ApplicantType"
 										name="type"
 										placeholder
-										formik={form}
-										enumType={ApplicantType}
+										value={t(`ApplicantType.${form.values?.type || ApplicantType.COMPANY}`)}
 									/>
 									<BaseSelect
 										readOnly={!canCreateReferral}
@@ -895,16 +906,44 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										?.value?.map((entity, i) => (
 											<div key={i} className={`my-1`}>
 												<div className="Row horizontalRow"></div>
-												<BaseInput
-													name={`extras[${form.values?.extras?.findIndex(
-														(v) => v.type == ApplicantExtras.CDL_NUMBER
-													)}].value[${i}].license_number`}
-													className="col-12"
-													placeholder="driver's_license_number"
-													label="ADDTIONAL_LICENSE_NUMBER"
-													required
-													formik={form}
-												/>
+												<div className=" d-flex justify-content-start align-items-end">
+													<BaseInput
+														name={`extras[${form.values?.extras?.findIndex(
+															(v) => v.type == ApplicantExtras.CDL_NUMBER
+														)}].value[${i}].license_number`}
+														className="col-11"
+														placeholder="driver's_license_number"
+														label="ADDTIONAL_LICENSE_NUMBER"
+														required
+														formik={form}
+													/>
+													<div>
+														<a
+															href="#"
+															onClick={() =>{
+																const extras = form.values?.extras || [];
+																form.setValues({
+																	...form.values,
+																	extras: extras?.map((item) =>
+																	item.type == ApplicantExtras.CDL_NUMBER ?
+																	{
+																		...item,
+																		value : [
+																			...item?.value?.filter((val, index) => index !== i)
+																		]
+																	}
+																	: item
+																	
+																	)
+																})
+															}
+															}
+														>
+															<DashCircle color="red" />
+														</a>
+													</div>
+
+												</div>
 												<Row className="px-3">
 													<BaseInput
 														className="col-6"
@@ -955,10 +994,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														}
 													>
 														<DashCircle /></Button> */}
+													
 											</div>
 										))}
-									<Row className="my-3">
-										<Col className="col-8"></Col>
+									<Row className="my-3 px-3">
+										<Col className="col-8 float-start d-flex  align-items-center">
+										
+										</Col>
 										<Button
 											// disabled={Boolean(entity?.is_hired)}
 											className="col-4 float-end"
@@ -1446,7 +1488,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												</span>
 											</AccordionSummary>
 											<AccordionDetails>
-												<Row>
+												<Row> 
 													<BaseInput
 														readOnly={Boolean(entity?.is_hired)}
 														className="col-12"
@@ -1474,16 +1516,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														max={new Date().toISOString().split("T")[0]}
 														formik={form}
 													/>
-
-													<BaseInput
+													{
+														((curentCompanyCheck?.id != form.values?.employers[i]?.id) || !form.values?.employers[i]?.is_current ) && <BaseInput
 														className="col-6"
 														readOnly={Boolean(entity?.is_hired)}
+														required
 														name={`employers[${i}].end_at`}
-														label="THROUGH_OPTIONAL"
+														label="THROUGH"
 														type="date"
 														formik={form}
 													/>
-
+													}
 													<BaseInput
 														className="col-12"
 														readOnly={Boolean(entity?.is_hired)}
@@ -1530,6 +1573,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														name={`employers[${i}].phone`}
 														label="PHONE"
 														placeholder="PHONE"
+														formik={form}
+													/>
+													<BaseCheck
+														className="col-12 mt-2"
+														disabled={currentCompanyCheckBox(form.values?.employers[i])}
+														name={`employers[${i}].is_current`}
+														label="CURRENT_COMPANY"
 														formik={form}
 													/>
 													<BaseCheck

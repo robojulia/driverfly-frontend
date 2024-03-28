@@ -1081,6 +1081,7 @@
   "CURENNT_COMPANY_{phone}": "Phone: {{phone}}",
   "MAY_CONTACT_COMPANY": "You may contact this company",
   "SUBJECT_TO_FMCSRS": "Subject to the FMCSRs",
+  "CURRENT_COMPANY": "Current company",
   "JOB_DESIGNATED_AS_SATEFY_SENSITIVE": "Job designated as a safety-sensitive function in any DOT- regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40",
   "MUST_BE_A_VALID_URL": "Must be a valid url (make sure your url starts with http:// or https:// and ends in .com, .org, .co etc)",
   "WEBSITE": "Website",
@@ -1198,6 +1199,7 @@
   "RELATIONSHIP": "Relationship",
   "NEW_EMPLOYER": "New Employer",
   "THROUGH_OPTIONAL": "Through (optional)",
+  "THROUGH":"Through",
   "REMOVE": "Remove",
   "ApplicantDocumentType": {
     "RESUME": "Resume",
