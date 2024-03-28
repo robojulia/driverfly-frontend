@@ -67,6 +67,7 @@ import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
 import ViewModal from "../../view-details/view-modal";
 import { ReferralSourceForm } from "../admin/referral-source-form";
 import { JobForm } from "./job-form";
+import ShowEnumFromString from "../../enum-filters/show-enum-from-string";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
@@ -251,6 +252,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			} else {
 				values = {
 					...new ApplicantEntity(),
+					type: ApplicantType.COMPANY,
 					extras,
 				};
 			}
@@ -819,15 +821,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										)}].value`}
 										formik={form}
 									/>
-									<BaseSelect
+									<BaseInput
 										readOnly
 										className="col-12 p-0 px-lg-2"
 										label="LEAD_TYPE"
-										labelPrefix="ApplicantType"
 										name="type"
 										placeholder
-										formik={form}
-										enumType={ApplicantType}
+										value={t(`ApplicantType.${form.values?.type || ApplicantType.COMPANY}`)}
 									/>
 									<BaseSelect
 										readOnly={!canCreateReferral}
