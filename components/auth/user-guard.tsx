@@ -22,7 +22,7 @@ export function UserGuard({ permissions, children }: UserGuardProps) {
     }
 
     async function CheckAuth() {
-        console.log("Checking Auth...");
+        // console.log("Checking Auth...");
         if (await loginGuard()) {
             if (permissions) {
                 if (user) {
@@ -55,7 +55,7 @@ export function UserGuard({ permissions, children }: UserGuardProps) {
                 }
                 if (user.jwt?.exp) {
                     const msToExpiration = jwtExpiryTimeout(user.jwt);
-                    console.log("Expires in ms: ", msToExpiration);
+                    // console.log("Expires in ms: ", msToExpiration);
 
                     const timeoutId = window.setTimeout(CheckAuth, msToExpiration);
 

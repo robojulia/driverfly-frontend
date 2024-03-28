@@ -175,74 +175,78 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	}, [user]);
 
 
-	useEffect(() => {
+	useEffectAsync(async () => {
 		// console.log("entity", entity);
 		setCanCreateReferral(!!!entity?.referralSource?.id && !!user?.company_admin)
-		form.setValues(() => {
-			let values: ApplicantEntity;
-			let extras: ApplicantExtrasEntity[] = entity?.extras ?? [];
+		let extras: ApplicantExtrasEntity[] = entity?.extras || [];
 
-			const ALREADY_APPLIED_TO_COMPANY = extras?.find(
-				(v) => v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
-			)
-			if (!ALREADY_APPLIED_TO_COMPANY?.id) {
-				extras?.push({
-					...new ApplicantExtrasEntity(),
-					type: ApplicantExtras.ALREADY_APPLIED_TO_COMPANY,
-					value: false,
-				});
-			} else {
-				extras?.push({
-					...ALREADY_APPLIED_TO_COMPANY,
-					value: Boolean(ALREADY_APPLIED_TO_COMPANY.value),
-				});
-			}
+		const ALREADY_APPLIED_TO_COMPANY = extras?.find(
+			(v) => v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
+		)
+		if (!ALREADY_APPLIED_TO_COMPANY?.id) {
+			extras?.push({
+				...new ApplicantExtrasEntity(),
+				type: ApplicantExtras.ALREADY_APPLIED_TO_COMPANY,
+				value: false,
+			});
+		// } else {
+		// 	extras?.push({
+		// 		...ALREADY_APPLIED_TO_COMPANY,
+		// 		value: Boolean(ALREADY_APPLIED_TO_COMPANY.value),
+		// 	});
+		}
 
-			const ALREADY_WORKED_TO_COMPANY = extras?.find(
-				(v) => v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
-			)
-			if (!ALREADY_WORKED_TO_COMPANY?.id) {
-				setIsWorkedBefore(false);
-				extras?.push({
-					...new ApplicantExtrasEntity(),
-					type: ApplicantExtras.ALREADY_WORKED_TO_COMPANY,
-				});
-			} else {
-				setIsWorkedBefore(true);
-			}
+		const ALREADY_WORKED_TO_COMPANY = extras?.find(
+			(v) => v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
+		)
+		if (!ALREADY_WORKED_TO_COMPANY?.id) {
+			setIsWorkedBefore(false);
+			extras?.push({
+				...new ApplicantExtrasEntity(),
+				type: ApplicantExtras.ALREADY_WORKED_TO_COMPANY,
+			});
+		} else {
+			setIsWorkedBefore(true);
+			// extras?.push({
+			// 	...ALREADY_WORKED_TO_COMPANY,
+			// 	value: Boolean(ALREADY_WORKED_TO_COMPANY.value),
+			// });
+		}
 
-			extras = extras.filter(Boolean);
-			if (!extras?.find((v) => v.type == ApplicantExtras.ROUTES))
-				extras?.push({
-					...new ApplicantExtrasEntity(),
-					type: ApplicantExtras.ROUTES,
-				});
-			if (!extras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME))
-				extras?.push({
-					...new ApplicantExtrasEntity(),
-					type: ApplicantExtras.BUSINESS_NAME,
-				});
-			if (!extras?.find((v) => v.type == ApplicantExtras.DOT_NUMBER))
-				extras?.push({
-					...new ApplicantExtrasEntity(),
-					type: ApplicantExtras.DOT_NUMBER,
-				});
-			if (
-				!extras?.find(
-					(v) => v.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD
-				)
+		extras = extras.filter(Boolean);
+		if (!extras?.find((v) => v.type == ApplicantExtras.ROUTES))
+			extras?.push({
+				...new ApplicantExtrasEntity(),
+				type: ApplicantExtras.ROUTES,
+			});
+		if (!extras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME))
+			extras?.push({
+				...new ApplicantExtrasEntity(),
+				type: ApplicantExtras.BUSINESS_NAME,
+			});
+		if (!extras?.find((v) => v.type == ApplicantExtras.DOT_NUMBER))
+			extras?.push({
+				...new ApplicantExtrasEntity(),
+				type: ApplicantExtras.DOT_NUMBER,
+			});
+		if (
+			!extras?.find(
+				(v) => v.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD
 			)
-				extras?.push({
-					...new ApplicantExtrasEntity(),
-					type: ApplicantExtras.AUTOMATED_RECRUITING_LEAD,
-				});
-			if (!extras?.find((v) => v.type == ApplicantExtras.CDL_NUMBER))
-				extras?.push({
-					...new ApplicantExtrasEntity(),
-					type: ApplicantExtras.CDL_NUMBER,
-				});
-			if (!!entity?.id) {
-				values = {
+		)
+			extras?.push({
+				...new ApplicantExtrasEntity(),
+				type: ApplicantExtras.AUTOMATED_RECRUITING_LEAD,
+			});
+		if (!extras?.find((v) => v.type == ApplicantExtras.CDL_NUMBER))
+			extras?.push({
+				...new ApplicantExtrasEntity(),
+				type: ApplicantExtras.CDL_NUMBER,
+			});
+
+		if (!!entity?.id) {
+			form.setValues(
+				{
 					...entity,
 					documents: entity?.documents?.filter((v) =>
 						Object.values(ApplicantDocumentType).includes(
@@ -250,16 +254,19 @@ export function ApplicantForm(props: ApplicantFormProps) {
 						)
 					),
 					extras,
-				};
-			} else {
-				values = {
+				});
+		} else {
+			console.log("extras", extras);
+
+			await form.setValues(
+				{
 					...new ApplicantEntity(),
 					type: ApplicantType.COMPANY,
-					extras,
-				};
-			}
-			return values;
-		});
+					extras
+					// extras: extras.map(({ id, type, value }) => ({ ...new ApplicantExtrasEntity(type, id), value })),
+				});
+		}
+
 	}, [entity]);
 
 	useEffect(() => {
@@ -316,10 +323,10 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		return curentCompanyCheck?.is_current ? (Boolean(employerId?.id !== curentCompanyCheck?.id)) : false
 	}
 
-	useEffect(()=>{
+	useEffect(() => {
 		const currentCompanyExists = form.values?.employers?.find((e) => e.is_current);
 		setCurentCompanyCheck(currentCompanyExists)
-	},[form.values])
+	}, [form.values])
 
 	const today = new Date();
 	const OldThan18Year = new Date(
@@ -334,26 +341,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		console.log("form.values", form.values);
 		console.log("form.errors", form.errors);
 	}, [form.values, form.errors]);
-
-	useEffect(() => {
-		!isWorkedBefore &&
-			form.setValues({
-				...form.values,
-				extras: form.values?.extras.map((extra) => {
-					if (extra.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY) {
-						return {
-							...extra,
-							value: {
-								...extra.value,
-								start_date: null,
-								end_date: null,
-							},
-						};
-					}
-					return extra;
-				}),
-			});
-	}, [isWorkedBefore]);
 
 	useEffect(() => {
 		try {
@@ -920,20 +907,20 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													<div>
 														<a
 															href="#"
-															onClick={() =>{
+															onClick={() => {
 																const extras = form.values?.extras || [];
 																form.setValues({
 																	...form.values,
 																	extras: extras?.map((item) =>
-																	item.type == ApplicantExtras.CDL_NUMBER ?
-																	{
-																		...item,
-																		value : [
-																			...item?.value?.filter((val, index) => index !== i)
-																		]
-																	}
-																	: item
-																	
+																		item.type == ApplicantExtras.CDL_NUMBER ?
+																			{
+																				...item,
+																				value: [
+																					...item?.value?.filter((val, index) => index !== i)
+																				]
+																			}
+																			: item
+
 																	)
 																})
 															}
@@ -994,12 +981,12 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														}
 													>
 														<DashCircle /></Button> */}
-													
+
 											</div>
 										))}
 									<Row className="my-3 px-3">
 										<Col className="col-8 float-start d-flex  align-items-center">
-										
+
 										</Col>
 										<Button
 											// disabled={Boolean(entity?.is_hired)}
@@ -1488,7 +1475,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												</span>
 											</AccordionSummary>
 											<AccordionDetails>
-												<Row> 
+												<Row>
 													<BaseInput
 														readOnly={Boolean(entity?.is_hired)}
 														className="col-12"
@@ -1517,15 +1504,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													{
-														((curentCompanyCheck?.id != form.values?.employers[i]?.id) || !form.values?.employers[i]?.is_current ) && <BaseInput
-														className="col-6"
-														readOnly={Boolean(entity?.is_hired)}
-														required
-														name={`employers[${i}].end_at`}
-														label="THROUGH"
-														type="date"
-														formik={form}
-													/>
+														((curentCompanyCheck?.id != form.values?.employers[i]?.id) || !form.values?.employers[i]?.is_current) && <BaseInput
+															className="col-6"
+															readOnly={Boolean(entity?.is_hired)}
+															required
+															name={`employers[${i}].end_at`}
+															label="THROUGH"
+															type="date"
+															formik={form}
+														/>
 													}
 													<BaseInput
 														className="col-12"
@@ -1630,7 +1617,16 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											)}].value`,
 											value
 										);
-										if (!value) setIsWorkedBefore(false);
+										if (!value) {
+											setIsWorkedBefore(false)
+											form.setFieldValue(
+												`extras[${form.values?.extras?.findIndex(
+													(v) =>
+														v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
+												)}].value`,
+												null
+											);
+										};
 									}}
 									formik={form}
 								/>
@@ -1650,7 +1646,18 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												name="is_worked_before"
 												label="WORKED_HERE_BEFORE"
 												checked={Boolean(isWorkedBefore)}
-												onChange={() => setIsWorkedBefore(!isWorkedBefore)}
+												onChange={({ target: { value } }) => {
+													setIsWorkedBefore(!isWorkedBefore)
+													if (!value) {
+														form.setFieldValue(
+															`extras[${form.values?.extras?.findIndex(
+																(v) =>
+																	v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
+															)}].value`,
+															null
+														);
+													}
+												}}
 											/>
 										</Col>
 									</Row>

@@ -11,8 +11,8 @@ import { BooleanTypeExtra } from "../../enums/jotform/bool-and-not-sure.enum";
 import { JobSchedule } from "../../enums/jobs/job-schedule.enum";
 
 export class ApplicantExtrasEntity {
-	constructor(type?: ApplicantExtras) {
-		console.log("type===", type)
+	constructor(type?: ApplicantExtras, id?: number) {
+		if (!!id) this.id = id;
 		if (!!type) this.type = type;
 	}
 	id?: number;
