@@ -8,5 +8,5 @@ export type ViewEmployeeDetailProps = {
     protectedFields?: ProtectedFields;
     hideAssignTo?: boolean | (() => boolean);
     hideCurrentStatus?: boolean | (() => boolean);
-
+    noTitle?:boolean;
 }

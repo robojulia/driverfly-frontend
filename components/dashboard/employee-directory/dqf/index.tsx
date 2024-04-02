@@ -187,7 +187,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                                                         <input className="form-check-input" type="radio" disabled checked={Boolean(document?.id)} />
                                                     </td>
                                                 }
-                                                <td colSpan={2}>
+                                                <td colSpan={2} className="w-25">
                                                     <UpdatedAt document={document} type={type} />
                                                 </td>
                                                 <td colSpan={1} className="border border-2 w-50">

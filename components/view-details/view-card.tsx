@@ -7,12 +7,13 @@ export interface ViewCardProps {
 	variant?: "primary" | "secondary";
 	readonly children?: any;
 	actions?: JSX.Element | JSX.Element[];
+	noTitle?: boolean;
 }
 
 export default function ViewCard(props: ViewCardProps) {
 	const { t } = useTranslation();
 
-	let { title, actions, children, variant, titleAs: TitleAsCmp } = props;
+	let { title, actions, children, variant, titleAs: TitleAsCmp, noTitle } = props;
 
 	function renderTitleCmp() {
 		if (TitleAsCmp) return <TitleAsCmp>{t(title)}</TitleAsCmp>;
@@ -22,7 +23,7 @@ export default function ViewCard(props: ViewCardProps) {
 
 	return (
 		<Card className={`card-${variant || "primary"} `}>
-			{(title || actions) && (
+			{!noTitle && (title || actions) && (
 				<Card.Header>
 					{title && <div style={{ float: "left" }}>{renderTitleCmp()}</div>}
 					{actions && <div style={{ float: "right" }}>{actions}</div>}
