@@ -83,10 +83,6 @@ export class ApplicantExtrasEntity {
 					is: ApplicantExtras.DOT_REGULATION,
 					then: yup.string().required().nullable(),
 				})
-				.when("type", {
-					is: ApplicantExtras.ALREADY_WORKED_TO_COMPANY,
-					then: WorkedBeforeExtrasDto.yupSchema(),
-				})
 				//for accordian
 				.when("type", {
 					is: ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE,
