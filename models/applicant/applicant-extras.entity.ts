@@ -25,10 +25,6 @@ export class ApplicantExtrasEntity {
 			value: yup
 				.mixed()
 				.when("type", {
-					is: ApplicantExtras.AUTHORIZE_TO_COMMUNICATE,
-					then: yup.string().required().nullable().default(BooleanTypeExtra.YES),
-				})
-				.when("type", {
 					is: ApplicantExtras.ACCIDENT_DETAILS,
 					then: yup.array(ApplicantAccidentEntity.yupSchema()),
 				})
@@ -61,14 +57,6 @@ export class ApplicantExtrasEntity {
 					then: yup.array(CdlExtras.yupSchema()),
 				})
 				.when("type", {
-					is: ApplicantExtras.ROUTES,
-					then: yup
-						.array((yup.string() as any).enum(JobSchedule))
-						.min(0)
-						.typeError("Choose atleast one!")
-						.nullable(),
-				})
-				.when("type", {
 					is: ApplicantExtras.REQUIRE_W2_EMPLOYMENT,
 					then: yup.string().optional().nullable(),
 				})
@@ -94,10 +82,6 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.DOT_REGULATION,
 					then: yup.string().required().nullable(),
-				})
-				.when("type", {
-					is: ApplicantExtras.ALREADY_APPLIED_TO_COMPANY,
-					then: yup.boolean().default(false).optional().nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.ALREADY_WORKED_TO_COMPANY,
@@ -143,10 +127,6 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.DOT_NUMBER,
 					then: yup.string().optional().nullable(),
-				})
-				.when("type", {
-					is: ApplicantExtras.AUTOMATED_RECRUITING_LEAD,
-					then: yup.boolean().optional().nullable(),
 				})
 		});
 	}

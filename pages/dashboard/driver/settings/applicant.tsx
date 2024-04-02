@@ -1,44 +1,43 @@
 import FullLayout from "../../../../components/dashboard/layouts/full-layout";
 import BaseInputPhone from "../../../../components/forms/base-input-phone";
 
-import { ApplicantEntity } from "../../../../models/applicant/applicant.entity"
+import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
+import { LicenseRestrictions } from "../../../../enums/applicants/applicant-license-restrictions-type.enum";
+import { JobEquipmentType } from "../../../../enums/jobs/job-equipment-type.enum";
+import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
+import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
+import { EducationLevel } from "../../../../enums/users/education-level.enum";
+import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
 import { ApplicantEmployerEntity } from "../../../../models/applicant/applicant-employer.entity";
 import { ApplicantEquipmentEntity } from "../../../../models/applicant/applicant-equipment.entity";
 import { ApplicantExperienceEntity } from "../../../../models/applicant/applicant-experience.entity";
+import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import { DocumentEntity } from "../../../../models/documents/document.entity";
-import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
-import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
-import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
-import { EducationLevel } from "../../../../enums/users/education-level.enum";
-import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
-import { JobEquipmentType } from "../../../../enums/jobs/job-equipment-type.enum";
-import { LicenseRestrictions } from "../../../../enums/applicants/applicant-license-restrictions-type.enum";
 
 
 import ApplicantApi from "../../../api/applicant";
 
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 
-import { Row, Col, Button, Table, Alert } from "react-bootstrap";
-import { PlusCircle, ChevronUp, XCircle, DashCircle } from "react-bootstrap-icons";
-import ViewCard from "../../../../components/view-details/view-card";
-import BaseInput from "../../../../components/forms/base-input";
-import BaseSelect from "../../../../components/forms/base-select";
-import StateSelect from "../../../../components/forms/state-select";
+import { Alert, Button, Col, Row, Table } from "react-bootstrap";
+import { ChevronUp, DashCircle, PlusCircle, XCircle } from "react-bootstrap-icons";
 import BaseCheck from "../../../../components/forms/base-check";
 import BaseCheckList from "../../../../components/forms/base-check-list";
-import FileInput from "../../../../components/forms/file-input";
+import BaseInput from "../../../../components/forms/base-input";
+import BaseSelect from "../../../../components/forms/base-select";
 import BaseTextArea from "../../../../components/forms/base-text-area";
+import FileInput from "../../../../components/forms/file-input";
+import StateSelect from "../../../../components/forms/state-select";
+import ViewCard from "../../../../components/view-details/view-card";
 
 import { useTranslation } from "../../../../hooks/use-translation";
 
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css'
-import { useEffectAsync } from "../../../../utils/react";
+import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
-import ApplicantResume from "../../../../components/pdf/applicant-resume";
+import { useEffectAsync } from "../../../../utils/react";
 
 export default function Applicant() {
     const { t } = useTranslation();

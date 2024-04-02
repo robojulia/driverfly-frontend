@@ -6,7 +6,7 @@ export class DriverApplicationDto {
   last_name: string;
   APPLY_DATE: ApplicantExtrasEntity;
   SIGNATURE: ApplicantExtrasEntity;
-  AUTOMATED_RECRUITING_LEAD: ApplicantExtrasEntity
+  is_automated_recruiting_lead: boolean;
   static yupSchema() {
     return yup.object({
       first_name: yup
@@ -21,7 +21,7 @@ export class DriverApplicationDto {
         .nullable(),
       APPLY_DATE: ApplicantExtrasEntity.yupSchema(),
       SIGNATURE: ApplicantExtrasEntity.yupSchema(),
-      AUTOMATED_RECRUITING_LEAD: ApplicantExtrasEntity.yupSchema(),
+      is_automated_recruiting_lead: yup.boolean().nullable(),
     });
   }
 }

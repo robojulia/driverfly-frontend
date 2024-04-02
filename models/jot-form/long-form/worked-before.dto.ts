@@ -1,36 +1,41 @@
 import * as yup from "yup";
-import { ApplicantExtrasEntity } from "../../applicant/applicant-extras.entity";
 
 export class WorkedBeforeDto {
-  ALREADY_APPLIED_TO_COMPANY: ApplicantExtrasEntity;
-  ALREADY_WORKED_TO_COMPANY: ApplicantExtrasEntity
-  is_worked_before: boolean
-  // ALREADY_WORKED_TO_COMPANY: boolean = false;
-  from_date: string ;
-  to_date: string ;
+  already_applied_to_company?: boolean;
+  already_worked_to_company?: boolean;
+  already_worked_start_date?: Date;
+  already_worked_end_date?: Date;
 
   static yupSchema() {
     return yup.object({
-      ALREADY_APPLIED_TO_COMPANY: ApplicantExtrasEntity.yupSchema(),
-      
-      is_worked_before: yup.boolean().default(false).optional().nullable(),
-      ALREADY_WORKED_TO_COMPANY: yup
-        .object()
-        .when("is_worked_before", {
-          is: (v) => !!v,
-          then: ApplicantExtrasEntity.yupSchema(),
+      already_applied_to_company: yup
+        .boolean()
+        .default(false)
+        .optional()
+        .nullable(),
+      already_worked_to_company: yup
+        .boolean()
+        .default(false)
+        .optional()
+        .nullable(),
+      already_worked_start_date: yup.date().max(new Date()).nullable(),
+      already_worked_end_date: yup
+        .date()
+        .test({
+          test: (value, context) => {
+            const start_date = context.resolve(
+              yup.ref("already_worked_start_date")
+            );
+            if (!Boolean(value)) return true;
+            if (value > start_date) return true;
+
+            return context.createError({
+              path: context.path,
+              message: "END_DATE_MUST_BE_AFTER_START_DATE",
+            });
+          },
         })
         .nullable(),
-      // from_date: yup.date().when("worked_before", {
-      //   is: (v) => !!v,
-      //   then: yup.date().required().nullable(),
-      //   otherwise: yup.date().optional().nullable(),
-      // }),
-      // to_date: yup.date().when("worked_before", {
-      //   is: (v) => !!v,
-      //   then: yup.date().required().nullable(),
-      //   otherwise: yup.date().optional().nullable(),
-      // }),
     });
   }
 }

@@ -1,14 +1,12 @@
 import { Col, Row } from "react-bootstrap";
 
-import React, { useEffect } from "react";
-import { useTranslation } from "../../../../hooks/use-translation";
-import ViewDetails from "../../../view-details/view-details";
-import ViewCard from "../../../view-details/view-card";
-import { ViewApplicantDetailProps } from "../../../../types/applicant/view-application-detail-props.type";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
-import ViewTable from "../../../view-details/view-table";
-import ShowFormattedDate from "../../../jobs/show-formatted-date";
 import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
+import { useTranslation } from "../../../../hooks/use-translation";
+import { ViewApplicantDetailProps } from "../../../../types/applicant/view-application-detail-props.type";
+import ViewCard from "../../../view-details/view-card";
+import ViewDetails from "../../../view-details/view-details";
+import ViewTable from "../../../view-details/view-table";
 
 interface ApplicantSafetyBackgroundProps extends ViewApplicantDetailProps { }
 
@@ -16,9 +14,6 @@ export default function ApplicantExtrasDetails({
 	applicant,
 }: ApplicantSafetyBackgroundProps) {
 	const { t } = useTranslation();
-	const authToCommunicate = applicant.extras.find(
-		(ex) => ex?.type == ApplicantExtras.AUTHORIZE_TO_COMMUNICATE
-	);
 	const hear_about_us = applicant.extras.find(
 		(ex) => ex?.type == ApplicantExtras.HEAR_ABOUT_US
 	);
@@ -48,9 +43,6 @@ export default function ApplicantExtrasDetails({
 	const cdl_details = applicant.extras.find(
 		(ex) => ex?.type == ApplicantExtras.CDL_NUMBER
 	);
-	const routes = applicant.extras.find(
-		(ex) => ex?.type == ApplicantExtras.ROUTES
-	);
 	const other_requirement = applicant.extras.find(
 		(ex) => ex?.type == ApplicantExtras.OTHER_ABSOLUTELY_REQUIREMENTS
 	);
@@ -68,13 +60,6 @@ export default function ApplicantExtrasDetails({
 
 	const past_employers = applicant.employers.filter(v => !!!v.is_current);
 
-	const already_applied = applicant.extras.find(
-		(ex) => ex?.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
-	);
-	const already_worked_here = applicant.extras.find(
-		(ex) => ex?.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
-	);
-
 	return (
 		<>
 			<Row>
@@ -83,7 +68,7 @@ export default function ApplicantExtrasDetails({
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
-								Authorize_to_Communicate: authToCommunicate?.value && t(`BooleanPreferenceType.${authToCommunicate?.value}`),
+								Authorize_to_Communicate: applicant.authorize_to_communicate && t(`BooleanPreferenceType.${applicant.authorize_to_communicate}`),
 								hear_about_us: hear_about_us?.value && t(`HearAboutUsType.${hear_about_us?.value}`),
 								job_apply_date: job_apply_date?.value,
 								qualified_for_manual_transmission:
@@ -143,7 +128,7 @@ export default function ApplicantExtrasDetails({
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
-								ROUTES: routes?.value && routes?.value?.map(route => t(`RouteType.${route}`))
+								ROUTES: applicant.routes && applicant.routes?.map(route => t(`RouteType.${route}`))
 							}}
 						/>
 						<ViewDetails
@@ -288,12 +273,14 @@ export default function ApplicantExtrasDetails({
 							<ViewDetails
 								default={t("NOT_ANSWERED")}
 								obj={{
-									ALREADY_APPLIED_HERE: already_applied?.value,
-									ALREADY_WORKED_HERE: !!already_worked_here?.value?.start_date
+									ALREADY_APPLIED_HERE: (applicant.already_applied_to_company)
 										? `${t("YES")}`
 										: `${t("NO")}`,
-									START_DATE: already_worked_here?.value?.start_date,
-									END_DATE: already_worked_here?.value?.end_date,
+									ALREADY_WORKED_HERE: (applicant.already_worked_to_company)
+										? `${t("YES")}`
+										: `${t("NO")}`,
+									START_DATE: applicant.already_worked_start_date,
+									END_DATE: applicant.already_worked_end_date,
 								}}
 							/>
 						</Row>

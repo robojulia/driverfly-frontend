@@ -1,16 +1,21 @@
 import { useFormik } from "formik"
+import Link from "next/link"
 import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
-import { ArrowRight, DashCircle, InfoCircle, PlusCircle } from 'react-bootstrap-icons'
+import { ArrowRight, DashCircle, PlusCircle } from 'react-bootstrap-icons'
 import Button from "react-bootstrap/Button"
 import { toast } from 'react-toastify'
 import { ApplicantDocumentType } from '../enums/applicants/applicant-document-type.enum'
+import { ApplicantExtras } from "../enums/applicants/applicant-extras.enum"
+import { BooleanTypeExtra } from "../enums/jotform/bool-and-not-sure.enum"
+import { HearAboutUsType } from "../enums/jotform/hear-about-type.enum"
 import { DriverLicenseType } from "../enums/users/driver-license-type.enum"
 import { EducationLevel } from '../enums/users/education-level.enum'
 import { SharePreference } from '../enums/users/share-preference.enum'
 import { UserPreferenceCategory } from '../enums/users/user-preference-category.enum'
 import { useAuth } from '../hooks/use-auth'
 import { useTranslation } from "../hooks/use-translation"
+import { ApplicantExtrasEntity } from "../models/applicant"
 import { ApplicantEntity } from '../models/applicant/applicant.entity'
 import { DocumentEntity } from '../models/documents/document.entity'
 import ApplicantApi from '../pages/api/applicant'
@@ -26,11 +31,6 @@ import FileInput from "./forms/file-input"
 import { LoaderIcon } from './loading/loader-icon'
 import ViewCard from './view-details/view-card'
 import ViewModal from "./view-details/view-modal"
-import Link from "next/link"
-import { BooleanTypeExtra } from "../enums/jotform/bool-and-not-sure.enum"
-import { ApplicantExtrasEntity } from "../models/applicant"
-import { ApplicantExtras } from "../enums/applicants/applicant-extras.enum"
-import { HearAboutUsType } from "../enums/jotform/hear-about-type.enum"
 
 export default function JobApply({ job, setEncourageModal }) {
     const { user } = useAuth();
@@ -96,7 +96,6 @@ export default function JobApply({ job, setEncourageModal }) {
             applicant.years_cdl_experience = 0;
             applicant.moving_violations_count = 0;
             applicant.accident_count = 0;
-            applicant.extras = [new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE)]
         }
         console.log({ applicant });
 
@@ -357,9 +356,7 @@ export default function JobApply({ job, setEncourageModal }) {
                                 required
                                 labelPrefix="BooleanPreferenceType"
                                 enumType={BooleanTypeExtra}
-                                name={`extras[${apply_form.values?.extras?.findIndex(
-                                    (v) => v.type == ApplicantExtras.AUTHORIZE_TO_COMMUNICATE
-                                )}].value`}
+                                name={`authorize_to_communicate`}
                                 placeholder="CHOOSE"
                                 label={t("{company_name}_SMS_EMAIL_AUTHORIZATION_NAUTILIUS", { company_name: job?.company?.name }, { translateProps: true })}
                                 formik={apply_form}

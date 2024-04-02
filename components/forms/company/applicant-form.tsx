@@ -87,11 +87,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		ReferralSourceEntity[]
 	>([]);
 	const [curentCompanyCheck, setCurentCompanyCheck] = useState<ApplicantEmployerEntity>();
-	// const [protectedFields, setProtectedFields] = useState({
-	// 	license_number: false,
-	// 	social_security_number: false,
-	// });
-	const [isWorkedBefore, setIsWorkedBefore] = useState<boolean>(false);
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
 	const [jobHired, setJobHired] = useState<ApplicantJobEntity>(null);
 	const [createJob, setCreateJob] = useState<boolean>(false);
@@ -179,46 +174,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		// console.log("entity", entity);
 		setCanCreateReferral(!!!entity?.referralSource?.id && !!user?.company_admin)
 		let extras: ApplicantExtrasEntity[] = entity?.extras || [];
-
-		const ALREADY_APPLIED_TO_COMPANY = extras?.find(
-			(v) => v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
-		)
-		if (!ALREADY_APPLIED_TO_COMPANY?.id) {
-			extras?.push({
-				...new ApplicantExtrasEntity(),
-				type: ApplicantExtras.ALREADY_APPLIED_TO_COMPANY,
-				value: false,
-			});
-		// } else {
-		// 	extras?.push({
-		// 		...ALREADY_APPLIED_TO_COMPANY,
-		// 		value: Boolean(ALREADY_APPLIED_TO_COMPANY.value),
-		// 	});
-		}
-
-		const ALREADY_WORKED_TO_COMPANY = extras?.find(
-			(v) => v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
-		)
-		if (!ALREADY_WORKED_TO_COMPANY?.id) {
-			setIsWorkedBefore(false);
-			extras?.push({
-				...new ApplicantExtrasEntity(),
-				type: ApplicantExtras.ALREADY_WORKED_TO_COMPANY,
-			});
-		} else {
-			setIsWorkedBefore(true);
-			// extras?.push({
-			// 	...ALREADY_WORKED_TO_COMPANY,
-			// 	value: Boolean(ALREADY_WORKED_TO_COMPANY.value),
-			// });
-		}
-
+		
 		extras = extras.filter(Boolean);
-		if (!extras?.find((v) => v.type == ApplicantExtras.ROUTES))
-			extras?.push({
-				...new ApplicantExtrasEntity(),
-				type: ApplicantExtras.ROUTES,
-			});
 		if (!extras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME))
 			extras?.push({
 				...new ApplicantExtrasEntity(),
@@ -228,15 +185,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			extras?.push({
 				...new ApplicantExtrasEntity(),
 				type: ApplicantExtras.DOT_NUMBER,
-			});
-		if (
-			!extras?.find(
-				(v) => v.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD
-			)
-		)
-			extras?.push({
-				...new ApplicantExtrasEntity(),
-				type: ApplicantExtras.AUTOMATED_RECRUITING_LEAD,
 			});
 		if (!extras?.find((v) => v.type == ApplicantExtras.CDL_NUMBER))
 			extras?.push({
@@ -814,9 +762,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										className="col-12 my-2"
 										disabled
 										label="AUTOMATED_RECRUITING_LEAD"
-										name={`extras[${form.values?.extras?.findIndex(
-											(v) => v.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD
-										)}].value`}
+										name={`is_automated_recruiting_lead`}
 										formik={form}
 									/>
 									<BaseInput
@@ -1085,9 +1031,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									className="col-12 mt-2"
 									disabled={Boolean(entity?.is_hired)}
 									label="ROUTE_TYPE"
-									name={`extras[${form.values?.extras?.findIndex(
-										(v) => v.type == ApplicantExtras.ROUTES
-									)}].value`}
+									name={`routes`}
 									formik={form}
 									labelPrefix="JobSchedule"
 									enumType={JobSchedule}
@@ -1605,27 +1549,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							<Col>
 								<BaseCheck
 									className="my-3 col float-left p-0"
-									name={`extras[${form.values?.extras?.findIndex(
-										(v) => v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
-									)}].value`}
+									name={`already_applied_to_company`}
 									label="APPLIED_HERE_BEFORE"
 									onChange={({ target: { value } }) => {
 										form.setFieldValue(
-											`extras[${form.values?.extras?.findIndex(
-												(v) =>
-													v.type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
-											)}].value`,
+											`already_applied_to_company`,
 											value
 										);
 										if (!value) {
-											setIsWorkedBefore(false)
-											form.setFieldValue(
-												`extras[${form.values?.extras?.findIndex(
-													(v) =>
-														v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
-												)}].value`,
-												null
-											);
+											form.setFieldValue(`already_worked_to_company`, false);
+											form.setFieldValue(`already_worked_start_date`, null);
+											form.setFieldValue(`already_worked_end_date`, null);
 										};
 									}}
 									formik={form}
@@ -1633,80 +1567,64 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							</Col>
 						</Row>
 
-						{Boolean(
-							form.values?.extras.find(
-								({ type }) => type == ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
-							)?.value
-						) && (
-								<>
+						{Boolean(form.values?.already_applied_to_company) && (
+							<>
+								<Row>
+									<Col>
+										<BaseCheck
+											className="my-3 col float-left p-0"
+											name="already_worked_to_company"
+											label="WORKED_HERE_BEFORE"
+											onChange={({ target: { value } }) => {
+												form.setFieldValue(`already_worked_to_company`, value);
+												if (!value) {
+													form.setFieldValue(`already_worked_start_date`, null);
+													form.setFieldValue(`already_worked_end_date`, null);
+												}
+											}}
+										/>
+									</Col>
+								</Row>
+								{form.values.already_worked_to_company && (
 									<Row>
-										<Col>
-											<BaseCheck
-												className="my-3 col float-left p-0"
-												name="is_worked_before"
-												label="WORKED_HERE_BEFORE"
-												checked={Boolean(isWorkedBefore)}
-												onChange={({ target: { value } }) => {
-													setIsWorkedBefore(!isWorkedBefore)
-													if (!value) {
-														form.setFieldValue(
-															`extras[${form.values?.extras?.findIndex(
-																(v) =>
-																	v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
-															)}].value`,
-															null
-														);
-													}
-												}}
-											/>
-										</Col>
+										<BaseInput
+											className="col-md-6 my-3 font-weight-bold"
+											type="date"
+											name={`already_worked_start_date`}
+											placeholder="DATE"
+											label="FROM"
+											max={
+												new Date(
+													new Date().getFullYear(),
+													new Date().getMonth(),
+													new Date().getDate()
+												)
+													.toISOString()
+													.split("T")[0]
+											}
+											formik={form}
+										/>
+										<BaseInput
+											className="col-md-6 my-3 font-weight-bold"
+											type="date"
+											name={`already_worked_start_date`}
+											placeholder="DATE"
+											label="TO"
+											max={
+												new Date(
+													new Date().getFullYear(),
+													new Date().getMonth(),
+													new Date().getDate()
+												)
+													.toISOString()
+													.split("T")[0]
+											}
+											formik={form}
+										/>
 									</Row>
-									{isWorkedBefore && (
-										<Row>
-											<BaseInput
-												className="col-md-6 my-3 font-weight-bold"
-												type="date"
-												name={`extras[${form.values?.extras?.findIndex(
-													(v) =>
-														v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
-												)}].value.start_date`}
-												placeholder="DATE"
-												label="FROM"
-												max={
-													new Date(
-														new Date().getFullYear(),
-														new Date().getMonth(),
-														new Date().getDate()
-													)
-														.toISOString()
-														.split("T")[0]
-												}
-												formik={form}
-											/>
-											<BaseInput
-												className="col-md-6 my-3 font-weight-bold"
-												type="date"
-												name={`extras[${form.values?.extras?.findIndex(
-													(v) =>
-														v.type == ApplicantExtras.ALREADY_WORKED_TO_COMPANY
-												)}].value.end_date`}
-												placeholder="DATE"
-												label="TO"
-												max={
-													new Date(
-														new Date().getFullYear(),
-														new Date().getMonth(),
-														new Date().getDate()
-													)
-														.toISOString()
-														.split("T")[0]
-												}
-												formik={form}
-											/>
-										</Row>
-									)}
-								</>
-							)}
+								)}
+							</>
+						)}
 					</ViewCard>
 				</Col>
 			</Row>

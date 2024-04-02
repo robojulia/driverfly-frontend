@@ -1161,7 +1161,7 @@
     },
     "array": {
       "length": "Must have {{length}} items",
-      "min": "Must have at least {{min}} items",
+      "min": "Choose atleast {{min}}",
       "max": "Must have no more than {{max}} items",
       "unique": "Field must be unique in the list"
     },
