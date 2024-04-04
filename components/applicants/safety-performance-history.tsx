@@ -87,7 +87,7 @@ export default function SafetyPerformanceHistory({
     const handleClick = async () => {
         const data = await applicantApi.employer.list(applicant.id);
         setEmployers(data);
-        if (!Boolean(data.length)) alert(t("NO_RECORDS_FOUND"));
+        if (!Boolean(data.length)) alert(t("NOT_AVAILABLE"));
     };
 
     /**
