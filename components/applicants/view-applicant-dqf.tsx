@@ -176,7 +176,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
                                                         && <Form onSubmit={form.handleSubmit} >
                                                             <FileInput
                                                                 name={`document`}
-                                                                accept="application/pdf"
+                                                                accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
                                                                 formik={form}
                                                             />
                                                             <div className="mt-2 d-flex w-100 ">
@@ -301,7 +301,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
                                                         && <Form onSubmit={form.handleSubmit} >
                                                             <FileInput
                                                                 name={`document`}
-                                                                accept="application/pdf"
+                                                                accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
                                                                 formik={form}
                                                             />
                                                             <div className="mt-2 d-flex w-100 ">

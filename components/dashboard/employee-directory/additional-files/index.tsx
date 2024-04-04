@@ -175,7 +175,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                                             <Form onSubmit={form.handleSubmit}>
                                                                 <FileInput
                                                                     name={`document`}
-                                                                    accept="application/pdf"
+                                                                    accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
                                                                     formik={form}
                                                                     allowedSizeInByte={3145728}
                                                                 />

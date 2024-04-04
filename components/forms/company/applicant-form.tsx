@@ -1652,7 +1652,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											className="col-12 mt-2"
 											readOnly={Boolean(entity?.is_hired)}
 											label="details"
-											name="license_revoked_details"
+											name="`	`"
 											formik={form}
 										/>
 									)}
@@ -1769,7 +1769,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													name={`documents[${i}]`}
 													readOnly={Boolean(props?.entity?.is_hired)}
 													required
-													accept="application/pdf"
+													accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
 													allowedSizeInByte={3145728}
 													formik={form}
 												/>
