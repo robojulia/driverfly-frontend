@@ -362,6 +362,7 @@ export class ApplicantEntity {
       criminal_history: yup.string().nullable(),
       accident_count: yup
         .number()
+		.default(0)
         .required()
         .when(
           "accident_history",
@@ -393,6 +394,7 @@ export class ApplicantEntity {
       moving_violations: yup.bool().nullable(),
       moving_violations_count: yup
         .number()
+		.default(0)
         .required()
         .when(
           "moving_violation_history",

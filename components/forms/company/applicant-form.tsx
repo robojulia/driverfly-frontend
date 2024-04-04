@@ -204,8 +204,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 					extras,
 				});
 		} else {
-			console.log("extras", extras);
-
 			await form.setValues(
 				{
 					...new ApplicantEntity(),
