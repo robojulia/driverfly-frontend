@@ -362,7 +362,7 @@ export class ApplicantEntity {
       criminal_history: yup.string().nullable(),
       accident_count: yup
         .number()
-		.default(0)
+        .default(0)
         .required()
         .when(
           "accident_history",
@@ -394,7 +394,7 @@ export class ApplicantEntity {
       moving_violations: yup.bool().nullable(),
       moving_violations_count: yup
         .number()
-		.default(0)
+        .default(0)
         .required()
         .when(
           "moving_violation_history",
@@ -665,7 +665,13 @@ export class ApplicantEntity {
       accident_count: yup.number().min(0).nullable(),
       accident_details: yup.string().nullable(),
       license_revoked: yup.bool().nullable(),
-      license_revoked_details: yup.string().nullable(),
+      license_revoked_details: yup
+        .string()
+        .when("license_revoked", {
+          is: (v) => !!v,
+          then: yup.string().required().nullable(),
+        })
+        .nullable(),
       psp_violations: yup.bool().nullable(),
       psp_violations_details: yup.string().nullable(),
       tickets: yup.bool().nullable(),
