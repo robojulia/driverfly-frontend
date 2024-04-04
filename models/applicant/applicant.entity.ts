@@ -554,7 +554,13 @@ export class ApplicantEntity {
       authorized_to_work_in_us: yup.bool().nullable(),
       accident_details: yup.string().nullable(),
       license_revoked: yup.bool().nullable(),
-      license_revoked_details: yup.string().nullable(),
+      license_revoked_details: yup
+        .string()
+        .when("license_revoked", {
+          is: (v) => !!v,
+          then: yup.string().required().nullable(),
+        })
+        .nullable(),
       psp_violations: yup.bool().nullable(),
       psp_violations_details: yup.string().nullable(),
       tickets: yup.bool().nullable(),
@@ -665,13 +671,7 @@ export class ApplicantEntity {
       accident_count: yup.number().min(0).nullable(),
       accident_details: yup.string().nullable(),
       license_revoked: yup.bool().nullable(),
-      license_revoked_details: yup
-        .string()
-        .when("license_revoked", {
-          is: (v) => !!v,
-          then: yup.string().required().nullable(),
-        })
-        .nullable(),
+      license_revoked_details: yup.string().nullable(),
       psp_violations: yup.bool().nullable(),
       psp_violations_details: yup.string().nullable(),
       tickets: yup.bool().nullable(),
