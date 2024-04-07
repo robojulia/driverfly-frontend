@@ -92,6 +92,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	const [createJob, setCreateJob] = useState<boolean>(false);
 	const [canCreateReferral, setCanCreateReferral] = useState<boolean>();
 	const [createReferral, setCreateReferral] = useState<boolean>(false);
+	const [hasCriminalHistory, setHasCriminalHistory] = useState<boolean>();
 
 	const form = useFormik({
 		initialValues: new ApplicantEntity(),
@@ -193,6 +194,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			});
 
 		if (!!entity?.id) {
+			setHasCriminalHistory(!!entity.criminal_history)
 			form.setValues(
 				{
 					...entity,
@@ -313,13 +315,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			console.error(error.message);
 		}
 	}, [form.submitCount])
-
-	function Violations() {
-		return (
-			<>
-			</>
-		);
-	}
 
 	return (
 		<EntityForm
@@ -1398,13 +1393,27 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										</ViewCard>
 									</Col>
 								)}
-								<BaseTextArea
+								<BaseCheck
 									className="col-12 mt-2"
-									readOnly={Boolean(entity?.is_hired)}
+									disabled={Boolean(entity?.is_hired)}
 									label="criminal_history_last_3_years"
-									name="criminal_history"
-									formik={form}
+									checked={hasCriminalHistory}
+									onChange={({ target: { value } }) => {
+										setHasCriminalHistory(!!value);
+										if (!value) {
+											form.setFieldValue("criminal_history", null);
+										}
+									}}
 								/>
+								{hasCriminalHistory &&
+									<BaseTextArea
+										className="col-12 mt-2"
+										readOnly={Boolean(entity?.is_hired)}
+										label="DETAILS"
+										name="criminal_history"
+										formik={form}
+									/>
+								}
 
 								{/* Accident sectiion */}
 								<BaseInput

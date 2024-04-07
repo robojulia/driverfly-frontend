@@ -351,7 +351,7 @@ export class ApplicantEntity {
         // })
         .nullable(),
       highest_degree: (yup.string() as any).enum(EducationLevel).nullable(),
-      authorized_to_work_in_us: yup.bool().nullable(),
+      authorized_to_work_in_us: yup.boolean().optional().nullable(),
       emergency_contact_name: yup.string().nullable(),
       emergency_contact_number: yup.string().nullable(),
       emergency_contact_relationship: yup.string().nullable(),
@@ -462,8 +462,8 @@ export class ApplicantEntity {
         .nullable(),
       authorize_to_communicate: yup
         .string()
-        .default(BooleanTypeExtra.YES)
-        .required()
+        // .default(BooleanTypeExtra.YES)
+        .optional()
         .nullable(),
       routes: yup
         .array((yup.string() as any).enum(JobSchedule))
