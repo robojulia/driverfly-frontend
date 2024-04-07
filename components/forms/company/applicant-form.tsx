@@ -353,7 +353,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									}
 									label="ASSIGNED_RECRUITER"
 									name="assignedUserId"
-									placeholder
+									displayPlaceholder
 									options={companyUsers}
 									valueKey="id"
 									createLabel={(c) => `${c.name} (#${c.id}) `}
@@ -451,7 +451,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										className="col-12 p-0 px-lg-2"
 										label="LEAD_TYPE"
 										name="type"
-										placeholder
+										displayPlaceholder
 										value={t(`ApplicantType.${form.values?.type || ApplicantType.COMPANY}`)}
 									/>
 									<BaseSelect
@@ -459,7 +459,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										className="col-12 p-0 px-lg-2"
 										label="REFERRAL_SOURCE"
 										name="referralSource.id"
-										placeholder
+										displayPlaceholder
 										formik={form}
 										valueKey="id"
 										createLabel={(v) => buildReferral(v)}
@@ -650,7 +650,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										required={Boolean(form.values?.license_number)}
 										label="CDL_TYPE"
 										name="license_type"
-										placeholder
+										displayPlaceholder
 										labelPrefix="DriverLicenseType"
 										enumType={DriverLicenseType}
 										formik={form}
@@ -771,7 +771,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											label="OTHER_ENDORSEMENTS"
 											required
 											name="endorsements_other"
-											placeholder
+											displayPlaceholder
 											formik={form}
 										/>
 									)}
@@ -802,7 +802,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											label="OTHER_LICENSE_RESTRICTIONS"
 											required
 											name="license_restrictions_other"
-											placeholder
+											displayPlaceholder
 											formik={form}
 										/>
 									)}
@@ -1365,7 +1365,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 																		type="int"
 																		required
 																		min={1900}
-																		max={new Date().getFullYear()}
+																		max="9999"
+																		// max={new Date().getFullYear()}
+																		onChange={({ target: { value } }) => {
+																			if (!/^\d{0,4}$/.test(value)) value = value.slice(0, 4);
+
+																			form.setFieldValue(`dui_years[${i}]`, value)
+																		}}
 																		formik={form}
 																	/>
 																</td>

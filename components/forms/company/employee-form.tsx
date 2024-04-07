@@ -244,7 +244,7 @@ export function EmployeeForm(props: EmployeeFormProps) {
 									className="col-6"
 									label="CDL_CLASS"
 									name="license_type"
-									placeholder
+									displayPlaceholder
 									labelPrefix="DriverLicenseType"
 									enumType={DriverLicenseType}
 									formik={form}

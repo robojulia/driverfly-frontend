@@ -70,7 +70,7 @@ export function UserForm(props: UserFormProps) {
                     label="FIRST_NAME"
                     name="first_name"
                     required
-                    placeholder
+                    displayPlaceholder
                     formik={form}
                 />
                 <BaseInput
@@ -78,7 +78,7 @@ export function UserForm(props: UserFormProps) {
                     label="LAST_NAME"
                     name="last_name"
                     required
-                    placeholder
+                    displayPlaceholder
                     formik={form}
                 />
                 <BaseInputPhone
@@ -99,7 +99,7 @@ export function UserForm(props: UserFormProps) {
                     label="EMAIL"
                     name="email"
                     required
-                    placeholder
+                    displayPlaceholder
                     formik={form}
                 />
                 {/* <RoleSelect
@@ -107,7 +107,7 @@ export function UserForm(props: UserFormProps) {
                     label="ROLE"
                     name="roles[0]"
                     required
-                    placeholder
+                    displayPlaceholder
                     formik={form}
                     /> */}
 

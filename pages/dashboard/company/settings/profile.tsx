@@ -58,7 +58,7 @@ export default function Profile() {
             label="FIRST_NAME"
             name="first_name"
             required
-            placeholder
+            displayPlaceholder
             formik={form}
           />
           <BaseInput
@@ -66,7 +66,7 @@ export default function Profile() {
             label="LAST_NAME"
             name="last_name"
             required
-            placeholder
+            displayPlaceholder
             formik={form}
           />
 
@@ -74,7 +74,7 @@ export default function Profile() {
             className="col-sm-6 mt-1"
             label="phone"
             name="contact_number"
-            placeholder
+            displayPlaceholder
             formik={form}
           />
 
@@ -82,14 +82,14 @@ export default function Profile() {
             className="col-sm-6 mt-1"
             label="phone_cell"
             name="cell_number"
-            placeholder
+            displayPlaceholder
             formik={form}
           />
           <BaseInput
             className="col-12 mt-1"
             label="EMAIL"
             name="email"
-            placeholder
+            displayPlaceholder
             formik={form}
           />
         </Row>
