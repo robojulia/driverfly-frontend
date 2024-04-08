@@ -822,25 +822,23 @@ function guessControl(
 
     if (Array.isArray(value)) {
         return (
-            <>
-                <ul itemType="circle">
-                    {value?.map((v, i) => {
-                        const error = meta.error ? meta.error[i] : null;
+            <ul itemType="circle">
+                {value?.map((v, i) => {
+                    const error = meta.error ? meta.error[i] : null;
 
-                        if (error) {
-                            return (
-                                <li key={i} className="m-0 p-0">
-                                    {v}
-                                    <br />
-                                    <span className="text-danger small m-0 p-0">{error}</span>
-                                </li>
-                            );
-                        }
+                    if (error) {
+                        return (
+                            <li key={i} className="m-0 p-0">
+                                {v}
+                                <br />
+                                <span className="text-danger small m-0 p-0">{error}</span>
+                            </li>
+                        );
+                    }
 
-                        return <li key={i} className="m-0 p-0">{v}</li>;
-                    })}
-                </ul>
-            </>
+                    return <li key={i} className="m-0 p-0">{v}</li>;
+                })}
+            </ul>
         );
     }
 
