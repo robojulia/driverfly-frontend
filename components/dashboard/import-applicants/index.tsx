@@ -714,10 +714,12 @@ const ImportApplicants = () => {
                                 const meta = form.getFieldMeta(`items.${i}`);
 
                                 const findIcon = () => {
-                                    if (meta.error) return <XCircle color="red" />;
+                                    console.log(`items.${i} meta`, { meta }, { warnings: warnings[i] });
 
-                                    // if (Boolean(warnings[i]) && Boolean(Object.keys((warnings[i]))??.length))
-                                    if (Boolean(warnings[i]))
+                                    if (!!meta.error) return <XCircle color="red" />;
+
+                                    if (Boolean(warnings[i]) && (Object.keys((warnings[i]))?.length))
+                                        // if (Boolean(warnings[i]))
                                         return <ExclamationTriangle color="orange" />;
 
                                     return <Check color="green" />;
