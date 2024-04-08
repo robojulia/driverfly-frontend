@@ -98,6 +98,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		initialValues: new ApplicantEntity(),
 		validationSchema: ApplicantEntity.yupSchemaForApplicantForm(),
 		onSubmit: async (values) => {
+			console.log("submitted ", values);
+			
 			values.extras = values.extras?.filter(
 				(v) => v.value != undefined || v.value != null
 			);
