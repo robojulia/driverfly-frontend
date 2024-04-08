@@ -829,15 +829,15 @@ function guessControl(
 
                         if (error) {
                             return (
-                                <li key={i}>
+                                <li key={i} className="m-0 p-0">
                                     {v}
                                     <br />
-                                    <span className="text-danger small">{error}</span>
+                                    <span className="text-danger small m-0 p-0">{error}</span>
                                 </li>
                             );
                         }
 
-                        return <li key={i}>{v}</li>;
+                        return <li key={i} className="m-0 p-0">{v}</li>;
                     })}
                 </ul>
             </>
