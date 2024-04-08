@@ -30,15 +30,14 @@ export function BasicInfo() {
 		onSubmit: async (values) => {
 			console.log("values", values);
 			try {
-				const { email, zip_code, AUTHORIZE_TO_COMMUNICATE } = values;
+				const { email, zip_code, authorize_to_communicate } = values;
 
 				setApplicant({
 					...applicant,
 					email,
 					zip_code,
+					authorize_to_communicate
 				});
-
-				updateApplicantExtras(AUTHORIZE_TO_COMMUNICATE);
 
 				stepNext();
 
@@ -52,18 +51,10 @@ export function BasicInfo() {
 	});
 
 	useEffect(() => {
-		const apx = applicantExtras?.find(
-			(v) => v.type == ApplicantExtras.AUTHORIZE_TO_COMMUNICATE
-		);
 		form.setValues({
 			...form.values,
-			AUTHORIZE_TO_COMMUNICATE: !!apx?.type
-				? apx
-				: {
-					...new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE),
-					value: BooleanTypeExtra.YES
-				},
 			email: applicant.email,
+			authorize_to_communicate: applicant.authorize_to_communicate,
 			zip_code: applicant.zip_code,
 		});
 
@@ -104,7 +95,7 @@ export function BasicInfo() {
 						required
 						labelPrefix="BooleanPreferenceType"
 						enumType={BooleanTypeExtra}
-						name="AUTHORIZE_TO_COMMUNICATE.value"
+						name="authorize_to_communicate"
 						placeholder="CHOOSE"
 						label={t("{company_name}_SMS_EMAIL_AUTHORIZATION_NAUTILIUS", { company_name: applicant?.company?.name }, { translateProps: true })}
 						formik={form}

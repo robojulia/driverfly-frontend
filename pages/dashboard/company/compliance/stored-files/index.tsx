@@ -450,7 +450,7 @@ export default function StoredFiles() {
                             label="FILE_TYPE"
                             name="type"
                             required
-                            placeholder
+                            displayPlaceholder
                             labelPrefix="CompanyDocumentType"
                             enumType={CompanyDocumentType}
                             formik={form}

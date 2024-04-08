@@ -114,7 +114,7 @@ export default function VerifyEmail(props: VerifyEmailDto) {
                 label="EMAIL"
                 required
                 name="email"
-                placeholder
+                displayPlaceholder
                 formik={form}
               />
             <BaseInput
@@ -122,7 +122,7 @@ export default function VerifyEmail(props: VerifyEmailDto) {
                 label="TOKEN"
                 required
                 name="token"
-                placeholder
+                displayPlaceholder
                 formik={form}
               />
             <div className="d-grid gap-2 mt-4">

@@ -166,7 +166,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                                     <td colSpan={2}>
                                                         {t(`EmployeeAdditionalFilesEnum.${type}`)}
                                                     </td>
-                                                    <td colSpan={2}>
+                                                    <td colSpan={2} className="w-25">
                                                         <UpdatedAt document={document} type={type} />
                                                     </td>
                                                     <td colSpan={1} className="border border-2 w-50">
@@ -175,7 +175,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                                             <Form onSubmit={form.handleSubmit}>
                                                                 <FileInput
                                                                     name={`document`}
-                                                                    accept="application/pdf"
+                                                                    accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
                                                                     formik={form}
                                                                     allowedSizeInByte={3145728}
                                                                 />

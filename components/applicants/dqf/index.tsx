@@ -198,7 +198,7 @@ export default function DQF(props: ViewApplicantDqfProps) {
                                                 && <Form onSubmit={form.handleSubmit} >
                                                     <FileInput
                                                         name={`document`}
-                                                        accept="application/pdf"
+                                                        accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
                                                         formik={form}
                                                         allowedSizeInByte={3145728}
                                                     />
@@ -244,7 +244,7 @@ export default function DQF(props: ViewApplicantDqfProps) {
                                                     && <Form onSubmit={form.handleSubmit} >
                                                         <FileInput
                                                             name={`document`}
-                                                            accept="application/pdf"
+                                                            accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
                                                             formik={form}
                                                             allowedSizeInByte={3145728}
                                                         />

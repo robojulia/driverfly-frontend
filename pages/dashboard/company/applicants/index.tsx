@@ -15,7 +15,6 @@ import PageLayout from "../../../../components/layouts/page/page-layout";
 import OverlyPopover from "../../../../components/popover/overly-popover";
 import ViewDataTable from "../../../../components/view-details/view-data-table";
 import ViewModal from "../../../../components/view-details/view-modal";
-import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantReasonCodeFired, ApplicantReasonCodeNotInterested, ApplicantReasonCodeNotQualified, ApplicantReasonCodeQuit } from "../../../../enums/applicants/applicant-reason-codes.enum";
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
 import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
@@ -175,7 +174,7 @@ export default function Applicants() {
                         canCreate &&
                         <ButtonGroup size="sm" style={{ float: "right" }}>
                             <Button variant="primary" onClick={() => router.push("/dashboard/company/applicants/create")}>
-                                + {t("ADD")}
+                                + {t("ADD_AN_APPLICANT")}
                             </Button>
                             <Button variant="" className="theme-general-btn" onClick={() => router.push("/dashboard/company/applicants/import")}>
                                 + {t("IMPORT_APPLICANTS")}
@@ -508,7 +507,7 @@ function ApplicantView(props: ViewProps) {
                     {
                         id: "AUTOMATED_RECRUITING_LEAD",
                         name: "AUTOMATED_RECRUITING_LEAD",
-                        selector: applicant => Boolean(applicant?.extras?.find(ap => ap?.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD && ap?.value)) ? BooleanType.YES : BooleanType.NO,
+                        selector: applicant => Boolean(applicant?.is_automated_recruiting_lead) ? BooleanType.YES : BooleanType.NO,
                     },
                     {
                         id: "date_added",

@@ -378,6 +378,7 @@
   "accident_details": "Accident Details",
   "has_had_license_revoked": "Have any of your license, permit, or privilege to operate a CMV ever been suspended or revoked?",
   "details": "Details",
+  "DETAILS": "Details",
   "has_had_psp_violations": "Do you have any violations on your PSP from the previous 3 years?",
   "has_had_tickets_last_5_years": "Have you had any tickets in the previous 5 years?",
   "has_had_positive_drug_test": "Have you ever refused to be tested or had a positive drug/alcohol test?",
@@ -1081,6 +1082,7 @@
   "CURENNT_COMPANY_{phone}": "Phone: {{phone}}",
   "MAY_CONTACT_COMPANY": "You may contact this company",
   "SUBJECT_TO_FMCSRS": "Subject to the FMCSRs",
+  "CURRENT_COMPANY": "Current company",
   "JOB_DESIGNATED_AS_SATEFY_SENSITIVE": "Job designated as a safety-sensitive function in any DOT- regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40",
   "MUST_BE_A_VALID_URL": "Must be a valid url (make sure your url starts with http:// or https:// and ends in .com, .org, .co etc)",
   "WEBSITE": "Website",
@@ -1160,7 +1162,7 @@
     },
     "array": {
       "length": "Must have {{length}} items",
-      "min": "Must have at least {{min}} items",
+      "min": "Choose atleast {{min}}",
       "max": "Must have no more than {{max}} items",
       "unique": "Field must be unique in the list"
     },
@@ -1198,6 +1200,7 @@
   "RELATIONSHIP": "Relationship",
   "NEW_EMPLOYER": "New Employer",
   "THROUGH_OPTIONAL": "Through (optional)",
+  "THROUGH":"Through",
   "REMOVE": "Remove",
   "ApplicantDocumentType": {
     "RESUME": "Resume",
@@ -1305,6 +1308,7 @@
   "SHARE_PAST_EMPLOYMENT": "Automatically Share past employers",
   "PREFERRED_EMPLOYMENT_TYPE": "Preferred employment type",
   "ADD": "Add",
+  "ADD_AN_APPLICANT": "Add an Applicant",
   "ADD_ANOTHER_STATE": "Add Another State",
   "ADD_ANOTHER_LICENSE":"Add Another License",
   "SHARE_MY_PHYSICALS": "Automatically Share my Physicals",
@@ -2167,7 +2171,7 @@
     "MEDICAL_EXAMINERS_CERTIFICATE": "Medical Examiner’s Certificate",
     "PRE_EMPLOYMENT_DRUG_TEST": "Pre-employment Drug Test",
     "RECORD_OF_ATTEMPTS": "Record of Attempts (Safety Performance History)",
-    "SAFETY_PERFORMANCE_HISTORY": "Safety Performance History (Previous Employers)",
+    "SAFETY_PERFORMANCE_HISTORY": "Safety Performance History (Verification of Employment)",
     "EMPLOYMENT_APPLICATION": "Employment Application",
     "DRIVERS_ROAD_TEST_CERTIFICATION": "Driver’s Road Test Certification (optional)"
   },

@@ -187,7 +187,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                                                         <input className="form-check-input" type="radio" disabled checked={Boolean(document?.id)} />
                                                     </td>
                                                 }
-                                                <td colSpan={2}>
+                                                <td colSpan={2} className="w-25">
                                                     <UpdatedAt document={document} type={type} />
                                                 </td>
                                                 <td colSpan={1} className="border border-2 w-50">
@@ -196,7 +196,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                                                         && <Form onSubmit={form.handleSubmit} >
                                                             <FileInput
                                                                 name={`document`}
-                                                                accept="application/pdf"
+                                                                accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
                                                                 formik={form}
                                                                 allowedSizeInByte={3145728}
                                                             />
@@ -242,7 +242,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                                                             && <Form onSubmit={form.handleSubmit} >
                                                                 <FileInput
                                                                     name={`document`}
-                                                                    accept="application/pdf"
+                                                                    accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
                                                                     formik={form}
                                                                     allowedSizeInByte={3145728}
                                                                 />

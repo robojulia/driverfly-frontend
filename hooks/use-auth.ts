@@ -104,7 +104,7 @@ export function jwtExpiryTimeout(jwt: JwtRefreshTokenPayload) {
 
     const msToExpiry = Math.max(0, (expMsSinceEpoc - nowMsSinceEpoc) - refreshBufferWindow);
 
-    console.log("EXPIRE CHECK", { jwt, now: new Date(nowMsSinceEpoc), exp: new Date(expMsSinceEpoc), msToExpiry })
+    // console.log("EXPIRE CHECK", { jwt, now: new Date(nowMsSinceEpoc), exp: new Date(expMsSinceEpoc), msToExpiry })
 
     return msToExpiry;
 }
@@ -146,7 +146,7 @@ export function useAuth() {
     }
 
     function hasPermission(...permissions) {
-        console.log("PermissionCheck: ", permissions);
+        // console.log("PermissionCheck: ", permissions);
 
         const user = userContext.user;
 

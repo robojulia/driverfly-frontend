@@ -75,7 +75,7 @@ export default function FlagCompany({ companyId }) {
                                 label="REASON"
                                 name="type"
                                 required
-                                placeholder
+                                displayPlaceholder
                                 labelPrefix="InappropriateCompanyFlag"
                                 enumType={InappropriateCompanyFlag}
                                 formik={form}
@@ -87,7 +87,7 @@ export default function FlagCompany({ companyId }) {
                                     label="other"
                                     required
                                     name="type_other"
-                                    placeholder
+                                    displayPlaceholder
                                     formik={form}
                                 />
                             }

@@ -9,14 +9,14 @@ import { ViewEmployeeDetailProps } from "../../types/employee/view-employee-deta
 export default function ViewEmployeeDetails({
 	employee,
 	protectedFields,
-
+	noTitle,
 }: ViewEmployeeDetailProps) {
 	const { t } = useTranslation();
 
 	return (
 		<>
 
-			<ViewCard title={`${employee.first_name} ${employee.last_name}`}>
+			<ViewCard title={`${employee.first_name} ${employee.last_name}`} noTitle={noTitle}>
 				<Row>
 					<Col className="px-2">
 						<ViewDetails

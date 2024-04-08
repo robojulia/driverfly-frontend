@@ -32,11 +32,10 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 		validationSchema: DriverApplicationDto.yupSchema(),
 		onSubmit: (values) => {
 			try {
-				const { first_name, last_name, APPLY_DATE, SIGNATURE, AUTOMATED_RECRUITING_LEAD } = values;
-				setApplicant({ ...applicant, first_name, last_name });
+				const { first_name, last_name, APPLY_DATE, SIGNATURE, is_automated_recruiting_lead } = values;
+				setApplicant({ ...applicant, first_name, last_name, is_automated_recruiting_lead });
 				updateApplicantExtras(APPLY_DATE);
 				updateApplicantExtras(SIGNATURE);
-				updateApplicantExtras(AUTOMATED_RECRUITING_LEAD);
 				stepNext();
 			} catch (error) {
 				console.log(error);
@@ -80,10 +79,7 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 				: new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
 			first_name: first_name || null,
 			last_name: last_name || null,
-			AUTOMATED_RECRUITING_LEAD: {
-				... new ApplicantExtrasEntity(ApplicantExtras.AUTOMATED_RECRUITING_LEAD),
-				value: Boolean(isAutoRecruitmentLead),
-			},
+			is_automated_recruiting_lead: Boolean(isAutoRecruitmentLead),
 		});
 
 	}, [applicant]);

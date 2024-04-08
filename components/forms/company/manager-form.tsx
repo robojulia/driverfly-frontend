@@ -64,7 +64,7 @@ export function ManagerForm(props: ManagerFormProps) {
                     label="NAME"
                     name="name"
                     required
-                    placeholder
+                    displayPlaceholder
                     formik={form}
                 />
                 <BaseInput
@@ -72,7 +72,7 @@ export function ManagerForm(props: ManagerFormProps) {
                     label="EMAIL"
                     name="email"
                     required
-                    placeholder
+                    displayPlaceholder
                     formik={form}
                 />
                 <BaseInputPhone

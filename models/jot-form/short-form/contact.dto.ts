@@ -1,21 +1,25 @@
 import * as yup from "yup";
-import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
-import { ApplicantExtrasEntity } from "../../applicant/applicant-extras.entity";
+import { BooleanTypeExtra } from "./../../../enums/jotform/bool-and-not-sure.enum";
 
 export class ContactDto {
-    email: string;
-    zip_code: string;
-    AUTHORIZE_TO_COMMUNICATE: ApplicantExtrasEntity;
+  email: string;
+  zip_code: string;
+  authorize_to_communicate: BooleanTypeExtra;
 
-    static yupSchema() {
-        return yup.object({
-            email: yup.string().email().required().nullable(),
-            zip_code: yup.string()
-                .required()
-                .matches(/^[0-9]+$/, "Must be only digits")
-                .min(5, 'Must be exactly 5 digits')
-                .max(5, 'Must be exactly 5 digits'),
-            AUTHORIZE_TO_COMMUNICATE: ApplicantExtrasEntity.yupSchema(),
-        });
-    }
+  static yupSchema() {
+    return yup.object({
+      email: yup.string().email().required().nullable(),
+      zip_code: yup
+        .string()
+        .required()
+        .matches(/^[0-9]+$/, "Must be only digits")
+        .min(5, "Must be exactly 5 digits")
+        .max(5, "Must be exactly 5 digits"),
+      authorize_to_communicate: yup
+        .string()
+        .default(BooleanTypeExtra.YES)
+        .required()
+        .nullable(),
+    });
+  }
 }

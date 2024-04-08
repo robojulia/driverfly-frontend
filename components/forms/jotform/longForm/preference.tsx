@@ -1,21 +1,21 @@
+import { useFormik } from "formik";
 import { useContext, useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import styles from "../../../../styles/digitalhiringapp.module.css";
 import Form from "react-bootstrap/Form";
-import { useTranslation } from "../../../../hooks/use-translation";
-import BaseCheckList from "../../base-check-list";
-import { useFormik } from "formik";
-import { OtherRequirementType } from "../../../../enums/users/other-requirements.enum";
-import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
-import BaseSelect from "../../base-select";
 import JotformContext, {
 	JotFormContextType,
 } from "../../../../context/jotform-context";
-import { PreferencesDto } from "../../../../models/jot-form/long-form/preferences.dto";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
-import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
 import { JobSchedule } from "../../../../enums/jobs/job-schedule.enum";
+import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
+import { OtherRequirementType } from "../../../../enums/users/other-requirements.enum";
+import { useTranslation } from "../../../../hooks/use-translation";
+import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import { PreferencesDto } from "../../../../models/jot-form/long-form/preferences.dto";
+import styles from "../../../../styles/digitalhiringapp.module.css";
+import BaseCheckList from "../../base-check-list";
+import BaseSelect from "../../base-select";
 
 export function Preferences() {
 	const {
@@ -30,13 +30,12 @@ export function Preferences() {
 		onSubmit: (values) => {
 			console.log("values", values);
 			const {
-				ROUTES,
+				routes,
 				REQUIRE_W2_EMPLOYMENT,
 				OTHER_ABSOLUTELY_REQUIREMENTS,
 				preferred_location,
 			} = values;
-			setApplicant({ ...applicant, preferred_location })
-			updateApplicantExtras(ROUTES);
+			setApplicant({ ...applicant, preferred_location, routes })
 			updateApplicantExtras(REQUIRE_W2_EMPLOYMENT);
 			updateApplicantExtras(OTHER_ABSOLUTELY_REQUIREMENTS);
 			stepNext();
@@ -52,9 +51,6 @@ export function Preferences() {
 	// }, [form.values, form.errors]);
 
 	useEffect(() => {
-		const apx_routes = applicantExtras?.find(
-			(v) => v.type == ApplicantExtras.ROUTES
-		);
 		const apx_w2 = applicantExtras?.find(
 			(v) => v.type == ApplicantExtras.REQUIRE_W2_EMPLOYMENT
 		);
@@ -63,9 +59,7 @@ export function Preferences() {
 		);
 		form.setValues({
 			...form.values,
-			ROUTES: !!apx_routes?.type
-				? apx_routes
-				: new ApplicantExtrasEntity(ApplicantExtras.ROUTES),
+			routes: applicant.routes,
 			REQUIRE_W2_EMPLOYMENT: !!apx_w2?.type
 				? apx_w2
 				: new ApplicantExtrasEntity(ApplicantExtras.REQUIRE_W2_EMPLOYMENT),
@@ -80,7 +74,7 @@ export function Preferences() {
 
 	return (
 		<>
-            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("PREFERENCES")}</h1>
+			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("PREFERENCES")}</h1>
 
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={styles.align__text_left}>
@@ -107,7 +101,7 @@ export function Preferences() {
 					<BaseCheckList
 						className="mb-3"
 						labelKey="ROUTES_OPEN_TO"
-						name="ROUTES.value"
+						name="routes"
 						labelPrefix="JobSchedule"
 						enumType={JobSchedule}
 						formik={form}

@@ -11,8 +11,8 @@ import { BooleanTypeExtra } from "../../enums/jotform/bool-and-not-sure.enum";
 import { JobSchedule } from "../../enums/jobs/job-schedule.enum";
 
 export class ApplicantExtrasEntity {
-	constructor(type?: ApplicantExtras) {
-		console.log("type===", type)
+	constructor(type?: ApplicantExtras, id?: number) {
+		if (!!id) this.id = id;
 		if (!!type) this.type = type;
 	}
 	id?: number;
@@ -24,10 +24,6 @@ export class ApplicantExtrasEntity {
 			type: (yup.string().required().nullable() as any).enum(ApplicantExtras),
 			value: yup
 				.mixed()
-				.when("type", {
-					is: ApplicantExtras.AUTHORIZE_TO_COMMUNICATE,
-					then: yup.string().required().nullable().default(BooleanTypeExtra.YES),
-				})
 				.when("type", {
 					is: ApplicantExtras.ACCIDENT_DETAILS,
 					then: yup.array(ApplicantAccidentEntity.yupSchema()),
@@ -61,14 +57,6 @@ export class ApplicantExtrasEntity {
 					then: yup.array(CdlExtras.yupSchema()),
 				})
 				.when("type", {
-					is: ApplicantExtras.ROUTES,
-					then: yup
-						.array((yup.string() as any).enum(JobSchedule))
-						.min(0)
-						.typeError("Choose atleast one!")
-						.nullable(),
-				})
-				.when("type", {
 					is: ApplicantExtras.REQUIRE_W2_EMPLOYMENT,
 					then: yup.string().optional().nullable(),
 				})
@@ -94,14 +82,6 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.DOT_REGULATION,
 					then: yup.string().required().nullable(),
-				})
-				.when("type", {
-					is: ApplicantExtras.ALREADY_APPLIED_TO_COMPANY,
-					then: yup.boolean().default(false).optional().nullable(),
-				})
-				.when("type", {
-					is: ApplicantExtras.ALREADY_WORKED_TO_COMPANY,
-					then: WorkedBeforeExtrasDto.yupSchema(),
 				})
 				//for accordian
 				.when("type", {
@@ -143,10 +123,6 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.DOT_NUMBER,
 					then: yup.string().optional().nullable(),
-				})
-				.when("type", {
-					is: ApplicantExtras.AUTOMATED_RECRUITING_LEAD,
-					then: yup.boolean().optional().nullable(),
 				})
 		});
 	}

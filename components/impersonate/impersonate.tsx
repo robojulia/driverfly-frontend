@@ -142,7 +142,7 @@ export default function Impersonate() {
                         className="col-12"
                         label="COMPANY"
                         name="companyId"
-                        placeholder
+                        displayPlaceholder
                         onChange={onCompanyChange}
                         options={companies}
                         valueKey="id"
@@ -153,7 +153,7 @@ export default function Impersonate() {
                         className="col-12"
                         label="USER"
                         name="userId"
-                        placeholder
+                        displayPlaceholder
                         options={users}
                         valueKey="id"
                         createLabel={c => `${c.name} (#${c.id})`}

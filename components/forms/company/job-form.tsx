@@ -417,7 +417,7 @@ export function JobForm(props: JobFormProps) {
         });
     };
     console.log("number", Number("2.02"));
-    
+
 
     const [createVehicle, setCreateVehicle] = useState<boolean | number>(false);
 
@@ -509,7 +509,7 @@ export function JobForm(props: JobFormProps) {
                                 label="title"
                                 required
                                 name="title"
-                                placeholder
+                                displayPlaceholder
                                 formik={form}
                             />
                             <BaseSelect
@@ -517,7 +517,7 @@ export function JobForm(props: JobFormProps) {
                                 label="location"
                                 name="location.id"
                                 required
-                                placeholder
+                                displayPlaceholder
                                 formik={form}
                                 valueKey="id"
                                 createLabel={(v) => buildAddress(v)}
@@ -536,7 +536,7 @@ export function JobForm(props: JobFormProps) {
                                 className="col-12 p-0 px-lg-2"
                                 label="expiration_date"
                                 name="expiry_date"
-                                placeholder
+                                displayPlaceholder
                                 type="date"
                                 min={new Date().toISOString().split("T")[0]}
                                 formik={form}
@@ -545,7 +545,7 @@ export function JobForm(props: JobFormProps) {
                                 className="col-12 p-0 px-lg-2"
                                 label="drivers_needed"
                                 name="drivers_needed"
-                                placeholder
+                                displayPlaceholder
                                 type="int"
                                 min="0"
                                 formik={form}
@@ -553,7 +553,7 @@ export function JobForm(props: JobFormProps) {
                             <BaseSelect
                                 className="col-12 p-0 px-lg-2"
                                 label="GEOGRAPHY"
-                                placeholder
+                                displayPlaceholder
                                 name="geography"
                                 required
                                 formik={form}
@@ -581,7 +581,7 @@ export function JobForm(props: JobFormProps) {
                                     label="SCHEDULE"
                                     name="schedule"
                                     required
-                                    placeholder
+                                    displayPlaceholder
                                     labelPrefix="JobSchedule"
                                     enumType={JobSchedule}
                                     formik={form}
@@ -592,7 +592,7 @@ export function JobForm(props: JobFormProps) {
                                         label="other_schedule"
                                         required
                                         name="schedule_other"
-                                        placeholder
+                                        displayPlaceholder
                                         formik={form}
                                     />
                                 )}
@@ -602,7 +602,7 @@ export function JobForm(props: JobFormProps) {
                                 label="EMPLOYMENT_TYPE"
                                 name="employment_type"
                                 required
-                                placeholder
+                                displayPlaceholder
                                 labelPrefix="JobEmploymentType"
                                 enumType={JobEmploymentType}
                                 formik={form}
@@ -622,7 +622,7 @@ export function JobForm(props: JobFormProps) {
                                     required
                                     label="other_equipment_type"
                                     name="equipment_type_other"
-                                    placeholder
+                                    displayPlaceholder
                                     formik={form}
                                 />
                             )}
@@ -651,7 +651,7 @@ export function JobForm(props: JobFormProps) {
                                 className="col-12 p-0 px-lg-2 mb-2"
                                 label="PAY_FREQUENCY"
                                 name="pay_frequency"
-                                placeholder
+                                displayPlaceholder
                                 formik={form}
                                 labelPrefix="JobPayFrequency"
                                 enumType={JobPayFrequency}
@@ -661,7 +661,7 @@ export function JobForm(props: JobFormProps) {
                                 label="PAY_METHOD"
                                 name="pay_method"
                                 required
-                                placeholder
+                                displayPlaceholder
                                 labelPrefix="JobPayMethod"
                                 enumType={JobPayMethod}
                                 formik={form}
@@ -811,7 +811,7 @@ export function JobForm(props: JobFormProps) {
                                     label="additional_benefits"
                                     name="benefits_other"
                                     required
-                                    placeholder
+                                    displayPlaceholder
                                     formik={form}
                                 />
                             )}
@@ -910,7 +910,7 @@ export function JobForm(props: JobFormProps) {
                                     required
                                     rows={3}
                                     maxLength={1500}
-                                    placeholder
+                                    displayPlaceholder
                                     formik={form}
                                 />
                             </Row>
@@ -972,7 +972,7 @@ export function JobForm(props: JobFormProps) {
                                         className="col-12"
                                         label="min_degree"
                                         name="min_degree"
-                                        placeholder
+                                        displayPlaceholder
                                         labelPrefix="EducationLevel"
                                         enumType={EducationLevel}
                                         formik={form}
@@ -1047,7 +1047,7 @@ export function JobForm(props: JobFormProps) {
                                         className="col-12"
                                         label="other_required_skills"
                                         name="required_skills_other"
-                                        placeholder
+                                        displayPlaceholder
                                         rows={1}
                                         formik={form}
                                     />
@@ -1319,7 +1319,7 @@ export function JobForm(props: JobFormProps) {
                                         className="col-12"
                                         label="other_safety_requirements"
                                         name="safety_requirements_other"
-                                        placeholder
+                                        displayPlaceholder
                                         rows={1}
                                         formik={form}
                                     />
@@ -1343,7 +1343,7 @@ export function JobForm(props: JobFormProps) {
                                                         label="location"
                                                         name="orientation.location.id"
                                                         // required
-                                                        placeholder
+                                                        displayPlaceholder
                                                         formik={form}
                                                         valueKey="id"
                                                         createLabel={(v) => buildAddress(v)}
@@ -1364,7 +1364,7 @@ export function JobForm(props: JobFormProps) {
                                                         className="col-md-6 p-0"
                                                         label="START_DATE"
                                                         name="orientation.start_datetime"
-                                                        placeholder
+                                                        displayPlaceholder
                                                         type="date"
                                                         min={new Date().toISOString().split("T")[0]}
                                                         formik={form}

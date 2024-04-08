@@ -93,7 +93,7 @@ export default function ViewApplicantDetail({
 								PREFERRED_LOCATION: applicant.preferred_location?.map((v) =>
 									t(`JobGeography.${v}`)
 								),
-								ROUTE_TYPE: applicant.extras?.find(v => v.type == ApplicantExtras.ROUTES)?.value?.map((v) =>
+								ROUTE_TYPE: applicant.routes?.map((v) =>
 									t(`RouteType.${v}`)
 								),
 							}}
@@ -118,7 +118,7 @@ export default function ViewApplicantDetail({
 								emergency_contact: applicant.emergency_contact_name,
 								phone: applicant.emergency_contact_number,
 								relationship: applicant.emergency_contact_relationship,
-								AUTOMATED_RECRUITING_LEAD: Boolean(applicant?.extras?.find(ap => ap?.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD && ap?.value)) ? BooleanType.YES : BooleanType.NO,
+								AUTOMATED_RECRUITING_LEAD: Boolean(applicant?.is_automated_recruiting_lead) ? BooleanType.YES : BooleanType.NO,
 								LEAD_TYPE: applicant.type ? t(`ApplicantType.${applicant.type}`) : null,
 								REFERRAL_NAME: applicant.utm?.referral_name,
 								UTM_SOURCE: applicant.utm?.utm_source,

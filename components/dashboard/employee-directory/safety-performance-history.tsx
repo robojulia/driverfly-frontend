@@ -209,7 +209,7 @@ export default function SafetyPerformanceHistory({
                                         && <form className="mt-2 mr-2" onSubmit={form?.handleSubmit} >
                                             <FileInput
                                                 name={`document`}
-                                                accept="application/pdf"
+                                                accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
                                                 formik={form}
                                                 allowedSizeInByte={3145728}
                                             />
