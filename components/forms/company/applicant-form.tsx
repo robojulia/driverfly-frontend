@@ -1233,6 +1233,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 						<Row>
 							<Col>
 								<BaseCheck
+									readOnly={Boolean(entity?.is_hired)}
 									className="my-3 col float-left p-0"
 									name={`already_applied_to_company`}
 									label="APPLIED_HERE_BEFORE"
@@ -1257,6 +1258,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<Row>
 									<Col>
 										<BaseCheck
+											readOnly={Boolean(entity?.is_hired)}
 											className="my-3 col float-left p-0"
 											name="already_worked_to_company"
 											label="WORKED_HERE_BEFORE"
@@ -1273,6 +1275,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								{form.values.already_worked_to_company && (
 									<Row>
 										<BaseInput
+											readOnly={Boolean(entity?.is_hired)}
 											className="col-md-6 my-3 font-weight-bold"
 											type="date"
 											name={`already_worked_start_date`}
@@ -1290,6 +1293,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											formik={form}
 										/>
 										<BaseInput
+											readOnly={Boolean(entity?.is_hired)}
 											className="col-md-6 my-3 font-weight-bold"
 											type="date"
 											name={`already_worked_start_date`}
@@ -1440,6 +1444,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										<ViewCard
 											title="ACCIDENT_DEAILS"
 											actions={
+												!entity?.is_hired &&
 												form?.values?.accident_count > 0 &&
 												form?.values?.accident_count >
 												(
@@ -1569,6 +1574,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										<ViewCard
 											title="VIOLATION_DETAILS"
 											actions={
+												!entity?.is_hired &&
 												form?.values?.moving_violations_count > 0 &&
 												form?.values?.moving_violations_count >
 												(
