@@ -165,6 +165,7 @@ export function EmployeeForm(props: EmployeeFormProps) {
 						</Col>
 						<Col md="4">
 							<BaseInput
+								readOnly
 								className="col-12"
 								label="HIRE_DATE"
 								type="date"
