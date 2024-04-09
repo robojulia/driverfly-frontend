@@ -96,9 +96,10 @@ export class EmployeeEntity {
       can_pass_drug_test: yup.bool().nullable(),
       is_owner_operator: yup.bool().nullable(),
       manager: yup
-        .object({
-          id: yup.number().required().nullable(),
-        })
+        .object()
+		.shape({
+			id:yup.number().nullable().required()
+		})
         .required()
         .nullable(),
       transmission_type: yup

@@ -99,7 +99,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		validationSchema: ApplicantEntity.yupSchemaForApplicantForm(),
 		onSubmit: async (values) => {
 			console.log("submitted ", values);
-			
+
 			values.extras = values.extras?.filter(
 				(v) => v.value != undefined || v.value != null
 			);
@@ -344,8 +344,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<BaseSelect
 									// className="col-12 my-2"
 									readOnly={
-										!Boolean(isSuperAdmin) ||
-										!Boolean(isCompanyAdmin) ||
+										Boolean(isSuperAdmin) ||
+										Boolean(isCompanyAdmin) ||
 										Boolean(entity?.is_hired)
 									}
 									label="ASSIGNED_RECRUITER"
@@ -452,7 +452,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										value={t(`ApplicantType.${form.values?.type || ApplicantType.COMPANY}`)}
 									/>
 									<BaseSelect
-										readOnly={!canCreateReferral}
+										readOnly={!canCreateReferral || Boolean(entity?.is_hired)}
 										className="col-12 p-0 px-lg-2"
 										label="REFERRAL_SOURCE"
 										name="referralSource.id"
@@ -462,7 +462,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										createLabel={(v) => buildReferral(v)}
 										options={(!!referralSources?.length) ? referralSources.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id) : referralSources}
 										append={
-											canCreateReferral &&
+											canCreateReferral && !entity?.is_hired &&
 											<Button
 												variant="btn create_btn"
 												onClick={() => setCreateReferral(true)}
@@ -475,6 +475,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							</Col>
 							<Col md="4" className="px-2">
 								<BaseInput
+									readOnly={Boolean(entity?.is_hired)}
 									className="col-12"
 									label="driver's_license_number"
 									name="license_number"
@@ -527,6 +528,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														label="ADDTIONAL_LICENSE_NUMBER"
 														required
 														formik={form}
+														readOnly={Boolean(entity?.is_hired)}
 													/>
 													<div>
 														<a
@@ -557,6 +559,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												</div>
 												<Row className="px-3">
 													<BaseInput
+														readOnly={Boolean(entity?.is_hired)}
 														className="col-6"
 														type="date"
 														name={`extras[${form.values?.extras?.findIndex(
@@ -568,6 +571,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<StateSelect
+														readOnly={Boolean(entity?.is_hired)}
 														className="col-6"
 														name={`extras[${form.values?.extras?.findIndex(
 															(v) => v.type == ApplicantExtras.CDL_NUMBER
@@ -608,35 +612,34 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 											</div>
 										))}
-									<Row className="my-3 px-3">
-										<Col className="col-8 float-start d-flex  align-items-center">
-
-										</Col>
-										<Button
-											// disabled={Boolean(entity?.is_hired)}
-											className="col-4 float-end"
-											size="sm"
-											onClick={() => {
-												const extras = form.values?.extras || [];
-												form.setValues({
-													...form.values,
-													extras: extras?.map((item) =>
-														item.type == ApplicantExtras.CDL_NUMBER
-															? {
-																...item,
-																value: [
-																	...(item.value || []),
-																	new CdlExtras(),
-																],
-															}
-															: item
-													),
-												});
-											}}
-										>
-											<PlusCircle /> {t("ADD_ANOTHER_LICENSE")}
-										</Button>
-									</Row>
+									{
+										!Boolean(entity?.is_hired) &&
+										<Row className="my-3 px-4">
+											<Button
+												className="ml-3 float-end"
+												size="sm"
+												onClick={() => {
+													const extras = form.values?.extras || [];
+													form.setValues({
+														...form.values,
+														extras: extras?.map((item) =>
+															item.type == ApplicantExtras.CDL_NUMBER
+																? {
+																	...item,
+																	value: [
+																		...(item.value || []),
+																		new CdlExtras(),
+																	],
+																}
+																: item
+														),
+													});
+												}}
+											>
+												<PlusCircle /> {t("ADD_ANOTHER_LICENSE")}
+											</Button>
+										</Row>
+									}
 								</Row>
 
 								<div className="Row horizontalRow"></div>
@@ -672,6 +675,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								{Boolean(form.values.is_owner_operator) && (
 									<>
 										<BaseInput
+											readOnly={Boolean(entity?.is_hired)}
 											className="col-12"
 											label="BUSINESS_NAME"
 											name={`extras[${form.values?.extras?.findIndex(
@@ -680,6 +684,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											formik={form}
 										/>
 										<BaseInput
+											readOnly={Boolean(entity?.is_hired)}
 											className="col-12"
 											name={`extras[${form.values?.extras?.findIndex(
 												(v) => v.type == ApplicantExtras.DOT_NUMBER
@@ -732,6 +737,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									<div className="col-12 mt-2">
 										<label>{t("REMARKS")}</label>
 										<BaseTextArea
+											readOnly={Boolean(entity?.is_hired)}
 											name="remarks"
 											placeholder="Add a remark"
 											formik={form}
@@ -783,6 +789,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									enumType={EducationLevel}
 								/>
 								<BaseCheckList
+									readOnly={Boolean(entity?.is_hired)}
 									className="col-12 p-1 "
 									label="License_Restrictions"
 									name="license_restrictions"
