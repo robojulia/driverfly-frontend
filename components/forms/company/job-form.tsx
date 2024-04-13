@@ -306,10 +306,11 @@ export function JobForm(props: JobFormProps) {
 
     function addRequiredSkills(e) {
         e.preventDefault();
+        const requiredSkills = form.values.required_skills || [];
         form.setValues({
             ...form.values,
             required_skills: [
-                ...form.values.required_skills,
+                ...requiredSkills,
                 {
                     type: null,
                     years: null,
