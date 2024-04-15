@@ -154,13 +154,16 @@ const ImportEmployees = () => {
                 let dto = values.items[i];
 
                 if (!!dto.birthdate) {
-                    dto.birthdate = new Date(dto.birthdate).toISOString();
+                    const utcBirthdate = new Date(dto.birthdate)
+                    dto.birthdate = new Date(utcBirthdate.getUTCFullYear(), utcBirthdate.getUTCMonth(), utcBirthdate.getUTCDate() + 2).toISOString();
                 }
                 if (!!dto.hire_date) {
-                    dto.hire_date = new Date(dto.hire_date).toISOString();
+                    const utcDateHired = new Date(dto.hire_date)
+                    dto.hire_date = new Date(utcDateHired.getUTCFullYear(), utcDateHired.getUTCMonth(), utcDateHired.getUTCDate() + 2).toISOString();
                 }
                 if (!!dto.license_expiry) {
-                    dto.license_expiry = new Date(dto.license_expiry).toISOString();
+                    const utcLicenseExpiry = new Date(dto.license_expiry)
+                    dto.license_expiry = new Date(utcLicenseExpiry.getUTCFullYear(), utcLicenseExpiry.getUTCMonth(), utcLicenseExpiry.getUTCDate() + 2).toISOString();
                 }
 
                 try {
