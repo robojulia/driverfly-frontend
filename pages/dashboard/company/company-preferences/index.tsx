@@ -473,7 +473,7 @@ export default function CompanyPreference() {
 							label="years_cdl_experience"
 							name="years_cdl_experience.value"
 							type="number"
-							placeholder
+							displayPlaceholder
 							formik={form}
 						/>
 
@@ -482,7 +482,7 @@ export default function CompanyPreference() {
 							label="MAX_ACCIDENTS"
 							name="minimum_accidents.value"
 							type="number"
-							placeholder
+							displayPlaceholder
 							formik={form}
 						/>
 
@@ -491,7 +491,7 @@ export default function CompanyPreference() {
 							label="MIN_MOVING_VIOLATIONS"
 							name="minimum_moving_violations.value"
 							type="number"
-							placeholder
+							displayPlaceholder
 							formik={form}
 						/>
 					</Row>

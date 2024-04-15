@@ -64,7 +64,7 @@ export default function Signup() {
                                 label="name"
                                 required
                                 name="name"
-                                placeholder
+                                displayPlaceholder
                                 formik={form}
                             />
                             <BaseInput
@@ -72,7 +72,7 @@ export default function Signup() {
                                 label="follow_up_action_url"
                                 required
                                 name="follow_up_action_url"
-                                placeholder
+                                displayPlaceholder
                                 formik={form}
                             />
                             <BaseInput
@@ -80,7 +80,7 @@ export default function Signup() {
                                 label="questions"
                                 required
                                 name="questions"
-                                placeholder
+                                displayPlaceholder
                                 formik={form}
                             />
                             <BaseInput
@@ -88,7 +88,7 @@ export default function Signup() {
                                 label="legal_content_id"
                                 required
                                 name="legal_content_id"
-                                placeholder
+                                displayPlaceholder
                                 formik={form}
                             />
                             {/* <BaseInput
@@ -96,7 +96,7 @@ export default function Signup() {
                                 label="privacy_policy"
                                 required
                                 name="privacy_policy"
-                                placeholder
+                                displayPlaceholder
                                 formik={form}
                             /> */}
 

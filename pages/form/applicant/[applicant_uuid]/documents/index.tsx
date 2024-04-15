@@ -76,7 +76,7 @@ export default function MissingDocuments({ entity, types }: MissingDocumentsProp
                                                 <FileInput
                                                     className="my-3"
                                                     name={`documents[${i}]`}
-                                                    accept="application/pdf"
+													accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
                                                     allowedSizeInByte={3145728}
                                                     formik={form}
                                                 />

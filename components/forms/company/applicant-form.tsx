@@ -92,11 +92,14 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	const [createJob, setCreateJob] = useState<boolean>(false);
 	const [canCreateReferral, setCanCreateReferral] = useState<boolean>();
 	const [createReferral, setCreateReferral] = useState<boolean>(false);
+	const [hasCriminalHistory, setHasCriminalHistory] = useState<boolean>();
 
 	const form = useFormik({
 		initialValues: new ApplicantEntity(),
 		validationSchema: ApplicantEntity.yupSchemaForApplicantForm(),
 		onSubmit: async (values) => {
+			console.log("submitted ", values);
+
 			values.extras = values.extras?.filter(
 				(v) => v.value != undefined || v.value != null
 			);
@@ -174,7 +177,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		// console.log("entity", entity);
 		setCanCreateReferral(!!!entity?.referralSource?.id && !!user?.company_admin)
 		let extras: ApplicantExtrasEntity[] = entity?.extras || [];
-		
+
 		extras = extras.filter(Boolean);
 		if (!extras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME))
 			extras?.push({
@@ -193,6 +196,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			});
 
 		if (!!entity?.id) {
+			setHasCriminalHistory(!!entity.criminal_history)
 			form.setValues(
 				{
 					...entity,
@@ -204,8 +208,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 					extras,
 				});
 		} else {
-			console.log("extras", extras);
-
 			await form.setValues(
 				{
 					...new ApplicantEntity(),
@@ -316,330 +318,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		}
 	}, [form.submitCount])
 
-	function DUI() {
-		return (
-			<>
-				<BaseCheck
-					className="col-12 mt-2"
-					disabled={Boolean(entity?.is_hired)}
-					label="HAS_DUIS"
-					name="has_past_dui"
-					formik={form}
-				/>
-				{form.values?.has_past_dui && (
-					<Col xs="12" className="mt-2">
-						<ViewCard
-							title="PAST_DUIS"
-							actions={
-								<Button
-									disabled={Boolean(entity?.is_hired)}
-									size="sm"
-									onClick={() =>
-										form.setValues({
-											...form.values,
-											dui_years: [...(form.values?.dui_years || []), ""],
-										})
-									}
-								>
-									<PlusCircle /> {t("ADD")}
-								</Button>
-							}
-						>
-							{form.values?.dui_years?.length > 0 && (
-								<Table striped>
-									<thead>
-										<tr>
-											<th colSpan={2}>{t("YEAR")}</th>
-										</tr>
-									</thead>
-									<tbody>
-										{form.values?.dui_years?.map((entity, i) => (
-											<tr key={i}>
-												<td className="w-100">
-													<BaseInput
-														name={`dui_years[${i}]`}
-														readOnly={Boolean(props?.entity?.is_hired)}
-														placeholder="YEAR"
-														type="int"
-														required
-														min={1900}
-														max={new Date().getFullYear()}
-														formik={form}
-													/>
-												</td>
-												<td>
-													<a
-														href="#"
-														onClick={() =>
-															form.setValues({
-																...form.values,
-																dui_years: form.values?.dui_years?.filter(
-																	(v, idx) => i != idx
-																),
-															})
-														}
-													>
-														<DashCircle color="red" />
-													</a>
-												</td>
-											</tr>
-										))}
-									</tbody>
-								</Table>
-							)}
-						</ViewCard>
-					</Col>
-				)}
-			</>
-		);
-	}
-	function Accidents() {
-		return (
-			<>
-				<BaseInput
-					className="col-12 mt-2"
-					readOnly={Boolean(entity?.is_hired)}
-					label="accidents_last_5_years"
-					name="accident_count"
-					type="int"
-					min="0"
-					formik={form}
-					placeholder="PLACEHOLDER_FOR_DIGITS"
-				/>
-				{form.values.accident_count > 0 && (
-					<div className="col-12 mt-2">
-						<ViewCard
-							title="ACCIDENT_DEAILS"
-							actions={
-								form?.values?.accident_count > 0 &&
-								form?.values?.accident_count >
-								(
-									form.values.accident_history || []
-								)?.length && (
-									<Button
-										className="w-100 py-2"
-										size="sm"
-										onClick={() => {
-											form.setValues({
-												...form.values,
-												accident_history: [
-													...(form.values?.accident_history || []), { ...new ApplicantAccidentEntity() }
-												],
-											});
-										}}
-									>
-										<PlusCircle /> {t("ADD")}
-									</Button>
-								)
-							}
-						>
-							<BaseTextArea
-								// className="col-12 mt-2"
-								readOnly={Boolean(entity?.is_hired)}
-								label="accident_details"
-								name="accident_details"
-								formik={form}
-							/>
-							{form.values?.accident_history?.map((accident_details_ex, i) => (
-								<Row className="pl-0 single-past-employer-items my-1" key={i}>
-									<div className="col-md-12 mt-2">
-										<Row className={""}>
-											<BaseInput
-												className="col-md-6 my-3"
-												name={`accident_history[${i}].date_of_accident`}
-												label="DATE"
-												type="date"
-												formik={form}
-												required
-												max={new Date().toISOString().split("T")[0]}
-											/>
-											<BaseInput
-												className="col-md-6 my-3"
-												name={`accident_history[${i}].nature_of_accident`}
-												label="LABEL_ACCIDENT_NATURE"
-												formik={form}
-												required
-											/>
-											<BaseInput
-												className="col-md-6 my-3"
-												name={`accident_history[${i}].location_of_accident`}
-												label="LABEL_ACCIDENT_LOCATION"
-												formik={form}
-												required
-											/>
-											<BaseInput
-												className="col-md-6 my-3"
-												name={`accident_history[${i}].number_of_fatalaties`}
-												label="LABEL_ACCIDENT_FATALITIES"
-												formik={form}
-												required
-											/>
-											<BaseInput
-												className="col-md-6 mt-2"
-												name={`accident_history[${i}].number_of_injured`}
-												label="LABEL_ACCIDENT_INJURED"
-												formik={form}
-												required
-											/>
-											<BaseCheck
-												className="col-md-6 mt-5"
-												name={`accident_history[${i}].dot_recordable`}
-												label="LABEL_ACCIDENT_DOT"
-												formik={form}
-											/>
-
-											<BaseCheck
-												className="col-md-12 mt-4"
-												name={`accident_history[${i}].at_fault`}
-												label="LABEL_ACCIDENT_FAULT"
-												formik={form}
-											/>
-											<Button
-												className="rounded-lg"
-												variant="outline-danger close_btn w-25 mx-auto my-2"
-												onClick={() =>
-													form.setFieldValue(
-														"accident_history", [...form.values?.accident_history?.filter((ex, indx) => indx !== i)]
-													)
-												}
-											>
-												<DashCircle />
-											</Button>
-											<div
-												className="Row"
-												style={{
-													height: "1px",
-													borderBottom: "solid 1px #8d8c8c",
-													marginTop: "15px",
-													width: "80%",
-													marginLeft: "10%",
-												}}
-											></div>
-										</Row>
-									</div>
-								</Row>
-							))}
-						</ViewCard>
-					</div>
-				)}
-			</>
-		);
-	}
-	function Violations() {
-		return (
-			<>
-				<BaseInput
-					className="col my-3"
-					readOnly={Boolean(entity?.is_hired)}
-					label="voilations_in_last_3_years"
-					name="moving_violations_count"
-					type="number"
-					step={1}
-					min={0}
-					placeholder="PLACEHOLDER_FOR_DIGITS"
-					formik={form}
-				/>
-				{form.values.moving_violations_count > 0 && (
-					<div className="col-12 mt-2">
-						<ViewCard
-							title="VIOLATION_DETAILS"
-							actions={
-								form?.values?.moving_violations_count > 0 &&
-								form?.values?.moving_violations_count >
-								(
-									form.values.moving_violation_history || []
-								)?.length && (
-									<Button
-										className="w-100 py-2"
-										size="sm"
-										onClick={() => {
-											form.setValues({
-												...form.values,
-												moving_violation_history: [
-													...(form.values?.moving_violation_history || []), { ...new ApplicantMovingViolationEntity() }
-												],
-											});
-										}}
-									>
-										<PlusCircle /> {t("ADD")}
-									</Button>
-								)
-							}
-						>
-							<BaseTextArea
-								// className="col-12 mt-2"
-								readOnly={Boolean(entity?.is_hired)}
-								label="VIOLATION_DETAILS"
-								name="moving_violations_details"
-								formik={form}
-							/>
-							{form.values?.moving_violation_history?.map((entity, i) => (
-								<Row key={i} className="single-past-employer-items my-3 ">
-									<div className="col-md-12 mt-2">
-										<Row className={""}>
-											<BaseInput
-												className="col-md-6 mt-3"
-												name={`moving_violation_history[${i}].date_of_violation`}
-												label="VIOLATION_DATE"
-												type="date"
-												formik={form}
-												max={new Date().toISOString().split("T")[0]}
-												required
-											/>
-											<BaseInput
-												className="col-md-6 mt-3"
-												name={`moving_violation_history[${i}].location`}
-												label="location"
-												formik={form}
-												required
-											/>
-
-											<BaseInput
-												className="col-md-6 mt-3"
-												name={`moving_violation_history[${i}].charge`}
-												label="CHARGE"
-												formik={form}
-												required
-											/>
-											<BaseInput
-												className="col-md-6 mt-3"
-												name={`moving_violation_history[${i}].penalty`}
-												label="PENALTY"
-												formik={form}
-												required
-											/>
-											<Button
-												className="rounded-lg"
-												variant="outline-danger close_btn w-25 mx-auto my-2"
-												onClick={() =>
-													form.setFieldValue(
-														"moving_violation_history", [...form.values?.moving_violation_history?.filter((ex, indx) => indx !== i)]
-													)
-												}
-											>
-												<DashCircle />
-											</Button>
-											<div
-												className="Row"
-												style={{
-													height: "1px",
-													borderBottom: "solid 1px #8d8c8c",
-													marginTop: "15px",
-													width: "80%",
-													marginLeft: "10%",
-												}}
-											></div>
-										</Row>
-									</div>
-								</Row>
-							))}
-						</ViewCard>
-					</div>
-				)}
-			</>
-		);
-	}
-
 	return (
 		<EntityForm
 			id={entity?.id}
@@ -666,13 +344,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<BaseSelect
 									// className="col-12 my-2"
 									readOnly={
-										!Boolean(isSuperAdmin) ||
-										!Boolean(isCompanyAdmin) ||
+										Boolean(isSuperAdmin) ||
+										Boolean(isCompanyAdmin) ||
 										Boolean(entity?.is_hired)
 									}
 									label="ASSIGNED_RECRUITER"
 									name="assignedUserId"
-									placeholder
+									displayPlaceholder
 									options={companyUsers}
 									valueKey="id"
 									createLabel={(c) => `${c.name} (#${c.id}) `}
@@ -770,21 +448,21 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										className="col-12 p-0 px-lg-2"
 										label="LEAD_TYPE"
 										name="type"
-										placeholder
+										displayPlaceholder
 										value={t(`ApplicantType.${form.values?.type || ApplicantType.COMPANY}`)}
 									/>
 									<BaseSelect
-										readOnly={!canCreateReferral}
+										readOnly={!canCreateReferral || Boolean(entity?.is_hired)}
 										className="col-12 p-0 px-lg-2"
 										label="REFERRAL_SOURCE"
 										name="referralSource.id"
-										placeholder
+										displayPlaceholder
 										formik={form}
 										valueKey="id"
 										createLabel={(v) => buildReferral(v)}
 										options={(!!referralSources?.length) ? referralSources.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id) : referralSources}
 										append={
-											canCreateReferral &&
+											canCreateReferral && !entity?.is_hired &&
 											<Button
 												variant="btn create_btn"
 												onClick={() => setCreateReferral(true)}
@@ -797,6 +475,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							</Col>
 							<Col md="4" className="px-2">
 								<BaseInput
+									readOnly={Boolean(entity?.is_hired)}
 									className="col-12"
 									label="driver's_license_number"
 									name="license_number"
@@ -849,6 +528,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														label="ADDTIONAL_LICENSE_NUMBER"
 														required
 														formik={form}
+														readOnly={Boolean(entity?.is_hired)}
 													/>
 													<div>
 														<a
@@ -879,6 +559,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												</div>
 												<Row className="px-3">
 													<BaseInput
+														readOnly={Boolean(entity?.is_hired)}
 														className="col-6"
 														type="date"
 														name={`extras[${form.values?.extras?.findIndex(
@@ -890,6 +571,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<StateSelect
+														readOnly={Boolean(entity?.is_hired)}
 														className="col-6"
 														name={`extras[${form.values?.extras?.findIndex(
 															(v) => v.type == ApplicantExtras.CDL_NUMBER
@@ -930,35 +612,34 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 											</div>
 										))}
-									<Row className="my-3 px-3">
-										<Col className="col-8 float-start d-flex  align-items-center">
-
-										</Col>
-										<Button
-											// disabled={Boolean(entity?.is_hired)}
-											className="col-4 float-end"
-											size="sm"
-											onClick={() => {
-												const extras = form.values?.extras || [];
-												form.setValues({
-													...form.values,
-													extras: extras?.map((item) =>
-														item.type == ApplicantExtras.CDL_NUMBER
-															? {
-																...item,
-																value: [
-																	...(item.value || []),
-																	new CdlExtras(),
-																],
-															}
-															: item
-													),
-												});
-											}}
-										>
-											<PlusCircle /> {t("ADD_ANOTHER_LICENSE")}
-										</Button>
-									</Row>
+									{
+										!Boolean(entity?.is_hired) &&
+										<Row className="my-3 px-4">
+											<Button
+												className="ml-3 float-end"
+												size="sm"
+												onClick={() => {
+													const extras = form.values?.extras || [];
+													form.setValues({
+														...form.values,
+														extras: extras?.map((item) =>
+															item.type == ApplicantExtras.CDL_NUMBER
+																? {
+																	...item,
+																	value: [
+																		...(item.value || []),
+																		new CdlExtras(),
+																	],
+																}
+																: item
+														),
+													});
+												}}
+											>
+												<PlusCircle /> {t("ADD_ANOTHER_LICENSE")}
+											</Button>
+										</Row>
+									}
 								</Row>
 
 								<div className="Row horizontalRow"></div>
@@ -969,7 +650,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										required={Boolean(form.values?.license_number)}
 										label="CDL_TYPE"
 										name="license_type"
-										placeholder
+										displayPlaceholder
 										labelPrefix="DriverLicenseType"
 										enumType={DriverLicenseType}
 										formik={form}
@@ -994,6 +675,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								{Boolean(form.values.is_owner_operator) && (
 									<>
 										<BaseInput
+											readOnly={Boolean(entity?.is_hired)}
 											className="col-12"
 											label="BUSINESS_NAME"
 											name={`extras[${form.values?.extras?.findIndex(
@@ -1002,6 +684,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											formik={form}
 										/>
 										<BaseInput
+											readOnly={Boolean(entity?.is_hired)}
 											className="col-12"
 											name={`extras[${form.values?.extras?.findIndex(
 												(v) => v.type == ApplicantExtras.DOT_NUMBER
@@ -1054,6 +737,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									<div className="col-12 mt-2">
 										<label>{t("REMARKS")}</label>
 										<BaseTextArea
+											readOnly={Boolean(entity?.is_hired)}
 											name="remarks"
 											placeholder="Add a remark"
 											formik={form}
@@ -1090,7 +774,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											label="OTHER_ENDORSEMENTS"
 											required
 											name="endorsements_other"
-											placeholder
+											displayPlaceholder
 											formik={form}
 										/>
 									)}
@@ -1105,6 +789,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									enumType={EducationLevel}
 								/>
 								<BaseCheckList
+									readOnly={Boolean(entity?.is_hired)}
 									className="col-12 p-1 "
 									label="License_Restrictions"
 									name="license_restrictions"
@@ -1121,7 +806,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											label="OTHER_LICENSE_RESTRICTIONS"
 											required
 											name="license_restrictions_other"
-											placeholder
+											displayPlaceholder
 											formik={form}
 										/>
 									)}
@@ -1548,6 +1233,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 						<Row>
 							<Col>
 								<BaseCheck
+									readOnly={Boolean(entity?.is_hired)}
 									className="my-3 col float-left p-0"
 									name={`already_applied_to_company`}
 									label="APPLIED_HERE_BEFORE"
@@ -1572,6 +1258,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<Row>
 									<Col>
 										<BaseCheck
+											readOnly={Boolean(entity?.is_hired)}
 											className="my-3 col float-left p-0"
 											name="already_worked_to_company"
 											label="WORKED_HERE_BEFORE"
@@ -1588,6 +1275,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								{form.values.already_worked_to_company && (
 									<Row>
 										<BaseInput
+											readOnly={Boolean(entity?.is_hired)}
 											className="col-md-6 my-3 font-weight-bold"
 											type="date"
 											name={`already_worked_start_date`}
@@ -1605,6 +1293,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											formik={form}
 										/>
 										<BaseInput
+											readOnly={Boolean(entity?.is_hired)}
 											className="col-md-6 my-3 font-weight-bold"
 											type="date"
 											name={`already_worked_start_date`}
@@ -1640,16 +1329,344 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									name="can_pass_drug_test"
 									formik={form}
 								/>
-								<DUI />
-								<BaseTextArea
+								<BaseCheck
 									className="col-12 mt-2"
-									readOnly={Boolean(entity?.is_hired)}
-									label="criminal_history_last_3_years"
-									name="criminal_history"
+									disabled={Boolean(entity?.is_hired)}
+									label="HAS_DUIS"
+									name="has_past_dui"
 									formik={form}
 								/>
-								<Accidents />
-								<Violations />
+								{form.values?.has_past_dui && (
+									<Col xs="12" className="mt-2">
+										<ViewCard
+											title="PAST_DUIS"
+											actions={
+												<Button
+													disabled={Boolean(entity?.is_hired)}
+													size="sm"
+													onClick={() =>
+														form.setValues({
+															...form.values,
+															dui_years: [...(form.values?.dui_years || []), ""],
+														})
+													}
+												>
+													<PlusCircle /> {t("ADD")}
+												</Button>
+											}
+										>
+											{form.values?.dui_years?.length > 0 && (
+												<Table striped>
+													<thead>
+														<tr>
+															<th colSpan={2}>{t("YEAR")}</th>
+														</tr>
+													</thead>
+													<tbody>
+														{form.values?.dui_years?.map((entity, i) => (
+															<tr key={i}>
+																<td className="w-100">
+																	<BaseInput
+																		name={`dui_years[${i}]`}
+																		readOnly={Boolean(props?.entity?.is_hired)}
+																		placeholder="YEAR"
+																		type="int"
+																		required
+																		min={1900}
+																		max="9999"
+																		// max={new Date().getFullYear()}
+																		onChange={({ target: { value } }) => {
+																			if (!/^\d{0,4}$/.test(value)) value = value.slice(0, 4);
+
+																			form.setFieldValue(`dui_years[${i}]`, value)
+																		}}
+																		formik={form}
+																	/>
+																</td>
+																<td>
+																	<a
+																		href="#"
+																		onClick={() =>
+																			form.setValues({
+																				...form.values,
+																				dui_years: form.values?.dui_years?.filter(
+																					(v, idx) => i != idx
+																				),
+																			})
+																		}
+																	>
+																		<DashCircle color="red" />
+																	</a>
+																</td>
+															</tr>
+														))}
+													</tbody>
+												</Table>
+											)}
+										</ViewCard>
+									</Col>
+								)}
+								<BaseCheck
+									className="col-12 mt-2"
+									disabled={Boolean(entity?.is_hired)}
+									label="criminal_history_last_3_years"
+									checked={hasCriminalHistory}
+									onChange={({ target: { value } }) => {
+										setHasCriminalHistory(!!value);
+										if (!value) {
+											form.setFieldValue("criminal_history", null);
+										}
+									}}
+								/>
+								{hasCriminalHistory &&
+									<BaseTextArea
+										className="col-12 mt-2"
+										readOnly={Boolean(entity?.is_hired)}
+										label="DETAILS"
+										name="criminal_history"
+										formik={form}
+									/>
+								}
+
+								{/* Accident sectiion */}
+								<BaseInput
+									className="col-12 mt-2"
+									readOnly={Boolean(entity?.is_hired)}
+									label="accidents_last_5_years"
+									name="accident_count"
+									type="int"
+									min="0"
+									formik={form}
+									placeholder="PLACEHOLDER_FOR_DIGITS"
+								/>
+								{form.values.accident_count > 0 && (
+									<div className="col-12 mt-2">
+										<ViewCard
+											title="ACCIDENT_DEAILS"
+											actions={
+												!entity?.is_hired &&
+												form?.values?.accident_count > 0 &&
+												form?.values?.accident_count >
+												(
+													form.values.accident_history || []
+												)?.length && (
+													<Button
+														className="w-100 py-2"
+														size="sm"
+														onClick={() => {
+															form.setValues({
+																...form.values,
+																accident_history: [
+																	...(form.values?.accident_history || []), { ...new ApplicantAccidentEntity() }
+																],
+															});
+														}}
+													>
+														<PlusCircle /> {t("ADD")}
+													</Button>
+												)
+											}
+										>
+											<BaseTextArea
+												// className="col-12 mt-2"
+												readOnly={Boolean(entity?.is_hired)}
+												label="accident_details"
+												name="accident_details"
+												formik={form}
+											/>
+											{form.values?.accident_history?.map((accident_details_ex, i) => (
+												<Row className="pl-0 single-past-employer-items my-1" key={i}>
+													<div className="col-md-12 mt-2">
+														<Row className={""}>
+															<BaseInput
+																className="col-md-6 my-3"
+																name={`accident_history[${i}].date_of_accident`}
+																label="DATE"
+																type="date"
+																formik={form}
+																required
+																max={new Date().toISOString().split("T")[0]}
+															/>
+															<BaseInput
+																className="col-md-6 my-3"
+																name={`accident_history[${i}].nature_of_accident`}
+																label="LABEL_ACCIDENT_NATURE"
+																formik={form}
+																required
+															/>
+															<BaseInput
+																className="col-md-6 my-3"
+																name={`accident_history[${i}].location_of_accident`}
+																label="LABEL_ACCIDENT_LOCATION"
+																formik={form}
+																required
+															/>
+															<BaseInput
+																className="col-md-6 my-3"
+																name={`accident_history[${i}].number_of_fatalaties`}
+																label="LABEL_ACCIDENT_FATALITIES"
+																formik={form}
+																required
+															/>
+															<BaseInput
+																className="col-md-6 mt-2"
+																name={`accident_history[${i}].number_of_injured`}
+																label="LABEL_ACCIDENT_INJURED"
+																formik={form}
+																required
+															/>
+															<BaseCheck
+																className="col-md-6 mt-5"
+																name={`accident_history[${i}].dot_recordable`}
+																label="LABEL_ACCIDENT_DOT"
+																formik={form}
+															/>
+
+															<BaseCheck
+																className="col-md-12 mt-4"
+																name={`accident_history[${i}].at_fault`}
+																label="LABEL_ACCIDENT_FAULT"
+																formik={form}
+															/>
+															<Button
+																className="rounded-lg"
+																variant="outline-danger close_btn w-25 mx-auto my-2"
+																onClick={() =>
+																	form.setFieldValue(
+																		"accident_history", [...form.values?.accident_history?.filter((ex, indx) => indx !== i)]
+																	)
+																}
+															>
+																<DashCircle />
+															</Button>
+															<div
+																className="Row"
+																style={{
+																	height: "1px",
+																	borderBottom: "solid 1px #8d8c8c",
+																	marginTop: "15px",
+																	width: "80%",
+																	marginLeft: "10%",
+																}}
+															></div>
+														</Row>
+													</div>
+												</Row>
+											))}
+										</ViewCard>
+									</div>
+								)}
+
+								{/* Violation sectiion */}
+								<BaseInput
+									className="col my-3"
+									readOnly={Boolean(entity?.is_hired)}
+									label="voilations_in_last_3_years"
+									name="moving_violations_count"
+									type="number"
+									step={1}
+									min={0}
+									placeholder="PLACEHOLDER_FOR_DIGITS"
+									formik={form}
+								/>
+								{form.values.moving_violations_count > 0 && (
+									<div className="col-12 mt-2">
+										<ViewCard
+											title="VIOLATION_DETAILS"
+											actions={
+												!entity?.is_hired &&
+												form?.values?.moving_violations_count > 0 &&
+												form?.values?.moving_violations_count >
+												(
+													form.values.moving_violation_history || []
+												)?.length && (
+													<Button
+														className="w-100 py-2"
+														size="sm"
+														onClick={() => {
+															form.setValues({
+																...form.values,
+																moving_violation_history: [
+																	...(form.values?.moving_violation_history || []), { ...new ApplicantMovingViolationEntity() }
+																],
+															});
+														}}
+													>
+														<PlusCircle /> {t("ADD")}
+													</Button>
+												)
+											}
+										>
+											<BaseTextArea
+												// className="col-12 mt-2"
+												readOnly={Boolean(entity?.is_hired)}
+												label="VIOLATION_DETAILS"
+												name="moving_violations_details"
+												formik={form}
+											/>
+											{form.values?.moving_violation_history?.map((entity, i) => (
+												<Row key={i} className="single-past-employer-items my-3 ">
+													<div className="col-md-12 mt-2">
+														<Row className={""}>
+															<BaseInput
+																className="col-md-6 mt-3"
+																name={`moving_violation_history[${i}].date_of_violation`}
+																label="VIOLATION_DATE"
+																type="date"
+																formik={form}
+																max={new Date().toISOString().split("T")[0]}
+																required
+															/>
+															<BaseInput
+																className="col-md-6 mt-3"
+																name={`moving_violation_history[${i}].location`}
+																label="location"
+																formik={form}
+																required
+															/>
+
+															<BaseInput
+																className="col-md-6 mt-3"
+																name={`moving_violation_history[${i}].charge`}
+																label="CHARGE"
+																formik={form}
+																required
+															/>
+															<BaseInput
+																className="col-md-6 mt-3"
+																name={`moving_violation_history[${i}].penalty`}
+																label="PENALTY"
+																formik={form}
+																required
+															/>
+															<Button
+																className="rounded-lg"
+																variant="outline-danger close_btn w-25 mx-auto my-2"
+																onClick={() =>
+																	form.setFieldValue(
+																		"moving_violation_history", [...form.values?.moving_violation_history?.filter((ex, indx) => indx !== i)]
+																	)
+																}
+															>
+																<DashCircle />
+															</Button>
+															<div
+																className="Row"
+																style={{
+																	height: "1px",
+																	borderBottom: "solid 1px #8d8c8c",
+																	marginTop: "15px",
+																	width: "80%",
+																	marginLeft: "10%",
+																}}
+															></div>
+														</Row>
+													</div>
+												</Row>
+											))}
+										</ViewCard>
+									</div>
+								)}
 							</Col>
 							<Col md="6">
 								<Row>
@@ -1665,7 +1682,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											className="col-12 mt-2"
 											readOnly={Boolean(entity?.is_hired)}
 											label="details"
-											name="license_revoked_details"
+											name="`	`"
 											formik={form}
 										/>
 									)}
@@ -1782,7 +1799,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													name={`documents[${i}]`}
 													readOnly={Boolean(props?.entity?.is_hired)}
 													required
-													accept="application/pdf"
+													accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
 													allowedSizeInByte={3145728}
 													formik={form}
 												/>

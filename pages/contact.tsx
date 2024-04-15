@@ -113,26 +113,26 @@ export default function Contact() {
                                                     className="col-md-6 mt-4"
                                                     required
                                                     name="name"
-                                                    placeholder
+                                                    displayPlaceholder
                                                     formik={form}
                                                 />
                                                 <BaseInput
                                                     className="col-md-6 mt-4"
                                                     required
                                                     name="email"
-                                                    placeholder
+                                                    displayPlaceholder
                                                     formik={form}
                                                 />
                                                 <BaseInput
                                                     className="col-12 mt-4"
                                                     name="subject"
-                                                    placeholder
+                                                    displayPlaceholder
                                                     formik={form}
                                                 />
                                                 <BaseTextArea
                                                     className="col-12 my-4"
                                                     name="message"
-                                                    placeholder
+                                                    displayPlaceholder
                                                     formik={form}
                                                 />
                                             </Row>

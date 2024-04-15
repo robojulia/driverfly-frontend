@@ -1,41 +1,38 @@
-import { Button, Col, Row, Table } from "react-bootstrap";
 import { useFormik } from "formik";
-import { toast } from "react-toastify";
 import { useState } from "react";
-import { ApplicantEmployerEntity } from "../../models/applicant";
-import { useTranslation } from "../../hooks/use-translation";
-import ApplicantApi from "../../pages/api/applicant";
+import { Button, Col, Row } from "react-bootstrap";
+import {
+    Send
+} from "react-bootstrap-icons";
+import { toast } from "react-toastify";
 import { ApplicantDqf } from "../../enums/applicants/applicant-dqf-types.enum";
+import { DocumentableType } from "../../enums/documents/documentable-type.enum";
+import { useTranslation } from "../../hooks/use-translation";
+import { ApplicantEmployerEntity } from "../../models/applicant";
+import { ApplicantEmployerDocumentDto } from "../../models/applicant/applicant-employer-document-dto";
+import ApplicantApi from "../../pages/api/applicant";
+import { SafetyPerformanceHistoryProps } from "../../types/applicant/safety-performnance-history-props.type";
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
-import ViewPdf from "../view-details/view-pdf";
-import ViewModal from "../view-details/view-modal";
-import ViewDataTable from "../view-details/view-data-table";
-import ViewDocumentHistory from "../documents/view-history";
+import {
+    handleDownloadDocument,
+    handleViewDocument,
+} from "../../utils/documents/button-actions";
+import { useEffectAsync } from "../../utils/react";
 import {
     AddDocumentButton,
     DeleteDocumentButton,
     DownloadDocumentButton,
     ViewDocumentButton,
 } from "../documents/buttons";
-import { DocumentableType } from "../../enums/documents/documentable-type.enum";
-import { SafetyPerformanceHistoryProps } from "../../types/applicant/safety-performnance-history-props.type";
-import {
-    handleDownloadDocument,
-    handleViewDocument,
-} from "../../utils/documents/button-actions";
+import ViewDocumentHistory from "../documents/view-history";
 import FileInput from "../forms/file-input";
-import OverlyPopover from "../popover/overly-popover";
-import { ApplicantEmployerDocumentDto } from "../../models/applicant/applicant-employer-document-dto";
-import { LoaderIcon } from "../loading/loader-icon";
-import ViewDetails from "../view-details/view-details";
 import ShowFormattedDate from "../jobs/show-formatted-date";
-import { BaseListRowControl } from "../forms/lists/base-list-row-control";
-import {
-    Arrow90degRight,
-    Send,
-    SendPlus,
-    SendPlusFill,
-} from "react-bootstrap-icons";
+import { LoaderIcon } from "../loading/loader-icon";
+import OverlyPopover from "../popover/overly-popover";
+import ViewDataTable from "../view-details/view-data-table";
+import ViewDetails from "../view-details/view-details";
+import ViewModal from "../view-details/view-modal";
+import ViewPdf from "../view-details/view-pdf";
 
 export default function SafetyPerformanceHistory({
     buttonClass,
@@ -47,6 +44,7 @@ export default function SafetyPerformanceHistory({
     const { t } = useTranslation();
     const applicantApi = new ApplicantApi();
 
+    const [showModal, setShowModal] = useState<boolean>(false);
     const [pdf, setPdf] = useState({});
 
     const [employers, setEmployers] = useState<ApplicantEmployerEntity[]>([]);
@@ -84,11 +82,15 @@ export default function SafetyPerformanceHistory({
         },
     });
 
-    const handleClick = async () => {
-        const data = await applicantApi.employer.list(applicant.id);
-        setEmployers(data);
-        if (!Boolean(data.length)) alert(t("NO_RECORDS_FOUND"));
-    };
+    useEffectAsync(
+        async () => {
+            if (!!applicant.id) {
+                const data = await applicantApi.employer.list(applicant.id);
+                setEmployers(data);
+            }
+        },
+        [applicant]
+    )
 
     /**
      * It deletes a document from the applicant's profile.
@@ -169,7 +171,7 @@ export default function SafetyPerformanceHistory({
                         <OverlyPopover
                             str={
                                 Boolean(!employer.can_contact) ?
-                                "REQUESTING_OR_UPLOADING_NOT_AUTHORIZED_TO_COMMUNICATE" : 'ADD_DOCUMENT'
+                                    "REQUESTING_OR_UPLOADING_NOT_AUTHORIZED_TO_COMMUNICATE" : 'ADD_DOCUMENT'
                             }
                             className="popover-class"
                         >
@@ -182,7 +184,7 @@ export default function SafetyPerformanceHistory({
                                     handleUpdateDocument(type, document?.id, employer)
                                 }
                             />
-                         </OverlyPopover>
+                        </OverlyPopover>
                     )}
                     <DownloadDocumentButton
                         document={document}
@@ -237,7 +239,7 @@ export default function SafetyPerformanceHistory({
                                         />
                                     </>
                                 </Button>
-                             </OverlyPopover>
+                            </OverlyPopover>
                         )}
                 </div>
             )}
@@ -247,17 +249,18 @@ export default function SafetyPerformanceHistory({
     return (
         <>
             <Button
+                disabled={!employers.length}
                 className={buttonClass ?? "w-100"}
                 title={t("VIEW")}
-                onClick={() => handleClick()}
+                onClick={() => setShowModal(true)}
             >
-                {t("VIEW")}
+                {t(!!employers.length ? "VIEW" : "NOT_AVAILABLE")}
             </Button>
 
             <ViewModal
-                show={Boolean(employers.length)}
+                show={showModal}
                 onCloseClick={() => {
-                    resetEmployers();
+                    setShowModal(false);
                     form.resetForm();
                 }}
                 closeText="CANCEL"
@@ -298,7 +301,7 @@ export default function SafetyPerformanceHistory({
                                             <form className="mt-2 mr-2" onSubmit={form?.handleSubmit}>
                                                 <FileInput
                                                     name={`document`}
-                                                    accept="application/pdf"
+                                                    accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
                                                     formik={form}
                                                     allowedSizeInByte={3145728}
                                                 />

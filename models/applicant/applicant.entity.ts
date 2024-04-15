@@ -351,7 +351,7 @@ export class ApplicantEntity {
         // })
         .nullable(),
       highest_degree: (yup.string() as any).enum(EducationLevel).nullable(),
-      authorized_to_work_in_us: yup.bool().nullable(),
+      authorized_to_work_in_us: yup.boolean().optional().nullable(),
       emergency_contact_name: yup.string().nullable(),
       emergency_contact_number: yup.string().nullable(),
       emergency_contact_relationship: yup.string().nullable(),
@@ -362,6 +362,7 @@ export class ApplicantEntity {
       criminal_history: yup.string().nullable(),
       accident_count: yup
         .number()
+        .default(0)
         .required()
         .when(
           "accident_history",
@@ -393,6 +394,7 @@ export class ApplicantEntity {
       moving_violations: yup.bool().nullable(),
       moving_violations_count: yup
         .number()
+        .default(0)
         .required()
         .when(
           "moving_violation_history",
@@ -460,8 +462,8 @@ export class ApplicantEntity {
         .nullable(),
       authorize_to_communicate: yup
         .string()
-        .default(BooleanTypeExtra.YES)
-        .required()
+        // .default(BooleanTypeExtra.YES)
+        .optional()
         .nullable(),
       routes: yup
         .array((yup.string() as any).enum(JobSchedule))
@@ -552,7 +554,13 @@ export class ApplicantEntity {
       authorized_to_work_in_us: yup.bool().nullable(),
       accident_details: yup.string().nullable(),
       license_revoked: yup.bool().nullable(),
-      license_revoked_details: yup.string().nullable(),
+      license_revoked_details: yup
+        .string()
+        .when("license_revoked", {
+          is: (v) => !!v,
+          then: yup.string().required().nullable(),
+        })
+        .nullable(),
       psp_violations: yup.bool().nullable(),
       psp_violations_details: yup.string().nullable(),
       tickets: yup.bool().nullable(),

@@ -215,7 +215,7 @@ export default function Applicant() {
                                         className="col-6 pl-3"
                                         label="CDL_CLASS"
                                         name="license_type"
-                                        placeholder
+                                        displayPlaceholder
                                         labelPrefix="DriverLicenseType"
                                         enumType={DriverLicenseType}
                                         formik={form}

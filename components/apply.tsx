@@ -291,7 +291,7 @@ export default function JobApply({ job, setEncourageModal }) {
                                                                         allowedSizeInByte={3145728}
                                                                         name={`documents[${i}]`}
                                                                         required
-                                                                        accept="application/pdf"
+                                                                        accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
                                                                         formik={apply_form}
                                                                     />
                                                                 </Col>

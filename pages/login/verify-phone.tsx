@@ -117,7 +117,7 @@ export default function VerifyPhone(props: VerifyPhoneDto) {
                 label="PHONE"
                 required
                 name="phone"
-                placeholder
+                displayPlaceholder
                 formik={form}
               />
             <BaseInput
@@ -125,7 +125,7 @@ export default function VerifyPhone(props: VerifyPhoneDto) {
                 label="TOKEN"
                 required
                 name="token"
-                placeholder
+                displayPlaceholder
                 formik={form}
               />
             <div className="d-grid gap-2 mt-4">

@@ -132,7 +132,7 @@ export default function Signup() {
 								label="ROLE"
 								name="role"
 								required
-								placeholder
+								displayPlaceholder
 								formik={form}
 								labelPrefix="SignUpRole"
 								enumType={SignUpRole}
@@ -143,7 +143,7 @@ export default function Signup() {
 									label="COMPANY_NAME"
 									required
 									name="name"
-									placeholder
+									displayPlaceholder
 									formik={form}
 								/>
 							)}
@@ -152,7 +152,7 @@ export default function Signup() {
 								label="FIRST_NAME"
 								required
 								name="first_name"
-								placeholder
+								displayPlaceholder
 								formik={form}
 							/>
 							<BaseInput
@@ -160,7 +160,7 @@ export default function Signup() {
 								label="LAST_NAME"
 								required
 								name="last_name"
-								placeholder
+								displayPlaceholder
 								formik={form}
 							/>
 							<BaseInput
@@ -168,7 +168,7 @@ export default function Signup() {
 								label="EMAIL"
 								required
 								name="email"
-								placeholder
+								displayPlaceholder
 								formik={form}
 							/>
 
@@ -187,7 +187,7 @@ export default function Signup() {
 								className="col-12 mt-1"
 								label="PHONE"
 								name="phone"
-								placeholder
+								displayPlaceholder
 								formik={form}
 							/>
 
@@ -205,7 +205,7 @@ export default function Signup() {
 								required
 								type="password"
 								name="password"
-								placeholder
+								displayPlaceholder
 								formik={form}
 							/>
 							<BaseInput
@@ -214,7 +214,7 @@ export default function Signup() {
 								required
 								type="password"
 								name="confirmPassword"
-								placeholder
+								displayPlaceholder
 								formik={form}
 							/>
 							{form.values.role == SignUpRole.COMPANY && (
@@ -231,7 +231,7 @@ export default function Signup() {
 									label="INVITE_CODE"
 									required
 									name="invite_code"
-									placeholder
+									displayPlaceholder
 									formik={form}
 								/>
 							)}
@@ -274,7 +274,7 @@ export default function Signup() {
 											className="col-12 mt-1"
 											label="utm_campaign.REFERRAL_CODE"
 											name="utm_campaign"
-											placeholder
+											displayPlaceholder
 											formik={form}
 										/>
 									)}
@@ -283,7 +283,7 @@ export default function Signup() {
 											className="col-12 mt-1"
 											label="utm_content.DETAILS_OPTIONAL"
 											name="utm_content"
-											placeholder
+											displayPlaceholder
 											formik={form}
 										/>
 									)}

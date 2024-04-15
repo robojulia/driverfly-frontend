@@ -22,6 +22,8 @@ export default class ApplicantApi extends BaseApi {
 	}
 
 	async create(dto: ApplicantEntity): Promise<ApplicantEntity> {
+		console.log("dto", {dto});
+		
 		const { data } = await this.post(this.baseUrl, dto);
 
 		return data;

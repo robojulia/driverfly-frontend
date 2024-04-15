@@ -70,7 +70,7 @@ export default function Login() {
                             label={t("EMAIL")}
                             required
                             name="email"
-                            placeholder
+                            displayPlaceholder
                             formik={form}
                         />
                         <BaseInput
@@ -79,7 +79,7 @@ export default function Login() {
                             required
                             type="password"
                             name="password"
-                            placeholder
+                            displayPlaceholder
                             formik={form}
                         />
 

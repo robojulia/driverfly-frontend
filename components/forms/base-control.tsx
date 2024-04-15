@@ -1,7 +1,7 @@
-import React from 'react'
+import { ReactNode } from 'react';
 import { InputGroup } from 'react-bootstrap';
 
-import { useTranslation } from "../../hooks/use-translation"
+import { useTranslation } from "../../hooks/use-translation";
 import { FormikInterface } from '../../utils/formik';
 
 export interface BaseControlProps {
@@ -9,8 +9,8 @@ export interface BaseControlProps {
   required?: boolean;
   className?: string;
   label?: string;
-  id?: string;
-  children?: JSX.Element | JSX.Element[];
+  // children?: JSX.Element | JSX.Element[];
+  children?: ReactNode;
   touched?: boolean;
   error?: string;
   name?: string;

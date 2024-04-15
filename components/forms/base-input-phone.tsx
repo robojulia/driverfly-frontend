@@ -4,10 +4,12 @@ import { useTranslation } from '../../hooks/use-translation';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import BaseControl, { BaseControlProps } from './base-control';
+import { grey } from '@mui/material/colors';
 
-export interface BaseInputPhoneProps extends BaseControlProps {
+export interface BaseInputPhoneProps extends BaseControlProps, React.InputHTMLAttributes<HTMLInputElement> {
 	handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-	placeholder?: string | boolean;
+	placeholder?: string;
+	displayPlaceholder?: string | boolean;
 	value?: any;
 	onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
@@ -15,7 +17,24 @@ export interface BaseInputPhoneProps extends BaseControlProps {
 }
 
 
-function BaseInputPhone({ formik, required, className, label, handleBlur, placeholder, value, onChange, onKeyDown, readOnly, name, error, touched, append, prepend }: BaseInputPhoneProps) {
+function BaseInputPhone({
+	formik,
+	required,
+	className,
+	label,
+	handleBlur,
+	placeholder,
+	displayPlaceholder,
+	value,
+	onChange,
+	onKeyDown,
+	readOnly,
+	name,
+	error,
+	touched,
+	append,
+	prepend,
+}: BaseInputPhoneProps) {
 	const { t } = useTranslation();
 
 	if (formik) {
@@ -30,19 +49,28 @@ function BaseInputPhone({ formik, required, className, label, handleBlur, placeh
 		handleBlur = handleBlur || formik.handleBlur;
 	}
 
-	function onChangeProxy(value: string, country: string, e: React.ChangeEvent<HTMLInputElement>, formattedValue: string) {
-		if (onChange) onChange({
-			...e,
-			target: {
-				...e.target,
-				name: name,
-				value: formattedValue
-			}
-		});
+	function onChangeProxy(
+		value: string,
+		country: string,
+		e: React.ChangeEvent<HTMLInputElement>,
+		formattedValue: string
+	) {
+		if (onChange)
+			onChange({
+				...e,
+				target: {
+					...e.target,
+					name: name,
+					value: formattedValue,
+				},
+			});
 	}
 
-	const PHONE_INPUT_COUNTRY_ALLOWED = process?.env?.PHONE_INPUT_COUNTRY_ALLOWED?.split(',')
-	const onlyCountries = Array.isArray(PHONE_INPUT_COUNTRY_ALLOWED) ? PHONE_INPUT_COUNTRY_ALLOWED : ['us']
+	const PHONE_INPUT_COUNTRY_ALLOWED =
+		process?.env?.PHONE_INPUT_COUNTRY_ALLOWED?.split(",");
+	const onlyCountries = Array.isArray(PHONE_INPUT_COUNTRY_ALLOWED)
+		? PHONE_INPUT_COUNTRY_ALLOWED
+		: ["us"];
 
 	return (
 		<BaseControl
@@ -57,6 +85,9 @@ function BaseInputPhone({ formik, required, className, label, handleBlur, placeh
 			append={append}
 		>
 			<PhoneInput
+				inputStyle={{
+					backgroundColor: readOnly && "#e9ecef"
+				}}
 				autoFormat
 				countryCodeEditable={false}
 				onlyCountries={onlyCountries}
@@ -64,11 +95,19 @@ function BaseInputPhone({ formik, required, className, label, handleBlur, placeh
 				inputProps={{
 					name: name,
 					readOnly: readOnly,
-					disabled: readOnly
+					disabled: readOnly,
 				}}
 				defaultErrorMessage={error}
-				country={'us'}
-				placeholder={t(placeholder == true ? label || name : (placeholder || "").toString())}
+				country={"us"}
+				placeholder={
+					(displayPlaceholder || placeholder) &&
+					t(
+						(typeof displayPlaceholder == "string" && displayPlaceholder) ||
+						placeholder ||
+						label ||
+						name
+					)
+				}
 				value={value || ""}
 				disabled={readOnly}
 				onChange={onChangeProxy}
@@ -76,7 +115,7 @@ function BaseInputPhone({ formik, required, className, label, handleBlur, placeh
 				onBlur={handleBlur}
 			/>
 		</BaseControl>
-	)
+	);
 }
 
 export default BaseInputPhone

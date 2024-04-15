@@ -80,7 +80,7 @@ export default function FlagJob({ jobId }) {
                                 label="REASON"
                                 name="type"
                                 required
-                                placeholder
+                                displayPlaceholder
                                 labelPrefix="InappropriateJobFlag"
                                 enumType={InappropriateJobFlag}
                                 formik={form}
@@ -92,7 +92,7 @@ export default function FlagJob({ jobId }) {
                                     label="other"
                                     required
                                     name="type_other"
-                                    placeholder
+                                    displayPlaceholder
                                     formik={form}
                                 />
                             }
