@@ -384,7 +384,7 @@ const ImportApplicants = () => {
                                             const equipmentExperienceObject = new ApplicantExperienceEntity();
                                             if (!Object.values(JobEquipmentType).includes(v.toString() as JobEquipmentType)) {
                                                 equipmentExperienceObject.type_other =
-                                                    v + ", " + (equipmentExperienceObject.type_other || "");
+                                                    v + (equipmentExperienceObject.type_other ? `, ${equipmentExperienceObject.type_other}` : "");
                                                 equipmentExperienceObject.type = JobEquipmentType.OTHER;
                                             } else {
                                                 equipmentExperienceObject.type = matchEnum(

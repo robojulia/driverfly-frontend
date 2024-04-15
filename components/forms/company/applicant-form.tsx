@@ -889,6 +889,14 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												labelPrefix="JobEquipmentType"
 												enumType={JobEquipmentType}
 												formik={form}
+												onChange={({ target: { value } }) => {
+													form.setFieldValue(`equipment_experience[${i}].type`, value)
+													if (value == JobEquipmentType.OTHER) {
+														form.setFieldValue(`equipment_experience[${i}].type_other`, t(`JobEquipmentType.OTHER`))
+													} else {
+														form.setFieldValue(`equipment_experience[${i}].type_other`, (``))
+													}
+												}}
 											/>
 										</div>
 										<div className="col-md-5 mt-2">
