@@ -290,23 +290,23 @@ const ImportApplicants = () => {
                             case "tickets_count":
                             case "tickets_details":
                             case "tickets":
-                                if (!!entity.tickets_count || entity.tickets_count > 0) {
-                                    entity.tickets_count = 0;
-                                    entity.tickets = true;
-                                } else {
-                                    entity.tickets = false;
-                                    entity.tickets_details = null;
+                                if (!entity.tickets) {
+                                    if (Boolean(entity.tickets_count)) {
+                                        entity.tickets = true;
+                                    } else {
+                                        entity.tickets_details = null;
+                                    }
                                 }
                                 break;
                             case "infractions_count":
                             case "infractions_details":
                             case "infractions":
-                                if (!!entity.infractions_count || entity.infractions_count > 0) {
-                                    entity.infractions_count = 0;
-                                    entity.infractions = true;
-                                } else {
-                                    entity.infractions = false;
-                                    entity.infractions_details = null;
+                                if (!entity.infractions) {
+                                    if (Boolean(entity.infractions_count)) {
+                                        entity.infractions = true;
+                                    } else {
+                                        entity.infractions_details = null;
+                                    }
                                 }
                                 break;
                             case "license_restrictions":
