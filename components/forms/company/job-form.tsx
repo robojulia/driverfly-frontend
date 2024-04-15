@@ -356,10 +356,11 @@ export function JobForm(props: JobFormProps) {
 
     function addMvrRequirement(e) {
         e.preventDefault();
+        const MvrRequirements = form.values.mvr_requirements || [];
         form.setValues({
             ...form.values,
             mvr_requirements: [
-                ...form.values.mvr_requirements,
+                ...MvrRequirements,
                 {
                     type: null,
                     max_count: 0,
@@ -380,10 +381,11 @@ export function JobForm(props: JobFormProps) {
 
     function addCriminalHistoryRequirement(e) {
         e.preventDefault();
+        const criminalHistory = form.values.criminal_history || [];
         form.setValues({
             ...form.values,
             criminal_history: [
-                ...form.values.criminal_history,
+                ...criminalHistory,
                 {
                     type: null,
                     max_count: 0,
