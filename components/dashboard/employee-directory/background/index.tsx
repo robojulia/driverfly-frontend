@@ -1,12 +1,12 @@
-import { Button, Col, Row } from 'react-bootstrap';
-import { useTranslation } from '../../../../hooks/use-translation';
-import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { ViewApplicantBackgroundProps } from '../../../../types/applicant/view-application-background-props.type';
-import ViewDetails from '../../../view-details/view-details';
-import ViewEmployeeDetails from '../../../employee/view-employee-detail';
-import { useAuth } from '../../../../hooks/use-auth';
+import { useEffect, useState } from 'react';
+import { Button, Col, Row } from 'react-bootstrap';
 import { EmployeeStatus } from '../../../../enums/applicants/employee-status.enum';
+import { useAuth } from '../../../../hooks/use-auth';
+import { useTranslation } from '../../../../hooks/use-translation';
+import { ViewApplicantBackgroundProps } from '../../../../types/applicant/view-application-background-props.type';
+import ViewEmployeeDetails from '../../../employee/view-employee-detail';
+import ViewDetails from '../../../view-details/view-details';
 
 
 export default function Background({ employee }: ViewApplicantBackgroundProps) {

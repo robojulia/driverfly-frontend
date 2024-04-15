@@ -41,7 +41,7 @@ const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
     append,
     prepend,
     ...rest
-  }) => {
+  }, _ref) => {
     const { t } = useTranslation();
 
     if (formik) {
@@ -142,6 +142,7 @@ const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
         append={append}
       >
         <input
+          ref={_ref}
           accept={type == "file" ? accept : null}
           onBlur={handleBlur}
           type={type || "text"}

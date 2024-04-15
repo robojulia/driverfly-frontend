@@ -339,6 +339,8 @@ export default function SafetyPerformanceHistory({
                     items={employers}
                     expandableRowsComponent={({ data }) => (
                         <>
+                            {console.log({ data })
+                            }
                             <Row className="mt-2">
                                 <Col>
                                     <ViewDetails
@@ -354,7 +356,7 @@ export default function SafetyPerformanceHistory({
                                     <ViewDetails
                                         default={t("NOT_ANSWERED")}
                                         obj={{
-                                            VOE_SUBMITTED: data.voe_submitted ? t("YES") : t("NO"),
+                                            VOE_SUBMITTED: data?.voe_submitted || Boolean(data?.documents?.length) ? t("YES") : t("NO"),
                                             AUTHORIZED_TO_COMMUNICATE: Boolean(data.can_contact)
                                                 ? t("YES")
                                                 : t("NO"),

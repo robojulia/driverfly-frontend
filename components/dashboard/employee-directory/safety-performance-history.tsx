@@ -1,25 +1,25 @@
-import { Button, Col, Row } from "react-bootstrap";
 import { useFormik } from "formik";
-import { toast } from "react-toastify";
 import { useState } from "react";
-import { useTranslation } from "../../../hooks/use-translation";
-import { globalAjaxExceptionHandler } from "../../../utils/ajax";
-import ViewPdf from "../../view-details/view-pdf";
-import ViewModal from "../../view-details/view-modal";
-import ViewDataTable from "../../view-details/view-data-table";
-import ViewDocumentHistory from "../../documents/view-history";
-import { AddDocumentButton, DeleteDocumentButton, DownloadDocumentButton, ViewDocumentButton } from "../../documents/buttons";
+import { Button, Col, Row } from "react-bootstrap";
+import { toast } from "react-toastify";
 import { DocumentableType } from "../../../enums/documents/documentable-type.enum";
-import { handleDownloadDocument, handleViewDocument } from "../../../utils/documents/button-actions";
-import FileInput from "../../forms/file-input";
-import OverlyPopover from '../../popover/overly-popover'
-import { EmployeeSafetyPerformanceHistoryProps } from "../../../types/employee/employee-safety-performnance-history-props.type";
-import EmployeeApi from "../../../pages/api/employee";
-import { EmployeeEmployerDocumentDto } from "../../../models/employee/employee-employer-document-dto";
 import { EmployeeDocumentType } from "../../../enums/employee/employee-document-types.enum";
+import { useTranslation } from "../../../hooks/use-translation";
+import { EmployeeEmployerDocumentDto } from "../../../models/employee/employee-employer-document-dto";
 import { EmployeeEmployerEntity } from "../../../models/employee/employee-employer.entity";
-import ViewDetails from "../../view-details/view-details";
+import EmployeeApi from "../../../pages/api/employee";
+import { EmployeeSafetyPerformanceHistoryProps } from "../../../types/employee/employee-safety-performnance-history-props.type";
+import { globalAjaxExceptionHandler } from "../../../utils/ajax";
+import { handleDownloadDocument, handleViewDocument } from "../../../utils/documents/button-actions";
+import { AddDocumentButton, DeleteDocumentButton, DownloadDocumentButton, ViewDocumentButton } from "../../documents/buttons";
+import ViewDocumentHistory from "../../documents/view-history";
+import FileInput from "../../forms/file-input";
 import ShowFormattedDate from "../../jobs/show-formatted-date";
+import OverlyPopover from '../../popover/overly-popover';
+import ViewDataTable from "../../view-details/view-data-table";
+import ViewDetails from "../../view-details/view-details";
+import ViewModal from "../../view-details/view-modal";
+import ViewPdf from "../../view-details/view-pdf";
 
 
 export default function SafetyPerformanceHistory({
@@ -250,7 +250,7 @@ export default function SafetyPerformanceHistory({
                                     <ViewDetails
                                         default={t("NOT_ANSWERED")}
                                         obj={{
-                                            VOE_SUBMITTED: data.voe_submitted ? t('YES') : t('NO'),
+                                            VOE_SUBMITTED: data.voe_submitted || Boolean(data?.documents?.length) ? t('YES') : t('NO'),
                                             AUTHORIZED_TO_COMMUNICATE: Boolean(data.can_contact) ? t('YES') : t('NO'),
                                             SUBJECT_TO_FMCR: Boolean(data.is_subject_to_fmcsrs) ? t('YES') : t('NO'),
                                         }}
