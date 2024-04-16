@@ -145,7 +145,7 @@ export function EmployeeForm(props: EmployeeFormProps) {
 					<Row className="mb-2">
 						<Col md='4'>
 							<BaseSelect
-								name={`manager.id`}
+								name={`managerId`}
 								label="MANAGER"
 								required
 								placeholder="MANAGER"

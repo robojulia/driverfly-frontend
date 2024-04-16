@@ -25,6 +25,7 @@ export class EmployeeEntity {
   id?: number;
   applicant?: ApplicantEntity;
   // applicantId?: number;
+  managerId?: number;
   job?: JobEntity;
   jobId?: number;
   status?: EmployeeStatus;
@@ -95,13 +96,6 @@ export class EmployeeEntity {
       years_cdl_experience: yup.number().min(0).nullable(),
       can_pass_drug_test: yup.bool().nullable(),
       is_owner_operator: yup.bool().nullable(),
-      manager: yup
-        .object()
-		.shape({
-			id:yup.number().nullable().required()
-		})
-        .required()
-        .nullable(),
       transmission_type: yup
         .array((yup.string() as any).enum(VehicleTransmissionType))
         .nullable(),
@@ -132,7 +126,7 @@ export class EmployeeEntity {
       equipment_owned: (
         yup.array(EmployeeEquipmentEntity.yupSchema()) as any
       ).unique("type", { mapper: EmployeeEquipmentEntity.key }),
-      // managerId: yup.number().optional().nullable()
+      managerId: yup.number().required().nullable(),
       hire_date: yup.date().nullable(),
     });
   }
