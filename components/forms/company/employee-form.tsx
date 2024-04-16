@@ -93,7 +93,7 @@ export function EmployeeForm(props: EmployeeFormProps) {
 
 	useEffect(() => {
 		if (entity.id) {
-			form.setValues({ ...entity, jobId: entity.job.id });
+			form.setValues({ ...entity, jobId: entity.job.id, managerId: entity?.manager?.id });
 		}
 	}, [entity]);
 
