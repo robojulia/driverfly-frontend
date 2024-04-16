@@ -53,7 +53,7 @@ const ImportApplicants = () => {
     const [warnings, setWarnings] = useState({});
     const [csvErrors, setCsvErrors] = useState([]);
 
-    const api = new ApplicantApi();
+    const applicantApi = new ApplicantApi();
     /**
      * @type {ApplicantEntity[]}
      */
@@ -78,6 +78,8 @@ const ImportApplicants = () => {
             ),
         }),
         validate: async (values) => {
+            // alert(3)
+            const companyApplicants = await applicantApi.list();
             const errors = {};
 
             let lastProgress = 0;
@@ -96,15 +98,18 @@ const ImportApplicants = () => {
 
                 if (applicant.email) {
                     const rowError: { email?: string; phone?: string } = {};
-                    const matches = await api.list({ email: applicant.email });
+                    // const matches = await api.list({ email: applicant.email });
+                    const matches = companyApplicants.find(({ email }) => email == applicant.email);
 
-                    if (matches.some((v) => v.company?.id != null))
+                    // if (matches.some((v) => v.company?.id != null))
+                    if (matches?.company?.id != null)
                         rowError.email = t(
                             "{name}_ALREADY_EXISTS",
                             { name: "EMAIL" },
                             { translateProps: true }
                         );
-                    else if (matches.some((v) => v.company == null))
+                    // else if (matches.some((v) => v.company == null))
+                    else if (matches?.company == null)
                         rowError.email = t(
                             "{name}_ALREADY_EXISTS_NO_MERGE",
                             { name: "EMAIL" },
@@ -112,13 +117,15 @@ const ImportApplicants = () => {
                         );
 
                     if (applicant.phone) {
-                        if (matches.some((v) => v.company?.id != null))
+                        // if (matches.some((v) => v.company?.id != null))
+                        if (matches?.company?.id != null)
                             rowError.phone = t(
                                 "{name}_ALREADY_EXISTS",
                                 { name: "PHONE" },
                                 { translateProps: true }
                             );
-                        else if (matches.some((v) => v.company == null))
+                        // else if (matches.some((v) => v.company == null))
+                        else if (matches?.company == null)
                             rowError.phone = t(
                                 "{name}_ALREADY_EXISTS_NO_MERGE",
                                 { name: "PHONE" },
@@ -157,7 +164,7 @@ const ImportApplicants = () => {
                 }
 
                 try {
-                    await api.create(dto);
+                    await applicantApi.create(dto);
                 } catch (e) {
                     console.log("error saving applicant", i, e);
                     form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
@@ -413,8 +420,11 @@ const ImportApplicants = () => {
                 return entity;
             })
             ?.filter(Boolean);
+        // alert(1)
+
         if (errors?.length) setCsvErrors(errors);
         form?.setValues({ items: contents }, true);
+        // alert(2)
     }
 
     const headers: string[] = Object.keys(schemaDescribe.fields).filter((v) => {
