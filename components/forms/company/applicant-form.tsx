@@ -912,17 +912,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												formik={form}
 											/>
 										</div>
-										{entity.type == JobEquipmentType.OTHER && (
-											<div>
-												<BaseInput
-													readOnly={Boolean(props?.entity?.is_hired)}
-													className="my-2"
-													name={`equipment_experience[${i}].type_other`}
-													placeholder="TYPE"
-													formik={form}
-												/>
-											</div>
-										)}
 										<div className="pl-sm-1 pt-lg-2 col-lg-1 col-md-12">
 											<Col className="mt-4"></Col>
 											<a
@@ -940,6 +929,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												<DashCircle color="red" />
 											</a>
 										</div>
+										{entity.type == JobEquipmentType.OTHER && (
+											<Col md="11">
+												<BaseInput
+													readOnly={Boolean(props?.entity?.is_hired)}
+													className="my-2"
+													name={`equipment_experience[${i}].type_other`}
+													placeholder="TYPE"
+													formik={form}
+												/>
+											</Col>
+										)}
 										<div className="12">
 											<hr />
 										</div>
@@ -1014,17 +1014,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													formik={form}
 												/>
 											</Col>
-											{entity.type == JobEquipmentType.OTHER && (
-												<Col xs="11">
-													<BaseInput
-														readOnly={Boolean(props?.entity?.is_hired)}
-														name={`equipment_owned[${i}].type_other`}
-														placeholder="TYPE"
-														formik={form}
-														required
-													/>
-												</Col>
-											)}
 											<Col xs="1">
 												<a
 													href="#"
@@ -1041,6 +1030,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													<DashCircle color="red" />
 												</a>
 											</Col>
+											{entity.type == JobEquipmentType.OTHER && (
+												<Col xs="11" className="mt-3">
+													<BaseInput
+														readOnly={Boolean(props?.entity?.is_hired)}
+														name={`equipment_owned[${i}].type_other`}
+														placeholder="TYPE"
+														formik={form}
+														required
+													/>
+												</Col>
+											)}
 											<Col xs="12">
 												<hr />
 											</Col>
