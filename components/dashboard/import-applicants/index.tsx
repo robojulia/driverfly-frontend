@@ -149,7 +149,7 @@ const ImportApplicants = () => {
             setProgress(100);
             setWarnings(errors);
         },
-        onSubmit: async (values) => {
+        onSubmit: async (values, { resetForm }) => {
             // alert(4)
             let lastProgress = 0;
 
@@ -171,7 +171,7 @@ const ImportApplicants = () => {
                 } catch (e) {
                     console.log("error saving applicant", i, e);
                     form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
-                    toast.error(t("unable_to_save_information"));
+                    toast.error(t("UNABLE_TO_SAVE_INFORMATION_FOR_{row}", { row: i + 1 }));
                     // return;
                 }
 
