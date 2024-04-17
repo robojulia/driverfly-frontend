@@ -32,8 +32,11 @@ export default class ApplicantApi extends BaseApi {
     return data;
   }
 
-  async createBulk(dtos: ApplicantEntity[]): Promise<[{ data?: ApplicantEntity; error?: string; }]> {
-    const { data } = await this.post(`${this.baseUrl}/bulk`, dtos);
+  async createBulk(
+    dtos: ApplicantEntity[],
+    config?: AxiosRequestConfig
+  ): Promise<{ data?: ApplicantEntity; error?: string }[]> {
+    const { data } = await this.post(`${this.baseUrl}/bulk`, dtos, config);
 
     return data;
   }

@@ -1,4 +1,5 @@
 "use client";
+import { AxiosProgressEvent } from "axios";
 import { useFormik } from "formik";
 import Papa from "papaparse";
 import { useState } from "react";
@@ -163,33 +164,45 @@ const ImportApplicants = () => {
                     const utcLicenseExpiry = new Date(dto.license_expiry)
                     dto.license_expiry = new Date(utcLicenseExpiry.getUTCFullYear(), utcLicenseExpiry.getUTCMonth(), utcLicenseExpiry.getUTCDate() + 2).toISOString();
                 }
-                // values.items[i] = dto;
+                values.items[i] = dto;
 
-                try {
-                    await applicantApi.create(dto);
-                } catch (e) {
-                    console.log("error saving applicant", i, e);
-                    form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
-                    toast.error(t("unable_to_save_information"));
-                    return;
-                }
+                // try {
+                //     await applicantApi.create(dto);
+                // } catch (e) {
+                //     console.log("error saving applicant", i, e);
+                //     form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
+                //     toast.error(t("unable_to_save_information"));
+                //     return;
+                // }
 
-                let progress = Math.floor(((i + 1) * 100) / values.items?.length);
+                // let progress = Math.floor(((i + 1) * 100) / values.items?.length);
 
-                if (progress != lastProgress) {
-                    setProgress(progress);
-                    lastProgress = progress;
-                }
+                // if (progress != lastProgress) {
+                //     setProgress(progress);
+                //     lastProgress = progress;
+                // }
             }
 
-            // const response = await applicantApi.createBulk(values.items);
-            // response.forEach(({ data, error }, i) => {
-            //     if (!!error) {
-            //         form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
-            //     } else {
-            //         console.log("saved applicant", i, data);
-            //     }
-            // })
+            const response = await applicantApi.createBulk(values.items, {
+                onUploadProgress: (progressEvent: AxiosProgressEvent) =>
+                    setProgress(
+                        Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                    ),
+                onDownloadProgress: (progressEvent: AxiosProgressEvent) =>
+                    setProgress(
+                        Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                    ),
+            });
+            console.log("response", response);
+
+            response?.forEach(({ data, error }, i) => {
+                if (!!error) {
+                    // form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
+                    form.setFieldError(`items.${i}.id`, t(error));
+                } else {
+                    console.log("saved applicant", i, data);
+                }
+            })
 
             toast.success(t("successfully_saved_information"));
 
@@ -235,7 +248,7 @@ const ImportApplicants = () => {
         console.log("results", { data, errors, fields });
 
         const contents = data
-            ?.map((row, i) => {
+            ?.map((row, i, self) => {
                 const entity = new ApplicantEntity();
                 if (!Object.values(row)?.some(Boolean)) {
                     errors = errors.filter((v) => v.row != i);
@@ -428,6 +441,7 @@ const ImportApplicants = () => {
                 if (!entity.infractions) entity.infractions_details = "";
                 if (!entity.moving_violations) entity.moving_violations_details = "";
 
+                setProgress(Math.floor(((i + 1) * 100) / self?.length))
                 return entity;
             })
             ?.filter(Boolean);
@@ -436,6 +450,7 @@ const ImportApplicants = () => {
         if (errors?.length) setCsvErrors(errors);
         // alert(2)
         form?.setValues({ items: contents }, true);
+        setProgress(0)
     }
 
     const headers: string[] = Object.keys(schemaDescribe.fields).filter((v) => {
