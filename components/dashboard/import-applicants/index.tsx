@@ -166,626 +166,626 @@ const ImportApplicants = () => {
                 }
                 values.items[i] = dto;
 
-                // try {
-                //     await applicantApi.create(dto);
-                // } catch (e) {
-                //     console.log("error saving applicant", i, e);
-                //     form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
-                //     toast.error(t("unable_to_save_information"));
-                //     return;
-                // }
+                try {
+                    await applicantApi.create(dto);
+                } catch (e) {
+                    console.log("error saving applicant", i, e);
+                    form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
+                    toast.error(t("unable_to_save_information"));
+                    // return;
+                }
 
-                // let progress = Math.floor(((i + 1) * 100) / values.items?.length);
+                let progress = Math.floor(((i + 1) * 100) / values.items?.length);
 
-                // if (progress != lastProgress) {
-                //     setProgress(progress);
-                //     lastProgress = progress;
-                // }
+                if (progress != lastProgress) {
+                    setProgress(progress);
+                    lastProgress = progress;
+                }
             }
 
-            const response = await applicantApi.createBulk(values.items, {
-                onUploadProgress: (progressEvent: AxiosProgressEvent) =>
-                    setProgress(
-                        Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                    ),
-                onDownloadProgress: (progressEvent: AxiosProgressEvent) =>
-                    setProgress(
-                        Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                    ),
-            });
-            console.log("response", response);
+            // const response = await applicantApi.createBulk(values.items, {
+            //     onUploadProgress: (progressEvent: AxiosProgressEvent) =>
+            //         setProgress(
+            //             Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            //         ),
+            //     onDownloadProgress: (progressEvent: AxiosProgressEvent) =>
+            //         setProgress(
+            //             Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            //         ),
+            // });
+            // console.log("response", response);
 
-            response?.forEach(({ data, error }, i) => {
-                if (!!error) {
-                    // form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
-                    form.setFieldError(`items.${i}.id`, t(error));
-                } else {
-                    console.log("saved applicant", i, data);
-                }
-            })
+            // response?.forEach(({ data, error }, i) => {
+            //     if (!!error) {
+            //         // form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
+            //         form.setFieldError(`items.${i}.id`, t(error));
+            //     } else {
+            //         console.log("saved applicant", i, data);
+            //     }
+        })
 
-            toast.success(t("successfully_saved_information"));
+    toast.success(t("successfully_saved_information"));
 
-            setTimeout(onClearClick, 2000);
-        },
+    setTimeout(onClearClick, 2000);
+},
     });
 
-    const [progress, setProgress] = useState(0);
+const [progress, setProgress] = useState(0);
 
-    const [fileName, setFileName] = useState("");
+const [fileName, setFileName] = useState("");
 
-    /**
-     *
-     * @param {React.ChangeEvent<HTMLInputElement>} e
-     */
-    async function onFileChange(
-        e: React.ChangeEvent<HTMLInputElement>
-    ): Promise<void> {
-        const {
-            target: {
-                files: [file],
-                value,
-            },
-        } = e;
-        setFileName(value);
-        setCsvErrors([]);
+/**
+ *
+ * @param {React.ChangeEvent<HTMLInputElement>} e
+ */
+async function onFileChange(
+    e: React.ChangeEvent<HTMLInputElement>
+): Promise<void> {
+    const {
+        target: {
+            files: [file],
+            value,
+        },
+    } = e;
+    setFileName(value);
+    setCsvErrors([]);
 
-        if (file) {
-            await Papa.parse(file, {
-                header: true,
-                skipEmptyLines: true,
-                complete: validateFileContent,
-            });
-        }
+    if (file) {
+        await Papa.parse(file, {
+            header: true,
+            skipEmptyLines: true,
+            complete: validateFileContent,
+        });
     }
+}
 
-    function validateFileContent(results): void {
-        let {
-            data,
-            errors,
-            meta: { fields },
-        } = results;
-        console.log("results", { data, errors, fields });
+function validateFileContent(results): void {
+    let {
+        data,
+        errors,
+        meta: { fields },
+    } = results;
+    console.log("results", { data, errors, fields });
 
-        const contents = data
-            ?.map((row, i, self) => {
-                const entity = new ApplicantEntity();
-                if (!Object.values(row)?.some(Boolean)) {
-                    errors = errors.filter((v) => v.row != i);
-                    return false;
-                }
+    const contents = data
+        ?.map((row, i, self) => {
+            const entity = new ApplicantEntity();
+            if (!Object.values(row)?.some(Boolean)) {
+                errors = errors.filter((v) => v.row != i);
+                return false;
+            }
 
-                Object.entries(row)
-                    ?.map(([key, value]: [string, any]) => {
-                        const fieldSchema = schemaDescribe.fields[key];
-                        if (!fieldSchema) return;
+            Object.entries(row)
+                ?.map(([key, value]: [string, any]) => {
+                    const fieldSchema = schemaDescribe.fields[key];
+                    if (!fieldSchema) return;
 
-                        switch (fieldSchema?.type) {
-                            case "boolean":
-                                entity[key] =
-                                    value.trim().toLowerCase().startsWith("y") ||
-                                    value.toLowerCase().startsWith("t");
-                                break;
-                            case "array":
-                                entity[key] = value
-                                    .split(",")
-                                    ?.map((v) => v.trim())
-                                    .filter((v) => !!v);
-                                break;
-                            case "number":
-                                entity[key] = value != "" ? Number(value) : null;
-                                break;
-                            case "date":
-                                entity[key] = value != "" ? (value) : null;
-                                break;
-                            default:
-                                entity[key] = value.trim();
-                        }
+                    switch (fieldSchema?.type) {
+                        case "boolean":
+                            entity[key] =
+                                value.trim().toLowerCase().startsWith("y") ||
+                                value.toLowerCase().startsWith("t");
+                            break;
+                        case "array":
+                            entity[key] = value
+                                .split(",")
+                                ?.map((v) => v.trim())
+                                .filter((v) => !!v);
+                            break;
+                        case "number":
+                            entity[key] = value != "" ? Number(value) : null;
+                            break;
+                        case "date":
+                            entity[key] = value != "" ? (value) : null;
+                            break;
+                        default:
+                            entity[key] = value.trim();
+                    }
 
-                        switch (key) {
-                            case "can_pass_drug_test":
-                                if (value == "") {
-                                    entity.can_pass_drug_test = true;
-                                }
-                                break;
-                            case "moving_violations_count":
-                            case "moving_violations_details":
-                            case "moving_violations":
-                                if (!!entity.moving_violations_count || entity.moving_violations_count > 0) {
-                                    entity.moving_violations = true;
+                    switch (key) {
+                        case "can_pass_drug_test":
+                            if (value == "") {
+                                entity.can_pass_drug_test = true;
+                            }
+                            break;
+                        case "moving_violations_count":
+                        case "moving_violations_details":
+                        case "moving_violations":
+                            if (!!entity.moving_violations_count || entity.moving_violations_count > 0) {
+                                entity.moving_violations = true;
+                            } else {
+                                entity.moving_violations_count = 0;
+                                entity.moving_violations = false;
+                                entity.moving_violations_details = null;
+                            }
+                            break;
+                        case "accident_count":
+                        case "accident_details":
+                            if (!!!entity.accident_count) {
+                                entity.accident_count = 0;
+                                entity.accident_details = null;
+                            }
+                            break;
+                        case "license_revoked":
+                        case "license_revoked_details":
+                            if (!!!entity.license_revoked) {
+                                entity.license_revoked_details = null;
+                            }
+                            break;
+                        case "psp_violations":
+                        case "psp_violations_details":
+                            if (!!!entity.psp_violations) {
+                                entity.psp_violations_details = null;
+                            }
+                            break;
+                        case "tickets_count":
+                        case "tickets_details":
+                        case "tickets":
+                            if (!entity.tickets) {
+                                if (Boolean(entity.tickets_count)) {
+                                    entity.tickets = true;
                                 } else {
-                                    entity.moving_violations_count = 0;
-                                    entity.moving_violations = false;
-                                    entity.moving_violations_details = null;
+                                    entity.tickets_details = null;
                                 }
-                                break;
-                            case "accident_count":
-                            case "accident_details":
-                                if (!!!entity.accident_count) {
-                                    entity.accident_count = 0;
-                                    entity.accident_details = null;
+                            }
+                            break;
+                        case "infractions_count":
+                        case "infractions_details":
+                        case "infractions":
+                            if (!entity.infractions) {
+                                if (Boolean(entity.infractions_count)) {
+                                    entity.infractions = true;
+                                } else {
+                                    entity.infractions_details = null;
                                 }
-                                break;
-                            case "license_revoked":
-                            case "license_revoked_details":
-                                if (!!!entity.license_revoked) {
-                                    entity.license_revoked_details = null;
-                                }
-                                break;
-                            case "psp_violations":
-                            case "psp_violations_details":
-                                if (!!!entity.psp_violations) {
-                                    entity.psp_violations_details = null;
-                                }
-                                break;
-                            case "tickets_count":
-                            case "tickets_details":
-                            case "tickets":
-                                if (!entity.tickets) {
-                                    if (Boolean(entity.tickets_count)) {
-                                        entity.tickets = true;
-                                    } else {
-                                        entity.tickets_details = null;
+                            }
+                            break;
+                        case "license_restrictions":
+                            entity.license_restrictions = entity.license_restrictions
+                                ?.filter(unique)
+                                ?.map((v, i, self) => {
+                                    if (!Object.values(LicenseRestrictions).includes(v)) {
+                                        entity.license_restrictions_other =
+                                            v + ", " + (entity.license_restrictions_other || "");
+                                        return LicenseRestrictions.OTHER;
                                     }
-                                }
-                                break;
-                            case "infractions_count":
-                            case "infractions_details":
-                            case "infractions":
-                                if (!entity.infractions) {
-                                    if (Boolean(entity.infractions_count)) {
-                                        entity.infractions = true;
-                                    } else {
-                                        entity.infractions_details = null;
-                                    }
-                                }
-                                break;
-                            case "license_restrictions":
-                                entity.license_restrictions = entity.license_restrictions
-                                    ?.filter(unique)
-                                    ?.map((v, i, self) => {
-                                        if (!Object.values(LicenseRestrictions).includes(v)) {
-                                            entity.license_restrictions_other =
-                                                v + ", " + (entity.license_restrictions_other || "");
-                                            return LicenseRestrictions.OTHER;
-                                        }
-                                        return matchEnum(
-                                            v,
-                                            LicenseRestrictions,
-                                            "LicenseRestrictions",
-                                            t
-                                        );
-                                    })
-                                    ?.filter(unique);
-                                break;
-                            case "transmission_type":
-                                entity.transmission_type = entity.transmission_type
-                                    ?.filter(unique)
-                                    ?.map((v) =>
-                                        matchEnum(
-                                            v,
-                                            VehicleTransmissionType,
-                                            "VehicleTransmissionType",
-                                            t
-                                        )
-                                    )
-                                    ?.filter(unique);
-                                break;
-                            case "endorsements":
-                                entity.endorsements = entity.endorsements
-                                    ?.filter(unique)
-                                    ?.map((v) => {
-                                        if (!Object.values(DriverEndorsement).includes(v)) {
-                                            entity.endorsements_other =
-                                                v + ", " + (entity.endorsements_other || "");
-                                            return DriverEndorsement.OTHER;
-                                        }
-                                        return matchEnum(
-                                            v,
-                                            DriverEndorsement,
-                                            "DriverEndorsement",
-                                            t
-                                        );
-                                    })
-                                    ?.filter(unique);
-                                break;
-                            case "highest_degree":
-                                entity.highest_degree = matchEnum(
-                                    entity.highest_degree,
-                                    EducationLevel,
-                                    "EducationLevel",
-                                    t
-                                );
-                                break;
-                            case "license_type":
-                                entity.license_type = !entity.license_type
-                                    ? DriverLicenseType.NO_CDL
-                                    : matchEnum(
-                                        entity.license_type,
-                                        DriverLicenseType,
-                                        "DriverLicenseType",
+                                    return matchEnum(
+                                        v,
+                                        LicenseRestrictions,
+                                        "LicenseRestrictions",
                                         t
                                     );
-                                break;
-                            case "equipment_experience":
-                                entity.equipment_experience = entity.equipment_experience
-                                    ?.filter(unique)
-                                    ?.map(
-                                        (v) => {
-                                            const equipmentExperienceObject = new ApplicantExperienceEntity();
-                                            if (!Object.values(JobEquipmentType).includes(v.toString() as JobEquipmentType)) {
-                                                equipmentExperienceObject.type_other =
-                                                    v + (equipmentExperienceObject.type_other ? `, ${equipmentExperienceObject.type_other}` : "");
-                                                equipmentExperienceObject.type = JobEquipmentType.OTHER;
-                                            } else {
-                                                equipmentExperienceObject.type = matchEnum(
-                                                    v.toString(),
-                                                    JobEquipmentType,
-                                                    "JobEquipmentType",
-                                                    t
-                                                );
-                                            }
-                                            return equipmentExperienceObject;
-                                        }
+                                })
+                                ?.filter(unique);
+                            break;
+                        case "transmission_type":
+                            entity.transmission_type = entity.transmission_type
+                                ?.filter(unique)
+                                ?.map((v) =>
+                                    matchEnum(
+                                        v,
+                                        VehicleTransmissionType,
+                                        "VehicleTransmissionType",
+                                        t
                                     )
-                                    ?.filter(unique);
-                                break;
-                        }
-                    })
-                    ?.filter(Boolean);
+                                )
+                                ?.filter(unique);
+                            break;
+                        case "endorsements":
+                            entity.endorsements = entity.endorsements
+                                ?.filter(unique)
+                                ?.map((v) => {
+                                    if (!Object.values(DriverEndorsement).includes(v)) {
+                                        entity.endorsements_other =
+                                            v + ", " + (entity.endorsements_other || "");
+                                        return DriverEndorsement.OTHER;
+                                    }
+                                    return matchEnum(
+                                        v,
+                                        DriverEndorsement,
+                                        "DriverEndorsement",
+                                        t
+                                    );
+                                })
+                                ?.filter(unique);
+                            break;
+                        case "highest_degree":
+                            entity.highest_degree = matchEnum(
+                                entity.highest_degree,
+                                EducationLevel,
+                                "EducationLevel",
+                                t
+                            );
+                            break;
+                        case "license_type":
+                            entity.license_type = !entity.license_type
+                                ? DriverLicenseType.NO_CDL
+                                : matchEnum(
+                                    entity.license_type,
+                                    DriverLicenseType,
+                                    "DriverLicenseType",
+                                    t
+                                );
+                            break;
+                        case "equipment_experience":
+                            entity.equipment_experience = entity.equipment_experience
+                                ?.filter(unique)
+                                ?.map(
+                                    (v) => {
+                                        const equipmentExperienceObject = new ApplicantExperienceEntity();
+                                        if (!Object.values(JobEquipmentType).includes(v.toString() as JobEquipmentType)) {
+                                            equipmentExperienceObject.type_other =
+                                                v + (equipmentExperienceObject.type_other ? `, ${equipmentExperienceObject.type_other}` : "");
+                                            equipmentExperienceObject.type = JobEquipmentType.OTHER;
+                                        } else {
+                                            equipmentExperienceObject.type = matchEnum(
+                                                v.toString(),
+                                                JobEquipmentType,
+                                                "JobEquipmentType",
+                                                t
+                                            );
+                                        }
+                                        return equipmentExperienceObject;
+                                    }
+                                )
+                                ?.filter(unique);
+                            break;
+                    }
+                })
+                ?.filter(Boolean);
 
-                if (!entity.license_revoked) entity.license_revoked_details = "";
-                if (!entity.psp_violations) delete entity.psp_violations_details;
-                if (!entity.tickets) entity.tickets_details = "";
-                if (!entity.positive_drug_test) entity.positive_drug_test_details = "";
-                if (!entity.infractions) entity.infractions_details = "";
-                if (!entity.moving_violations) entity.moving_violations_details = "";
+            if (!entity.license_revoked) entity.license_revoked_details = "";
+            if (!entity.psp_violations) delete entity.psp_violations_details;
+            if (!entity.tickets) entity.tickets_details = "";
+            if (!entity.positive_drug_test) entity.positive_drug_test_details = "";
+            if (!entity.infractions) entity.infractions_details = "";
+            if (!entity.moving_violations) entity.moving_violations_details = "";
 
-                setProgress(Math.floor(((i + 1) * 100) / self?.length))
-                return entity;
-            })
-            ?.filter(Boolean);
-        // alert(1)
+            setProgress(Math.floor(((i + 1) * 100) / self?.length))
+            return entity;
+        })
+        ?.filter(Boolean);
+    // alert(1)
 
-        if (errors?.length) setCsvErrors(errors);
-        // alert(2)
-        form?.setValues({ items: contents }, true);
-        setProgress(0)
+    if (errors?.length) setCsvErrors(errors);
+    // alert(2)
+    form?.setValues({ items: contents }, true);
+    setProgress(0)
+}
+
+const headers: string[] = Object.keys(schemaDescribe.fields).filter((v) => {
+    switch (v) {
+        case "equipment_owned":
+        case "employers":
+        case "documents":
+        case "jobs":
+            return false;
+        default:
+            return true;
     }
+}); //Object.keys(new ApplicantEntity());
 
-    const headers: string[] = Object.keys(schemaDescribe.fields).filter((v) => {
-        switch (v) {
-            case "equipment_owned":
-            case "employers":
-            case "documents":
-            case "jobs":
-                return false;
-            default:
-                return true;
-        }
-    }); //Object.keys(new ApplicantEntity());
+const onClearClick = (e) => {
+    form.resetForm();
+    setFileName("");
+    setProgress(0);
+    setCsvErrors([]);
+};
 
-    const onClearClick = (e) => {
-        form.resetForm();
-        setFileName("");
-        setProgress(0);
-        setCsvErrors([]);
-    };
+const [onlyErrors, setOnlyErrors] = useState(false);
 
-    const [onlyErrors, setOnlyErrors] = useState(false);
+/**
+ *
+ * @param {React.ChangeEvent<HTMLInputElement>} e
+ */
+const onOnlyErrorsChange = (e) => {
+    setOnlyErrors(e.target.checked);
+};
 
-    /**
-     *
-     * @param {React.ChangeEvent<HTMLInputElement>} e
-     */
-    const onOnlyErrorsChange = (e) => {
-        setOnlyErrors(e.target.checked);
-    };
+const canUpload = !fileName && !form.isValidating && !form.isSubmitting;
+const canImport =
+    form.isValid &&
+    !form.isValidating &&
+    !form.isSubmitting &&
+    form.values.items?.length > 0;
+const canClear =
+    (form.values.items?.length > 0 || fileName) &&
+    !form.isValidating &&
+    !form.isSubmitting;
 
-    const canUpload = !fileName && !form.isValidating && !form.isSubmitting;
-    const canImport =
-        form.isValid &&
-        !form.isValidating &&
-        !form.isSubmitting &&
-        form.values.items?.length > 0;
-    const canClear =
-        (form.values.items?.length > 0 || fileName) &&
-        !form.isValidating &&
-        !form.isSubmitting;
-
-    return (
-        <>
-            <Row>
-                <Col sm="6" className="my-3">
-                    <InputGroup>
-                        <div className="input-group-prepend">
-                            <a
-                                download
-                                href="../../../ApplicantsTemplate.xlsx"
-                                // onClick={onDownloadClick}
-                                className="btn btn-md btn-primary pl-3"
-                            >
-                                {t("DOWNLOAD_TEMPLATE")}
-                            </a>
-                        </div>
-                        <input
-                            onChange={onFileChange}
-                            disabled={!canUpload}
-                            className="form-control"
-                            type="file"
-                            accept=".csv"
-                            value={fileName}
-                            id="formFile"
-                        />
-                        {!!fileName && (
-                            <div className="input-group-append">
-                                <button
-                                    type="button"
-                                    disabled={!canClear}
-                                    onClick={onClearClick}
-                                    className="btn btn-md btn-danger"
-                                >
-                                    {t("CLEAR")}
-                                </button>
-                            </div>
-                        )}
-                    </InputGroup>
-                    <p className="small text-secondary">
-                        {t("DOWNLOAD_AND_SAVE_AS_CSV")}
-                    </p>
-                </Col>
-                <Col sm="6" className="my-3">
-                    <div style={{ float: "right" }}>
-                        <button
-                            type="button"
-                            disabled={!canImport}
-                            onClick={form.submitForm}
-                            className={`btn btn-md btn-primary`}
+return (
+    <>
+        <Row>
+            <Col sm="6" className="my-3">
+                <InputGroup>
+                    <div className="input-group-prepend">
+                        <a
+                            download
+                            href="../../../ApplicantsTemplate.xlsx"
+                            // onClick={onDownloadClick}
+                            className="btn btn-md btn-primary pl-3"
                         >
-                            {t("IMPORT")}
-                        </button>
+                            {t("DOWNLOAD_TEMPLATE")}
+                        </a>
                     </div>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <div style={{ float: "left" }}>
-                        {!form.isValid && (
-                            <div className="text-danger small">
-                                {t("ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE")}
-                            </div>
-                        )}
-                    </div>
-                    <br />
-                    {Boolean(csvErrors.length) && (
-                        <div className="text-warning" style={{ float: "left" }}>
-                            {csvErrors.map((error, i) => (
-                                <div key={i} className="text-bold small">
-                                    {error.message} at row {error.row + 1}
-                                </div>
-                            ))}
+                    <input
+                        onChange={onFileChange}
+                        disabled={!canUpload}
+                        className="form-control"
+                        type="file"
+                        accept=".csv"
+                        value={fileName}
+                        id="formFile"
+                    />
+                    {!!fileName && (
+                        <div className="input-group-append">
+                            <button
+                                type="button"
+                                disabled={!canClear}
+                                onClick={onClearClick}
+                                className="btn btn-md btn-danger"
+                            >
+                                {t("CLEAR")}
+                            </button>
                         </div>
                     )}
-                    <div className="text-nowrap" style={{ float: "right" }}>
-                        <OverlyPopover
-                            skipTranslate={false}
-                            str={"ONLY_DISPLAY_ERRORS_EXPLANATION"}
-                        >
-                            <Switch
-                                label={"ONLY_DISPLAY_ERRORS"}
-                                readOnly={!canClear}
-                                value={onlyErrors}
-                                onChange={onOnlyErrorsChange}
-                            />
-                        </OverlyPopover>
+                </InputGroup>
+                <p className="small text-secondary">
+                    {t("DOWNLOAD_AND_SAVE_AS_CSV")}
+                </p>
+            </Col>
+            <Col sm="6" className="my-3">
+                <div style={{ float: "right" }}>
+                    <button
+                        type="button"
+                        disabled={!canImport}
+                        onClick={form.submitForm}
+                        className={`btn btn-md btn-primary`}
+                    >
+                        {t("IMPORT")}
+                    </button>
+                </div>
+            </Col>
+        </Row>
+        <Row>
+            <Col>
+                <div style={{ float: "left" }}>
+                    {!form.isValid && (
+                        <div className="text-danger small">
+                            {t("ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE")}
+                        </div>
+                    )}
+                </div>
+                <br />
+                {Boolean(csvErrors.length) && (
+                    <div className="text-warning" style={{ float: "left" }}>
+                        {csvErrors.map((error, i) => (
+                            <div key={i} className="text-bold small">
+                                {error.message} at row {error.row + 1}
+                            </div>
+                        ))}
                     </div>
-                </Col>
-            </Row>
-            {progress > 0 && progress < 100 && (
-                <Row>
-                    <Col>
-                        <ProgressBar
-                            variant="primary"
-                            min={0}
-                            max={100}
-                            now={progress}
-                            label={`${progress}%`}
-                            striped
-                            animated
+                )}
+                <div className="text-nowrap" style={{ float: "right" }}>
+                    <OverlyPopover
+                        skipTranslate={false}
+                        str={"ONLY_DISPLAY_ERRORS_EXPLANATION"}
+                    >
+                        <Switch
+                            label={"ONLY_DISPLAY_ERRORS"}
+                            readOnly={!canClear}
+                            value={onlyErrors}
+                            onChange={onOnlyErrorsChange}
                         />
-                    </Col>
-                </Row>
-            )}
+                    </OverlyPopover>
+                </div>
+            </Col>
+        </Row>
+        {progress > 0 && progress < 100 && (
             <Row>
-                <Col className={`p-0 ${style.table_wrapper_overflowX}`}>
-                    <Table striped bordered hover className={style.table_overflowX}>
-                        <thead>
-                            <tr>
-                                <th className={style.frozen_col}>
-                                    <CheckCircle />
-                                </th>
-                                <th className={style.frozen_col}>#</th>
-                                {headers?.map((k, i) => {
-                                    const text = `${k}${(schemaDescribe.fields[k] as SchemaDescription).tests.some(
-                                        (v) => v.name == "required"
-                                    )
-                                        ? "*"
-                                        : ""
-                                        }`;
-
-                                    switch (k) {
-                                        case "license_restrictions":
-                                            return (
-                                                <th key={i}>
-                                                    <Dropdown>
-                                                        <Dropdown.Toggle variant="light">
-                                                            {text}
-                                                        </Dropdown.Toggle>
-                                                        <Dropdown.Menu>
-                                                            {Object.values(LicenseRestrictions)?.map(
-                                                                (v, j) => {
-                                                                    return (
-                                                                        <Dropdown.ItemText key={j}>
-                                                                            {v}
-                                                                        </Dropdown.ItemText>
-                                                                    );
-                                                                }
-                                                            )}
-                                                        </Dropdown.Menu>
-                                                    </Dropdown>
-                                                </th>
-                                            );
-                                        case "transmission_type":
-                                            return (
-                                                <th key={i}>
-                                                    <Dropdown>
-                                                        <Dropdown.Toggle variant="light">
-                                                            {text}
-                                                        </Dropdown.Toggle>
-                                                        <Dropdown.Menu>
-                                                            {Object.values(VehicleTransmissionType)?.map(
-                                                                (v, j) => {
-                                                                    return (
-                                                                        <Dropdown.ItemText key={j}>
-                                                                            {v}
-                                                                        </Dropdown.ItemText>
-                                                                    );
-                                                                }
-                                                            )}
-                                                        </Dropdown.Menu>
-                                                    </Dropdown>
-                                                </th>
-                                            );
-                                        case "endorsements":
-                                            return (
-                                                <th key={i}>
-                                                    <Dropdown>
-                                                        <Dropdown.Toggle variant="light">
-                                                            {text}
-                                                        </Dropdown.Toggle>
-                                                        <Dropdown.Menu>
-                                                            {Object.values(DriverEndorsement)?.map((v, j) => {
-                                                                return (
-                                                                    <Dropdown.ItemText key={j}>
-                                                                        {v}
-                                                                    </Dropdown.ItemText>
-                                                                );
-                                                            })}
-                                                        </Dropdown.Menu>
-                                                    </Dropdown>
-                                                </th>
-                                            );
-                                        case "highest_degree":
-                                            return (
-                                                <th key={i}>
-                                                    <Dropdown>
-                                                        <Dropdown.Toggle variant="light">
-                                                            {text}
-                                                        </Dropdown.Toggle>
-                                                        <Dropdown.Menu>
-                                                            {Object.values(EducationLevel)?.map((v, j) => {
-                                                                return (
-                                                                    <Dropdown.ItemText key={j}>
-                                                                        {v}
-                                                                    </Dropdown.ItemText>
-                                                                );
-                                                            })}
-                                                        </Dropdown.Menu>
-                                                    </Dropdown>
-                                                </th>
-                                            );
-                                        case "license_type":
-                                            return (
-                                                <th key={i}>
-                                                    <Dropdown>
-                                                        <Dropdown.Toggle variant="light">
-                                                            {text}
-                                                        </Dropdown.Toggle>
-                                                        <Dropdown.Menu>
-                                                            {Object.values(DriverLicenseType)?.map((v, j) => {
-                                                                return (
-                                                                    <Dropdown.ItemText key={j}>
-                                                                        {v}
-                                                                    </Dropdown.ItemText>
-                                                                );
-                                                            })}
-                                                        </Dropdown.Menu>
-                                                    </Dropdown>
-                                                </th>
-                                            );
-                                        case "equipment_experience":
-                                            return (
-                                                <th key={i}>
-                                                    <Dropdown>
-                                                        <Dropdown.Toggle variant="light">
-                                                            {text}
-                                                        </Dropdown.Toggle>
-                                                        <Dropdown.Menu>
-                                                            {Object.values(JobEquipmentType)?.map((v, j) => {
-                                                                return (
-                                                                    <Dropdown.ItemText key={j}>
-                                                                        {v}
-                                                                    </Dropdown.ItemText>
-                                                                );
-                                                            })}
-                                                        </Dropdown.Menu>
-                                                    </Dropdown>
-                                                </th>
-                                            );
-                                        default:
-                                            return <th key={i}>{text}</th>;
-                                    }
-                                })}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {typeof form.errors.items == "string" && (
-                                <tr>
-                                    <td colSpan={headers?.length + 2}>
-                                        <span className="text-danger small">
-                                            {form.errors.items}
-                                        </span>
-                                    </td>
-                                </tr>
-                            )}
-                            {form.values.items?.map((v, i) => {
-                                const meta = form.getFieldMeta(`items.${i}`);
-
-                                const findIcon = () => {
-                                    console.log(`items.${i} meta`, { meta }, { warnings: warnings[i] });
-
-                                    if (!!meta.error) return <XCircle color="red" />;
-
-                                    if (Boolean(warnings[i]) && (Object.keys((warnings[i]))?.length))
-                                        // if (Boolean(warnings[i]))
-                                        return <ExclamationTriangle color="orange" />;
-
-                                    return <Check color="green" />;
-                                };
-
-                                if (onlyErrors && !meta.error) return null;
-
-                                return (
-                                    <tr
-                                        key={i}
-                                        className={onlyErrors && !meta.error ? `d-none` : ""}
-                                    >
-                                        <td className={style.frozen_col}>{findIcon()}</td>
-                                        <td className={style.frozen_col}>{i + 1}</td>
-                                        {headers?.map((h, j) => (
-                                            <td key={j}>
-                                                {guessControl(form, schema, warnings[i], h, i, t)}
-                                            </td>
-                                        ))}
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </Table>
+                <Col>
+                    <ProgressBar
+                        variant="primary"
+                        min={0}
+                        max={100}
+                        now={progress}
+                        label={`${progress}%`}
+                        striped
+                        animated
+                    />
                 </Col>
             </Row>
-        </>
-    );
+        )}
+        <Row>
+            <Col className={`p-0 ${style.table_wrapper_overflowX}`}>
+                <Table striped bordered hover className={style.table_overflowX}>
+                    <thead>
+                        <tr>
+                            <th className={style.frozen_col}>
+                                <CheckCircle />
+                            </th>
+                            <th className={style.frozen_col}>#</th>
+                            {headers?.map((k, i) => {
+                                const text = `${k}${(schemaDescribe.fields[k] as SchemaDescription).tests.some(
+                                    (v) => v.name == "required"
+                                )
+                                    ? "*"
+                                    : ""
+                                    }`;
+
+                                switch (k) {
+                                    case "license_restrictions":
+                                        return (
+                                            <th key={i}>
+                                                <Dropdown>
+                                                    <Dropdown.Toggle variant="light">
+                                                        {text}
+                                                    </Dropdown.Toggle>
+                                                    <Dropdown.Menu>
+                                                        {Object.values(LicenseRestrictions)?.map(
+                                                            (v, j) => {
+                                                                return (
+                                                                    <Dropdown.ItemText key={j}>
+                                                                        {v}
+                                                                    </Dropdown.ItemText>
+                                                                );
+                                                            }
+                                                        )}
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                                            </th>
+                                        );
+                                    case "transmission_type":
+                                        return (
+                                            <th key={i}>
+                                                <Dropdown>
+                                                    <Dropdown.Toggle variant="light">
+                                                        {text}
+                                                    </Dropdown.Toggle>
+                                                    <Dropdown.Menu>
+                                                        {Object.values(VehicleTransmissionType)?.map(
+                                                            (v, j) => {
+                                                                return (
+                                                                    <Dropdown.ItemText key={j}>
+                                                                        {v}
+                                                                    </Dropdown.ItemText>
+                                                                );
+                                                            }
+                                                        )}
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                                            </th>
+                                        );
+                                    case "endorsements":
+                                        return (
+                                            <th key={i}>
+                                                <Dropdown>
+                                                    <Dropdown.Toggle variant="light">
+                                                        {text}
+                                                    </Dropdown.Toggle>
+                                                    <Dropdown.Menu>
+                                                        {Object.values(DriverEndorsement)?.map((v, j) => {
+                                                            return (
+                                                                <Dropdown.ItemText key={j}>
+                                                                    {v}
+                                                                </Dropdown.ItemText>
+                                                            );
+                                                        })}
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                                            </th>
+                                        );
+                                    case "highest_degree":
+                                        return (
+                                            <th key={i}>
+                                                <Dropdown>
+                                                    <Dropdown.Toggle variant="light">
+                                                        {text}
+                                                    </Dropdown.Toggle>
+                                                    <Dropdown.Menu>
+                                                        {Object.values(EducationLevel)?.map((v, j) => {
+                                                            return (
+                                                                <Dropdown.ItemText key={j}>
+                                                                    {v}
+                                                                </Dropdown.ItemText>
+                                                            );
+                                                        })}
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                                            </th>
+                                        );
+                                    case "license_type":
+                                        return (
+                                            <th key={i}>
+                                                <Dropdown>
+                                                    <Dropdown.Toggle variant="light">
+                                                        {text}
+                                                    </Dropdown.Toggle>
+                                                    <Dropdown.Menu>
+                                                        {Object.values(DriverLicenseType)?.map((v, j) => {
+                                                            return (
+                                                                <Dropdown.ItemText key={j}>
+                                                                    {v}
+                                                                </Dropdown.ItemText>
+                                                            );
+                                                        })}
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                                            </th>
+                                        );
+                                    case "equipment_experience":
+                                        return (
+                                            <th key={i}>
+                                                <Dropdown>
+                                                    <Dropdown.Toggle variant="light">
+                                                        {text}
+                                                    </Dropdown.Toggle>
+                                                    <Dropdown.Menu>
+                                                        {Object.values(JobEquipmentType)?.map((v, j) => {
+                                                            return (
+                                                                <Dropdown.ItemText key={j}>
+                                                                    {v}
+                                                                </Dropdown.ItemText>
+                                                            );
+                                                        })}
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                                            </th>
+                                        );
+                                    default:
+                                        return <th key={i}>{text}</th>;
+                                }
+                            })}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {typeof form.errors.items == "string" && (
+                            <tr>
+                                <td colSpan={headers?.length + 2}>
+                                    <span className="text-danger small">
+                                        {form.errors.items}
+                                    </span>
+                                </td>
+                            </tr>
+                        )}
+                        {form.values.items?.map((v, i) => {
+                            const meta = form.getFieldMeta(`items.${i}`);
+
+                            const findIcon = () => {
+                                console.log(`items.${i} meta`, { meta }, { warnings: warnings[i] });
+
+                                if (!!meta.error) return <XCircle color="red" />;
+
+                                if (Boolean(warnings[i]) && (Object.keys((warnings[i]))?.length))
+                                    // if (Boolean(warnings[i]))
+                                    return <ExclamationTriangle color="orange" />;
+
+                                return <Check color="green" />;
+                            };
+
+                            if (onlyErrors && !meta.error) return null;
+
+                            return (
+                                <tr
+                                    key={i}
+                                    className={onlyErrors && !meta.error ? `d-none` : ""}
+                                >
+                                    <td className={style.frozen_col}>{findIcon()}</td>
+                                    <td className={style.frozen_col}>{i + 1}</td>
+                                    {headers?.map((h, j) => (
+                                        <td key={j}>
+                                            {guessControl(form, schema, warnings[i], h, i, t)}
+                                        </td>
+                                    ))}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </Table>
+            </Col>
+        </Row>
+    </>
+);
 };
 
 function guessControl(
