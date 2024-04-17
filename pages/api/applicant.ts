@@ -3,7 +3,10 @@ import { ApplicantDocumentType } from "../../enums/applicants/applicant-document
 import { ApplicantDqf } from "../../enums/applicants/applicant-dqf-types.enum";
 import { ApplicantFormStatus } from "../../enums/applicants/applicant-form-status.enum";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
-import { ApplicantEmployerEntity, ApplicantVoeEntity } from "../../models/applicant";
+import {
+  ApplicantEmployerEntity,
+  ApplicantVoeEntity,
+} from "../../models/applicant";
 import { ApplicantDacEntity } from "../../models/applicant/applicant-dac.entity";
 import { ApplicantJobEntity } from "../../models/applicant/applicant-job.entity";
 import { ApplicantNoteEntity } from "../../models/applicant/applicant-note.entity";
@@ -16,377 +19,415 @@ import { UpsertApplicantVoeformDto } from "../../models/jot-form/upsert-applican
 import BaseApi from "./_baseApi";
 
 export default class ApplicantApi extends BaseApi {
-	baseUrl: string = "applicants";
-	constructor() {
-		super();
-	}
+  baseUrl: string = "applicants";
+  constructor() {
+    super();
+  }
 
-	async create(dto: ApplicantEntity): Promise<ApplicantEntity> {
-		console.log("dto", {dto});
-		
-		const { data } = await this.post(this.baseUrl, dto);
+  async create(dto: ApplicantEntity): Promise<ApplicantEntity> {
+    console.log("dto", { dto });
 
-		return data;
-	}
+    const { data } = await this.post(this.baseUrl, dto);
 
-	async update(id: number, dto: ApplicantEntity): Promise<ApplicantEntity> {
-		const { data } = await this.put(this.baseUrl + "/" + id, dto);
+    return data;
+  }
 
-		return data;
-	}
+  async createBulk(dtos: ApplicantEntity[]): Promise<[{ data?: ApplicantEntity; error?: string; }]> {
+    const { data } = await this.post(`${this.baseUrl}/bulk`, dtos);
 
-	async remove(id: number): Promise<ApplicantEntity | void> {
-		const { data } = await this.delete(`${this.baseUrl}/${id}`);
+    return data;
+  }
 
-		return data;
-	}
+  async update(id: number, dto: ApplicantEntity): Promise<ApplicantEntity> {
+    const { data } = await this.put(this.baseUrl + "/" + id, dto);
 
-	async assign(id: number) {
-		const { data } = await this.post(this.baseUrl + "/" + id + "/assign", null);
+    return data;
+  }
 
-		return data;
-	}
+  async remove(id: number): Promise<ApplicantEntity | void> {
+    const { data } = await this.delete(`${this.baseUrl}/${id}`);
 
-	async unassign(id: number) {
-		const { data } = await this.delete(this.baseUrl + "/" + id + "/assign");
+    return data;
+  }
 
-		return data;
-	}
+  async assign(id: number) {
+    const { data } = await this.post(this.baseUrl + "/" + id + "/assign", null);
 
-	async search(
-		params: ApplicantEntity,
-		config?: AxiosRequestConfig
-	): Promise<ApplicantEntity[]> {
-		const { data } = await this.get(
-			this.buildUrl(this.baseUrl + "/search", params),
-			config
-		);
+    return data;
+  }
 
-		return data;
-	}
+  async unassign(id: number) {
+    const { data } = await this.delete(this.baseUrl + "/" + id + "/assign");
 
-	async searchByPublic(
-		params: ApplicantEntity
-	): Promise<any> {
-		const { data } = await this.get(
-			this.buildUrl(this.baseUrl + "/public-search", params)
-		);
+    return data;
+  }
 
-		return data;
-	}
-	// new api to fetch applicant Profile
-	async searchApplicantProfile(
-		params: ApplicantEntity
-	): Promise<ApplicantEntity> {
-		const { data } = await this.get(
-			this.buildUrl(this.baseUrl + "/search-applicant", params)
-		);
+  async search(
+    params: ApplicantEntity,
+    config?: AxiosRequestConfig
+  ): Promise<ApplicantEntity[]> {
+    const { data } = await this.get(
+      this.buildUrl(this.baseUrl + "/search", params),
+      config
+    );
 
-		return data;
-	}
+    return data;
+  }
 
+  async searchByPublic(params: ApplicantEntity): Promise<any> {
+    const { data } = await this.get(
+      this.buildUrl(this.baseUrl + "/public-search", params)
+    );
 
-	async requestOTP(dto: ApplicantEntity): Promise<any> {
-		const { data } = await this.post(this.baseUrl + "/request-otp", dto);
+    return data;
+  }
+  // new api to fetch applicant Profile
+  async searchApplicantProfile(
+    params: ApplicantEntity
+  ): Promise<ApplicantEntity> {
+    const { data } = await this.get(
+      this.buildUrl(this.baseUrl + "/search-applicant", params)
+    );
 
-		return data;
-	}
-	async verifyOTP(dto: VerifyOTPDto): Promise<ApplicantEntity> {
-		const { data } = await this.post(this.baseUrl + "/verify-otp", dto);
+    return data;
+  }
 
-		return data;
-	}
+  async requestOTP(dto: ApplicantEntity): Promise<any> {
+    const { data } = await this.post(this.baseUrl + "/request-otp", dto);
 
-	async list(params?: {
-		jobId?: number,
-		email?: string,
-		status?: ApplicantStatus | ApplicantStatus[],
-		withHired?: boolean,
-		without?: string[],
-	}): Promise<ApplicantEntity[]> {
-		const { data } = await this.get(
-			this.buildUrl(this.baseUrl + "/list", params)
-		);
+    return data;
+  }
+  async verifyOTP(dto: VerifyOTPDto): Promise<ApplicantEntity> {
+    const { data } = await this.post(this.baseUrl + "/verify-otp", dto);
 
-		return data;
-	}
-	async getById(id: number): Promise<ApplicantEntity> {
-		const { data } = await this.get(this.buildUrl(this.baseUrl + `/${id}`));
+    return data;
+  }
 
-		return data;
-	}
+  async list(params?: {
+    jobId?: number;
+    email?: string;
+    status?: ApplicantStatus | ApplicantStatus[];
+    withHired?: boolean;
+    without?: string[];
+  }): Promise<ApplicantEntity[]> {
+    const { data } = await this.get(
+      this.buildUrl(this.baseUrl + "/list", params)
+    );
 
-	async getByUuidToken(uuid_token: string): Promise<ApplicantEntity> {
-		const { data } = await this.get(this.buildUrl(this.baseUrl + `/fetch-applicant/${uuid_token}`));
+    return data;
+  }
+  async getById(id: number): Promise<ApplicantEntity> {
+    const { data } = await this.get(this.buildUrl(this.baseUrl + `/${id}`));
 
-		return data;
-	}
+    return data;
+  }
 
-	// user specific actions
-	async getByUserId(userId: number): Promise<ApplicantEntity> {
-		const { data } = await this.get(`${this.baseUrl}/user/${userId}`);
+  async getByUuidToken(uuid_token: string): Promise<ApplicantEntity> {
+    const { data } = await this.get(
+      this.buildUrl(this.baseUrl + `/fetch-applicant/${uuid_token}`)
+    );
 
-		return data;
-	}
+    return data;
+  }
 
-	me = {
-		get: async (): Promise<ApplicantEntity> => {
-			const { data } = await this.get(this.baseUrl);
+  // user specific actions
+  async getByUserId(userId: number): Promise<ApplicantEntity> {
+    const { data } = await this.get(`${this.baseUrl}/user/${userId}`);
 
-			return data;
-		},
-		jobs: async (): Promise<ApplicantJobEntity[]> => {
-			const { data } = await this.get(this.baseUrl + "/jobs");
+    return data;
+  }
 
-			return data;
-		},
-		suggestedJobs: async (): Promise<ApplicantSuggestedJobEntity[]> => {
-			const { data } = await this.get(this.baseUrl + "/suggested-jobs");
+  me = {
+    get: async (): Promise<ApplicantEntity> => {
+      const { data } = await this.get(this.baseUrl);
 
-			return data;
-		},
-		update: async (dto: ApplicantEntity): Promise<ApplicantEntity> => {
-			const { data } = await this.put(this.baseUrl, dto);
+      return data;
+    },
+    jobs: async (): Promise<ApplicantJobEntity[]> => {
+      const { data } = await this.get(this.baseUrl + "/jobs");
 
-			return data;
-		},
-	};
+      return data;
+    },
+    suggestedJobs: async (): Promise<ApplicantSuggestedJobEntity[]> => {
+      const { data } = await this.get(this.baseUrl + "/suggested-jobs");
 
-	suggestedJobs = {
-		get: async (
-			applicantId: number
-		): Promise<ApplicantSuggestedJobEntity[]> => {
-			const { data } = await this.get(
-				`${this.baseUrl}/${applicantId}/suggested-jobs`
-			);
+      return data;
+    },
+    update: async (dto: ApplicantEntity): Promise<ApplicantEntity> => {
+      const { data } = await this.put(this.baseUrl, dto);
 
-			return data;
-		},
-	};
+      return data;
+    },
+  };
 
-	documents = {
-		baseUrl: (applicantId: number) =>
-			`${this.baseUrl}/${applicantId}/documents`,
-		create: async (
-			applicantId: number,
-			dto: DocumentEntity
-		): Promise<DocumentEntity> => {
-			const { data } = await this.post(
-				this.documents.baseUrl(applicantId),
-				dto
-			);
+  suggestedJobs = {
+    get: async (
+      applicantId: number
+    ): Promise<ApplicantSuggestedJobEntity[]> => {
+      const { data } = await this.get(
+        `${this.baseUrl}/${applicantId}/suggested-jobs`
+      );
 
-			return data;
-		},
-		delete: async (
-			applicantId: number,
-			type: ApplicantDocumentType | ApplicantDqf | string
-		): Promise<DocumentEntity> => {
-			const { data } = await this.delete(`${this.documents.baseUrl(applicantId)}/${type}`);
+      return data;
+    },
+  };
 
-			return data;
-		},
-	};
+  documents = {
+    baseUrl: (applicantId: number) =>
+      `${this.baseUrl}/${applicantId}/documents`,
+    create: async (
+      applicantId: number,
+      dto: DocumentEntity
+    ): Promise<DocumentEntity> => {
+      const { data } = await this.post(
+        this.documents.baseUrl(applicantId),
+        dto
+      );
 
-	jotform = {
-		baseUrl: () => `${this.baseUrl}/applicant-jotform`,
-		create: async (
-			companyId: number,
-			dto: UpsertApplicantJotformDto
-		): Promise<ApplicantEntity> => {
-			const { data } = await this.post(`${this.jotform.baseUrl()}?companyId=${companyId}`, dto);
-			return data;
-		},
-		update: async (
-			applicantId: number,
-			dto: UpsertApplicantJotformDto
-		): Promise<ApplicantEntity> => {
-			const { data } = await this.put(`${this.jotform.baseUrl()}/${applicantId}`, dto);
-			return data;
-		},
-		mark: async (
-			uuid_token: string,
-			status: ApplicantFormStatus
-		): Promise<void> => {
-			const { data } = await this.patch(
-				`${this.jotform.baseUrl()}/${uuid_token}/mark/${status}`,
-				null
-			);
-			return data;
-		},
-		updateDocuments: async (
-			applicantId: number,
-			dto: DocumentEntity[]
-		): Promise<ApplicantEntity> => {
-			const { data } = await this.put(`${this.jotform.baseUrl()}/${applicantId}/documents`, dto);
-			return data;
-		},
-		suggestedJobs: async (applicantId: number): Promise<ApplicantSuggestedJobEntity[]> => {
-			const { data } = await this.get(`${this.baseUrl}/${applicantId}/jotform-suggested-jobs`);
+      return data;
+    },
+    delete: async (
+      applicantId: number,
+      type: ApplicantDocumentType | ApplicantDqf | string
+    ): Promise<DocumentEntity> => {
+      const { data } = await this.delete(
+        `${this.documents.baseUrl(applicantId)}/${type}`
+      );
 
-			return data;
-		},
-	};
+      return data;
+    },
+  };
 
-	voeform = {
-		baseUrl: () => `${this.baseUrl}/voe`,
-		submitVoe: async (dto: UpsertApplicantVoeformDto): Promise<any> => {
-			const { data } = await this.post(`${this.voeform.baseUrl()}/submit`, dto);
-			return data;
-		},
-		fetch: async (applicant_uuid: string, employer_uuid: string): Promise<ApplicantVoeEntity> => {
-			const { data } = await this.get(`${this.voeform.baseUrl()}/fetch/${applicant_uuid}/${employer_uuid}`);
+  jotform = {
+    baseUrl: () => `${this.baseUrl}/applicant-jotform`,
+    create: async (
+      companyId: number,
+      dto: UpsertApplicantJotformDto
+    ): Promise<ApplicantEntity> => {
+      const { data } = await this.post(
+        `${this.jotform.baseUrl()}?companyId=${companyId}`,
+        dto
+      );
+      return data;
+    },
+    update: async (
+      applicantId: number,
+      dto: UpsertApplicantJotformDto
+    ): Promise<ApplicantEntity> => {
+      const { data } = await this.put(
+        `${this.jotform.baseUrl()}/${applicantId}`,
+        dto
+      );
+      return data;
+    },
+    mark: async (
+      uuid_token: string,
+      status: ApplicantFormStatus
+    ): Promise<void> => {
+      const { data } = await this.patch(
+        `${this.jotform.baseUrl()}/${uuid_token}/mark/${status}`,
+        null
+      );
+      return data;
+    },
+    updateDocuments: async (
+      applicantId: number,
+      dto: DocumentEntity[]
+    ): Promise<ApplicantEntity> => {
+      const { data } = await this.put(
+        `${this.jotform.baseUrl()}/${applicantId}/documents`,
+        dto
+      );
+      return data;
+    },
+    suggestedJobs: async (
+      applicantId: number
+    ): Promise<ApplicantSuggestedJobEntity[]> => {
+      const { data } = await this.get(
+        `${this.baseUrl}/${applicantId}/jotform-suggested-jobs`
+      );
 
-			return data;
-		},
-	};
+      return data;
+    },
+  };
 
-	employer = {
-		baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/employer`,
-		getByUuidToken: async (uuid_token: string): Promise<ApplicantEmployerEntity> => {
-			const { data } = await this.get(this.buildUrl(`${this.baseUrl}/fetch-employer/${uuid_token}`));
+  voeform = {
+    baseUrl: () => `${this.baseUrl}/voe`,
+    submitVoe: async (dto: UpsertApplicantVoeformDto): Promise<any> => {
+      const { data } = await this.post(`${this.voeform.baseUrl()}/submit`, dto);
+      return data;
+    },
+    fetch: async (
+      applicant_uuid: string,
+      employer_uuid: string
+    ): Promise<ApplicantVoeEntity> => {
+      const { data } = await this.get(
+        `${this.voeform.baseUrl()}/fetch/${applicant_uuid}/${employer_uuid}`
+      );
 
-			return data;
-		},
-		list: async (applicantId: number): Promise<ApplicantEmployerEntity[]> => {
-			const { data } = await this.get(`${this.employer.baseUrl(applicantId)}`);
+      return data;
+    },
+  };
 
-			return data;
-		},
-		sendVoeRequest: async (applicantId: number, employerId: number): Promise<ApplicantEmployerEntity> => {
-			const { data } = await this.get(`${this.employer.baseUrl(applicantId)}/${employerId}/send-voew-request`);
+  employer = {
+    baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/employer`,
+    getByUuidToken: async (
+      uuid_token: string
+    ): Promise<ApplicantEmployerEntity> => {
+      const { data } = await this.get(
+        this.buildUrl(`${this.baseUrl}/fetch-employer/${uuid_token}`)
+      );
 
-			return data;
-		},
-		search: async (params: ApplicantEmployerEntity): Promise<ApplicantEmployerEntity[]> => {
-			const { data } = await this.get(this.buildUrl(this.baseUrl + "/employer/search", params));
+      return data;
+    },
+    list: async (applicantId: number): Promise<ApplicantEmployerEntity[]> => {
+      const { data } = await this.get(`${this.employer.baseUrl(applicantId)}`);
 
-			return data;
-		},
-		documents: {
-			baseUrl: (applicantId: number, employerId: number) =>
-				`${this.employer.baseUrl(applicantId)}/${employerId}/documents`,
-			create: async (
-				applicantId: number,
-				employerId: number,
-				dto: DocumentEntity
-			): Promise<DocumentEntity> => {
-				const { data } = await this.post(
-					`${this.employer.documents.baseUrl(applicantId, employerId)}`,
-					dto
-				);
+      return data;
+    },
+    sendVoeRequest: async (
+      applicantId: number,
+      employerId: number
+    ): Promise<ApplicantEmployerEntity> => {
+      const { data } = await this.get(
+        `${this.employer.baseUrl(applicantId)}/${employerId}/send-voew-request`
+      );
 
-				return data;
-			},
-			delete: async (
-				applicantId: number,
-				employerId: number,
-				type: ApplicantDocumentType | ApplicantDqf | string
-			): Promise<void> => {
-				const { data } = await this.delete(
-					`${this.employer.documents.baseUrl(applicantId, employerId)}/${type}`
-				);
+      return data;
+    },
+    search: async (
+      params: ApplicantEmployerEntity
+    ): Promise<ApplicantEmployerEntity[]> => {
+      const { data } = await this.get(
+        this.buildUrl(this.baseUrl + "/employer/search", params)
+      );
 
-				return data;
-			},
-		},
-	};
+      return data;
+    },
+    documents: {
+      baseUrl: (applicantId: number, employerId: number) =>
+        `${this.employer.baseUrl(applicantId)}/${employerId}/documents`,
+      create: async (
+        applicantId: number,
+        employerId: number,
+        dto: DocumentEntity
+      ): Promise<DocumentEntity> => {
+        const { data } = await this.post(
+          `${this.employer.documents.baseUrl(applicantId, employerId)}`,
+          dto
+        );
 
-	notes = {
-		baseUrl: (applicantId: number, noteId?: number) =>
-			`${this.baseUrl}/${applicantId}/notes/${noteId || ""}`,
-		create: async (
-			applicantId: number,
-			dto: ApplicantNoteEntity
-		): Promise<ApplicantNoteEntity> => {
-			const { data } = await this.post(this.notes.baseUrl(applicantId), dto);
+        return data;
+      },
+      delete: async (
+        applicantId: number,
+        employerId: number,
+        type: ApplicantDocumentType | ApplicantDqf | string
+      ): Promise<void> => {
+        const { data } = await this.delete(
+          `${this.employer.documents.baseUrl(applicantId, employerId)}/${type}`
+        );
 
-			return data;
-		},
-		update: async (
-			applicantId: number,
-			noteId: number,
-			dto: ApplicantNoteEntity
-		): Promise<ApplicantNoteEntity> => {
-			const { data } = await this.put(
-				this.notes.baseUrl(applicantId, noteId),
-				dto
-			);
+        return data;
+      },
+    },
+  };
 
-			return data;
-		},
-		remove: async (applicantId: number, noteId: number): Promise<any> => {
-			const { data } = await this.delete(
-				this.notes.baseUrl(applicantId, noteId)
-			);
+  notes = {
+    baseUrl: (applicantId: number, noteId?: number) =>
+      `${this.baseUrl}/${applicantId}/notes/${noteId || ""}`,
+    create: async (
+      applicantId: number,
+      dto: ApplicantNoteEntity
+    ): Promise<ApplicantNoteEntity> => {
+      const { data } = await this.post(this.notes.baseUrl(applicantId), dto);
 
-			return data;
-		},
-	};
+      return data;
+    },
+    update: async (
+      applicantId: number,
+      noteId: number,
+      dto: ApplicantNoteEntity
+    ): Promise<ApplicantNoteEntity> => {
+      const { data } = await this.put(
+        this.notes.baseUrl(applicantId, noteId),
+        dto
+      );
 
-	dac = {
-		baseUrl: (applicantId: number, dacId?: number) =>
-			`${this.baseUrl}/${applicantId}/dac/${dacId || ""}`,
-		create: async (
-			applicantId: number,
-			dto: ApplicantDacEntity
-		): Promise<ApplicantDacEntity> => {
-			const { data } = await this.post(this.dac.baseUrl(applicantId), dto);
+      return data;
+    },
+    remove: async (applicantId: number, noteId: number): Promise<any> => {
+      const { data } = await this.delete(
+        this.notes.baseUrl(applicantId, noteId)
+      );
 
-			return data;
-		},
-		update: async (
-			applicantId: number,
-			dacId: number,
-			dto: ApplicantDacEntity
-		): Promise<ApplicantDacEntity> => {
-			const { data } = await this.put(
-				this.dac.baseUrl(applicantId, dacId),
-				dto
-			);
+      return data;
+    },
+  };
 
-			return data;
-		},
-		remove: async (applicantId: number, dacId: number): Promise<any> => {
-			const { data } = await this.delete(this.dac.baseUrl(applicantId, dacId));
+  dac = {
+    baseUrl: (applicantId: number, dacId?: number) =>
+      `${this.baseUrl}/${applicantId}/dac/${dacId || ""}`,
+    create: async (
+      applicantId: number,
+      dto: ApplicantDacEntity
+    ): Promise<ApplicantDacEntity> => {
+      const { data } = await this.post(this.dac.baseUrl(applicantId), dto);
 
-			return data;
-		},
-	};
+      return data;
+    },
+    update: async (
+      applicantId: number,
+      dacId: number,
+      dto: ApplicantDacEntity
+    ): Promise<ApplicantDacEntity> => {
+      const { data } = await this.put(
+        this.dac.baseUrl(applicantId, dacId),
+        dto
+      );
 
-	jobs = {
-		baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/jobs`,
-		list: async (applicantId: number) => {
-			const { data } = await this.get(this.jobs.baseUrl(applicantId));
+      return data;
+    },
+    remove: async (applicantId: number, dacId: number): Promise<any> => {
+      const { data } = await this.delete(this.dac.baseUrl(applicantId, dacId));
 
-			return data;
-		},
-		remove: async (applicantId: number, jobId: number) => {
-			await this.delete(this.jobs.baseUrl(applicantId) + `/${jobId}`);
-		},
-		create: async (
-			applicantId: number,
-			jobId: number,
-			dto: ApplicantJobEntity
-		): Promise<ApplicantEntity> => {
-			const { data } = await this.post(
-				this.jobs.baseUrl(applicantId) + `/${jobId}`,
-				dto
-			);
+      return data;
+    },
+  };
 
-			return data;
-		},
-		update: async (
-			applicantId: number,
-			jobId: number,
-			dto: ApplicantJobEntity
-		): Promise<ApplicantEntity> => {
-			const { data } = await this.put(
-				this.jobs.baseUrl(applicantId) + `/${jobId}`,
-				dto
-			);
+  jobs = {
+    baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/jobs`,
+    list: async (applicantId: number) => {
+      const { data } = await this.get(this.jobs.baseUrl(applicantId));
 
-			return data;
-		},
-	};
+      return data;
+    },
+    remove: async (applicantId: number, jobId: number) => {
+      await this.delete(this.jobs.baseUrl(applicantId) + `/${jobId}`);
+    },
+    create: async (
+      applicantId: number,
+      jobId: number,
+      dto: ApplicantJobEntity
+    ): Promise<ApplicantEntity> => {
+      const { data } = await this.post(
+        this.jobs.baseUrl(applicantId) + `/${jobId}`,
+        dto
+      );
+
+      return data;
+    },
+    update: async (
+      applicantId: number,
+      jobId: number,
+      dto: ApplicantJobEntity
+    ): Promise<ApplicantEntity> => {
+      const { data } = await this.put(
+        this.jobs.baseUrl(applicantId) + `/${jobId}`,
+        dto
+      );
+
+      return data;
+    },
+  };
 }

@@ -78,7 +78,7 @@ const ImportApplicants = () => {
             ),
         }),
         validate: async (values) => {
-            // alert(3)
+            alert(3)
             const companyApplicants = await applicantApi.list();
             const errors = {};
 
@@ -149,6 +149,7 @@ const ImportApplicants = () => {
             setWarnings(errors);
         },
         onSubmit: async (values) => {
+            alert(4)
             let lastProgress = 0;
 
             for (let i = 0; i < values.items?.length; i++) {
@@ -162,23 +163,33 @@ const ImportApplicants = () => {
                     const utcLicenseExpiry = new Date(dto.license_expiry)
                     dto.license_expiry = new Date(utcLicenseExpiry.getUTCFullYear(), utcLicenseExpiry.getUTCMonth(), utcLicenseExpiry.getUTCDate() + 2).toISOString();
                 }
+                values.items[i] = dto;
 
-                try {
-                    await applicantApi.create(dto);
-                } catch (e) {
-                    console.log("error saving applicant", i, e);
-                    form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
-                    toast.error(t("unable_to_save_information"));
-                    return;
-                }
+                // try {
+                //     await applicantApi.create(dto);
+                // } catch (e) {
+                //     console.log("error saving applicant", i, e);
+                //     form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
+                //     toast.error(t("unable_to_save_information"));
+                //     return;
+                // }
 
-                let progress = Math.floor(((i + 1) * 100) / values.items?.length);
+                // let progress = Math.floor(((i + 1) * 100) / values.items?.length);
 
-                if (progress != lastProgress) {
-                    setProgress(progress);
-                    lastProgress = progress;
-                }
+                // if (progress != lastProgress) {
+                //     setProgress(progress);
+                //     lastProgress = progress;
+                // }
             }
+
+            const response = await applicantApi.createBulk(values.items);
+            response.forEach(({ data, error }, i) => {
+                if (!!error) {
+                    form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
+                } else {
+                    console.log("saved applicant", i, data);
+                }
+            })
 
             toast.success(t("successfully_saved_information"));
 
@@ -420,11 +431,11 @@ const ImportApplicants = () => {
                 return entity;
             })
             ?.filter(Boolean);
-        // alert(1)
+        alert(1)
 
         if (errors?.length) setCsvErrors(errors);
+        alert(2)
         form?.setValues({ items: contents }, true);
-        // alert(2)
     }
 
     const headers: string[] = Object.keys(schemaDescribe.fields).filter((v) => {
