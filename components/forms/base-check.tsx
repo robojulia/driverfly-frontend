@@ -13,6 +13,7 @@ export interface BaseCheckProps extends BaseControlProps {
 
 export default function BaseCheck({ formik, required, className, label, checked, onChange, handleBlur, readOnly, name, touched, error, disabled }: BaseCheckProps) {
   const { t } = useTranslation();
+  checked = !!checked;
 
   if (formik) {
     const meta = formik.getFieldMeta(name);

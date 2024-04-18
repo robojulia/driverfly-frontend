@@ -3,8 +3,22 @@ import Select, { StylesConfig } from "react-select";
 import { useTranslation } from "../../hooks/use-translation";
 
 import { useEffectAsync } from "../../utils/react";
+import { ChattableType } from "../../enums/conversation/chattable-type.enum";
 
-const csutomStyles: StylesConfig = {
+export interface ComboboxProps {
+    label?: string;
+    name?: string;
+    minLength?: number;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement> | any) => void;
+    options?: ComboboxItem[] | ((search: string) => Promise<ComboboxItem[]>);
+}
+export interface ComboboxItem {
+    text: string;
+    value: any;
+    parts?: string[]
+}
+
+const csutomStyles: StylesConfig<ComboboxItem & any> = {
     placeholder: (styles: any, { isFocused }) => ({
         ...styles,
         color: "black",
@@ -32,7 +46,11 @@ const csutomStyles: StylesConfig = {
         return {
             ...styles,
             zIndex: 9999,
-            color: isFocused || isSelected ? "white" : "black",
+            color: isFocused || isSelected
+                ? "white"
+                // : data?.value?.chattable_type == ChattableType.EMPLOYEE
+                //     ? '#2ec8c4'
+                : "black",
             backgroundColor: isFocused
                 ? "#2ec8c4"
                 : isSelected
@@ -42,20 +60,6 @@ const csutomStyles: StylesConfig = {
     },
 };
 
-
-export interface ComboboxProps {
-    label?: string;
-    name?: string;
-    minLength?: number;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement> | any) => void;
-    options?: ComboboxItem[] | ((search: string) => Promise<ComboboxItem[]>);
-}
-
-export interface ComboboxItem {
-    text: string;
-    value: any;
-    parts?: string[]
-}
 
 export default function Combobox(props: ComboboxProps) {
     const { label, name, onChange, ...rest } = props;

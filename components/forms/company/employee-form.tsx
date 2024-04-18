@@ -1,65 +1,67 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { useEffectAsync } from "../../../utils/react";
 import { formFailed, formSuccess } from "../../../utils/toast";
-import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 
 import { useFormik } from "formik";
-import { useTranslation } from "../../../hooks/use-translation";
-import { useAuth } from "../../../hooks/use-auth";
+import { useRouter } from "next/router";
 import { Button, Col, Row } from "react-bootstrap";
-import { BaseFormProps } from "./base-form-props";
-import EntityForm from "../../layouts/page/entity-form";
-import ViewCard from "../../view-details/view-card";
-import BaseCheckList from "../base-check-list";
-import BaseInput from "../base-input";
-import BaseSelect from "../base-select";
-import BaseInputPhone from "../base-input-phone";
-import StateSelect from "../state-select";
-import BaseCheck from "../base-check";
+import { DashCircle, PlusCircle } from "react-bootstrap-icons";
+import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
+import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
 import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
 import { EducationLevel } from "../../../enums/users/education-level.enum";
 import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
-import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
-import { JobGeography } from "../../../enums/jobs/job-geography.enum";
-import UserApi from "../../../pages/api/user";
-import { UserEntity } from "../../../models/user/user.entity";
-import EmployeeApi from "../../../pages/api/employee";
-import { EmployeeEntity } from "../../../models/employee/employee.entity";
-import { useRouter } from "next/router";
+import { useAuth } from "../../../hooks/use-auth";
+import { useTranslation } from "../../../hooks/use-translation";
 import { CompanyManagerEntity } from "../../../models/company/company-manager.entity";
-import CompanyApi from "../../../pages/api/company";
 import { EmployeeEquipmentEntity } from "../../../models/employee/employee-equipment.entity";
-import { DashCircle, PlusCircle } from "react-bootstrap-icons";
-import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
+import { EmployeeEntity } from "../../../models/employee/employee.entity";
+import { UserEntity } from "../../../models/user/user.entity";
+import CompanyApi from "../../../pages/api/company";
+import EmployeeApi from "../../../pages/api/employee";
+import UserApi from "../../../pages/api/user";
+import EntityForm from "../../layouts/page/entity-form";
+import ViewCard from "../../view-details/view-card";
+import BaseCheck from "../base-check";
+import BaseCheckList from "../base-check-list";
+import BaseInput from "../base-input";
+import BaseInputPhone from "../base-input-phone";
+import BaseSelect from "../base-select";
+import StateSelect from "../state-select";
+import { BaseFormProps } from "./base-form-props";
+import ViewModal from "../../view-details/view-modal";
+import { ManagerForm } from "./manager-form";
 
 export interface EmployeeFormProps extends BaseFormProps<EmployeeEntity> {
 }
 
 export function EmployeeForm(props: EmployeeFormProps) {
+	let { className, entity, onSaveComplete, onSaveError } = props;
+	let { user, hasPermission, isSuperAdmin } = useAuth();
 	const { t } = useTranslation();
-
 	const router = useRouter();
-	const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([])
-	const [managers, setManagers] = useState<CompanyManagerEntity[]>([]);
-
 	const userApi = new UserApi()
 	const employeeApi = new EmployeeApi();
 
-	let { className, entity, onSaveComplete, onSaveError } = props;
-
-	let { user, hasPermission, isSuperAdmin } = useAuth();
-
-	const [protectedFields, setProtectedFields] = useState({
-		license_number: false,
-	});
 	const goBack = () => router.push('/dashboard/company/compliance/employee-directory')
+	const today = new Date()
+	const OldThan18Year = new Date((today.getFullYear() - 18), today.getMonth(), today.getDate()).toISOString().split("T")[0]
+
+	const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([])
+	const [managers, setManagers] = useState<CompanyManagerEntity[]>([]);
+	const [createManager, setCreateManager] = useState<boolean>(false);
+
+	const onManagerAdded = (manager: CompanyManagerEntity) => {
+		form.setFieldValue(`manager.id`, manager.id);
+		setManagers([...managers, manager]);
+		setCreateManager(false);
+	};
+
 	useEffectAsync(async () => {
-		setProtectedFields({
-			license_number: hasPermission("CanViewEmployee.license_number"),
-		});
 		const companyApi = new CompanyApi();
 		const data = await companyApi.manager.list();
 		setManagers(data);
@@ -68,10 +70,8 @@ export function EmployeeForm(props: EmployeeFormProps) {
 
 	const form = useFormik({
 		initialValues: new EmployeeEntity(),
-		validationSchema: EmployeeEntity.yupSchema(),
+		validationSchema: EmployeeEntity.employeeFormYupSchema(),
 		onSubmit: async (values) => {
-
-
 			try {
 				if (entity?.id) {
 					values = await employeeApi.update(entity.id, values);
@@ -92,7 +92,9 @@ export function EmployeeForm(props: EmployeeFormProps) {
 	});
 
 	useEffect(() => {
-		form.setValues(entity);
+		if (entity.id) {
+			form.setValues({ ...entity, jobId: entity.job.id, managerId: entity?.manager?.id });
+		}
 	}, [entity]);
 
 	useEffect(() => {
@@ -100,13 +102,37 @@ export function EmployeeForm(props: EmployeeFormProps) {
 		console.log("form val", form.values)
 	}, [form.errors, form.values]);
 
-	const today = new Date()
-	const OldThan18Year = new Date((today.getFullYear() - 18), today.getMonth(), today.getDate()).toISOString().split("T")[0]
-
 	useEffectAsync(async () => {
 		const data = await userApi.list()
 		setCompanyUsers(data)
 	}, [])
+
+	useEffect(() => {
+		try {
+			const errorKeys = Object.keys(form.errors);
+
+			if (!!errorKeys.length && form.submitCount > 0) {
+
+				const errorKey = errorKeys[0];
+				let id: string;
+
+				if (typeof form.errors[errorKey] == "object" && form.errors[errorKey]?.length > 0) {
+					id = (`${errorKey}[0].${Object.keys(form.errors[errorKey][0])[0]}`);
+				} else {
+					id = (`${errorKey}`);
+				}
+
+				const firstElement = document.getElementById(id);
+
+				if (firstElement !== document.activeElement) {
+					firstElement?.focus();
+				}
+			}
+		} catch (error) {
+			console.error(error.message);
+		}
+	}, [form.submitCount])
+
 	return (
 		<EntityForm
 			id={entity?.id}
@@ -119,7 +145,7 @@ export function EmployeeForm(props: EmployeeFormProps) {
 					<Row className="mb-2">
 						<Col md='4'>
 							<BaseSelect
-								name={`manager.id`}
+								name={`managerId`}
 								label="MANAGER"
 								required
 								placeholder="MANAGER"
@@ -127,10 +153,19 @@ export function EmployeeForm(props: EmployeeFormProps) {
 								labelKey="name"
 								valueKey="id"
 								formik={form}
+								append={
+									<Button
+										variant="btn create_btn"
+										onClick={() => setCreateManager(true)}
+									>
+										<PlusCircle /> {t("CREATE")}
+									</Button>
+								}
 							/>
 						</Col>
 						<Col md="4">
 							<BaseInput
+								readOnly
 								className="col-12"
 								label="HIRE_DATE"
 								type="date"
@@ -222,7 +257,6 @@ export function EmployeeForm(props: EmployeeFormProps) {
 								name="license_number"
 								placeholder="driver_license_number"
 								formik={form}
-							// readOnly={!protectedFields.license_number}
 							/>
 							<BaseInput
 								className="col-12"
@@ -483,12 +517,17 @@ export function EmployeeForm(props: EmployeeFormProps) {
 						</Col>
 
 					</Row>
-
-
-
-
 				</ViewCard >
 			</div>
+			<ViewModal
+				title={t(
+					"ASSIGN_TO_MANAGER",
+				)}
+				show={createManager}
+				onCloseClick={() => setCreateManager(false)}
+			>
+				<ManagerForm onSaveComplete={onManagerAdded} />
+			</ViewModal>
 		</EntityForm >
 	);
 }

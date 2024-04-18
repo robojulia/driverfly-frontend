@@ -98,6 +98,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		initialValues: new ApplicantEntity(),
 		validationSchema: ApplicantEntity.yupSchemaForApplicantForm(),
 		onSubmit: async (values) => {
+			console.log("submitted ", values);
+
 			values.extras = values.extras?.filter(
 				(v) => v.value != undefined || v.value != null
 			);
@@ -342,8 +344,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<BaseSelect
 									// className="col-12 my-2"
 									readOnly={
-										!Boolean(isSuperAdmin) ||
-										!Boolean(isCompanyAdmin) ||
+										Boolean(isSuperAdmin) ||
+										Boolean(isCompanyAdmin) ||
 										Boolean(entity?.is_hired)
 									}
 									label="ASSIGNED_RECRUITER"
@@ -450,7 +452,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										value={t(`ApplicantType.${form.values?.type || ApplicantType.COMPANY}`)}
 									/>
 									<BaseSelect
-										readOnly={!canCreateReferral}
+										readOnly={!canCreateReferral || Boolean(entity?.is_hired)}
 										className="col-12 p-0 px-lg-2"
 										label="REFERRAL_SOURCE"
 										name="referralSource.id"
@@ -460,7 +462,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										createLabel={(v) => buildReferral(v)}
 										options={(!!referralSources?.length) ? referralSources.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id) : referralSources}
 										append={
-											canCreateReferral &&
+											canCreateReferral && !entity?.is_hired &&
 											<Button
 												variant="btn create_btn"
 												onClick={() => setCreateReferral(true)}
@@ -473,6 +475,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							</Col>
 							<Col md="4" className="px-2">
 								<BaseInput
+									readOnly={Boolean(entity?.is_hired)}
 									className="col-12"
 									label="driver's_license_number"
 									name="license_number"
@@ -525,6 +528,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														label="ADDTIONAL_LICENSE_NUMBER"
 														required
 														formik={form}
+														readOnly={Boolean(entity?.is_hired)}
 													/>
 													<div>
 														<a
@@ -555,6 +559,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												</div>
 												<Row className="px-3">
 													<BaseInput
+														readOnly={Boolean(entity?.is_hired)}
 														className="col-6"
 														type="date"
 														name={`extras[${form.values?.extras?.findIndex(
@@ -566,6 +571,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<StateSelect
+														readOnly={Boolean(entity?.is_hired)}
 														className="col-6"
 														name={`extras[${form.values?.extras?.findIndex(
 															(v) => v.type == ApplicantExtras.CDL_NUMBER
@@ -606,35 +612,34 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 											</div>
 										))}
-									<Row className="my-3 px-3">
-										<Col className="col-8 float-start d-flex  align-items-center">
-
-										</Col>
-										<Button
-											// disabled={Boolean(entity?.is_hired)}
-											className="col-4 float-end"
-											size="sm"
-											onClick={() => {
-												const extras = form.values?.extras || [];
-												form.setValues({
-													...form.values,
-													extras: extras?.map((item) =>
-														item.type == ApplicantExtras.CDL_NUMBER
-															? {
-																...item,
-																value: [
-																	...(item.value || []),
-																	new CdlExtras(),
-																],
-															}
-															: item
-													),
-												});
-											}}
-										>
-											<PlusCircle /> {t("ADD_ANOTHER_LICENSE")}
-										</Button>
-									</Row>
+									{
+										!Boolean(entity?.is_hired) &&
+										<Row className="my-3 px-4">
+											<Button
+												className="ml-3 float-end"
+												size="sm"
+												onClick={() => {
+													const extras = form.values?.extras || [];
+													form.setValues({
+														...form.values,
+														extras: extras?.map((item) =>
+															item.type == ApplicantExtras.CDL_NUMBER
+																? {
+																	...item,
+																	value: [
+																		...(item.value || []),
+																		new CdlExtras(),
+																	],
+																}
+																: item
+														),
+													});
+												}}
+											>
+												<PlusCircle /> {t("ADD_ANOTHER_LICENSE")}
+											</Button>
+										</Row>
+									}
 								</Row>
 
 								<div className="Row horizontalRow"></div>
@@ -670,6 +675,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								{Boolean(form.values.is_owner_operator) && (
 									<>
 										<BaseInput
+											readOnly={Boolean(entity?.is_hired)}
 											className="col-12"
 											label="BUSINESS_NAME"
 											name={`extras[${form.values?.extras?.findIndex(
@@ -678,6 +684,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											formik={form}
 										/>
 										<BaseInput
+											readOnly={Boolean(entity?.is_hired)}
 											className="col-12"
 											name={`extras[${form.values?.extras?.findIndex(
 												(v) => v.type == ApplicantExtras.DOT_NUMBER
@@ -730,6 +737,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									<div className="col-12 mt-2">
 										<label>{t("REMARKS")}</label>
 										<BaseTextArea
+											readOnly={Boolean(entity?.is_hired)}
 											name="remarks"
 											placeholder="Add a remark"
 											formik={form}
@@ -781,6 +789,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									enumType={EducationLevel}
 								/>
 								<BaseCheckList
+									readOnly={Boolean(entity?.is_hired)}
 									className="col-12 p-1 "
 									label="License_Restrictions"
 									name="license_restrictions"
@@ -880,6 +889,14 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												labelPrefix="JobEquipmentType"
 												enumType={JobEquipmentType}
 												formik={form}
+												onChange={({ target: { value } }) => {
+													form.setFieldValue(`equipment_experience[${i}].type`, value)
+													if (value == JobEquipmentType.OTHER) {
+														form.setFieldValue(`equipment_experience[${i}].type_other`, t(`JobEquipmentType.OTHER`))
+													} else {
+														form.setFieldValue(`equipment_experience[${i}].type_other`, (``))
+													}
+												}}
 											/>
 										</div>
 										<div className="col-md-5 mt-2">
@@ -895,17 +912,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												formik={form}
 											/>
 										</div>
-										{entity.type == JobEquipmentType.OTHER && (
-											<div>
-												<BaseInput
-													readOnly={Boolean(props?.entity?.is_hired)}
-													className="my-2"
-													name={`equipment_experience[${i}].type_other`}
-													placeholder="TYPE"
-													formik={form}
-												/>
-											</div>
-										)}
 										<div className="pl-sm-1 pt-lg-2 col-lg-1 col-md-12">
 											<Col className="mt-4"></Col>
 											<a
@@ -923,6 +929,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												<DashCircle color="red" />
 											</a>
 										</div>
+										{entity.type == JobEquipmentType.OTHER && (
+											<Col md="11">
+												<BaseInput
+													readOnly={Boolean(props?.entity?.is_hired)}
+													className="my-2"
+													name={`equipment_experience[${i}].type_other`}
+													placeholder="TYPE"
+													formik={form}
+												/>
+											</Col>
+										)}
 										<div className="12">
 											<hr />
 										</div>
@@ -997,17 +1014,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													formik={form}
 												/>
 											</Col>
-											{entity.type == JobEquipmentType.OTHER && (
-												<Col xs="11">
-													<BaseInput
-														readOnly={Boolean(props?.entity?.is_hired)}
-														name={`equipment_owned[${i}].type_other`}
-														placeholder="TYPE"
-														formik={form}
-														required
-													/>
-												</Col>
-											)}
 											<Col xs="1">
 												<a
 													href="#"
@@ -1024,6 +1030,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													<DashCircle color="red" />
 												</a>
 											</Col>
+											{entity.type == JobEquipmentType.OTHER && (
+												<Col xs="11" className="mt-3">
+													<BaseInput
+														readOnly={Boolean(props?.entity?.is_hired)}
+														name={`equipment_owned[${i}].type_other`}
+														placeholder="TYPE"
+														formik={form}
+														required
+													/>
+												</Col>
+											)}
 											<Col xs="12">
 												<hr />
 											</Col>
@@ -1062,11 +1079,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							<>
 								{form.values?.employers?.map((e, i) => {
 									const meta = form.getFieldMeta(`employers[${i}]`);
-
 									const hasError = Object.keys(e || {}).some(
 										(v) => form.getFieldMeta(`employers[${i}].${v}`).error
 									);
-
 									return (
 										<Accordion
 											key={i}
@@ -1098,7 +1113,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												<Row>
 													<BaseInput
 														readOnly={Boolean(entity?.is_hired)}
-														className="col-12"
+														className="col-12 mt-2"
 														name={`employers[${i}].name`}
 														label="NAME"
 														required
@@ -1106,7 +1121,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<BaseInput
-														className="col-12"
+														className="col-12 mt-2"
 														readOnly={Boolean(entity?.is_hired)}
 														label="EMAIL"
 														type="email"
@@ -1116,7 +1131,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													/>
 													<BaseInput
 														readOnly={Boolean(entity?.is_hired)}
-														className="col-6"
+														className="col-6 mt-2"
 														name={`employers[${i}].start_at`}
 														label="DATES_EMPLOYED"
 														type="date"
@@ -1125,7 +1140,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													/>
 													{
 														((curentCompanyCheck?.id != form.values?.employers[i]?.id) || !form.values?.employers[i]?.is_current) && <BaseInput
-															className="col-6"
+															className="col-6 mt-2"
 															readOnly={Boolean(entity?.is_hired)}
 															required
 															name={`employers[${i}].end_at`}
@@ -1135,7 +1150,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														/>
 													}
 													<BaseInput
-														className="col-12"
+														className="col-12 mt-2"
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].title`}
 														label="TITLE"
@@ -1143,7 +1158,37 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<BaseInput
-														className="col-12"
+														className="col-md-6 mt-2"
+														name={`employers[${i}].manager_name`}
+														required
+														label="MANAGER_OR_REPRESENTATIVE"
+														formik={form}
+													/>
+													<BaseInput
+														className="col-md-6 mt-2"
+														name={`employers[${i}].email`}
+														label="CURRENT_COMPANY_EMAIL"
+														required
+														placeholder="email"
+														formik={form}
+													/>
+													<BaseInput
+														className="col-md-6 mt-2"
+														required
+														name={`employers[${i}].address`}
+														placeholder="ADDRESS_LINE_1"
+														label="ADDRESS_LINE_1"
+														formik={form}
+													/>
+													<BaseInput
+														className="col-md-6 mt-2"
+														name={`employers[${i}].address_2`}
+														placeholder="ADDRESS_LINE_2"
+														label="ADDRESS_LINE_2"
+														formik={form}
+													/>
+													<BaseInput
+														className="col-6 mt-2"
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].street`}
 														label="STREET"
@@ -1151,7 +1196,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<BaseInput
-														className="col-12"
+														className="col-6 mt-2"
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].city`}
 														label="CITY"
@@ -1159,7 +1204,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<StateSelect
-														className="col-6"
+														className="col-6 mt-2"
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].state`}
 														label="STATE"
@@ -1167,7 +1212,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<BaseInput
-														className="col-6"
+														className="col-6 mt-2"
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].zip_code`}
 														label="ZIP_CODE"
@@ -1175,20 +1220,23 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<BaseInputPhone
-														className="col-12"
+														className="col-12 mt-2"
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].phone`}
 														label="PHONE"
 														placeholder="PHONE"
 														formik={form}
 													/>
-													<BaseCheck
-														className="col-12 mt-2"
-														disabled={currentCompanyCheckBox(form.values?.employers[i])}
-														name={`employers[${i}].is_current`}
-														label="CURRENT_COMPANY"
-														formik={form}
-													/>
+													{
+														(!form.values.employers?.some(v => v.is_current) || form.values.employers?.indexOf(form.values.employers?.find(v => v.is_current)) == i) &&
+														<BaseCheck
+															className="col-12 mt-2"
+															disabled={currentCompanyCheckBox(form.values?.employers[i])}
+															name={`employers[${i}].is_current`}
+															label="CURRENT_COMPANY"
+															formik={form}
+														/>
+													}
 													<BaseCheck
 														className="col-12 mt-2"
 														disabled={Boolean(entity?.is_hired)}
@@ -1224,6 +1272,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 						<Row>
 							<Col>
 								<BaseCheck
+									readOnly={Boolean(entity?.is_hired)}
 									className="my-3 col float-left p-0"
 									name={`already_applied_to_company`}
 									label="APPLIED_HERE_BEFORE"
@@ -1248,6 +1297,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<Row>
 									<Col>
 										<BaseCheck
+											readOnly={Boolean(entity?.is_hired)}
 											className="my-3 col float-left p-0"
 											name="already_worked_to_company"
 											label="WORKED_HERE_BEFORE"
@@ -1264,6 +1314,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								{form.values.already_worked_to_company && (
 									<Row>
 										<BaseInput
+											readOnly={Boolean(entity?.is_hired)}
 											className="col-md-6 my-3 font-weight-bold"
 											type="date"
 											name={`already_worked_start_date`}
@@ -1281,6 +1332,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											formik={form}
 										/>
 										<BaseInput
+											readOnly={Boolean(entity?.is_hired)}
 											className="col-md-6 my-3 font-weight-bold"
 											type="date"
 											name={`already_worked_start_date`}
@@ -1431,6 +1483,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										<ViewCard
 											title="ACCIDENT_DEAILS"
 											actions={
+												!entity?.is_hired &&
 												form?.values?.accident_count > 0 &&
 												form?.values?.accident_count >
 												(
@@ -1560,6 +1613,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										<ViewCard
 											title="VIOLATION_DETAILS"
 											actions={
+												!entity?.is_hired &&
 												form?.values?.moving_violations_count > 0 &&
 												form?.values?.moving_violations_count >
 												(

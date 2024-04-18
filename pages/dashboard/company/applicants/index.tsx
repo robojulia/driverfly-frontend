@@ -79,7 +79,7 @@ export default function Applicants() {
         });
 
         setApplicants(data);
-        setLoading(false)
+        setTimeout(() => setLoading(false), 1000);
     }, [user, jobId, viewMode, applicantStatus]);
 
     const onViewClick = (id: number) => {

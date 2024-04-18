@@ -306,10 +306,11 @@ export function JobForm(props: JobFormProps) {
 
     function addRequiredSkills(e) {
         e.preventDefault();
+        const requiredSkills = form.values.required_skills || [];
         form.setValues({
             ...form.values,
             required_skills: [
-                ...form.values.required_skills,
+                ...requiredSkills,
                 {
                     type: null,
                     years: null,
@@ -355,10 +356,11 @@ export function JobForm(props: JobFormProps) {
 
     function addMvrRequirement(e) {
         e.preventDefault();
+        const MvrRequirements = form.values.mvr_requirements || [];
         form.setValues({
             ...form.values,
             mvr_requirements: [
-                ...form.values.mvr_requirements,
+                ...MvrRequirements,
                 {
                     type: null,
                     max_count: 0,
@@ -379,10 +381,11 @@ export function JobForm(props: JobFormProps) {
 
     function addCriminalHistoryRequirement(e) {
         e.preventDefault();
+        const criminalHistory = form.values.criminal_history || [];
         form.setValues({
             ...form.values,
             criminal_history: [
-                ...form.values.criminal_history,
+                ...criminalHistory,
                 {
                     type: null,
                     max_count: 0,
@@ -1175,7 +1178,7 @@ export function JobForm(props: JobFormProps) {
                                                                 }
                                                             >
                                                                 <BaseSelect
-                                                                    className="mx-1"
+                                                                    className="mx-1 col-3"
                                                                     placeholder={t(
                                                                         "SELECT_{name}",
                                                                         { name: "MAX" },
@@ -1188,7 +1191,7 @@ export function JobForm(props: JobFormProps) {
                                                                     formik={form}
                                                                 />
                                                                 <BaseSelect
-                                                                    className="mr-1"
+                                                                    className="mr-1 col-4"
                                                                     placeholder="TYPE"
                                                                     name={`mvr_requirements.${i}.type`}
                                                                     required
@@ -1200,7 +1203,7 @@ export function JobForm(props: JobFormProps) {
                                                                     formik={form}
                                                                 />
                                                                 <BaseSelect
-                                                                    className="mr-1"
+                                                                    className="mr-1 col-3"
                                                                     name={`mvr_requirements.${i}.max_years`}
                                                                     required
                                                                     value={v.max_years}
@@ -1276,7 +1279,7 @@ export function JobForm(props: JobFormProps) {
                                                                 }
                                                             >
                                                                 <BaseSelect
-                                                                    className="mx-1"
+                                                                    className="mx-1 col-3"
                                                                     name={`criminal_history.${i}.max_count`}
                                                                     required
                                                                     placeholder="MAX"
@@ -1284,7 +1287,7 @@ export function JobForm(props: JobFormProps) {
                                                                     formik={form}
                                                                 />
                                                                 <BaseSelect
-                                                                    className="mr-1"
+                                                                    className="mr-1 col-4"
                                                                     placeholder="TYPE"
                                                                     name={`criminal_history.${i}.type`}
                                                                     required
@@ -1293,7 +1296,7 @@ export function JobForm(props: JobFormProps) {
                                                                     formik={form}
                                                                 />
                                                                 <BaseSelect
-                                                                    className="mr-1"
+                                                                    className="mr-1 col-3"
                                                                     name={`criminal_history.${i}.max_years`}
                                                                     required
                                                                     options={years}

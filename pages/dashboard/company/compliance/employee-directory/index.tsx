@@ -1,40 +1,36 @@
-import { useFormik } from "formik";
-import { toast } from "react-toastify";
-import Link from "next/link";
-import { Button, Col, FormGroup, Row } from "react-bootstrap";
 import { FormControlLabel, Switch } from "@mui/material";
-import { useEffect, useState } from "react";
-import React from "react";
+import { useFormik } from "formik";
 import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import { Button, Col, FormGroup, Row } from "react-bootstrap";
 import { EyeFill, PenFill, TrashFill } from 'react-bootstrap-icons';
 import 'react-tabs/style/react-tabs.css';
-import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
-import PageLayout from "../../../../../components/layouts/page/page-layout";
-import { useTranslation } from "../../../../../hooks/use-translation";
-import ViewDataTable, { ViewTableColumn, getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
-import { useAuth } from "../../../../../hooks/use-auth";
-import { useEffectAsync } from "../../../../../utils/react";
-import { TabbedLayout } from "../../../../../components/layouts/page/tabbed-layout";
-import DAC from "../../../../../components/dashboard/employee-directory/dac";
-import DQF from "../../../../../components/dashboard/employee-directory/dqf";
-import ViewModal from "../../../../../components/view-details/view-modal";
-import useLastPage from "../../../../../hooks/use-last-page";
-import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
-import OverlyPopover from "../../../../../components/popover/overly-popover";
-import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
-import Background from "../../../../../components/dashboard/employee-directory/background";
-import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
-import EntityForm from "../../../../../components/layouts/page/entity-form";
-import { Status } from "../../../../../enums/status.enum";
-import BaseSelect from "../../../../../components/forms/base-select";
+import { toast } from "react-toastify";
 import AdditionalFiles from "../../../../../components/dashboard/employee-directory/additional-files";
-import { EmployeeEntity } from "../../../../../models/employee/employee.entity";
-import { ListActionOptions } from "../../../../../components/list-actions/list-actions";
-import EmployeeApi from "../../../../api/employee";
-import { EmployeeStatus } from "../../../../../enums/applicants/employee-status.enum";
+import Background from "../../../../../components/dashboard/employee-directory/background";
+import DQF from "../../../../../components/dashboard/employee-directory/dqf";
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
+import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
 import BaseCheckList from "../../../../../components/forms/base-check-list";
-import { EmployeeReasonCodeFired, EmployeeReasonCodeQuit } from "../../../../../enums/employee/employee-reason-codes.enum";
+import BaseSelect from "../../../../../components/forms/base-select";
 import BaseTextArea from "../../../../../components/forms/base-text-area";
+import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
+import EntityForm from "../../../../../components/layouts/page/entity-form";
+import PageLayout from "../../../../../components/layouts/page/page-layout";
+import { TabbedLayout } from "../../../../../components/layouts/page/tabbed-layout";
+import { ListActionOptions } from "../../../../../components/list-actions/list-actions";
+import OverlyPopover from "../../../../../components/popover/overly-popover";
+import ViewDataTable, { ViewTableColumn, getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
+import ViewModal from "../../../../../components/view-details/view-modal";
+import { EmployeeStatus } from "../../../../../enums/applicants/employee-status.enum";
+import { EmployeeReasonCodeFired, EmployeeReasonCodeQuit } from "../../../../../enums/employee/employee-reason-codes.enum";
+import { useAuth } from "../../../../../hooks/use-auth";
+import useLastPage from "../../../../../hooks/use-last-page";
+import { useTranslation } from "../../../../../hooks/use-translation";
+import { EmployeeEntity } from "../../../../../models/employee/employee.entity";
+import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
+import { useEffectAsync } from "../../../../../utils/react";
+import EmployeeApi from "../../../../api/employee";
 
 export default function EmployeeDirectory() {
 
@@ -53,12 +49,19 @@ export default function EmployeeDirectory() {
     const { setPreviousPath } = useLastPage();
     setPreviousPath(router.asPath)
 
+    enum ViewModeType { EMPLOYEE = "EMPLOYEE", PAST_EMPLOYEE = "PAST_EMPLOYEE" }
+
+    const [viewMode, setViewMode] = useState<ViewModeType>(ViewModeType.EMPLOYEE)
+    const [loading, setLoading] = useState<boolean>(true);
     const [employees, setEmployees] = useState<EmployeeEntity[]>([])
     const resetEmployees = () => setEmployees([])
     const filterEmployees = (id: number) => setEmployees(employees.filter(v => v.id != id))
+    const [modalAction, setModalAction] = useState<{
+        entity: EmployeeEntity,
+        type: "VIEW" | "DELETE" | "MOVE_TO_PAST_EMPLOYEE",
+    }>(null)
 
-    enum ViewModeType { EMPLOYEE = "EMPLOYEE", PAST_EMPLOYEE = "PAST_EMPLOYEE" }
-    const [viewMode, setViewMode] = useState<ViewModeType>(ViewModeType.EMPLOYEE)
+    const resetModalAction = (): void => setModalAction(null)
 
     useEffect(() => {
         setViewMode(router.query.viewMode as ViewModeType ?? ViewModeType.EMPLOYEE)
@@ -76,26 +79,34 @@ export default function EmployeeDirectory() {
     }
 
     const fetchEmployee = async (): Promise<void> => {
-        const data = await employeeApi.list({ status: [EmployeeStatus.ACTIVE] })
-        setEmployees(data)
+        setLoading(true);
+        const data = await employeeApi.list({ status: [EmployeeStatus.ACTIVE] });
+        setEmployees(data);
+        setTimeout(() => setLoading(false), 1000);
     }
 
     const fetchPastEmployee = async (): Promise<void> => {
-        const data = await employeeApi.list({ status: [EmployeeStatus.QUIT, EmployeeStatus.FIRED] })
-        setEmployees(data)
+        setLoading(true);
+        const data = await employeeApi.list({ status: [EmployeeStatus.QUIT, EmployeeStatus.FIRED] });
+        setEmployees(data);
+        setTimeout(() => setLoading(false), 1000);
     }
 
-    const [modalAction, setModalAction] = useState<{
-        entity: EmployeeEntity,
-        type: "VIEW" | "DELETE" | "MOVE_TO_PAST_EMPLOYEE",
-    }>(null)
-    const resetModalAction = (): void => setModalAction(null)
-
     const tabs = {
-        BACKGROUND: <Background employee={modalAction?.entity} />,
-        DQF: < DQF employee={modalAction?.entity} canEdit={(modalAction?.entity.status == EmployeeStatus.ACTIVE)} showHistory={true} />,
+        BACKGROUND: <Background
+            employee={modalAction?.entity}
+        />,
+        DQF: < DQF
+            employee={modalAction?.entity}
+            canEdit={(modalAction?.entity.status == EmployeeStatus.ACTIVE)}
+            canEditSafetyPerformance
+            showHistory={true}
+        />,
         // DRIVER_ONBOARDING_CHECKLIST: < DAC applicant={modalAction?.entity.applicant} />,
-        ADDITIONAL_FILES: < AdditionalFiles employee={modalAction?.entity} canEdit={(modalAction?.entity.status == EmployeeStatus.ACTIVE)} />,
+        ADDITIONAL_FILES: < AdditionalFiles
+            employee={modalAction?.entity}
+            canEdit={(modalAction?.entity.status == EmployeeStatus.ACTIVE)}
+        />,
 
         // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };
@@ -160,7 +171,7 @@ export default function EmployeeDirectory() {
             },
             {
                 id: "name",
-                width:"15%",
+                width: "15%",
                 name: 'NAME',
                 cell: data => <span
                     role="button"
@@ -171,7 +182,7 @@ export default function EmployeeDirectory() {
             {
                 id: "phone",
                 name: 'PHONE',
-                width:"15%",
+                width: "15%",
                 selector: data => data?.phone,
                 cell: data => (<OverlyPopover
                     skipTranslate
@@ -182,7 +193,7 @@ export default function EmployeeDirectory() {
             {
                 id: "email",
                 name: 'EMAIL',
-                width:"15%",
+                width: "15%",
                 selector: data => data?.email,
                 cell: data => (<OverlyPopover
                     skipTranslate
@@ -191,7 +202,7 @@ export default function EmployeeDirectory() {
                 />),
             },
             {
-                width:"15%",
+                width: "15%",
                 id: "jobTitle",
                 name: 'job_title',
                 selector: data => data?.job?.title,
@@ -210,7 +221,7 @@ export default function EmployeeDirectory() {
             },
             {
                 id: "status",
-                width:"8%",
+                width: "8%",
                 name: 'STATUS',
                 selector: data => data?.status,
                 cell: data =>
@@ -262,7 +273,7 @@ export default function EmployeeDirectory() {
                 />),
             });
         } else {
-                
+
         }
 
         return data
@@ -305,44 +316,49 @@ export default function EmployeeDirectory() {
                             </p>)
                         }
 
-                        <FormGroup style={{ float: "right", display:'flex',  alignItems:'center' }}>
-                            <span className="p-4">{t("VIEW_BY_{name}", { name:  "PAST_EMPLOYEE"   }, { translateProps: true })}</span>
+                        <FormGroup style={{ float: "right", display: 'flex', alignItems: 'center' }}>
+                            <span className="p-4">{t("VIEW_BY_{name}", { name: "PAST_EMPLOYEE" }, { translateProps: true })}</span>
                             <FormControlLabel
                                 control={<Switch
                                     value={viewMode == ViewModeType.EMPLOYEE ? ViewModeType.EMPLOYEE : ViewModeType.PAST_EMPLOYEE}
                                     checked={viewMode == ViewModeType.EMPLOYEE}
                                     onChange={onViewModeChange} />}
-                                    label=''
+                                label=''
                             />
-                            <span className="">{t("VIEW_BY_{name}", { name:  "EMPLOYEE"   },  { translateProps: true })}</span>
+                            <span className="">{t("VIEW_BY_{name}", { name: "EMPLOYEE" }, { translateProps: true })}</span>
 
                         </FormGroup>
                     </Col>
                 </Row>
             }
         >
-            <ViewDataTable<EmployeeEntity>
-                columnSettingKey={columnSettingKey}
-                customStyles={{
-                    headRow: {
-                        style: {
-                            background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
-                            color: "white"
+            {loading
+                ? <div className="spinner-border mt-3 ml-1" role="status">
+                    <span className="sr-only">Loading...</span>
+                </div>
+                :
+                <ViewDataTable<EmployeeEntity>
+                    columnSettingKey={columnSettingKey}
+                    customStyles={{
+                        headRow: {
+                            style: {
+                                background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                                color: "white"
+                            },
                         },
-                    },
-                }}
-                columns={tableColumns()}
-                actions={data => (viewMode != ViewModeType.EMPLOYEE) ? null : tableActions(data)}
-                items={employees}
-            />
+                    }}
+                    columns={tableColumns()}
+                    actions={data => (viewMode != ViewModeType.EMPLOYEE) ? null : tableActions(data)}
+                    items={employees}
+                />}
 
             {/* TabbedLayout modal component with items passed as a prop `tabs` */}
             <ViewModal title="VIEW_DETAILS" show={!!(modalAction?.type == "VIEW")} onCloseClick={resetModalAction} size='xl' >
-               <>
+                <>
                     {
-                        <h2>{modalAction?.entity?.first_name +" "+ modalAction?.entity?.last_name}</h2>
+                        <h2>{modalAction?.entity?.first_name + " " + modalAction?.entity?.last_name}</h2>
                     }
-                    <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
+                    <TabbedLayout items={tabs} className=""></TabbedLayout>
                 </>
             </ViewModal>
 
@@ -354,27 +370,27 @@ export default function EmployeeDirectory() {
                 size='sm'
             >
                 <>
-                <Row >
-                    <Col className="d-flex justify-content-center align-items-center">
-                    <h4 className="mt-4">{t("ARE_YOU_SURE_TO_DELETE_OR_MOVE_TO_PAST_EMPLOYEE")}</h4>
-                    </Col>
-                </Row>
-                <Row className="mt-90 my-10">
-                    <Col>
-                        <button
-                            onClick={() => onDeleteClick()}
-                            type="button"
-                            className="theme-danger-btn btn-block btn-theme w-50 p-3 m-auto"
-                        > {t("DELETE")}</button>
-                    </Col>
-                    <Col>
-                        <button
-                            onClick={() => onMoveToPastEmploeeClick()}
-                            type="button"
-                            className="theme-primary-btn btn-block btn-theme w-50 p-3 m-auto"
-                        > {t("MOVE_TO_PAST_EMPLOYEE")}</button>
-                    </Col>
-                </Row>
+                    <Row >
+                        <Col className="d-flex justify-content-center align-items-center">
+                            <h4 className="mt-4">{t("ARE_YOU_SURE_TO_DELETE_OR_MOVE_TO_PAST_EMPLOYEE")}</h4>
+                        </Col>
+                    </Row>
+                    <Row className="mt-90 my-10">
+                        <Col>
+                            <button
+                                onClick={() => onDeleteClick()}
+                                type="button"
+                                className="theme-danger-btn btn-block btn-theme w-50 p-3 m-auto"
+                            > {t("DELETE")}</button>
+                        </Col>
+                        <Col>
+                            <button
+                                onClick={() => onMoveToPastEmploeeClick()}
+                                type="button"
+                                className="theme-primary-btn btn-block btn-theme w-50 p-3 m-auto"
+                            > {t("MOVE_TO_PAST_EMPLOYEE")}</button>
+                        </Col>
+                    </Row>
                 </>
             </ViewModal>
 

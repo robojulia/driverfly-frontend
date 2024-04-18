@@ -1,4 +1,5 @@
 "use client";
+import { AxiosProgressEvent } from "axios";
 import { useFormik } from "formik";
 import Papa from "papaparse";
 import { useState } from "react";
@@ -53,7 +54,7 @@ const ImportApplicants = () => {
     const [warnings, setWarnings] = useState({});
     const [csvErrors, setCsvErrors] = useState([]);
 
-    const api = new ApplicantApi();
+    const applicantApi = new ApplicantApi();
     /**
      * @type {ApplicantEntity[]}
      */
@@ -78,6 +79,8 @@ const ImportApplicants = () => {
             ),
         }),
         validate: async (values) => {
+            // alert(3)
+            const companyApplicants = await applicantApi.list();
             const errors = {};
 
             let lastProgress = 0;
@@ -96,15 +99,18 @@ const ImportApplicants = () => {
 
                 if (applicant.email) {
                     const rowError: { email?: string; phone?: string } = {};
-                    const matches = await api.list({ email: applicant.email });
+                    // const matches = await api.list({ email: applicant.email });
+                    const matches = companyApplicants.find(({ email }) => email == applicant.email);
 
-                    if (matches.some((v) => v.company?.id != null))
+                    // if (matches.some((v) => v.company?.id != null))
+                    if (matches?.company?.id != null)
                         rowError.email = t(
                             "{name}_ALREADY_EXISTS",
                             { name: "EMAIL" },
                             { translateProps: true }
                         );
-                    else if (matches.some((v) => v.company == null))
+                    // else if (matches.some((v) => v.company == null))
+                    else if (matches?.company == null)
                         rowError.email = t(
                             "{name}_ALREADY_EXISTS_NO_MERGE",
                             { name: "EMAIL" },
@@ -112,13 +118,15 @@ const ImportApplicants = () => {
                         );
 
                     if (applicant.phone) {
-                        if (matches.some((v) => v.company?.id != null))
+                        // if (matches.some((v) => v.company?.id != null))
+                        if (matches?.company?.id != null)
                             rowError.phone = t(
                                 "{name}_ALREADY_EXISTS",
                                 { name: "PHONE" },
                                 { translateProps: true }
                             );
-                        else if (matches.some((v) => v.company == null))
+                        // else if (matches.some((v) => v.company == null))
+                        else if (matches?.company == null)
                             rowError.phone = t(
                                 "{name}_ALREADY_EXISTS_NO_MERGE",
                                 { name: "PHONE" },
@@ -142,25 +150,30 @@ const ImportApplicants = () => {
             setWarnings(errors);
         },
         onSubmit: async (values) => {
+            // alert(4)
             let lastProgress = 0;
 
             for (let i = 0; i < values.items?.length; i++) {
                 let dto = values.items[i];
 
                 if (!!dto.birthdate) {
-                    dto.birthdate = new Date(dto.birthdate).toISOString();
+                    const utcBirthdate = new Date(dto.birthdate)
+                    dto.birthdate = new Date(utcBirthdate.getUTCFullYear(), utcBirthdate.getUTCMonth(), utcBirthdate.getUTCDate() + 2).toISOString();
                 }
                 if (!!dto.license_expiry) {
-                    dto.license_expiry = new Date(dto.license_expiry).toISOString();
+                    const utcLicenseExpiry = new Date(dto.license_expiry)
+                    dto.license_expiry = new Date(utcLicenseExpiry.getUTCFullYear(), utcLicenseExpiry.getUTCMonth(), utcLicenseExpiry.getUTCDate() + 2).toISOString();
                 }
+                values.items[i] = dto;
 
                 try {
-                    await api.create(dto);
+                    await applicantApi.create(dto);
                 } catch (e) {
                     console.log("error saving applicant", i, e);
                     form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
-                    toast.error(t("unable_to_save_information"));
-                    return;
+                    // toast.error(t("unable_to_save_information"));
+                    toast.error(t("UNABLE_TO_SAVE_INFORMATION_FOR_{row}", { row: i + 1 }));
+                    // return;
                 }
 
                 let progress = Math.floor(((i + 1) * 100) / values.items?.length);
@@ -170,6 +183,27 @@ const ImportApplicants = () => {
                     lastProgress = progress;
                 }
             }
+
+            // const response = await applicantApi.createBulk(values.items, {
+            //     onUploadProgress: (progressEvent: AxiosProgressEvent) =>
+            //         setProgress(
+            //             Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            //         ),
+            //     onDownloadProgress: (progressEvent: AxiosProgressEvent) =>
+            //         setProgress(
+            //             Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            //         ),
+            // });
+            // console.log("response", response);
+
+            // response?.forEach(({ data, error }, i) => {
+            //     if (!!error) {
+            //         // form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
+            //         form.setFieldError(`items.${i}.id`, t(error));
+            //     } else {
+            //         console.log("saved applicant", i, data);
+            //     }
+            // })
 
             toast.success(t("successfully_saved_information"));
 
@@ -215,7 +249,7 @@ const ImportApplicants = () => {
         console.log("results", { data, errors, fields });
 
         const contents = data
-            ?.map((row, i) => {
+            ?.map((row, i, self) => {
                 const entity = new ApplicantEntity();
                 if (!Object.values(row)?.some(Boolean)) {
                     errors = errors.filter((v) => v.row != i);
@@ -288,23 +322,23 @@ const ImportApplicants = () => {
                             case "tickets_count":
                             case "tickets_details":
                             case "tickets":
-                                if (!!entity.tickets_count || entity.tickets_count > 0) {
-                                    entity.tickets_count = 0;
-                                    entity.tickets = true;
-                                } else {
-                                    entity.tickets = false;
-                                    entity.tickets_details = null;
+                                if (!entity.tickets) {
+                                    if (Boolean(entity.tickets_count)) {
+                                        entity.tickets = true;
+                                    } else {
+                                        entity.tickets_details = null;
+                                    }
                                 }
                                 break;
                             case "infractions_count":
                             case "infractions_details":
                             case "infractions":
-                                if (!!entity.infractions_count || entity.infractions_count > 0) {
-                                    entity.infractions_count = 0;
-                                    entity.infractions = true;
-                                } else {
-                                    entity.infractions = false;
-                                    entity.infractions_details = null;
+                                if (!entity.infractions) {
+                                    if (Boolean(entity.infractions_count)) {
+                                        entity.infractions = true;
+                                    } else {
+                                        entity.infractions_details = null;
+                                    }
                                 }
                                 break;
                             case "license_restrictions":
@@ -382,7 +416,7 @@ const ImportApplicants = () => {
                                             const equipmentExperienceObject = new ApplicantExperienceEntity();
                                             if (!Object.values(JobEquipmentType).includes(v.toString() as JobEquipmentType)) {
                                                 equipmentExperienceObject.type_other =
-                                                    v + ", " + (equipmentExperienceObject.type_other || "");
+                                                    v + (equipmentExperienceObject.type_other ? `, ${equipmentExperienceObject.type_other}` : "");
                                                 equipmentExperienceObject.type = JobEquipmentType.OTHER;
                                             } else {
                                                 equipmentExperienceObject.type = matchEnum(
@@ -408,11 +442,16 @@ const ImportApplicants = () => {
                 if (!entity.infractions) entity.infractions_details = "";
                 if (!entity.moving_violations) entity.moving_violations_details = "";
 
+                setProgress(Math.floor(((i + 1) * 100) / self?.length))
                 return entity;
             })
             ?.filter(Boolean);
+        // alert(1)
+
         if (errors?.length) setCsvErrors(errors);
+        // alert(2)
         form?.setValues({ items: contents }, true);
+        setProgress(0)
     }
 
     const headers: string[] = Object.keys(schemaDescribe.fields).filter((v) => {
@@ -714,10 +753,12 @@ const ImportApplicants = () => {
                                 const meta = form.getFieldMeta(`items.${i}`);
 
                                 const findIcon = () => {
-                                    if (meta.error) return <XCircle color="red" />;
+                                    console.log(`items.${i} meta`, { meta }, { warnings: warnings[i] });
 
-                                    // if (Boolean(warnings[i]) && Boolean(Object.keys((warnings[i]))??.length))
-                                    if (Boolean(warnings[i]))
+                                    if (!!meta.error) return <XCircle color="red" />;
+
+                                    if (Boolean(warnings[i]) && (Object.keys((warnings[i]))?.length))
+                                        // if (Boolean(warnings[i]))
                                         return <ExclamationTriangle color="orange" />;
 
                                     return <Check color="green" />;
@@ -822,25 +863,23 @@ function guessControl(
 
     if (Array.isArray(value)) {
         return (
-            <>
-                <ul itemType="circle">
-                    {value?.map((v, i) => {
-                        const error = meta.error ? meta.error[i] : null;
+            <ul itemType="circle">
+                {value?.map((v, i) => {
+                    const error = meta.error ? meta.error[i] : null;
 
-                        if (error) {
-                            return (
-                                <li key={i}>
-                                    {v}
-                                    <br />
-                                    <span className="text-danger small">{error}</span>
-                                </li>
-                            );
-                        }
+                    if (error) {
+                        return (
+                            <li key={i} className="m-0 p-0">
+                                {v}
+                                <br />
+                                <span className="text-danger small m-0 p-0">{error}</span>
+                            </li>
+                        );
+                    }
 
-                        return <li key={i}>{v}</li>;
-                    })}
-                </ul>
-            </>
+                    return <li key={i} className="m-0 p-0">{v}</li>;
+                })}
+            </ul>
         );
     }
 

@@ -4,6 +4,7 @@ import { useTranslation } from '../../hooks/use-translation';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import BaseControl, { BaseControlProps } from './base-control';
+import { grey } from '@mui/material/colors';
 
 export interface BaseInputPhoneProps extends BaseControlProps, React.InputHTMLAttributes<HTMLInputElement> {
 	handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
@@ -84,6 +85,9 @@ function BaseInputPhone({
 			append={append}
 		>
 			<PhoneInput
+				inputStyle={{
+					backgroundColor: readOnly && "#e9ecef"
+				}}
 				autoFormat
 				countryCodeEditable={false}
 				onlyCountries={onlyCountries}

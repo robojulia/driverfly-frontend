@@ -33,7 +33,7 @@ export default function MessageList() {
         return [
             ...applicants?.map(v => ({
                 // text: `${v.first_name} ${v.last_name} (${t("ChattableType." + Boolean(v?.user?.id) ? ChattableType.USER : ChattableType.APPLICANT)}) `,
-                text: `${v.first_name} ${v.last_name} `,
+                text: `${v.first_name} ${v.last_name} (${t("ChattableType." + ChattableType.APPLICANT)})`,
                 value: {
                     chattable_type: Boolean(v.user) ? ChattableType.USER : ChattableType.APPLICANT,
                     chattable_id: v.user?.id || v.id,
