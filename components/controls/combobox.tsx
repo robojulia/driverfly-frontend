@@ -18,7 +18,7 @@ export interface ComboboxItem {
     parts?: string[]
 }
 
-const csutomStyles: StylesConfig<ComboboxItem> = {
+const csutomStyles: StylesConfig<ComboboxItem & any> = {
     placeholder: (styles: any, { isFocused }) => ({
         ...styles,
         color: "black",
