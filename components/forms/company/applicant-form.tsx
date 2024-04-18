@@ -1079,11 +1079,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							<>
 								{form.values?.employers?.map((e, i) => {
 									const meta = form.getFieldMeta(`employers[${i}]`);
-
 									const hasError = Object.keys(e || {}).some(
 										(v) => form.getFieldMeta(`employers[${i}].${v}`).error
 									);
-
 									return (
 										<Accordion
 											key={i}
@@ -1115,7 +1113,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												<Row>
 													<BaseInput
 														readOnly={Boolean(entity?.is_hired)}
-														className="col-12"
+														className="col-12 mt-2"
 														name={`employers[${i}].name`}
 														label="NAME"
 														required
@@ -1123,7 +1121,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<BaseInput
-														className="col-12"
+														className="col-12 mt-2"
 														readOnly={Boolean(entity?.is_hired)}
 														label="EMAIL"
 														type="email"
@@ -1133,7 +1131,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													/>
 													<BaseInput
 														readOnly={Boolean(entity?.is_hired)}
-														className="col-6"
+														className="col-6 mt-2"
 														name={`employers[${i}].start_at`}
 														label="DATES_EMPLOYED"
 														type="date"
@@ -1142,7 +1140,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													/>
 													{
 														((curentCompanyCheck?.id != form.values?.employers[i]?.id) || !form.values?.employers[i]?.is_current) && <BaseInput
-															className="col-6"
+															className="col-6 mt-2"
 															readOnly={Boolean(entity?.is_hired)}
 															required
 															name={`employers[${i}].end_at`}
@@ -1152,7 +1150,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														/>
 													}
 													<BaseInput
-														className="col-12"
+														className="col-12 mt-2"
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].title`}
 														label="TITLE"
@@ -1160,7 +1158,37 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<BaseInput
-														className="col-12"
+														className="col-md-6 mt-2"
+														name={`employers[${i}].manager_name`}
+														required
+														label="MANAGER_OR_REPRESENTATIVE"
+														formik={form}
+													/>
+													<BaseInput
+														className="col-md-6 mt-2"
+														name={`employers[${i}].email`}
+														label="CURRENT_COMPANY_EMAIL"
+														required
+														placeholder="email"
+														formik={form}
+													/>
+													<BaseInput
+														className="col-md-6 mt-2"
+														required
+														name={`employers[${i}].address`}
+														placeholder="ADDRESS_LINE_1"
+														label="ADDRESS_LINE_1"
+														formik={form}
+													/>
+													<BaseInput
+														className="col-md-6 mt-2"
+														name={`employers[${i}].address_2`}
+														placeholder="ADDRESS_LINE_2"
+														label="ADDRESS_LINE_2"
+														formik={form}
+													/>
+													<BaseInput
+														className="col-6 mt-2"
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].street`}
 														label="STREET"
@@ -1168,7 +1196,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<BaseInput
-														className="col-12"
+														className="col-6 mt-2"
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].city`}
 														label="CITY"
@@ -1176,7 +1204,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<StateSelect
-														className="col-6"
+														className="col-6 mt-2"
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].state`}
 														label="STATE"
@@ -1184,7 +1212,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<BaseInput
-														className="col-6"
+														className="col-6 mt-2"
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].zip_code`}
 														label="ZIP_CODE"
@@ -1192,20 +1220,23 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<BaseInputPhone
-														className="col-12"
+														className="col-12 mt-2"
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].phone`}
 														label="PHONE"
 														placeholder="PHONE"
 														formik={form}
 													/>
-													<BaseCheck
-														className="col-12 mt-2"
-														disabled={currentCompanyCheckBox(form.values?.employers[i])}
-														name={`employers[${i}].is_current`}
-														label="CURRENT_COMPANY"
-														formik={form}
-													/>
+													{
+														(!form.values.employers?.some(v => v.is_current) || form.values.employers?.indexOf(form.values.employers?.find(v => v.is_current)) == i) &&
+														<BaseCheck
+															className="col-12 mt-2"
+															disabled={currentCompanyCheckBox(form.values?.employers[i])}
+															name={`employers[${i}].is_current`}
+															label="CURRENT_COMPANY"
+															formik={form}
+														/>
+													}
 													<BaseCheck
 														className="col-12 mt-2"
 														disabled={Boolean(entity?.is_hired)}
