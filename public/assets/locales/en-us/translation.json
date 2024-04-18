@@ -450,6 +450,7 @@
   "become_your_own_boss_paragraph": "Learn about how you can become the owner of your own trucking company",
   "sign_up_for_newsletter_paragraph": "Subscribe to the DriverFly Newsletter to get the latest jobs and trucking tips",
   "BENEFITS": "Benefits",
+  "HELLO_{name}": "Hello {{name}}",
   "vehicle_info": "Vehicle Info",
   "location": "Location",
   "new_location": "New Location",

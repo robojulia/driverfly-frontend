@@ -183,7 +183,7 @@ export default function Dashboard() {
                     >
                         <div className="my_chart px-4">
                             <ChartWrapper
-                                title="Hello Evano"
+                                title={t("HELLO_{name}", { name: user.name })}
                                 sm="12"
                                 md="12"
                                 lg="12"
