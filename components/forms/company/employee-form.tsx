@@ -521,9 +521,7 @@ export function EmployeeForm(props: EmployeeFormProps) {
 			</div>
 			<ViewModal
 				title={t(
-					"CREATE_{name}",
-					{ name: "REFERRAL_SOURCE" },
-					{ translateProps: true }
+					"ASSIGN_TO_MANAGER",
 				)}
 				show={createManager}
 				onCloseClick={() => setCreateManager(false)}
