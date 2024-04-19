@@ -103,37 +103,40 @@ const ImportApplicants = () => {
                     // const matches = await api.list({ email: applicant.email });
                     const matches = companyApplicants?.find(({ email }) => email == applicant.email);
 
-                    // if (matches.some((v) => v.company?.id != null))
-                    if (matches?.company?.id != null)
-                        rowError.email = t(
-                            "{name}_ALREADY_EXISTS",
-                            { name: "EMAIL" },
-                            { translateProps: true }
-                        );
-                    // else if (matches.some((v) => v.company == null))
-                    else if (matches?.company == null)
-                        rowError.email = t(
-                            "{name}_ALREADY_EXISTS_NO_MERGE",
-                            { name: "EMAIL" },
-                            { translateProps: true }
-                        );
-
-                    if (applicant.phone) {
+                    if (!!matches) {
                         // if (matches.some((v) => v.company?.id != null))
                         if (matches?.company?.id != null)
-                            rowError.phone = t(
+                            rowError.email = t(
                                 "{name}_ALREADY_EXISTS",
-                                { name: "PHONE" },
+                                { name: "EMAIL" },
                                 { translateProps: true }
                             );
                         // else if (matches.some((v) => v.company == null))
                         else if (matches?.company == null)
-                            rowError.phone = t(
+                            rowError.email = t(
                                 "{name}_ALREADY_EXISTS_NO_MERGE",
-                                { name: "PHONE" },
+                                { name: "EMAIL" },
                                 { translateProps: true }
                             );
+
+                        if (applicant.phone) {
+                            // if (matches.some((v) => v.company?.id != null))
+                            if (matches?.company?.id != null)
+                                rowError.phone = t(
+                                    "{name}_ALREADY_EXISTS",
+                                    { name: "PHONE" },
+                                    { translateProps: true }
+                                );
+                            // else if (matches.some((v) => v.company == null))
+                            else if (matches?.company == null)
+                                rowError.phone = t(
+                                    "{name}_ALREADY_EXISTS_NO_MERGE",
+                                    { name: "PHONE" },
+                                    { translateProps: true }
+                                );
+                        }
                     }
+
                     if (rowError) {
                         errors[i] = rowError;
                     }
