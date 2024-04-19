@@ -178,7 +178,7 @@ const ImportApplicants = () => {
                             if (isJwtExpired(user.jwtRefresh)) {
                                 // console.log("loginGuard:: jwt refresh expired", router.asPath)
                                 return !(await logoutAndRedirect());
-                            } 
+                            }
                             await refreshToken();
                             // return false;
                             // } else {
