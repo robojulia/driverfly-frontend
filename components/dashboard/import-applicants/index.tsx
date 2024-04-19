@@ -170,50 +170,50 @@ const ImportApplicants = () => {
                 }
                 values.items[i] = dto;
 
-                // try {
-                //     await applicantApi.create(dto);
-                // } catch (e) {
-                //     console.log("error saving applicant", i, e);
-                //     form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
-                //     // toast.error(t("unable_to_save_information"));
-                //     toast.error(t("UNABLE_TO_SAVE_INFORMATION_FOR_{row}", { row: i + 1 }));
-                //     return;
-                // }
-
-                // let progress = Math.floor(((i + 1) * 100) / values.items?.length);
-
-                // if (progress != lastProgress) {
-                //     setProgress(progress);
-                //     lastProgress = progress;
-                // }
-            }
-
-            const response = await applicantApi.createBulk(values.items, {
-                onUploadProgress: (progressEvent: AxiosProgressEvent) =>
-                    setProgress(
-                        Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                    ),
-                onDownloadProgress: (progressEvent: AxiosProgressEvent) =>
-                    setProgress(
-                        Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                    ),
-            });
-            console.log("response", response);
-
-            response?.forEach(({ data, error }, i) => {
-                if (!!error) {
-                    // form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
-                    form.setFieldError(`items.${i}.id`, t(error));
-                } else {
-                    console.log("saved applicant", i, data);
+                try {
+                    await applicantApi.create(dto);
+                } catch (e) {
+                    console.log("error saving applicant", i, e);
+                    form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
+                    // toast.error(t("unable_to_save_information"));
+                    toast.error(t("UNABLE_TO_SAVE_INFORMATION_FOR_{row}", { row: i + 1 }));
+                    return;
                 }
-            })
 
-            if (!response?.some(({ error }) => !!error)) {
-                toast.success(t("successfully_saved_information"));
+                let progress = Math.floor(((i + 1) * 100) / values.items?.length);
 
-                setTimeout(onClearClick, 2000);
+                if (progress != lastProgress) {
+                    setProgress(progress);
+                    lastProgress = progress;
+                }
             }
+
+            // const response = await applicantApi.createBulk(values.items, {
+            //     onUploadProgress: (progressEvent: AxiosProgressEvent) =>
+            //         setProgress(
+            //             Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            //         ),
+            //     onDownloadProgress: (progressEvent: AxiosProgressEvent) =>
+            //         setProgress(
+            //             Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            //         ),
+            // });
+            // console.log("response", response);
+
+            // response?.forEach(({ data, error }, i) => {
+            //     if (!!error) {
+            //         // form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
+            //         form.setFieldError(`items.${i}.id`, t(error));
+            //     } else {
+            //         console.log("saved applicant", i, data);
+            //     }
+            // })
+
+            // if (!response?.some(({ error }) => !!error)) {
+            toast.success(t("successfully_saved_information"));
+
+            setTimeout(onClearClick, 2000);
+            // }
         },
     });
 
