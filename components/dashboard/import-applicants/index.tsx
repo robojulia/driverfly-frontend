@@ -55,6 +55,9 @@ const ImportApplicants = () => {
 
     const [warnings, setWarnings] = useState({});
     const [csvErrors, setCsvErrors] = useState([]);
+    const [progress, setProgress] = useState(0);
+    const [fileName, setFileName] = useState("");
+    const [onlyErrors, setOnlyErrors] = useState(false);
 
     const applicantApi = new ApplicantApi();
     /**
@@ -173,8 +176,11 @@ const ImportApplicants = () => {
                 values.items[i] = dto;
 
                 try {
+                    console.log("isJwtExpired(user.jwt)", isJwtExpired(user.jwt));
+
                     if (isJwtExpired(user.jwt)) {
                         if (user.jwtRefresh) {
+                            console.log("isJwtExpired(user.jwtRefresh)", isJwtExpired(user.jwtRefresh));
                             if (isJwtExpired(user.jwtRefresh)) {
                                 // console.log("loginGuard:: jwt refresh expired", router.asPath)
                                 return !(await logoutAndRedirect());
@@ -233,10 +239,6 @@ const ImportApplicants = () => {
         },
     });
 
-    const [progress, setProgress] = useState(0);
-
-    const [fileName, setFileName] = useState("");
-
     /**
      *
      * @param {React.ChangeEvent<HTMLInputElement>} e
@@ -272,6 +274,9 @@ const ImportApplicants = () => {
 
         const contents = data
             ?.map((row, i, self) => {
+                console.log(Math.floor(((i + 1) * 100) / data?.length));
+
+                setProgress(Math.floor(((i + 1) * 100) / data?.length))
                 const entity = new ApplicantEntity();
                 if (!Object.values(row)?.some(Boolean)) {
                     errors = errors.filter((v) => v.row != i);
@@ -464,7 +469,6 @@ const ImportApplicants = () => {
                 if (!entity.infractions) entity.infractions_details = "";
                 if (!entity.moving_violations) entity.moving_violations_details = "";
 
-                setProgress(Math.floor(((i + 1) * 100) / self?.length))
                 return entity;
             })
             ?.filter(Boolean);
@@ -494,8 +498,6 @@ const ImportApplicants = () => {
         setProgress(0);
         setCsvErrors([]);
     };
-
-    const [onlyErrors, setOnlyErrors] = useState(false);
 
     /**
      *
@@ -606,6 +608,7 @@ const ImportApplicants = () => {
             </Row>
             {progress > 0 && progress < 100 && (
                 <Row>
+                    {progress}
                     <Col>
                         <ProgressBar
                             variant="primary"
@@ -775,7 +778,7 @@ const ImportApplicants = () => {
                                 const meta = form.getFieldMeta(`items.${i}`);
 
                                 const findIcon = () => {
-                                    console.log(`items.${i} meta`, { meta }, { warnings: warnings[i] });
+                                    // c(`items.${i} meta`, { meta }, { warnings: warnings[i] });
 
                                     if (!!meta.error) return <XCircle color="red" />;
 
