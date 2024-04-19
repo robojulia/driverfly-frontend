@@ -177,7 +177,7 @@ const ImportApplicants = () => {
                     form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
                     // toast.error(t("unable_to_save_information"));
                     toast.error(t("UNABLE_TO_SAVE_INFORMATION_FOR_{row}", { row: i + 1 }));
-                    // return;
+                    return;
                 }
 
                 let progress = Math.floor(((i + 1) * 100) / values.items?.length);
