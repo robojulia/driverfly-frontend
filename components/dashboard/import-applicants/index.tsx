@@ -81,6 +81,7 @@ const ImportApplicants = () => {
         validate: async (values) => {
             // alert(3)
             // const companyApplicants = await applicantApi.list();
+            const companyApplicants = [];
             const errors = {};
 
             let lastProgress = 0;
@@ -100,7 +101,7 @@ const ImportApplicants = () => {
                 if (applicant.email) {
                     const rowError: { email?: string; phone?: string } = {};
                     // const matches = await api.list({ email: applicant.email });
-                    const matches = companyApplicants.find(({ email }) => email == applicant.email);
+                    const matches = companyApplicants?.find(({ email }) => email == applicant.email);
 
                     // if (matches.some((v) => v.company?.id != null))
                     if (matches?.company?.id != null)
