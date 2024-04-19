@@ -209,9 +209,11 @@ const ImportApplicants = () => {
                 }
             })
 
-            toast.success(t("successfully_saved_information"));
+            if (!response?.some(({ error }) => !!error)) {
+                toast.success(t("successfully_saved_information"));
 
-            setTimeout(onClearClick, 2000);
+                setTimeout(onClearClick, 2000);
+            }
         },
     });
 
