@@ -608,8 +608,7 @@ const ImportApplicants = () => {
             </Row>
             {progress > 0 && progress < 100 && (
                 <Row>
-                    {progress}
-                    <Col>
+                    <Col className="mx-2">
                         <ProgressBar
                             variant="primary"
                             min={0}
