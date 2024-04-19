@@ -11,14 +11,16 @@ export function SourceBreakdownChart() {
 		let company = 0;
 		let jobApply = 0;
 		state.applicants.forEach((a) => {
-			(
-				{
-					[ApplicantType.DHA]: (() => dha++),
-					[ApplicantType.USER]: (() => user++),
-					[ApplicantType.COMPANY]: (() => company++),
-					[ApplicantType.DIRECT_JOB_APPLY]: (() => jobApply++),
-				}[a.type]()
-			)
+			if (!a?.is_hired) {
+				(
+					{
+						[ApplicantType.DHA]: (() => dha++),
+						[ApplicantType.USER]: (() => user++),
+						[ApplicantType.COMPANY]: (() => company++),
+						[ApplicantType.DIRECT_JOB_APPLY]: (() => jobApply++),
+					}[a.type]()
+				)
+			}
 		});
 		return [dha, user, company, jobApply];
 	};

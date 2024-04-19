@@ -43,7 +43,7 @@ export const DashboardStats = () => {
             CONVERSION_RATE?: StatAttributes;
         } = applicants?.reduce(
             (acc, a) => {
-                if (a?.current_application_status?.startsWith("NEW_")) {
+                if (!a.is_hired && a?.current_application_status?.startsWith("NEW_")) {
                     acc.TOTAL_LEADS.value++;
                     if (moment(a?.created_at).isoWeek() == currentWeek) {
                         acc.NEW_LEADS.value++;
