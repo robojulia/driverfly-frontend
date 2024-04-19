@@ -47,7 +47,7 @@ const ImportApplicants = () => {
     const style: any = _style;
 
     const { t } = useTranslation();
-    const { user, refreshToken, logoutAndRedirect } = useAuth();
+    let { user, refreshToken, logoutAndRedirect } = useAuth();
 
     const schema = ApplicantEntity.yupSchemaForImportApplicants();
 
@@ -185,7 +185,7 @@ const ImportApplicants = () => {
                                 // console.log("loginGuard:: jwt refresh expired", router.asPath)
                                 return !(await logoutAndRedirect());
                             }
-                            await refreshToken();
+                            user = await refreshToken();
                             // return false;
                             // } else {
                             //     return !(await logoutAndRedirect());

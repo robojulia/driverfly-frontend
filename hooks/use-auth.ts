@@ -224,6 +224,7 @@ export function useAuth() {
             const api = new AuthApi();
             const newUser = await api.refreshToken(user.refreshToken);
             updateUser(newUser);
+            return newUser;
         } catch (e) {
             console.error("Unable to refresh jwt token", e);
             await logoutAndRedirect();
