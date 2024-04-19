@@ -38,6 +38,7 @@ import { matchEnum } from "../../../utils/enums.utils";
 import { FormikInterface } from "../../../utils/formik";
 import Switch from "../../controls/switch";
 import OverlyPopover from "../../popover/overly-popover";
+import { isJwtExpired, useAuth } from "../../../hooks/use-auth";
 
 function unique<T>(value: T, index: number, self: T[]) {
     return (Boolean(value) && self.indexOf(value) == index)
@@ -46,6 +47,7 @@ const ImportApplicants = () => {
     const style: any = _style;
 
     const { t } = useTranslation();
+    const { user, refreshToken } = useAuth();
 
     const schema = ApplicantEntity.yupSchemaForImportApplicants();
 
@@ -171,6 +173,22 @@ const ImportApplicants = () => {
                 values.items[i] = dto;
 
                 try {
+                    if (isJwtExpired(user.jwt)) {
+                        if (user.jwtRefresh) {
+                            // if (isJwtExpired(user.jwtRefresh)) {
+                            //     console.log("loginGuard:: jwt refresh expired", router.asPath)
+                            //     return !(await logoutAndRedirect());
+                            // }
+
+                            await refreshToken();
+                            // return false;
+                            // } else {
+                            //     return !(await logoutAndRedirect());
+                        }
+                        // } else {
+                        // return true;
+                    }
+
                     await applicantApi.create(dto);
                 } catch (e) {
                     console.log("error saving applicant", i, e);
