@@ -80,7 +80,7 @@ const ImportApplicants = () => {
         }),
         validate: async (values) => {
             // alert(3)
-            const companyApplicants = await applicantApi.list();
+            // const companyApplicants = await applicantApi.list();
             const errors = {};
 
             let lastProgress = 0;
