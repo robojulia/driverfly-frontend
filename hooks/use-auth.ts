@@ -243,6 +243,7 @@ export function useAuth() {
         hasPermission,
         loginGuard,
         refreshToken,
+        logoutAndRedirect
     };
 
 }

@@ -47,7 +47,7 @@ const ImportApplicants = () => {
     const style: any = _style;
 
     const { t } = useTranslation();
-    const { user, refreshToken } = useAuth();
+    const { user, refreshToken, logoutAndRedirect } = useAuth();
 
     const schema = ApplicantEntity.yupSchemaForImportApplicants();
 
@@ -175,11 +175,10 @@ const ImportApplicants = () => {
                 try {
                     if (isJwtExpired(user.jwt)) {
                         if (user.jwtRefresh) {
-                            // if (isJwtExpired(user.jwtRefresh)) {
-                            //     console.log("loginGuard:: jwt refresh expired", router.asPath)
-                            //     return !(await logoutAndRedirect());
-                            // }
-
+                            if (isJwtExpired(user.jwtRefresh)) {
+                                // console.log("loginGuard:: jwt refresh expired", router.asPath)
+                                return !(await logoutAndRedirect());
+                            } 
                             await refreshToken();
                             // return false;
                             // } else {
@@ -188,7 +187,6 @@ const ImportApplicants = () => {
                         // } else {
                         // return true;
                     }
-
                     await applicantApi.create(dto);
                 } catch (e) {
                     console.log("error saving applicant", i, e);
