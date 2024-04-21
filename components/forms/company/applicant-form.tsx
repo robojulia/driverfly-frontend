@@ -1166,14 +1166,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													/>
 													<BaseInput
 														className="col-md-6 mt-2"
-														name={`employers[${i}].email`}
-														label="CURRENT_COMPANY_EMAIL"
-														required
-														placeholder="email"
-														formik={form}
-													/>
-													<BaseInput
-														className="col-md-6 mt-2"
 														required
 														name={`employers[${i}].address`}
 														placeholder="ADDRESS_LINE_1"
