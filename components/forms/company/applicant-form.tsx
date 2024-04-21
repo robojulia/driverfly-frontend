@@ -342,7 +342,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 						<Row className="mb-2">
 							<Col md="4" className="px-2">
 								<BaseSelect
-									// className="col-12 my-2"
+									className="col-12 my-2"
 									readOnly={
 										Boolean(isSuperAdmin) ||
 										Boolean(isCompanyAdmin) ||
@@ -770,6 +770,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									DriverEndorsement.OTHER
 								) && (
 										<BaseInput
+											readOnly={Boolean(entity?.is_hired)}
 											className="col-12"
 											label="OTHER_ENDORSEMENTS"
 											required
@@ -789,7 +790,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									enumType={EducationLevel}
 								/>
 								<BaseCheckList
-									readOnly={Boolean(entity?.is_hired)}
+									disabled={Boolean(entity?.is_hired)}
 									className="col-12 p-1 "
 									label="License_Restrictions"
 									name="license_restrictions"
@@ -802,6 +803,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									LicenseRestrictions.OTHER
 								) && (
 										<BaseInput
+											readOnly={Boolean(entity?.is_hired)}
 											className="col-12"
 											label="OTHER_LICENSE_RESTRICTIONS"
 											required
@@ -1264,7 +1266,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 						<Row>
 							<Col>
 								<BaseCheck
-									readOnly={Boolean(entity?.is_hired)}
+									disabled={Boolean(entity?.is_hired)}
 									className="my-3 col float-left p-0"
 									name={`already_applied_to_company`}
 									label="APPLIED_HERE_BEFORE"
@@ -1289,7 +1291,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<Row>
 									<Col>
 										<BaseCheck
-											readOnly={Boolean(entity?.is_hired)}
+											disabled={Boolean(entity?.is_hired)}
 											className="my-3 col float-left p-0"
 											name="already_worked_to_company"
 											label="WORKED_HERE_BEFORE"

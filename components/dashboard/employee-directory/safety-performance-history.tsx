@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { DocumentableType } from "../../../enums/documents/documentable-type.enum";
-import { EmployeeDocumentType } from "../../../enums/employee/employee-document-types.enum";
+import { EmployeeDqf } from "../../../enums/employee/employee-dqf.enum";
 import { useTranslation } from "../../../hooks/use-translation";
 import { EmployeeEmployerDocumentDto } from "../../../models/employee/employee-employer-document-dto";
 import { EmployeeEmployerEntity } from "../../../models/employee/employee-employer.entity";
@@ -72,12 +72,12 @@ export default function SafetyPerformanceHistory({
 
     /**
      * It deletes a document from the employee's profile.
-     * @param {EmployeeDocumentType | string} docType - The type of document you want to
+     * @param {EmployeeDqf | string} docType - The type of document you want to
      * delete.
      */
     const handleDeleteDocument = async (
         employer: EmployeeEmployerEntity,
-        docType: EmployeeDocumentType | string
+        docType: EmployeeDqf | string
     ): Promise<void> => {
         setIsLoading({ action: "DELETE" })
         await employeeApi.employer.documents.delete(employee?.id, employer?.id, docType)
@@ -95,10 +95,10 @@ export default function SafetyPerformanceHistory({
     /**
      * It takes a type and an optional documentId, and sets the form's document field to an object with the
      * type and id
-     * @param {EmployeeDocumentType} type - EmployeeDocumentType - this is the type of document that is being uploaded.
+     * @param {EmployeeDqf} type - EmployeeDqf - this is the type of document that is being uploaded.
      * @param {number} [documentId] - The id of the document to be updated.
      */
-    const handleUpdateDocument = async (type: EmployeeDocumentType, documentId?: number, employer?: EmployeeEmployerEntity): Promise<void> => {
+    const handleUpdateDocument = async (type: EmployeeDqf, documentId?: number, employer?: EmployeeEmployerEntity): Promise<void> => {
         form?.setFieldValue("employer", employer)
         form?.setFieldValue("document", { type, id: documentId ?? null })
     }
@@ -174,7 +174,7 @@ export default function SafetyPerformanceHistory({
                         && <ViewDocumentHistory
                             document={document}
                             type={type}
-                            typePrefix="EmployeeDocumentType"
+                            typePrefix="EmployeeDqf"
                             documentable_id={employee.id}
                             documentable_type={DocumentableType.EMPLOYEE_EMPLOYERS}
                         />
@@ -215,14 +215,14 @@ export default function SafetyPerformanceHistory({
                             name: "COMPANY_NAME",
                             selector: emp => emp.name,
                             hidable: false,
-                            width: '50%',
+                            width: '40%',
                         },
                         {
-                            width: '50%',
+                            width: '55%',
                             cell: emp => {
-                                const doc = emp.documents?.find(v => v.type == EmployeeDocumentType.SAFETY_PERFORMANCE_HISTORY)
+                                const doc = emp.documents?.find(v => v.type == EmployeeDqf.SAFETY_PERFORMANCE_HISTORY)
                                 return (<>
-                                    <ButtonList employer={emp} type={EmployeeDocumentType.SAFETY_PERFORMANCE_HISTORY} document={doc} />
+                                    <ButtonList employer={emp} type={EmployeeDqf.SAFETY_PERFORMANCE_HISTORY} document={doc} />
                                     {(form?.values?.document?.type)
                                         && <form className="mt-2 mr-2" onSubmit={form?.handleSubmit} >
                                             <FileInput

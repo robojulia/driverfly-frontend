@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from "axios";
 import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
-import { ApplicantDqf } from "../../enums/applicants/applicant-dqf-types.enum";
 import { ApplicantFormStatus } from "../../enums/applicants/applicant-form-status.enum";
+import { ApplicantOnBoardingChecklist } from "../../enums/applicants/applicant-onboarding-checklist.enum";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
 import {
   ApplicantEmployerEntity,
@@ -191,7 +191,7 @@ export default class ApplicantApi extends BaseApi {
     },
     delete: async (
       applicantId: number,
-      type: ApplicantDocumentType | ApplicantDqf | string
+      type: ApplicantDocumentType | ApplicantOnBoardingChecklist | string
     ): Promise<DocumentEntity> => {
       const { data } = await this.delete(
         `${this.documents.baseUrl(applicantId)}/${type}`
@@ -325,7 +325,7 @@ export default class ApplicantApi extends BaseApi {
       delete: async (
         applicantId: number,
         employerId: number,
-        type: ApplicantDocumentType | ApplicantDqf | string
+        type: ApplicantDocumentType | ApplicantOnBoardingChecklist | string
       ): Promise<void> => {
         const { data } = await this.delete(
           `${this.employer.documents.baseUrl(applicantId, employerId)}/${type}`

@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import { ClockHistory, Eye } from "react-bootstrap-icons";
-import { ViewDocumentHistoryProps } from "../../types/applicant/view-document-history-props.type";
-import ViewModal from "../view-details/view-modal";
+import { useTranslation } from "../../hooks/use-translation";
 import { DocumentHistoryEntity } from "../../models/documents/document-history.entity";
 import DocumentApi from "../../pages/api/document";
-import ViewDataTable from "../view-details/view-data-table";
+import { ViewDocumentHistoryProps } from "../../types/applicant/view-document-history-props.type";
 import ShowFormattedDate from "../jobs/show-formatted-date";
-import { useTranslation } from "../../hooks/use-translation";
+import ViewDataTable from "../view-details/view-data-table";
+import ViewModal from "../view-details/view-modal";
 import ViewPdf from "../view-details/view-pdf";
+import { handleDownloadDocument, handleViewDocument } from "../../utils/documents/button-actions";
+import { DownloadDocumentButton, ViewDocumentButton } from "./buttons";
 
 
 export default function ViewDocumentHistory({
@@ -85,14 +87,18 @@ export default function ViewDocumentHistory({
                             hidable: false
                         },
                         {
-                            cell: doc => <Button
-                                onClick={() => {
-                                    setPdf({
-                                        name: `(${doc.name})`,
-                                        url: doc.path
-                                    })
-                                }}
-                                className="btn btn-success p-0 py-1 mr-2 w-50"><Eye /></Button>,
+                            cell: doc => <>
+                                <ViewDocumentButton
+                                    className="btn btn-success p-0 py-1 mr-2 w-50"
+                                    document={document}
+                                    onClick={() => handleViewDocument(doc.id, setPdf)}
+                                />
+                                <DownloadDocumentButton
+                                    className="btn theme-primary2-btn p-0 py-1 mr-2 w-50"
+                                    document={document}
+                                    onClick={() => handleDownloadDocument(doc.id)}
+                                />
+                            </>,
                             hidable: false
                         },
                     ]}
