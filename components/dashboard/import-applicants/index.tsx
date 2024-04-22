@@ -175,67 +175,76 @@ const ImportApplicants = () => {
                 }
                 values.items[i] = dto;
 
-                try {
-                    console.log("isJwtExpired(user.jwt)", isJwtExpired(user.jwt));
+                // try {
+                //     // console.log("isJwtExpired(user.jwt)", isJwtExpired(user.jwt));
 
-                    if (isJwtExpired(user.jwt)) {
-                        if (user.jwtRefresh) {
-                            console.log("isJwtExpired(user.jwtRefresh)", isJwtExpired(user.jwtRefresh));
-                            if (isJwtExpired(user.jwtRefresh)) {
-                                // console.log("loginGuard:: jwt refresh expired", router.asPath)
-                                return !(await logoutAndRedirect());
-                            }
-                            user = await refreshToken();
-                            // return false;
-                            // } else {
-                            //     return !(await logoutAndRedirect());
-                        }
-                        // } else {
-                        // return true;
-                    }
-                    await applicantApi.create(dto);
-                } catch (e) {
-                    console.log("error saving applicant", i, e);
-                    form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
-                    // toast.error(t("unable_to_save_information"));
-                    toast.error(t("UNABLE_TO_SAVE_INFORMATION_FOR_{row}", { row: i + 1 }));
-                    return;
-                }
+                //     if (isJwtExpired(user.jwt)) {
+                //         if (user.jwtRefresh) {
+                //             console.log("isJwtExpired(user.jwtRefresh)", isJwtExpired(user.jwtRefresh));
+                //             if (isJwtExpired(user.jwtRefresh)) {
+                //                 // console.log("loginGuard:: jwt refresh expired", router.asPath)
+                //                 return !(await logoutAndRedirect());
+                //             }
+                //             user = await refreshToken();
+                //             // return false;
+                //             // } else {
+                //             //     return !(await logoutAndRedirect());
+                //         }
+                //         // } else {
+                //         // return true;
+                //     }
+                //     await applicantApi.create(dto);
+                // } catch (e) {
+                //     console.log("error saving applicant", i, e);
+                //     form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
+                //     // toast.error(t("unable_to_save_information"));
+                //     toast.error(t("UNABLE_TO_SAVE_INFORMATION_FOR_{row}", { row: i + 1 }));
+                //     return;
+                // }
 
-                let progress = Math.floor(((i + 1) * 100) / values.items?.length);
+                // let progress = Math.floor(((i + 1) * 100) / values.items?.length);
 
-                if (progress != lastProgress) {
-                    setProgress(progress);
-                    lastProgress = progress;
-                }
+                // if (progress != lastProgress) {
+                //     setProgress(progress);
+                //     lastProgress = progress;
+                // }
             }
 
-            // const response = await applicantApi.createBulk(values.items, {
-            //     onUploadProgress: (progressEvent: AxiosProgressEvent) =>
-            //         setProgress(
-            //             Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            //         ),
-            //     onDownloadProgress: (progressEvent: AxiosProgressEvent) =>
-            //         setProgress(
-            //             Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            //         ),
-            // });
-            // console.log("response", response);
+            if (isJwtExpired(user.jwt)) {
+                if (user.jwtRefresh) {
+                    if (isJwtExpired(user.jwtRefresh)) {
+                        return !(await logoutAndRedirect());
+                    }
+                    user = await refreshToken();
+                }
+            }
+            const response = await applicantApi.createBulk(values.items, {
+                timeout: 0,
+                onUploadProgress: (progressEvent: AxiosProgressEvent) =>
+                    setProgress(
+                        Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                    ),
+                onDownloadProgress: (progressEvent: AxiosProgressEvent) =>
+                    setProgress(
+                        Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                    ),
+            });
+            console.log("response", response);
 
-            // response?.forEach(({ data, error }, i) => {
-            //     if (!!error) {
-            //         // form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
-            //         form.setFieldError(`items.${i}.id`, t(error));
-            //     } else {
-            //         console.log("saved applicant", i, data);
-            //     }
-            // })
+            response?.forEach(({ data, error }, i) => {
+                if (!!error) {
+                    // form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
+                    form.setFieldError(`items.${i}.id`, t(error));
+                } else {
+                    console.log("saved applicant", i, data);
+                }
+            })
 
-            // if (!response?.some(({ error }) => !!error)) {
-            toast.success(t("successfully_saved_information"));
+            if (!response?.some(({ error }) => !!error)) {
+                toast.success(t("successfully_saved_information"));
 
-            setTimeout(onClearClick, 2000);
-            // }
+                setTimeout(onClearClick, 2000);
+            }
         },
     });
 
