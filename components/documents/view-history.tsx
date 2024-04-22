@@ -44,11 +44,26 @@ export default function ViewDocumentHistory({
         setDocumentHistory(data)
     }
 
-    const handleDownloadDocument = async (path: string): Promise<void> => {
+    const handleViewDocument = async (id: number, name?: string): Promise<void> => {
+        const api = new DocumentApi();
 
+        const document: DocumentHistoryEntity = await api.getSignedUrlForHistory(id);
+
+        if (document) {
+            setPdf({
+                name: name ?? document.name,
+                url: document.path
+            });
+        }
+    }
+
+    const handleDownloadDocument = async (id: number): Promise<void> => {
+
+        const api = new DocumentApi();
+        const doc: DocumentHistoryEntity = await api.getSignedUrlForHistory(id);
 
         // Make a request to get the file data
-        const response = await fetch(path);
+        const response = await fetch(doc.path);
         const fileBlob = await response.blob();
 
         // Create a temporary link element
@@ -107,22 +122,17 @@ export default function ViewDocumentHistory({
                             hidable: false
                         },
                         {
-                            cell: doc => <>
+                            cell: document => <>
                                 <Button
-                                    onClick={() => {
-                                        setPdf({
-                                            name: `(${doc.name})`,
-                                            url: doc.path
-                                        })
-                                    }}
+                                    onClick={() => handleViewDocument(document.id)}
                                     className="btn btn-success p-0 py-1 mr-2 w-50"><Eye /></Button>
-                                <button
+                                <Button
                                     type="button"
-                                    onClick={() => handleDownloadDocument(doc.path)}
+                                    onClick={() => handleDownloadDocument(document.id)}
                                     className={"btn theme-primary2-btn p-0 pt-1 mr-2"}
                                 >
                                     <CloudArrowDown />
-                                </button>
+                                </Button>
                             </>,
                             hidable: false
                         },
