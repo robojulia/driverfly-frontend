@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "react-bootstrap";
-import { ClockHistory, Eye } from "react-bootstrap-icons";
+import { ClockHistory, CloudArrowDown, Eye } from "react-bootstrap-icons";
 import { useTranslation } from "../../hooks/use-translation";
 import { DocumentHistoryEntity } from "../../models/documents/document-history.entity";
 import DocumentApi from "../../pages/api/document";
@@ -9,13 +9,11 @@ import ShowFormattedDate from "../jobs/show-formatted-date";
 import ViewDataTable from "../view-details/view-data-table";
 import ViewModal from "../view-details/view-modal";
 import ViewPdf from "../view-details/view-pdf";
-import { handleDownloadDocument, handleViewDocument } from "../../utils/documents/button-actions";
-import { DownloadDocumentButton, ViewDocumentButton } from "./buttons";
 
 
 export default function ViewDocumentHistory({
     buttonClass,
-    document,
+    document: doc,
     type,
     documentable_type,
     documentable_id,
@@ -39,11 +37,33 @@ export default function ViewDocumentHistory({
         const documentApi = new DocumentApi()
         const data = await documentApi.getDocumentHistory({
             type: type,
-            documentable_type: document?.documentable_type as string ?? documentable_type,
-            documentable_id: document?.documentable_id ?? documentable_id,
+            documentable_type: doc?.documentable_type as string ?? documentable_type,
+            documentable_id: doc?.documentable_id ?? documentable_id,
         })
         if (!data?.length) alert(t('NO_RECORDS_FOUND'))
         setDocumentHistory(data)
+    }
+
+    const handleDownloadDocument = async (path: string): Promise<void> => {
+
+
+        // Make a request to get the file data
+        const response = await fetch(path);
+        const fileBlob = await response.blob();
+
+        // Create a temporary link element
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(fileBlob);
+        link.download = doc.name;
+
+        document.body.appendChild(link);
+
+        // Simulate a click on the link to trigger the download
+        link.click();
+
+        // Clean up the temporary link
+        document.body.removeChild(link);
+        link.remove();
     }
 
     return (
@@ -88,16 +108,21 @@ export default function ViewDocumentHistory({
                         },
                         {
                             cell: doc => <>
-                                <ViewDocumentButton
-                                    className="btn btn-success p-0 py-1 mr-2 w-50"
-                                    document={document}
-                                    onClick={() => handleViewDocument(doc.id, setPdf)}
-                                />
-                                <DownloadDocumentButton
-                                    className="btn theme-primary2-btn p-0 py-1 mr-2 w-50"
-                                    document={document}
-                                    onClick={() => handleDownloadDocument(doc.id)}
-                                />
+                                <Button
+                                    onClick={() => {
+                                        setPdf({
+                                            name: `(${doc.name})`,
+                                            url: doc.path
+                                        })
+                                    }}
+                                    className="btn btn-success p-0 py-1 mr-2 w-50"><Eye /></Button>
+                                <button
+                                    type="button"
+                                    onClick={() => handleDownloadDocument(doc.path)}
+                                    className={"btn theme-primary2-btn p-0 pt-1 mr-2"}
+                                >
+                                    <CloudArrowDown />
+                                </button>
                             </>,
                             hidable: false
                         },
