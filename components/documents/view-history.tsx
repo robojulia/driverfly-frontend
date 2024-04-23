@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "react-bootstrap";
-import { ClockHistory, CloudArrowDown, Eye } from "react-bootstrap-icons";
+import { ClockHistory, CloudArrowDown, Eye, Trash } from "react-bootstrap-icons";
 import { useTranslation } from "../../hooks/use-translation";
 import { DocumentHistoryEntity } from "../../models/documents/document-history.entity";
 import DocumentApi from "../../pages/api/document";
@@ -9,6 +9,7 @@ import ShowFormattedDate from "../jobs/show-formatted-date";
 import ViewDataTable from "../view-details/view-data-table";
 import ViewModal from "../view-details/view-modal";
 import ViewPdf from "../view-details/view-pdf";
+import { toast } from "react-toastify";
 
 
 export default function ViewDocumentHistory({
@@ -21,6 +22,7 @@ export default function ViewDocumentHistory({
 }: ViewDocumentHistoryProps) {
 
     const { t } = useTranslation();
+    const documentApi = new DocumentApi()
 
     const [pdf, setPdf] = useState({});
     const [documentHistory, setDocumentHistory] = useState<DocumentHistoryEntity[]>([])
@@ -34,7 +36,6 @@ export default function ViewDocumentHistory({
      * It fetches the document history of an document and sets the state of the document history
      */
     const viewHistory = async () => {
-        const documentApi = new DocumentApi()
         const data = await documentApi.getDocumentHistory({
             type: type,
             documentable_type: doc?.documentable_type as string ?? documentable_type,
@@ -45,9 +46,7 @@ export default function ViewDocumentHistory({
     }
 
     const handleViewDocument = async (id: number, name?: string): Promise<void> => {
-        const api = new DocumentApi();
-
-        const document: DocumentHistoryEntity = await api.getSignedUrlForHistory(id);
+        const document: DocumentHistoryEntity = await documentApi.getSignedUrlForHistory(id);
 
         if (document) {
             setPdf({
@@ -58,9 +57,7 @@ export default function ViewDocumentHistory({
     }
 
     const handleDownloadDocument = async (id: number): Promise<void> => {
-
-        const api = new DocumentApi();
-        const doc: DocumentHistoryEntity = await api.getSignedUrlForHistory(id);
+        const doc: DocumentHistoryEntity = await documentApi.getSignedUrlForHistory(id);
 
         // Make a request to get the file data
         const response = await fetch(doc.path);
@@ -79,6 +76,12 @@ export default function ViewDocumentHistory({
         // Clean up the temporary link
         document.body.removeChild(link);
         link.remove();
+    }
+
+    const handleDeleteDocument = async (documentId: number): Promise<void> => {
+        await documentApi.deleteHistoryDoccument(documentId);
+        setDocumentHistory(documentHistory.filter(({ id }) => (id != documentId)))
+        toast.success(t('DOCUMENT_DELETED_SUCCESS_MESSAGE'))
     }
 
     return (
@@ -124,15 +127,23 @@ export default function ViewDocumentHistory({
                         {
                             cell: document => <>
                                 <Button
+                                    type="button"
                                     onClick={() => handleViewDocument(document.id)}
                                     className="btn btn-success p-0 py-1 mr-2 w-50"><Eye /></Button>
                                 <Button
                                     type="button"
                                     onClick={() => handleDownloadDocument(document.id)}
-                                    className={"btn theme-primary2-btn p-0 pt-1 mr-2"}
+                                    className={"btn theme-primary2-btn p-0 py-1 mr-2 w-50"}
                                 >
                                     <CloudArrowDown />
                                 </Button>
+                                <button
+                                    type="button"
+                                    onClick={() => handleDeleteDocument(document.id)}
+                                    className={"btn btn-danger p-0 py-1 mr-2 w-50"}
+                                >
+                                    <Trash />
+                                </button>
                             </>,
                             hidable: false
                         },
