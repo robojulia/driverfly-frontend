@@ -977,9 +977,11 @@ button:active {
 .input-group>.form-select:focus {
   border-color: #4ca7a8 !important;
 }
-.radio-btns{
+
+.radio-btns {
   margin: 5px;
 }
+
 input[type='radio']:checked:after {
   width: 16px;
   height: 16px;
@@ -993,22 +995,26 @@ input[type='radio']:checked:after {
   visibility: visible;
   border: 2px solid white;
 }
-.horizontalRow{
+
+.horizontalRow {
   border-bottom: 2px solid gray;
   opacity: 0.7;
   width: 80%;
   margin: 2%;
   margin-left: 8%;
 }
-.popover-class{
+
+.popover-class {
   margin-right: 8px;
   width: 100% !important;
 }
-.link-background{
+
+.link-background {
   background-color: #00706c8a;
   color: white !important;
 }
-.newletter-btn{
+
+.newletter-btn {
   height: 38px;
   display: flex;
   justify-items: center;
@@ -1017,12 +1023,18 @@ input[type='radio']:checked:after {
   z-index: 999;
   border-radius: 0px 5px 5px 0px;
 }
+
 input[type="number"] {
-  -moz-appearance: textfield; /* Firefox */
+  -moz-appearance: textfield;
+  /* Firefox */
 }
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.bg-primary {
+  background-color: #009f94 !important;
 }

@@ -3,7 +3,7 @@ import { HireApplicantDto } from "../../models/applicant/hire-applicant.dto";
 import { DocumentEntity } from "../../models/documents/document.entity";
 import { EmployeeEntity } from "../../models/employee/employee.entity";
 import { SearchEmployeeDto } from '../../models/employee/search-employee.dto';
-import { EmployeeDocumentType } from './../../enums/employee/employee-document-types.enum';
+import { EmployeeDqf } from '../../enums/employee/employee-dqf.enum';
 import { EmployeeEmployerEntity } from './../../models/employee/employee-employer.entity';
 import BaseApi from "./_baseApi";
 
@@ -82,7 +82,7 @@ export default class EmployeeApi extends BaseApi {
 		},
 		delete: async (
 			employeeId: number,
-			type: EmployeeDocumentType | string
+			type: EmployeeDqf | string
 		): Promise<DocumentEntity> => {
 			const { data } = await this.delete(`${this.documents.baseUrl(employeeId)}/${type}`);
 
@@ -125,7 +125,7 @@ export default class EmployeeApi extends BaseApi {
 			delete: async (
 				employeeId: number,
 				employerId: number,
-				type: EmployeeDocumentType | string
+				type: EmployeeDqf | string
 			): Promise<void> => {
 				const { data } = await this.delete(
 					`${this.employer.documents.baseUrl(employeeId, employerId)}/${type}`

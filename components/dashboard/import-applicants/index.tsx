@@ -38,6 +38,7 @@ import { matchEnum } from "../../../utils/enums.utils";
 import { FormikInterface } from "../../../utils/formik";
 import Switch from "../../controls/switch";
 import OverlyPopover from "../../popover/overly-popover";
+import { isJwtExpired, useAuth } from "../../../hooks/use-auth";
 
 function unique<T>(value: T, index: number, self: T[]) {
     return (Boolean(value) && self.indexOf(value) == index)
@@ -46,6 +47,7 @@ const ImportApplicants = () => {
     const style: any = _style;
 
     const { t } = useTranslation();
+    let { user, refreshToken, logoutAndRedirect } = useAuth();
 
     const schema = ApplicantEntity.yupSchemaForImportApplicants();
 
@@ -53,6 +55,9 @@ const ImportApplicants = () => {
 
     const [warnings, setWarnings] = useState({});
     const [csvErrors, setCsvErrors] = useState([]);
+    const [progress, setProgress] = useState(0);
+    const [fileName, setFileName] = useState("");
+    const [onlyErrors, setOnlyErrors] = useState(false);
 
     const applicantApi = new ApplicantApi();
     /**
@@ -80,7 +85,8 @@ const ImportApplicants = () => {
         }),
         validate: async (values) => {
             // alert(3)
-            const companyApplicants = await applicantApi.list();
+            // const companyApplicants = await applicantApi.list();
+            const companyApplicants = [];
             const errors = {};
 
             let lastProgress = 0;
@@ -100,39 +106,42 @@ const ImportApplicants = () => {
                 if (applicant.email) {
                     const rowError: { email?: string; phone?: string } = {};
                     // const matches = await api.list({ email: applicant.email });
-                    const matches = companyApplicants.find(({ email }) => email == applicant.email);
+                    const matches = companyApplicants?.find(({ email }) => email == applicant.email);
 
-                    // if (matches.some((v) => v.company?.id != null))
-                    if (matches?.company?.id != null)
-                        rowError.email = t(
-                            "{name}_ALREADY_EXISTS",
-                            { name: "EMAIL" },
-                            { translateProps: true }
-                        );
-                    // else if (matches.some((v) => v.company == null))
-                    else if (matches?.company == null)
-                        rowError.email = t(
-                            "{name}_ALREADY_EXISTS_NO_MERGE",
-                            { name: "EMAIL" },
-                            { translateProps: true }
-                        );
-
-                    if (applicant.phone) {
+                    if (!!matches) {
                         // if (matches.some((v) => v.company?.id != null))
                         if (matches?.company?.id != null)
-                            rowError.phone = t(
+                            rowError.email = t(
                                 "{name}_ALREADY_EXISTS",
-                                { name: "PHONE" },
+                                { name: "EMAIL" },
                                 { translateProps: true }
                             );
                         // else if (matches.some((v) => v.company == null))
                         else if (matches?.company == null)
-                            rowError.phone = t(
+                            rowError.email = t(
                                 "{name}_ALREADY_EXISTS_NO_MERGE",
-                                { name: "PHONE" },
+                                { name: "EMAIL" },
                                 { translateProps: true }
                             );
+
+                        if (applicant.phone) {
+                            // if (matches.some((v) => v.company?.id != null))
+                            if (matches?.company?.id != null)
+                                rowError.phone = t(
+                                    "{name}_ALREADY_EXISTS",
+                                    { name: "PHONE" },
+                                    { translateProps: true }
+                                );
+                            // else if (matches.some((v) => v.company == null))
+                            else if (matches?.company == null)
+                                rowError.phone = t(
+                                    "{name}_ALREADY_EXISTS_NO_MERGE",
+                                    { name: "PHONE" },
+                                    { translateProps: true }
+                                );
+                        }
                     }
+
                     if (rowError) {
                         errors[i] = rowError;
                     }
@@ -167,13 +176,25 @@ const ImportApplicants = () => {
                 values.items[i] = dto;
 
                 try {
+                    // console.log("isJwtExpired(user.jwt)", isJwtExpired(user.jwt));
+
+                    if (isJwtExpired(user.jwt)) {
+                        if (user.jwtRefresh) {
+                            // console.log("isJwtExpired(user.jwtRefresh)", isJwtExpired(user.jwtRefresh));
+                            if (isJwtExpired(user.jwtRefresh)) {
+                                // console.log("loginGuard:: jwt refresh expired", router.asPath)
+                                return !(await logoutAndRedirect());
+                            }
+                            user = await refreshToken();
+                        }
+                    }
                     await applicantApi.create(dto);
                 } catch (e) {
                     console.log("error saving applicant", i, e);
                     form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
                     // toast.error(t("unable_to_save_information"));
                     toast.error(t("UNABLE_TO_SAVE_INFORMATION_FOR_{row}", { row: i + 1 }));
-                    // return;
+                    return;
                 }
 
                 let progress = Math.floor(((i + 1) * 100) / values.items?.length);
@@ -184,7 +205,16 @@ const ImportApplicants = () => {
                 }
             }
 
+            // if (isJwtExpired(user.jwt)) {
+            //     if (user.jwtRefresh) {
+            //         if (isJwtExpired(user.jwtRefresh)) {
+            //             return !(await logoutAndRedirect());
+            //         }
+            //         user = await refreshToken();
+            //     }
+            // }
             // const response = await applicantApi.createBulk(values.items, {
+            //     timeout: 0,
             //     onUploadProgress: (progressEvent: AxiosProgressEvent) =>
             //         setProgress(
             //             Math.round((progressEvent.loaded * 100) / progressEvent.total)
@@ -205,15 +235,13 @@ const ImportApplicants = () => {
             //     }
             // })
 
+            // if (!response?.some(({ error }) => !!error)) {
             toast.success(t("successfully_saved_information"));
 
             setTimeout(onClearClick, 2000);
+            // }
         },
     });
-
-    const [progress, setProgress] = useState(0);
-
-    const [fileName, setFileName] = useState("");
 
     /**
      *
@@ -250,6 +278,9 @@ const ImportApplicants = () => {
 
         const contents = data
             ?.map((row, i, self) => {
+                console.log(Math.floor(((i + 1) * 100) / data?.length));
+
+                setProgress(Math.floor(((i + 1) * 100) / data?.length))
                 const entity = new ApplicantEntity();
                 if (!Object.values(row)?.some(Boolean)) {
                     errors = errors.filter((v) => v.row != i);
@@ -442,7 +473,6 @@ const ImportApplicants = () => {
                 if (!entity.infractions) entity.infractions_details = "";
                 if (!entity.moving_violations) entity.moving_violations_details = "";
 
-                setProgress(Math.floor(((i + 1) * 100) / self?.length))
                 return entity;
             })
             ?.filter(Boolean);
@@ -472,8 +502,6 @@ const ImportApplicants = () => {
         setProgress(0);
         setCsvErrors([]);
     };
-
-    const [onlyErrors, setOnlyErrors] = useState(false);
 
     /**
      *
@@ -584,7 +612,7 @@ const ImportApplicants = () => {
             </Row>
             {progress > 0 && progress < 100 && (
                 <Row>
-                    <Col>
+                    <Col className="mx-2">
                         <ProgressBar
                             variant="primary"
                             min={0}
@@ -753,7 +781,7 @@ const ImportApplicants = () => {
                                 const meta = form.getFieldMeta(`items.${i}`);
 
                                 const findIcon = () => {
-                                    console.log(`items.${i} meta`, { meta }, { warnings: warnings[i] });
+                                    // c(`items.${i} meta`, { meta }, { warnings: warnings[i] });
 
                                     if (!!meta.error) return <XCircle color="red" />;
 

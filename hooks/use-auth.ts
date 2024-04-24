@@ -103,8 +103,9 @@ export function jwtExpiryTimeout(jwt: JwtRefreshTokenPayload) {
     const refreshBufferWindow = 10 * 1000; // 10 seconds
 
     const msToExpiry = Math.max(0, (expMsSinceEpoc - nowMsSinceEpoc) - refreshBufferWindow);
+    console.log("jwtExpiryTimeout",{nowMsSinceEpoc, expMsSinceEpoc, refreshBufferWindow, msToExpiry});
 
-    // console.log("EXPIRE CHECK", { jwt, now: new Date(nowMsSinceEpoc), exp: new Date(expMsSinceEpoc), msToExpiry })
+    console.log("EXPIRE CHECK", { jwt, now: new Date(nowMsSinceEpoc), exp: new Date(expMsSinceEpoc), msToExpiry })
 
     return msToExpiry;
 }
@@ -223,6 +224,7 @@ export function useAuth() {
             const api = new AuthApi();
             const newUser = await api.refreshToken(user.refreshToken);
             updateUser(newUser);
+            return newUser;
         } catch (e) {
             console.error("Unable to refresh jwt token", e);
             await logoutAndRedirect();
@@ -243,6 +245,7 @@ export function useAuth() {
         hasPermission,
         loginGuard,
         refreshToken,
+        logoutAndRedirect
     };
 
 }

@@ -523,6 +523,7 @@ li:hover ul {
     border-radius: 5px;
     margin-bottom: 30px;
 }
+
 /* .view_job_btnP{
     text-decoration: none !important;
 
@@ -1200,7 +1201,8 @@ input[type='range']::-webkit-slider-thumb {
     line-height: 28px;
     margin-bottom: 25px;
 }
-.who-we-img{
+
+.who-we-img {
     height: 700px !important;
     overflow: hidden;
     display: flex;
@@ -1209,7 +1211,7 @@ input[type='range']::-webkit-slider-thumb {
     /* justify-content: sp; */
 }
 
-.who-we-img img{
+.who-we-img img {
     object-fit: contain;
     height: 90%;
     margin: 0% 5%;
@@ -2394,15 +2396,18 @@ p {
     color: #fff;
     transition: all ease-in-out 0.3s;
 }
-.custom-trucker-review-btn:hover{
-    box-shadow:  8px 8px 15px #0d35463b;
+
+.custom-trucker-review-btn:hover {
+    box-shadow: 8px 8px 15px #0d35463b;
 }
-.apply_job_btn{
+
+.apply_job_btn {
     width: 120px;
     height: 45px;
     background: #1D4354 !important;
     color: #fff;
 }
+
 .social-profile-sec {
     padding: 15px;
     margin-bottom: 15px;
@@ -2716,3 +2721,7 @@ input::-webkit-inner-spin-button {
     appearance: textfield;
     -moz-appearance: textfield;
 } */
+
+.bg-primary {
+    background-color: #009f94 !important;
+}

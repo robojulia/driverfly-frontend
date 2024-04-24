@@ -9,7 +9,7 @@ import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
-import DQF from "../../../../../components/applicants/dqf";
+import OnboardingChecklist from "../../../../../components/applicants/onboarding-checklist";
 
 export default function EditApplicant({ id }) {
     const router = useRouter();
@@ -56,11 +56,11 @@ export default function EditApplicant({ id }) {
             {applicant?.id && (
                 <Row>
                     <Col>
-                        <DQF
+                        <OnboardingChecklist
+                            showHistory
                             title="ONBOARDING_CHECKLIST"
                             applicant={applicant}
                             canEdit={!Boolean(applicant?.is_hired)}
-                            showOnboarding={true}
                             showCompleted={true}
                             canEditSafetyPerformance={true}
                             showResendButton={true}

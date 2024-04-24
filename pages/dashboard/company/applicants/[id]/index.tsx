@@ -1,44 +1,41 @@
 import { toast } from "react-toastify";
 
-import { Button, ButtonGroup, Col, Form, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
+import { Button, Col, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
 import {
-	BookmarkCheck,
-	BookmarkDash,
 	Pencil,
 	PlusLg,
-	Trash,
+	Trash
 } from "react-bootstrap-icons";
 
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import { useTranslation } from "../../../../../hooks/use-translation";
-import { useEffectAsync } from "../../../../../utils/react";
-import { useAuth } from "../../../../../hooks/use-auth";
-import ViewTable from "../../../../../components/view-details/view-table";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import BaseTextArea from "../../../../../components/forms/base-text-area";
+import ViewCard from "../../../../../components/view-details/view-card";
 import ViewModal from "../../../../../components/view-details/view-modal";
 import ViewPdf from "../../../../../components/view-details/view-pdf";
-import ViewCard from "../../../../../components/view-details/view-card";
+import ViewTable from "../../../../../components/view-details/view-table";
+import { useAuth } from "../../../../../hooks/use-auth";
+import { useTranslation } from "../../../../../hooks/use-translation";
+import { useEffectAsync } from "../../../../../utils/react";
 
-import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import { ApplicantNoteEntity } from "../../../../../models/applicant/applicant-note.entity";
+import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 
-import ApplicantApi from "../../../../api/applicant";
-import DocumentApi from "../../../../api/document";
+import FlagApplicant from "../../../../../components/flag/flag-a-applicant";
 import ChildPageLayout from "../../../../../components/layouts/page/child-page-layout";
 import { ApplicantSuggestedJobEntity } from "../../../../../models/applicant/applicant-suggested-job.entity";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
-import FlagApplicant from "../../../../../components/flag/flag-a-applicant";
+import ApplicantApi from "../../../../api/applicant";
+import DocumentApi from "../../../../api/document";
 
+import ApplicantConsiderFor from "../../../../../components/applicants/applicant-consider-for";
+import ApplicantJobsApplied from "../../../../../components/applicants/applicant-jobs-applied";
+import ApplicantSafetyBackground from "../../../../../components/applicants/applicant-safety-background";
 import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
 import ApplicantWorkHistory from "../../../../../components/applicants/applicant-work-history";
-import ApplicantSafetyBackground from "../../../../../components/applicants/applicant-safety-background";
-import ApplicantJobsApplied from "../../../../../components/applicants/applicant-jobs-applied";
-import ApplicantConsiderFor from "../../../../../components/applicants/applicant-consider-for";
-import ViewApplicantDqf from "../../../../../components/applicants/view-applicant-dqf";
 import { ApplicantDocumentType } from "../../../../../enums/applicants/applicant-document-type.enum";
 
 export default function ViewApplicant({ id }) {
@@ -305,7 +302,7 @@ export default function ViewApplicant({ id }) {
 					</Col>
 					<Col lg={6}>
 						{/* < ViewApplicantDAC applicant={applicant} /> */}
-						<ViewApplicantDqf applicant={applicant} />
+						{/* <ViewApplicantDqf applicant={applicant} /> */}
 					</Col>
 
 				</Row>

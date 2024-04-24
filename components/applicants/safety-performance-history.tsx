@@ -1,11 +1,8 @@
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import {
-    Send
-} from "react-bootstrap-icons";
+import { Send } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
-import { ApplicantDqf } from "../../enums/applicants/applicant-dqf-types.enum";
 import { DocumentableType } from "../../enums/documents/documentable-type.enum";
 import { useTranslation } from "../../hooks/use-translation";
 import { ApplicantEmployerEntity } from "../../models/applicant";
@@ -33,6 +30,7 @@ import ViewDataTable from "../view-details/view-data-table";
 import ViewDetails from "../view-details/view-details";
 import ViewModal from "../view-details/view-modal";
 import ViewPdf from "../view-details/view-pdf";
+import { ApplicantOnBoardingChecklist } from "../../enums/applicants/applicant-onboarding-checklist.enum";
 
 export default function SafetyPerformanceHistory({
     buttonClass,
@@ -82,24 +80,27 @@ export default function SafetyPerformanceHistory({
         },
     });
 
-    useEffectAsync(
-        async () => {
-            if (!!applicant.id) {
-                const data = await applicantApi.employer.list(applicant.id);
-                setEmployers(data);
-            }
-        },
-        [applicant]
-    )
+    useEffectAsync(async () => {
+        if (!!applicant.id) {
+            const data = await applicantApi.employer.list(applicant.id);
+            setEmployers(data);
+        }
+    }, [applicant]);
+
+    useEffect(() => {
+        return () => {
+            setEmployers([])
+        }
+    }, []);
 
     /**
      * It deletes a document from the applicant's profile.
-     * @param {ApplicantDqf | string} docType - The type of document you want to
+     * @param {ApplicantOnBoardingChecklist | string} docType - The type of document you want to
      * delete.
      */
     const handleDeleteDocument = async (
         employer: ApplicantEmployerEntity,
-        docType: ApplicantDqf | string
+        docType: ApplicantOnBoardingChecklist | string
     ): Promise<void> => {
         setIsLoading({ action: "DELETE", id: employer?.id });
 
@@ -122,11 +123,11 @@ export default function SafetyPerformanceHistory({
     /**
      * It takes a type and an optional documentId, and sets the form's document field to an object with the
      * type and id
-     * @param {ApplicantDqf} type - ApplicantDqf - this is the type of document that is being uploaded.
+     * @param {ApplicantOnBoardingChecklist} type - ApplicantOnBoardingChecklist - this is the type of document that is being uploaded.
      * @param {number} [documentId] - The id of the document to be updated.
      */
     const handleUpdateDocument = async (
-        type: ApplicantDqf,
+        type: ApplicantOnBoardingChecklist,
         documentId?: number,
         employer?: ApplicantEmployerEntity
     ): Promise<void> => {
@@ -167,11 +168,12 @@ export default function SafetyPerformanceHistory({
                         document={document}
                         onClick={() => handleViewDocument(document.id, setPdf)}
                     />
-                    {Boolean(canEditSafetyPerformance) && (
+                    {!applicant?.is_hired && Boolean(canEditSafetyPerformance) && (
                         <OverlyPopover
                             str={
-                                Boolean(!employer.can_contact) ?
-                                    "REQUESTING_OR_UPLOADING_NOT_AUTHORIZED_TO_COMMUNICATE" : 'ADD_DOCUMENT'
+                                Boolean(!employer.can_contact)
+                                    ? "REQUESTING_OR_UPLOADING_NOT_AUTHORIZED_TO_COMMUNICATE"
+                                    : "ADD_DOCUMENT"
                             }
                             className="popover-class"
                         >
@@ -190,57 +192,62 @@ export default function SafetyPerformanceHistory({
                         document={document}
                         onClick={() => handleDownloadDocument(document.id)}
                     />
-                    {Boolean(canEditSafetyPerformance) && (
-                        <DeleteDocumentButton
-                            isLoading={
-                                isLoading?.action == "DELETE" && isLoading.id == document?.id
-                            }
-                            document={document}
-                            onClick={() => handleDeleteDocument(employer, type)}
-                        />
+                    {!applicant?.is_hired && (
+                        <>
+                            {Boolean(canEditSafetyPerformance) && (
+                                <DeleteDocumentButton
+                                    isLoading={
+                                        isLoading?.action == "DELETE" &&
+                                        isLoading.id == document?.id
+                                    }
+                                    document={document}
+                                    onClick={() => handleDeleteDocument(employer, type)}
+                                />
+                            )}
+                            {Boolean(showResendButton) &&
+                                Boolean(employer?.email) &&
+                                // Boolean(employer?.can_contact) ? (
+                                Boolean(employer?.is_subject_to_fmcsrs) && (
+                                    <OverlyPopover
+                                        str={
+                                            Boolean(employer.can_contact)
+                                                ? "RESEND_VOE"
+                                                : "REQUESTING_OR_UPLOADING_NOT_AUTHORIZED_TO_COMMUNICATE"
+                                        }
+                                        className="popover-class"
+                                    >
+                                        <Button
+                                            disabled={!Boolean(employer?.can_contact)}
+                                            className="mr-2 w-100 "
+                                            onClick={() =>
+                                                Boolean(employer?.can_contact) &&
+                                                resendVoeRequest(employer.id)
+                                            }
+                                        >
+                                            {Boolean(
+                                                isLoading?.action == "RESEND" &&
+                                                isLoading.id == employer?.id
+                                            ) ? (
+                                                <LoaderIcon isLoading />
+                                            ) : (
+                                                <>
+                                                    {t("RESEND")} <Send />
+                                                </>
+                                            )}
+                                        </Button>
+                                    </OverlyPopover>
+                                )}
+                        </>
                     )}
                     {Boolean(showHistory) && (
                         <ViewDocumentHistory
-                            typePrefix="ApplicantDqf"
+                            typePrefix="ApplicantOnBoardingChecklist"
                             document={document}
                             type={type}
                             documentable_id={applicant.id}
                             documentable_type={DocumentableType.APPLICANT_EMPLOYERS}
                         />
                     )}
-                    {Boolean(showResendButton) &&
-                        Boolean(employer?.email) &&
-                        // Boolean(employer?.can_contact) ? (
-                        Boolean(employer?.is_subject_to_fmcsrs) && (
-                            <OverlyPopover
-                                str={
-                                    Boolean(employer.can_contact)
-                                        ? "RESEND_VOE"
-                                        : "REQUESTING_OR_UPLOADING_NOT_AUTHORIZED_TO_COMMUNICATE"
-                                }
-                                className="popover-class"
-
-                            >
-                                <Button
-                                    disabled={!Boolean(employer?.can_contact)}
-                                    className="mr-2 w-100 "
-                                    onClick={() =>
-                                        Boolean(employer?.can_contact) &&
-                                        resendVoeRequest(employer.id)
-                                    }
-                                >
-                                    <>
-                                        {t("RESEND")} <Send />
-                                        <LoaderIcon
-                                            isLoading={Boolean(
-                                                isLoading?.action == "RESEND" &&
-                                                isLoading.id == employer?.id
-                                            )}
-                                        />
-                                    </>
-                                </Button>
-                            </OverlyPopover>
-                        )}
                 </div>
             )}
         </>
@@ -288,48 +295,56 @@ export default function SafetyPerformanceHistory({
                             width: "70%",
                             cell: (emp) => {
                                 const doc = emp.documents?.find(
-                                    (v) => v.type == ApplicantDqf.SAFETY_PERFORMANCE_HISTORY
+                                    (v) =>
+                                        v.type ==
+                                        ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY
                                 );
                                 return (
                                     <>
                                         <ButtonList
                                             employer={emp}
-                                            type={ApplicantDqf.SAFETY_PERFORMANCE_HISTORY}
+                                            type={
+                                                ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY
+                                            }
                                             document={doc}
                                         />
-                                        {form?.values?.employer?.id == emp.id && (
-                                            <form className="mt-2 mr-2" onSubmit={form?.handleSubmit}>
-                                                <FileInput
-                                                    name={`document`}
-                                                    accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
-                                                    formik={form}
-                                                    allowedSizeInByte={3145728}
-                                                />
-                                                <div className="mt-2 d-flex w-100 ">
-                                                    <Button
-                                                        disabled={
-                                                            form?.isSubmitting ||
-                                                            !form?.isValid ||
-                                                            form?.isValidating
-                                                        }
-                                                        className="mr-2 w-50 theme-primary-btn"
-                                                        type="submit"
-                                                    >
-                                                        {t(`SAVE`)}{" "}
-                                                        <LoaderIcon isLoading={form?.isSubmitting} />
-                                                    </Button>
-                                                    <Button
-                                                        type="button"
-                                                        className="w-50 bg-danger"
-                                                        onClick={() => {
-                                                            form?.resetForm();
-                                                        }}
-                                                    >
-                                                        {t(`CANCEL`)}
-                                                    </Button>
-                                                </div>
-                                            </form>
-                                        )}
+                                        {!applicant?.is_hired &&
+                                            form?.values?.employer?.id == emp.id && (
+                                                <form
+                                                    className="mt-2 mr-2"
+                                                    onSubmit={form?.handleSubmit}
+                                                >
+                                                    <FileInput
+                                                        name={`document`}
+                                                        accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
+                                                        formik={form}
+                                                        allowedSizeInByte={3145728}
+                                                    />
+                                                    <div className="mt-2 d-flex w-100 ">
+                                                        <Button
+                                                            disabled={
+                                                                form?.isSubmitting ||
+                                                                !form?.isValid ||
+                                                                form?.isValidating
+                                                            }
+                                                            className="mr-2 w-50 theme-primary-btn"
+                                                            type="submit"
+                                                        >
+                                                            {t(`SAVE`)}{" "}
+                                                            <LoaderIcon isLoading={form?.isSubmitting} />
+                                                        </Button>
+                                                        <Button
+                                                            type="button"
+                                                            className="w-50 bg-danger"
+                                                            onClick={() => {
+                                                                form?.resetForm();
+                                                            }}
+                                                        >
+                                                            {t(`CANCEL`)}
+                                                        </Button>
+                                                    </div>
+                                                </form>
+                                            )}
                                     </>
                                 );
                             },
@@ -339,8 +354,7 @@ export default function SafetyPerformanceHistory({
                     items={employers}
                     expandableRowsComponent={({ data }) => (
                         <>
-                            {console.log({ data })
-                            }
+                            {console.log({ data })}
                             <Row className="mt-2">
                                 <Col>
                                     <ViewDetails
@@ -356,7 +370,10 @@ export default function SafetyPerformanceHistory({
                                     <ViewDetails
                                         default={t("NOT_ANSWERED")}
                                         obj={{
-                                            VOE_SUBMITTED: data?.voe_submitted || Boolean(data?.documents?.length) ? t("YES") : t("NO"),
+                                            VOE_SUBMITTED:
+                                                data?.voe_submitted || Boolean(data?.documents?.length)
+                                                    ? t("YES")
+                                                    : t("NO"),
                                             AUTHORIZED_TO_COMMUNICATE: Boolean(data.can_contact)
                                                 ? t("YES")
                                                 : t("NO"),

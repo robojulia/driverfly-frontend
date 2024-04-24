@@ -11,6 +11,18 @@ export default class DocumentApi extends BaseApi {
         return data;
     }
 
+    async getSignedUrlForHistory(id: number): Promise<DocumentHistoryEntity> {
+        const { data } = await this.get(`${this.baseUrl}/${id}/history`);
+
+        return data;
+    }
+
+    async deleteHistoryDoccument(id: number): Promise<void> {
+        const { data } = await this.delete(`${this.baseUrl}/${id}/history`);
+
+        return data;
+    }
+
     async getCompanyPhoto(id: number): Promise<DocumentEntity> {
         const { data } = await this.get(`${this.baseUrl}/company/${id}/photo`);
 
