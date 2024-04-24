@@ -892,17 +892,9 @@
   "MY_APPLICATIONS": "My Applications",
   "NO_RECORDS_FOUND": "No Record Found",
   "ApplicantDac": {
-    "PERIOD_OF_SERVICE": "period of service",
-    "EQUIPMENT_OPERATED": "equipment operated",
-    "LOADS_HAULED": "loads hauled",
-    "DRIVER_STATUS_AND_EXPERIENCE": "driving status and experience",
-    "REASON_FOR_LEAVING": "reason for leaving",
-    "REHIRE_ELIGIBILITY": "rehire eligibility",
-    "NUMBER_OF_ACCIDENTS": "number of accidents",
-    "ACCIDENT_DETAILS": "accident details",
-    "DRUG_AND_ALCOHOL_HISTORIES": "drug and alcohol histories",
-    "PRE_EMPLOYMENT_TEST_RESULTS": "pre employment test results",
-    "TRUCK_DRIVING_SCHOOL_PERFORMANCE_RECORDS": "truck driving school performance records"
+    "INSURANCE_PASS": "Insurance Pass",
+    "ORIENTATION_COMPLETE": "Orientation Complete",
+    "TRUCK_PROVIDED_OPTIONAL": "Truck Provided (Optional)"
   },
   "ApplicantStatus": {
     "APPLIED": "Applied",
@@ -2138,7 +2130,7 @@
     "DELETED": "Deleted"
   },
   "EmployeeDqf": {
-    "MOTOR_VEHICLE_RECORD_MVR": "Motor Vehicle Report (Annual)s",
+    "MOTOR_VEHICLE_RECORD_MVR": "Motor Vehicle Report (Annual)",
     "ANNUAL_MVR_REVIEW_NOTES_OPTIONAL": "Annual MVR Review Notes (Optional)",
     "DRIVER_CERTIFICATION_OF_VIOLATIONS_ANNUAL": "Driver Certification of Violations (Annual)",
     "DRIVER_LICENSE": "Driver’s License",
@@ -2180,11 +2172,8 @@
     "RECORD_OF_ATTEMPTS_SAFETY_PERFORMANCE_HISTORY": "Record of Attempts (Safety Performance History)",
     "PSP_RECORD": "PSP Record",
     "PRE_EMPLOYMENT_DRUG_TEST": "Pre-employment Drug Test",
-    "INSURANCE_PASS": "Insurance Pass",
-    "ORIENTATION_COMPLETE": "Orientation Complete",
     "SIGNED_HOURS_OF_SERVICE_RECORD_STATEMENT": "Signed Hours of Service Record Statement",
-    "TWIC_OPTIONAL": "TWIC (Optional)",
-    "TRUCK_PROVIDED_OPTIONAL": "Truck Provided (Optional)"
+    "TWIC_OPTIONAL": "TWIC (Optional)"
   },
   "ApplicantAdditionalFilesEnum": {
     "DAC_REPORT": "DAC Report",

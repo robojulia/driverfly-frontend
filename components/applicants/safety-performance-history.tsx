@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Send } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
@@ -86,6 +86,12 @@ export default function SafetyPerformanceHistory({
             setEmployers(data);
         }
     }, [applicant]);
+
+    useEffect(() => {
+        return () => {
+            setEmployers([])
+        }
+    }, []);
 
     /**
      * It deletes a document from the applicant's profile.
