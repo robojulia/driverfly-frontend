@@ -8,7 +8,9 @@ import { JobDetailProps } from "../../../types/job/job-detail-props.type";
 import { Pagination } from "../../../types/pagination.type";
 import JobApi from "../../api/job";
 
-export default function Detail({ job, relatedJobs, quick_apply }: JobDetailProps) {
+export default function Detail({ job, relatedJobs, quick_apply, error }: JobDetailProps) {
+
+  console.error("error", error);
 
   const { t } = useTranslation();
 
@@ -46,7 +48,7 @@ export async function getServerSideProps({ params, query }) {
     }
   } catch (error) {
     console.error("Exception is here:", error);
-    return { props: { job: {}, relatedJobs: [] } }
+    return { props: { job: {}, relatedJobs: [], error: error.message } }
   }
 }
 
