@@ -47,8 +47,8 @@ export async function getServerSideProps({ params, query }) {
       props: { job: job, relatedJobs: items, quick_apply: quick_apply || null }
     }
   } catch (error) {
-    console.error("Exception is here:", error);
-    return { props: { job: {}, relatedJobs: [], error: error.message } }
+    console.error("Exception is here:", error?.response?.data);
+    return { props: { job: {}, relatedJobs: [], error: error?.response?.data } }
   }
 }
 
