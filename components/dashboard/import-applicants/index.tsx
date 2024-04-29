@@ -750,7 +750,7 @@ const ImportApplicants = () => {
                                                             {text}
                                                         </Dropdown.Toggle>
                                                         <Dropdown.Menu>
-                                                            {Object.values(JobEquipmentType)?.map((v, j) => {
+                                                            {Object.values(JobEquipmentType)?.filter(v => v != JobEquipmentType.OTHER)?.map((v, j) => {
                                                                 return (
                                                                     <Dropdown.ItemText key={j}>
                                                                         {v}
