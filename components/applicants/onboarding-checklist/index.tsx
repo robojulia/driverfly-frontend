@@ -15,20 +15,18 @@ import ShowFormattedDate from "../../jobs/show-formatted-date";
 import ViewCard from "../../view-details/view-card";
 import ViewPdf from "../../view-details/view-pdf";
 
-import { Pen } from "react-bootstrap-icons";
+import { ApplicantDac } from "../../../enums/applicants/applicant-dac.enum";
 import { ApplicantOnBoardingChecklist } from "../../../enums/applicants/applicant-onboarding-checklist.enum";
 import { DocumentableType } from "../../../enums/documents/documentable-type.enum";
+import { BooleanType } from "../../../enums/jotform/boolean-type.enum";
+import { ApplicantDacEntity } from "../../../models/applicant";
 import { DocumentEntity } from "../../../models/documents/document.entity";
 import { ViewApplicantOnboardingChecklistProps } from "../../../types/applicant/view-application-onboarding-checklist-props.type";
 import { handleDownloadDocument, handleViewDocument } from "../../../utils/documents/button-actions";
 import { AddDocumentButton, DeleteDocumentButton, DownloadDocumentButton, ViewDocumentButton } from "../../documents/buttons";
 import ViewDocumentHistory from "../../documents/view-history";
-import BaseCheck from "../../forms/base-check";
-import SafetyPerformanceHistory from "../safety-performance-history";
-import { ApplicantDacEntity } from "../../../models/applicant";
-import { ApplicantDac } from "../../../enums/applicants/applicant-dac.enum";
 import BaseRadio from "../../forms/base-radio";
-import { BooleanType } from "../../../enums/jotform/boolean-type.enum";
+import SafetyPerformanceHistory from "../safety-performance-history";
 
 export default function OnboardingChecklist(props: ViewApplicantOnboardingChecklistProps) {
 
@@ -43,7 +41,7 @@ export default function OnboardingChecklist(props: ViewApplicantOnboardingCheckl
         if (props.applicant?.id) {
             const v = await applicantApi.getById(props.applicant?.id)
             console.log("applicant", v);
-            
+
             setApplicant(v)
         }
     }, [user]);
@@ -164,6 +162,7 @@ export default function OnboardingChecklist(props: ViewApplicantOnboardingCheckl
                             }
                             {Boolean(props.showHistory)
                                 && <ViewDocumentHistory
+                                    canDelete={!!applicant.is_hired}
                                     typePrefix="ApplicantOnBoardingChecklist"
                                     document={document}
                                     type={type}

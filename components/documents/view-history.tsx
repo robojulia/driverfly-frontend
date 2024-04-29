@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 
 
 export default function ViewDocumentHistory({
+    canDelete,
     buttonClass,
     document: doc,
     type,
@@ -158,13 +159,13 @@ export default function ViewDocumentHistory({
                                 >
                                     <CloudArrowDown />
                                 </Button>
-                                <button
+                                {canDelete && <button
                                     type="button"
                                     onClick={() => handleClick(document.id)}
                                     className={"btn btn-danger p-0 py-1 mr-2 w-50"}
                                 >
                                     <Trash />
-                                </button>
+                                </button>}
                             </>,
                             hidable: false
                         },
