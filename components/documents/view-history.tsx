@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, ButtonGroup } from "react-bootstrap";
 import { ClockHistory, CloudArrowDown, Eye, Trash } from "react-bootstrap-icons";
 import { useTranslation } from "../../hooks/use-translation";
 import { DocumentHistoryEntity } from "../../models/documents/document-history.entity";
@@ -26,6 +26,27 @@ export default function ViewDocumentHistory({
 
     const [pdf, setPdf] = useState({});
     const [documentHistory, setDocumentHistory] = useState<DocumentHistoryEntity[]>([])
+    const [deleteId, setDeleteId] = useState<number>(null);
+
+    async function handleClick(id: number) {
+        setDeleteId(id);
+    }
+
+    async function onCloseClick() {
+        setDeleteId(null);
+    }
+
+    async function onConfirmClick() {
+        try {
+            await handleDeleteDocument(deleteId);
+        }
+        catch (e) {
+            toast.error(t("UNABLE_TO_DELETE"))
+        }
+        finally {
+            setDeleteId(null);
+        }
+    }
 
     /**
      * It sets the document history to an empty array.
@@ -139,7 +160,7 @@ export default function ViewDocumentHistory({
                                 </Button>
                                 <button
                                     type="button"
-                                    onClick={() => handleDeleteDocument(document.id)}
+                                    onClick={() => handleClick(document.id)}
                                     className={"btn btn-danger p-0 py-1 mr-2 w-50"}
                                 >
                                     <Trash />
@@ -152,6 +173,25 @@ export default function ViewDocumentHistory({
                 />
             </ViewModal>
             <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
+
+            <ViewModal
+                show={Boolean(deleteId)}
+                title="DELETE_CONFIRMATION"
+                closeText="CANCEL"
+                onCloseClick={onCloseClick}
+                footer={(
+                    <ButtonGroup>
+                        <Button type="button" variant="info" onClick={onCloseClick}>
+                            {t("DO_NOT_DELETE")}
+                        </Button>
+                        <Button type="button" variant="danger" onClick={onConfirmClick}>
+                            {t("DELETE")}
+                        </Button>
+                    </ButtonGroup>
+                )}
+            >
+                {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE_FILE")}
+            </ViewModal>
 
         </>
     )

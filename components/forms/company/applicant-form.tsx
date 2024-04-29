@@ -1291,6 +1291,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<Row>
 									<Col>
 										<BaseCheck
+											formik={form}
 											disabled={Boolean(entity?.is_hired)}
 											className="my-3 col float-left p-0"
 											name="already_worked_to_company"
@@ -1329,7 +1330,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											readOnly={Boolean(entity?.is_hired)}
 											className="col-md-6 my-3 font-weight-bold"
 											type="date"
-											name={`already_worked_start_date`}
+											name={`already_worked_end_date`}
 											placeholder="DATE"
 											label="TO"
 											max={

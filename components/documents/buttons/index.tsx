@@ -1,8 +1,11 @@
-import { Button } from "react-bootstrap";
+import { toast } from "react-toastify";
+import { Button, ButtonGroup } from "react-bootstrap";
 import { CloudArrowDown, Eye, Pen, Trash } from "react-bootstrap-icons";
-import { TranslateInterface } from "../../../hooks/use-translation";
+import { TranslateInterface, useTranslation } from "../../../hooks/use-translation";
 import { DocumentEntity } from "../../../models/documents/document.entity";
 import { LoaderIcon } from "../../loading/loader-icon";
+import ViewModal from "../../view-details/view-modal";
+import { useState } from "react";
 
 type ButtonProps = {
     document?: DocumentEntity;
@@ -49,19 +52,66 @@ export const DeleteDocumentButton = ({
     onClick,
     className,
     isLoading,
-}: ButtonProps) => (
-    <>
-        {document && (
-            <button
-                type="button"
-                className={className ?? "btn btn-danger  p-0 pt-1 mr-2 w-100"}
-                onClick={() => onClick(document.type)}
-            >
-                <Trash /> <LoaderIcon isLoading={Boolean(isLoading)} />
-            </button>
-        )}
-    </>
-);
+}: ButtonProps) => {
+    const [showDialog, setShowDialog] = useState(false);
+
+    const { t } = useTranslation();
+
+    async function handleClick(e: React.MouseEvent) {
+        setShowDialog(true);
+    }
+
+    async function onCloseClick() {
+        setShowDialog(false);
+    }
+
+    async function onConfirmClick() {
+        try {
+            await onClick(document.type);
+        }
+        catch (e) {
+            toast.error(t("UNABLE_TO_DELETE"))
+        }
+        finally {
+            setShowDialog(false);
+        }
+    }
+
+    return (
+        <>
+            {document && (
+                <>
+                    <button
+                        type="button"
+                        className={className ?? "btn btn-danger  p-0 pt-1 mr-2 w-100"}
+                        onClick={handleClick}
+                    >
+                        <Trash /> <LoaderIcon isLoading={Boolean(isLoading)} />
+                    </button>
+                    <ViewModal
+                        show={showDialog}
+                        title="DELETE_CONFIRMATION"
+                        closeText="CANCEL"
+                        onCloseClick={onCloseClick}
+                        footer={(
+                            <ButtonGroup>
+                                <Button type="button" variant="info" onClick={onCloseClick}>
+                                    {t("DO_NOT_DELETE")}
+                                </Button>
+                                <Button type="button" variant="danger" onClick={onConfirmClick}>
+                                    {t("DELETE")}
+                                </Button>
+                            </ButtonGroup>
+                        )}
+                    >
+                        {t("ARE_YOU_SURE_YOU_WANT_TO_DELETE_FILE")}
+                    </ViewModal>
+
+                </>
+            )}
+        </>
+    )
+};
 
 /* This is a functional component in TypeScript React that renders a button with a cloud
 arrow down icon. It takes a prop called "document" and checks if it exists. If it does, it renders
