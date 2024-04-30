@@ -164,10 +164,12 @@ export default function SafetyPerformanceHistory({
         <>
             {form?.values?.employer?.id != employer?.id && (
                 <div className="d-flex w-100 mt-2  ">
-                    <ViewDocumentButton
-                        document={document}
-                        onClick={() => handleViewDocument(document.id, setPdf)}
-                    />
+                    {!document?.name?.includes(".doc") &&
+                        <ViewDocumentButton
+                            document={document}
+                            onClick={() => handleViewDocument(document.id, setPdf)}
+                        />
+                    }
                     {!applicant?.is_hired && Boolean(canEditSafetyPerformance) && (
                         <OverlyPopover
                             str={

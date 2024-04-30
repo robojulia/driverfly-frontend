@@ -138,10 +138,12 @@ export default function OnboardingChecklist(props: ViewApplicantOnboardingCheckl
                 && (<div className="d-flex">
                     {type != ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY
                         ? (<>
-                            <ViewDocumentButton
-                                document={document}
-                                onClick={() => handleViewDocument(document.id, setPdf)}
-                            />
+                            {!document?.name?.includes(".doc") &&
+                                <ViewDocumentButton
+                                    document={document}
+                                    onClick={() => handleViewDocument(document.id, setPdf)}
+                                />
+                            }
                             {Boolean(props.canEdit)
                                 && <AddDocumentButton
                                     document={document}

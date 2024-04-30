@@ -148,10 +148,12 @@ export default function ViewDocumentHistory({
                         },
                         {
                             cell: document => <>
-                                <Button
-                                    type="button"
-                                    onClick={() => handleViewDocument(document.id)}
-                                    className="btn btn-success p-0 py-1 mr-2 w-50"><Eye /></Button>
+                                {!document?.name?.includes(".doc") &&
+                                    <Button
+                                        type="button"
+                                        onClick={() => handleViewDocument(document.id)}
+                                        className="btn btn-success p-0 py-1 mr-2 w-50"><Eye /></Button>
+                                }
                                 <Button
                                     type="button"
                                     onClick={() => handleDownloadDocument(document.id)}
