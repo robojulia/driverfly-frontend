@@ -162,7 +162,7 @@ export default function OnboardingChecklist(props: ViewApplicantOnboardingCheckl
                             }
                             {Boolean(props.showHistory)
                                 && <ViewDocumentHistory
-                                    canDelete={!!applicant.is_hired}
+                                    canDelete={!applicant.is_hired}
                                     typePrefix="ApplicantOnBoardingChecklist"
                                     document={document}
                                     type={type}
