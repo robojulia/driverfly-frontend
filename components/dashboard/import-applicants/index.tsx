@@ -84,7 +84,6 @@ const ImportApplicants = () => {
             ),
         }),
         validate: async (values) => {
-            // alert(3)
             // const companyApplicants = await applicantApi.list();
             const companyApplicants = [];
             const errors = {};
@@ -159,7 +158,6 @@ const ImportApplicants = () => {
             setWarnings(errors);
         },
         onSubmit: async (values) => {
-            // alert(4)
             let lastProgress = 0;
 
             for (let i = 0; i < values.items?.length; i++) {
@@ -476,10 +474,8 @@ const ImportApplicants = () => {
                 return entity;
             })
             ?.filter(Boolean);
-        // alert(1)
 
         if (errors?.length) setCsvErrors(errors);
-        // alert(2)
         form?.setValues({ items: contents }, true);
         setProgress(0)
     }
