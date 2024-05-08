@@ -405,9 +405,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<BaseInput
 									className="col-12"
 									readOnly={Boolean(entity?.is_hired)}
-									label="STREET"
-									name="street"
-									placeholder="STREET"
+									label="ADDRESS_LINE_1"
+									name="address_1"
+									placeholder="ADDRESS_LINE_1"
+									formik={form}
+								/>
+								<BaseInput
+									className="col-12"
+									readOnly={Boolean(entity?.is_hired)}
+									label="ADDRESS_LINE_2"
+									name="address_2"
+									placeholder="ADDRESS_LINE_2"
 									formik={form}
 								/>
 								<BaseInput

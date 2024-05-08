@@ -37,9 +37,6 @@ export default function ApplicantExtrasDetails({
 		(ex) => ex?.type == ApplicantExtras.DOT_REGULATION
 	);
 
-	const lineAdress = applicant.extras.find(
-		(ex) => ex?.type == ApplicantExtras.LINE_ADDRESS
-	);
 	const cdl_details = applicant.extras.find(
 		(ex) => ex?.type == ApplicantExtras.CDL_NUMBER
 	);
@@ -95,8 +92,8 @@ export default function ApplicantExtrasDetails({
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
-								adress_1: lineAdress?.value?.address_1,
-								adress_2: lineAdress?.value?.address_2,
+								adress_1: applicant?.address_1,
+								adress_2: applicant?.address_2,
 							}}
 						/>
 					</ViewCard>
