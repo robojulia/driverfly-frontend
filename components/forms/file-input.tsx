@@ -161,7 +161,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
     function close() {
         setViewDoc(null);
     }
-    const canView = !value.name?.includes(".doc") && !(hideView);
+    const canView = !value?.name?.includes(".doc") && !(hideView);
 
     return (
         <>
