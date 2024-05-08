@@ -138,8 +138,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
         setViewDoc(null);
     }
 
-    // only supported views for right now.
-    const canView = accept == "application/pdf" || accept?.startsWith("image/");
+    const canView = value?.mime_type == "application/pdf" || value?.mime_type?.includes("image/");
 
     return (
         <>
@@ -162,7 +161,8 @@ export default function FileInput({ documentType, formik, accept, required, clas
                     {value?.name &&
                         <div className='input-group-append'>
                             <ButtonGroup>
-                                {!Boolean(hideView) && canView &&
+                                {!(hideView) &&
+                                    !!canView &&
                                     <Button name={name} type="button" onClick={view}>
                                         <Eye />
                                     </Button>
@@ -176,9 +176,9 @@ export default function FileInput({ documentType, formik, accept, required, clas
                 </InputGroup>
                 {touched && error ? <span className="text-danger small">{typeof error == "string" ? t(error) : JSON.stringify(error)}</span> : null}
             </div>
-            {accept == "application/pdf" &&
+            {value?.mime_type == "application/pdf" &&
                 <ViewPdf name={value?.name} url={viewDoc} onCloseClick={close} />}
-            {accept.startsWith("image/") &&
+            {value?.mime_type?.includes("image/") &&
                 <ViewModal show={!!viewDoc} title={value?.name} onCloseClick={close}>
                     <img className="img-thumbnail" src={viewDoc} />
                 </ViewModal>}
