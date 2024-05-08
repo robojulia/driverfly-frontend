@@ -69,6 +69,8 @@ import ViewModal from "../../view-details/view-modal";
 import { ReferralSourceForm } from "../admin/referral-source-form";
 import { JobForm } from "./job-form";
 import ShowEnumFromString from "../../enum-filters/show-enum-from-string";
+import { DownloadDocumentButton } from "../../documents/buttons";
+import { handleDownloadDocument } from "../../../utils/documents/button-actions";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
