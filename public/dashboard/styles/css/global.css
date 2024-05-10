@@ -1038,3 +1038,25 @@ input[type="number"]::-webkit-outer-spin-button {
 .bg-primary {
   background-color: #009f94 !important;
 }
+
+.contact-support {
+  right: 2%;
+  bottom: 2%;
+  position: fixed;
+  cursor: pointer;
+  z-index: 9999;
+  padding: 20px 20px;
+  text-align: center;
+}
+
+.contact-support .question-mark {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: #1b4454;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+}
