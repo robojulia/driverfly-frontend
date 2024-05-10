@@ -25,6 +25,7 @@ import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum"
 import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
 import { EducationLevel } from "../../../enums/users/education-level.enum";
 import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
+import { isJwtExpired, useAuth } from "../../../hooks/use-auth";
 import {
     TranslateInterface,
     useTranslation,
@@ -44,6 +45,7 @@ const ImportEmployees = () => {
     const style: any = _style;
 
     const { t } = useTranslation();
+    let { user, refreshToken, logoutAndRedirect } = useAuth();
 
     const schema = EmployeeEntity.yupSchemaForImportEmployees();
 
@@ -97,44 +99,44 @@ const ImportEmployees = () => {
                     employee.emergency_contact_number = "+1 " + employee.emergency_contact_number;
                 }
 
-                if (employee.email) {
-                    const rowError: { email?: string; phone?: string } = {};
-                    const matches = await api.list({ email: employee.email });
+                // if (employee.email) {
+                //     const rowError: { email?: string; phone?: string } = {};
+                //     const matches = await api.list({ email: employee.email });
 
-                    if (matches.some((v) => v.company?.id != null))
-                        rowError.email = t(
-                            "{name}_ALREADY_EXISTS",
-                            { name: "EMAIL" },
-                            { translateProps: true }
-                        );
-                    else if (matches.some((v) => v.company == null))
-                        rowError.email = t(
-                            "{name}_ALREADY_EXISTS",
-                            { name: "EMAIL" },
-                            { translateProps: true }
-                        );
-                    // else if (matches.some(v => v.company == null)) rowError.email = t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "EMAIL" }, { translateProps: true });
+                //     if (matches.some((v) => v.company?.id != null))
+                //         rowError.email = t(
+                //             "{name}_ALREADY_EXISTS",
+                //             { name: "EMAIL" },
+                //             { translateProps: true }
+                //         );
+                //     else if (matches.some((v) => v.company == null))
+                //         rowError.email = t(
+                //             "{name}_ALREADY_EXISTS",
+                //             { name: "EMAIL" },
+                //             { translateProps: true }
+                //         );
+                //     // else if (matches.some(v => v.company == null)) rowError.email = t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "EMAIL" }, { translateProps: true });
 
-                    if (employee.phone) {
+                //     if (employee.phone) {
 
-                        if (matches.some((v) => v.company?.id != null))
-                            rowError.phone = t(
-                                "{name}_ALREADY_EXISTS",
-                                { name: "PHONE" },
-                                { translateProps: true }
-                            );
-                        else if (matches.some((v) => v.company == null))
-                            rowError.phone = t(
-                                "{name}_ALREADY_EXISTS",
-                                { name: "PHONE" },
-                                { translateProps: true }
-                            );
-                        // else if (matches.some(v => v.company == null)) rowError.phone = t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "PHONE" }, { translateProps: true });
-                    }
-                    if (rowError) {
-                        errors[i] = rowError;
-                    }
-                }
+                //         if (matches.some((v) => v.company?.id != null))
+                //             rowError.phone = t(
+                //                 "{name}_ALREADY_EXISTS",
+                //                 { name: "PHONE" },
+                //                 { translateProps: true }
+                //             );
+                //         else if (matches.some((v) => v.company == null))
+                //             rowError.phone = t(
+                //                 "{name}_ALREADY_EXISTS",
+                //                 { name: "PHONE" },
+                //                 { translateProps: true }
+                //             );
+                //         // else if (matches.some(v => v.company == null)) rowError.phone = t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "PHONE" }, { translateProps: true });
+                //     }
+                //     if (rowError) {
+                //         errors[i] = rowError;
+                //     }
+                // }
 
                 let progress = Math.floor(((i + 1) * 100) / values.items.length);
 
@@ -167,6 +169,17 @@ const ImportEmployees = () => {
                 }
 
                 try {
+                    if (isJwtExpired(user.jwt)) {
+                        if (user.jwtRefresh) {
+                            // console.log("isJwtExpired(user.jwtRefresh)", isJwtExpired(user.jwtRefresh));
+                            if (isJwtExpired(user.jwtRefresh)) {
+                                // console.log("loginGuard:: jwt refresh expired", router.asPath)
+                                return !(await logoutAndRedirect());
+                            }
+                            user = await refreshToken();
+                        }
+                    }
+
                     await api.create(dto);
                 } catch (e) {
                     console.log("error saving applicant", i, e.response);
@@ -626,7 +639,7 @@ const ImportEmployees = () => {
                                                             {text}
                                                         </Dropdown.Toggle>
                                                         <Dropdown.Menu>
-                                                            {Object.values(JobEquipmentType).map((v) => {
+                                                            {Object.values(JobEquipmentType)?.filter(v => v != JobEquipmentType.OTHER)?.map((v) => {
                                                                 return (
                                                                     <Dropdown.ItemText>{v}</Dropdown.ItemText>
                                                                 );

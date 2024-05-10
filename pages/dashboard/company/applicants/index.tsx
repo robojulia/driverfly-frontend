@@ -471,6 +471,7 @@ function ApplicantView(props: ViewProps) {
                     {
                         id: "name",
                         name: "NAME",
+                        wrap: true,
                         selector: applicant => getApplicantName(applicant),
                         cell: applicant => (
                             <Link href={`${router.pathname}/${applicant.id}/edit`}>
@@ -482,36 +483,45 @@ function ApplicantView(props: ViewProps) {
                     {
                         id: "city",
                         name: "CITY",
+                        wrap: true,
                         selector: applicant => applicant.city,
                     },
                     {
                         id: "state",
                         name: "STATE",
+                        wrap: true,
                         selector: applicant => applicant.state,
                     },
                     {
                         id: "phone",
                         name: "PHONE",
+                        wrap: true,
                         selector: applicant => applicant.phone,
+                        cell: applicant => <OverlyPopover str='applicant.phone'>{applicant.phone}</OverlyPopover>
                     },
                     {
                         id: "email",
                         name: "EMAIL",
+                        wrap: true,
                         selector: applicant => applicant.email,
+                        cell: applicant => <OverlyPopover str='applicant.email'>{applicant.email}</OverlyPopover>
                     },
                     {
                         id: "source",
                         name: "LEAD_TYPE",
-                        selector: applicant => applicant.type ? t(`ApplicantType.${applicant.type}`) : "",
+                        wrap: true,
+                        cell: applicant => applicant.type ? <OverlyPopover str={t(`ApplicantType.${applicant.type}`)}>{t(`ApplicantType.${applicant.type}`)}</OverlyPopover> : "",
                     },
                     {
                         id: "AUTOMATED_RECRUITING_LEAD",
                         name: "AUTOMATED_RECRUITING_LEAD",
+                        wrap: true,
                         selector: applicant => Boolean(applicant?.is_automated_recruiting_lead) ? BooleanType.YES : BooleanType.NO,
                     },
                     {
                         id: "date_added",
                         name: "DATE_ADDED",
+                        wrap: true,
                         selector: applicant => applicant.created_at,
                         cell: applicant => (
                             <ShowFormattedDate date={applicant.created_at} />
@@ -521,6 +531,7 @@ function ApplicantView(props: ViewProps) {
                     {
                         id: "assigned_to",
                         name: "ASSIGNED_TO",
+                        wrap: true,
                         selector: applicant => applicant.assignedUser?.name || t("NONE"),
                     }
                 ]}

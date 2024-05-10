@@ -45,6 +45,8 @@ export class ApplicantEntity {
   phone?: string;
   email?: string;
   birthdate?: string;
+  address_1?: string;
+  address_2?: string;
   street?: string;
   city?: string;
   state?: string;
@@ -127,6 +129,8 @@ export class ApplicantEntity {
       phone: yup.string().nullable(),
       email: yup.string().email().required().nullable(),
       birthdate: yup.date().nullable(),
+      address_1: yup.string().nullable(),
+      address_2: yup.string().nullable(),
       street: yup.string().nullable(),
       city: yup.string().nullable(),
       state: yup.string().nullable(),
@@ -291,6 +295,8 @@ export class ApplicantEntity {
         .nullable(),
       email: yup.string().email().nullable(),
       birthdate: yup.date().nullable(),
+      address_1: yup.string().nullable(),
+      address_2: yup.string().nullable(),
       street: yup.string().nullable(),
       city: yup.string().nullable(),
       state: yup.string().nullable(),
@@ -481,6 +487,8 @@ export class ApplicantEntity {
       phone: yup.string().nullable(),
       email: yup.string().email().required().nullable(),
       birthdate: yup.date().nullable(),
+      address_1: yup.string().nullable(),
+      address_2: yup.string().nullable(),
       street: yup.string().nullable(),
       city: yup.string().nullable(),
       state: yup.string().nullable(),
@@ -599,6 +607,8 @@ export class ApplicantEntity {
       phone: yup.string().required().nullable(),
       email: yup.string().email().nullable(),
       birthdate: yup.date().nullable(),
+      address_1: yup.string().nullable(),
+      address_2: yup.string().nullable(),
       street: yup.string().nullable(),
       city: yup.string().nullable(),
       state: yup.string().nullable(),

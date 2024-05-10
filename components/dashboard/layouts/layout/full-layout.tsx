@@ -33,6 +33,7 @@ import {
 import CompanyProfileNav from "../header/company-profile-nav";
 import { useAuth } from "../../../../hooks/use-auth";
 import { useRouter } from 'next/router';
+import ContactSupportNote from "../../components/dashboard/banner/contact-support-note";
 
 // company layout
 const FullLayout = ({ children }) => {
@@ -173,7 +174,7 @@ const FullLayout = ({ children }) => {
 
 		},
 
-		
+
 
 	];
 	//  Code below is to set scroll to top on each child page
@@ -192,6 +193,7 @@ const FullLayout = ({ children }) => {
 				<link rel="icon" href="/img/favicon.ico" />
 			</Head>
 			<Scripts />
+			<ContactSupportNote />
 			<div className="header">
 				<div className="contentArea ">
 					{/********header**********/}

@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Button, ButtonGroup, InputGroup } from 'react-bootstrap';
-import { Eye, Trash } from 'react-bootstrap-icons';
+import { CloudArrowDown, Eye, Trash } from 'react-bootstrap-icons';
 import { useTranslation } from '../../hooks/use-translation';
 import DocumentApi from '../../pages/api/document';
 import { getBase64 } from "../../utils/file";
 import ViewModal from '../view-details/view-modal';
 import ViewPdf from '../view-details/view-pdf';
 import { BaseControlProps } from './base-control';
+import { handleDownloadDocument } from '../../utils/documents/button-actions';
 
 export interface FileInputProps extends BaseControlProps {
     documentType?: string;
@@ -134,12 +135,33 @@ export default function FileInput({ documentType, formik, accept, required, clas
         }
     }
 
+    async function download(e) {
+        if (value?.id) {
+            await handleDownloadDocument(value?.id)
+        } else if (value?.path) {
+            const response = await fetch(value?.path);
+            const fileBlob = await response.blob();
+
+            // Create a temporary link element
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(fileBlob);
+            link.download = value.name;
+
+            document.body.appendChild(link);
+
+            // Simulate a click on the link to trigger the download
+            link.click();
+
+            // Clean up the temporary link
+            document.body.removeChild(link);
+            link.remove();
+        }
+    }
+
     function close() {
         setViewDoc(null);
     }
-
-    // only supported views for right now.
-    const canView = accept == "application/pdf" || accept?.startsWith("image/");
+    const canView = !value?.name?.includes(".doc") && !(hideView);
 
     return (
         <>
@@ -162,7 +184,11 @@ export default function FileInput({ documentType, formik, accept, required, clas
                     {value?.name &&
                         <div className='input-group-append'>
                             <ButtonGroup>
-                                {!Boolean(hideView) && canView &&
+                                <Button name={name} variant="success" type="button" onClick={download}>
+                                    <CloudArrowDown />
+                                </Button>
+                                {
+                                    !!canView &&
                                     <Button name={name} type="button" onClick={view}>
                                         <Eye />
                                     </Button>
@@ -176,9 +202,9 @@ export default function FileInput({ documentType, formik, accept, required, clas
                 </InputGroup>
                 {touched && error ? <span className="text-danger small">{typeof error == "string" ? t(error) : JSON.stringify(error)}</span> : null}
             </div>
-            {accept == "application/pdf" &&
+            {value?.mime_type == "application/pdf" &&
                 <ViewPdf name={value?.name} url={viewDoc} onCloseClick={close} />}
-            {accept.startsWith("image/") &&
+            {value?.mime_type?.includes("image/") &&
                 <ViewModal show={!!viewDoc} title={value?.name} onCloseClick={close}>
                     <img className="img-thumbnail" src={viewDoc} />
                 </ViewModal>}

@@ -52,7 +52,7 @@ export default function OverlyPopover({
             <OverlayTrigger
                 trigger={trigger}
                 placement={placement ?? "bottom"}
-                delay={{ show: 50, hide: 40 }}
+                delay={{ show: 50, hide: 150 }}
                 overlay={popover}
             >
                 {children ?

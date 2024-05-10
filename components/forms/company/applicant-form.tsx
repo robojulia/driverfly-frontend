@@ -69,6 +69,8 @@ import ViewModal from "../../view-details/view-modal";
 import { ReferralSourceForm } from "../admin/referral-source-form";
 import { JobForm } from "./job-form";
 import ShowEnumFromString from "../../enum-filters/show-enum-from-string";
+import { DownloadDocumentButton } from "../../documents/buttons";
+import { handleDownloadDocument } from "../../../utils/documents/button-actions";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
@@ -405,9 +407,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<BaseInput
 									className="col-12"
 									readOnly={Boolean(entity?.is_hired)}
-									label="STREET"
-									name="street"
-									placeholder="STREET"
+									label="ADDRESS_LINE_1"
+									name="address_1"
+									placeholder="ADDRESS_LINE_1"
+									formik={form}
+								/>
+								<BaseInput
+									className="col-12"
+									readOnly={Boolean(entity?.is_hired)}
+									label="ADDRESS_LINE_2"
+									name="address_2"
+									placeholder="ADDRESS_LINE_2"
 									formik={form}
 								/>
 								<BaseInput
@@ -1167,29 +1177,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<BaseInput
-														className="col-md-6 mt-2"
-														required
-														name={`employers[${i}].address`}
-														placeholder="ADDRESS_LINE_1"
-														label="ADDRESS_LINE_1"
-														formik={form}
-													/>
-													<BaseInput
-														className="col-md-6 mt-2"
-														name={`employers[${i}].address_2`}
-														placeholder="ADDRESS_LINE_2"
-														label="ADDRESS_LINE_2"
-														formik={form}
-													/>
-													<BaseInput
-														className="col-6 mt-2"
-														readOnly={Boolean(entity?.is_hired)}
-														name={`employers[${i}].street`}
-														label="STREET"
-														placeholder="STREET"
-														formik={form}
-													/>
-													<BaseInput
 														className="col-6 mt-2"
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].city`}
@@ -1211,6 +1198,21 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														name={`employers[${i}].zip_code`}
 														label="ZIP_CODE"
 														placeholder="ZIP_CODE"
+														formik={form}
+													/>
+													<BaseInput
+														className="col-md-6 mt-2"
+														required
+														name={`employers[${i}].address`}
+														placeholder="ADDRESS_LINE_1"
+														label="ADDRESS_LINE_1"
+														formik={form}
+													/>
+													<BaseInput
+														className="col-md-6 mt-2"
+														name={`employers[${i}].address_2`}
+														placeholder="ADDRESS_LINE_2"
+														label="ADDRESS_LINE_2"
 														formik={form}
 													/>
 													<BaseInputPhone

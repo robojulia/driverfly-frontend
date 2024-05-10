@@ -2,13 +2,9 @@ import * as yup from "yup";
 import { ApplicantExtras } from "../../enums/applicants/applicant-extras.enum";
 import { OtherRequirementType } from "../../enums/users/other-requirements.enum";
 import { ApplicantAccidentEntity } from "../applicant/applicant-accidentr.entity";
-import { AccordianExtras } from "../jot-form/long-form/accordian-info/index.dto";
-import { BackgroundInfoLineAddress } from "../jot-form/long-form/backgorund-info/index.dto";
-import { CdlExtras } from "../jot-form/long-form/cdl-object/index.dto";
 import { ApplicantMovingViolationEntity } from "../applicant/applicant-moving-violation.entity";
-import { WorkedBeforeExtrasDto } from "../jot-form/long-form/worked-before/index.dto";
-import { BooleanTypeExtra } from "../../enums/jotform/bool-and-not-sure.enum";
-import { JobSchedule } from "../../enums/jobs/job-schedule.enum";
+import { AccordianExtras } from "../jot-form/long-form/accordian-info/index.dto";
+import { CdlExtras } from "../jot-form/long-form/cdl-object/index.dto";
 
 export class ApplicantExtrasEntity {
 	constructor(type?: ApplicantExtras, id?: number) {
@@ -39,10 +35,6 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.SIGNATURE,
 					then: yup.string().required().nullable(),
-				})
-				.when("type", {
-					is: ApplicantExtras.LINE_ADDRESS,
-					then: BackgroundInfoLineAddress.yupSchema(),
 				})
 				.when("type", {
 					is: ApplicantExtras.HEAR_ABOUT_US,

@@ -24,10 +24,8 @@ export function BackgroundInfo() {
 		validationSchema: BackgroundInfoDto.yupSchema(),
 		onSubmit: (values) => {
 			try {
-				const { birthdate, LINE_ADDRESS, city, state, zip_code } = values;
-
-				setApplicant({ ...applicant, birthdate, city, state, zip_code });
-				updateApplicantExtras(LINE_ADDRESS);
+				const { birthdate, city, state, zip_code, address_1, address_2 } = values;
+				setApplicant({ ...applicant, birthdate, city, state, zip_code, address_1, address_2 });
 			} catch (error) {
 				console.log(error);
 			}
@@ -39,15 +37,11 @@ export function BackgroundInfo() {
 	});
 
 	useEffect(() => {
-		const { birthdate, city, state, zip_code } = applicant;
-		const apx = applicantExtras?.find(
-			(v) => v.type == ApplicantExtras.LINE_ADDRESS
-		);
+		const { birthdate, city, state, zip_code, address_1, address_2 } = applicant;
 		form.setValues({
 			...form.values,
-			LINE_ADDRESS: !!apx?.type
-				? apx
-				: new ApplicantExtrasEntity(ApplicantExtras.LINE_ADDRESS),
+			address_1: address_1 || null,
+			address_2: address_2 || null,
 			birthdate: birthdate || null,
 			city: city || null,
 			state: state || null,
@@ -86,14 +80,14 @@ export function BackgroundInfo() {
 							<BaseInput
 								className="col-md-6 my-3"
 								required
-								name={`LINE_ADDRESS.value.address_1`}
+								name={`address_1`}
 								placeholder="ADDRESS_LINE_1"
 								label="ADDRESS_LINE_1"
 								formik={form}
 							/>
 							<BaseInput
 								className="col-md-6 my-3"
-								name={`LINE_ADDRESS.value.address_2`}
+								name={`address_2`}
 								placeholder="ADDRESS_LINE_2"
 								label="ADDRESS_LINE_2"
 								formik={form}
