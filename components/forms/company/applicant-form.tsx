@@ -1177,29 +1177,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<BaseInput
-														className="col-md-6 mt-2"
-														required
-														name={`employers[${i}].address`}
-														placeholder="ADDRESS_LINE_1"
-														label="ADDRESS_LINE_1"
-														formik={form}
-													/>
-													<BaseInput
-														className="col-md-6 mt-2"
-														name={`employers[${i}].address_2`}
-														placeholder="ADDRESS_LINE_2"
-														label="ADDRESS_LINE_2"
-														formik={form}
-													/>
-													<BaseInput
-														className="col-6 mt-2"
-														readOnly={Boolean(entity?.is_hired)}
-														name={`employers[${i}].street`}
-														label="STREET"
-														placeholder="STREET"
-														formik={form}
-													/>
-													<BaseInput
 														className="col-6 mt-2"
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].city`}
@@ -1221,6 +1198,21 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														name={`employers[${i}].zip_code`}
 														label="ZIP_CODE"
 														placeholder="ZIP_CODE"
+														formik={form}
+													/>
+													<BaseInput
+														className="col-md-6 mt-2"
+														required
+														name={`employers[${i}].address`}
+														placeholder="ADDRESS_LINE_1"
+														label="ADDRESS_LINE_1"
+														formik={form}
+													/>
+													<BaseInput
+														className="col-md-6 mt-2"
+														name={`employers[${i}].address_2`}
+														placeholder="ADDRESS_LINE_2"
+														label="ADDRESS_LINE_2"
 														formik={form}
 													/>
 													<BaseInputPhone
