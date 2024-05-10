@@ -5,6 +5,7 @@ import { UserContext } from "../../context/user-context";
 import ErrorBoundary from "../ErrorBoundry";
 import { TranslationProvider } from "./translation-provider";
 import { UserGuard } from "./user-guard";
+import Metrics from "../metrics";
 
 export interface AuthProviderProps {
     Component: React.ElementType;
@@ -32,6 +33,7 @@ export function AuthProvider(props: AuthProviderProps) {
                 <TranslationProvider>
                     <UserGuard permissions={getPermissions}>
                         <>
+                            <Metrics />
                             {/* {!Boolean(userContext?.user?.id) && <ManyChatScript />} */}
                             {getLayout(<Component {...pageProps} />)}
                         </>
