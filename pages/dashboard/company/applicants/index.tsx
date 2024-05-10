@@ -497,14 +497,14 @@ function ApplicantView(props: ViewProps) {
                         name: "PHONE",
                         wrap: true,
                         selector: applicant => applicant.phone,
-                        cell: applicant => <OverlyPopover str='applicant.phone'>{applicant.phone}</OverlyPopover>
+                        cell: applicant => <OverlyPopover str={applicant.phone}>{applicant.phone}</OverlyPopover>
                     },
                     {
                         id: "email",
                         name: "EMAIL",
                         wrap: true,
                         selector: applicant => applicant.email,
-                        cell: applicant => <OverlyPopover str='applicant.email'>{applicant.email}</OverlyPopover>
+                        cell: applicant => <OverlyPopover str={applicant.email}>{applicant.email}</OverlyPopover>
                     },
                     {
                         id: "source",
