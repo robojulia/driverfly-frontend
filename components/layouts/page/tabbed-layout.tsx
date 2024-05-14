@@ -7,12 +7,12 @@ import { useTranslation } from "../../../hooks/use-translation";
 export interface TabbedLayoutProps {
     id?: string;
     className?: string;
-    items: {[title: string]: (TabbedLayoutItem|ReactChild)}
+    items: { [title: string]: (TabbedLayoutItem | ReactChild) }
 }
 export interface TabbedLayoutItem {
     id?: string;
     title?: string;
-    hidden?: boolean|((key: string, value: TabbedLayoutItem) => boolean);
+    hidden?: boolean | ((key: string, value: TabbedLayoutItem) => boolean);
     panelClassName?: string;
     headerClassName?: string;
     item: ReactChild;
@@ -44,7 +44,7 @@ export function TabbedLayout(props: TabbedLayoutProps) {
             } as TabbedLayoutItem;
         })
         .filter(value => value.hidden != true);
-    
+
     return (
         <Tabs id={id} className={className}>
             <TabList>
@@ -53,7 +53,7 @@ export function TabbedLayout(props: TabbedLayoutProps) {
                 )}
             </TabList>
             {tabs.map(tab => (
-                <TabPanel key={tab.id} className={tab.panelClassName}>
+                <TabPanel key={tab.id} className={`${tab.panelClassName} `} >
                     {tab.item}
                 </TabPanel>
             ))}
