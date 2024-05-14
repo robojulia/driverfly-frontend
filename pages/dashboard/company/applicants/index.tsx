@@ -449,19 +449,25 @@ function ApplicantView(props: ViewProps) {
             })
         };
     });
-
     return (
-        <div className="applicant__table__sty">
+        <div className="applicant__table__sty ellipsis_remove">
             <ViewDataTable<ConsolodatedApplicant>
                 // preExpanded={(applicant) => applicant.jobs?.length > 0}
                 customStyles={{
                     headRow: {
                         style: {
                             background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
-                            color: "white"
+                            color: "white",
+                            whiteSpace: "unset", textOverflow: "unset", overflow: "hidden"
                         },
                     },
+                    // headCells: {
+                    //     style: { whiteSpace: "unset", textOverflow: "unset", overflow: "hidden", background: "red" },
+                    // },
                 }}
+                // customStyles={props.customStyles}
+
+
                 columns={[
                     {
                         id: "id",
@@ -507,16 +513,22 @@ function ApplicantView(props: ViewProps) {
                         cell: applicant => <OverlyPopover str={applicant.email}>{applicant.email}</OverlyPopover>
                     },
                     {
-                        id: "source",
-                        name: "LEAD_TYPE",
+                        id: "license_type",
+                        name: `CDL_TYPE`,
                         wrap: true,
-                        cell: applicant => applicant.type ? <OverlyPopover str={t(`ApplicantType.${applicant.type}`)}>{t(`ApplicantType.${applicant.type}`)}</OverlyPopover> : "",
+                        selector: applicant => applicant?.license_type || t("NONE"),
                     },
                     {
-                        id: "AUTOMATED_RECRUITING_LEAD",
-                        name: "AUTOMATED_RECRUITING_LEAD",
+                        id: "years_cdl_experience",
+                        name: "years_cdl_experience",
                         wrap: true,
-                        selector: applicant => Boolean(applicant?.is_automated_recruiting_lead) ? BooleanType.YES : BooleanType.NO,
+                        selector: applicant => applicant?.years_cdl_experience || t("NONE"),
+                    },
+                    {
+                        id: "transmission_type",
+                        name: "TRANSMISSION_EXPERIENCE",
+                        wrap: true,
+                        selector: applicant => applicant?.transmission_type.join(",") || t("NONE"),
                     },
                     {
                         id: "date_added",
@@ -529,11 +541,58 @@ function ApplicantView(props: ViewProps) {
                         hidable: false,
                     },
                     {
+                        id: "source",
+                        name: "LEAD_TYPE",
+                        wrap: true,
+                        hide: 1,
+                        cell: applicant => applicant.type ? <OverlyPopover str={t(`ApplicantType.${applicant.type}`)}>{t(`ApplicantType.${applicant.type}`)}</OverlyPopover> : "",
+                    },
+                    {
+                        id: "AUTOMATED_RECRUITING_LEAD",
+                        name: "AUTOMATED_RECRUITING_LEAD",
+                        wrap: true,
+                        hide: 1,
+                        selector: applicant => Boolean(applicant?.is_automated_recruiting_lead) ? BooleanType.YES : BooleanType.NO,
+                    },
+
+                    {
                         id: "assigned_to",
                         name: "ASSIGNED_TO",
                         wrap: true,
+                        hide: 1,
                         selector: applicant => applicant.assignedUser?.name || t("NONE"),
+                    },
+
+                    {
+                        id: "endorsement",
+                        name: "ENDORSEMENTS",
+                        wrap: true,
+                        hide: 1,
+                        selector: applicant => applicant.endorsements?.join(",") || t("NONE"),
+                    },
+
+                    {
+                        id: "license_restrictions",
+                        name: "License_Restrictions",
+                        wrap: true,
+                        hide: 1,
+                        selector: applicant => applicant.license_restrictions.join(",") || t("NONE"),
+                    },
+                    {
+                        id: "is_owner_operator",
+                        name: `${t("OWNER_OPERATOR")}/${t("COMPANY_DRIVER")}`,
+                        wrap: true,
+                        hide: 1,
+                        selector: applicant => applicant.is_owner_operator ? t("OWNER_OPERATOR") : t("COMPANY_DRIVER") || t("NONE"),
+                    },
+                    {
+                        id: "preferred_location",
+                        name: `PREFERRED_LOCATION`,
+                        wrap: true,
+                        hide: 1,
+                        selector: applicant => applicant?.preferred_location.join(",") || t("NONE"),
                     }
+
                 ]}
                 items={items}
                 actions={row => [
@@ -560,6 +619,7 @@ function ApplicantView(props: ViewProps) {
                                 },
                             },
                         }}
+
                         columns={[
                             {
                                 name: "ID",
