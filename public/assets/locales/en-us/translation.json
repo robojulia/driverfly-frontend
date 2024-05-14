@@ -215,6 +215,7 @@
   },
   "preferred_benefits": "Preferred Benefits",
   "OTHER_BENEFITS": "Other Benefits",
+  "COMPANY_DRIVER": "Company Driver", 
   "JobBenefits": {
     "SIGN_ON_BONUS": "Sign-on bonus",
     "GUARANTEED_BASE_SALARY": "Guaranteed base salary",
