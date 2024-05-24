@@ -16,12 +16,12 @@ export interface StatefulStorageProps {
 export function useStatefulStorage<TElement>(props: StatefulStorageProps) : StatefulStorageInterface<TElement> {
     let { type, key } = props;
 
-    if (!type) type = "session";
+    if (!type) type = "local";
 
     if (!key) throw new Error("Unable to initialize stateful storage without key");
 
     const isBrowser: boolean = ((): boolean => typeof window != 'undefined')();
-    const storageApi: Storage = isBrowser ? window[`${type ?? 'session'}Storage`] : null;
+    const storageApi: Storage = isBrowser ? window[`${type ?? 'local'}Storage`] : null;
 
     const EMPTY = "";
 
