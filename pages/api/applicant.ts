@@ -17,6 +17,12 @@ import { VerifyOTPDto } from "../../models/jot-form/OTP/verify-otp.dto";
 import { UpsertApplicantJotformDto } from "../../models/jot-form/upsert-applicant-jotform.dto";
 import { UpsertApplicantVoeformDto } from "../../models/jot-form/upsert-applicant-voe.dto";
 import BaseApi from "./_baseApi";
+import { VehicleTransmissionType } from "../../enums/vehicles/vehicle-transmission-type.enum";
+import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
+import { ApplicantType } from "../../enums/applicants/applicant-type.enum";
+import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum";
+import { LicenseRestrictions } from "../../enums/applicants/applicant-license-restrictions-type.enum";
+import { JobGeography } from "../../enums/jobs/job-geography.enum";
 
 export default class ApplicantApi extends BaseApi {
   baseUrl: string = "applicants";
@@ -109,6 +115,20 @@ export default class ApplicantApi extends BaseApi {
   async list(params?: {
     jobId?: number;
     email?: string;
+    name?: string;
+    assignedUserId?: number;
+    is_owner_operator?: string;
+    preferred_location?: JobGeography;
+    type?: ApplicantType;
+    state?: string;
+    endorsements?: DriverEndorsement;
+    license_restrictions?: LicenseRestrictions;
+    license_type?: DriverLicenseType;
+    city?: string;
+    license_restrictions_other?: string;
+    endorsements_other?: string;
+    transmission_type?: VehicleTransmissionType;
+    years_cdl_experience?: number;
     status?: ApplicantStatus | ApplicantStatus[];
     withHired?: boolean;
     without?: string[];

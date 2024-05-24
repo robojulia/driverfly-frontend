@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import Link from "next/link";
 import { NextRouter, useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
+import { Accordion, Button, ButtonGroup, Col, Row } from "react-bootstrap";
 import { EyeFill, PencilFill } from 'react-bootstrap-icons';
 import { toast } from "react-toastify";
 import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
@@ -29,6 +29,20 @@ import { buildAddress } from "../../../../utils/common";
 import * as numbers from "../../../../utils/number";
 import { useEffectAsync } from "../../../../utils/react";
 import ApplicantApi from "../../../api/applicant";
+import BaseInput from '../../../../components/forms/base-input';
+import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
+import { ApplicantType } from '../../../../enums/applicants/applicant-type.enum';
+import { DriverEndorsement } from '../../../../enums/users/driver-endorsement.enum';
+import { LicenseRestrictions } from '../../../../enums/applicants/applicant-license-restrictions-type.enum';
+import StateSelect from '../../../../components/forms/state-select';
+import { JobGeography } from '../../../../enums/jobs/job-geography.enum';
+import { VehicleTransmissionType } from '../../../../enums/vehicles/vehicle-transmission-type.enum';
+import { OwnerOperatorCompanyDriverEnum } from '../../../../enums/company/owner-company-type.enum';
+import { UserEntity } from '../../../../models/user/user.entity';
+import UserApi from '../../../api/user';
+import { Status } from '../../../../enums/status.enum';
+import ApplicantFilterForm from '../../../../components/forms/company/filter-form';
+import { ApplicantFiltersDto } from '../../../../models/applicant/applicant-filters.entity';
 
 const ViewMode = {
     job: "job",
@@ -46,14 +60,13 @@ interface ConsolodatedApplicantJob extends ApplicantJobEntity {
     qualification_fail_reason?: string[];
 }
 
+
 export default function Applicants() {
-    // continue loading
     const { t } = useTranslation();
 
     const router = useRouter();
 
-    const { user, hasPermission } = useAuth();
-
+    let { user, hasPermission } = useAuth();
     let { viewMode, jobId } = router.query;
 
     if (!ViewMode[`${viewMode}`]) viewMode = ViewMode.applicant;
@@ -61,26 +74,49 @@ export default function Applicants() {
     const [loading, setLoading] = useState<boolean>(true);
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
     const [applicantStatus, setApplicantStatus] = useState<ApplicantStatus | null>(null);
+    const [drivingLicenceType, setDrivingLicenseTypeSelected] = useState<DriverLicenseType | null>(null);
+    const [applicantTypeSelected, setApplicantTypeSelected] = useState<ApplicantType | null>(null);
+    const [endorsementsSelected, setEndorsementsSelected] = useState<DriverEndorsement | null>(null);
+    const [licenseRestrictionsSelected, setLicenseRestrictionsSelected] = useState<LicenseRestrictions | null>(null);
+    const [automatedRecruitingLeadSelect, setAutomatedRecruitingLeadSelect] = useState<BooleanType | null>(null);
+    const [stateSelected, setStateSelected] = useState<string>(null);
+    const [fullNameSelected, setFullNameSelected] = useState<string>(null)
+    const [yearsOfCDL, setYearsOfCDL] = useState<number>(null)
+    const [preferredLocation, setPreferredLocation] = useState<JobGeography>(null)
+    const [transmissionExperience, setTransmissionExperience] = useState<VehicleTransmissionType>(null)
+    const [assignedRecruiter, setAssignedRecruiter] = useState<number>(null)
+    const [citySelected, setCitySelected] = useState<string>(null)
+    const [endorsementOther, setEndorsementOther] = useState<string>(null)
+    const [licenseRestrictionsOther, setLicenseRestrictionsOther] = useState<string>(null)
+    const [ownerOperator, setOwnerOperator] = useState<OwnerOperatorCompanyDriverEnum>(null)
+    const [searchData, setSearchData] = useState<boolean>(false)
+    const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([]);
 
-    useEffectAsync(async () => {
+
+    const fetchApplicant = async (values?: ApplicantFiltersDto) => {
         setLoading(true)
         const api = new ApplicantApi();
 
         const data = await api.list({
             jobId: jobId as any as number,
-            status: applicantStatus,
             without: [
-                // "jobs",
-                // "equipment_experience",
-                // "assignedUser",
                 "applicant_dac",
                 "applicant_extras",
             ],
+            ...values
         });
 
         setApplicants(data);
         setTimeout(() => setLoading(false), 1000);
-    }, [user, jobId, viewMode, applicantStatus]);
+    }
+
+
+    useEffectAsync(async () => {
+        fetchApplicant()
+    }, [user, jobId, viewMode, searchData]);
+
+
+
 
     const onViewClick = (id: number) => {
         router.push(`${router.pathname}/${id}`);
@@ -104,6 +140,12 @@ export default function Applicants() {
         await router.push(router);
 
     }
+
+    useEffectAsync(async () => {
+        const userApi = new UserApi();
+        const data = await userApi.list();
+        setCompanyUsers(data?.filter((u) => u.status == Status.ACTIVE));
+    }, []);
 
     const onChangeStatus = async (e: React.ChangeEvent<HTMLSelectElement>, applicant: ApplicantEntity, job: JobEntity) => {
         const value: ApplicantStatus = e.target.options[e.target.selectedIndex].value as ApplicantStatus;
@@ -134,6 +176,8 @@ export default function Applicants() {
         }
     }
 
+
+    ``
     const applicantJobForm = useFormik({
         initialValues: new ApplicantJobEntity(),
         validationSchema: ApplicantJobEntity.yupSchema(),
@@ -163,166 +207,355 @@ export default function Applicants() {
         });
     }
 
+
+
+
+    const onResetFilter = () => {
+        setApplicantStatus(null);
+        setDrivingLicenseTypeSelected(null);
+        setApplicantTypeSelected(null);
+        setEndorsementsSelected(null);
+        setStateSelected(null);
+        setPreferredLocation(null);
+        setFullNameSelected(null);
+        setLicenseRestrictionsSelected(null);
+        setAutomatedRecruitingLeadSelect(null);
+        setYearsOfCDL(null);
+        setTransmissionExperience(null);
+        setCitySelected(null);
+        setOwnerOperator(null);
+        setAssignedRecruiter(null)
+        setSearchData(!searchData)
+    }
+
     const canCreate = hasPermission("CanCreateApplicant");
 
-    return (
-        <PageLayout
-            title="APPLICANTS"
-            actions={(
-                <>
-                    {
-                        canCreate &&
-                        <ButtonGroup size="sm" style={{ float: "right" }}>
-                            <Button variant="primary" onClick={() => router.push("/dashboard/company/applicants/create")}>
-                                + {t("ADD_AN_APPLICANT")}
-                            </Button>
-                            <Button variant="" className="theme-general-btn" onClick={() => router.push("/dashboard/company/applicants/import")}>
-                                + {t("IMPORT_APPLICANTS")}
-                            </Button>
-                        </ButtonGroup>
-                    }
-                </>
-            )}
-        >
-            <Row>
-                <Col className='force-overflow p-0  '>
-                    <FormGroup style={{ float: "right" }}>
-                        <FormControlLabel
-                            control={<Switch value={viewMode == ViewMode.applicant ? ViewMode.job : ViewMode.applicant} checked={viewMode == ViewMode.job} onChange={onViewModeChange} />}
-                            label={t("VIEW_BY_{name}", { name: t(viewMode == ViewMode.applicant ? "JOB" : "APPLICANT") })}
-                        />
-                    </FormGroup>
-                    <Row>
-                        <BaseSelect
-                            className="col-md-3"
-                            placeholder="STATUS"
-                            labelPrefix="ApplicantStatus"
-                            hideOptions={[ApplicantStatus.OTHER]}
-                            enumType={ApplicantStatus}
-                            onChange={({ target: { value } }) => setApplicantStatus(value as ApplicantStatus)}
-                            value={applicantStatus}
-                        />
-                        {Boolean(applicantStatus) && (<Col md="2">
-                            <button
-                                onClick={() => { setApplicantStatus(null) }}
-                                type="button"
-                                className="btn btn-link"
-                            >{t("CLEAR")}</button>
-                        </Col>)}
-                    </Row>
-                    {loading
-                        ? <div className="spinner-border mt-3 ml-1" role="status">
-                            <span className="sr-only">Loading...</span>
-                        </div>
-                        : <>
-                            {viewMode == ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
-                            {viewMode == ViewMode.job && <JobView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
-                        </>}
-                </Col>
-            </Row>
-            <ViewModal
-                show={!!applicantJobForm.values.status}
-                onCloseClick={applicantJobForm.resetForm}
-                closeText="CANCEL"
-                title={"CHANGE_STATUS"}
-                className="bg-secondary "
-            >
-                <form onSubmit={applicantJobForm.handleSubmit}>
-                    <Row className="py-3 px-5">
-                        <BaseSelect
-                            className="col-12"
-                            label="STATUS"
-                            name="status"
-                            required
-                            formik={applicantJobForm}
-                            labelPrefix="ApplicantStatus"
-                            enumType={ApplicantStatus}
-                            onChange={onStatusChange}
-                        />
-                        {
-                            applicantJobForm.values.status == ApplicantStatus.OTHER &&
-                            <BaseTextArea
-                                className="col-12"
-                                placeholder="STATUS"
-                                name="status_other"
-                                required
-                                maxLength={100}
-                                formik={applicantJobForm}
-                            />
-                        }
-                        {
-                            applicantJobForm.values.status == ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED &&
-                            <BaseCheckList
-                                className="col-12"
-                                label="REASON_CODES"
-                                name="reason_codes"
-                                required
-                                cols={2}
-                                formik={applicantJobForm}
-                                labelPrefix="ApplicantReasonCodeNotQualified"
-                                enumType={ApplicantReasonCodeNotQualified}
-                            />
-                        }
-                        {
-                            applicantJobForm.values.status == ApplicantStatus.INACTIVE_CONTACTED_UNINTERESTED &&
-                            <BaseCheckList
-                                className="col-12"
-                                label="REASON_CODES"
-                                name="reason_codes"
-                                required
-                                cols={2}
-                                formik={applicantJobForm}
-                                labelPrefix="ApplicantReasonCodeNotInterested"
-                                enumType={ApplicantReasonCodeNotInterested}
-                            />
-                        }
-                        {
-                            applicantJobForm.values.status == ApplicantStatus.INACTIVE_QUIT &&
-                            <BaseCheckList
-                                className="col-12"
-                                label="REASON_CODES"
-                                name="reason_codes"
-                                required
-                                cols={2}
-                                formik={applicantJobForm}
-                                labelPrefix="ApplicantReasonCodeQuit"
-                                enumType={ApplicantReasonCodeQuit}
-                            />
-                        }
-                        {
-                            applicantJobForm.values.status == ApplicantStatus.INACTIVE_FIRED &&
-                            <BaseCheckList
-                                className="col-12"
-                                label="REASON_CODES"
-                                name="reason_codes"
-                                required
-                                cols={2}
-                                formik={applicantJobForm}
-                                labelPrefix="ApplicantReasonCodeFired"
-                                enumType={ApplicantReasonCodeFired}
-                            />
-                        }
-                        {
-                            applicantJobForm.values.reason_codes?.includes("OTHER") &&
-                            <BaseTextArea
-                                className="col-12"
-                                placeholder="REASONS"
-                                name="reason_codes_other"
-                                required
-                                maxLength={100}
-                                formik={applicantJobForm}
-                            />
-                        }
-                    </Row>
-                    <Row className="py-3 px-5">
-                        <Button type="submit" variant="primary">
-                            {t("SUBMIT")}
-                        </Button>
-                    </Row>
-                </form>
 
-            </ViewModal>
-        </PageLayout >
+    return (
+        <>
+            <Accordion defaultActiveKey="0" flush>
+                <PageLayout
+                    title="APPLICANTS"
+                    actions={(
+                        <div style={{ display: "flex", justifyContent: "end", alignItems: "center" }}>
+                            <Accordion.Button className="mr-3 text-black theme-filter-btn" style={{ width: "auto", fontSize: ".95rem", lineHeight: "1.5", padding: ".25rem 1.5rem", borderRadius: ".2rem" }} >
+                                <div className="mr-2">{t("FILTERS")}</div>
+                            </Accordion.Button>
+                            {
+                                canCreate &&
+                                <ButtonGroup size="sm" style={{ float: "right" }}>
+                                    <Button variant="primary" onClick={() => router.push("/dashboard/company/applicants/create")}>
+                                        + {t("ADD_AN_APPLICANT")}
+                                    </Button>
+                                    <Button variant="" className="theme-general-btn" onClick={() => router.push("/dashboard/company/applicants/import")}>
+                                        + {t("IMPORT_APPLICANTS")}
+                                    </Button>
+                                </ButtonGroup>
+                            }
+                        </div>
+                    )}
+                >
+
+                    <div style={{ display: "flex", alignItems: "end", justifyContent: "end" }}>
+                        <FormGroup style={{ float: "right" }}>
+                            <FormControlLabel
+                                control={<Switch value={viewMode == ViewMode.applicant ? ViewMode.job : ViewMode.applicant} checked={viewMode == ViewMode.job} onChange={onViewModeChange} />}
+                                label={t("VIEW_BY_{name}", { name: t(viewMode == ViewMode.applicant ? "JOB" : "APPLICANT") })}
+                            />
+                        </FormGroup>
+                    </div>
+
+                    <Row>
+
+                        <Col className='force-overflow p-0'>
+                            <Accordion.Body >
+                                <ApplicantFilterForm onSubmit={fetchApplicant} />
+                                {/* <Row >
+                                    <React.Fragment>
+                                        <BaseInput
+                                            className="col-md-2 mt-1 mb-3"
+                                            name="FULL_NAME"
+                                            displayPlaceholder
+                                            value={fullNameSelected}
+                                            onChange={({ target: { value } }) => setFullNameSelected(value as string)}
+                                        />
+
+                                        <BaseSelect
+                                            className="col-md-2 mt-1 mb-3"
+                                            placeholder="cdl_type"
+                                            labelPrefix="DriverLicenseType"
+                                            enumType={DriverLicenseType}
+                                            onChange={({ target: { value } }) => setDrivingLicenseTypeSelected(value as DriverLicenseType)}
+                                            value={drivingLicenceType}
+                                        />
+                                        <BaseSelect
+                                            className="col-md-2 mt-1 mb-3"
+                                            placeholder="LEAD_TYPE"
+                                            labelPrefix="ApplicantType"
+                                            enumType={ApplicantType}
+                                            onChange={({ target: { value } }) => setApplicantTypeSelected(value as ApplicantType)}
+                                            value={applicantTypeSelected}
+                                        />
+
+                                        <BaseSelect
+                                            className="col-md-3 mt-1 mb-3"
+                                            placeholder="ENDORSEMENTS"
+                                            labelPrefix="DriverEndorsement"
+                                            enumType={DriverEndorsement}
+                                            onChange={({ target: { value } }) => setEndorsementsSelected(value as DriverEndorsement)}
+                                            value={endorsementsSelected}
+                                        />
+
+                                        {endorsementsSelected == DriverEndorsement.OTHER && (
+                                            <BaseInput
+                                                className="col-md-3 mt-1 mb-3"
+                                                name="ENDORSEMENTS"
+                                                displayPlaceholder
+                                                value={endorsementOther}
+                                                onChange={({ target: { value } }) => setEndorsementOther(value as string)}
+                                            />
+                                        )}
+
+                                        <BaseSelect
+                                            className="col-md-3 mt-1 mb-3"
+                                            placeholder="License_Restrictions"
+                                            labelPrefix="LicenseRestrictions"
+                                            enumType={LicenseRestrictions}
+                                            onChange={({ target: { value } }) => setLicenseRestrictionsSelected(value as LicenseRestrictions)}
+                                            value={licenseRestrictionsSelected}
+                                        />
+
+                                        {licenseRestrictionsSelected == LicenseRestrictions.OTHER && (
+                                            <BaseInput
+                                                className="col-md-3 mt-1 mb-3"
+                                                name="License_Restrictions"
+                                                displayPlaceholder
+                                                value={licenseRestrictionsOther}
+                                                onChange={({ target: { value } }) => setLicenseRestrictionsOther(value as string)}
+                                            />
+                                        )}
+
+
+                                        <BaseSelect
+                                            className="col-md-3 mt-1 mb-3"
+                                            placeholder="AUTOMATED_RECRUITING_LEAD"
+                                            // labelPrefix="LicenseRestrictions"
+                                            enumType={BooleanType}
+                                            onChange={({ target: { value } }) => setAutomatedRecruitingLeadSelect(value as BooleanType)}
+                                            value={automatedRecruitingLeadSelect}
+                                        />
+
+                                        <StateSelect
+                                            className="col-md-2 mt-1 mb-3"
+                                            name="state"
+                                            placeholder="STATE"
+                                            value={stateSelected}
+                                            onChange={({ target: { value } }) => setStateSelected(value as string)}
+
+                                        />
+                                        <BaseInput
+                                            className="col-md-2 mt-1 mb-3"
+                                            name="city"
+                                            displayPlaceholder
+                                            value={citySelected}
+                                            onChange={({ target: { value } }) => setCitySelected(value as string)}
+                                        />
+
+                                        <BaseSelect
+                                            className="col-md-2 mt-1 mb-3"
+                                            placeholder="STATUS"
+                                            labelPrefix="ApplicantStatus"
+                                            hideOptions={[ApplicantStatus.OTHER]}
+                                            enumType={ApplicantStatus}
+                                            onChange={({ target: { value } }) => setApplicantStatus(value as ApplicantStatus)}
+                                            value={applicantStatus}
+                                        />
+
+
+                                        <BaseSelect
+                                            className="col-md-3 mt-1 mb-3"
+                                            placeholder="ASSIGNED_RECRUITER"
+                                            displayPlaceholder
+                                            options={companyUsers}
+                                            valueKey="id"
+                                            value={assignedRecruiter}
+                                            createLabel={(c) => `${c.name} (#${c.id}) `}
+                                            onChange={({ target: { value } }) => setAssignedRecruiter(value as any)}
+                                        />
+
+                                        <BaseInput
+                                            className="col-md-2 mt-1 mb-3"
+                                            name="years_cdl_experience"
+                                            displayPlaceholder
+                                            type='number'
+                                            value={yearsOfCDL}
+                                            onChange={({ target: { value } }) => setYearsOfCDL(value as unknown as number)}
+                                        />
+
+
+                                        <BaseSelect
+                                            className="col-md-2 mt-1 mb-3"
+                                            placeholder="PREFERRED_LOCATION"
+                                            labelPrefix="JobGeography"
+                                            enumType={JobGeography}
+                                            onChange={({ target: { value } }) => setPreferredLocation(value as JobGeography)}
+                                            value={preferredLocation}
+                                        />
+                                        <BaseSelect
+                                            className="col-md-2 mt-1 mb-3"
+                                            placeholder="TRANSMISSION_EXPERIENCE"
+                                            labelPrefix="VehicleTransmissionType"
+                                            enumType={VehicleTransmissionType}
+                                            onChange={({ target: { value } }) => setTransmissionExperience(value as VehicleTransmissionType)}
+                                            value={transmissionExperience}
+                                        />
+
+                                        <BaseSelect
+                                            className="col-md-3 mt-1 mb-3"
+                                            placeholder="OWNER_OP_COMPANY_DRIVER"
+                                            enumType={OwnerOperatorCompanyDriverEnum}
+                                            onChange={({ target: { value } }) => setOwnerOperator(value as OwnerOperatorCompanyDriverEnum)}
+                                            value={ownerOperator}
+                                        />
+                                        <Button
+                                            className="col-md-1 ml-3 mt-1 mb-3 mr-3 "
+                                            variant="primary"
+                                            size='sm'
+                                            onClick={() => { setSearchData(!searchData) }}
+                                        >
+                                            {t("SEARCH")}
+                                        </Button>
+
+                                        <Button
+                                            className="col-md-1 ml-3 mt-1 mb-3 theme-general-btn  mr-3"
+                                            variant=""
+                                            size='sm'
+                                            onClick={onResetFilter}
+                                        >
+                                            {t("RESET")}
+                                        </Button>
+
+                                    </React.Fragment>
+
+                                </Row> */}
+                            </Accordion.Body>
+
+                            {loading
+                                ? <div className="spinner-border mt-3 ml-1" role="status">
+                                    <span className="sr-only">Loading...</span>
+                                </div>
+                                : <>
+                                    {viewMode == ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                                    {viewMode == ViewMode.job && <JobView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                                </>}
+                        </Col>
+                    </Row>
+                    <ViewModal
+                        show={!!applicantJobForm.values.status}
+                        onCloseClick={applicantJobForm.resetForm}
+                        closeText="CANCEL"
+                        title={"CHANGE_STATUS"}
+                        className="bg-secondary "
+                    >
+                        <form onSubmit={applicantJobForm.handleSubmit}>
+                            <Row className="py-3 px-5">
+                                <BaseSelect
+                                    className="col-12"
+                                    label="STATUS"
+                                    name="status"
+                                    required
+                                    formik={applicantJobForm}
+                                    labelPrefix="ApplicantStatus"
+                                    enumType={ApplicantStatus}
+                                    onChange={onStatusChange}
+                                />
+                                {
+                                    applicantJobForm.values.status == ApplicantStatus.OTHER &&
+                                    <BaseTextArea
+                                        className="col-12"
+                                        placeholder="STATUS"
+                                        name="status_other"
+                                        required
+                                        maxLength={100}
+                                        formik={applicantJobForm}
+                                    />
+                                }
+                                {
+                                    applicantJobForm.values.status == ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED &&
+                                    <BaseCheckList
+                                        className="col-12"
+                                        label="REASON_CODES"
+                                        name="reason_codes"
+                                        required
+                                        cols={2}
+                                        formik={applicantJobForm}
+                                        labelPrefix="ApplicantReasonCodeNotQualified"
+                                        enumType={ApplicantReasonCodeNotQualified}
+                                    />
+                                }
+                                {
+                                    applicantJobForm.values.status == ApplicantStatus.INACTIVE_CONTACTED_UNINTERESTED &&
+                                    <BaseCheckList
+                                        className="col-12"
+                                        label="REASON_CODES"
+                                        name="reason_codes"
+                                        required
+                                        cols={2}
+                                        formik={applicantJobForm}
+                                        labelPrefix="ApplicantReasonCodeNotInterested"
+                                        enumType={ApplicantReasonCodeNotInterested}
+                                    />
+                                }
+                                {
+                                    applicantJobForm.values.status == ApplicantStatus.INACTIVE_QUIT &&
+                                    <BaseCheckList
+                                        className="col-12"
+                                        label="REASON_CODES"
+                                        name="reason_codes"
+                                        required
+                                        cols={2}
+                                        formik={applicantJobForm}
+                                        labelPrefix="ApplicantReasonCodeQuit"
+                                        enumType={ApplicantReasonCodeQuit}
+                                    />
+                                }
+                                {
+                                    applicantJobForm.values.status == ApplicantStatus.INACTIVE_FIRED &&
+                                    <BaseCheckList
+                                        className="col-12"
+                                        label="REASON_CODES"
+                                        name="reason_codes"
+                                        required
+                                        cols={2}
+                                        formik={applicantJobForm}
+                                        labelPrefix="ApplicantReasonCodeFired"
+                                        enumType={ApplicantReasonCodeFired}
+                                    />
+                                }
+                                {
+                                    applicantJobForm.values.reason_codes?.includes("OTHER") &&
+                                    <BaseTextArea
+                                        className="col-12"
+                                        placeholder="REASONS"
+                                        name="reason_codes_other"
+                                        required
+                                        maxLength={100}
+                                        formik={applicantJobForm}
+                                    />
+                                }
+                            </Row>
+                            <Row className="py-3 px-5">
+                                <Button type="submit" variant="primary">
+                                    {t("SUBMIT")}
+                                </Button>
+                            </Row>
+                        </form>
+
+                    </ViewModal>
+                </PageLayout >
+            </Accordion >
+        </>
+
     )
 };
 
@@ -452,7 +685,7 @@ function ApplicantView(props: ViewProps) {
     return (
         <div className="applicant__table__sty ellipsis_remove">
             <ViewDataTable<ConsolodatedApplicant>
-                // preExpanded={(applicant) => applicant.jobs?.length > 0}
+
                 customStyles={{
                     headRow: {
                         style: {
@@ -461,12 +694,8 @@ function ApplicantView(props: ViewProps) {
                             whiteSpace: "unset", textOverflow: "unset", overflow: "hidden"
                         },
                     },
-                    // headCells: {
-                    //     style: { whiteSpace: "unset", textOverflow: "unset", overflow: "hidden", background: "red" },
-                    // },
-                }}
-                // customStyles={props.customStyles}
 
+                }}
 
                 columns={[
                     {
@@ -594,6 +823,7 @@ function ApplicantView(props: ViewProps) {
                     }
 
                 ]}
+                hideSetting
                 items={items}
                 actions={row => [
                     // {
