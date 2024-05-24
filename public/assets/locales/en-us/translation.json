@@ -1409,6 +1409,7 @@
   "USER_NOT_ACTIVATED": "Check your email to activate your account",
   "ARE_YOU_SURE_YOU_WANT_TO_DELETE": "Are you sure you want to delete this record?",
   "ARE_YOU_SURE_YOU_WANT_TO_DELETE_FILE": "Are you sure you want to permanently delete this file?",
+  "ARE_YOU_SURE_YOU_WANT_TO_DELETE_USER": "Are you sure you want to  delete this user?",
   "CONFIRMATION": "Confirmation",
   "ARE_YOU_SURE_TO_DELETE_OR_MOVE_TO_PAST_EMPLOYEE": "Would you like to Delete this record or move to your past employee list?",
   "CONFIRM": "Confirm",
@@ -1462,12 +1463,13 @@
   "PHONE_VERIFIED": "Phone was successfully verified",
   "EMAIL_IS_REQUIRED": "Email is required",
   "PHONE_IS_REQUIRED": "Phone is required",
+  "DELETE_USER": "Are you sure you want to delete?",
   "PLEASE_CHECK_PHONE": "Please check your phone",
   "TECHNICAL_ASSISTANCE_HELP": "For technical assistance, reach out to help@driverfly.co",
   "Status": {
     "ACTIVE": "Active",
     "DELETED": "Deleted",
-    "DEACTIVE": "DEACTIVE"
+    "DEACTIVE": "In Active"
   },
   "UNABLE_TO_RESTORE": "Unable to restore.",
   "DESCRIPTION": "Description",
