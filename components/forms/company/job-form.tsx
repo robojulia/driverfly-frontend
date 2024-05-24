@@ -92,8 +92,12 @@ export function JobForm(props: JobFormProps) {
             ...(entity || {}),
             schedule: entity?.schedule || JobSchedule.OPEN_TO_NEGOTIATE,
             pay_method: entity?.pay_method || JobPayMethod.OPEN_TO_NEGOTIATE,
-            min_weekly_pay: Boolean(entity?.min_weekly_pay) ? entity.min_weekly_pay : null,
-            max_weekly_pay: Boolean(entity?.max_weekly_pay) ? entity.max_weekly_pay : null,
+            min_weekly_pay: Boolean(entity?.min_weekly_pay)
+                ? entity.min_weekly_pay
+                : null,
+            max_weekly_pay: Boolean(entity?.max_weekly_pay)
+                ? entity.max_weekly_pay
+                : null,
         });
     }, [entity]);
 
@@ -164,13 +168,13 @@ export function JobForm(props: JobFormProps) {
         switch (form.values.pay_method) {
             case JobPayMethod.RATE_PER_MILE:
                 /**
-                                    -if rate per mile		
-                                        Min Rate Per Mi	
-                                        Max Rate Per Mi	
-                                        Avg mi per week	
-                                        Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                                        Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                                */
+                                            -if rate per mile		
+                                                Min Rate Per Mi	
+                                                Max Rate Per Mi	
+                                                Avg mi per week	
+                                                Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                                                Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                                        */
                 min_percent = null;
                 max_percent = null;
                 min_hours = null;
@@ -189,17 +193,17 @@ export function JobForm(props: JobFormProps) {
             case JobPayMethod.PERCENT_PER_MOVE:
             case JobPayMethod.PERCENT_PER_WEIGHT:
                 /*
-                                -if % per move		
-                                    Min % per move	
-                                    Max % per move	
-                                    Estimated maximum weekly pay	(manual entry)
-                                    Estimated minimum weekly pay	(manual entry)
-                                -if % weight		
-                                    Min % per weight	
-                                    Max % per weight	
-                                    Estimated maximum weekly pay	(manual entry)
-                                    Estimated minimum weekly pay	(manual entry)
-                                */
+                                        -if % per move		
+                                            Min % per move	
+                                            Max % per move	
+                                            Estimated maximum weekly pay	(manual entry)
+                                            Estimated minimum weekly pay	(manual entry)
+                                        -if % weight		
+                                            Min % per weight	
+                                            Max % per weight	
+                                            Estimated maximum weekly pay	(manual entry)
+                                            Estimated minimum weekly pay	(manual entry)
+                                        */
                 // noop
                 min_miles = null;
                 max_miles = null;
@@ -212,13 +216,13 @@ export function JobForm(props: JobFormProps) {
                 break;
             case JobPayMethod.HOURLY:
                 /*
-                                -if hourly		
-                                    Min $ per hr	
-                                    Max $ per hr	
-                                    Avg hrs per week	
-                                    Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                                    Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                                */
+                                        -if hourly		
+                                            Min $ per hr	
+                                            Max $ per hr	
+                                            Avg hrs per week	
+                                            Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                                            Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                                        */
                 min_miles = null;
                 max_miles = null;
                 min_percent = null;
@@ -236,10 +240,10 @@ export function JobForm(props: JobFormProps) {
                 break;
             case JobPayMethod.SET_WEEKLY:
                 /*
-                                -if set weekly		
-                                    Estimated maximum weekly pay	(manual entry)
-                                    Estimated minimum weekly pay	(manual entry)
-                                */
+                                        -if set weekly		
+                                            Estimated maximum weekly pay	(manual entry)
+                                            Estimated minimum weekly pay	(manual entry)
+                                        */
                 min_miles = null;
                 max_miles = null;
                 min_percent = null;
@@ -253,12 +257,12 @@ export function JobForm(props: JobFormProps) {
                 break;
             case JobPayMethod.SALARY:
                 /*
-                                -if salaried		
-                                    Min annual salary	
-                                    Max annual salary	
-                                    Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                                    Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                                */
+                                        -if salaried		
+                                            Min annual salary	
+                                            Max annual salary	
+                                            Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                                            Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                                        */
                 min_miles = null;
                 max_miles = null;
                 min_percent = null;
@@ -419,8 +423,6 @@ export function JobForm(props: JobFormProps) {
             max_applicant_radius: maxRadius[value],
         });
     };
-    console.log("number", Number("2.02"));
-
 
     const [createVehicle, setCreateVehicle] = useState<boolean | number>(false);
 

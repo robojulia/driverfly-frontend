@@ -1346,6 +1346,7 @@
     "FAIL_{action}_{name}": "Failed to {{action}} {{name}}"
   },
   "VEHICLE": "Vehicle",
+  "SELECT_UNIQUE_VEHICLE_MESSAGE": "Can not add duplicate Vehicle",
   "{number}_CHARACTERS_REMAINING": "{{number}} characters remaining",
   "GOVERNED_SPEED": "Governed speed",
   "MAX_SPEED": "Max speed",
