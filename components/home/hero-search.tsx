@@ -1,12 +1,10 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Search } from "react-bootstrap-icons";
-import { AsyncTypeahead } from "react-bootstrap-typeahead";
+import { AsyncTypeahead, TypeaheadMenuProps } from "react-bootstrap-typeahead";
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
-import { DriverLicenseType } from "../../enums/users/driver-license-type.enum"
+import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
 import { useTranslation } from "../../hooks/use-translation";
 import MapboxApi from "../../pages/api/mapbox";
-
 export default function HeroSearch(props) {
 
     const router = useRouter();
@@ -15,7 +13,6 @@ export default function HeroSearch(props) {
     const [filters, setFilters] = useState({});
     const mapboxApi = new MapboxApi()
 
-    const [range, setRange] = useState(50);
     const [location, setLocation] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState([]);
@@ -45,8 +42,10 @@ export default function HeroSearch(props) {
         try {
             if (query) {
                 setIsLoading(true);
-                const results = await mapboxApi.forwardGeocoding(query)
-                setOptions(results?.features || []);
+                const { features } = await mapboxApi.forwardGeocoding(query)
+                console.log("features", features);
+
+                setOptions(features || []);
                 setIsLoading(false);
             } else {
                 setLocation(null)
@@ -75,7 +74,7 @@ export default function HeroSearch(props) {
     return (
         <div className="hero-search shadow mb-5 bg-white ">
             <div className="input-group border-0">
-             
+
                 <input
                     onKeyPress={handleKeywordSearch}
                     onChange={handleChange}
@@ -100,10 +99,8 @@ export default function HeroSearch(props) {
                     onInputChange={handleTypeheadSearch}
                     options={options}
                     placeholder="Location"
-                    renderMenuItemChildren={(option, props) => (
-                        <>
-                            <span className='text-dark'>{option}</span>
-                        </>
+                    renderMenuItemChildren={(option: any, menuProps: TypeaheadMenuProps, idx: number) => (
+                        <span className='text-dark'>{option.place_name}</span>
                     )}
                 />
             </div>

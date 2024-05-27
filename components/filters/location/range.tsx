@@ -56,12 +56,14 @@ export default function Range(props: SearchJobFilterProps) {
 
     useEffect(() => {
         if (!!!filters) setOptions(null)
+        // console.log("filters.place_name", typeaheadRef.current?.props);
+        // typeaheadRef.current.props.defaultInputValue = typeaheadRef.current, filters.place_name, filters.location?.place_name
     }, [filters])
 
     return (
         <FindJobFilterAccordion {...props} header={t("LOCATION")}>
             <AsyncTypeahead
-                defaultInputValue={filters.place_name || filters.location?.place_name || ""}
+                defaultInputValue={filters.place_name || filters.location?.place_name}
                 ref={typeaheadRef}
                 id="location-typeahead"
                 isLoading={isLoading}
