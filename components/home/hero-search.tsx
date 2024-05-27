@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AsyncTypeahead, TypeaheadMenuProps } from "react-bootstrap-typeahead";
+import Typeahead from "react-bootstrap-typeahead/types/core/Typeahead";
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
 import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
 import { useTranslation } from "../../hooks/use-translation";
@@ -10,9 +11,13 @@ export default function HeroSearch(props) {
     const router = useRouter();
     const { t } = useTranslation();
 
+    const typeaheadRef = useRef<Typeahead>(null)
+
     const [filters, setFilters] = useState({});
     const mapboxApi = new MapboxApi()
 
+    const [index, setIndex] = useState<number>();
+    const [selected, setSelected] = useState<[]>([]);
     const [location, setLocation] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState([]);
@@ -89,10 +94,14 @@ export default function HeroSearch(props) {
 
             <div className="input-group">
                 <AsyncTypeahead
+                    ref={typeaheadRef}
                     id="async-example"
                     // name="location"
                     isLoading={isLoading}
                     labelKey="place_name"
+                    onBlur={() => {
+                       if(!location) typeaheadRef.current?.clear()
+                    }}
                     minLength={1}
                     onChange={value => setLocation(value[0])}
                     onSearch={handleTypeheadSearch}

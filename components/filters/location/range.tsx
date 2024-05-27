@@ -7,6 +7,7 @@ import MapboxApi from "../../../pages/api/mapbox"
 import { useTranslation } from '../../../hooks/use-translation';
 import { TypeaheadMenuProps } from 'react-bootstrap-typeahead/types/components/TypeaheadMenu';
 import { SearchJobFilterProps } from '../../../types/search-filter/job-search-filter.type';
+import Typeahead from 'react-bootstrap-typeahead/types/core/Typeahead';
 
 export default function Range(props: SearchJobFilterProps) {
 
@@ -16,7 +17,7 @@ export default function Range(props: SearchJobFilterProps) {
     } = props
     const { t } = useTranslation();
     const mapboxApi = new MapboxApi()
-    const typeaheadRef = useRef(null)
+    const typeaheadRef = useRef<Typeahead>(null)
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [options, setOptions] = useState<any>([]);
@@ -56,7 +57,8 @@ export default function Range(props: SearchJobFilterProps) {
 
     useEffect(() => {
         if (!!!filters) setOptions(null)
-        // console.log("filters.place_name", typeaheadRef.current?.props);
+        // console.log("filters.place_name", typeaheadRef.current?.props.defaultInputValue);
+        // if (!typeaheadRef.current?.props?.defaultInputValue && filters?.location?.place_name || location?.place_name) typeaheadRef.current?.setItem("defaultInputValue", filters.location.place_name || location.place_name)
         // typeaheadRef.current.props.defaultInputValue = typeaheadRef.current, filters.place_name, filters.location?.place_name
     }, [filters])
 
