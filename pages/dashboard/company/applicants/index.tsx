@@ -528,7 +528,7 @@ function ApplicantView(props: ViewProps) {
                         id: "transmission_type",
                         name: "TRANSMISSION_EXPERIENCE",
                         wrap: true,
-                        selector: applicant => applicant?.transmission_type.join(",") || t("NONE"),
+                        selector: applicant => applicant?.transmission_type?.join(",") || t("NONE"),
                     },
                     {
                         id: "date_added",
@@ -576,7 +576,7 @@ function ApplicantView(props: ViewProps) {
                         name: "License_Restrictions",
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant.license_restrictions.join(",") || t("NONE"),
+                        selector: applicant => applicant.license_restrictions?.join(",") || t("NONE"),
                     },
                     {
                         id: "is_owner_operator",
@@ -590,7 +590,7 @@ function ApplicantView(props: ViewProps) {
                         name: `PREFERRED_LOCATION`,
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant?.preferred_location.join(",") || t("NONE"),
+                        selector: applicant => applicant?.preferred_location?.join(",") || t("NONE"),
                     }
 
                 ]}

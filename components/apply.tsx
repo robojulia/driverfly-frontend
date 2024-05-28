@@ -15,7 +15,7 @@ import { SharePreference } from '../enums/users/share-preference.enum'
 import { UserPreferenceCategory } from '../enums/users/user-preference-category.enum'
 import { useAuth } from '../hooks/use-auth'
 import { useTranslation } from "../hooks/use-translation"
-import { ApplicantExtrasEntity } from "../models/applicant"
+import { ApplicantExtrasEntity, ApplicantJobEntity } from "../models/applicant"
 import { ApplicantEntity } from '../models/applicant/applicant.entity'
 import { DocumentEntity } from '../models/documents/document.entity'
 import ApplicantApi from '../pages/api/applicant'
@@ -42,6 +42,7 @@ export default function JobApply({ job, setEncourageModal }) {
     const [showModal, setShowModal] = useState(false);
     const [showForm, setShowForm] = useState(true);
     const [applicant, setApplicant] = useState<ApplicantEntity>();
+    const [applicantJobs, setApplicantJobs] = useState<ApplicantJobEntity[]>([]);
 
     const apply_form = useFormik({
         initialValues: new ApplicantEntity(),
@@ -73,6 +74,7 @@ export default function JobApply({ job, setEncourageModal }) {
             try {
                 if (!user.company) {
                     applicant = await applicantApi.me.get();
+                    setApplicantJobs(applicant?.jobs)
                     applicant.documents = applicant.documents.filter(v => Object.values(ApplicantDocumentType).includes(v.type as ApplicantDocumentType))
                     if (applicant) {
                         const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
@@ -121,11 +123,19 @@ export default function JobApply({ job, setEncourageModal }) {
         console.log("errors", apply_form.errors);
     }, [apply_form.values, apply_form.errors])
 
+
     return (
         <>
-            <div className="ort-btn mt-lg-4 mt-0">
-                <button type="button" className="btn theme-primary-btn" onClick={onApplyClick}> {t('APPLY_NOW')}<ArrowRight /></button>
-            </div>
+            {applicantJobs.length > 0 && applicantJobs.filter((item) => item?.job?.id == job?.id).length > 0 ?
+                <div className="ort-btn mt-lg-4 mt-0">
+                    <button type="button" className="btn theme-primary-btn" disabled={true}> {t('APPLIED')}</button>
+                </div>
+                :
+                <div className="ort-btn mt-lg-4 mt-0">
+                    <button type="button" className="btn theme-primary-btn" onClick={onApplyClick}> {t('APPLY_NOW')}<ArrowRight /></button>
+                </div>
+            }
+
             <ViewModal
                 size={"xl"}
                 show={showModal}
