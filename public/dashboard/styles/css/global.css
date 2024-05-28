@@ -23,6 +23,8 @@
 
 .ellipsis_remove .rdt_TableHead .brFloq{
   white-space: unset !important;
+  text-overflow: unset !important;
+  overflow: unset !important;
 }
 
 .dashboardsidebar .page-link:hover {
