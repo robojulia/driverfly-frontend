@@ -24,6 +24,9 @@ import {
 } from "../utils/job-filter";
 import { useEffectAsync } from "../utils/react";
 import JobApi from "./api/job";
+import { JobPayMethod } from "../enums/jobs/job-pay-method.enum";
+import { JobSchedule } from "../enums/jobs/job-schedule.enum";
+import { LoaderIcon } from "../components/loading/loader-icon";
 
 export default function FindJobs(props) {
 	let { params } = props;
@@ -32,6 +35,7 @@ export default function FindJobs(props) {
 	const jobApi = new JobApi();
 	const { t } = useTranslation();
 
+	const [loading, setLoading] = useState<boolean>(true);
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
 
 	const [pagingMeta, setPagingMeta] = useState<PagingMeta>(
@@ -59,10 +63,20 @@ export default function FindJobs(props) {
 		resetFilters();
 		resetLocation();
 		resetRange();
-	 
+
 	};
 
 	const setFiltersByKeyValue = (key: string, value: any): void => {
+		switch (key) {
+			case "pay_structure":
+				value = JobPayMethod.OPEN_TO_NEGOTIATE ? null : value
+				break;
+			case "schedule":
+				value = JobSchedule.OPEN_TO_NEGOTIATE ? null : value
+				break;
+			default:
+				break;
+		}
 		setFilters({
 			...filters,
 			page: 1,
@@ -128,6 +142,7 @@ export default function FindJobs(props) {
 	};
 
 	const fetchJobs = async (): Promise<void> => {
+		setLoading(true);
 		try {
 			// navigator.geolocation.getCurrentPosition(function (position) {
 			// 	setFiltersByKeyValue("location", {
@@ -148,6 +163,7 @@ export default function FindJobs(props) {
 			console.log("Error", e.message, e);
 			toast.error(t("FIND_JOB_ERROR_GENERAL"));
 		}
+		setLoading(false);
 	};
 
 	useEffectAsync(fetchJobs, [filters]);
@@ -163,10 +179,10 @@ export default function FindJobs(props) {
 	}, []);
 
 	useEffect(() => {
-		if(filters.min_years_experience){
-			console.log("Minimum years of experience : ",filters.min_years_experience);
+		if (filters.min_years_experience) {
+			console.log("Minimum years of experience : ", filters.min_years_experience);
 		}
-	},[filters]);
+	}, [filters]);
 
 	return (
 		<JobContext.Provider
@@ -207,6 +223,7 @@ export default function FindJobs(props) {
 							<FilterResult />
 						</div>
 						<div className="col-md-9 outer pl-4 ">
+							<LoaderIcon isLoading={loading} />
 							<ResultCount />
 
 							<div className="filter-btn-groups mt-3">

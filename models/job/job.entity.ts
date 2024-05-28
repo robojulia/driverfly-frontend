@@ -292,7 +292,7 @@ export class JobEntity {
                     })
                     .nullable(),
                 vehicles: (yup.array(BasicEntity.yupSchema()) as any)
-                    .unique("id")
+                    .unique("id", "SELECT_UNIQUE_VEHICLE_MESSAGE")
                     .nullable(),
                 cdl_class: (yup.string() as any).enum(DriverLicenseType).nullable(),
                 min_years_experience: yup.number().min(0).nullable(),
