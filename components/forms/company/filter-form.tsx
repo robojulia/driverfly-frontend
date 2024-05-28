@@ -1,69 +1,44 @@
 import { useFormik } from "formik";
-import React, { ReactNode, useState } from "react";
+import React, { useState } from "react";
 import { Button, Form, Row } from "react-bootstrap";
-import { Icon } from "react-bootstrap-icons";
 import { LicenseRestrictions } from "../../../enums/applicants/applicant-license-restrictions-type.enum";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
 import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
-import { OwnerOperatorCompanyDriverEnum } from "../../../enums/company/owner-company-type.enum";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 import { BooleanType } from "../../../enums/jotform/boolean-type.enum";
+import { Status } from "../../../enums/status.enum";
 import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
 import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
 import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
 import { useTranslation } from "../../../hooks/use-translation";
-import { ApplicantFiltersDto } from "../../../models/applicant/applicant-filters.entity";
-import { FormikInterface } from "../../../utils/formik";
-import EntityForm from "../../layouts/page/entity-form";
+import { SearchApplicantDto } from "../../../models/applicant/search-applicant.dto";
+import { UserEntity } from "../../../models/user/user.entity";
+import UserApi from "../../../pages/api/user";
+import { useEffectAsync } from "../../../utils/react";
 import BaseInput from "../base-input";
 import BaseSelect from "../base-select";
 import StateSelect from "../state-select";
-import { UserEntity } from "../../../models/user/user.entity";
-import { useEffectAsync } from "../../../utils/react";
-import { Status } from "../../../enums/status.enum";
-import UserApi from "../../../pages/api/user";
 
-export interface FormActionOptions {
-    icon?: Icon;
-    label?: string | ReactNode | (() => string | ReactNode);
+export interface ApplicantFilterFormProps {
+    onSearch?: (values: SearchApplicantDto) => void;
     className?: string;
-    onClick?: (e: React.MouseEvent) => void;
-    hide?: boolean;
-    disabled?: boolean;
 }
 
-export interface EntityFormProps {
-    id?: number;
-    canSubmit?: boolean;
-    formik?: FormikInterface;
-    onSubmit?: (values: ApplicantFiltersDto) => void;
-    className?: string;
-    readonly children?: JSX.Element | JSX.Element[];
-    actions?: FormActionOptions[];
-    submitLabel?: string;
-    forbidSubmit?: boolean;
-    actionButtonDown?: boolean;
-}
-
-export default function ApplicantFilterForm(props: EntityFormProps) {
-    const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([]);
-
+export default function ApplicantFilterForm({ className, onSearch }: ApplicantFilterFormProps) {
     const { t } = useTranslation();
 
-    let { canSubmit, formik, className, onSubmit } = props;
-
+    const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([]);
 
     const form = useFormik({
-        initialValues: new ApplicantFiltersDto(),
-        validationSchema: ApplicantFiltersDto.yupSchema(),
+        initialValues: new SearchApplicantDto(),
+        validationSchema: SearchApplicantDto.yupSchema(),
         onSubmit: async (values) => {
-            onSubmit(values)
+            onSearch(values)
         },
         onReset: async () => {
-            onSubmit({})
+            onSearch({})
         },
     });
-
 
     useEffectAsync(async () => {
         const userApi = new UserApi();
@@ -71,7 +46,10 @@ export default function ApplicantFilterForm(props: EntityFormProps) {
         setCompanyUsers(data?.filter((u) => u.status == Status.ACTIVE));
     }, []);
 
-
+    // uncomment this in debug mode
+    // useEffect(() => {
+    //     console.log("filteer form.values", form.values);
+    // }, [form.values])
 
     return (
         <Form
@@ -87,7 +65,6 @@ export default function ApplicantFilterForm(props: EntityFormProps) {
                         displayPlaceholder
                         formik={form}
                     />
-
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
                         placeholder="cdl_type"
@@ -104,7 +81,6 @@ export default function ApplicantFilterForm(props: EntityFormProps) {
                         enumType={ApplicantType}
                         formik={form}
                     />
-
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
                         placeholder="ENDORSEMENTS"
@@ -113,7 +89,6 @@ export default function ApplicantFilterForm(props: EntityFormProps) {
                         enumType={DriverEndorsement}
                         formik={form}
                     />
-
                     {form.values.endorsements == DriverEndorsement.OTHER && (
                         <BaseInput
                             className="col-md-3 mt-1 mb-3"
@@ -123,7 +98,6 @@ export default function ApplicantFilterForm(props: EntityFormProps) {
                             formik={form}
                         />
                     )}
-
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
                         placeholder="License_Restrictions"
@@ -132,7 +106,6 @@ export default function ApplicantFilterForm(props: EntityFormProps) {
                         enumType={LicenseRestrictions}
                         formik={form}
                     />
-
                     {form.values.license_restrictions == LicenseRestrictions.OTHER && (
                         <BaseInput
                             className="col-md-3 mt-1 mb-3"
@@ -142,8 +115,6 @@ export default function ApplicantFilterForm(props: EntityFormProps) {
                             formik={form}
                         />
                     )}
-
-
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
                         placeholder="AUTOMATED_RECRUITING_LEAD"
@@ -151,13 +122,11 @@ export default function ApplicantFilterForm(props: EntityFormProps) {
                         enumType={BooleanType}
                         formik={form}
                     />
-
                     <StateSelect
                         className="col-md-3 mt-1 mb-3"
                         name="state"
                         placeholder="STATE"
                         formik={form}
-
                     />
                     <BaseInput
                         className="col-md-3 mt-1 mb-3"
@@ -165,7 +134,6 @@ export default function ApplicantFilterForm(props: EntityFormProps) {
                         displayPlaceholder
                         formik={form}
                     />
-
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
                         placeholder="STATUS"
@@ -175,8 +143,6 @@ export default function ApplicantFilterForm(props: EntityFormProps) {
                         enumType={ApplicantStatus}
                         formik={form}
                     />
-
-
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
                         placeholder="ASSIGNED_RECRUITER"
@@ -187,7 +153,6 @@ export default function ApplicantFilterForm(props: EntityFormProps) {
                         createLabel={(c) => `${c.name} (#${c.id}) `}
                         formik={form}
                     />
-
                     <BaseInput
                         className="col-md-3 mt-1 mb-3"
                         name="years_cdl_experience"
@@ -195,8 +160,6 @@ export default function ApplicantFilterForm(props: EntityFormProps) {
                         type='number'
                         formik={form}
                     />
-
-
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
                         placeholder="PREFERRED_LOCATION"
@@ -213,12 +176,17 @@ export default function ApplicantFilterForm(props: EntityFormProps) {
                         enumType={VehicleTransmissionType}
                         formik={form}
                     />
-
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
                         placeholder="OWNER_OP_COMPANY_DRIVER"
                         name="is_owner_operator"
-                        enumType={OwnerOperatorCompanyDriverEnum}
+                        options={([{
+                            label: t("OWNER_OPERATOR"),
+                            value: true
+                        }, {
+                            label: t("COMPANY_DRIVER"),
+                            value: false
+                        }])}
                         formik={form}
                     />
                     <Button

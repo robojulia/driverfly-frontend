@@ -2,14 +2,13 @@ import * as yup from "yup";
 import { LicenseRestrictions } from "../../enums/applicants/applicant-license-restrictions-type.enum";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
 import { ApplicantType } from "../../enums/applicants/applicant-type.enum";
-import { OwnerOperatorCompanyDriverEnum } from "../../enums/company/owner-company-type.enum";
 import { JobGeography } from "../../enums/jobs/job-geography.enum";
 import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum";
 import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
 import { VehicleTransmissionType } from "../../enums/vehicles/vehicle-transmission-type.enum";
 import "../../utils/yup";
 
-export class ApplicantFiltersDto {
+export class SearchApplicantDto {
   status?: ApplicantStatus;
   name?: string;
   type?: ApplicantType;
@@ -17,7 +16,7 @@ export class ApplicantFiltersDto {
   city?: string;
   preferred_location?: JobGeography;
   state?: string;
-  is_owner_operator?: OwnerOperatorCompanyDriverEnum;
+  is_owner_operator?: boolean;
   license_restrictions?: LicenseRestrictions;
   years_cdl_experience?: number;
   license_type?: DriverLicenseType;
@@ -25,6 +24,10 @@ export class ApplicantFiltersDto {
   assignedUserId?: number;
   endorsements_other?: string;
   license_restrictions_other?: string;
+  jobId?: number;
+  email?: string;
+  withHired?: boolean;
+  without?: string[];
 
   static yupSchema() {
     return yup.object({
@@ -34,9 +37,7 @@ export class ApplicantFiltersDto {
       city: yup.string().nullable(),
       preferred_location: (yup.string() as any).enum(JobGeography).nullable(),
       state: yup.string().nullable(),
-      is_owner_operator: (yup.string() as any)
-        .enum(OwnerOperatorCompanyDriverEnum)
-        .nullable(),
+      is_owner_operator: yup.boolean().nullable(),
       license_restrictions: (yup.string() as any)
         .enum(LicenseRestrictions)
         .nullable(),

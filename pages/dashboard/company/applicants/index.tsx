@@ -10,6 +10,7 @@ import FullLayout from "../../../../components/dashboard/layouts/layout/full-lay
 import BaseCheckList from "../../../../components/forms/base-check-list";
 import BaseSelect from "../../../../components/forms/base-select";
 import BaseTextArea from "../../../../components/forms/base-text-area";
+import ApplicantFilterForm from '../../../../components/forms/company/filter-form';
 import ShowFormattedDate from "../../../../components/jobs/show-formatted-date";
 import PageLayout from "../../../../components/layouts/page/page-layout";
 import OverlyPopover from "../../../../components/popover/overly-popover";
@@ -23,26 +24,13 @@ import { useAuth } from "../../../../hooks/use-auth";
 import { TranslateInterface, useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
+import { SearchApplicantDto } from '../../../../models/applicant/search-applicant.dto';
 import { JobEntity } from '../../../../models/job/job.entity';
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { buildAddress } from "../../../../utils/common";
 import * as numbers from "../../../../utils/number";
 import { useEffectAsync } from "../../../../utils/react";
 import ApplicantApi from "../../../api/applicant";
-import BaseInput from '../../../../components/forms/base-input';
-import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
-import { ApplicantType } from '../../../../enums/applicants/applicant-type.enum';
-import { DriverEndorsement } from '../../../../enums/users/driver-endorsement.enum';
-import { LicenseRestrictions } from '../../../../enums/applicants/applicant-license-restrictions-type.enum';
-import StateSelect from '../../../../components/forms/state-select';
-import { JobGeography } from '../../../../enums/jobs/job-geography.enum';
-import { VehicleTransmissionType } from '../../../../enums/vehicles/vehicle-transmission-type.enum';
-import { OwnerOperatorCompanyDriverEnum } from '../../../../enums/company/owner-company-type.enum';
-import { UserEntity } from '../../../../models/user/user.entity';
-import UserApi from '../../../api/user';
-import { Status } from '../../../../enums/status.enum';
-import ApplicantFilterForm from '../../../../components/forms/company/filter-form';
-import { ApplicantFiltersDto } from '../../../../models/applicant/applicant-filters.entity';
 
 const ViewMode = {
     job: "job",
@@ -60,7 +48,6 @@ interface ConsolodatedApplicantJob extends ApplicantJobEntity {
     qualification_fail_reason?: string[];
 }
 
-
 export default function Applicants() {
     const { t } = useTranslation();
 
@@ -73,50 +60,24 @@ export default function Applicants() {
 
     const [loading, setLoading] = useState<boolean>(true);
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
-    const [applicantStatus, setApplicantStatus] = useState<ApplicantStatus | null>(null);
-    const [drivingLicenceType, setDrivingLicenseTypeSelected] = useState<DriverLicenseType | null>(null);
-    const [applicantTypeSelected, setApplicantTypeSelected] = useState<ApplicantType | null>(null);
-    const [endorsementsSelected, setEndorsementsSelected] = useState<DriverEndorsement | null>(null);
-    const [licenseRestrictionsSelected, setLicenseRestrictionsSelected] = useState<LicenseRestrictions | null>(null);
-    const [automatedRecruitingLeadSelect, setAutomatedRecruitingLeadSelect] = useState<BooleanType | null>(null);
-    const [stateSelected, setStateSelected] = useState<string>(null);
-    const [fullNameSelected, setFullNameSelected] = useState<string>(null)
-    const [yearsOfCDL, setYearsOfCDL] = useState<number>(null)
-    const [preferredLocation, setPreferredLocation] = useState<JobGeography>(null)
-    const [transmissionExperience, setTransmissionExperience] = useState<VehicleTransmissionType>(null)
-    const [assignedRecruiter, setAssignedRecruiter] = useState<number>(null)
-    const [citySelected, setCitySelected] = useState<string>(null)
-    const [endorsementOther, setEndorsementOther] = useState<string>(null)
-    const [licenseRestrictionsOther, setLicenseRestrictionsOther] = useState<string>(null)
-    const [ownerOperator, setOwnerOperator] = useState<OwnerOperatorCompanyDriverEnum>(null)
-    const [searchData, setSearchData] = useState<boolean>(false)
-    const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([]);
+    const [filters, setFilters] = useState<SearchApplicantDto>();
 
-
-    const fetchApplicant = async (values?: ApplicantFiltersDto) => {
+    const fetchApplicant = async () => {
         setLoading(true)
         const api = new ApplicantApi();
-
         const data = await api.list({
             jobId: jobId as any as number,
             without: [
                 "applicant_dac",
                 "applicant_extras",
             ],
-            ...values
+            ...filters
         });
-
         setApplicants(data);
         setTimeout(() => setLoading(false), 1000);
     }
 
-
-    useEffectAsync(async () => {
-        fetchApplicant()
-    }, [user, jobId, viewMode, searchData]);
-
-
-
+    useEffectAsync(async () => await fetchApplicant(), [user, jobId, viewMode, filters]);
 
     const onViewClick = (id: number) => {
         router.push(`${router.pathname}/${id}`);
@@ -138,14 +99,7 @@ export default function Applicants() {
         setApplicants([]);
 
         await router.push(router);
-
     }
-
-    useEffectAsync(async () => {
-        const userApi = new UserApi();
-        const data = await userApi.list();
-        setCompanyUsers(data?.filter((u) => u.status == Status.ACTIVE));
-    }, []);
 
     const onChangeStatus = async (e: React.ChangeEvent<HTMLSelectElement>, applicant: ApplicantEntity, job: JobEntity) => {
         const value: ApplicantStatus = e.target.options[e.target.selectedIndex].value as ApplicantStatus;
@@ -176,8 +130,6 @@ export default function Applicants() {
         }
     }
 
-
-    ``
     const applicantJobForm = useFormik({
         initialValues: new ApplicantJobEntity(),
         validationSchema: ApplicantJobEntity.yupSchema(),
@@ -207,29 +159,7 @@ export default function Applicants() {
         });
     }
 
-
-
-
-    const onResetFilter = () => {
-        setApplicantStatus(null);
-        setDrivingLicenseTypeSelected(null);
-        setApplicantTypeSelected(null);
-        setEndorsementsSelected(null);
-        setStateSelected(null);
-        setPreferredLocation(null);
-        setFullNameSelected(null);
-        setLicenseRestrictionsSelected(null);
-        setAutomatedRecruitingLeadSelect(null);
-        setYearsOfCDL(null);
-        setTransmissionExperience(null);
-        setCitySelected(null);
-        setOwnerOperator(null);
-        setAssignedRecruiter(null)
-        setSearchData(!searchData)
-    }
-
     const canCreate = hasPermission("CanCreateApplicant");
-
 
     return (
         <>
@@ -269,175 +199,7 @@ export default function Applicants() {
 
                         <Col className='force-overflow p-0'>
                             <Accordion.Body >
-                                <ApplicantFilterForm onSubmit={fetchApplicant} />
-                                {/* <Row >
-                                    <React.Fragment>
-                                        <BaseInput
-                                            className="col-md-2 mt-1 mb-3"
-                                            name="FULL_NAME"
-                                            displayPlaceholder
-                                            value={fullNameSelected}
-                                            onChange={({ target: { value } }) => setFullNameSelected(value as string)}
-                                        />
-
-                                        <BaseSelect
-                                            className="col-md-2 mt-1 mb-3"
-                                            placeholder="cdl_type"
-                                            labelPrefix="DriverLicenseType"
-                                            enumType={DriverLicenseType}
-                                            onChange={({ target: { value } }) => setDrivingLicenseTypeSelected(value as DriverLicenseType)}
-                                            value={drivingLicenceType}
-                                        />
-                                        <BaseSelect
-                                            className="col-md-2 mt-1 mb-3"
-                                            placeholder="LEAD_TYPE"
-                                            labelPrefix="ApplicantType"
-                                            enumType={ApplicantType}
-                                            onChange={({ target: { value } }) => setApplicantTypeSelected(value as ApplicantType)}
-                                            value={applicantTypeSelected}
-                                        />
-
-                                        <BaseSelect
-                                            className="col-md-3 mt-1 mb-3"
-                                            placeholder="ENDORSEMENTS"
-                                            labelPrefix="DriverEndorsement"
-                                            enumType={DriverEndorsement}
-                                            onChange={({ target: { value } }) => setEndorsementsSelected(value as DriverEndorsement)}
-                                            value={endorsementsSelected}
-                                        />
-
-                                        {endorsementsSelected == DriverEndorsement.OTHER && (
-                                            <BaseInput
-                                                className="col-md-3 mt-1 mb-3"
-                                                name="ENDORSEMENTS"
-                                                displayPlaceholder
-                                                value={endorsementOther}
-                                                onChange={({ target: { value } }) => setEndorsementOther(value as string)}
-                                            />
-                                        )}
-
-                                        <BaseSelect
-                                            className="col-md-3 mt-1 mb-3"
-                                            placeholder="License_Restrictions"
-                                            labelPrefix="LicenseRestrictions"
-                                            enumType={LicenseRestrictions}
-                                            onChange={({ target: { value } }) => setLicenseRestrictionsSelected(value as LicenseRestrictions)}
-                                            value={licenseRestrictionsSelected}
-                                        />
-
-                                        {licenseRestrictionsSelected == LicenseRestrictions.OTHER && (
-                                            <BaseInput
-                                                className="col-md-3 mt-1 mb-3"
-                                                name="License_Restrictions"
-                                                displayPlaceholder
-                                                value={licenseRestrictionsOther}
-                                                onChange={({ target: { value } }) => setLicenseRestrictionsOther(value as string)}
-                                            />
-                                        )}
-
-
-                                        <BaseSelect
-                                            className="col-md-3 mt-1 mb-3"
-                                            placeholder="AUTOMATED_RECRUITING_LEAD"
-                                            // labelPrefix="LicenseRestrictions"
-                                            enumType={BooleanType}
-                                            onChange={({ target: { value } }) => setAutomatedRecruitingLeadSelect(value as BooleanType)}
-                                            value={automatedRecruitingLeadSelect}
-                                        />
-
-                                        <StateSelect
-                                            className="col-md-2 mt-1 mb-3"
-                                            name="state"
-                                            placeholder="STATE"
-                                            value={stateSelected}
-                                            onChange={({ target: { value } }) => setStateSelected(value as string)}
-
-                                        />
-                                        <BaseInput
-                                            className="col-md-2 mt-1 mb-3"
-                                            name="city"
-                                            displayPlaceholder
-                                            value={citySelected}
-                                            onChange={({ target: { value } }) => setCitySelected(value as string)}
-                                        />
-
-                                        <BaseSelect
-                                            className="col-md-2 mt-1 mb-3"
-                                            placeholder="STATUS"
-                                            labelPrefix="ApplicantStatus"
-                                            hideOptions={[ApplicantStatus.OTHER]}
-                                            enumType={ApplicantStatus}
-                                            onChange={({ target: { value } }) => setApplicantStatus(value as ApplicantStatus)}
-                                            value={applicantStatus}
-                                        />
-
-
-                                        <BaseSelect
-                                            className="col-md-3 mt-1 mb-3"
-                                            placeholder="ASSIGNED_RECRUITER"
-                                            displayPlaceholder
-                                            options={companyUsers}
-                                            valueKey="id"
-                                            value={assignedRecruiter}
-                                            createLabel={(c) => `${c.name} (#${c.id}) `}
-                                            onChange={({ target: { value } }) => setAssignedRecruiter(value as any)}
-                                        />
-
-                                        <BaseInput
-                                            className="col-md-2 mt-1 mb-3"
-                                            name="years_cdl_experience"
-                                            displayPlaceholder
-                                            type='number'
-                                            value={yearsOfCDL}
-                                            onChange={({ target: { value } }) => setYearsOfCDL(value as unknown as number)}
-                                        />
-
-
-                                        <BaseSelect
-                                            className="col-md-2 mt-1 mb-3"
-                                            placeholder="PREFERRED_LOCATION"
-                                            labelPrefix="JobGeography"
-                                            enumType={JobGeography}
-                                            onChange={({ target: { value } }) => setPreferredLocation(value as JobGeography)}
-                                            value={preferredLocation}
-                                        />
-                                        <BaseSelect
-                                            className="col-md-2 mt-1 mb-3"
-                                            placeholder="TRANSMISSION_EXPERIENCE"
-                                            labelPrefix="VehicleTransmissionType"
-                                            enumType={VehicleTransmissionType}
-                                            onChange={({ target: { value } }) => setTransmissionExperience(value as VehicleTransmissionType)}
-                                            value={transmissionExperience}
-                                        />
-
-                                        <BaseSelect
-                                            className="col-md-3 mt-1 mb-3"
-                                            placeholder="OWNER_OP_COMPANY_DRIVER"
-                                            enumType={OwnerOperatorCompanyDriverEnum}
-                                            onChange={({ target: { value } }) => setOwnerOperator(value as OwnerOperatorCompanyDriverEnum)}
-                                            value={ownerOperator}
-                                        />
-                                        <Button
-                                            className="col-md-1 ml-3 mt-1 mb-3 mr-3 "
-                                            variant="primary"
-                                            size='sm'
-                                            onClick={() => { setSearchData(!searchData) }}
-                                        >
-                                            {t("SEARCH")}
-                                        </Button>
-
-                                        <Button
-                                            className="col-md-1 ml-3 mt-1 mb-3 theme-general-btn  mr-3"
-                                            variant=""
-                                            size='sm'
-                                            onClick={onResetFilter}
-                                        >
-                                            {t("RESET")}
-                                        </Button>
-
-                                    </React.Fragment>
-
-                                </Row> */}
+                                <ApplicantFilterForm onSearch={setFilters} />
                             </Accordion.Body>
 
                             {loading
