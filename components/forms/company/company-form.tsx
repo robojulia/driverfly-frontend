@@ -2,22 +2,21 @@ import { useFormik } from "formik";
 import { useEffect } from "react";
 import { Row } from "react-bootstrap";
 import { toast } from "react-toastify";
+import BaseClickToCopyInput from "../../../components/forms/base-click-to-copy-input";
+import { useAuth } from "../../../hooks/use-auth";
 import { useTranslation } from "../../../hooks/use-translation";
 import { CompanyEntity } from "../../../models/company/company.entity";
 import CompanyApi from "../../../pages/api/company";
-import { useAuth } from "../../../hooks/use-auth";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { formSuccess } from "../../../utils/toast";
-import BaseClickToCopyInput from "../../../components/forms/base-click-to-copy-input";
 
+import { UncontrolledTooltip } from "reactstrap";
 import EntityForm from "../../layouts/page/entity-form";
 import BaseInput from "../base-input";
+import BaseInputPhone from "../base-input-phone";
 import BaseTextArea from "../base-text-area";
 import FileInput from "../file-input";
 import { BaseFormProps } from "./base-form-props";
-import { UncontrolledTooltip } from "reactstrap";
-import {  Facebook, Instagram, Linkedin, Telephone, Twitter } from "react-bootstrap-icons";
-import BaseInputPhone from "../base-input-phone";
 
 
 
@@ -128,16 +127,16 @@ export function CompanyForm(props: CompanyFormProps) {
 					placeholder="PHONE"
 					formik={form}
 				/>
- 
+
 				<p className="mt-3" >{t("SOCIAL_MEDIA_LINKS")}</p>
 				<div className="p-0 d-flex justify-content-start ">
 					<div className="col-3">
 						<BaseInput
-						className=""
-						label={t("FACEBOOK")}
-						name={`facebook`}
-						placeholder="http://www.facebook.com"
-						formik={form}
+							className=""
+							label={t("FACEBOOK")}
+							name={`facebook`}
+							placeholder="http://www.facebook.com"
+							formik={form}
 						/>
 					</div>
 					<div className="col-3">

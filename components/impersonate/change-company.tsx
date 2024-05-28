@@ -1,10 +1,11 @@
-import { useState } from "react";
 import { useRouter } from "next/router";
-import { Dropdown, Button, Row } from "react-bootstrap";
+import { useState } from "react";
+import { Dropdown } from "react-bootstrap";
+import { Status } from "../../enums/status.enum";
 import { useAuth } from "../../hooks/use-auth";
 import { useTranslation } from "../../hooks/use-translation";
-import AuthApi from "../../pages/api/auth";
 import { CompanyEntity } from "../../models/company/company.entity";
+import AuthApi from "../../pages/api/auth";
 
 export default function ChangeCompany() {
     const { user, updateUser } = useAuth();
@@ -37,6 +38,7 @@ export default function ChangeCompany() {
             <Dropdown.Menu>
                 {user.company
                     .children
+                    .filter((v) => v.status == Status.ACTIVE)
                     .map((v, i) => (<Dropdown.Item key={v.id} onClick={e => onClick(e, v)}>{v.name} {v.id == user.company.id ? `(${t("CURRENT")})` : ""}</Dropdown.Item>))}
             </Dropdown.Menu>
         </Dropdown>
