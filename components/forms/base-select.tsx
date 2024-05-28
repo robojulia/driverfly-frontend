@@ -7,7 +7,7 @@ export interface BaseSelectProps extends BaseControlProps, React.InputHTMLAttrib
 	enumType?: object;
 	hideOptions?: string[];
 	showOptions?: string[];
-	options?: { value?: string, label?: string }[] | any[];
+	options?: { value?: number | string | boolean, label?: string }[] | any[];
 	valueKey?: string;
 	labelKey?: string;
 	labelPrefix?: string;
