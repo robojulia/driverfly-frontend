@@ -182,10 +182,10 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                         name="is_owner_operator"
                         options={([{
                             label: t("OWNER_OPERATOR"),
-                            value: true
+                            value: 1
                         }, {
                             label: t("COMPANY_DRIVER"),
-                            value: false
+                            value: 0
                         }])}
                         formik={form}
                     />
