@@ -757,7 +757,7 @@ function ApplicantView(props: ViewProps) {
                         id: "transmission_type",
                         name: "TRANSMISSION_EXPERIENCE",
                         wrap: true,
-                        selector: applicant => applicant?.transmission_type.join(",") || t("NONE"),
+                        selector: applicant => applicant?.transmission_type?.join(",") || t("NONE"),
                     },
                     {
                         id: "date_added",
