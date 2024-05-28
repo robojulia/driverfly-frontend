@@ -747,6 +747,7 @@ function JobView(props: ViewProps) {
                 name: "JOB",
                 selector: job => job.title,
                 hidable: false,
+                cell: (j) => (<Link href={`/dashboard/company/jobs/${j.id}`} ><a>{j.title}</a></Link>),
             },
             {
                 id: "location",
