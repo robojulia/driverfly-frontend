@@ -805,7 +805,7 @@ function ApplicantView(props: ViewProps) {
                         name: "License_Restrictions",
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant.license_restrictions.join(",") || t("NONE"),
+                        selector: applicant => applicant.license_restrictions?.join(",") || t("NONE"),
                     },
                     {
                         id: "is_owner_operator",
@@ -819,7 +819,7 @@ function ApplicantView(props: ViewProps) {
                         name: `PREFERRED_LOCATION`,
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant?.preferred_location.join(",") || t("NONE"),
+                        selector: applicant => applicant?.preferred_location?.join(",") || t("NONE"),
                     }
 
                 ]}
@@ -889,7 +889,7 @@ function ApplicantView(props: ViewProps) {
                             },
                             {
                                 name: "REASONS_IF_NO",
-                                selector: aJob => aJob.qualification_fail_reason.join(),
+                                selector: aJob => aJob.qualification_fail_reason?.join(),
                                 hidable: false,
                             },
                             {
@@ -1063,7 +1063,7 @@ function JobView(props: ViewProps) {
                     },
                     {
                         name: "REASONS_IF_NO",
-                        selector: aJob => aJob.qualification_fail_reason.join(),
+                        selector: aJob => aJob.qualification_fail_reason?.join(),
                         hidable: false,
                     },
                     {
