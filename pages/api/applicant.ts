@@ -2,10 +2,10 @@ import { AxiosRequestConfig } from "axios";
 import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
 import { ApplicantFormStatus } from "../../enums/applicants/applicant-form-status.enum";
 import { ApplicantOnBoardingChecklist } from "../../enums/applicants/applicant-onboarding-checklist.enum";
-import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
 import {
   ApplicantEmployerEntity,
   ApplicantVoeEntity,
+  SearchApplicantDto,
 } from "../../models/applicant";
 import { ApplicantDacEntity } from "../../models/applicant/applicant-dac.entity";
 import { ApplicantJobEntity } from "../../models/applicant/applicant-job.entity";
@@ -106,13 +106,7 @@ export default class ApplicantApi extends BaseApi {
     return data;
   }
 
-  async list(params?: {
-    jobId?: number;
-    email?: string;
-    status?: ApplicantStatus | ApplicantStatus[];
-    withHired?: boolean;
-    without?: string[];
-  }): Promise<ApplicantEntity[]> {
+  async list(params?: SearchApplicantDto): Promise<ApplicantEntity[]> {
     const { data } = await this.get(
       this.buildUrl(this.baseUrl + "/list", params)
     );

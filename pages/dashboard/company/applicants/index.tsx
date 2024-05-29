@@ -3,13 +3,14 @@ import { useFormik } from "formik";
 import Link from "next/link";
 import { NextRouter, useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
+import { Accordion, Button, ButtonGroup, Col, Row } from "react-bootstrap";
 import { EyeFill, PencilFill } from 'react-bootstrap-icons';
 import { toast } from "react-toastify";
 import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
 import BaseCheckList from "../../../../components/forms/base-check-list";
 import BaseSelect from "../../../../components/forms/base-select";
 import BaseTextArea from "../../../../components/forms/base-text-area";
+import ApplicantFilterForm from '../../../../components/forms/company/filter-form';
 import ShowFormattedDate from "../../../../components/jobs/show-formatted-date";
 import PageLayout from "../../../../components/layouts/page/page-layout";
 import OverlyPopover from "../../../../components/popover/overly-popover";
@@ -23,6 +24,7 @@ import { useAuth } from "../../../../hooks/use-auth";
 import { TranslateInterface, useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
+import { SearchApplicantDto } from '../../../../models/applicant/search-applicant.dto';
 import { JobEntity } from '../../../../models/job/job.entity';
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { buildAddress } from "../../../../utils/common";
@@ -47,40 +49,35 @@ interface ConsolodatedApplicantJob extends ApplicantJobEntity {
 }
 
 export default function Applicants() {
-    // continue loading
     const { t } = useTranslation();
 
     const router = useRouter();
 
-    const { user, hasPermission } = useAuth();
-
+    let { user, hasPermission } = useAuth();
     let { viewMode, jobId } = router.query;
 
     if (!ViewMode[`${viewMode}`]) viewMode = ViewMode.applicant;
 
     const [loading, setLoading] = useState<boolean>(true);
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
-    const [applicantStatus, setApplicantStatus] = useState<ApplicantStatus | null>(null);
+    const [filters, setFilters] = useState<SearchApplicantDto>();
 
-    useEffectAsync(async () => {
+    const fetchApplicant = async () => {
         setLoading(true)
         const api = new ApplicantApi();
-
         const data = await api.list({
             jobId: jobId as any as number,
-            status: applicantStatus,
             without: [
-                // "jobs",
-                // "equipment_experience",
-                // "assignedUser",
                 "applicant_dac",
                 "applicant_extras",
             ],
+            ...filters
         });
-
         setApplicants(data);
         setTimeout(() => setLoading(false), 1000);
-    }, [user, jobId, viewMode, applicantStatus]);
+    }
+
+    useEffectAsync(async () => await fetchApplicant(), [user, jobId, viewMode, filters]);
 
     const onViewClick = (id: number) => {
         router.push(`${router.pathname}/${id}`);
@@ -102,7 +99,6 @@ export default function Applicants() {
         setApplicants([]);
 
         await router.push(router);
-
     }
 
     const onChangeStatus = async (e: React.ChangeEvent<HTMLSelectElement>, applicant: ApplicantEntity, job: JobEntity) => {
@@ -166,163 +162,162 @@ export default function Applicants() {
     const canCreate = hasPermission("CanCreateApplicant");
 
     return (
-        <PageLayout
-            title="APPLICANTS"
-            actions={(
-                <>
-                    {
-                        canCreate &&
-                        <ButtonGroup size="sm" style={{ float: "right" }}>
-                            <Button variant="primary" onClick={() => router.push("/dashboard/company/applicants/create")}>
-                                + {t("ADD_AN_APPLICANT")}
-                            </Button>
-                            <Button variant="" className="theme-general-btn" onClick={() => router.push("/dashboard/company/applicants/import")}>
-                                + {t("IMPORT_APPLICANTS")}
-                            </Button>
-                        </ButtonGroup>
-                    }
-                </>
-            )}
-        >
-            <Row>
-                <Col className='force-overflow p-0  '>
-                    <FormGroup style={{ float: "right" }}>
-                        <FormControlLabel
-                            control={<Switch value={viewMode == ViewMode.applicant ? ViewMode.job : ViewMode.applicant} checked={viewMode == ViewMode.job} onChange={onViewModeChange} />}
-                            label={t("VIEW_BY_{name}", { name: t(viewMode == ViewMode.applicant ? "JOB" : "APPLICANT") })}
-                        />
-                    </FormGroup>
-                    <Row>
-                        <BaseSelect
-                            className="col-md-3"
-                            placeholder="STATUS"
-                            labelPrefix="ApplicantStatus"
-                            hideOptions={[ApplicantStatus.OTHER]}
-                            enumType={ApplicantStatus}
-                            onChange={({ target: { value } }) => setApplicantStatus(value as ApplicantStatus)}
-                            value={applicantStatus}
-                        />
-                        {Boolean(applicantStatus) && (<Col md="2">
-                            <button
-                                onClick={() => { setApplicantStatus(null) }}
-                                type="button"
-                                className="btn btn-link"
-                            >{t("CLEAR")}</button>
-                        </Col>)}
-                    </Row>
-                    {loading
-                        ? <div className="spinner-border mt-3 ml-1" role="status">
-                            <span className="sr-only">Loading...</span>
+        <>
+            <Accordion defaultActiveKey="0" flush>
+                <PageLayout
+                    title="APPLICANTS"
+                    actions={(
+                        <div style={{ display: "flex", justifyContent: "end", alignItems: "center" }}>
+                            <Accordion.Button className="mr-3 text-black theme-filter-btn" style={{ width: "auto", fontSize: ".95rem", lineHeight: "1.5", padding: ".25rem 1.5rem", borderRadius: ".2rem" }} >
+                                <div className="mr-2">{t("FILTERS")}</div>
+                            </Accordion.Button>
+                            {
+                                canCreate &&
+                                <ButtonGroup size="sm" style={{ float: "right" }}>
+                                    <Button variant="primary" onClick={() => router.push("/dashboard/company/applicants/create")}>
+                                        + {t("ADD_AN_APPLICANT")}
+                                    </Button>
+                                    <Button variant="" className="theme-general-btn" onClick={() => router.push("/dashboard/company/applicants/import")}>
+                                        + {t("IMPORT_APPLICANTS")}
+                                    </Button>
+                                </ButtonGroup>
+                            }
                         </div>
-                        : <>
-                            {viewMode == ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
-                            {viewMode == ViewMode.job && <JobView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
-                        </>}
-                </Col>
-            </Row>
-            <ViewModal
-                show={!!applicantJobForm.values.status}
-                onCloseClick={applicantJobForm.resetForm}
-                closeText="CANCEL"
-                title={"CHANGE_STATUS"}
-                className="bg-secondary "
-            >
-                <form onSubmit={applicantJobForm.handleSubmit}>
-                    <Row className="py-3 px-5">
-                        <BaseSelect
-                            className="col-12"
-                            label="STATUS"
-                            name="status"
-                            required
-                            formik={applicantJobForm}
-                            labelPrefix="ApplicantStatus"
-                            enumType={ApplicantStatus}
-                            onChange={onStatusChange}
-                        />
-                        {
-                            applicantJobForm.values.status == ApplicantStatus.OTHER &&
-                            <BaseTextArea
-                                className="col-12"
-                                placeholder="STATUS"
-                                name="status_other"
-                                required
-                                maxLength={100}
-                                formik={applicantJobForm}
-                            />
-                        }
-                        {
-                            applicantJobForm.values.status == ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED &&
-                            <BaseCheckList
-                                className="col-12"
-                                label="REASON_CODES"
-                                name="reason_codes"
-                                required
-                                cols={2}
-                                formik={applicantJobForm}
-                                labelPrefix="ApplicantReasonCodeNotQualified"
-                                enumType={ApplicantReasonCodeNotQualified}
-                            />
-                        }
-                        {
-                            applicantJobForm.values.status == ApplicantStatus.INACTIVE_CONTACTED_UNINTERESTED &&
-                            <BaseCheckList
-                                className="col-12"
-                                label="REASON_CODES"
-                                name="reason_codes"
-                                required
-                                cols={2}
-                                formik={applicantJobForm}
-                                labelPrefix="ApplicantReasonCodeNotInterested"
-                                enumType={ApplicantReasonCodeNotInterested}
-                            />
-                        }
-                        {
-                            applicantJobForm.values.status == ApplicantStatus.INACTIVE_QUIT &&
-                            <BaseCheckList
-                                className="col-12"
-                                label="REASON_CODES"
-                                name="reason_codes"
-                                required
-                                cols={2}
-                                formik={applicantJobForm}
-                                labelPrefix="ApplicantReasonCodeQuit"
-                                enumType={ApplicantReasonCodeQuit}
-                            />
-                        }
-                        {
-                            applicantJobForm.values.status == ApplicantStatus.INACTIVE_FIRED &&
-                            <BaseCheckList
-                                className="col-12"
-                                label="REASON_CODES"
-                                name="reason_codes"
-                                required
-                                cols={2}
-                                formik={applicantJobForm}
-                                labelPrefix="ApplicantReasonCodeFired"
-                                enumType={ApplicantReasonCodeFired}
-                            />
-                        }
-                        {
-                            applicantJobForm.values.reason_codes?.includes("OTHER") &&
-                            <BaseTextArea
-                                className="col-12"
-                                placeholder="REASONS"
-                                name="reason_codes_other"
-                                required
-                                maxLength={100}
-                                formik={applicantJobForm}
-                            />
-                        }
-                    </Row>
-                    <Row className="py-3 px-5">
-                        <Button type="submit" variant="primary">
-                            {t("SUBMIT")}
-                        </Button>
-                    </Row>
-                </form>
+                    )}
+                >
 
-            </ViewModal>
-        </PageLayout >
+                    <div style={{ display: "flex", alignItems: "end", justifyContent: "end" }}>
+                        <FormGroup style={{ float: "right" }}>
+                            <FormControlLabel
+                                control={<Switch value={viewMode == ViewMode.applicant ? ViewMode.job : ViewMode.applicant} checked={viewMode == ViewMode.job} onChange={onViewModeChange} />}
+                                label={t("VIEW_BY_{name}", { name: t(viewMode == ViewMode.applicant ? "JOB" : "APPLICANT") })}
+                            />
+                        </FormGroup>
+                    </div>
+
+                    <Row>
+
+                        <Col className='force-overflow p-0'>
+                            <Accordion.Body >
+                                <ApplicantFilterForm onSearch={setFilters} />
+                            </Accordion.Body>
+
+                            {loading
+                                ? <div className="spinner-border mt-3 ml-1" role="status">
+                                    <span className="sr-only">Loading...</span>
+                                </div>
+                                : <>
+                                    {viewMode == ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                                    {viewMode == ViewMode.job && <JobView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                                </>}
+                        </Col>
+                    </Row>
+                    <ViewModal
+                        show={!!applicantJobForm.values.status}
+                        onCloseClick={applicantJobForm.resetForm}
+                        closeText="CANCEL"
+                        title={"CHANGE_STATUS"}
+                        className="bg-secondary "
+                    >
+                        <form onSubmit={applicantJobForm.handleSubmit}>
+                            <Row className="py-3 px-5">
+                                <BaseSelect
+                                    className="col-12"
+                                    label="STATUS"
+                                    name="status"
+                                    required
+                                    formik={applicantJobForm}
+                                    labelPrefix="ApplicantStatus"
+                                    enumType={ApplicantStatus}
+                                    onChange={onStatusChange}
+                                />
+                                {
+                                    applicantJobForm.values.status == ApplicantStatus.OTHER &&
+                                    <BaseTextArea
+                                        className="col-12"
+                                        placeholder="STATUS"
+                                        name="status_other"
+                                        required
+                                        maxLength={100}
+                                        formik={applicantJobForm}
+                                    />
+                                }
+                                {
+                                    applicantJobForm.values.status == ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED &&
+                                    <BaseCheckList
+                                        className="col-12"
+                                        label="REASON_CODES"
+                                        name="reason_codes"
+                                        required
+                                        cols={2}
+                                        formik={applicantJobForm}
+                                        labelPrefix="ApplicantReasonCodeNotQualified"
+                                        enumType={ApplicantReasonCodeNotQualified}
+                                    />
+                                }
+                                {
+                                    applicantJobForm.values.status == ApplicantStatus.INACTIVE_CONTACTED_UNINTERESTED &&
+                                    <BaseCheckList
+                                        className="col-12"
+                                        label="REASON_CODES"
+                                        name="reason_codes"
+                                        required
+                                        cols={2}
+                                        formik={applicantJobForm}
+                                        labelPrefix="ApplicantReasonCodeNotInterested"
+                                        enumType={ApplicantReasonCodeNotInterested}
+                                    />
+                                }
+                                {
+                                    applicantJobForm.values.status == ApplicantStatus.INACTIVE_QUIT &&
+                                    <BaseCheckList
+                                        className="col-12"
+                                        label="REASON_CODES"
+                                        name="reason_codes"
+                                        required
+                                        cols={2}
+                                        formik={applicantJobForm}
+                                        labelPrefix="ApplicantReasonCodeQuit"
+                                        enumType={ApplicantReasonCodeQuit}
+                                    />
+                                }
+                                {
+                                    applicantJobForm.values.status == ApplicantStatus.INACTIVE_FIRED &&
+                                    <BaseCheckList
+                                        className="col-12"
+                                        label="REASON_CODES"
+                                        name="reason_codes"
+                                        required
+                                        cols={2}
+                                        formik={applicantJobForm}
+                                        labelPrefix="ApplicantReasonCodeFired"
+                                        enumType={ApplicantReasonCodeFired}
+                                    />
+                                }
+                                {
+                                    applicantJobForm.values.reason_codes?.includes("OTHER") &&
+                                    <BaseTextArea
+                                        className="col-12"
+                                        placeholder="REASONS"
+                                        name="reason_codes_other"
+                                        required
+                                        maxLength={100}
+                                        formik={applicantJobForm}
+                                    />
+                                }
+                            </Row>
+                            <Row className="py-3 px-5">
+                                <Button type="submit" variant="primary">
+                                    {t("SUBMIT")}
+                                </Button>
+                            </Row>
+                        </form>
+
+                    </ViewModal>
+                </PageLayout >
+            </Accordion >
+        </>
+
     )
 };
 
@@ -452,7 +447,7 @@ function ApplicantView(props: ViewProps) {
     return (
         <div className="applicant__table__sty ellipsis_remove">
             <ViewDataTable<ConsolodatedApplicant>
-                // preExpanded={(applicant) => applicant.jobs?.length > 0}
+
                 customStyles={{
                     headRow: {
                         style: {
@@ -461,12 +456,8 @@ function ApplicantView(props: ViewProps) {
                             whiteSpace: "unset", textOverflow: "unset", overflow: "hidden"
                         },
                     },
-                    // headCells: {
-                    //     style: { whiteSpace: "unset", textOverflow: "unset", overflow: "hidden", background: "red" },
-                    // },
-                }}
-                // customStyles={props.customStyles}
 
+                }}
 
                 columns={[
                     {
@@ -594,6 +585,7 @@ function ApplicantView(props: ViewProps) {
                     }
 
                 ]}
+                hideSetting
                 items={items}
                 actions={row => [
                     // {
@@ -659,7 +651,7 @@ function ApplicantView(props: ViewProps) {
                             },
                             {
                                 name: "REASONS_IF_NO",
-                                selector: aJob => aJob.qualification_fail_reason.join(),
+                                selector: aJob => aJob.qualification_fail_reason?.join(),
                                 hidable: false,
                             },
                             {
@@ -755,6 +747,7 @@ function JobView(props: ViewProps) {
                 name: "JOB",
                 selector: job => job.title,
                 hidable: false,
+                cell: (j) => (<Link href={`/dashboard/company/jobs/${j.id}`} ><a>{j.title}</a></Link>),
             },
             {
                 id: "location",
@@ -833,7 +826,7 @@ function JobView(props: ViewProps) {
                     },
                     {
                         name: "REASONS_IF_NO",
-                        selector: aJob => aJob.qualification_fail_reason.join(),
+                        selector: aJob => aJob.qualification_fail_reason?.join(),
                         hidable: false,
                     },
                     {

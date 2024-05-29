@@ -10,3 +10,4 @@ export { ApplicantSuggestedJobEntity } from "./applicant-suggested-job.entity"
 export { ApplicantVoeEntity } from "./applicant-voe.entity"
 export { ApplicantEntity } from "./applicant.entity"
 
+export { SearchApplicantDto } from "./search-applicant.dto"

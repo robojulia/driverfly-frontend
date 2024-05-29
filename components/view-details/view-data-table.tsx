@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect, useState } from "react";
-import { Button, Container, Dropdown } from "react-bootstrap";
+import { Button, ButtonGroup, Container, Dropdown } from "react-bootstrap";
 import { Gear, Search } from "react-bootstrap-icons";
 import DataTable, { TableColumn, TableStyles } from "react-data-table-component";
 // import {
@@ -22,8 +22,10 @@ export interface ViewTableProps<TElement> {
     enableSelectableRows?: boolean | (() => boolean);
     selectableRowChangeHandler?: (e?: any) => void;
     expandableRowsComponent?: any;
+
     // expandableRowsComponent?: ExpandableRowsComponent<TElement>;
     hideSearch?: boolean;
+    hideSetting?: boolean;
     subHeader?: ReactNode;
     noDataComponent?: ReactNode;
     customStyles?: TableStyles;
@@ -178,18 +180,21 @@ export default function ViewDataTable<TElement>(
                     )
                     : null
             }
-            subHeader={!props.hideSearch}
+            subHeader={!props.hideSearch || props.hideSetting}
             subHeaderComponent={<>
                 {props.subHeader}
                 {!props.hideSearch && (
                     <>
-                        <BaseInput
-                            placeholder="SEARCH"
-                            // onKeyDown={onSearchKey}
-                            onChange={onSearchChange}
-                            value={search}
-                            append={
+
+                        <ButtonGroup >
+                            {!props.hideSetting && (
                                 <>
+                                    <BaseInput
+                                        placeholder="SEARCH"
+                                        onChange={onSearchChange}
+                                        value={search}
+                                    />
+
                                     <Button
                                         variant="primary"
                                         type="button"
@@ -197,39 +202,41 @@ export default function ViewDataTable<TElement>(
                                     >
                                         <Search />
                                     </Button>
-                                    {canHideColumns && (
-                                        <Dropdown autoClose="outside">
-                                            <Dropdown.Toggle variant="" className="theme-general-btn">
-                                                <Gear />
-                                            </Dropdown.Toggle>
-                                            <Dropdown.Menu className="select_dropdown data_table_dropdown">
-                                                {columns
-                                                    .filter((v) => !!v.id)
-                                                    .map((v, i) => (
-                                                        <Dropdown.Item
-                                                            disabled={!hideable.has(v.id)}
-                                                            key={i}
-                                                            onClick={() => onColumnHide(v)}
-                                                        >
-                                                            {v.hide == 1 ? (
-                                                                <del>
-                                                                    {typeof v.name == "string"
-                                                                        ? t(v.name)
-                                                                        : v.name}
-                                                                </del>
-                                                            ) : !hideable.has(v.id) ? (
-                                                                <>{t(v.name as any)}</>
-                                                            ) : (
-                                                                t(v.name as any)
-                                                            )}
-                                                        </Dropdown.Item>
-                                                    ))}
-                                            </Dropdown.Menu>
-                                        </Dropdown>
-                                    )}
                                 </>
-                            }
-                        />
+                            )}
+
+                            {canHideColumns && (
+                                <Dropdown autoClose="outside">
+                                    <Dropdown.Toggle variant="" className="theme-general-btn">
+                                        <Gear />
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu className="select_dropdown data_table_dropdown">
+                                        {columns
+                                            .filter((v) => !!v.id)
+                                            .map((v, i) => (
+                                                <Dropdown.Item
+                                                    disabled={!hideable.has(v.id)}
+                                                    key={i}
+                                                    onClick={() => onColumnHide(v)}
+                                                >
+                                                    {v.hide == 1 ? (
+                                                        <del>
+                                                            {typeof v.name == "string"
+                                                                ? t(v.name)
+                                                                : v.name}
+                                                        </del>
+                                                    ) : !hideable.has(v.id) ? (
+                                                        <>{t(v.name as any)}</>
+                                                    ) : (
+                                                        t(v.name as any)
+                                                    )}
+                                                </Dropdown.Item>
+                                            ))}
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            )}
+
+                        </ButtonGroup>
                     </>
                 )}
             </>

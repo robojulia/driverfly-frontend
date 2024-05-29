@@ -119,6 +119,7 @@
   "update": "Update",
   "We_want_to_hear_form_you": "We want to hear form you!",
   "reset_all": "Reset All",
+  "RESET": "Reset",
   "PREFERENCES": "Preferences",
   "communication_preferences": "Communication Preferences",
   "communication_preferences_receive_driverfly": "Consent to receive text messages from DriverFly & any third parties of DriverFly",
@@ -217,6 +218,7 @@
   "preferred_benefits": "Preferred Benefits",
   "OTHER_BENEFITS": "Other Benefits",
   "COMPANY_DRIVER": "Company Driver", 
+  "OWNER_OP_COMPANY_DRIVER": "Owner Op/Company Driver", 
   "JobBenefits": {
     "SIGN_ON_BONUS": "Sign-on bonus",
     "GUARANTEED_BASE_SALARY": "Guaranteed base salary",
