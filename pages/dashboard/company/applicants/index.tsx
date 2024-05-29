@@ -32,6 +32,7 @@ import * as numbers from "../../../../utils/number";
 import { useEffectAsync } from "../../../../utils/react";
 import ApplicantApi from "../../../api/applicant";
 
+
 const ViewMode = {
     job: "job",
     applicant: "applicant"
@@ -451,7 +452,8 @@ function ApplicantView(props: ViewProps) {
                 customStyles={{
                     headRow: {
                         style: {
-                            background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                            background: "linear-gradient(to bottom right, #2ec8c4, #1b4454)",
+                            opacity: '1',
                             color: "white",
                             whiteSpace: "unset", textOverflow: "unset", overflow: "hidden"
                         },
@@ -606,8 +608,8 @@ function ApplicantView(props: ViewProps) {
                         customStyles={{
                             headRow: {
                                 style: {
-                                    background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
-                                    color: "white"
+                                    background: "linear-gradient(to bottom right, #2ec8c4, #1b4454)",
+                                    color: "white",
                                 },
                             },
                         }}
