@@ -200,7 +200,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
                         </div>
                     }
                 </InputGroup>
-                {touched && error ? <span className="text-danger small">{typeof error == "string" ? t(error) : JSON.stringify(error)}</span> : null}
+                {touched && error && typeof error != "object" ? <span className="text-danger small">{typeof error == "string" ? t(error) : JSON.stringify(error)}</span> : null}
             </div>
             {value?.mime_type == "application/pdf" &&
                 <ViewPdf name={value?.name} url={viewDoc} onCloseClick={close} />}
