@@ -42,7 +42,6 @@ export default function JobApply({ job, setEncourageModal }) {
     const [showModal, setShowModal] = useState(false);
     const [showForm, setShowForm] = useState(true);
     const [applicant, setApplicant] = useState<ApplicantEntity>();
-    const [applicantJobs, setApplicantJobs] = useState<ApplicantJobEntity[]>([]);
 
     const apply_form = useFormik({
         initialValues: new ApplicantEntity(),
@@ -73,8 +72,7 @@ export default function JobApply({ job, setEncourageModal }) {
         if (user && user.id) {
             try {
                 if (!user.company) {
-                    applicant = await applicantApi.me.get();
-                    setApplicantJobs(applicant?.jobs)
+                    setApplicant(await applicantApi.me.get());
                     applicant.documents = applicant.documents.filter(v => Object.values(ApplicantDocumentType).includes(v.type as ApplicantDocumentType))
                     if (applicant) {
                         const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
@@ -123,10 +121,9 @@ export default function JobApply({ job, setEncourageModal }) {
         console.log("errors", apply_form.errors);
     }, [apply_form.values, apply_form.errors])
 
-
     return (
         <>
-            {applicantJobs.length > 0 && applicantJobs.filter((item) => item?.job?.id == job?.id).length > 0 ?
+            {applicant?.jobs?.length > 0 && applicant?.jobs?.some((item) => item?.job?.id == job?.id) ?
                 <div className="ort-btn mt-lg-4 mt-0">
                     <button type="button" className="btn theme-primary-btn" disabled={true}> {t('APPLIED')}</button>
                 </div>
