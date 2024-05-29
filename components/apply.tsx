@@ -15,7 +15,7 @@ import { SharePreference } from '../enums/users/share-preference.enum'
 import { UserPreferenceCategory } from '../enums/users/user-preference-category.enum'
 import { useAuth } from '../hooks/use-auth'
 import { useTranslation } from "../hooks/use-translation"
-import { ApplicantExtrasEntity } from "../models/applicant"
+import { ApplicantExtrasEntity, ApplicantJobEntity } from "../models/applicant"
 import { ApplicantEntity } from '../models/applicant/applicant.entity'
 import { DocumentEntity } from '../models/documents/document.entity'
 import ApplicantApi from '../pages/api/applicant'
@@ -72,7 +72,7 @@ export default function JobApply({ job, setEncourageModal }) {
         if (user && user.id) {
             try {
                 if (!user.company) {
-                    applicant = await applicantApi.me.get();
+                    setApplicant(await applicantApi.me.get());
                     applicant.documents = applicant.documents.filter(v => Object.values(ApplicantDocumentType).includes(v.type as ApplicantDocumentType))
                     if (applicant) {
                         const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
@@ -123,9 +123,16 @@ export default function JobApply({ job, setEncourageModal }) {
 
     return (
         <>
-            <div className="ort-btn mt-lg-4 mt-0">
-                <button type="button" className="btn theme-primary-btn" onClick={onApplyClick}> {t('APPLY_NOW')}<ArrowRight /></button>
-            </div>
+            {applicant?.jobs?.length > 0 && applicant?.jobs?.some((item) => item?.job?.id == job?.id) ?
+                <div className="ort-btn mt-lg-4 mt-0">
+                    <button type="button" className="btn theme-primary-btn" disabled={true}> {t('APPLIED')}</button>
+                </div>
+                :
+                <div className="ort-btn mt-lg-4 mt-0">
+                    <button type="button" className="btn theme-primary-btn" onClick={onApplyClick}> {t('APPLY_NOW')}<ArrowRight /></button>
+                </div>
+            }
+
             <ViewModal
                 size={"xl"}
                 show={showModal}
