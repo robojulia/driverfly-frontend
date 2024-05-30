@@ -12,7 +12,7 @@ export default function CompanyPhoto(props) {
 
         let ret = false
         for (const vehicle of props.job.vehicles) {
-            if (!!vehicle.photo?.id)
+            if (!!vehicle.photo?.id && !!vehicle.is_public)
                 await documentApi.getPhoto(vehicle.photo.id)
                     .then(file => {
                         setPhoto(file.path)
