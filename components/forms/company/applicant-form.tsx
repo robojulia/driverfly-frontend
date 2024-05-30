@@ -6,9 +6,8 @@ import { Button, Col, Row, Table } from "react-bootstrap";
 import {
 	ChevronUp,
 	DashCircle,
-	Pass,
 	PlusCircle,
-	XCircle,
+	XCircle
 } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
 
@@ -64,13 +63,11 @@ import EmployeeApi from "../../../pages/api/employee";
 import { ReferralSourceApi } from "../../../pages/api/referral-source";
 import UserApi from "../../../pages/api/user";
 import { buildReferral } from "../../../utils/common";
+import { focusOnErrorField } from "../../../utils/form-error";
 import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
 import ViewModal from "../../view-details/view-modal";
 import { ReferralSourceForm } from "../admin/referral-source-form";
 import { JobForm } from "./job-form";
-import ShowEnumFromString from "../../enum-filters/show-enum-from-string";
-import { DownloadDocumentButton } from "../../documents/buttons";
-import { handleDownloadDocument } from "../../../utils/documents/button-actions";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
@@ -294,31 +291,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		console.log("form.errors", form.errors);
 	}, [form.values, form.errors]);
 
-	useEffect(() => {
-		try {
-			const errorKeys = Object.keys(form.errors);
-
-			if (!!errorKeys.length && form.submitCount > 0) {
-
-				const errorKey = errorKeys[0];
-				let id: string;
-
-				if (typeof form.errors[errorKey] == "object" && form.errors[errorKey]?.length > 0) {
-					id = (`${errorKey}[0].${Object.keys(form.errors[errorKey][0])[0]}`);
-				} else {
-					id = (`${errorKey}`);
-				}
-
-				const firstElement = document.getElementById(id);
-
-				if (firstElement !== document.activeElement) {
-					firstElement?.focus();
-				}
-			}
-		} catch (error) {
-			console.error(error.message);
-		}
-	}, [form.submitCount])
+	useEffect(() => focusOnErrorField(form), [form.submitCount])
 
 	return (
 		<EntityForm

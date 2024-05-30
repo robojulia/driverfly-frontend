@@ -57,6 +57,7 @@ import { LocationEntity } from "../../../models/company/location.entity";
 import { VehicleEntity } from "../../../models/company/vehicle.entity";
 import { JobEntity } from "../../../models/job/job.entity";
 import { buildAddress } from "../../../utils/common";
+import { focusOnErrorField } from "../../../utils/form-error";
 import BaseHoursInput from "../base-hours-input";
 import BaseMilesInput from "../base-miles-input";
 import BaseMoneyInput from "../base-money-input";
@@ -497,6 +498,8 @@ export function JobForm(props: JobFormProps) {
             if (onSaveError) onSaveError(e);
         }
     };
+
+    useEffect(() => focusOnErrorField(form), [form.submitCount])
 
     return (
         <>
