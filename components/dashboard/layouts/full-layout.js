@@ -1,13 +1,13 @@
-import React, { useEffect, useRef } from "react";
+import Head from "next/head";
+import { useRouter } from 'next/router';
+import { useEffect, useRef } from "react";
 import { Container } from "reactstrap";
 import Header from "./header/header.tsx";
 import Sidebar from "./sidebars/sidebar";
-import Head from "next/head";
-import { useRouter } from 'next/router';
 
-import { useTranslation } from "../../../hooks/use-translation";
-import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, BellFill, SearchHeartFill, GiftFill, GearFill, ShareFill, EnvelopeFill, CardList, QuestionCircleFill } from 'react-bootstrap-icons';
+import { BagFill, BellFill, CardList, ClockHistory, FileEarmarkFill, GearFill, GiftFill, HouseFill, PersonFill, QuestionCircleFill, Search, SearchHeartFill, ShareFill } from 'react-bootstrap-icons';
 import { useAuth } from "../../../hooks/use-auth";
+import { useTranslation } from "../../../hooks/use-translation";
 
 import { Scripts } from "../../scripts/scripts";
 import DriverProfileNav from "./header/driver-profile-nav";

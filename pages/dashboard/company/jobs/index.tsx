@@ -127,6 +127,7 @@ export default function JobListing() {
                     {
                         id: "expiration_date",
                         name: "expiration_date",
+                        cell: j => j.expiry_date ? <ShowFormattedDate date={j?.expiry_date} hideTime /> : null,
                         selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null,
                     },
                     {

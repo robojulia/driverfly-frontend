@@ -1,35 +1,33 @@
-import * as yup from "yup"
-import { TestContext } from "yup/lib/util/createValidation"
+import * as yup from "yup";
+import { TestContext } from "yup/lib/util/createValidation";
 import { useTranslation } from "../hooks/use-translation";
 
-yup.addMethod(yup.string, "enum", function(enumType, message) {
+yup.addMethod(yup.string, "enum", function (enumType, message) {
   const keys = Object.values(enumType);
   const set = new Set(keys);
   return this.test("enum", message, function (str) {
-      if (str && !set.has(str)) {
-        if (!message) {
-          message = `${this.path} must be one of ${keys.join(", ")}`;
-        }
-        return this.createError({
-          path: this.path,
-          message: message
-        });
+    if (str && !set.has(str)) {
+      if (!message) {
+        message = `${this.path} must be one of ${keys.join(", ")}`;
       }
-      return true;
+      return this.createError({
+        path: this.path,
+        message: message,
+      });
+    }
+    return true;
   });
 });
 
 /**
  * @param {TestContext} thisObj
- * @param {any[]} list 
+ * @param {any[]} list
  * @param {string} field
- * @param {object} options 
+ * @param {object} options
  * @param {any => string} options.mapper
  * @param {string} message
  */
 function unique(thisObj, list, field, options, message) {
-
- 
   if (list) {
     const { mapper } = options;
     const set = new Set();
@@ -48,9 +46,9 @@ function unique(thisObj, list, field, options, message) {
           path: `${thisObj.path}[${i}].${field}`,
           message: message,
           params: {
-            field: field
+            field: field,
           },
-          type: "unique"
+          type: "unique",
         });
         return false;
       }
@@ -61,21 +59,21 @@ function unique(thisObj, list, field, options, message) {
 }
 
 /**
- * 
- * @param {string} field 
- * @param {object} options 
+ *
+ * @param {string} field
+ * @param {object} options
  * @param {(any) => string} options.mapper
  * @param {string} message
  * @this import("yup/lib/array").OptionalArraySchema
  */
 unique.addTest = function (field, options, message) {
   const { t } = useTranslation();
-  
+
   if (typeof options == "string") {
     message = options;
     options = null;
   }
-  if (!message) message = t("yup.array.unique");
+  message = message ? t(message) : t("yup.array.unique");
   if (!options) options = {};
 
   if (message) {
@@ -83,10 +81,16 @@ unique.addTest = function (field, options, message) {
       return unique(this, list, field, options, message);
     });
   }
-  return this.test("unique", function() { return this.createError() }, function (list) {
-    return unique(this, list, field, options, message);
-  });
-}
+  return this.test(
+    "unique",
+    function () {
+      return this.createError();
+    },
+    function (list) {
+      return unique(this, list, field, options, message);
+    }
+  );
+};
 
 yup.addMethod(yup.array, "unique", unique.addTest);
 
@@ -96,41 +100,59 @@ export function stringEnum<Enum>(enumType: Enum) {
 }
 
 export function numberRangeStart(maxField: string, minValue: number) {
-  return yup.number().moreThan(minValue)
+  return (
+    yup
+      .number()
+      .moreThan(minValue)
 
-  // DO NOT IMPLEMENT BELOW: will cause Cyclic dependency when used in tandum with numberRangeEnd
-  // .when(maxField, {
-  //   is: v => v != null && +v > minValue,
-  //   then: yup.number().lessThan(yup.ref(maxField)).nullable()
-  // })
-  .nullable()
+      // DO NOT IMPLEMENT BELOW: will cause Cyclic dependency when used in tandum with numberRangeEnd
+      // .when(maxField, {
+      //   is: v => v != null && +v > minValue,
+      //   then: yup.number().lessThan(yup.ref(maxField)).nullable()
+      // })
+      .nullable()
+  );
 }
 
-export function numberRangeEnd(minField: string, minValue: number, inclusive?: boolean) {
+export function numberRangeEnd(
+  minField: string,
+  minValue: number,
+  inclusive?: boolean
+) {
   if (inclusive) {
-    return yup.number().when(minField, {
-      is: v => v != null && +v > minValue,
-      then: yup.number().min(yup.ref(minField)).nullable(),
-      otherwise: yup.number().moreThan(minValue).nullable()
-    }).nullable()
+    return yup
+      .number()
+      .when(minField, {
+        is: (v) => v != null && +v > minValue,
+        then: yup.number().min(yup.ref(minField)).nullable(),
+        otherwise: yup.number().moreThan(minValue).nullable(),
+      })
+      .nullable();
   }
-  return yup.number().when(minField, {
-    is: v => v != null && +v > minValue,
-    then: yup.number().moreThan(yup.ref(minField)).nullable(),
-    otherwise: yup.number().moreThan(minValue).nullable()
-  }).nullable()
+  return yup
+    .number()
+    .when(minField, {
+      is: (v) => v != null && +v > minValue,
+      then: yup.number().moreThan(yup.ref(minField)).nullable(),
+      otherwise: yup.number().moreThan(minValue).nullable(),
+    })
+    .nullable();
 }
 
 export function cityRegexValidation() {
   const { t } = useTranslation();
 
-  return yup.string().matches(/^[^0-9]+$/, t("CITY_REGEX_VALIDATION_MESSAGE")).nullable();
+  return yup
+    .string()
+    .matches(/^[^0-9]+$/, t("CITY_REGEX_VALIDATION_MESSAGE"))
+    .nullable();
 }
 
 export function zipCodeRegexValidation() {
   const { t } = useTranslation();
 
-  return yup.string()
+  return yup
+    .string()
     .matches(/^[0-9]+$/, t("ZIP_CODE_REGEX_VALIDATION_MESSAGE"))
     .min(5, t("ZIP_CODE_MIN_VALIDATION_MESSAGE"))
     .max(5, t("ZIP_CODE_MAX_VALIDATION_MESSAGE"))

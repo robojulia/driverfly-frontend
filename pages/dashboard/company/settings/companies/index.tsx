@@ -20,7 +20,7 @@ export default function CompanyList() {
 
   const { t } = useTranslation();
   const router = useRouter();
-  const { user, company, hasPermission, isCompanyAdmin } = useAuth();
+  const { user, company, hasPermission, isCompanyAdmin, refreshToken } = useAuth();
 
   const columnSettingKey = getDataTableColumnKey("company", user, "companies");
 
@@ -52,6 +52,7 @@ export default function CompanyList() {
 
       await api.remove(id);
 
+      await refreshToken();
       setCompanies(companies.filter(v => v.id != id));
     } catch (e) {
       globalAjaxExceptionHandler(e, { t: t, defaultMessage: "UNABLE_TO_DELETE", toast: toast });

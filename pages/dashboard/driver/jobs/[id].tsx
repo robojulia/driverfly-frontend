@@ -1,13 +1,13 @@
-import RelatedJobs from '../../../../components/related-jobs/related-jobs'
-import { useTranslation } from "../../../../hooks/use-translation"
-import JobApi from "../../../api/job"
-import StructuredData from "../../../../components/seo/structured-data"
 import FullLayout from "../../../../components/dashboard/layouts/full-layout"
+import ViewJobDetail from "../../../../components/jobs/view-job-detail"
 import ChildPageLayout from "../../../../components/layouts/page/child-page-layout"
-import ViewJobDetail from "../../../../components/jobs/view-job-detail";
+import RelatedJobs from '../../../../components/related-jobs/related-jobs'
+import StructuredData from "../../../../components/seo/structured-data"
+import { useTranslation } from "../../../../hooks/use-translation"
+import { JobEntity } from '../../../../models/job/job.entity'
 import { JobDetailProps } from '../../../../types/job/job-detail-props.type'
 import { Pagination } from '../../../../types/pagination.type'
-import { JobEntity } from '../../../../models/job/job.entity'
+import JobApi from "../../../api/job"
 
 export default function JobDetail({ job, relatedJobs }: JobDetailProps) {
 

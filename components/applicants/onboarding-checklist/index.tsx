@@ -246,7 +246,7 @@ export default function OnboardingChecklist(
               <tr>
                 <th colSpan={2}>{t("TYPE")}</th>
                 <th colSpan={2}>{t("UPDATED_AT")}</th>
-                <th colSpan={2}>{t("UPLOAD_METHOD")}</th>
+                {/* <th colSpan={2}>{t("UPLOAD_METHOD")}</th> */}
                 <th colSpan={1}></th>
               </tr>
             </thead>
@@ -266,7 +266,7 @@ export default function OnboardingChecklist(
                         <td colSpan={2}>
                           <UpdatedAt document={document} type={type} />
                         </td>
-                        <td colSpan={2}></td>
+                        {/* <td colSpan={2}></td> */}
                         <td colSpan={1} className="border border-2 w-50">
                           <ButtonList document={document} type={type} />
                           {form.values?.document?.type == type && (
@@ -313,7 +313,7 @@ export default function OnboardingChecklist(
             <thead>
               <tr>
                 <th colSpan={2}>{t("TYPE")}</th>
-                <th colSpan={2}>{t("AUTO_UPLOAD?")}</th>
+                {/* <th colSpan={2}>{t("AUTO_UPLOAD?")}</th> */}
                 <th colSpan={1}></th>
               </tr>
             </thead>
@@ -330,7 +330,7 @@ export default function OnboardingChecklist(
                         <td colSpan={2}>
                           {t(`ApplicantOnBoardingChecklist.${type}`)}
                         </td>
-                        <td colSpan={2}></td>
+                        {/* <td colSpan={2}></td> */}
                         <td colSpan={1} className="border border-2 w-50">
                           <ButtonList document={document} type={type} />
                           {form.values?.document?.type == type && (

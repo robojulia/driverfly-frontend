@@ -166,10 +166,11 @@ export default function FileInput({ documentType, formik, accept, required, clas
     return (
         <>
             <div className={className}>
-                {label && <><label id={id}>{t(label)}{required ? "*" : ""}:</label><br /></>}
+                {label && <><label >{t(label)}{required ? "*" : ""}:</label><br /></>}
                 {allowedTypesFriendlyName && <span className='text-muted small'>{t("FILE_MUST_BE_OF_{types}", { types: allowedTypesFriendlyName })}</span>}
                 <InputGroup>
                     <input
+                        id={id || name}
                         accept={accept}
                         onBlur={handleBlur}
                         type={value?.name ? "text" : "file"}
@@ -200,7 +201,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
                         </div>
                     }
                 </InputGroup>
-                {touched && error ? <span className="text-danger small">{typeof error == "string" ? t(error) : JSON.stringify(error)}</span> : null}
+                {touched && error && typeof error != "object" ? <span className="text-danger small">{typeof error == "string" ? t(error) : JSON.stringify(error)}</span> : null}
             </div>
             {value?.mime_type == "application/pdf" &&
                 <ViewPdf name={value?.name} url={viewDoc} onCloseClick={close} />}

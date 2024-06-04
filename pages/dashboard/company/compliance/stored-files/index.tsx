@@ -31,8 +31,6 @@ import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
 import ComplianceApi from "../../../../api/compliance";
 import EmployeeApi from "../../../../api/employee";
-import { DeleteDocumentButton } from "../../../../../components/documents/buttons";
-import { LoaderIcon } from "../../../../../components/loading/loader-icon";
 
 export default function StoredFiles() {
   const { user } = useAuth();
@@ -77,10 +75,10 @@ export default function StoredFiles() {
       const v = await complianceApi.filesList();
       setFiles(v);
       const a = await applicantApi.list();
-      setApplicants(a);
+      setApplicants(a?.filter(({ email }) => !!email));
 
       const e = await employeeApi.list();
-      setEmployees(e);
+      setEmployees(e?.filter(({ email }) => !!email));
     },
     [user],
     () => {
@@ -413,8 +411,7 @@ export default function StoredFiles() {
                       handleViewDocument(
                         file.id,
                         setPdf,
-                        `${t("CompanyDocumentType." + file?.type)} (${
-                          file.name
+                        `${t("CompanyDocumentType." + file?.type)} (${file.name
                         })`
                       )
                     }

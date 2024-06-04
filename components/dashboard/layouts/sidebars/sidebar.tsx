@@ -1,10 +1,10 @@
-import { Navbar, Container } from "react-bootstrap";
-import { Icon } from "react-bootstrap-icons";
-import { useRouter } from "next/router";
-import { TranslateInterface, useTranslation } from "../../../../hooks/use-translation";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { Container, Navbar } from "react-bootstrap";
+import { Icon } from "react-bootstrap-icons";
 import { useMediaQuery } from "react-responsive";
 import { useAuth } from "../../../../hooks/use-auth";
+import { TranslateInterface, useTranslation } from "../../../../hooks/use-translation";
 
 export interface SidebarProps {
     open?: boolean;
@@ -42,7 +42,7 @@ export default function Sidebar(props: SidebarProps) {
     items = filterItems(items, hasPermission);
 
     let current = findLast(items, v => IsSelected(v, router.asPath));
-    if(current == null) router.back();
+    // if(current == null) router.back();
     if (!current) current = items[0];
 
     return (<>

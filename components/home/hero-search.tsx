@@ -1,21 +1,23 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { Search } from "react-bootstrap-icons";
-import { AsyncTypeahead } from "react-bootstrap-typeahead";
+import { useEffect, useRef, useState } from "react";
+import { AsyncTypeahead, TypeaheadMenuProps } from "react-bootstrap-typeahead";
+import Typeahead from "react-bootstrap-typeahead/types/core/Typeahead";
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
-import { DriverLicenseType } from "../../enums/users/driver-license-type.enum"
+import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
 import { useTranslation } from "../../hooks/use-translation";
 import MapboxApi from "../../pages/api/mapbox";
-
 export default function HeroSearch(props) {
 
     const router = useRouter();
     const { t } = useTranslation();
 
+    const typeaheadRef = useRef<Typeahead>(null)
+
     const [filters, setFilters] = useState({});
     const mapboxApi = new MapboxApi()
 
-    const [range, setRange] = useState(50);
+    const [index, setIndex] = useState<number>();
+    const [selected, setSelected] = useState<[]>([]);
     const [location, setLocation] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState([]);
@@ -45,8 +47,10 @@ export default function HeroSearch(props) {
         try {
             if (query) {
                 setIsLoading(true);
-                const results = await mapboxApi.forwardGeocoding(query)
-                setOptions(results?.features || []);
+                const { features } = await mapboxApi.forwardGeocoding(query)
+                console.log("features", features);
+
+                setOptions(features || []);
                 setIsLoading(false);
             } else {
                 setLocation(null)
@@ -75,7 +79,7 @@ export default function HeroSearch(props) {
     return (
         <div className="hero-search shadow mb-5 bg-white ">
             <div className="input-group border-0">
-             
+
                 <input
                     onKeyPress={handleKeywordSearch}
                     onChange={handleChange}
@@ -90,20 +94,22 @@ export default function HeroSearch(props) {
 
             <div className="input-group">
                 <AsyncTypeahead
+                    ref={typeaheadRef}
                     id="async-example"
                     // name="location"
                     isLoading={isLoading}
                     labelKey="place_name"
+                    onBlur={() => {
+                       if(!location) typeaheadRef.current?.clear()
+                    }}
                     minLength={1}
                     onChange={value => setLocation(value[0])}
                     onSearch={handleTypeheadSearch}
                     onInputChange={handleTypeheadSearch}
                     options={options}
                     placeholder="Location"
-                    renderMenuItemChildren={(option, props) => (
-                        <>
-                            <span className='text-dark'>{option}</span>
-                        </>
+                    renderMenuItemChildren={(option: any, menuProps: TypeaheadMenuProps, idx: number) => (
+                        <span className='text-dark'>{option.place_name}</span>
                     )}
                 />
             </div>

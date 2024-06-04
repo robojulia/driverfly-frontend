@@ -12,15 +12,7 @@ export default function ContactSupportNote() {
     <Popover id="popover-basic">
       <Popover.Header as="h3">{t("CONTACT_SUPPORT")}</Popover.Header>
       <Popover.Body>
-        {t("CONTACT_SUPPORT_MESSAGE_THROUGH")}&nbsp;
-        <Link legacyBehavior href={`/dashboard/company/settings/support`}>
-          {t("CONTACT_SUPPORT_MESSAGE_LINK")}
-        </Link>
-        &nbsp;{t("CONTACT_SUPPORT_MESSAGE_EMAIL")}&nbsp;
-        <Link legacyBehavior href={`mailto:help@driverfly.co`}>
-          help@driverfly.co
-        </Link>
-        .
+        {t("CONTACT_SUPPORT_MESSAGE_THROUGH")}&nbsp;<Link legacyBehavior href={`/dashboard/company/settings/support`}>{t("CONTACT_SUPPORT_MESSAGE_LINK")}</Link>&nbsp;{t("CONTACT_SUPPORT_MESSAGE_EMAIL")}&nbsp;<Link legacyBehavior href={`mailto:help@driverfly.co`}>help@driverfly.co</Link>.
       </Popover.Body>
     </Popover>
   );

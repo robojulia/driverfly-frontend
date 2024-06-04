@@ -28,7 +28,7 @@ export class CompanyEntity {
 	static yupSchema() {
 		const { t } = useTranslation()
 		return yup.object({
-			name: yup.string().required().nullable().max(255).trim(),
+			name: yup.string().required().nullable().max(100).trim(),
 			about: yup.string().nullable().max(750)
 				.test({
 					test: (value, context) => {
