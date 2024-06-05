@@ -489,6 +489,7 @@ function ApplicantView(props: ViewProps) {
                         wrap: true,
                         selector: applicant => applicant.state,
                     },
+
                     {
                         id: "phone",
                         name: "PHONE",
@@ -507,13 +508,13 @@ function ApplicantView(props: ViewProps) {
                         id: "license_type",
                         name: `CDL_TYPE`,
                         wrap: true,
-                        selector: applicant => applicant?.license_type || t("NONE"),
+                        selector: applicant => applicant?.license_type === t("NONE_TYPE") ? t("DriverLicenseType.NONE") : applicant?.license_type || t("NONE"),
                     },
                     {
                         id: "years_cdl_experience",
                         name: "years_cdl_experience",
                         wrap: true,
-                        selector: applicant => applicant?.years_cdl_experience || t("NONE"),
+                        selector: applicant => applicant?.years_cdl_experience || t("ZERO"),
                     },
                     {
                         id: "transmission_type",
@@ -545,7 +546,13 @@ function ApplicantView(props: ViewProps) {
                         hide: 1,
                         selector: applicant => Boolean(applicant?.is_automated_recruiting_lead) ? BooleanType.YES : BooleanType.NO,
                     },
-
+                    {
+                        id: "status",
+                        name: "STATUS",
+                        wrap: true,
+                        hide: 1,
+                        selector: applicant => applicant.status,
+                    },
                     {
                         id: "assigned_to",
                         name: "ASSIGNED_TO",
