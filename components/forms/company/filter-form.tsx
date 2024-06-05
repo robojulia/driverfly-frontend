@@ -47,9 +47,9 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
     }, []);
 
     // uncomment this in debug mode
-    // useEffect(() => {
-    //     console.log("filteer form.values", form.values);
-    // }, [form.values])
+    React.useEffect(() => {
+        console.log("filteer form.values", form.values);
+    }, [form.values])
 
     return (
         <Form
@@ -89,15 +89,6 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                         enumType={DriverEndorsement}
                         formik={form}
                     />
-                    {form.values.endorsements == DriverEndorsement.OTHER && (
-                        <BaseInput
-                            className="col-md-3 mt-1 mb-3"
-                            placeholder="ENDORSEMENTS"
-                            name="license_restrictions_other"
-                            displayPlaceholder
-                            formik={form}
-                        />
-                    )}
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
                         placeholder="License_Restrictions"
@@ -106,15 +97,6 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                         enumType={LicenseRestrictions}
                         formik={form}
                     />
-                    {form.values.license_restrictions == LicenseRestrictions.OTHER && (
-                        <BaseInput
-                            className="col-md-3 mt-1 mb-3"
-                            placeholder="License_Restrictions"
-                            name="license_restrictions_other"
-                            displayPlaceholder
-                            formik={form}
-                        />
-                    )}
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
                         placeholder="AUTOMATED_RECRUITING_LEAD"
