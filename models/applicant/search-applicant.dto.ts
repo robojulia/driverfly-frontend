@@ -22,8 +22,6 @@ export class SearchApplicantDto {
   license_type?: DriverLicenseType;
   transmission_type?: VehicleTransmissionType;
   assignedUserId?: number;
-  endorsements_other?: string;
-  license_restrictions_other?: string;
   jobId?: number;
   email?: string;
   withHired?: boolean;
@@ -47,20 +45,6 @@ export class SearchApplicantDto {
         .enum(VehicleTransmissionType)
         .nullable(),
       assignedUserId: yup.number().nullable(),
-      endorsements_other: yup
-        .string()
-        .when("endorsements", {
-          is: DriverEndorsement.OTHER,
-          then: yup.string().required().nullable(),
-        })
-        .nullable(),
-      license_restrictions_other: yup
-        .string()
-        .when("license_restrictions", {
-          is: LicenseRestrictions.OTHER,
-          then: yup.string().required().nullable(),
-        })
-        .nullable(),
     });
   }
 }
