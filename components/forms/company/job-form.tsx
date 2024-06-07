@@ -455,6 +455,10 @@ export function JobForm(props: JobFormProps) {
             if (dto.min_experience_in_months) {
                 dto.min_experience_in_years += dto.min_experience_in_months / 12;
             }
+
+            if (dto.orientation?.location?.id == null) {
+                delete dto.orientation
+            }
             dto.min_years_experience = dto.min_experience_in_years
                 ? parseFloat(dto.min_experience_in_years?.toFixed(2))
                 : 0;
