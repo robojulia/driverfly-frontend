@@ -104,6 +104,14 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			);
 			const jobs = values.jobs || [];
 			if ("jobs" in values) delete values.jobs;
+			if (values.accident_count === undefined) {
+				values.accident_count = 0
+			}
+
+			if (values.moving_violations_count === undefined) {
+				values.moving_violations_count = 0
+			}
+
 			try {
 				if (entity?.id) {
 					values = await applicantApi.update(entity.id, {
@@ -119,6 +127,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 						]?.filter((v) => !!v),
 					} as ApplicantEntity);
 				} else {
+
 					values = await applicantApi.create(values);
 				}
 

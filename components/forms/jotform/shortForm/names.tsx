@@ -33,6 +33,7 @@ export function Names() {
 		},
 	});
 
+
 	useEffect(() => {
 		const { first_name, last_name } = applicant;
 		form.setValues({
@@ -43,7 +44,7 @@ export function Names() {
 
 	return (
 		<>
-            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("name")}</h1>
+			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("name")}</h1>
 			<form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={styles.bold}>
 					<BaseInput

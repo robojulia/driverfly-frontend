@@ -556,7 +556,7 @@
   "pay_structure": "Pay Structure",
   "DriverEndorsement": {
     "HAZMAT": "Hazmat",
-    "TANKERS": "Tankers",
+    "TANKERS": "Tanker",
     "DOUBLES_TRIPLES": "Doubles/Triples",
     "SCHOOL_BUS": "School Bus",
     "TWIC": "TWIC",
