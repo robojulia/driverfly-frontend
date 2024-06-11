@@ -48,7 +48,7 @@ export class VehicleEntity {
                 is: v => !!v,
                 then: DocumentEntity.yupSchema()
                     .test('supportedImageTypes', 'INVALID_IMAGE_TYPE', (value : any) => {
-                      return !value || ['image/jpeg','image/png', 'image/gif'].includes(value?.mime_type);
+                      return !value?.mime_type || ['image/jpeg','image/png', 'image/gif'].includes(value?.mime_type);
                     })
                     .nullable(),
             }).optional(),
