@@ -42,6 +42,9 @@ export function VehicleForm(props: VehicleFormProps) {
 
             const api = new VehicleApi();
             try {
+                if (dto.max_speed == null) {
+                    dto.max_speed = 0
+                }
                 let vehicle = null;
                 if (entity?.id) {
                     vehicle = await api.update(entity.id, dto);
