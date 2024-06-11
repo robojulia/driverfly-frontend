@@ -116,6 +116,7 @@ export default function JobApply({ job, setEncourageModal }) {
         setEncourageModal(true)
     }
 
+
     useEffect(() => {
         console.log("values", apply_form.values);
         console.log("errors", apply_form.errors);
@@ -377,8 +378,13 @@ export default function JobApply({ job, setEncourageModal }) {
                     </form>
                     : <Row>
                         <p>
-                            {t('QUICK_APPLY_MESSAGE_{JOB}_{COMPANY}', { JOB: job.title, COMPANY: job.company.name })}
-                            <Link href={`/form/digitalhiringapp/quick-apply/${applicant.uuid_token}`} >{t('COMPLETE_APPLICATION')}</Link>
+                            {!user?.id ? (<>
+
+                                {t('QUICK_APPLY_MESSAGE_{JOB}_{COMPANY}', { JOB: job.title, COMPANY: job.company.name })}
+                                <Link href={`/form/digitalhiringapp/quick-apply/${applicant.uuid_token}`} >{t('COMPLETE_APPLICATION')}</Link>
+                            </>
+                            ) : t("job_applied_success_message")}
+
                         </p>
                     </Row>
                 }
