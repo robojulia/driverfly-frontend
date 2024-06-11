@@ -69,9 +69,14 @@ export function VehicleForm(props: VehicleFormProps) {
     }, [entity]);
 
     useEffect(() => {
-        console.log("form.values", form.values);
-        console.log("form.errors", form.errors);
-    }, [form.values, form.errors]);
+        if (!form.values.is_governed) form.setFieldValue("max_speed", null);
+    }, [form.values.is_governed]);
+
+    // Uncomment in debug mode.
+    // useEffect(() => {
+    //     console.log("form.values", form.values);
+    //     console.log("form.errors", form.errors);
+    // }, [form.values, form.errors]);
 
     return (
         <EntityForm
@@ -201,6 +206,7 @@ export function VehicleForm(props: VehicleFormProps) {
                             className="col-12 mt-2 p-0"
                             label="MAX_SPEED"
                             name="max_speed"
+                            min={1}
                             type="int"
                             placeholder="MAX_SPEED"
                             formik={form}

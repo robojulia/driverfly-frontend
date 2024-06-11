@@ -61,7 +61,7 @@ export class VehicleEntity {
             }).nullable(),
             is_governed: yup.boolean().required().nullable(),
             is_public: yup.boolean().required().nullable(),
-            max_speed: yup.number().min(0).nullable()
+            max_speed: yup.number().min(1).optional().nullable()
         });
     }
 }
