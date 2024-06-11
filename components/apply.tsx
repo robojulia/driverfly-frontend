@@ -117,14 +117,6 @@ export default function JobApply({ job, setEncourageModal }) {
     }
 
 
-
-
-    useEffect(() => {
-        if (user?.email != undefined) {
-            apply_form.setFieldValue("email", user?.email);
-        }
-    }, [user?.email, apply_form.values?.email]);
-
     useEffect(() => {
         console.log("values", apply_form.values);
         console.log("errors", apply_form.errors);
