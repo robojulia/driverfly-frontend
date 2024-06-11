@@ -73,10 +73,10 @@ export function VehicleForm(props: VehicleFormProps) {
     }, [form.values.is_governed]);
 
     // Uncomment in debug mode.
-    // useEffect(() => {
-    //     console.log("form.values", form.values);
-    //     console.log("form.errors", form.errors);
-    // }, [form.values, form.errors]);
+    useEffect(() => {
+        console.log("form.values", form.values);
+        console.log("form.errors", form.errors);
+    }, [form.values, form.errors]);
 
     return (
         <EntityForm
