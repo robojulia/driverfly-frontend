@@ -22,6 +22,7 @@ import { useEffectAsync } from "../../../../utils/react";
 import Link from "next/link";
 import { Button } from "react-bootstrap";
 import ShowFormattedDate from "../../../../components/jobs/show-formatted-date";
+import moment from "moment";
 
 export default function JobListing() {
 
@@ -122,12 +123,12 @@ export default function JobListing() {
                     {
                         id: "created_at",
                         name: "CREATED_AT",
-                        cell: job => job?.created_at ? <ShowFormattedDate date={job?.created_at} hideTime /> : null,
+                        cell: job => job?.created_at ? moment(job?.created_at).format('DD MMM YYYY') : null,
                     },
                     {
                         id: "expiration_date",
                         name: "expiration_date",
-                        cell: j => j.expiry_date ? <ShowFormattedDate date={j?.expiry_date} hideTime /> : null,
+                        cell: j => j.expiry_date ? moment(j.expiry_date).format('DD MMM YYYY') : null,
                         selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null,
                     },
                     {

@@ -7,6 +7,7 @@ import { Accordion, Button, ButtonGroup, Col, Row } from "react-bootstrap";
 import { EyeFill, PencilFill } from 'react-bootstrap-icons';
 import { toast } from "react-toastify";
 import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
+import ShowEnumFromString from '../../../../components/enum-filters/show-enum-from-string';
 import BaseCheckList from "../../../../components/forms/base-check-list";
 import BaseSelect from "../../../../components/forms/base-select";
 import BaseTextArea from "../../../../components/forms/base-text-area";
@@ -20,6 +21,7 @@ import { ApplicantReasonCodeFired, ApplicantReasonCodeNotInterested, ApplicantRe
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
 import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
 import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
+import { DriverEndorsement } from '../../../../enums/users/driver-endorsement.enum';
 import { useAuth } from "../../../../hooks/use-auth";
 import { TranslateInterface, useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";
@@ -31,6 +33,7 @@ import { buildAddress } from "../../../../utils/common";
 import * as numbers from "../../../../utils/number";
 import { useEffectAsync } from "../../../../utils/react";
 import ApplicantApi from "../../../api/applicant";
+import { JobGeography } from '../../../../enums/jobs/job-geography.enum';
 
 
 const ViewMode = {
@@ -491,6 +494,7 @@ function ApplicantView(props: ViewProps) {
                         wrap: true,
                         selector: applicant => applicant.state,
                     },
+
                     {
                         id: "phone",
                         name: "PHONE",
@@ -509,13 +513,13 @@ function ApplicantView(props: ViewProps) {
                         id: "license_type",
                         name: `CDL_TYPE`,
                         wrap: true,
-                        selector: applicant => applicant?.license_type || t("NONE"),
+                        selector: applicant => applicant?.license_type === t("NONE_TYPE") ? t("DriverLicenseType.NONE") : applicant?.license_type || t("NONE"),
                     },
                     {
                         id: "years_cdl_experience",
                         name: "years_cdl_experience",
                         wrap: true,
-                        selector: applicant => applicant?.years_cdl_experience || t("NONE"),
+                        selector: applicant => applicant?.years_cdl_experience || t("ZERO"),
                     },
                     {
                         id: "transmission_type",
@@ -547,7 +551,13 @@ function ApplicantView(props: ViewProps) {
                         hide: 1,
                         selector: applicant => Boolean(applicant?.is_automated_recruiting_lead) ? BooleanType.YES : BooleanType.NO,
                     },
-
+                    {
+                        id: "status",
+                        name: "STATUS",
+                        wrap: true,
+                        hide: 1,
+                        selector: applicant => applicant.status,
+                    },
                     {
                         id: "assigned_to",
                         name: "ASSIGNED_TO",
@@ -561,7 +571,14 @@ function ApplicantView(props: ViewProps) {
                         name: "ENDORSEMENTS",
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant.endorsements?.join(",") || t("NONE"),
+                        selector: applicant => applicant.endorsements ? t(`DriverEndorsement.${applicant.endorsements}`) : null,
+                        cell: applicant =>
+                        (<ShowEnumFromString
+                            popover_header={t('ENDORSEMENTS')}
+                            labelPrefix={applicant.endorsements.length > 0 ? "DriverEndorsement" : ""}
+                            popover={true}
+                            value={applicant.endorsements}
+                            enumArray={DriverEndorsement} />)
                     },
 
                     {
@@ -583,7 +600,13 @@ function ApplicantView(props: ViewProps) {
                         name: `PREFERRED_LOCATION`,
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant?.preferred_location?.join(",") || t("NONE"),
+                        selector: applicant => applicant?.preferred_location ? t(`JobGeography.${applicant?.preferred_location}`) : null,
+                        cell: applicant =>
+                        (<ShowEnumFromString
+                            labelPrefix={applicant?.preferred_location.length > 0 ? "JobGeography" : ""}
+                            value={applicant?.preferred_location}
+                            enumArray={JobGeography} />)
+
                     }
 
                 ]}

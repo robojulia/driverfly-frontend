@@ -54,11 +54,11 @@ export function PhoneNumber() {
                     // } else if (applicantPhoneExists) {
                     // 	setErrors({ phone: 'ALREADY_EXISTS' })
                 } else {
+
                     setApplicant({
                         ...applicant,
                         phone,
                     });
-
                     stepNext();
                 }
             } catch (error) {
@@ -69,6 +69,7 @@ export function PhoneNumber() {
             stepBack();
         },
     });
+
 
     useEffect(() => {
         form.setValues({
@@ -98,6 +99,10 @@ export function PhoneNumber() {
 
     const handleLeavePreviousProfile = () => {
         setOpenModal(false);
+        setApplicant({
+            ...applicant,
+            phone: form.values.phone,
+        });
         stepNext();
     };
 

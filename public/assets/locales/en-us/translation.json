@@ -556,7 +556,7 @@
   "pay_structure": "Pay Structure",
   "DriverEndorsement": {
     "HAZMAT": "Hazmat",
-    "TANKERS": "Tankers",
+    "TANKERS": "Tanker",
     "DOUBLES_TRIPLES": "Doubles/Triples",
     "SCHOOL_BUS": "School Bus",
     "TWIC": "TWIC",
@@ -628,6 +628,7 @@
   "LINKEDIN": "Linkedin",
   "TWITTER": "Twitter",
   "none": "None",
+  "NONE_TYPE": "NONE",
   "CriminalHistoryType": {
     "FELONY": "Felony",
     "MISDEMEANOR": "Misdemeanor",
@@ -1859,6 +1860,7 @@
   "WORKED_HERE_BEFORE": "Have you worked with this company before?",
   "FROM": "From",
   "TO": "To",
+  "ZERO":"0",
   "TELL_ABOUT_YOUR_EDUCATION": "Tell us about your Education",
   "MEDICAL_CARD_UPLOAD_TITLE": "Medical Card Photo",
   "PAST_EMPLOYMENT_HISTORY": "Past Employment History",

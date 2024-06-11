@@ -45,7 +45,7 @@ export default function JobDescription({ job }: JobDetailProps) {
                                             />
                                         </div>
                                         <div className="col-md-3">
-                                            {`${item.years} ${t("YEARS")} `}
+                                            {`${item.years} ${item.years > 1 ? t("YEARS") : t("YEAR")} `}
                                         </div>
                                     </li>
                                 ))}

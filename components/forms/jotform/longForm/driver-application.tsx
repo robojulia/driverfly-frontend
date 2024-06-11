@@ -27,6 +27,8 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 		form.setFieldValue("SIGNATURE.value", null);
 	}
 
+
+
 	const form = useFormik({
 		initialValues: new DriverApplicationDto(),
 		validationSchema: DriverApplicationDto.yupSchema(),
@@ -42,6 +44,10 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 			}
 		},
 	});
+
+	useEffect(() => {
+		console.log("form.values", form.values)
+	}, [form.values])
 
 	const handleSignatureEnd = () => {
 		const signatureValue = padRef?.current?.toDataURL()?.toString();
