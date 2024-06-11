@@ -42,9 +42,6 @@ export function VehicleForm(props: VehicleFormProps) {
 
             const api = new VehicleApi();
             try {
-                if (dto.max_speed != null) {
-                    dto.max_speed = parseFloat(dto?.max_speed?.toString())
-                }
                 let vehicle = null;
                 if (entity?.id) {
                     vehicle = await api.update(entity.id, dto);
@@ -64,13 +61,15 @@ export function VehicleForm(props: VehicleFormProps) {
     });
 
     useEffect(() => {
+        console.log({ entity });
+
         if (entity && !form.dirty)
             form.setValues(entity);
     }, [entity]);
 
-    useEffect(() => {
-        if (!form.values.is_governed) form.setFieldValue("max_speed", null);
-    }, [form.values.is_governed]);
+    // useEffect(() => {
+    //     if (!form.values.is_governed) form.setFieldValue("max_speed", null);
+    // }, [form.values.is_governed]);
 
     // Uncomment in debug mode.
     useEffect(() => {
