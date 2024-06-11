@@ -42,8 +42,8 @@ export function VehicleForm(props: VehicleFormProps) {
 
             const api = new VehicleApi();
             try {
-                if (dto.max_speed == null) {
-                    dto.max_speed = 0
+                if (dto.max_speed != null) {
+                    dto.max_speed = parseFloat(dto?.max_speed?.toString())
                 }
                 let vehicle = null;
                 if (entity?.id) {
