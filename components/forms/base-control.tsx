@@ -29,7 +29,7 @@ function BaseControl({ formik, required, className, label, children, touched, er
     const meta = formik.getFieldMeta(name);
 
     if (meta) {
-      touched = meta.touched;
+      touched = touched || meta.touched;
       error = meta.error;
     }
   }

@@ -1809,6 +1809,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														Boolean(!!entity?.id && !entity?.file_base64) ||
 														Boolean(props?.entity?.is_hired)
 													}
+													touched
 													formik={form}
 												/>
 											</td>
