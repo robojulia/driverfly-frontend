@@ -1,27 +1,27 @@
 import { useFormik } from "formik";
+import { useEffect } from "react";
+import { Col, Row } from "react-bootstrap";
+import { toast } from 'react-toastify';
 import { useTranslation } from "../../../hooks/use-translation";
 import { VehicleEntity } from "../../../models/company/vehicle.entity";
 import VehicleApi from "../../../pages/api/vehicle";
-import { toast } from 'react-toastify'
-import { useEffect } from "react";
-import { Col, Row } from "react-bootstrap";
 
-import { VehicleType } from "../../../enums/vehicles/vehicle-type.enum";
+import { VehicleAccessory } from "../../../enums/vehicles/vehicle-accessory.enum";
 import { VehicleTrailerType } from "../../../enums/vehicles/vehicle-trailer-type.enum";
 import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
-import { VehicleAccessory } from "../../../enums/vehicles/vehicle-accessory.enum";
+import { VehicleType } from "../../../enums/vehicles/vehicle-type.enum";
 
 import { DocumentType } from "../../../models/documents/document.entity";
 
-import BaseSelect from "../base-select";
-import BaseCheckList from "../base-check-list";
-import BaseCheck from "../base-check";
-import BaseInput from "../base-input";
-import FileInput from "../file-input";
-import BaseTextArea from "../base-text-area";
-import EntityForm from "../../layouts/page/entity-form";
-import { BaseFormProps } from "./base-form-props";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
+import EntityForm from "../../layouts/page/entity-form";
+import BaseCheck from "../base-check";
+import BaseCheckList from "../base-check-list";
+import BaseInput from "../base-input";
+import BaseSelect from "../base-select";
+import BaseTextArea from "../base-text-area";
+import FileInput from "../file-input";
+import { BaseFormProps } from "./base-form-props";
 
 export interface VehicleFormProps extends BaseFormProps<VehicleEntity> {
 
@@ -61,9 +61,21 @@ export function VehicleForm(props: VehicleFormProps) {
     });
 
     useEffect(() => {
+        console.log({ entity });
+
         if (entity && !form.dirty)
             form.setValues(entity);
     }, [entity]);
+
+    // useEffect(() => {
+    //     if (!form.values.is_governed) form.setFieldValue("max_speed", null);
+    // }, [form.values.is_governed]);
+
+    // Uncomment in debug mode.
+    useEffect(() => {
+        console.log("form.values", form.values);
+        console.log("form.errors", form.errors);
+    }, [form.values, form.errors]);
 
     return (
         <EntityForm
@@ -193,6 +205,7 @@ export function VehicleForm(props: VehicleFormProps) {
                             className="col-12 mt-2 p-0"
                             label="MAX_SPEED"
                             name="max_speed"
+                            min={1}
                             type="int"
                             placeholder="MAX_SPEED"
                             formik={form}

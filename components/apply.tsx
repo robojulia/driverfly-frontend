@@ -68,22 +68,23 @@ export default function JobApply({ job, setEncourageModal }) {
     });
 
     useEffectAsync(async () => {
-        let applicant = new ApplicantEntity();
+        let data = new ApplicantEntity();
         if (user && user.id) {
             try {
                 if (!user.company) {
-                    setApplicant(await applicantApi.me.get());
-                    applicant.documents = applicant.documents.filter(v => Object.values(ApplicantDocumentType).includes(v.type as ApplicantDocumentType))
-                    if (applicant) {
+                    data = await applicantApi.me.get();
+                    data.documents = data.documents?.filter(v => Object.values(ApplicantDocumentType).includes(v.type as ApplicantDocumentType))
+                    if (data) {
                         const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
                         if (preferences?.length > 0) {
-                            applicant.documents = applicant.documents.filter(
+                            data.documents = applicant.documents.filter(
                                 (document) => !preferences.some(
                                     (preference) => preference.label == document.type && preference.value == SharePreference.NEVER
                                 )
                             );
-                        } else applicant.documents = applicant.documents?.filter((document) => document.type == ApplicantDocumentType.RESUME);
+                        } else data.documents = data.documents?.filter((document) => document.type == ApplicantDocumentType.RESUME);
                     }
+                    setApplicant(data);
                 }
             }
             catch (e) {
@@ -93,15 +94,14 @@ export default function JobApply({ job, setEncourageModal }) {
                 throw e;
             }
         } else {
-            applicant.years_cdl_experience = 0;
-            applicant.moving_violations_count = 0;
-            applicant.accident_count = 0;
+            data.years_cdl_experience = 0;
+            data.moving_violations_count = 0;
+            data.accident_count = 0;
         }
-        console.log({ applicant });
 
         apply_form.setValues({
             ...apply_form.values,
-            ...applicant,
+            ...data,
         });
     }, [showModal])
 
@@ -115,6 +115,7 @@ export default function JobApply({ job, setEncourageModal }) {
         setShowForm(true);
         setEncourageModal(true)
     }
+
 
     useEffect(() => {
         console.log("values", apply_form.values);
@@ -377,8 +378,13 @@ export default function JobApply({ job, setEncourageModal }) {
                     </form>
                     : <Row>
                         <p>
-                            {t('QUICK_APPLY_MESSAGE_{JOB}_{COMPANY}', { JOB: job.title, COMPANY: job.company.name })}
-                            <Link href={`/form/digitalhiringapp/quick-apply/${applicant.uuid_token}`} >{t('COMPLETE_APPLICATION')}</Link>
+                            {!user?.id ? (<>
+
+                                {t('QUICK_APPLY_MESSAGE_{JOB}_{COMPANY}', { JOB: job.title, COMPANY: job.company.name })}
+                                <Link href={`/form/digitalhiringapp/quick-apply/${applicant.uuid_token}`} >{t('COMPLETE_APPLICATION')}</Link>
+                            </>
+                            ) : t("job_applied_success_message")}
+
                         </p>
                     </Row>
                 }

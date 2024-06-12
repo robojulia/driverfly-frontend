@@ -29,7 +29,7 @@ function BaseControl({ formik, required, className, label, children, touched, er
     const meta = formik.getFieldMeta(name);
 
     if (meta) {
-      touched = meta.touched;
+      touched = touched || meta.touched;
       error = meta.error;
     }
   }
@@ -45,7 +45,7 @@ function BaseControl({ formik, required, className, label, children, touched, er
         {children}
         {append && <div className="input-group-append">{append}</div>}
       </InputGroup>
-      {touched && error && typeof error == "string" && <span className="text-danger small">{t(error)}</span>}
+      {(touched || error) && typeof error == "string" && <span className="text-danger small">{t(error)}</span>}
       {after}
     </div>
   )

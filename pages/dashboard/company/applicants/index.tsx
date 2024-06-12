@@ -7,6 +7,7 @@ import { Accordion, Button, ButtonGroup, Col, Row } from "react-bootstrap";
 import { EyeFill, PencilFill } from 'react-bootstrap-icons';
 import { toast } from "react-toastify";
 import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
+import ShowEnumFromString from '../../../../components/enum-filters/show-enum-from-string';
 import BaseCheckList from "../../../../components/forms/base-check-list";
 import BaseSelect from "../../../../components/forms/base-select";
 import BaseTextArea from "../../../../components/forms/base-text-area";
@@ -20,6 +21,7 @@ import { ApplicantReasonCodeFired, ApplicantReasonCodeNotInterested, ApplicantRe
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
 import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
 import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
+import { DriverEndorsement } from '../../../../enums/users/driver-endorsement.enum';
 import { useAuth } from "../../../../hooks/use-auth";
 import { TranslateInterface, useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";
@@ -31,6 +33,7 @@ import { buildAddress } from "../../../../utils/common";
 import * as numbers from "../../../../utils/number";
 import { useEffectAsync } from "../../../../utils/react";
 import ApplicantApi from "../../../api/applicant";
+import { JobGeography } from '../../../../enums/jobs/job-geography.enum';
 
 
 const ViewMode = {
@@ -568,7 +571,14 @@ function ApplicantView(props: ViewProps) {
                         name: "ENDORSEMENTS",
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant.endorsements?.join(",") || t("NONE"),
+                        selector: applicant => applicant.endorsements ? t(`DriverEndorsement.${applicant.endorsements}`) : null,
+                        cell: applicant =>
+                        (<ShowEnumFromString
+                            popover_header={t('ENDORSEMENTS')}
+                            labelPrefix={applicant.endorsements.length > 0 ? "DriverEndorsement" : ""}
+                            popover={true}
+                            value={applicant.endorsements}
+                            enumArray={DriverEndorsement} />)
                     },
 
                     {
@@ -590,7 +600,13 @@ function ApplicantView(props: ViewProps) {
                         name: `PREFERRED_LOCATION`,
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant?.preferred_location?.join(",") || t("NONE"),
+                        selector: applicant => applicant?.preferred_location ? t(`JobGeography.${applicant?.preferred_location}`) : null,
+                        cell: applicant =>
+                        (<ShowEnumFromString
+                            labelPrefix={applicant?.preferred_location.length > 0 ? "JobGeography" : ""}
+                            value={applicant?.preferred_location}
+                            enumArray={JobGeography} />)
+
                     }
 
                 ]}
