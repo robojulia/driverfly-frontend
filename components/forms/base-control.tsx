@@ -45,7 +45,7 @@ function BaseControl({ formik, required, className, label, children, touched, er
         {children}
         {append && <div className="input-group-append">{append}</div>}
       </InputGroup>
-      {touched && error && typeof error == "string" && <span className="text-danger small">{t(error)}</span>}
+      {(touched || error) && typeof error == "string" && <span className="text-danger small">{t(error)}</span>}
       {after}
     </div>
   )
