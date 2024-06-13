@@ -69,10 +69,10 @@ export default function FindJobs(props) {
 	const setFiltersByKeyValue = (key: string, value: any): void => {
 		switch (key) {
 			case "pay_structure":
-				value = JobPayMethod.OPEN_TO_NEGOTIATE ? null : value
+				value = value
 				break;
 			case "schedule":
-				value = JobSchedule.OPEN_TO_NEGOTIATE ? null : value
+				value = value
 				break;
 			default:
 				break;
