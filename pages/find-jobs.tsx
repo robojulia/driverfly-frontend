@@ -10,6 +10,7 @@ import ResultCount from "../components/find-jobs/result-count";
 import Sort from "../components/find-jobs/sort";
 import JobsList from "../components/jobslisting/jobslist";
 import { PublicLayout } from "../components/layouts/public-layout";
+import { LoaderIcon } from "../components/loading/loader-icon";
 import JobContext from "../context/job-context";
 import { useTranslation } from "../hooks/use-translation";
 import { JobEntity } from "../models/job/job.entity";
@@ -24,9 +25,6 @@ import {
 } from "../utils/job-filter";
 import { useEffectAsync } from "../utils/react";
 import JobApi from "./api/job";
-import { JobPayMethod } from "../enums/jobs/job-pay-method.enum";
-import { JobSchedule } from "../enums/jobs/job-schedule.enum";
-import { LoaderIcon } from "../components/loading/loader-icon";
 
 export default function FindJobs(props) {
 	let { params } = props;
@@ -67,16 +65,6 @@ export default function FindJobs(props) {
 	};
 
 	const setFiltersByKeyValue = (key: string, value: any): void => {
-		switch (key) {
-			case "pay_structure":
-				value = value
-				break;
-			case "schedule":
-				value = value
-				break;
-			default:
-				break;
-		}
 		setFilters({
 			...filters,
 			page: 1,
