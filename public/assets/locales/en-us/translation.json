@@ -724,7 +724,7 @@
   "EmbeddedFilterTypes": {
     "CDL_SCHOOLS": "CDL School",
     "HEAVY_HAUL": "Heavy Haul",
-    "OWNER_OPERATOR": "Owner Operator",
+    "OWNER_OPERATOR": "Owner-Operator",
     "NEW_HIRES": "New Hires",
     "TEAM_DRIVERS": "Team Drivers",
     "OTR_JOBS": "OTR Jobs"
@@ -851,7 +851,7 @@
   "DRIVER_RESOURCES": "Driver Resources",
   "FAQ": "FAQs",
   "GET_YOUR_CDL": "Get Your CDL",
-  "OWNER_OPERATORS": " Owner Operators ",
+  "OWNER_OPERATORS": "Owner-Operator",
   "MOTOR_CARRIER_SOLUTIONS": " Motor Carrier Solutions",
   "OUR_SOLUTION": "Our Solution",
   "OPTIOS_&_PRICING": "Option & Pricing",
@@ -949,7 +949,7 @@
     "CRIMINAL_OFFENSE": "Criminal offense(s)",
     "INAPPROPRIATE_BEHAVIOR": "Inappropriate behavior",
     "CITIZENSHIP": "Citizenship",
-    "ENDORSEMENTS": "Endorsements/TWIC",
+    "ENDORSEMENTS": "Endorsements / TWIC",
     "FAILED_DRUG_TEST": "Failed drug test",
     "OTHER": "Other"
   },
@@ -1060,7 +1060,7 @@
   "GO_BACK": "Go Back",
   "STATE_AND_ZIP": "State & Zip",
   "UNKNOWN": "Unknown",
-  "ENDORSEMENTS": "Endorsements/TWIC",
+  "ENDORSEMENTS": "Endorsements / TWIC",
   "AUTHORIZED_TO_WORK_IN_THE_US": "Authorized to work in the US",
   "WORK_HISTORY": "Work History",
   "SAFETY_BACKGROUND": "Safety Background",
@@ -1151,7 +1151,7 @@
       "negative": "Value must be less than {{less}}",
       "integer": "Value must be a whole number"
     },
-    "phone": "Value must be a proper phoone number",
+    "phone": "Value must be a proper phone number",
     "date": {
       "min": "Value must be greater than or equal to {{min}}",
       "max": "Value must be less than or equal to {{max}}"
@@ -1189,7 +1189,7 @@
   "IMPORT": "Import",
   "BASIC_DETAILS": "Basic Details",
   "QUANTITY": "Quantity",
-  "OWNER_OPERATOR": "Owner Operator",
+  "OWNER_OPERATOR": "Owner-Operator",
   "TRANSMISSION_EXPERIENCE": "Transmission Experience",
   "BIRTHDATE": "Birthdate",
   "HIGHEST_DEGREE": "Highest Degree",
