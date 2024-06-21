@@ -1119,14 +1119,14 @@
   "FILE_MUST_BE_OF_{size}_{unit}_{uploaded_size}": "File size must not be greater than {{size}} {{unit}}. Your file is of {{uploaded_size}} {{unit}}",
   "DOWNLOAD_TEMPLATE": "Download Template",
   "ONLY_DISPLAY_ERRORS": "Only display errors",
-  "ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE": "One or more errors were found on the input file, please correct them and re-upload",
+  "ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE": "One or more errors detected in the file. Please correct and re-upload",
   "CATEGORY": "Category",
   "POST_DATE": "Post Date",
   "PAY_FREQUENCY": "Pay Frequency",
   "PLEASE_ENTER_A_VALID_NAME": "Please enter valid name",
   "yup": {
     "type": {
-      "date": "date, it must be in the format MM/dd/yyyy (eg. 01/12/2014)",
+      "date": "date, Please enter the date in mm/dd/yyyy format (e.g., 12/31/2020)",
       "number": "number",
       "object": "value"
     },
