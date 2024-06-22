@@ -189,7 +189,6 @@ export class EmployeeEntity {
 
           return age >= 18;
         }),
-      street: yup.string().nullable(),
       address_1: yup.string().nullable(),
       address_2: yup.string().nullable(),
       city: yup.string().nullable(),
