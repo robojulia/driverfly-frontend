@@ -1,9 +1,9 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Row } from "react-bootstrap";
 import ApplicantSafetyBackground from "../../../../../components/applicants/applicant-safety-background";
 import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
 import ApplicantExtrasDetails from "../../../../../components/applicants/jotform/applicant-profile";
-import BaseReCapcha from "../../../../../components/forms/base-re-capcha";
+import BaseRecaptcha from "../../../../../components/forms/base-recaptcha";
 import PageLayout from "../../../../../components/layouts/page/page-layout";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant";
@@ -17,12 +17,9 @@ export interface LongFormProps {
 
 export default function Dashboard({ entity, no_bot }: LongFormProps) {
 
-	const captchaRef = useRef(null)
 	const [recaptchaToken, setRecaptchaToken] = useState<string>(null);
 
-	const onChange = (value) => {
-		setRecaptchaToken(value)
-	}
+	const onChange = (value) => setRecaptchaToken(value)
 
 	const { t } = useTranslation();
 	const [pdf, setPdf] = useState({});
@@ -43,12 +40,10 @@ export default function Dashboard({ entity, no_bot }: LongFormProps) {
 		<>
 			{
 				(!!!no_bot) &&
-				<BaseReCapcha
+				<BaseRecaptcha
 					className='col-12 my-4'
 					name='recaptchaValue'
 					onChange={onChange}
-					captchaRef={captchaRef}
-
 				/>
 			}
 

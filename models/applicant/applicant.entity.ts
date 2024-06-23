@@ -484,7 +484,18 @@ export class ApplicantEntity {
     return yup.object({
       first_name: yup.string().required().nullable().trim(),
       last_name: yup.string().required().nullable().trim(),
-      phone: yup.string().nullable(),
+      phone: yup
+        .string()
+        .required()
+        .test({
+          test: (value, context) => {
+            if (value?.length < 17) {
+              return context.createError({ message: "yup.phone" });
+            }
+            return true;
+          },
+        })
+        .nullable(),
       email: yup.string().email().required().nullable(),
       birthdate: yup.date().nullable(),
       address_1: yup.string().nullable(),

@@ -1,29 +1,27 @@
-import Link from "next/link";
-import React, { useEffect, useRef } from "react";
 import { useFormik } from "formik";
-import { Row, Col } from "reactstrap";
-import { ToastContainer, toast } from "react-toastify";
 import Head from "next/head";
+import Link from "next/link";
 import {
     ArrowRight,
     Newspaper,
     PersonBadgeFill,
     QuestionCircle,
 } from "react-bootstrap-icons";
-import { PublicLayout } from "../components/layouts/public-layout";
+import { ToastContainer, toast } from "react-toastify";
+import { Col, Row } from "reactstrap";
 import Breadcrumb from "../components/breadcrumbs/breadcrumb";
-import { useTranslation } from "../hooks/use-translation";
 import BaseInput from "../components/forms/base-input";
+import BaseRecaptcha from "../components/forms/base-recaptcha";
 import BaseTextArea from "../components/forms/base-text-area";
-import BaseReCapcha from "../components/forms/base-re-capcha";
+import { PublicLayout } from "../components/layouts/public-layout";
+import { useTranslation } from "../hooks/use-translation";
 import { ContactUsEntity } from "../models/contact/contact-us.entity";
-import ContactApi from "./api/contact";
 import { globalAjaxExceptionHandler } from "../utils/ajax";
+import ContactApi from "./api/contact";
 
 export default function Contact() {
     const { t } = useTranslation();
     const contactApi = new ContactApi();
-    const captchaRef = useRef(null);
 
     const form = useFormik({
         initialValues: new ContactUsEntity(),
@@ -136,12 +134,11 @@ export default function Contact() {
                                                     formik={form}
                                                 />
                                             </Row>
-                                            <BaseReCapcha
+                                            <BaseRecaptcha
                                                 className="col-12 my-4"
                                                 name="recaptchaValue"
                                                 formik={form}
                                                 onChange={handleReCapchaChange}
-                                                captchaRef={captchaRef}
                                             />
                                             <button
                                                 disabled={

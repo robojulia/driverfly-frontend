@@ -34,6 +34,8 @@ import * as numbers from "../../../../utils/number";
 import { useEffectAsync } from "../../../../utils/react";
 import ApplicantApi from "../../../api/applicant";
 import { JobGeography } from '../../../../enums/jobs/job-geography.enum';
+import { VehicleTransmissionType } from '../../../../enums/vehicles/vehicle-transmission-type.enum';
+import { Status } from '../../../../enums/status.enum';
 
 
 const ViewMode = {
@@ -525,7 +527,14 @@ function ApplicantView(props: ViewProps) {
                         id: "transmission_type",
                         name: "TRANSMISSION_EXPERIENCE",
                         wrap: true,
-                        selector: applicant => applicant?.transmission_type?.join(",") || t("NONE"),
+                        selector: applicant => applicant.transmission_type ? t(`VehicleTransmissionType.${applicant.transmission_type}`) : null,
+                        cell: applicant =>
+                        (<ShowEnumFromString
+                            popover_header={t('VehicleTransmissionType')}
+                            labelPrefix={applicant.transmission_type.length > 0 ? "VehicleTransmissionType" : ""}
+                            popover={true}
+                            value={applicant.transmission_type}
+                            enumArray={VehicleTransmissionType} />)
                     },
                     {
                         id: "date_added",
@@ -549,14 +558,21 @@ function ApplicantView(props: ViewProps) {
                         name: "AUTOMATED_RECRUITING_LEAD",
                         wrap: true,
                         hide: 1,
-                        selector: applicant => Boolean(applicant?.is_automated_recruiting_lead) ? BooleanType.YES : BooleanType.NO,
+                        selector: applicant => Boolean(applicant?.is_automated_recruiting_lead) ? t('BooleanType.YES') : t('BooleanType.NO'),
                     },
                     {
                         id: "status",
                         name: "STATUS",
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant.status,
+                        selector: applicant => applicant.status ? t(`Status.${applicant.status}`) : null,
+                        cell: applicant =>
+                        (<ShowEnumFromString
+                            popover_header={t('Status')}
+                            labelPrefix={applicant.status.length > 0 ? "Status" : ""}
+                            popover={true}
+                            value={applicant.status}
+                            enumArray={Status} />)
                     },
                     {
                         id: "assigned_to",
@@ -590,7 +606,7 @@ function ApplicantView(props: ViewProps) {
                     },
                     {
                         id: "is_owner_operator",
-                        name: `${t("OWNER_OPERATOR")}/${t("COMPANY_DRIVER")}`,
+                        name: `${t("OWNER_OPERATOR")} / ${t("COMPANY_DRIVER")}`,
                         wrap: true,
                         hide: 1,
                         selector: applicant => applicant.is_owner_operator ? t("OWNER_OPERATOR") : t("COMPANY_DRIVER") || t("NONE"),
