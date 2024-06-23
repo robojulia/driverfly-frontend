@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import BaseCheck from "../components/forms/base-check";
 import BaseInput from "../components/forms/base-input";
 import BaseInputPhone from "../components/forms/base-input-phone";
+import BaseRecaptcha from "../components/forms/base-recaptcha";
 import BaseSelect from "../components/forms/base-select";
 import BaseTextArea from "../components/forms/base-text-area";
 import { PublicLayout } from "../components/layouts/public-layout";
@@ -65,6 +66,8 @@ export default function Signup() {
 			}
 		},
 	});
+
+	const handleReCapchaChange = (token: string) => form.setFieldValue("recaptchaValue", token || null);
 
 	useEffect(() => {
 		form.setValues({
@@ -309,6 +312,12 @@ export default function Signup() {
 								</Link>
 							</Col>
 						</Row>
+						<BaseRecaptcha
+							className="col-12 my-4"
+							name="recaptchaValue"
+							formik={form}
+							onChange={handleReCapchaChange}
+						/>
 						<div className="d-grid gap-2 my-4 sign_up_btns">
 							<Button
 								disabled={form.isSubmitting}

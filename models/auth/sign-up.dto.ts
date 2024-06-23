@@ -20,6 +20,7 @@ export class SignUpDto {
 	utm_content?: string;
 	personal_recruiter?: boolean = false;
 	company_admin?: boolean = false;
+	recaptchaValue: string;
 
 	static yupSchema() {
 		return yup.object({
@@ -73,6 +74,7 @@ export class SignUpDto {
 					then: yup.string().trim().required().nullable(),
 				})
 				.nullable(),
+			recaptchaValue: yup.string().required().nullable(),
 		});
 	}
 }
