@@ -31,10 +31,8 @@ export default function Contact() {
                 const res = await contactApi.sendMail(dto);
                 toast.success(t("THANKS_FOR_CONTACTING_US"));
                 form.resetForm();
-                captchaRef.current.reset();
             } catch (e) {
                 if (e.response?.data?.recaptchaValue == "INVALID_RECAPTCHA_TOKEN")
-                    captchaRef.current.reset();
 
                 globalAjaxExceptionHandler(e, {
                     formik: form,
@@ -47,9 +45,6 @@ export default function Contact() {
     });
 
     const handleReCapchaChange = (token: string) => {
-        const captchaValue = captchaRef.current.getValue();
-
-        // make form submission
         form.setFieldValue("recaptchaValue", token || null);
     };
 
