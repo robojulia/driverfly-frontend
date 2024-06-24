@@ -395,6 +395,7 @@ const ImportEmployees = () => {
             case "equipment_owned":
             case "employers":
             case "documents":
+            case "street":
             case "jobs":
                 return false;
             default:
