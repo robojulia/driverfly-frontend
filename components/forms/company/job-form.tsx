@@ -848,66 +848,69 @@ export function JobForm(props: JobFormProps) {
                             }
                         >
                             {form.values.vehicles?.length > 0 &&
-                                form.values.vehicles.map((v, i) => (
-                                    <BaseListRowControl
-                                        key={i}
-                                        index={i}
-                                        onRemoveClick={() =>
-                                            form.setFieldValue(
-                                                "vehicles",
-                                                form.values.vehicles.filter((v, idx) => i != idx)
-                                            )
-                                        }
-                                    >
-                                        <BaseSelect
-                                            className="mx-1"
-                                            name={`vehicles.${i}.id`}
-                                            placeholder={t(
-                                                "SELECT_{name}",
-                                                { name: "VEHICLE" },
-                                                { translateProps: true }
-                                            )}
-                                            options={vehicles}
-                                            valueKey="id"
-                                            createLabel={(veh) => {
-                                                const {
-                                                    type,
-                                                    type_other,
-                                                    make,
-                                                    model,
-                                                    transmission_type,
-                                                    year,
-                                                } = veh;
-                                                let label =
-                                                    type == VehicleType.OTHER
-                                                        ? type_other
-                                                        : t("VehicleType." + type);
-
-                                                if (make) label += ` / ${make}`;
-
-                                                if (model) label += ` / ${model}`;
-
-                                                if (transmission_type)
-                                                    label += ` / ${t(transmission_type)}`;
-
-                                                if (year) label += ` / ${year}`;
-                                                return label; //`${()} / ${veh.make} / ${veh.model} / ${t(veh.transmission_type)} / ${veh.year}`
-                                            }}
-                                            formik={form}
-                                            append={
-                                                <>
-                                                    <Button
-                                                        variant="btn create_btn"
-                                                        disabled={!can.createVehicle}
-                                                        onClick={() => setCreateVehicle(i)}
-                                                    >
-                                                        <PlusCircle /> {t("CREATE")}
-                                                    </Button>
-                                                </>
+                                form.values.vehicles.map((v, i) => {
+                                    v.id = Number(v?.id)
+                                    return (
+                                        <BaseListRowControl
+                                            key={i}
+                                            index={i}
+                                            onRemoveClick={() =>
+                                                form.setFieldValue(
+                                                    "vehicles",
+                                                    form.values.vehicles.filter((v, idx) => i != idx)
+                                                )
                                             }
-                                        />
-                                    </BaseListRowControl>
-                                ))}
+                                        >
+                                            <BaseSelect
+                                                className="mx-1"
+                                                name={`vehicles.${i}.id`}
+                                                placeholder={t(
+                                                    "SELECT_{name}",
+                                                    { name: "VEHICLE" },
+                                                    { translateProps: true }
+                                                )}
+                                                options={vehicles}
+                                                valueKey="id"
+                                                createLabel={(veh) => {
+                                                    const {
+                                                        type,
+                                                        type_other,
+                                                        make,
+                                                        model,
+                                                        transmission_type,
+                                                        year,
+                                                    } = veh;
+                                                    let label =
+                                                        type == VehicleType.OTHER
+                                                            ? type_other
+                                                            : t("VehicleType." + type);
+
+                                                    if (make) label += ` / ${make}`;
+
+                                                    if (model) label += ` / ${model}`;
+
+                                                    if (transmission_type)
+                                                        label += ` / ${t(transmission_type)}`;
+
+                                                    if (year) label += ` / ${year}`;
+                                                    return label; //`${()} / ${veh.make} / ${veh.model} / ${t(veh.transmission_type)} / ${veh.year}`
+                                                }}
+                                                formik={form}
+                                                append={
+                                                    <>
+                                                        <Button
+                                                            variant="btn create_btn"
+                                                            disabled={!can.createVehicle}
+                                                            onClick={() => setCreateVehicle(i)}
+                                                        >
+                                                            <PlusCircle /> {t("CREATE")}
+                                                        </Button>
+                                                    </>
+                                                }
+                                            />
+                                        </BaseListRowControl>
+                                    )
+                                })}
                         </ViewCard>
                     </Col>
                 </Row>

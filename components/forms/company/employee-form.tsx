@@ -221,9 +221,16 @@ export function EmployeeForm(props: EmployeeFormProps) {
 							/>
 							<BaseInput
 								className="col-12"
-								label="STREET"
-								name="street"
-								placeholder="STREET"
+								label="Address 1"
+								name="address_1"
+								placeholder="Address 1"
+								formik={form}
+							/>
+							<BaseInput
+								className="col-12"
+								label="Address 2"
+								name="address_2"
+								placeholder="Address 2"
 								formik={form}
 							/>
 							<BaseInput
