@@ -531,7 +531,7 @@ function ApplicantView(props: ViewProps) {
                         cell: applicant =>
                         (<ShowEnumFromString
                             popover_header={t('VehicleTransmissionType')}
-                            labelPrefix={applicant.transmission_type.length > 0 ? "VehicleTransmissionType" : ""}
+                            labelPrefix={applicant.transmission_type?.length > 0 ? "VehicleTransmissionType" : ""}
                             popover={true}
                             value={applicant.transmission_type}
                             enumArray={VehicleTransmissionType} />)
@@ -569,7 +569,7 @@ function ApplicantView(props: ViewProps) {
                         cell: applicant =>
                         (<ShowEnumFromString
                             popover_header={t('Status')}
-                            labelPrefix={applicant.status.length > 0 ? "Status" : ""}
+                            labelPrefix={applicant.status?.length > 0 ? "Status" : ""}
                             popover={true}
                             value={applicant.status}
                             enumArray={Status} />)
@@ -591,7 +591,7 @@ function ApplicantView(props: ViewProps) {
                         cell: applicant =>
                         (<ShowEnumFromString
                             popover_header={t('ENDORSEMENTS')}
-                            labelPrefix={applicant.endorsements.length > 0 ? "DriverEndorsement" : ""}
+                            labelPrefix={applicant.endorsements?.length > 0 ? "DriverEndorsement" : ""}
                             popover={true}
                             value={applicant.endorsements}
                             enumArray={DriverEndorsement} />)
@@ -619,7 +619,7 @@ function ApplicantView(props: ViewProps) {
                         selector: applicant => applicant?.preferred_location ? t(`JobGeography.${applicant?.preferred_location}`) : null,
                         cell: applicant =>
                         (<ShowEnumFromString
-                            labelPrefix={applicant?.preferred_location.length > 0 ? "JobGeography" : ""}
+                            labelPrefix={applicant?.preferred_location?.length > 0 ? "JobGeography" : ""}
                             value={applicant?.preferred_location}
                             enumArray={JobGeography} />)
 
