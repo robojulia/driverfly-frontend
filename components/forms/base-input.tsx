@@ -124,7 +124,7 @@ const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
     in the `rest` object to "numeric". This is a way to dynamically set the `inputMode` property based
     on the `type` of the input field being rendered. */
     if (!rest.inputMode) {
-      if (type == "number" || "int" || type == "integer") {
+      if (type == "number" || type == "int" || type == "integer") {
         rest.inputMode = "numeric";
       }
     }
