@@ -175,7 +175,14 @@ export class EmployeeEntity {
     return yup.object({
       first_name: yup.string().optional().nullable().trim(),
       last_name: yup.string().optional().nullable().trim(),
-      phone: yup.string().nullable(),
+      phone: yup.string().nullable().test({
+        name: 'phone',
+        message: "Invalid phone number. Please use the format (987) 654-3210",
+        test: (value) => {
+          var patt = new RegExp(/^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{4}$/);
+          return patt.test(value);
+        },
+      }),
       email: yup.string().email().optional().nullable(),
       birthdate: yup
         .date()
@@ -218,7 +225,14 @@ export class EmployeeEntity {
       highest_degree: (yup.string() as any).enum(EducationLevel).nullable(),
       authorized_to_work_in_us: yup.bool().nullable(),
       emergency_contact_name: yup.string().nullable(),
-      emergency_contact_number: yup.string().nullable(),
+      emergency_contact_number: yup.string().nullable().test({
+        name: 'emergency_contact_number',
+        message: "Invalid phone number. Please use the format (987) 654-3210",
+        test: (value) => {
+          var patt = new RegExp(/^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{4}$/);
+          return patt.test(value);
+        },
+      }),
       emergency_contact_relationship: yup.string().nullable(),
       preferred_location: yup
         .array((yup.string() as any).enum(JobGeography))
