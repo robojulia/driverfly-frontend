@@ -70,6 +70,8 @@ export class EmployeeEntity {
   termination_date?: Date;
 
   static employeeFormYupSchema() {
+    const { t } = useTranslation();
+
     return yup.object({
       first_name: yup.string().trim().required().nullable(),
       last_name: yup.string().trim().required().nullable(),
@@ -78,7 +80,7 @@ export class EmployeeEntity {
       birthdate: yup
         .date()
         .nullable()
-        .test("age", "You must be at least 18 years old", function (value) {
+        .test("age", t("IMPORT_AGE"), function (value) {
           if (!value) return true;
 
           const currentDate = new Date();
@@ -172,12 +174,14 @@ export class EmployeeEntity {
   }
 
   static yupSchemaForImportEmployees() {
+    const { t } = useTranslation();
+
     return yup.object({
       first_name: yup.string().optional().nullable().trim(),
       last_name: yup.string().optional().nullable().trim(),
       phone: yup.string().nullable().test({
         name: 'phone',
-        message: "Invalid phone number. Please use the format (987) 654-3210",
+        message: t("IMPORT_PHONE_ERROR"),
         test: (value) => {
           var patt = new RegExp(/^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{4}$/);
           return patt.test(value);
@@ -187,7 +191,7 @@ export class EmployeeEntity {
       birthdate: yup
         .date()
         .nullable()
-        .test("age", "You must be at least 18 years old", function (value) {
+        .test("age", t("IMPORT_AGE"), function (value) {
           if (!value) return true;
 
           const currentDate = new Date();
@@ -204,7 +208,7 @@ export class EmployeeEntity {
       license_number: yup.string().required().nullable(),
       license_expiry: yup
         .date()
-        .typeError("Not a valid date, Please enter the date in mm/dd/yyyy format (e.g., 12/31/2020)")
+        .typeError(t("IMPORT_INVALID_DATE"))
         .min(
           moment().endOf("day").add(0.5, "years"),
           "LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
@@ -227,7 +231,7 @@ export class EmployeeEntity {
       emergency_contact_name: yup.string().nullable(),
       emergency_contact_number: yup.string().nullable().test({
         name: 'emergency_contact_number',
-        message: "Invalid phone number. Please use the format (987) 654-3210",
+        message: t("IMPORT_PHONE_ERROR"),
         test: (value) => {
           var patt = new RegExp(/^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{4}$/);
           return patt.test(value);
