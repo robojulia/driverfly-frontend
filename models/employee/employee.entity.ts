@@ -204,7 +204,7 @@ export class EmployeeEntity {
       license_number: yup.string().required().nullable(),
       license_expiry: yup
         .date()
-        .typeError("INVALID_DATE")
+        .typeError("Not a valid date, Please enter the date in mm/dd/yyyy format (e.g., 12/31/2020)")
         .min(
           moment().endOf("day").add(0.5, "years"),
           "LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
