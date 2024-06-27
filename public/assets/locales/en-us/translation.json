@@ -1124,6 +1124,9 @@
   "POST_DATE": "Post Date",
   "PAY_FREQUENCY": "Pay Frequency",
   "PLEASE_ENTER_A_VALID_NAME": "Please enter valid name",
+  "IMPORT_AGE_ERROR":"You must be at least 18 years old",
+  "IMPORT_PHONE_ERROR":"Invalid phone number. Please use the format (987) 654-3210",
+  "IMPORT_DATE_ERROR":"Not a valid date, Please enter the date in mm/dd/yyyy format (e.g., 12/31/2020)",
   "yup": {
     "type": {
       "date": "date, Please enter the date in mm/dd/yyyy format (e.g., 12/31/2020)",
