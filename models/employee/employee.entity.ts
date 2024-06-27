@@ -80,7 +80,7 @@ export class EmployeeEntity {
       birthdate: yup
         .date()
         .nullable()
-        .test("age", t("IMPORT_AGE"), function (value) {
+        .test("age", t("IMPORT_AGE_ERROR"), function (value) {
           if (!value) return true;
 
           const currentDate = new Date();
@@ -191,7 +191,7 @@ export class EmployeeEntity {
       birthdate: yup
         .date()
         .nullable()
-        .test("age", t("IMPORT_AGE"), function (value) {
+        .test("age", t("IMPORT_AGE_ERROR"), function (value) {
           if (!value) return true;
 
           const currentDate = new Date();
@@ -208,7 +208,7 @@ export class EmployeeEntity {
       license_number: yup.string().required().nullable(),
       license_expiry: yup
         .date()
-        .typeError(t("IMPORT_INVALID_DATE"))
+        .typeError(t("IMPORT_DATE_ERROR"))
         .min(
           moment().endOf("day").add(0.5, "years"),
           "LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
