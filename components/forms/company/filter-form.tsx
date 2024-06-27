@@ -18,6 +18,8 @@ import { useEffectAsync } from "../../../utils/react";
 import BaseInput from "../base-input";
 import BaseSelect from "../base-select";
 import StateSelect from "../state-select";
+import BaseMultiSelect from "../base-multiselect";
+import stateList from "../../../utils/stateList";
 
 export interface ApplicantFilterFormProps {
     onSearch?: (values: SearchApplicantDto) => void;
@@ -81,22 +83,20 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                         enumType={ApplicantType}
                         formik={form}
                     />
-                    <BaseSelect
-                        className="col-md-3 mt-1 mb-3"
+                    <BaseMultiSelect
+                        className="col-md-3 z-3"
                         placeholder="ENDORSEMENTS"
                         name="endorsements"
-                        labelPrefix="DriverEndorsement"
-                        enumType={DriverEndorsement}
                         formik={form}
-                    />
-                    <BaseSelect
-                        className="col-md-3 mt-1 mb-3"
+                        labelPrefix="DriverEndorsement"
+                        enumType={DriverEndorsement} />
+                    {/*   <BaseMultiSelect
+                        className="col-md-3 z-3"
                         placeholder="License_Restrictions"
                         name="license_restrictions"
-                        labelPrefix="LicenseRestrictions"
-                        enumType={LicenseRestrictions}
                         formik={form}
-                    />
+                        labelPrefix="LicenseRestrictions"
+                        enumType={LicenseRestrictions} /> */}
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
                         placeholder="AUTOMATED_RECRUITING_LEAD"
@@ -104,25 +104,35 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                         enumType={BooleanType}
                         formik={form}
                     />
-                    <StateSelect
-                        className="col-md-3 mt-1 mb-3"
-                        name="state"
+
+                    {/* <BaseMultiSelect
+                        className="col-md-3 z-2"
+                        placeholder="STATUS"
+                        name="status"
+                        labelPrefix="ApplicantStatus"
+                        hideOptions={[ApplicantStatus.OTHER]}
+                        enumType={ApplicantStatus}
+                        formik={form} /> */}
+                    {/* <BaseMultiSelect
+                        className="col-md-3"
                         placeholder="STATE"
+                        name="state"
+                        options={stateList}
+                        valueKey="value"
+                        labelKey="label"
+                        enumType={stateList}
                         formik={form}
-                    />
+                    /> */}
                     <BaseInput
                         className="col-md-3 mt-1 mb-3"
                         name="city"
                         displayPlaceholder
                         formik={form}
                     />
-                    <BaseSelect
+                    <StateSelect
                         className="col-md-3 mt-1 mb-3"
-                        placeholder="STATUS"
-                        name="status"
-                        labelPrefix="ApplicantStatus"
-                        hideOptions={[ApplicantStatus.OTHER]}
-                        enumType={ApplicantStatus}
+                        name="state"
+                        placeholder="STATE"
                         formik={form}
                     />
                     <BaseSelect
@@ -135,6 +145,15 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                         createLabel={(c) => `${c.name} (#${c.id}) `}
                         formik={form}
                     />
+                    {/* <BaseMultiSelect
+                        className="col-md-3 z-2"
+                        placeholder="ASSIGNED_RECRUITER"
+                        displayPlaceholder
+                        options={companyUsers}
+                        name="assignedUserId"
+                        valueKey="id"
+                        createLabel={(c) => `${c.name} (#${c.id}) `}
+                        formik={form} /> */}
                     <BaseInput
                         className="col-md-3 mt-1 mb-3"
                         name="years_cdl_experience"
@@ -142,22 +161,20 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                         type='number'
                         formik={form}
                     />
-                    <BaseSelect
-                        className="col-md-3 mt-1 mb-3"
+                    {/* <BaseMultiSelect
+                        className="col-md-3 z-2"
                         placeholder="PREFERRED_LOCATION"
                         name="preferred_location"
                         labelPrefix="JobGeography"
                         enumType={JobGeography}
-                        formik={form}
-                    />
-                    <BaseSelect
-                        className="col-md-3 mt-1 mb-3"
+                        formik={form} />
+                    <BaseMultiSelect
+                        className="col-md-3 z-2"
                         placeholder="TRANSMISSION_EXPERIENCE"
                         name="transmission_type"
                         labelPrefix="VehicleTransmissionType"
                         enumType={VehicleTransmissionType}
-                        formik={form}
-                    />
+                        formik={form} /> */}
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
                         placeholder="OWNER_OP_COMPANY_DRIVER"
