@@ -204,8 +204,7 @@ function BaseMultiSelect({
 						)
 					}
 					options={options}
-				>
-				</Select>
+				/>
 			</BaseControl>
 
 		</div>
