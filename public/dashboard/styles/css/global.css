@@ -1083,17 +1083,11 @@ border: 1px solid red !important;
 
 }
 
-   
+  
 .css-cp01gg-control>div {
   padding: 9px;
 }
-.css-100ebu3-menu>div>div:hover {
-  background-color: #007bff;
-  color: white;
-}
-.css-100ebu3-menu>div>div {
-  padding-left: 15px;
-}
+
 .css-x2yrli-multiValue {
   background: #d3d3d3;
   border-radius: 4px;
@@ -1111,22 +1105,15 @@ border: 1px solid red !important;
   font-size: small !important;
 }
 
-.css-100ebu3-menu {
-  background: white !important;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
-  height: auto;
-border: 1px solid black;
-  font-size: 14px;
-  font-weight: 300;
-  color: #000;
-  font-family: sans-serif;
-  overflow: hidden;
-  margin-left: 2px;
-  width: 98.8% !important;
+
+.multiselect-border{
+  padding: 0.05rem 0.6rem 0.05rem 0.475rem;
+  border-radius: 4px !important;
+  border: 1px solid #d3d3d3 !important;
 
 }
 .Filter_Select{
-  width: 100% !important;
+ border: 1px solid black !important;
 }
 
 .Filter_Select:focus {

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Select, { StylesConfig } from 'react-select';
 import { useTranslation } from "../../hooks/use-translation";
 import { ComboboxItem } from '../controls/combobox';
@@ -27,7 +27,7 @@ const csutomStyles: StylesConfig<ComboboxItem & any> = {
 		color: "black",
 		borderColor: isFocused || menuIsOpen
 			? "#2ec8c4"
-			: "#4ca7a8",
+			: "#d3d3d3",
 	}),
 	option: (styles: any, { data, isDisabled, isFocused, isSelected }) => {
 		return {
@@ -35,11 +35,10 @@ const csutomStyles: StylesConfig<ComboboxItem & any> = {
 			zIndex: 9999,
 			color: isFocused || isSelected
 				? "white"
-				// : data?.value?.chattable_type == ChattableType.EMPLOYEE
 				//     ? '#2ec8c4'
 				: "black",
 			backgroundColor: isFocused
-				? "#2ec8c4"
+				? "#4169E1"
 				: isSelected
 					? "#4ca7a8"
 					: "white",
@@ -55,6 +54,7 @@ export interface BaseMultiSelectProps extends BaseControlProps, React.InputHTMLA
 	valueKey?: string;
 	labelKey?: string;
 	multiple?: boolean;
+	showNone?: boolean;
 	labelPrefix?: string;
 	createLabel?: (any) => string;
 	placeholder?: string;
@@ -77,6 +77,8 @@ function BaseMultiSelect({
 	labelKey = "label",
 	createLabel,
 	label,
+	labelPrefix,
+	showNone,
 	placeholder,
 	displayPlaceholder,
 	value,
@@ -109,38 +111,65 @@ function BaseMultiSelect({
 			[valueKey]: value,
 			[labelKey]: value,
 		}));
+		if (showNone) {
+			options.push({
+				"value": "",
+				"label": "NONE"
+			})
+		}
 
 		if (hideOptions?.length)
 			options = options?.filter((v) => !hideOptions.includes(v.value));
 		if (showOptions?.length)
 			options = options?.filter((v) => showOptions.includes(v.value));
+		if (options && options?.length > 0) {
+			options = options?.map((item) => {
+				return {
+					label: t(labelPrefix ? `${labelPrefix}.${item[labelKey]}` : item[labelKey]),
+					value: item?.value
+				}
+			})
+		}
 	} else if (options && options.length > 0 && typeof options[0] != "object") {
 		options = options?.map((v) => ({
 			[valueKey]: v,
 			[labelKey]: v,
 		}));
+
+		if (options && options?.length > 0) {
+			options = options?.map((item) => {
+				return {
+					label: t(item?.label),
+					value: item?.value
+				}
+			})
+		}
+
 	} else if (createLabel) {
 		options = options?.map((v) => ({
 			[valueKey]: v[valueKey],
+			value: v[valueKey],
 			[labelKey]: createLabel(v),
 		}));
 	}
 
-	if (options && options?.length > 0) {
-		options = options?.map((item) => {
-			return {
-				label: t(item?.label),
-				value: item?.value
-			}
-		})
-	}
 
-	function onChangeProxy(e) {
-		if (onChange) return onChange(e);
-		if (name && e !== null && e?.length > 0) {
-			formik?.setFieldValue(name, e?.flatMap((item: { value: string, label: string }) => item?.value));
+
+
+	function onChangeProxy(selectedOptions) {
+		const values = selectedOptions ? selectedOptions.map(option => option.value) : [];
+		if (onChange) return onChange(values);
+		if (name) {
+			formik?.setFieldValue(name, values);
 		}
 	}
+
+
+	useEffect(() => {
+		if (!formik?.dirty) {
+			formik.setFieldValue(name, []);
+		}
+	}, [formik.dirty, formik.setFieldValue, name]);
 
 	return (
 		<div className={className} >
@@ -157,13 +186,13 @@ function BaseMultiSelect({
 				<Select
 					closeMenuOnSelect={false}
 					isMulti
-					unstyled
-					// className="Filter_Select"
 					onChange={onChangeProxy}
 					ref={selectInputRef}
+					value={options?.filter(option => value?.includes(option?.value)) || []}
+					className="basic-single"
 					isClearable={true}
+					styles={csutomStyles}
 					isSearchable={true}
-					className="basic-single,Filter_Select"
 					onBlur={handleBlur}
 					placeholder={
 						(displayPlaceholder || placeholder) &&

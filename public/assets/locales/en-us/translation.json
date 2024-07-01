@@ -288,7 +288,8 @@
     "M": "M (only Class B and C passenger vehicle or school bus)",
     "N": "N (only Class C passenger vehicle or school bus)",
     "V": "V (medical variance)",
-    "OTHER": "Other"
+    "OTHER": "Other",
+    "NONE": "None"
   },
   "OTHER_LICENSE_RESTRICTIONS": "Other Restrictions",
   "OTHER_ENDORSEMENTS": "Other Endorsements",
@@ -560,7 +561,8 @@
     "DOUBLES_TRIPLES": "Doubles/Triples",
     "SCHOOL_BUS": "School Bus",
     "TWIC": "TWIC",
-    "OTHER": "Other"
+    "OTHER": "Other",
+    "NONE": "None"
   },
   "hazmat": "Hazmat",
   "tankers": "Tankers",
@@ -719,7 +721,8 @@
   "NO_{name}_FOUND": "No {{name}} found",
   "VehicleTransmissionType": {
     "MANUAL": "Manual",
-    "AUTOMATIC": "Automatic"
+    "AUTOMATIC": "Automatic",
+    "NONE":"None"
   },
   "EmbeddedFilterTypes": {
     "CDL_SCHOOLS": "CDL School",
