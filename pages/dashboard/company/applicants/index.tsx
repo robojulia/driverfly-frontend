@@ -487,28 +487,28 @@ function ApplicantView(props: ViewProps) {
                         id: "city",
                         name: "CITY",
                         wrap: true,
-                        selector: applicant => applicant?.city ? applicant?.city : t("NONE"),
+                        selector: applicant => applicant?.city,
                     },
                     {
                         id: "state",
                         name: "STATE",
                         wrap: true,
-                        selector: applicant => applicant?.state ? applicant?.state : t("NONE"),
+                        selector: applicant => applicant?.state,
                     },
 
                     {
                         id: "phone",
                         name: "PHONE",
                         wrap: true,
-                        selector: applicant => applicant?.phone ? applicant?.phone : t("NONE"),
-                        cell: applicant => <OverlyPopover str={applicant?.phone ? applicant?.phone : t("NONE")}>{applicant?.phone}</OverlyPopover>
+                        selector: applicant => applicant?.phone,
+                        cell: applicant => <OverlyPopover str={applicant?.phone}>{applicant?.phone}</OverlyPopover>
                     },
                     {
                         id: "email",
                         name: "EMAIL",
                         wrap: true,
                         selector: applicant => applicant.email,
-                        cell: applicant => <OverlyPopover str={applicant.email ? applicant?.email : t("NONE")}>{applicant.email}</OverlyPopover>
+                        cell: applicant => <OverlyPopover str={applicant.email}>{applicant.email}</OverlyPopover>
                     },
                     {
                         id: "license_type",
