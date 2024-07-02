@@ -54,6 +54,7 @@ export interface BaseMultiSelectProps extends BaseControlProps, React.InputHTMLA
 	valueKey?: string;
 	labelKey?: string;
 	multiple?: boolean;
+	showNoneLabel?: string;
 	showNone?: boolean;
 	labelPrefix?: string;
 	createLabel?: (any) => string;
@@ -81,9 +82,11 @@ function BaseMultiSelect({
 	showNone,
 	placeholder,
 	displayPlaceholder,
+	showNoneLabel,
 	value,
 	onChange,
 	handleBlur,
+
 	name,
 	touched,
 	error,
@@ -114,7 +117,7 @@ function BaseMultiSelect({
 		if (showNone) {
 			options.push({
 				"value": "",
-				"label": "NONE"
+				"label": showNoneLabel ? showNoneLabel : "NONE"
 			})
 		}
 
@@ -135,6 +138,12 @@ function BaseMultiSelect({
 			[valueKey]: v,
 			[labelKey]: v,
 		}));
+		if (showNone) {
+			options.push({
+				"value": "",
+				"label": showNoneLabel ? showNoneLabel : "NONE"
+			})
+		}
 
 		if (options && options?.length > 0) {
 			options = options?.map((item) => {
@@ -146,15 +155,20 @@ function BaseMultiSelect({
 		}
 
 	} else if (createLabel) {
+
 		options = options?.map((v) => ({
 			[valueKey]: v[valueKey],
 			value: v[valueKey],
 			[labelKey]: createLabel(v),
 		}));
+		if (showNone) {
+			options.push({
+				"value": "",
+				"label": showNoneLabel ? showNoneLabel : "NONE"
+			})
+		}
+
 	}
-
-
-
 
 	function onChangeProxy(selectedOptions) {
 		const values = selectedOptions ? selectedOptions.map(option => option.value) : [];

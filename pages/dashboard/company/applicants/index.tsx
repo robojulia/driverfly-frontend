@@ -487,28 +487,28 @@ function ApplicantView(props: ViewProps) {
                         id: "city",
                         name: "CITY",
                         wrap: true,
-                        selector: applicant => applicant.city,
+                        selector: applicant => applicant?.city ? applicant?.city : t("NONE"),
                     },
                     {
                         id: "state",
                         name: "STATE",
                         wrap: true,
-                        selector: applicant => applicant?.state,
+                        selector: applicant => applicant?.state ? applicant?.state : t("NONE"),
                     },
 
                     {
                         id: "phone",
                         name: "PHONE",
                         wrap: true,
-                        selector: applicant => applicant.phone,
-                        cell: applicant => <OverlyPopover str={applicant.phone}>{applicant.phone}</OverlyPopover>
+                        selector: applicant => applicant?.phone ? applicant?.phone : t("NONE"),
+                        cell: applicant => <OverlyPopover str={applicant?.phone ? applicant?.phone : t("NONE")}>{applicant?.phone}</OverlyPopover>
                     },
                     {
                         id: "email",
                         name: "EMAIL",
                         wrap: true,
                         selector: applicant => applicant.email,
-                        cell: applicant => <OverlyPopover str={applicant.email}>{applicant.email}</OverlyPopover>
+                        cell: applicant => <OverlyPopover str={applicant.email ? applicant?.email : t("NONE")}>{applicant.email}</OverlyPopover>
                     },
                     {
                         id: "license_type",
@@ -600,12 +600,7 @@ function ApplicantView(props: ViewProps) {
                         name: `PREFERRED_LOCATION`,
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant?.preferred_location ? t(`JobGeography.${applicant?.preferred_location}`) : null,
-                        cell: applicant =>
-                        (<ShowEnumFromString
-                            labelPrefix={applicant?.preferred_location?.length > 0 ? "JobGeography" : ""}
-                            value={applicant?.preferred_location}
-                            enumArray={JobGeography} />)
+                        selector: applicant => applicant.preferred_location ? joinArrayElements(applicant?.preferred_location, "OTHER", undefined) : t("NONE"),
 
                     }
 

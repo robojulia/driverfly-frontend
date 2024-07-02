@@ -127,25 +127,17 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                         displayPlaceholder
                         formik={form}
                     />
-                    {/* <BaseMultiSelect
+                    <BaseMultiSelect
                         className="col-md-3 z-2"
                         placeholder="ASSIGNED_RECRUITER"
                         displayPlaceholder
                         options={companyUsers}
                         name="assignedUserId"
                         valueKey="id"
+                        showNone
+                        showNoneLabel="Unassigned"
                         createLabel={(c) => `${c?.name} (#${c?.id}) `}
-                        formik={form} /> */}
-                    <BaseSelect
-                        className="col-md-3 mt-1 mb-3"
-                        placeholder="ASSIGNED_RECRUITER"
-                        displayPlaceholder
-                        options={companyUsers}
-                        name="assignedUserId"
-                        valueKey="id"
-                        createLabel={(c) => `${c.name} (#${c.id}) `}
-                        formik={form}
-                    />
+                        formik={form} />
                     <BaseInput
                         className="col-md-3 mt-1 mb-3"
                         name="years_cdl_experience"
