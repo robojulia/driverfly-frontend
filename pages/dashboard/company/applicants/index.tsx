@@ -20,8 +20,9 @@ import ViewModal from "../../../../components/view-details/view-modal";
 import { ApplicantReasonCodeFired, ApplicantReasonCodeNotInterested, ApplicantReasonCodeNotQualified, ApplicantReasonCodeQuit } from "../../../../enums/applicants/applicant-reason-codes.enum";
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
 import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
-import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
+import { JobGeography } from '../../../../enums/jobs/job-geography.enum';
 import { DriverEndorsement } from '../../../../enums/users/driver-endorsement.enum';
+import { VehicleTransmissionType } from '../../../../enums/vehicles/vehicle-transmission-type.enum';
 import { useAuth } from "../../../../hooks/use-auth";
 import { TranslateInterface, useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";
@@ -33,9 +34,7 @@ import { buildAddress } from "../../../../utils/common";
 import * as numbers from "../../../../utils/number";
 import { useEffectAsync } from "../../../../utils/react";
 import ApplicantApi from "../../../api/applicant";
-import { JobGeography } from '../../../../enums/jobs/job-geography.enum';
-import { VehicleTransmissionType } from '../../../../enums/vehicles/vehicle-transmission-type.enum';
-import { Status } from '../../../../enums/status.enum';
+import joinArrayElements from '../../../../utils/join-in-order.utils';
 
 
 const ViewMode = {
@@ -488,28 +487,28 @@ function ApplicantView(props: ViewProps) {
                         id: "city",
                         name: "CITY",
                         wrap: true,
-                        selector: applicant => applicant.city,
+                        selector: applicant => applicant?.city ? applicant?.city : t("NONE"),
                     },
                     {
                         id: "state",
                         name: "STATE",
                         wrap: true,
-                        selector: applicant => applicant.state,
+                        selector: applicant => applicant?.state ? applicant?.state : t("NONE"),
                     },
 
                     {
                         id: "phone",
                         name: "PHONE",
                         wrap: true,
-                        selector: applicant => applicant.phone,
-                        cell: applicant => <OverlyPopover str={applicant.phone}>{applicant.phone}</OverlyPopover>
+                        selector: applicant => applicant?.phone ? applicant?.phone : t("NONE"),
+                        cell: applicant => <OverlyPopover str={applicant?.phone ? applicant?.phone : t("NONE")}>{applicant?.phone}</OverlyPopover>
                     },
                     {
                         id: "email",
                         name: "EMAIL",
                         wrap: true,
                         selector: applicant => applicant.email,
-                        cell: applicant => <OverlyPopover str={applicant.email}>{applicant.email}</OverlyPopover>
+                        cell: applicant => <OverlyPopover str={applicant.email ? applicant?.email : t("NONE")}>{applicant.email}</OverlyPopover>
                     },
                     {
                         id: "license_type",
@@ -527,14 +526,7 @@ function ApplicantView(props: ViewProps) {
                         id: "transmission_type",
                         name: "TRANSMISSION_EXPERIENCE",
                         wrap: true,
-                        selector: applicant => applicant.transmission_type ? t(`VehicleTransmissionType.${applicant.transmission_type}`) : null,
-                        cell: applicant =>
-                        (<ShowEnumFromString
-                            popover_header={t('VehicleTransmissionType')}
-                            labelPrefix={applicant.transmission_type?.length > 0 ? "VehicleTransmissionType" : ""}
-                            popover={true}
-                            value={applicant.transmission_type}
-                            enumArray={VehicleTransmissionType} />)
+                        selector: applicant => applicant.transmission_type ? joinArrayElements(applicant?.transmission_type, "OTHER", "VehicleTransmissionType") : t("NONE"),
                     },
                     {
                         id: "date_added",
@@ -565,14 +557,14 @@ function ApplicantView(props: ViewProps) {
                         name: "STATUS",
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant.status ? t(`Status.${applicant.status}`) : null,
+                        selector: applicant => applicant.current_application_status ? t(`ApplicantStatus.${applicant.current_application_status}`) : null,
                         cell: applicant =>
                         (<ShowEnumFromString
-                            popover_header={t('Status')}
-                            labelPrefix={applicant.status?.length > 0 ? "Status" : ""}
+                            popover_header={t('ApplicantStatus')}
+                            labelPrefix={applicant.current_application_status?.length > 0 ? "ApplicantStatus" : ""}
                             popover={true}
-                            value={applicant.status}
-                            enumArray={Status} />)
+                            value={applicant.current_application_status}
+                            enumArray={ApplicantStatus} />)
                     },
                     {
                         id: "assigned_to",
@@ -587,22 +579,14 @@ function ApplicantView(props: ViewProps) {
                         name: "ENDORSEMENTS",
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant.endorsements ? t(`DriverEndorsement.${applicant.endorsements}`) : null,
-                        cell: applicant =>
-                        (<ShowEnumFromString
-                            popover_header={t('ENDORSEMENTS')}
-                            labelPrefix={applicant.endorsements?.length > 0 ? "DriverEndorsement" : ""}
-                            popover={true}
-                            value={applicant.endorsements}
-                            enumArray={DriverEndorsement} />)
+                        selector: applicant => applicant.endorsements ? joinArrayElements(applicant?.endorsements, "OTHER", "DriverEndorsement") : t("NONE"),
                     },
-
                     {
                         id: "license_restrictions",
                         name: "License_Restrictions",
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant.license_restrictions?.join(",") || t("NONE"),
+                        selector: applicant => applicant.license_restrictions ? joinArrayElements(applicant?.license_restrictions, "OTHER", undefined) : t("NONE"),
                     },
                     {
                         id: "is_owner_operator",
@@ -616,12 +600,7 @@ function ApplicantView(props: ViewProps) {
                         name: `PREFERRED_LOCATION`,
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant?.preferred_location ? t(`JobGeography.${applicant?.preferred_location}`) : null,
-                        cell: applicant =>
-                        (<ShowEnumFromString
-                            labelPrefix={applicant?.preferred_location?.length > 0 ? "JobGeography" : ""}
-                            value={applicant?.preferred_location}
-                            enumArray={JobGeography} />)
+                        selector: applicant => applicant.preferred_location ? joinArrayElements(applicant?.preferred_location, "OTHER", undefined) : t("NONE"),
 
                     }
 
@@ -629,11 +608,6 @@ function ApplicantView(props: ViewProps) {
                 hideSetting
                 items={items}
                 actions={row => [
-                    // {
-                    //     icon: EyeFill,
-                    //     label: "VIEW",
-                    //     onClick: (e) => onViewClick(row.id)
-                    // },
                     {
                         icon: PencilFill,
                         label: "EDIT",
