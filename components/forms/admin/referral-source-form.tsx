@@ -108,6 +108,7 @@ export function ReferralSourceForm(props: ReferralSourceFormProps) {
                         required
                         name="name"
                         displayPlaceholder
+                        placeholder="ENTER_NAME"
                         formik={form}
                     />
                 </Col>
@@ -118,6 +119,7 @@ export function ReferralSourceForm(props: ReferralSourceFormProps) {
                         name="code"
                         readOnly={Boolean(entity?.id)}
                         displayPlaceholder
+                        placeholder="ENTER_REFERREL_CODE"
                         formik={form}
                         append={
                             <Button disabled={Boolean(entity?.id) || generatingCode} onClick={generateCode}>
@@ -134,6 +136,7 @@ export function ReferralSourceForm(props: ReferralSourceFormProps) {
                         label="SOURCE"
                         required
                         name="source"
+                        placeholder="SOURCES"
                         displayPlaceholder
                         formik={form}
                     // onChange={slugifyHandler}
@@ -145,6 +148,7 @@ export function ReferralSourceForm(props: ReferralSourceFormProps) {
                         label="MEDIUM"
                         required
                         name="medium"
+                        placeholder="MEDIUMS"
                         displayPlaceholder
                         formik={form}
                     // onChange={slugifyHandler}

@@ -63,11 +63,12 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                         className="col-md-3 mt-1 mb-3"
                         name="name"
                         displayPlaceholder
+                        placeholder="ENTER_APPLICANT_NAME"
                         formik={form}
                     />
                     <BaseMultiSelect
                         className="col-md-3 z-999"
-                        placeholder="ENDORSEMENTS"
+                        placeholder="SELECT_ENDORSEMENTS"
                         name="endorsements"
                         formik={form}
                         showNone
@@ -76,7 +77,7 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
 
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
-                        placeholder="LEAD_TYPE"
+                        placeholder="SELECT_LEAD_TYPE"
                         name="type"
                         labelPrefix="ApplicantType"
                         enumType={ApplicantType}
@@ -84,7 +85,7 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                     />
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
-                        placeholder="cdl_type"
+                        placeholder="SELECT_CDL_TYPE"
                         name="license_type"
                         labelPrefix="DriverLicenseType"
                         enumType={DriverLicenseType}
@@ -92,7 +93,7 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                     />
                     <BaseMultiSelect
                         className="col-md-3 z-3"
-                        placeholder="License_Restrictions"
+                        placeholder="SELECT_LICENSE_RESTRICTIONS"
                         name="license_restrictions"
                         formik={form}
                         showNone
@@ -108,7 +109,7 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
 
                     <BaseMultiSelect
                         className="col-md-3 z-2 "
-                        placeholder="STATUS"
+                        placeholder="SELECT_APPLICANT_STATUS"
                         name="status"
                         labelPrefix="ApplicantStatus"
                         hideOptions={[ApplicantStatus.OTHER]}
@@ -116,7 +117,7 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                         formik={form} />
                     <BaseMultiSelect
                         className="col-md-3"
-                        placeholder="STATE"
+                        placeholder="SELECT_STATE"
                         name="state"
                         options={stateList}
                         formik={form}
@@ -124,12 +125,13 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                     <BaseInput
                         className="col-md-3 mt-1 mb-3"
                         name="city"
+                        placeholder="ENTER_CITY"
                         displayPlaceholder
                         formik={form}
                     />
                     <BaseMultiSelect
                         className="col-md-3 z-2"
-                        placeholder="ASSIGNED_RECRUITER"
+                        placeholder="SELECT_ASSIGNED_RECRUITER"
                         displayPlaceholder
                         options={companyUsers}
                         name="assignedUserId"
@@ -142,19 +144,20 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                         className="col-md-3 mt-1 mb-3"
                         name="years_cdl_experience"
                         displayPlaceholder
+                        placeholder="ENTER_YEARS_OF_CDL"
                         type='number'
                         formik={form}
                     />
                     <BaseMultiSelect
                         className="col-md-3 z-2"
-                        placeholder="PREFERRED_LOCATION"
+                        placeholder="SELECT_PREFERRED_LOCATION"
                         name="preferred_location"
                         labelPrefix="JobGeography"
                         enumType={JobGeography}
                         formik={form} />
                     <BaseMultiSelect
                         className="col-md-3 z-2"
-                        placeholder="TRANSMISSION_EXPERIENCE"
+                        placeholder="SELECT_TRANSMISSION_EXPERIENCE"
                         name="transmission_type"
                         labelPrefix="VehicleTransmissionType"
                         enumType={VehicleTransmissionType}

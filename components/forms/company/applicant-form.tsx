@@ -346,7 +346,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									label="FIRST_NAME"
 									required
 									name="first_name"
-									placeholder="FIRST_NAME"
+									placeholder="ENTER_FIRST_NAME"
 									formik={form}
 								/>
 								<BaseInput
@@ -355,7 +355,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									label="LAST_NAME"
 									required
 									name="last_name"
-									placeholder="LAST_NAME"
+									placeholder="ENTER_LAST_NAME"
 									formik={form}
 								/>
 								<BaseInput
@@ -374,7 +374,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									label="PHONE"
 									name="phone"
 									required
-									placeholder="PHONE"
+									placeholder="ENTER_PHONE"
 									formik={form}
 								/>
 								<BaseInput
@@ -383,7 +383,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									label="EMAIL"
 									type="email"
 									name="email"
-									placeholder="EMAIL"
+									placeholder="ENTER_EMAIL"
 									formik={form}
 								/>
 								<BaseInput
@@ -391,7 +391,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									readOnly={Boolean(entity?.is_hired)}
 									label="ADDRESS_LINE_1"
 									name="address_1"
-									placeholder="ADDRESS_LINE_1"
+									placeholder="ENTER_ADDRESS_LINE1"
 									formik={form}
 								/>
 								<BaseInput
@@ -399,7 +399,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									readOnly={Boolean(entity?.is_hired)}
 									label="ADDRESS_LINE_2"
 									name="address_2"
-									placeholder="ADDRESS_LINE_2"
+									placeholder="ENTER_ADDRESS_LINE2"
 									formik={form}
 								/>
 								<BaseInput
@@ -407,7 +407,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									readOnly={Boolean(entity?.is_hired)}
 									label="CITY"
 									name="city"
-									placeholder="CITY"
+									placeholder="ENTER_CITY"
 									formik={form}
 								/>
 								<Row className="px-3">
@@ -416,7 +416,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										readOnly={Boolean(entity?.is_hired)}
 										label="STATE"
 										name="state"
-										placeholder="STATE"
+										placeholder="SELECT_STATE"
 										formik={form}
 									/>
 									<BaseInput
@@ -424,7 +424,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										readOnly={Boolean(entity?.is_hired)}
 										label="ZIP_CODE"
 										name="zip_code"
-										placeholder="ZIP_CODE"
+										placeholder="ENTER_ZIP_CODE"
 										formik={form}
 									/>
 									<BaseCheck
@@ -450,6 +450,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										name="referralSource.id"
 										displayPlaceholder
 										formik={form}
+										placeholder="SELECT_REFERREL_SOURCE"
 										valueKey="id"
 										createLabel={(v) => buildReferral(v)}
 										options={(!!referralSources?.length) ? referralSources.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id) : referralSources}
@@ -471,7 +472,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									className="col-12"
 									label="driver's_license_number"
 									name="license_number"
-									placeholder="driver_license_number"
+									placeholder="ENTER_DRIVER_LICENSE"
 									formik={form}
 								/>
 								<Row className="px-3">
@@ -500,7 +501,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										readOnly={Boolean(entity?.is_hired)}
 										label="state_issued"
 										name="license_state"
-										placeholder="SELECT_STATE"
+										placeholder="SELECT_ISSUE_STATE"
 										formik={form}
 									/>
 								</Row>
@@ -516,7 +517,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 															(v) => v.type == ApplicantExtras.CDL_NUMBER
 														)}].value[${i}].license_number`}
 														className="col-11"
-														placeholder="driver's_license_number"
+														placeholder="ENTER_ADDITIONAL_LICENSE"
 														label="ADDTIONAL_LICENSE_NUMBER"
 														required
 														formik={form}
@@ -568,7 +569,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														name={`extras[${form.values?.extras?.findIndex(
 															(v) => v.type == ApplicantExtras.CDL_NUMBER
 														)}].value[${i}].state`}
-														placeholder="SELECT_STATE"
+														placeholder="SELECT_ISSUE_STATE"
 														label="state_issued"
 														required
 														formik={form}
@@ -643,6 +644,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										label="CDL_TYPE"
 										name="license_type"
 										displayPlaceholder
+										placeholder="SELECT_CDL_TYPE"
 										labelPrefix="DriverLicenseType"
 										enumType={DriverLicenseType}
 										formik={form}
@@ -653,7 +655,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										label="years_cdl_experience"
 										name="years_cdl_experience"
 										type="number"
-										placeholder="years_cdl_experience"
+										placeholder="ENTER_YEARS_OF_CDL"
 										formik={form}
 									/>
 								</Row>
@@ -776,7 +778,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									readOnly={Boolean(entity?.is_hired)}
 									label="HIGHEST_DEGREE"
 									name="highest_degree"
-									placeholder="HIGHEST_DEGREE"
+									placeholder="SELECT_HIGHEST_DEGREE"
 									formik={form}
 									labelPrefix="EducationLevel"
 									enumType={EducationLevel}
@@ -812,7 +814,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											readOnly={Boolean(entity?.is_hired)}
 											name={`emergency_contact_name`}
 											label="NAME"
-											placeholder="FULL_NAME"
+											placeholder="ENTER_EMERGENCY_CONTACT"
 											formik={form}
 										/>
 
@@ -829,7 +831,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											readOnly={Boolean(entity?.is_hired)}
 											name={`emergency_contact_relationship`}
 											label="RELATIONSHIP"
-											placeholder="RELATIONSHIP"
+											placeholder="ENTER_EMERGENCY_CONTACT_RELATIONSHIP"
 											formik={form}
 										/>
 									</ViewCard>
@@ -878,7 +880,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											<BaseSelect
 												readOnly={Boolean(props?.entity?.is_hired)}
 												name={`equipment_experience[${i}].type`}
-												placeholder="TYPE"
+												placeholder="SELECT_EQUIPMENT_TYPE"
 												required
 												labelPrefix="JobEquipmentType"
 												enumType={JobEquipmentType}
@@ -900,7 +902,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											<BaseInput
 												readOnly={Boolean(props?.entity?.is_hired)}
 												name={`equipment_experience[${i}].years`}
-												placeholder="YEARS"
+												placeholder="ENTER_YEARS_OF_EXPERIENCE"
 												type="int"
 												min="1"
 												formik={form}
@@ -1111,7 +1113,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														name={`employers[${i}].name`}
 														label="NAME"
 														required
-														placeholder="COMPANY_NAME"
+														placeholder="ENTER_COMPANY_NAME"
 														formik={form}
 													/>
 													<BaseInput
@@ -1120,7 +1122,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														label="EMAIL"
 														type="email"
 														name={`employers[${i}].email`}
-														placeholder="EMAIL"
+														placeholder="ENTER_EMAIL"
 														formik={form}
 													/>
 													<BaseInput
@@ -1148,7 +1150,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].title`}
 														label="TITLE"
-														placeholder="TITLE"
+														placeholder="ENTER_JOB_TITLE"
 														formik={form}
 													/>
 													<BaseInput
@@ -1156,6 +1158,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														name={`employers[${i}].manager_name`}
 														required
 														label="MANAGER_OR_REPRESENTATIVE"
+														placeholder="ENTER_MANAGER"
 														formik={form}
 													/>
 													<BaseInput
@@ -1163,7 +1166,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].city`}
 														label="CITY"
-														placeholder="CITY"
+														placeholder="ENTER_CITY"
 														formik={form}
 													/>
 													<StateSelect
@@ -1171,7 +1174,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].state`}
 														label="STATE"
-														placeholder="STATE"
+														placeholder="SELECT_STATE"
 														formik={form}
 													/>
 													<BaseInput
@@ -1179,21 +1182,21 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].zip_code`}
 														label="ZIP_CODE"
-														placeholder="ZIP_CODE"
+														placeholder="ENTER_ZIP_CODE"
 														formik={form}
 													/>
 													<BaseInput
 														className="col-md-6 mt-2"
 														required
 														name={`employers[${i}].address`}
-														placeholder="ADDRESS_LINE_1"
+														placeholder="ENTER_ADDRESS_LINE1"
 														label="ADDRESS_LINE_1"
 														formik={form}
 													/>
 													<BaseInput
 														className="col-md-6 mt-2"
 														name={`employers[${i}].address_2`}
-														placeholder="ADDRESS_LINE_2"
+														placeholder="ENTER_ADDRESS_LINE2"
 														label="ADDRESS_LINE_2"
 														formik={form}
 													/>
@@ -1202,7 +1205,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].phone`}
 														label="PHONE"
-														placeholder="PHONE"
+														placeholder="ENTER_PHONE"
 														formik={form}
 													/>
 													{
@@ -1387,7 +1390,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 																	<BaseInput
 																		name={`dui_years[${i}]`}
 																		readOnly={Boolean(props?.entity?.is_hired)}
-																		placeholder="YEAR"
+																		placeholder="ENTER_PAST_DUIS"
 																		type="int"
 																		required
 																		min={1900}
@@ -1455,7 +1458,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									type="int"
 									min="0"
 									formik={form}
-									placeholder="PLACEHOLDER_FOR_DIGITS"
+									placeholder="ENTER_NO_OF_ACCIDENTS"
 								/>
 								{form.values.accident_count > 0 && (
 									<div className="col-12 mt-2">
@@ -1584,7 +1587,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									type="number"
 									step={1}
 									min={0}
-									placeholder="PLACEHOLDER_FOR_DIGITS"
+									placeholder="ENTER_NO_OF_VIOLATIONS"
 									formik={form}
 								/>
 								{form.values.moving_violations_count > 0 && (
@@ -1802,7 +1805,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												<BaseSelect
 													name={`documents[${i}].type`}
 													required
-													placeholder="TYPE"
+													placeholder="SELECT_DOCUMENT_TYPE"
 													labelPrefix="ApplicantDocumentType"
 													enumType={ApplicantDocumentType}
 													readOnly={
@@ -1897,7 +1900,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 															name={`jobs[${i}].job.id`}
 															readOnly={Boolean(props?.entity?.is_hired)}
 															required
-															placeholder="JOB"
+															placeholder="SELECT_JOB"
 															options={jobs}
 															labelKey="title"
 															valueKey="id"
@@ -1910,7 +1913,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														name={`jobs[${i}].status`}
 														readOnly={Boolean(props?.entity?.is_hired)}
 														required
-														placeholder="STATUS"
+														placeholder="SELECT_STATUS"
 														labelPrefix="ApplicantStatus"
 														hideOptions={hideStatus}
 														enumType={ApplicantStatus}
