@@ -105,7 +105,7 @@ export default function Applicants() {
 
         await router.push(router);
         if (value === ViewMode.job) {
-            toast.success(t("TOGGLE_ON_APPLICANTS"))
+            toast.warning(t("TOGGLE_ON_APPLICANTS"))
         }
     }
 
