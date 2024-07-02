@@ -104,6 +104,9 @@ export default function Applicants() {
         setApplicants([]);
 
         await router.push(router);
+        if (value === ViewMode.job) {
+            toast.warning(t("TOGGLE_ON_APPLICANTS"))
+        }
     }
 
     const onChangeStatus = async (e: React.ChangeEvent<HTMLSelectElement>, applicant: ApplicantEntity, job: JobEntity) => {
@@ -195,7 +198,7 @@ export default function Applicants() {
                         <FormGroup style={{ float: "right" }}>
                             <FormControlLabel
                                 control={<Switch value={viewMode == ViewMode.applicant ? ViewMode.job : ViewMode.applicant} checked={viewMode == ViewMode.job} onChange={onViewModeChange} />}
-                                label={t("VIEW_BY_{name}", { name: t(viewMode == ViewMode.applicant ? "JOB" : "APPLICANT") })}
+                                label={t("VIEW_BY_{name}", { name: t(viewMode == ViewMode.applicant ? "JOB" : "JOB") })}
                             />
                         </FormGroup>
                     </div>

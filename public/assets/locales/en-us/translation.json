@@ -801,6 +801,7 @@
   "INVALID_JOB_SPECIFIED": "Job doest not exist.",
   "ALREADY_APPLIED": "You have already applied to this job",
   "ALREADY_USED": "Already used",
+  "TOGGLE_ON_APPLICANTS":"Toggle off to View by Applicants",
   "ACCOUNT_ALREADY_VERIFIED": "You account already verified",
   "ACCOUNT_DELETED": "You account is deleted",
   "ACCOUNT_DISABLED": "You account is disabled",
