@@ -58,7 +58,7 @@ export default function Call() {
             .list()
             ?.then((data) => {
                 setloading(false);
-                setApplicants(data?.filter((v) => Boolean(v.phone)));
+                setApplicants((data as ApplicantEntity[])?.filter((v) => Boolean(v.phone)));
             })
             .catch((error) =>
                 console.error("applicantApi.list error....", error.response)

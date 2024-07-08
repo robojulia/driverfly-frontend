@@ -2,7 +2,7 @@ import { FormControlLabel, FormGroup, Switch } from '@mui/material';
 import { useFormik } from "formik";
 import Link from "next/link";
 import { NextRouter, useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Accordion, Button, ButtonGroup, Col, Row } from "react-bootstrap";
 import { EyeFill, PencilFill } from 'react-bootstrap-icons';
 import { toast } from "react-toastify";
@@ -35,6 +35,10 @@ import * as numbers from "../../../../utils/number";
 import { useEffectAsync } from "../../../../utils/react";
 import ApplicantApi from "../../../api/applicant";
 import joinArrayElements from '../../../../utils/join-in-order.utils';
+import CustomPagination from '../../../../utils/custom-pagination';
+import { ReturnApplicantPaginatedData } from '../../../../models/applicant/return-pagination.dto';
+import { PagingMetaDto } from '../../../../types/pagination.type';
+import { pagingsMetaInitialValues } from '../../../../utils/pagination';
 
 
 const ViewMode = {
@@ -66,6 +70,7 @@ export default function Applicants() {
     const [loading, setLoading] = useState<boolean>(true);
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
     const [filters, setFilters] = useState<SearchApplicantDto>();
+    const [pagingMeta, setPagingMeta] = useState<PagingMetaDto>(pagingsMetaInitialValues);
 
     const fetchApplicant = async () => {
         setLoading(true)
@@ -76,13 +81,21 @@ export default function Applicants() {
                 "applicant_dac",
                 "applicant_extras",
             ],
-            ...filters
+            ...filters,
+            pagination: true,
+            page: filters?.page === 0 ? 1 : pagingMeta?.currentPage,
+            limit: pagingMeta?.recordsPerPage,
         });
-        setApplicants(data);
+        setApplicants((data as ReturnApplicantPaginatedData)?.data);
+        setPagingMeta({
+            ...pagingMeta,
+            currentPage: filters?.page === 0 ? 1 : pagingMeta?.currentPage,
+            totalRecords: (data as ReturnApplicantPaginatedData)?.total
+        });
         setTimeout(() => setLoading(false), 1000);
     }
 
-    useEffectAsync(async () => await fetchApplicant(), [user, jobId, viewMode, filters]);
+    useEffectAsync(async () => await fetchApplicant(), [user, jobId, viewMode, filters, pagingMeta?.currentPage, pagingMeta?.recordsPerPage]);
 
     const onViewClick = (id: number) => {
         router.push(`${router.pathname}/${id}`);
@@ -215,7 +228,7 @@ export default function Applicants() {
                                     <span className="sr-only">Loading...</span>
                                 </div>
                                 : <>
-                                    {viewMode == ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                                    {viewMode == ViewMode.applicant && <ApplicantView totalRecords={pagingMeta?.totalRecords} setPagingMeta={setPagingMeta} pagingMeta={pagingMeta} router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
                                     {viewMode == ViewMode.job && <JobView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
                                 </>}
                         </Col>
@@ -425,16 +438,25 @@ interface ViewProps {
     onChangeStatus: (e: React.ChangeEvent<HTMLSelectElement>, applicant: ApplicantEntity, job: JobEntity) => Promise<void>;
     onViewClick: (applicantId: number) => void;
     onEditClick: (applicantId: number) => void;
+    setPagingMeta?: React.Dispatch<React.SetStateAction<PagingMetaDto>>;
+    pagingMeta?: PagingMetaDto,
+    totalRecords?: number;
     router: NextRouter;
     t: TranslateInterface;
 }
 
 function ApplicantView(props: ViewProps) {
-    const { router, applicants, onChangeStatus, onViewClick, onEditClick, t } = props;
-
+    const { router, applicants, onChangeStatus, onViewClick, onEditClick, t, totalRecords, setPagingMeta, pagingMeta } = props;
     const { hasPermission } = useAuth();
+    const handlePageChange = (page: number, perPage: number) => {
+        setPagingMeta((prevPagingMeta: PagingMetaDto) => ({
+            ...prevPagingMeta,
+            currentPage: page,
+            recordsPerPage: perPage
+        }));
+    };
 
-    const items: ConsolodatedApplicant[] = applicants.map(applicant => {
+    const items: ConsolodatedApplicant[] = applicants?.map(applicant => {
         return {
             ...applicant,
             jobs: applicant.jobs?.map(aJob => {
@@ -699,6 +721,13 @@ function ApplicantView(props: ViewProps) {
                         items={data.jobs}
                     />
                 )}
+            />
+            <CustomPagination
+                totalRecords={totalRecords | 0}
+                recordsPerPageOptions={[20, 50, 100]}
+                onPageChange={handlePageChange}
+                pagingMeta={pagingMeta}
+                setPagingMeta={setPagingMeta}
             />
         </div>
 

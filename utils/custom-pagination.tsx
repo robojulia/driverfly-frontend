@@ -1,0 +1,113 @@
+import { ArrowBack, ArrowForward, DoubleArrow } from '@mui/icons-material';
+import { Box, IconButton, MenuItem, Pagination, Select, Typography } from '@mui/material';
+import { SelectChangeEvent } from '@mui/material/Select';
+import React from 'react';
+import { useTranslation } from '../hooks/use-translation';
+import { PagingMetaDto } from '../types/pagination.type';
+
+interface CustomPaginationProps {
+    totalRecords: number;
+    recordsPerPageOptions: number[];
+    onPageChange: (page: number, perPage: number) => void;
+    pagingMeta: PagingMetaDto;
+    setPagingMeta?: React.Dispatch<React.SetStateAction<PagingMetaDto>>;
+}
+
+const CustomPagination: React.FC<CustomPaginationProps> = ({ totalRecords, recordsPerPageOptions, onPageChange, pagingMeta, setPagingMeta }) => {
+    const totalPages = Math.ceil(totalRecords / pagingMeta?.recordsPerPage);
+
+    const { t } = useTranslation();
+
+    const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+        setPagingMeta((prevPagingMeta: PagingMetaDto) => ({
+            ...prevPagingMeta,
+            currentPage: value,
+        }));
+        onPageChange(value, pagingMeta?.recordsPerPage);
+    };
+
+    const handleNextFivePages = () => {
+        const newPage = Math.min(pagingMeta?.currentPage + 5, totalPages);
+        setPagingMeta((prevPagingMeta: PagingMetaDto) => ({
+            ...prevPagingMeta,
+            currentPage: newPage,
+        }));
+        onPageChange(newPage, pagingMeta?.recordsPerPage);
+    };
+
+    const handlePrevFivePages = () => {
+        const newPage = Math.max(pagingMeta?.currentPage - 5, 1);
+        setPagingMeta((prevPagingMeta: PagingMetaDto) => ({
+            ...prevPagingMeta,
+            currentPage: newPage,
+        }));
+        onPageChange(newPage, pagingMeta?.recordsPerPage);
+    };
+
+    const handleNextTenPages = () => {
+        const newPage = Math.min(pagingMeta?.currentPage + 10, totalPages);
+        setPagingMeta((prevPagingMeta: PagingMetaDto) => ({
+            ...prevPagingMeta,
+            currentPage: newPage,
+        }));
+        onPageChange(newPage, pagingMeta?.recordsPerPage);
+    };
+
+    const handlePrevTenPages = () => {
+        const newPage = Math.max(pagingMeta?.currentPage - 10, 1);
+        setPagingMeta((prevPagingMeta: PagingMetaDto) => ({
+            ...prevPagingMeta,
+            currentPage: newPage,
+        }));
+        onPageChange(newPage, pagingMeta?.recordsPerPage);
+    };
+
+    const handleRecordsPerPageChange = (event: SelectChangeEvent<number>) => {
+        const newPerPage = event.target.value as number;
+        setPagingMeta((prevPagingMeta: PagingMetaDto) => ({
+            ...prevPagingMeta,
+            currentPage: 1,
+            recordsPerPage: newPerPage,
+        }));
+    };
+    return (
+        <Box display="flex" alignItems="center" style={{ marginTop: '2%', display: 'flex', justifyContent: 'right' }}>
+            <Typography>{`${(pagingMeta?.currentPage - 1) * pagingMeta?.recordsPerPage + 1}-${Math.min(pagingMeta?.currentPage * pagingMeta?.recordsPerPage, totalRecords)} of ${totalRecords} ${t('RECORDS')}`}</Typography>
+            <IconButton onClick={handlePrevTenPages} disabled={pagingMeta?.currentPage <= 10}>
+                <DoubleArrow />
+            </IconButton>
+            <IconButton onClick={handlePrevFivePages} disabled={pagingMeta?.currentPage <= 5}>
+                <ArrowBack />
+            </IconButton>
+            <Pagination
+                count={totalPages}
+                page={pagingMeta?.currentPage}
+                onChange={handlePageChange}
+                siblingCount={2}
+                boundaryCount={1}
+                sx={{
+                    "& .Mui-selected": { backgroundColor: "#1b4454 !important", color: "white" },
+                }}
+            />
+            <IconButton onClick={handleNextFivePages} disabled={pagingMeta?.currentPage > totalPages - 5}>
+                <ArrowForward />
+            </IconButton>
+            <IconButton onClick={handleNextTenPages} disabled={pagingMeta?.currentPage > totalPages - 10}>
+                <DoubleArrow style={{ transform: 'rotate(180deg)' }} />
+            </IconButton>
+            <Select
+                value={pagingMeta?.recordsPerPage}
+                onChange={handleRecordsPerPageChange}
+                style={{ marginLeft: 16 }}
+            >
+                {recordsPerPageOptions.map((option) => (
+                    <MenuItem key={option} value={option}>
+                        {option} / {t('PAGE')}
+                    </MenuItem>
+                ))}
+            </Select>
+        </Box>
+    );
+};
+
+export default CustomPagination;

@@ -75,7 +75,7 @@ export default function StoredFiles() {
       const v = await complianceApi.filesList();
       setFiles(v);
       const a = await applicantApi.list();
-      setApplicants(a?.filter(({ email }) => !!email));
+      setApplicants((a as ApplicantEntity[])?.filter(({ email }) => !!email));
 
       const e = await employeeApi.list();
       setEmployees(e?.filter(({ email }) => !!email));
