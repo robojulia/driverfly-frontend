@@ -44,24 +44,6 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({ totalRecords, recor
         onPageChange(newPage, pagingMeta?.recordsPerPage);
     };
 
-    const handleNextTenPages = () => {
-        const newPage = Math.min(pagingMeta?.currentPage + 10, totalPages);
-        setPagingMeta((prevPagingMeta: PagingMetaDto) => ({
-            ...prevPagingMeta,
-            currentPage: newPage,
-        }));
-        onPageChange(newPage, pagingMeta?.recordsPerPage);
-    };
-
-    const handlePrevTenPages = () => {
-        const newPage = Math.max(pagingMeta?.currentPage - 10, 1);
-        setPagingMeta((prevPagingMeta: PagingMetaDto) => ({
-            ...prevPagingMeta,
-            currentPage: newPage,
-        }));
-        onPageChange(newPage, pagingMeta?.recordsPerPage);
-    };
-
     const handleRecordsPerPageChange = (event: SelectChangeEvent<number>) => {
         const newPerPage = event.target.value as number;
         setPagingMeta((prevPagingMeta: PagingMetaDto) => ({
@@ -73,9 +55,6 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({ totalRecords, recor
     return (
         <Box display="flex" alignItems="center" style={{ marginTop: '2%', display: 'flex', justifyContent: 'right' }}>
             <Typography>{`${(pagingMeta?.currentPage - 1) * pagingMeta?.recordsPerPage + 1}-${Math.min(pagingMeta?.currentPage * pagingMeta?.recordsPerPage, totalRecords)} of ${totalRecords} ${t('RECORDS')}`}</Typography>
-            <IconButton onClick={handlePrevTenPages} disabled={pagingMeta?.currentPage <= 10}>
-                <DoubleArrow />
-            </IconButton>
             <IconButton onClick={handlePrevFivePages} disabled={pagingMeta?.currentPage <= 5}>
                 <ArrowBack />
             </IconButton>
@@ -91,9 +70,6 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({ totalRecords, recor
             />
             <IconButton onClick={handleNextFivePages} disabled={pagingMeta?.currentPage > totalPages - 5}>
                 <ArrowForward />
-            </IconButton>
-            <IconButton onClick={handleNextTenPages} disabled={pagingMeta?.currentPage > totalPages - 10}>
-                <DoubleArrow style={{ transform: 'rotate(180deg)' }} />
             </IconButton>
             <Select
                 value={pagingMeta?.recordsPerPage}
