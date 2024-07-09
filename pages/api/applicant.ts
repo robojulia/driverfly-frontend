@@ -17,7 +17,6 @@ import { VerifyOTPDto } from "../../models/jot-form/OTP/verify-otp.dto";
 import { UpsertApplicantJotformDto } from "../../models/jot-form/upsert-applicant-jotform.dto";
 import { UpsertApplicantVoeformDto } from "../../models/jot-form/upsert-applicant-voe.dto";
 import BaseApi from "./_baseApi";
-import { ReturnApplicantPaginatedData } from "../../models/applicant/return-pagination.dto";
 import { Pagination } from "../../types/pagination.type";
 
 export default class ApplicantApi extends BaseApi {
