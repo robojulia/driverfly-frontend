@@ -35,10 +35,10 @@ import * as numbers from "../../../../utils/number";
 import { useEffectAsync } from "../../../../utils/react";
 import ApplicantApi from "../../../api/applicant";
 import joinArrayElements from '../../../../utils/join-in-order.utils';
-import CustomPagination from '../../../../utils/custom-pagination';
+import CustomPagination from '../../../../components/pagination/custom-pagination';
 import { ReturnApplicantPaginatedData } from '../../../../models/applicant/return-pagination.dto';
-import { PagingMetaDto } from '../../../../types/pagination.type';
-import { pagingsMetaInitialValues } from '../../../../utils/pagination';
+import { Pagination, PagingMeta, PagingMetaDto } from '../../../../types/pagination.type';
+import { pagingsMetaInitialValues } from '../../../../models/applicant/paging-meta-values';
 
 
 const ViewMode = {
@@ -82,15 +82,15 @@ export default function Applicants() {
                 "applicant_extras",
             ],
             ...filters,
-            pagination: true,
+            is_paginated: true,
             page: filters?.page === 0 ? 1 : pagingMeta?.currentPage,
             limit: pagingMeta?.recordsPerPage,
         });
-        setApplicants((data as ReturnApplicantPaginatedData)?.data);
+        setApplicants((data as Pagination<ApplicantEntity>)?.items);
         setPagingMeta({
             ...pagingMeta,
             currentPage: filters?.page === 0 ? 1 : pagingMeta?.currentPage,
-            totalRecords: (data as ReturnApplicantPaginatedData)?.total
+            totalRecords: (data as Pagination<PagingMeta>)?.meta?.totalItems
         });
         setTimeout(() => setLoading(false), 1000);
     }

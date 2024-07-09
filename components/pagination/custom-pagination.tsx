@@ -2,8 +2,8 @@ import { ArrowBack, ArrowForward, DoubleArrow } from '@mui/icons-material';
 import { Box, IconButton, MenuItem, Pagination, Select, Typography } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 import React from 'react';
-import { useTranslation } from '../hooks/use-translation';
-import { PagingMetaDto } from '../types/pagination.type';
+import { useTranslation } from '../../hooks/use-translation';
+import { PagingMetaDto } from '../../types/pagination.type';
 
 interface CustomPaginationProps {
     totalRecords: number;

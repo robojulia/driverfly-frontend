@@ -14,7 +14,7 @@ export class SearchApplicantDto {
   type?: ApplicantType;
   endorsements?: DriverEndorsement;
   city?: string;
-  pagination?: boolean;
+  is_paginated?: boolean;
   preferred_location?: JobGeography;
   state?: string;
   is_owner_operator?: boolean;

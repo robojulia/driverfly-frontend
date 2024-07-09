@@ -18,6 +18,7 @@ import { UpsertApplicantJotformDto } from "../../models/jot-form/upsert-applican
 import { UpsertApplicantVoeformDto } from "../../models/jot-form/upsert-applicant-voe.dto";
 import BaseApi from "./_baseApi";
 import { ReturnApplicantPaginatedData } from "../../models/applicant/return-pagination.dto";
+import { Pagination } from "../../types/pagination.type";
 
 export default class ApplicantApi extends BaseApi {
   baseUrl: string = "applicants";
@@ -109,7 +110,7 @@ export default class ApplicantApi extends BaseApi {
 
   async list(
     params?: SearchApplicantDto
-  ): Promise<ApplicantEntity[] | ReturnApplicantPaginatedData> {
+  ): Promise<Pagination<ApplicantEntity> | ApplicantEntity> {
     const { data } = await this.get(
       this.buildUrl(this.baseUrl + "/list", params)
     );
