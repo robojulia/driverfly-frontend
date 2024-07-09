@@ -1,60 +1,59 @@
-import { ArrowBack, ArrowForward, DoubleArrow } from '@mui/icons-material';
+import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import { Box, IconButton, MenuItem, Pagination, Select, Typography } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 import React from 'react';
 import { useTranslation } from '../../hooks/use-translation';
-import { PagingMetaDto } from '../../types/pagination.type';
+import { PagingMeta } from '../../types/pagination.type';
 
 interface CustomPaginationProps {
-    totalRecords: number;
     recordsPerPageOptions: number[];
     onPageChange: (page: number, perPage: number) => void;
-    pagingMeta: PagingMetaDto;
-    setPagingMeta?: React.Dispatch<React.SetStateAction<PagingMetaDto>>;
+    pagingMeta: PagingMeta;
+    setPagingMeta?: React.Dispatch<React.SetStateAction<PagingMeta>>;
 }
 
-const CustomPagination: React.FC<CustomPaginationProps> = ({ totalRecords, recordsPerPageOptions, onPageChange, pagingMeta, setPagingMeta }) => {
-    const totalPages = Math.ceil(totalRecords / pagingMeta?.recordsPerPage);
+const CustomPagination: React.FC<CustomPaginationProps> = ({ recordsPerPageOptions, onPageChange, pagingMeta, setPagingMeta }) => {
+    const totalPages = Math.ceil(pagingMeta?.totalItems / pagingMeta?.itemsPerPage);
 
     const { t } = useTranslation();
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-        setPagingMeta((prevPagingMeta: PagingMetaDto) => ({
+        setPagingMeta((prevPagingMeta: PagingMeta) => ({
             ...prevPagingMeta,
             currentPage: value,
         }));
-        onPageChange(value, pagingMeta?.recordsPerPage);
+        onPageChange(value, pagingMeta?.itemsPerPage);
     };
 
     const handleNextFivePages = () => {
         const newPage = Math.min(pagingMeta?.currentPage + 5, totalPages);
-        setPagingMeta((prevPagingMeta: PagingMetaDto) => ({
+        setPagingMeta((prevPagingMeta: PagingMeta) => ({
             ...prevPagingMeta,
             currentPage: newPage,
         }));
-        onPageChange(newPage, pagingMeta?.recordsPerPage);
+        onPageChange(newPage, pagingMeta?.itemsPerPage);
     };
 
     const handlePrevFivePages = () => {
         const newPage = Math.max(pagingMeta?.currentPage - 5, 1);
-        setPagingMeta((prevPagingMeta: PagingMetaDto) => ({
+        setPagingMeta((prevPagingMeta: PagingMeta) => ({
             ...prevPagingMeta,
             currentPage: newPage,
         }));
-        onPageChange(newPage, pagingMeta?.recordsPerPage);
+        onPageChange(newPage, pagingMeta?.itemsPerPage);
     };
 
     const handleRecordsPerPageChange = (event: SelectChangeEvent<number>) => {
         const newPerPage = event.target.value as number;
-        setPagingMeta((prevPagingMeta: PagingMetaDto) => ({
+        setPagingMeta((prevPagingMeta: PagingMeta) => ({
             ...prevPagingMeta,
             currentPage: 1,
-            recordsPerPage: newPerPage,
+            itemsPerPage: newPerPage,
         }));
     };
     return (
         <Box display="flex" alignItems="center" style={{ marginTop: '2%', display: 'flex', justifyContent: 'right' }}>
-            <Typography>{`${(pagingMeta?.currentPage - 1) * pagingMeta?.recordsPerPage + 1}-${Math.min(pagingMeta?.currentPage * pagingMeta?.recordsPerPage, totalRecords)} of ${totalRecords} ${t('RECORDS')}`}</Typography>
+            <Typography>{`${(pagingMeta?.currentPage - 1) * pagingMeta?.itemsPerPage + 1}-${Math.min(pagingMeta?.currentPage * pagingMeta?.itemsPerPage, pagingMeta?.totalItems)} of ${pagingMeta?.totalItems} ${t('RECORDS')}`}</Typography>
             <IconButton onClick={handlePrevFivePages} disabled={pagingMeta?.currentPage <= 5}>
                 <ArrowBack />
             </IconButton>
@@ -72,7 +71,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({ totalRecords, recor
                 <ArrowForward />
             </IconButton>
             <Select
-                value={pagingMeta?.recordsPerPage}
+                value={pagingMeta?.itemsPerPage}
                 onChange={handleRecordsPerPageChange}
                 style={{ marginLeft: 16 }}
             >

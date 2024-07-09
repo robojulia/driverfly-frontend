@@ -109,7 +109,7 @@ export default class ApplicantApi extends BaseApi {
 
   async list(
     params?: SearchApplicantDto
-  ): Promise<Pagination<ApplicantEntity> | ApplicantEntity> {
+  ): Promise<Pagination<ApplicantEntity> | ApplicantEntity[]> {
     const { data } = await this.get(
       this.buildUrl(this.baseUrl + "/list", params)
     );

@@ -36,8 +36,7 @@ import { useEffectAsync } from "../../../../utils/react";
 import ApplicantApi from "../../../api/applicant";
 import joinArrayElements from '../../../../utils/join-in-order.utils';
 import CustomPagination from '../../../../components/pagination/custom-pagination';
-import { Pagination, PagingMeta, PagingMetaDto } from '../../../../types/pagination.type';
-import { pagingsMetaInitialValues } from '../../../../models/applicant/paging-meta-values';
+import { Pagination, PagingMeta } from '../../../../types/pagination.type';
 
 
 const ViewMode = {
@@ -56,6 +55,14 @@ interface ConsolodatedApplicantJob extends ApplicantJobEntity {
     qualification_fail_reason?: string[];
 }
 
+const pagingsMetaInitialValues = (): PagingMeta => ({
+    currentPage: 1,
+    totalItems: 0,
+    itemsPerPage: 20,
+    totalPages: 0,
+    itemCount: 0
+})
+
 export default function Applicants() {
     const { t } = useTranslation();
 
@@ -69,7 +76,7 @@ export default function Applicants() {
     const [loading, setLoading] = useState<boolean>(true);
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
     const [filters, setFilters] = useState<SearchApplicantDto>();
-    const [pagingMeta, setPagingMeta] = useState<PagingMetaDto>(pagingsMetaInitialValues);
+    const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingsMetaInitialValues);
 
     const fetchApplicant = async () => {
         setLoading(true)
@@ -83,18 +90,18 @@ export default function Applicants() {
             ...filters,
             is_paginated: true,
             page: filters?.page === 0 ? 1 : pagingMeta?.currentPage,
-            limit: pagingMeta?.recordsPerPage,
+            limit: pagingMeta?.itemsPerPage,
         });
         setApplicants((data as Pagination<ApplicantEntity>)?.items);
         setPagingMeta({
             ...pagingMeta,
             currentPage: filters?.page === 0 ? 1 : pagingMeta?.currentPage,
-            totalRecords: (data as Pagination<PagingMeta>)?.meta?.totalItems
+            totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems
         });
         setTimeout(() => setLoading(false), 1000);
     }
 
-    useEffectAsync(async () => await fetchApplicant(), [user, jobId, viewMode, filters, pagingMeta?.currentPage, pagingMeta?.recordsPerPage]);
+    useEffectAsync(async () => await fetchApplicant(), [user, jobId, viewMode, filters, pagingMeta?.currentPage, pagingMeta?.itemsPerPage]);
 
     const onViewClick = (id: number) => {
         router.push(`${router.pathname}/${id}`);
@@ -227,7 +234,7 @@ export default function Applicants() {
                                     <span className="sr-only">Loading...</span>
                                 </div>
                                 : <>
-                                    {viewMode == ViewMode.applicant && <ApplicantView totalRecords={pagingMeta?.totalRecords} setPagingMeta={setPagingMeta} pagingMeta={pagingMeta} router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                                    {viewMode == ViewMode.applicant && <ApplicantView totalItems={pagingMeta?.totalItems} setPagingMeta={setPagingMeta} pagingMeta={pagingMeta} router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
                                     {viewMode == ViewMode.job && <JobView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
                                 </>}
                         </Col>
@@ -437,21 +444,21 @@ interface ViewProps {
     onChangeStatus: (e: React.ChangeEvent<HTMLSelectElement>, applicant: ApplicantEntity, job: JobEntity) => Promise<void>;
     onViewClick: (applicantId: number) => void;
     onEditClick: (applicantId: number) => void;
-    setPagingMeta?: React.Dispatch<React.SetStateAction<PagingMetaDto>>;
-    pagingMeta?: PagingMetaDto,
-    totalRecords?: number;
     router: NextRouter;
     t: TranslateInterface;
+    pagingMeta?: PagingMeta,
+    totalItems?: number;
+    setPagingMeta?: React.Dispatch<React.SetStateAction<PagingMeta>>;
 }
 
 function ApplicantView(props: ViewProps) {
-    const { router, applicants, onChangeStatus, onViewClick, onEditClick, t, totalRecords, setPagingMeta, pagingMeta } = props;
+    const { router, applicants, onChangeStatus, onViewClick, onEditClick, t, totalItems, setPagingMeta, pagingMeta } = props;
     const { hasPermission } = useAuth();
     const handlePageChange = (page: number, perPage: number) => {
-        setPagingMeta((prevPagingMeta: PagingMetaDto) => ({
+        setPagingMeta((prevPagingMeta: PagingMeta) => ({
             ...prevPagingMeta,
             currentPage: page,
-            recordsPerPage: perPage
+            itemsPerPage: perPage
         }));
     };
 
@@ -722,7 +729,6 @@ function ApplicantView(props: ViewProps) {
                 )}
             />
             <CustomPagination
-                totalRecords={totalRecords | 0}
                 recordsPerPageOptions={[20, 50, 100]}
                 onPageChange={handlePageChange}
                 pagingMeta={pagingMeta}
