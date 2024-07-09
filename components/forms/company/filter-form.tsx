@@ -34,7 +34,7 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
         initialValues: new SearchApplicantDto(),
         validationSchema: SearchApplicantDto.yupSchema(),
         onSubmit: async (values) => {
-            onSearch(values)
+            onSearch({ ...values, page: 0 })
         },
         onReset: async () => {
             onSearch({})

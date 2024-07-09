@@ -95,13 +95,13 @@ const ImportApplicants = () => {
                     const rowError: { email?: string; phone?: string } = {};
                     const matches = await api.list({ email: applicant.email });
 
-                    if (matches.some((v) => v.company?.id != null))
+                    if ((matches as ApplicantEntity[]).some((v) => v.company?.id != null))
                         rowError.email = t(
                             "{name}_ALREADY_EXISTS",
                             { name: "EMAIL" },
                             { translateProps: true }
                         );
-                    else if (matches.some((v) => v.company == null))
+                    else if ((matches as ApplicantEntity[]).some((v) => v.company == null))
                         rowError.email = t(
                             "{name}_ALREADY_EXISTS_NO_MERGE",
                             { name: "EMAIL" },
@@ -111,13 +111,13 @@ const ImportApplicants = () => {
                     if (applicant.phone) {
                         if (applicant.phone.length > 3 && !applicant.phone.startsWith("+1")) applicant.phone = "+1 " + applicant.phone
 
-                        if (matches.some((v) => v.company?.id != null))
+                        if ((matches as ApplicantEntity[]).some((v) => v.company?.id != null))
                             rowError.phone = t(
                                 "{name}_ALREADY_EXISTS",
                                 { name: "PHONE" },
                                 { translateProps: true }
                             );
-                        else if (matches.some((v) => v.company == null))
+                        else if ((matches as ApplicantEntity[]).some((v) => v.company == null))
                             rowError.phone = t(
                                 "{name}_ALREADY_EXISTS_NO_MERGE",
                                 { name: "PHONE" },

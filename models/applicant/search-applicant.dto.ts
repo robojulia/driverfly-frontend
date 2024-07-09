@@ -14,11 +14,14 @@ export class SearchApplicantDto {
   type?: ApplicantType;
   endorsements?: DriverEndorsement;
   city?: string;
+  is_paginated?: boolean;
   preferred_location?: JobGeography;
   state?: string;
   is_owner_operator?: boolean;
   license_restrictions?: LicenseRestrictions | LicenseRestrictions[];
   years_cdl_experience?: number;
+  limit?: number;
+  page?: number;
   license_type?: DriverLicenseType;
   transmission_type?: VehicleTransmissionType;
   assignedUserId?: number;
