@@ -36,7 +36,6 @@ import { useEffectAsync } from "../../../../utils/react";
 import ApplicantApi from "../../../api/applicant";
 import joinArrayElements from '../../../../utils/join-in-order.utils';
 import CustomPagination from '../../../../components/pagination/custom-pagination';
-import { ReturnApplicantPaginatedData } from '../../../../models/applicant/return-pagination.dto';
 import { Pagination, PagingMeta, PagingMetaDto } from '../../../../types/pagination.type';
 import { pagingsMetaInitialValues } from '../../../../models/applicant/paging-meta-values';
 
