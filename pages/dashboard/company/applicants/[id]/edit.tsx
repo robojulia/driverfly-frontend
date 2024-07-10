@@ -1,15 +1,19 @@
+import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
+import OnboardingChecklist from "../../../../../components/applicants/onboarding-checklist";
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
-import { ApplicantForm } from "../../../../../components/forms/company/applicant-form";
+import { EditApplicantForm } from "../../../../../components/forms/company/edit-applicant-form";
 import ChildPageLayout from "../../../../../components/layouts/page/child-page-layout";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
+import { HireApplicantDto } from "../../../../../models/applicant/hire-applicant.dto";
+import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
-import OnboardingChecklist from "../../../../../components/applicants/onboarding-checklist";
+import EmployeeApi from "../../../../api/employee";
 
 export default function EditApplicant({ id }) {
     const router = useRouter();
@@ -40,6 +44,34 @@ export default function EditApplicant({ id }) {
         }
     }, [id]);
 
+    const routeToEmployees = () =>
+        router.push("/dashboard/company/compliance/employee-directory");
+
+    const hireApplicantForm = useFormik({
+        initialValues: new HireApplicantDto(),
+        validationSchema: HireApplicantDto.yupSchema(),
+        validateOnMount: false,
+        onSubmit: async (values, { resetForm }) => {
+            try {
+                const employeeApi = new EmployeeApi();
+                await employeeApi.hire(values);
+                resetForm();
+                toast.success(t("STATUS_UPDATED_SUCCESSFULLY"))
+                // formSuccess(t, "STATUS_UPDATED_SUCCESSFULLY", "STATUS");
+                // setTimeout(() => {
+                //     routeToEmployees();
+                // }, 1000);
+            } catch (e) {
+                globalAjaxExceptionHandler(e, {
+                    formik: hireApplicantForm,
+                    t: t,
+                    toast: toast,
+                });
+            }
+        },
+    });
+
+
     return (
         <ChildPageLayout
             title={t(
@@ -49,9 +81,9 @@ export default function EditApplicant({ id }) {
             )}
             backPath={backPath}
         >
-            <ApplicantForm
+
+            <EditApplicantForm
                 entity={applicant}
-                onSaveComplete={goBack}
             />
             {applicant?.id && (
                 <Row>

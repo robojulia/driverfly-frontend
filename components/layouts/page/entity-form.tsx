@@ -25,6 +25,7 @@ export interface EntityFormProps {
     submitLabel?: string;
     forbidSubmit?: boolean;
     actionButtonDown?: boolean;
+    hideActionButton?: boolean
 }
 
 export default function EntityForm(props: EntityFormProps) {
@@ -38,7 +39,7 @@ export default function EntityForm(props: EntityFormProps) {
         canSubmit = !formik.isValidating && !formik.isSubmitting;
         if (!onSubmit) onSubmit = formik.handleSubmit;
     }
-    
+
     return (
         <Form className={className} onSubmit={onSubmit}>
             {
@@ -95,9 +96,14 @@ export default function EntityForm(props: EntityFormProps) {
                                     </Button>)
                                 ))}
 
-                                <Button type="submit" className="theme-secondary-btn" disabled={canSubmit == null || !!!canSubmit || forbidSubmit}>
-                                    <LoaderIcon isLoading={!!formik?.isSubmitting} /> {action}
-                                </Button>
+                                {
+                                    !props?.hideActionButton && (
+                                        <Button type="submit" className="theme-secondary-btn" disabled={canSubmit == null || !!!canSubmit || forbidSubmit}>
+                                            <LoaderIcon isLoading={!!formik?.isSubmitting} /> {action}
+                                        </Button>
+                                    )
+                                }
+
                             </Col>
                         </Row>
                         {children}
