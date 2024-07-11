@@ -34,6 +34,7 @@ import { buildReferral } from "../../../utils/common";
 import { focusOnErrorField } from "../../../utils/form-error";
 import { useEffectAsync } from "../../../utils/react";
 import { formFailed, formSuccess } from "../../../utils/toast";
+import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
 import ViewCard from "../../view-details/view-card";
 import ViewModal from "../../view-details/view-modal";
 import { ReferralSourceForm } from "../admin/referral-source-form";
@@ -49,7 +50,7 @@ import { BaseFormProps } from "./base-form-props";
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
 
-export function ApplicantBasicDetails(props: any) {
+export function ApplicantBasicDetailsForm(props: any) {
 	let { className, entity, onSaveComplete, onSaveError } = props?.props;
 	let { user, isSuperAdmin, isCompanyAdmin } = useAuth();
 	const { t } = useTranslation();
@@ -69,7 +70,6 @@ export function ApplicantBasicDetails(props: any) {
 		initialValues: new ApplicantEntity(),
 		validationSchema: ApplicantEntity.yupSchemaForApplicantBasicDetailsForm(),
 		onSubmit: async (values) => {
-			console.log("Submitted Values", values)
 			values.extras = values.extras?.filter(
 				(v) => v.value != undefined || v.value != null
 			);
@@ -139,7 +139,6 @@ export function ApplicantBasicDetails(props: any) {
 		setCreateReferral(false);
 	};
 
-
 	useEffectAsync(async () => {
 		setCanCreateReferral(!!!entity?.referralSource?.id && !!user?.company_admin)
 		let extras: ApplicantExtrasEntity[] = entity?.extras || [];
@@ -183,7 +182,6 @@ export function ApplicantBasicDetails(props: any) {
 
 	}, [entity]);
 
-
 	useEffectAsync(async () => {
 		const userApi = new UserApi();
 		const data = await userApi.list();
@@ -201,18 +199,13 @@ export function ApplicantBasicDetails(props: any) {
 		.toLocaleString("en-US", { timeZone: "America/New_York" })
 		.split("T")[0];
 
-	useEffect(() => {
-		console.log("form.values", form.values);
-		console.log("form.errors", form.errors);
-	}, [form.values, form.errors]);
-
 	useEffect(() => focusOnErrorField(form), [form.submitCount])
 
 	return (
 		<Form
 			onSubmit={form.handleSubmit}
 			className={className}
-		// onReset={form.handleReset}
+			onReset={form.handleReset}
 		>
 			<Row>
 				<Col className="p-0 px-lg-2 mt-3">
@@ -715,12 +708,17 @@ export function ApplicantBasicDetails(props: any) {
 								<ReferralSourceForm onSaveComplete={onReferralAdded} />
 							</ViewModal>
 						</Row>
-						<Button type="submit" className="theme-secondary-btn">
+						<Button disabled={form.isSubmitting} type="submit" className="theme-secondary-btn">
 							{t("UPDATE")}
 						</Button>
 					</ViewCard>
 				</Col>
 			</Row>
+			{Boolean(entity?.id) && (
+				<Row className="mt-2">
+					<ViewSuggestedJobs applicant={entity} />
+				</Row>
+			)}
 		</Form>
 	);
 }
