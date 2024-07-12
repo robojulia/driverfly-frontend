@@ -87,7 +87,7 @@ export function DriverLicense() {
 	}, [applicant]);
 
 	useEffect(() => {
-		if (!!form.errors) {
+		if (Object.keys(form.errors)?.length) {
 			console.log("form values", form.values);
 			console.log("form errors", form.errors);
 			console.log("form applicant", applicant);
