@@ -30,6 +30,8 @@ export function DriverLicense() {
 
 	const { t } = useTranslation();
 	const router = useRouter();
+	console.log("router.route", router.route);
+	
 	const missingDocRouteActive = router.route.includes('longform/[applicant_uuid]/missing-document');
 	const dhaRouteActive  = router.route.includes('digitalhiringapp/[slug]')
 
