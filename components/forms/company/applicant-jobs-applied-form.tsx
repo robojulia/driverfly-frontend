@@ -48,14 +48,7 @@ export function ApplicantJobsAppliedForm(props: any) {
 				(v) => v.value != undefined || v.value != null
 			);
 			const jobs = values.jobs || [];
-			// if ("jobs" in values) delete values.jobs;
-			if (values.accident_count === undefined) {
-				values.accident_count = 0
-			}
-
-			if (values.moving_violations_count === undefined) {
-				values.moving_violations_count = 0
-			}
+			if ("jobs" in values) delete values.jobs;
 
 			try {
 				if (entity?.id) {
@@ -93,7 +86,6 @@ export function ApplicantJobsAppliedForm(props: any) {
 						await applicantApi.jobs.create(values.id, job.job.id, job);
 					}
 				}
-
 				formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
 				if (onSaveComplete) onSaveComplete(values);
 			} catch (e) {
@@ -272,9 +264,11 @@ export function ApplicantJobsAppliedForm(props: any) {
 						)}
 						<div style={{ display: "flex", flexDirection: "row" }}>
 							{!form.values?.jobs?.length && <>{t("NONE")}</>}
-							<Button disabled={form.isSubmitting} style={{ marginTop: "2%" }} type="submit" className="theme-secondary-btn">
-								{t("UPDATE")}
-							</Button>
+							<div style={{ display: "flex", justifyContent: "right" }}>
+								<Button disabled={form.isSubmitting} style={{ marginTop: "2%" }} type="submit" className="theme-secondary-btn">
+									{t("UPDATE")}
+								</Button>
+							</div>
 						</div>
 					</ViewCard>
 				</Col>

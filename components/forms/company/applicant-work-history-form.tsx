@@ -29,7 +29,6 @@ import BaseCheck from "../base-check";
 import BaseInput from "../base-input";
 import BaseInputPhone from "../base-input-phone";
 import StateSelect from "../state-select";
-import { ApplicantAlreadyWorkedForm } from "./applicant-already-worked-form";
 import { BaseFormProps } from "./base-form-props";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
@@ -186,7 +185,6 @@ export function ApplicantWorkHistoryForm(props: any) {
             onSubmit={form.handleSubmit}
             className={className}
         >
-
             <Row>
                 <Col md="12" className="p-0 px-lg-2">
                     <ViewCard
@@ -384,13 +382,13 @@ export function ApplicantWorkHistoryForm(props: any) {
                                 })}
                             </>
                         )}
-                        <div style={{ display: "flex", flexDirection: "row" }}>
-                            {!form.values?.employers?.length && <>{t("NONE")}</>}
+
+                        {!form.values?.employers?.length && <>{t("NONE")}</>}
+                        <div style={{ display: "flex", justifyContent: "right" }}>
                             <Button disabled={form.isSubmitting} style={{ marginTop: "3%" }} type="submit" className="theme-secondary-btn">
                                 {t("UPDATE")}
                             </Button>
                         </div>
-
                     </ViewCard>
                 </Col>
             </Row>

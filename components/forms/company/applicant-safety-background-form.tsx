@@ -578,9 +578,11 @@ export function ApplicantSafetyBackgroundForm(props: any) {
                                 </Row>
                             </Col>
                         </Row>
-                        <Button disabled={form.isSubmitting} type="submit" className="theme-secondary-btn">
-                            {t("UPDATE")}
-                        </Button>
+                        <div style={{ display: "flex", justifyContent: "right" }}>
+                            <Button disabled={form.isSubmitting} type="submit" className="theme-secondary-btn">
+                                {t("UPDATE")}
+                            </Button>
+                        </div>
                     </ViewCard>
                 </Col>
             </Row>

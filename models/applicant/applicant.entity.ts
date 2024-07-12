@@ -812,6 +812,11 @@ export class ApplicantEntity {
       equipment_experience: (
         yup.array(ApplicantExperienceEntity.yupSchemaForImport()) as any
       ).unique("type", { mapper: ApplicantExperienceEntity.key }),
+    });
+  }
+
+  static yupSchemaApplicantEquipmentForm() {
+    return yup.object({
       equipment_owned: (
         yup.array(ApplicantEquipmentEntity.yupSchema()) as any
       ).unique("type", { mapper: ApplicantEquipmentEntity.key }),

@@ -6,6 +6,7 @@ import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import { ApplicantAlreadyWorkedForm } from "./applicant-already-worked-form";
 import { ApplicantBasicDetailsForm } from "./applicant-basic-details-form";
 import { ApplicantEquipmentExperienceForm } from "./applicant-equipment-experience-form";
+import { ApplicantEquipmentOwnForm } from "./applicant-equipment-own-form";
 import { ApplicantJobsAppliedForm } from "./applicant-jobs-applied-form";
 import { ApplicantSafetyBackgroundForm } from "./applicant-safety-background-form";
 import { ApplicantUploadedDocumentsForm } from "./applicant-uploaded-documents-form";
@@ -20,7 +21,14 @@ export function EditApplicantForm(props: EditApplicantFormProps) {
 		<React.Fragment>
 			<HireApplicantForm props={props} />
 			<ApplicantBasicDetailsForm props={props} />
-			<ApplicantEquipmentExperienceForm props={props} />
+			<Row>
+				<Col md="6" >
+					<ApplicantEquipmentExperienceForm props={props} />
+				</Col>
+				<Col md="6">
+					<ApplicantEquipmentOwnForm props={props} />
+				</Col>
+			</Row>
 			<Row>
 				<Col md="6" >
 					<ApplicantWorkHistoryForm props={props} />

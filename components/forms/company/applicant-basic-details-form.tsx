@@ -73,51 +73,22 @@ export function ApplicantBasicDetailsForm(props: any) {
 			values.extras = values.extras?.filter(
 				(v) => v.value != undefined || v.value != null
 			);
-			const jobs = values.jobs || [];
 			if ("jobs" in values) delete values.jobs;
-			if (values.accident_count === undefined) {
-				values.accident_count = 0
-			}
-
-			if (values.moving_violations_count === undefined) {
-				values.moving_violations_count = 0
-			}
+			if ("assignedUser" in values) delete values.assignedUser;
+			if ("company" in values) delete values.company;
+			if ("documents" in values) delete values.documents;
+			if ("equipment_experience" in values) delete values.equipment_experience;
+			if ("equipment_owned" in values) delete values.equipment_owned;
+			if ("job_history" in values) delete values.job_history;
+			if ("employers" in values) delete values.employers;
 
 			try {
 				if (entity?.id) {
 					values = await applicantApi.update(entity.id, {
-						...values,
-						documents: [
-							...values.documents,
-							...entity.documents?.filter(
-								(v) =>
-									!Object.values(ApplicantDocumentType).includes(
-										v.type as ApplicantDocumentType
-									)
-							),
-						]?.filter((v) => !!v),
+						...values
 					} as ApplicantEntity);
 				} else {
-
 					values = await applicantApi.create(values);
-				}
-
-				for (let i = 0; i < entity?.jobs?.length; i++) {
-					let job = entity?.jobs[i];
-
-					if (!jobs.some((v) => v.job?.id == job.job.id)) {
-						await applicantApi.jobs.remove(values.id, job.job.id);
-					}
-				}
-
-				for (let i = 0; i < jobs.length; i++) {
-					let job = jobs[i];
-
-					if (job.id) {
-						await applicantApi.jobs.update(values.id, job.job.id, job);
-					} else {
-						await applicantApi.jobs.create(values.id, job.job.id, job);
-					}
 				}
 
 				formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
@@ -708,9 +679,12 @@ export function ApplicantBasicDetailsForm(props: any) {
 								<ReferralSourceForm onSaveComplete={onReferralAdded} />
 							</ViewModal>
 						</Row>
-						<Button disabled={form.isSubmitting} type="submit" className="theme-secondary-btn">
-							{t("UPDATE")}
-						</Button>
+						<div style={{ display: "flex", justifyContent: "right" }}>
+							<Button disabled={form.isSubmitting} type="submit" className="theme-secondary-btn">
+								{t("UPDATE")}
+							</Button>
+						</div>
+
 					</ViewCard>
 				</Col>
 			</Row>

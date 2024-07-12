@@ -232,8 +232,8 @@ export function ApplicantUploadedDocumentsForm(props: { props: ApplicantFormProp
                                 </tbody>
                             </Table>
                         )}
-                        <div style={{ display: "flex", flexDirection: "row" }}>
-                            {!form.values?.documents?.length && <>{t("NONE")}</>}
+                        {!form.values?.documents?.length && <>{t("NONE")}</>}
+                        <div style={{ display: "flex", justifyContent: "right" }}>
                             <Button disabled={form.isSubmitting} style={{ marginTop: "2%" }} type="submit" className="theme-secondary-btn">
                                 {t("UPDATE")}
                             </Button>

@@ -36,6 +36,15 @@ export function HireApplicantForm(props: any) {
         setJobs(jobs);
     }, [user]);
 
+
+
+    const form = useFormik({
+        initialValues: new ApplicantEntity(),
+        validationSchema: ApplicantEntity.yupSchemaForApplyForm(),
+        onSubmit: async (values) => {
+        }
+    });
+
     const routeToEmployees = () =>
         router.push("/dashboard/company/compliance/employee-directory");
 
@@ -66,7 +75,6 @@ export function HireApplicantForm(props: any) {
         setJobs([...jobs, job]);
         setCreateJob(false);
     };
-
     return (
         <EntityForm
             id={entity?.id}
@@ -76,7 +84,7 @@ export function HireApplicantForm(props: any) {
                 {
                     label: "HIRE",
                     className: "btn theme-primary-btn",
-                    hide: Boolean(entity?.is_hired),
+                    hide: !Boolean(form.values?.id) || Boolean(entity?.is_hired),
                     onClick: () =>
                         hireApplicantForm.setValues({ applicantId: entity?.id }),
                 },
