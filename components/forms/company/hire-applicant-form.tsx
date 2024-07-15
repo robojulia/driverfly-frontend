@@ -78,7 +78,7 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
     return (
         <EntityForm
             id={entity?.id}
-            hideActionButton={true}
+            hideSubmitButton={true}
             className={className}
             actions={[
                 {
