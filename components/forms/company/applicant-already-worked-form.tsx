@@ -30,54 +30,14 @@ export function ApplicantAlreadyWorkedForm(props: ApplicantAlreadyWorkedFormProp
         initialValues: new ApplicantEntity(),
         validationSchema: ApplicantEntity.yupSchemaForApplicantAlreadyWorkedForm(),
         onSubmit: async (values) => {
-            values.extras = values.extras?.filter(
-                (v) => v.value != undefined || v.value != null
-            );
-            const jobs = values.jobs || [];
-            if ("jobs" in values) delete values.jobs;
-            if (values.accident_count === undefined) {
-                values.accident_count = 0
-            }
-
-            if (values.moving_violations_count === undefined) {
-                values.moving_violations_count = 0
-            }
-
             try {
                 if (entity?.id) {
                     values = await applicantApi.update(entity.id, {
-                        ...values,
-                        documents: [
-                            ...values.documents,
-                            ...entity.documents?.filter(
-                                (v) =>
-                                    !Object.values(ApplicantDocumentType).includes(
-                                        v.type as ApplicantDocumentType
-                                    )
-                            ),
-                        ]?.filter((v) => !!v),
-                    } as ApplicantEntity);
+                        ...values
+                    })
                 } else {
 
                     values = await applicantApi.create(values);
-                }
-
-                for (let i = 0; i < entity?.jobs?.length; i++) {
-                    let job = entity?.jobs[i];
-
-                    if (!jobs.some((v) => v.job?.id == job.job.id)) {
-                        await applicantApi.jobs.remove(values.id, job.job.id);
-                    }
-                }
-
-                for (let i = 0; i < jobs.length; i++) {
-                    let job = jobs[i];
-
-                    if (job.id) {
-                        await applicantApi.jobs.update(values.id, job.job.id, job);
-                    } else {
-                        await applicantApi.jobs.create(values.id, job.job.id, job);
-                    }
                 }
 
                 formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
