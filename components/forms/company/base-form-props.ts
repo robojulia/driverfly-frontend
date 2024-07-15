@@ -3,6 +3,5 @@ export interface BaseFormProps<T> {
     className?: string;
     onSaveComplete?: (e: T) => void;
     setApplicant?: (e: T) => void;
-    setRefetchApplicant?: (e: T) => boolean;
     onSaveError?: (e?: Error) => void;
 }
