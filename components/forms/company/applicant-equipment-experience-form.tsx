@@ -50,9 +50,9 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
 
                 formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
                 setEntity(values);
-                setIsSubmitting(true)
+                setIsSubmitting(false)
             } catch (e) {
-                setIsSubmitting(true)
+                setIsSubmitting(false)
                 console.error("Unable to save applicant info", e);
                 if (
                     !globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
