@@ -162,7 +162,7 @@
     "HOME_EVERY_NIGHT": "Home every night",
     "HOME_EVERY_OTHER_NIGHT": "Home every other night",
     "NIGHT_SHIFT": "Night shift",
-    "OPEN_TO_NEGOTIATE": "Open to neggotiate"
+    "OPEN_TO_NEGOTIATE": "Open to negotiate"
   },
   "OtherRequirementType": {
     "HEALTH_BENEFITS": "Health Benefits",
@@ -208,7 +208,7 @@
   "ago": "ago",
   "BY": "by",
   "JobPayMethod": {
-    "OPEN_TO_NEGOTIATE": "Open to neggotiate",
+    "OPEN_TO_NEGOTIATE": "Open to negotiate",
     "RATE_PER_MILE": "Rate per mile",
     "PERCENT_PER_MOVE": "Percent per move",
     "HOURLY": "Hourly",
@@ -473,7 +473,7 @@
   "friday": "Friday",
   "saturday": "Saturday",
   "JobSchedule": {
-    "OPEN_TO_NEGOTIATE": "Open to neggotiate",
+    "OPEN_TO_NEGOTIATE": "Open to negotiate",
     "MULTIPLE_WEEKS_ON_ROAD": "Multiple weeks on the road",
     "MOST_WEEKENDS_OFF": "Most weekends off",
     "WEEKENDS_OFF": "Weekends off",
