@@ -47,11 +47,11 @@ import BaseTextArea from "../base-text-area";
 import StateSelect from "../state-select";
 import { BaseFormProps } from "./base-form-props";
 
-export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
+export interface ApplicantBasicDetailsFormProps extends BaseFormProps<ApplicantEntity> { }
 
 
-export function ApplicantBasicDetailsForm(props: any) {
-	let { className, entity, onSaveComplete, onSaveError } = props?.props;
+export function ApplicantBasicDetailsForm(props: ApplicantBasicDetailsFormProps) {
+	let { className, entity, setApplicant } = props;
 	let { user, isSuperAdmin, isCompanyAdmin } = useAuth();
 	const { t } = useTranslation();
 	const current_date = new Date();
@@ -74,14 +74,6 @@ export function ApplicantBasicDetailsForm(props: any) {
 				(v) => v.value != undefined || v.value != null
 			);
 			if ("jobs" in values) delete values.jobs;
-			if ("assignedUser" in values) delete values.assignedUser;
-			if ("company" in values) delete values.company;
-			if ("documents" in values) delete values.documents;
-			if ("equipment_experience" in values) delete values.equipment_experience;
-			if ("equipment_owned" in values) delete values.equipment_owned;
-			if ("job_history" in values) delete values.job_history;
-			if ("employers" in values) delete values.employers;
-
 			try {
 				if (entity?.id) {
 					values = await applicantApi.update(entity.id, {
@@ -92,14 +84,12 @@ export function ApplicantBasicDetailsForm(props: any) {
 				}
 
 				formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
-				if (onSaveComplete) onSaveComplete(values);
+				setApplicant(values)
 			} catch (e) {
 				if (
 					!globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
 				)
 					formFailed(t, entity?.id ? "update" : "create", "APPLICANT");
-
-				if (onSaveError) onSaveError(e);
 			}
 		}
 	});

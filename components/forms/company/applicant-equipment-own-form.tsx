@@ -25,10 +25,10 @@ import BaseInput from "../base-input";
 import BaseSelect from "../base-select";
 import { BaseFormProps } from "./base-form-props";
 
-export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
+export interface ApplicantEquipmentOwnFormProps extends BaseFormProps<ApplicantEntity> { }
 
-export function ApplicantEquipmentOwnForm(props: any) {
-    let { className, entity, onSaveComplete, onSaveError } = props?.props;
+export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps) {
+    let { className, entity, setApplicant } = props;
 
     const { t } = useTranslation();
 
@@ -44,32 +44,21 @@ export function ApplicantEquipmentOwnForm(props: any) {
             try {
                 if (entity?.id) {
                     values = await applicantApi.update(entity.id, {
-                        ...values,
-                        documents: [
-                            ...values.documents,
-                            ...entity.documents?.filter(
-                                (v) =>
-                                    !Object.values(ApplicantDocumentType).includes(
-                                        v.type as ApplicantDocumentType
-                                    )
-                            ),
-                        ]?.filter((v) => !!v),
-                    } as ApplicantEntity);
+                        ...values
+                    })
                 } else {
 
                     values = await applicantApi.create(values);
                 }
 
                 formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
-                if (onSaveComplete) onSaveComplete(values);
+                setApplicant(values);
             } catch (e) {
                 console.error("Unable to save applicant info", e);
                 if (
                     !globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
                 )
                     formFailed(t, entity?.id ? "update" : "create", "APPLICANT");
-
-                if (onSaveError) onSaveError(e);
             }
         },
     });

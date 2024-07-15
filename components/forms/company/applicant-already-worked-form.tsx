@@ -19,10 +19,10 @@ import BaseCheck from "../base-check";
 import BaseInput from "../base-input";
 import { BaseFormProps } from "./base-form-props";
 
-export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
+export interface ApplicantAlreadyWorkedFormProps extends BaseFormProps<ApplicantEntity> { }
 
-export function ApplicantAlreadyWorkedForm(props: any) {
-    let { className, entity, onSaveComplete, onSaveError } = props?.props;
+export function ApplicantAlreadyWorkedForm(props: ApplicantAlreadyWorkedFormProps) {
+    let { className, entity, setApplicant } = props;
     const { t } = useTranslation();
     const applicantApi = new ApplicantApi();
 
@@ -81,15 +81,14 @@ export function ApplicantAlreadyWorkedForm(props: any) {
                 }
 
                 formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
-                if (onSaveComplete) onSaveComplete(values);
+                setApplicant(values)
+
             } catch (e) {
                 console.error("Unable to save applicant info", e);
                 if (
                     !globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
                 )
                     formFailed(t, entity?.id ? "update" : "create", "APPLICANT");
-
-                if (onSaveError) onSaveError(e);
             }
         },
     });

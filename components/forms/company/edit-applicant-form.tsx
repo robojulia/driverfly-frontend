@@ -19,27 +19,27 @@ export interface EditApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 export function EditApplicantForm(props: EditApplicantFormProps) {
 	return (
 		<React.Fragment>
-			<HireApplicantForm props={props} />
-			<ApplicantBasicDetailsForm props={props} />
+			<HireApplicantForm entity={props?.entity} className={props?.className} />
+			<ApplicantBasicDetailsForm entity={props?.entity} className={props?.className} setApplicant={props?.setApplicant} />
 			<Row>
 				<Col md="6" >
-					<ApplicantEquipmentExperienceForm props={props} />
+					<ApplicantEquipmentExperienceForm entity={props?.entity} className={props?.className} setApplicant={props?.setApplicant} />
 				</Col>
 				<Col md="6">
-					<ApplicantEquipmentOwnForm props={props} />
+					<ApplicantEquipmentOwnForm entity={props?.entity} className={props?.className} setApplicant={props?.setApplicant} />
 				</Col>
 			</Row>
 			<Row>
 				<Col md="6" >
-					<ApplicantWorkHistoryForm props={props} />
+					<ApplicantWorkHistoryForm entity={props?.entity} className={props?.className} setApplicant={props?.setApplicant} />
 				</Col>
 				<Col md="6">
-					<ApplicantAlreadyWorkedForm props={props} />
+					<ApplicantAlreadyWorkedForm entity={props?.entity} className={props?.className} setApplicant={props?.setApplicant} />
 				</Col>
 			</Row>
-			<ApplicantSafetyBackgroundForm props={props} />
-			<ApplicantUploadedDocumentsForm props={props} />
-			<ApplicantJobsAppliedForm props={props} />
+			<ApplicantSafetyBackgroundForm entity={props?.entity} className={props?.className} setApplicant={props?.setApplicant} />
+			<ApplicantUploadedDocumentsForm entity={props?.entity} className={props?.className} setApplicant={props?.setApplicant} />
+			<ApplicantJobsAppliedForm entity={props?.entity} className={props?.className} setApplicant={props?.setApplicant} onSaveComplete={props?.onSaveComplete} />
 		</React.Fragment>
 	);
 }

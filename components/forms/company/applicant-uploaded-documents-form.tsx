@@ -24,10 +24,10 @@ import BaseSelect from "../base-select";
 import FileInput from "../file-input";
 import { BaseFormProps } from "./base-form-props";
 
-export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
+export interface ApplicantUploadedDocumentsFormProps extends BaseFormProps<ApplicantEntity> { }
 
-export function ApplicantUploadedDocumentsForm(props: { props: ApplicantFormProps }) {
-    let { className, entity, onSaveComplete, onSaveError } = props?.props;
+export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocumentsFormProps) {
+    let { className, entity, setApplicant } = props;
     const { t } = useTranslation();
 
     const applicantApi = new ApplicantApi();
@@ -39,16 +39,6 @@ export function ApplicantUploadedDocumentsForm(props: { props: ApplicantFormProp
             values.extras = values.extras?.filter(
                 (v) => v.value != undefined || v.value != null
             );
-            const jobs = values.jobs || [];
-            if ("jobs" in values) delete values.jobs;
-            if (values.accident_count === undefined) {
-                values.accident_count = 0
-            }
-
-            if (values.moving_violations_count === undefined) {
-                values.moving_violations_count = 0
-            }
-
             try {
                 if (entity?.id) {
                     values = await applicantApi.update(entity.id, {
@@ -67,35 +57,14 @@ export function ApplicantUploadedDocumentsForm(props: { props: ApplicantFormProp
 
                     values = await applicantApi.create(values);
                 }
-
-                for (let i = 0; i < entity?.jobs?.length; i++) {
-                    let job = entity?.jobs[i];
-
-                    if (!jobs.some((v) => v.job?.id == job.job.id)) {
-                        await applicantApi.jobs.remove(values.id, job.job.id);
-                    }
-                }
-
-                for (let i = 0; i < jobs.length; i++) {
-                    let job = jobs[i];
-
-                    if (job.id) {
-                        await applicantApi.jobs.update(values.id, job.job.id, job);
-                    } else {
-                        await applicantApi.jobs.create(values.id, job.job.id, job);
-                    }
-                }
-
                 formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
-                if (onSaveComplete) onSaveComplete(values);
+                setApplicant(values)
             } catch (e) {
                 console.error("Unable to save applicant info", e);
                 if (
                     !globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
                 )
                     formFailed(t, entity?.id ? "update" : "create", "APPLICANT");
-
-                if (onSaveError) onSaveError(e);
             }
         },
     });
@@ -197,7 +166,7 @@ export function ApplicantUploadedDocumentsForm(props: { props: ApplicantFormProp
                                                     enumType={ApplicantDocumentType}
                                                     readOnly={
                                                         Boolean(!!entity?.id && !entity?.file_base64) ||
-                                                        Boolean(props?.props?.entity?.is_hired)
+                                                        Boolean(props?.entity?.is_hired)
                                                     }
                                                     formik={form}
                                                 />
@@ -205,7 +174,7 @@ export function ApplicantUploadedDocumentsForm(props: { props: ApplicantFormProp
                                             <td>
                                                 <FileInput
                                                     name={`documents[${i}]`}
-                                                    readOnly={Boolean(props?.props?.entity?.is_hired)}
+                                                    readOnly={Boolean(props?.entity?.is_hired)}
                                                     required
                                                     accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
                                                     allowedSizeInByte={3145728}

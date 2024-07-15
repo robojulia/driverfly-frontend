@@ -26,10 +26,10 @@ import BaseInput from "../base-input";
 import BaseTextArea from "../base-text-area";
 import { BaseFormProps } from "./base-form-props";
 
-export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
+export interface ApplicantSafetyBackgroundFormProps extends BaseFormProps<ApplicantEntity> { }
 
-export function ApplicantSafetyBackgroundForm(props: any) {
-    let { className, entity, onSaveComplete, onSaveError } = props?.props;
+export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFormProps) {
+    let { className, entity, setApplicant } = props;
     const { t } = useTranslation();
 
     const applicantApi = new ApplicantApi();
@@ -42,62 +42,23 @@ export function ApplicantSafetyBackgroundForm(props: any) {
             values.extras = values.extras?.filter(
                 (v) => v.value != undefined || v.value != null
             );
-            const jobs = values.jobs || [];
-            if ("jobs" in values) delete values.jobs;
-            if (values.accident_count === undefined) {
-                values.accident_count = 0
-            }
-
-            if (values.moving_violations_count === undefined) {
-                values.moving_violations_count = 0
-            }
-
             try {
                 if (entity?.id) {
                     values = await applicantApi.update(entity.id, {
                         ...values,
-                        documents: [
-                            ...values.documents,
-                            ...entity.documents?.filter(
-                                (v) =>
-                                    !Object.values(ApplicantDocumentType).includes(
-                                        v.type as ApplicantDocumentType
-                                    )
-                            ),
-                        ]?.filter((v) => !!v),
-                    } as ApplicantEntity);
+                    });
                 } else {
 
                     values = await applicantApi.create(values);
                 }
 
-                for (let i = 0; i < entity?.jobs?.length; i++) {
-                    let job = entity?.jobs[i];
-
-                    if (!jobs.some((v) => v.job?.id == job.job.id)) {
-                        await applicantApi.jobs.remove(values.id, job.job.id);
-                    }
-                }
-
-                for (let i = 0; i < jobs.length; i++) {
-                    let job = jobs[i];
-
-                    if (job.id) {
-                        await applicantApi.jobs.update(values.id, job.job.id, job);
-                    } else {
-                        await applicantApi.jobs.create(values.id, job.job.id, job);
-                    }
-                }
-
                 formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
-                if (onSaveComplete) onSaveComplete(values);
+                setApplicant(values)
             } catch (e) {
                 if (
                     !globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
                 )
                     formFailed(t, entity?.id ? "update" : "create", "APPLICANT");
-
-                if (onSaveError) onSaveError(e);
             }
         },
     });
@@ -145,12 +106,6 @@ export function ApplicantSafetyBackgroundForm(props: any) {
         }
 
     }, [entity]);
-
-
-    useEffect(() => {
-        console.log("form.values", form.values);
-        console.log("form.errors", form.errors);
-    }, [form.values, form.errors]);
 
     useEffect(() => focusOnErrorField(form), [form.submitCount])
 

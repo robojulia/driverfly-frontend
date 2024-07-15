@@ -19,10 +19,10 @@ import BaseSelect from "../base-select";
 import { BaseFormProps } from "./base-form-props";
 import { JobForm } from "./job-form";
 
-export interface EditApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
+export interface HireApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
-export function HireApplicantForm(props: any) {
-    let { className, entity } = props?.props;
+export function HireApplicantForm(props: HireApplicantFormProps) {
+    let { className, entity } = props;
     let { user } = useAuth();
     const { t } = useTranslation();
     const router = useRouter();

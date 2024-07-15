@@ -1,4 +1,3 @@
-import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
@@ -9,23 +8,19 @@ import { EditApplicantForm } from "../../../../../components/forms/company/edit-
 import ChildPageLayout from "../../../../../components/layouts/page/child-page-layout";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
-import { HireApplicantDto } from "../../../../../models/applicant/hire-applicant.dto";
-import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
-import EmployeeApi from "../../../../api/employee";
 
 export default function EditApplicant({ id }) {
     const router = useRouter();
     const { t } = useTranslation();
 
     const backPath = "/dashboard/company/applicants";
-    // const backPath = `/dashboard/company/applicants/${id}`;
 
-    // const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
     const goBack = () => window.setTimeout(() => router.back(), 2000);
 
     const [applicant, setApplicant] = useState(new ApplicantEntity());
+    const [refetchApplicant, setRefetchApplicant] = useState<boolean>(false);
 
     useEffectAsync(async () => {
         if (id) {
@@ -42,35 +37,11 @@ export default function EditApplicant({ id }) {
             toast.error(t("UNABLE_TO_FIND_{name}", { name: "APPLICANT" }, { translateProps: true }));
             goBack();
         }
-    }, [id]);
+    }, [id, refetchApplicant]);
 
-    const routeToEmployees = () =>
-        router.push("/dashboard/company/compliance/employee-directory");
-
-    const hireApplicantForm = useFormik({
-        initialValues: new HireApplicantDto(),
-        validationSchema: HireApplicantDto.yupSchema(),
-        validateOnMount: false,
-        onSubmit: async (values, { resetForm }) => {
-            try {
-                const employeeApi = new EmployeeApi();
-                await employeeApi.hire(values);
-                resetForm();
-                toast.success(t("STATUS_UPDATED_SUCCESSFULLY"))
-                // formSuccess(t, "STATUS_UPDATED_SUCCESSFULLY", "STATUS");
-                // setTimeout(() => {
-                //     routeToEmployees();
-                // }, 1000);
-            } catch (e) {
-                globalAjaxExceptionHandler(e, {
-                    formik: hireApplicantForm,
-                    t: t,
-                    toast: toast,
-                });
-            }
-        },
-    });
-
+    const onSaveComplete = () => {
+        setRefetchApplicant(!refetchApplicant)
+    }
 
     return (
         <ChildPageLayout
@@ -84,6 +55,8 @@ export default function EditApplicant({ id }) {
 
             <EditApplicantForm
                 entity={applicant}
+                setApplicant={setApplicant}
+                onSaveComplete={onSaveComplete}
             />
             {applicant?.id && (
                 <Row>

@@ -27,10 +27,10 @@ import ViewCard from "../../view-details/view-card";
 import BaseSelect from "../base-select";
 import { BaseFormProps } from "./base-form-props";
 
-export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
+export interface ApplicantJobsAppliedFormProps extends BaseFormProps<ApplicantEntity> { }
 
-export function ApplicantJobsAppliedForm(props: any) {
-	let { className, entity, onSaveComplete, onSaveError } = props?.props;
+export function ApplicantJobsAppliedForm(props: ApplicantJobsAppliedFormProps) {
+	let { className, entity, setApplicant, onSaveComplete } = props;
 	let { user } = useAuth();
 	const { t } = useTranslation();
 
@@ -44,9 +44,6 @@ export function ApplicantJobsAppliedForm(props: any) {
 		initialValues: new ApplicantEntity(),
 		validationSchema: ApplicantEntity.yupSchemaForApplicantJobsAppliedWithYouForm(),
 		onSubmit: async (values) => {
-			values.extras = values.extras?.filter(
-				(v) => v.value != undefined || v.value != null
-			);
 			const jobs = values.jobs || [];
 			if ("jobs" in values) delete values.jobs;
 
@@ -54,18 +51,8 @@ export function ApplicantJobsAppliedForm(props: any) {
 				if (entity?.id) {
 					values = await applicantApi.update(entity.id, {
 						...values,
-						documents: [
-							...values.documents,
-							...entity.documents?.filter(
-								(v) =>
-									!Object.values(ApplicantDocumentType).includes(
-										v.type as ApplicantDocumentType
-									)
-							),
-						]?.filter((v) => !!v),
-					} as ApplicantEntity);
+					})
 				} else {
-
 					values = await applicantApi.create(values);
 				}
 
@@ -87,6 +74,7 @@ export function ApplicantJobsAppliedForm(props: any) {
 					}
 				}
 				formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
+				setApplicant(values)
 				if (onSaveComplete) onSaveComplete(values);
 			} catch (e) {
 				console.error("Unable to save applicant info", e);
@@ -94,8 +82,6 @@ export function ApplicantJobsAppliedForm(props: any) {
 					!globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
 				)
 					formFailed(t, entity?.id ? "update" : "create", "APPLICANT");
-
-				if (onSaveError) onSaveError(e);
 			}
 		},
 	});
@@ -140,7 +126,7 @@ export function ApplicantJobsAppliedForm(props: any) {
 				});
 		}
 
-	}, [entity]);
+	}, [entity, setApplicant]);
 
 	useEffect(() => {
 		setJobHired(
@@ -155,13 +141,6 @@ export function ApplicantJobsAppliedForm(props: any) {
 
 		setJobs(jobs);
 	}, [user]);
-
-
-
-	useEffect(() => {
-		console.log("form.values", form.values);
-		console.log("form.errors", form.errors);
-	}, [form.values, form.errors]);
 
 	useEffect(() => focusOnErrorField(form), [form.submitCount])
 
@@ -262,13 +241,11 @@ export function ApplicantJobsAppliedForm(props: any) {
 								</tbody>
 							</Table>
 						)}
-						<div style={{ display: "flex", flexDirection: "row" }}>
-							{!form.values?.jobs?.length && <>{t("NONE")}</>}
-							<div style={{ display: "flex", justifyContent: "right" }}>
-								<Button disabled={form.isSubmitting} style={{ marginTop: "2%" }} type="submit" className="theme-secondary-btn">
-									{t("UPDATE")}
-								</Button>
-							</div>
+						{!form.values?.jobs?.length && <>{t("NONE")}</>}
+						<div style={{ display: "flex", justifyContent: "right" }}>
+							<Button disabled={form.isSubmitting} style={{ marginTop: "2%" }} type="submit" className="theme-secondary-btn">
+								{t("UPDATE")}
+							</Button>
 						</div>
 					</ViewCard>
 				</Col>
