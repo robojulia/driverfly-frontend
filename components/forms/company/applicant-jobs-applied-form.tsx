@@ -7,13 +7,10 @@ import {
 } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
 
-import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
-import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
 import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
 import { useAuth } from "../../../hooks/use-auth";
 import { useTranslation } from "../../../hooks/use-translation";
-import { ApplicantExtrasEntity } from "../../../models/applicant";
 import { ApplicantJobEntity } from "../../../models/applicant/applicant-job.entity";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import { JobEntity } from "../../../models/job/job.entity";
@@ -27,13 +24,15 @@ import ViewCard from "../../view-details/view-card";
 import BaseSelect from "../base-select";
 import { BaseFormProps } from "./base-form-props";
 
-export interface ApplicantJobsAppliedFormProps extends BaseFormProps<ApplicantEntity> { }
+export interface ApplicantJobsAppliedFormProps extends BaseFormProps<ApplicantEntity> {
+	isSubmitting: boolean;
+	setIsSubmitting(value: boolean): void;
+}
 
 export function ApplicantJobsAppliedForm(props: ApplicantJobsAppliedFormProps) {
-	let { className, entity, setApplicant, onSaveComplete } = props;
+	let { className, entity, setEntity, onSaveComplete, isSubmitting, setIsSubmitting } = props;
 	let { user } = useAuth();
 	const { t } = useTranslation();
-
 
 	const applicantApi = new ApplicantApi();
 
@@ -44,6 +43,7 @@ export function ApplicantJobsAppliedForm(props: ApplicantJobsAppliedFormProps) {
 		initialValues: new ApplicantEntity(),
 		validationSchema: ApplicantEntity.yupSchemaForApplicantJobsAppliedWithYouForm(),
 		onSubmit: async (values) => {
+			setIsSubmitting(true)
 			const jobs = values.jobs || [];
 			if ("jobs" in values) delete values.jobs;
 
@@ -74,9 +74,11 @@ export function ApplicantJobsAppliedForm(props: ApplicantJobsAppliedFormProps) {
 					}
 				}
 				formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
-				setApplicant(values)
+				setEntity(values)
 				if (onSaveComplete) onSaveComplete(values);
+				setIsSubmitting(false)
 			} catch (e) {
+				setIsSubmitting(false)
 				console.error("Unable to save applicant info", e);
 				if (
 					!globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
@@ -87,46 +89,19 @@ export function ApplicantJobsAppliedForm(props: ApplicantJobsAppliedFormProps) {
 	});
 
 	useEffectAsync(async () => {
-		let extras: ApplicantExtrasEntity[] = entity?.extras || [];
-
-		extras = extras.filter(Boolean);
-		if (!extras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME))
-			extras?.push({
-				...new ApplicantExtrasEntity(),
-				type: ApplicantExtras.BUSINESS_NAME,
-			});
-		if (!extras?.find((v) => v.type == ApplicantExtras.DOT_NUMBER))
-			extras?.push({
-				...new ApplicantExtrasEntity(),
-				type: ApplicantExtras.DOT_NUMBER,
-			});
-		if (!extras?.find((v) => v.type == ApplicantExtras.CDL_NUMBER))
-			extras?.push({
-				...new ApplicantExtrasEntity(),
-				type: ApplicantExtras.CDL_NUMBER,
-			});
-
 		if (!!entity?.id) {
 			form.setValues(
 				{
-					...entity,
-					documents: entity?.documents?.filter((v) =>
-						Object.values(ApplicantDocumentType).includes(
-							v.type as ApplicantDocumentType
-						)
-					),
-					extras,
+					...entity
 				});
 		} else {
 			await form.setValues(
 				{
 					...new ApplicantEntity(),
-					type: ApplicantType.COMPANY,
-					extras
+					type: ApplicantType.COMPANY
 				});
 		}
-
-	}, [entity, setApplicant]);
+	}, [entity, setEntity]);
 
 	useEffect(() => {
 		setJobHired(
@@ -243,7 +218,7 @@ export function ApplicantJobsAppliedForm(props: ApplicantJobsAppliedFormProps) {
 						)}
 						{!form.values?.jobs?.length && <>{t("NONE")}</>}
 						<div style={{ display: "flex", justifyContent: "right" }}>
-							<Button disabled={form.isSubmitting} style={{ marginTop: "2%" }} type="submit" className="theme-secondary-btn">
+							<Button disabled={form.isSubmitting || isSubmitting} style={{ marginTop: "2%" }} type="submit" className="theme-secondary-btn">
 								{t("UPDATE")}
 							</Button>
 						</div>

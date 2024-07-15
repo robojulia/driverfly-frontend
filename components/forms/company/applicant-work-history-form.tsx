@@ -9,12 +9,9 @@ import {
 } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
 
-import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
-import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
 import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
 import { useAuth } from "../../../hooks/use-auth";
 import { useTranslation } from "../../../hooks/use-translation";
-import { ApplicantExtrasEntity } from "../../../models/applicant";
 import { ApplicantEmployerEntity } from "../../../models/applicant/applicant-employer.entity";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import { JobEntity } from "../../../models/job/job.entity";
@@ -31,10 +28,13 @@ import BaseInputPhone from "../base-input-phone";
 import StateSelect from "../state-select";
 import { BaseFormProps } from "./base-form-props";
 
-export interface ApplicantWorkHistoryFormProps extends BaseFormProps<ApplicantEntity> { }
+export interface ApplicantWorkHistoryFormProps extends BaseFormProps<ApplicantEntity> {
+    isSubmitting: boolean;
+    setIsSubmitting(value: boolean): void;
+}
 
 export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
-    let { className, entity, setApplicant } = props;
+    let { className, entity, setEntity, isSubmitting, setIsSubmitting } = props;
     let { user } = useAuth();
     const { t } = useTranslation();
 
@@ -48,7 +48,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
         initialValues: new ApplicantEntity(),
         validationSchema: ApplicantEntity.yupSchemaForApplicantWorkHistory(),
         onSubmit: async (values) => {
-
+            setIsSubmitting(true)
             try {
                 if (entity?.id) {
                     values = await applicantApi.update(entity.id, {
@@ -59,9 +59,10 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                     values = await applicantApi.create(values);
                 }
                 formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
-                setApplicant(values)
+                setEntity(values)
+                setIsSubmitting(false)
             } catch (e) {
-                console.error("Unable to save applicant info", e);
+                setIsSubmitting(false)
                 if (
                     !globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
                 )
@@ -78,45 +79,19 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
 
 
     useEffectAsync(async () => {
-        let extras: ApplicantExtrasEntity[] = entity?.extras || [];
-
-        extras = extras.filter(Boolean);
-        if (!extras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME))
-            extras?.push({
-                ...new ApplicantExtrasEntity(),
-                type: ApplicantExtras.BUSINESS_NAME,
-            });
-        if (!extras?.find((v) => v.type == ApplicantExtras.DOT_NUMBER))
-            extras?.push({
-                ...new ApplicantExtrasEntity(),
-                type: ApplicantExtras.DOT_NUMBER,
-            });
-        if (!extras?.find((v) => v.type == ApplicantExtras.CDL_NUMBER))
-            extras?.push({
-                ...new ApplicantExtrasEntity(),
-                type: ApplicantExtras.CDL_NUMBER,
-            });
 
         if (!!entity?.id) {
             form.setValues(
                 {
-                    ...entity,
-                    documents: entity?.documents?.filter((v) =>
-                        Object.values(ApplicantDocumentType).includes(
-                            v.type as ApplicantDocumentType
-                        )
-                    ),
-                    extras,
+                    ...entity
                 });
         } else {
             await form.setValues(
                 {
                     ...new ApplicantEntity(),
                     type: ApplicantType.COMPANY,
-                    extras
                 });
         }
-
     }, [entity]);
 
 
@@ -129,12 +104,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
         const currentCompanyExists = form.values?.employers?.find((e) => e.is_current);
         setCurentCompanyCheck(currentCompanyExists)
     }, [form.values])
-
-
-    useEffect(() => {
-        console.log("form.values history", form.values);
-        console.log("form.errors", form.errors);
-    }, [form.values, form.errors]);
 
     useEffect(() => focusOnErrorField(form), [form.submitCount])
 
@@ -343,7 +312,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
 
                         {!form.values?.employers?.length && <>{t("NONE")}</>}
                         <div style={{ display: "flex", justifyContent: "right" }}>
-                            <Button disabled={form.isSubmitting} style={{ marginTop: "3%" }} type="submit" className="theme-secondary-btn">
+                            <Button disabled={form.isSubmitting || isSubmitting} style={{ marginTop: "3%" }} type="submit" className="theme-secondary-btn">
                                 {t("UPDATE")}
                             </Button>
                         </div>

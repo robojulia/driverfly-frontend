@@ -8,10 +8,8 @@ import {
 import { toast } from "react-toastify";
 
 import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
-import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
 import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
 import { useTranslation } from "../../../hooks/use-translation";
-import { ApplicantExtrasEntity } from "../../../models/applicant";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import { DocumentEntity } from "../../../models/documents/document.entity";
 import ApplicantApi from "../../../pages/api/applicant";
@@ -24,10 +22,13 @@ import BaseSelect from "../base-select";
 import FileInput from "../file-input";
 import { BaseFormProps } from "./base-form-props";
 
-export interface ApplicantUploadedDocumentsFormProps extends BaseFormProps<ApplicantEntity> { }
+export interface ApplicantUploadedDocumentsFormProps extends BaseFormProps<ApplicantEntity> {
+    isSubmitting: boolean;
+    setIsSubmitting(value: boolean): void;
+}
 
 export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocumentsFormProps) {
-    let { className, entity, setApplicant } = props;
+    let { className, entity, setEntity, isSubmitting, setIsSubmitting } = props;
     const { t } = useTranslation();
 
     const applicantApi = new ApplicantApi();
@@ -36,9 +37,7 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
         initialValues: new ApplicantEntity(),
         validationSchema: ApplicantEntity.yupSchemaForApplicantDocumentsForm(),
         onSubmit: async (values) => {
-            values.extras = values.extras?.filter(
-                (v) => v.value != undefined || v.value != null
-            );
+            setIsSubmitting(true)
             try {
                 if (entity?.id) {
                     values = await applicantApi.update(entity.id, {
@@ -58,9 +57,10 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
                     values = await applicantApi.create(values);
                 }
                 formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
-                setApplicant(values)
+                setEntity(values)
+                setIsSubmitting(false)
             } catch (e) {
-                console.error("Unable to save applicant info", e);
+                setIsSubmitting(false)
                 if (
                     !globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
                 )
@@ -70,25 +70,6 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
     });
 
     useEffectAsync(async () => {
-        let extras: ApplicantExtrasEntity[] = entity?.extras || [];
-
-        extras = extras.filter(Boolean);
-        if (!extras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME))
-            extras?.push({
-                ...new ApplicantExtrasEntity(),
-                type: ApplicantExtras.BUSINESS_NAME,
-            });
-        if (!extras?.find((v) => v.type == ApplicantExtras.DOT_NUMBER))
-            extras?.push({
-                ...new ApplicantExtrasEntity(),
-                type: ApplicantExtras.DOT_NUMBER,
-            });
-        if (!extras?.find((v) => v.type == ApplicantExtras.CDL_NUMBER))
-            extras?.push({
-                ...new ApplicantExtrasEntity(),
-                type: ApplicantExtras.CDL_NUMBER,
-            });
-
         if (!!entity?.id) {
             form.setValues(
                 {
@@ -98,14 +79,12 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
                             v.type as ApplicantDocumentType
                         )
                     ),
-                    extras,
                 });
         } else {
             await form.setValues(
                 {
                     ...new ApplicantEntity(),
                     type: ApplicantType.COMPANY,
-                    extras
                 });
         }
 
@@ -203,7 +182,7 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
                         )}
                         {!form.values?.documents?.length && <>{t("NONE")}</>}
                         <div style={{ display: "flex", justifyContent: "right" }}>
-                            <Button disabled={form.isSubmitting} style={{ marginTop: "2%" }} type="submit" className="theme-secondary-btn">
+                            <Button disabled={form.isSubmitting || isSubmitting} style={{ marginTop: "2%" }} type="submit" className="theme-secondary-btn">
                                 {t("UPDATE")}
                             </Button>
                         </div>

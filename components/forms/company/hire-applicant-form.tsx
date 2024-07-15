@@ -36,8 +36,6 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
         setJobs(jobs);
     }, [user]);
 
-
-
     const form = useFormik({
         initialValues: new ApplicantEntity(),
         validationSchema: ApplicantEntity.yupSchemaForApplyForm(),

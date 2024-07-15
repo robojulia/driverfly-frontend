@@ -21,6 +21,7 @@ export default function EditApplicant({ id }) {
 
     const [applicant, setApplicant] = useState(new ApplicantEntity());
     const [refetchApplicant, setRefetchApplicant] = useState<boolean>(false);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     useEffectAsync(async () => {
         if (id) {
@@ -55,7 +56,9 @@ export default function EditApplicant({ id }) {
 
             <EditApplicantForm
                 entity={applicant}
-                setApplicant={setApplicant}
+                setEntity={setApplicant}
+                isSubmitting={isSubmitting}
+                setIsSubmitting={setIsSubmitting}
                 onSaveComplete={onSaveComplete}
             />
             {applicant?.id && (

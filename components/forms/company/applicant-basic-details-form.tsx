@@ -7,7 +7,6 @@ import {
 } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
 
-import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
 import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
 import { LicenseRestrictions } from "../../../enums/applicants/applicant-license-restrictions-type.enum";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
@@ -47,11 +46,14 @@ import BaseTextArea from "../base-text-area";
 import StateSelect from "../state-select";
 import { BaseFormProps } from "./base-form-props";
 
-export interface ApplicantBasicDetailsFormProps extends BaseFormProps<ApplicantEntity> { }
+export interface ApplicantBasicDetailsFormProps extends BaseFormProps<ApplicantEntity> {
+	isSubmitting: boolean;
+	setIsSubmitting(value: boolean): void;
+}
 
 
 export function ApplicantBasicDetailsForm(props: ApplicantBasicDetailsFormProps) {
-	let { className, entity, setApplicant } = props;
+	let { className, entity, setEntity, isSubmitting, setIsSubmitting } = props;
 	let { user, isSuperAdmin, isCompanyAdmin } = useAuth();
 	const { t } = useTranslation();
 	const current_date = new Date();
@@ -70,6 +72,7 @@ export function ApplicantBasicDetailsForm(props: ApplicantBasicDetailsFormProps)
 		initialValues: new ApplicantEntity(),
 		validationSchema: ApplicantEntity.yupSchemaForApplicantBasicDetailsForm(),
 		onSubmit: async (values) => {
+			setIsSubmitting(true)
 			values.extras = values.extras?.filter(
 				(v) => v.value != undefined || v.value != null
 			);
@@ -84,8 +87,10 @@ export function ApplicantBasicDetailsForm(props: ApplicantBasicDetailsFormProps)
 				}
 
 				formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
-				setApplicant(values)
+				setEntity(values)
+				setIsSubmitting(false)
 			} catch (e) {
+				setIsSubmitting(false)
 				if (
 					!globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
 				)
@@ -125,12 +130,6 @@ export function ApplicantBasicDetailsForm(props: ApplicantBasicDetailsFormProps)
 			form.setValues(
 				{
 					...entity,
-					documents: entity?.documents?.filter((v) =>
-						Object.values(ApplicantDocumentType).includes(
-							v.type as ApplicantDocumentType
-						)
-					),
-					extras,
 				});
 		} else {
 			await form.setValues(
@@ -670,7 +669,7 @@ export function ApplicantBasicDetailsForm(props: ApplicantBasicDetailsFormProps)
 							</ViewModal>
 						</Row>
 						<div style={{ display: "flex", justifyContent: "right" }}>
-							<Button disabled={form.isSubmitting} type="submit" className="theme-secondary-btn">
+							<Button disabled={form.isSubmitting || isSubmitting} type="submit" className="theme-secondary-btn">
 								{t("UPDATE")}
 							</Button>
 						</div>

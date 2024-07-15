@@ -3,11 +3,8 @@ import { useEffect } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 
-import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
-import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
 import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
 import { useTranslation } from "../../../hooks/use-translation";
-import { ApplicantExtrasEntity } from "../../../models/applicant";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import ApplicantApi from "../../../pages/api/applicant";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
@@ -19,10 +16,13 @@ import BaseCheck from "../base-check";
 import BaseInput from "../base-input";
 import { BaseFormProps } from "./base-form-props";
 
-export interface ApplicantAlreadyWorkedFormProps extends BaseFormProps<ApplicantEntity> { }
+export interface ApplicantAlreadyWorkedFormProps extends BaseFormProps<ApplicantEntity> {
+    isSubmitting: boolean;
+    setIsSubmitting(value: boolean): void;
+}
 
 export function ApplicantAlreadyWorkedForm(props: ApplicantAlreadyWorkedFormProps) {
-    let { className, entity, setApplicant } = props;
+    let { className, entity, setEntity, isSubmitting, setIsSubmitting } = props;
     const { t } = useTranslation();
     const applicantApi = new ApplicantApi();
 
@@ -30,6 +30,7 @@ export function ApplicantAlreadyWorkedForm(props: ApplicantAlreadyWorkedFormProp
         initialValues: new ApplicantEntity(),
         validationSchema: ApplicantEntity.yupSchemaForApplicantAlreadyWorkedForm(),
         onSubmit: async (values) => {
+            setIsSubmitting(true)
             try {
                 if (entity?.id) {
                     values = await applicantApi.update(entity.id, {
@@ -41,10 +42,10 @@ export function ApplicantAlreadyWorkedForm(props: ApplicantAlreadyWorkedFormProp
                 }
 
                 formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
-                setApplicant(values)
-
+                setEntity(values)
+                setIsSubmitting(false)
             } catch (e) {
-                console.error("Unable to save applicant info", e);
+                setIsSubmitting(false)
                 if (
                     !globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
                 )
@@ -55,42 +56,16 @@ export function ApplicantAlreadyWorkedForm(props: ApplicantAlreadyWorkedFormProp
 
 
     useEffectAsync(async () => {
-        let extras: ApplicantExtrasEntity[] = entity?.extras || [];
-
-        extras = extras.filter(Boolean);
-        if (!extras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME))
-            extras?.push({
-                ...new ApplicantExtrasEntity(),
-                type: ApplicantExtras.BUSINESS_NAME,
-            });
-        if (!extras?.find((v) => v.type == ApplicantExtras.DOT_NUMBER))
-            extras?.push({
-                ...new ApplicantExtrasEntity(),
-                type: ApplicantExtras.DOT_NUMBER,
-            });
-        if (!extras?.find((v) => v.type == ApplicantExtras.CDL_NUMBER))
-            extras?.push({
-                ...new ApplicantExtrasEntity(),
-                type: ApplicantExtras.CDL_NUMBER,
-            });
-
         if (!!entity?.id) {
             form.setValues(
                 {
                     ...entity,
-                    documents: entity?.documents?.filter((v) =>
-                        Object.values(ApplicantDocumentType).includes(
-                            v.type as ApplicantDocumentType
-                        )
-                    ),
-                    extras,
                 });
         } else {
             await form.setValues(
                 {
                     ...new ApplicantEntity(),
                     type: ApplicantType.COMPANY,
-                    extras
                 });
         }
 
@@ -192,7 +167,7 @@ export function ApplicantAlreadyWorkedForm(props: ApplicantAlreadyWorkedFormProp
                             </>
                         )}
                         <div style={{ display: "flex", justifyContent: "right" }}>
-                            <Button disabled={form.isSubmitting} type="submit" className="theme-secondary-btn">
+                            <Button disabled={form.isSubmitting || isSubmitting} type="submit" className="theme-secondary-btn">
                                 {t("UPDATE")}
                             </Button>
                         </div>

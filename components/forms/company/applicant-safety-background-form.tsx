@@ -7,11 +7,8 @@ import {
 } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
 
-import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
-import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
 import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
 import { useTranslation } from "../../../hooks/use-translation";
-import { ApplicantExtrasEntity } from "../../../models/applicant";
 import { ApplicantAccidentEntity } from "../../../models/applicant/applicant-accidentr.entity";
 import { ApplicantMovingViolationEntity } from "../../../models/applicant/applicant-moving-violation.entity";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
@@ -26,10 +23,13 @@ import BaseInput from "../base-input";
 import BaseTextArea from "../base-text-area";
 import { BaseFormProps } from "./base-form-props";
 
-export interface ApplicantSafetyBackgroundFormProps extends BaseFormProps<ApplicantEntity> { }
+export interface ApplicantSafetyBackgroundFormProps extends BaseFormProps<ApplicantEntity> {
+    isSubmitting: boolean;
+    setIsSubmitting(value: boolean): void;
+}
 
 export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFormProps) {
-    let { className, entity, setApplicant } = props;
+    let { className, entity, setEntity, isSubmitting, setIsSubmitting } = props;
     const { t } = useTranslation();
 
     const applicantApi = new ApplicantApi();
@@ -39,9 +39,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
         initialValues: new ApplicantEntity(),
         validationSchema: ApplicantEntity.yupSchemaForApplicantSafetyBackgroundForm(),
         onSubmit: async (values) => {
-            values.extras = values.extras?.filter(
-                (v) => v.value != undefined || v.value != null
-            );
+            setIsSubmitting(true)
             try {
                 if (entity?.id) {
                     values = await applicantApi.update(entity.id, {
@@ -53,8 +51,10 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                 }
 
                 formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
-                setApplicant(values)
+                setEntity(values)
+                setIsSubmitting(false)
             } catch (e) {
+                setIsSubmitting(false)
                 if (
                     !globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
                 )
@@ -64,44 +64,18 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
     });
 
     useEffectAsync(async () => {
-        let extras: ApplicantExtrasEntity[] = entity?.extras || [];
-
-        extras = extras.filter(Boolean);
-        if (!extras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME))
-            extras?.push({
-                ...new ApplicantExtrasEntity(),
-                type: ApplicantExtras.BUSINESS_NAME,
-            });
-        if (!extras?.find((v) => v.type == ApplicantExtras.DOT_NUMBER))
-            extras?.push({
-                ...new ApplicantExtrasEntity(),
-                type: ApplicantExtras.DOT_NUMBER,
-            });
-        if (!extras?.find((v) => v.type == ApplicantExtras.CDL_NUMBER))
-            extras?.push({
-                ...new ApplicantExtrasEntity(),
-                type: ApplicantExtras.CDL_NUMBER,
-            });
 
         if (!!entity?.id) {
             setHasCriminalHistory(!!entity.criminal_history)
             form.setValues(
                 {
                     ...entity,
-                    documents: entity?.documents?.filter((v) =>
-                        Object.values(ApplicantDocumentType).includes(
-                            v.type as ApplicantDocumentType
-                        )
-                    ),
-                    extras,
                 });
         } else {
             await form.setValues(
                 {
                     ...new ApplicantEntity(),
-                    type: ApplicantType.COMPANY,
-                    extras
-
+                    type: ApplicantType.COMPANY
                 });
         }
 
@@ -534,7 +508,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                             </Col>
                         </Row>
                         <div style={{ display: "flex", justifyContent: "right" }}>
-                            <Button disabled={form.isSubmitting} type="submit" className="theme-secondary-btn">
+                            <Button disabled={form.isSubmitting || isSubmitting} type="submit" className="theme-secondary-btn">
                                 {t("UPDATE")}
                             </Button>
                         </div>
