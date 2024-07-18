@@ -37,6 +37,7 @@ import ApplicantApi from "../../../api/applicant";
 import joinArrayElements from '../../../../utils/join-in-order.utils';
 import CustomPagination from '../../../../components/pagination/custom-pagination';
 import { Pagination, PagingMeta } from '../../../../types/pagination.type';
+import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
 
 
 const ViewMode = {
@@ -545,7 +546,7 @@ function ApplicantView(props: ViewProps) {
                         id: "license_type",
                         name: `CDL_TYPE`,
                         wrap: true,
-                        selector: applicant => applicant?.license_type === t("NONE_TYPE") ? t("DriverLicenseType.NONE") : applicant?.license_type || t("NONE"),
+                        selector: applicant => applicant?.license_type === DriverLicenseType.NO_CDL ? t("DriverLicenseType.NONE") : applicant?.license_type || t("DriverLicenseType.NONE"),
                     },
                     {
                         id: "years_cdl_experience",
