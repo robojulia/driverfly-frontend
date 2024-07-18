@@ -51,9 +51,10 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({ recordsPerPageOptio
             itemsPerPage: newPerPage,
         }));
     };
+
     return (
         <Box display="flex" alignItems="center" style={{ marginTop: '2%', display: 'flex', justifyContent: 'right' }}>
-            <Typography>{`${(pagingMeta?.currentPage - 1) * pagingMeta?.itemsPerPage + (pagingMeta?.totalItems == 0 ? 0 : 1)}-${Math.min(pagingMeta?.currentPage * pagingMeta?.itemsPerPage, pagingMeta?.totalItems)} of ${pagingMeta?.totalItems} ${t('RECORDS')}`}</Typography>
+            <Typography style={{ fontSize: "0.875rem" }}>{`${(pagingMeta?.currentPage - 1) * (pagingMeta?.itemsPerPage) + (pagingMeta?.totalItems === 0 || pagingMeta?.totalItems == undefined ? 0 : 1)}-${Math.min(pagingMeta?.currentPage * pagingMeta?.itemsPerPage, pagingMeta?.totalItems) || 0} of ${pagingMeta?.totalItems || 0} ${t('RECORDS')}`}</Typography>
             <IconButton onClick={handlePrevFivePages} disabled={pagingMeta?.currentPage <= 5}>
                 <ArrowBack />
             </IconButton>
@@ -61,10 +62,11 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({ recordsPerPageOptio
                 count={totalPages}
                 page={pagingMeta?.currentPage}
                 onChange={handlePageChange}
-                siblingCount={2}
+                siblingCount={1}
                 boundaryCount={1}
                 sx={{
                     "& .Mui-selected": { backgroundColor: "#1b4454 !important", color: "white" },
+                    "& .MuiPagination-ul": { backgroundColor: "#FAFBFF !important" },
                 }}
             />
             <IconButton onClick={handleNextFivePages} disabled={pagingMeta?.currentPage > totalPages - 5}>
@@ -73,10 +75,10 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({ recordsPerPageOptio
             <Select
                 value={pagingMeta?.itemsPerPage}
                 onChange={handleRecordsPerPageChange}
-                style={{ marginLeft: 16 }}
+                style={{ fontSize: "0.875rem" }}
             >
-                {recordsPerPageOptions.map((option) => (
-                    <MenuItem key={option} value={option}>
+                {recordsPerPageOptions?.map((option) => (
+                    <MenuItem key={option} value={option} style={{ fontSize: "0.875rem" }}>
                         {option} / {t('PAGE')}
                     </MenuItem>
                 ))}
