@@ -51,9 +51,10 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({ recordsPerPageOptio
             itemsPerPage: newPerPage,
         }));
     };
+
     return (
         <Box display="flex" alignItems="center" style={{ marginTop: '2%', display: 'flex', justifyContent: 'right' }}>
-            <Typography style={{ fontSize: "0.875rem" }}>{`${(pagingMeta?.currentPage - 1) * pagingMeta?.itemsPerPage + (pagingMeta?.totalItems == 0 ? 0 : 1)}-${Math.min(pagingMeta?.currentPage * pagingMeta?.itemsPerPage, pagingMeta?.totalItems)} of ${pagingMeta?.totalItems} ${t('RECORDS')}`}</Typography>
+            <Typography style={{ fontSize: "0.875rem" }}>{`${(pagingMeta?.currentPage - 1) * (pagingMeta?.itemsPerPage) + (pagingMeta?.totalItems === 0 || pagingMeta?.totalItems == undefined ? 0 : 1)}-${Math.min(pagingMeta?.currentPage * pagingMeta?.itemsPerPage, pagingMeta?.totalItems) || 0} of ${pagingMeta?.totalItems || 0} ${t('RECORDS')}`}</Typography>
             <IconButton onClick={handlePrevFivePages} disabled={pagingMeta?.currentPage <= 5}>
                 <ArrowBack />
             </IconButton>
@@ -76,7 +77,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({ recordsPerPageOptio
                 onChange={handleRecordsPerPageChange}
                 style={{ marginLeft: 16, fontSize: "0.875rem" }}
             >
-                {recordsPerPageOptions.map((option) => (
+                {recordsPerPageOptions?.map((option) => (
                     <MenuItem key={option} value={option} style={{ fontSize: "0.875rem" }}>
                         {option} / {t('PAGE')}
                     </MenuItem>
