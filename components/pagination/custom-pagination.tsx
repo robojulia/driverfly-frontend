@@ -66,7 +66,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({ recordsPerPageOptio
                 boundaryCount={1}
                 sx={{
                     "& .Mui-selected": { backgroundColor: "#1b4454 !important", color: "white" },
-                    "& .MuiPagination-ul": { backgroundColor: "#fff !important" },
+                    "& .MuiPagination-ul": { backgroundColor: "#FAFBFF !important" },
                 }}
             />
             <IconButton onClick={handleNextFivePages} disabled={pagingMeta?.currentPage > totalPages - 5}>
@@ -75,7 +75,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({ recordsPerPageOptio
             <Select
                 value={pagingMeta?.itemsPerPage}
                 onChange={handleRecordsPerPageChange}
-                style={{ marginLeft: 16, fontSize: "0.875rem" }}
+                style={{ fontSize: "0.875rem" }}
             >
                 {recordsPerPageOptions?.map((option) => (
                     <MenuItem key={option} value={option} style={{ fontSize: "0.875rem" }}>
