@@ -91,8 +91,7 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
                 },
                 {
                     label: "BACK",
-                    className: "",
-                    hide: !Boolean(entity?.id) || Boolean(entity?.is_hired),
+                    className: "btn theme-general-btn",
                     onClick: routeToApplicants,
                 },
             ]}
