@@ -148,25 +148,29 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                             expanded={hasError || undefined}
                                         >
                                             <AccordionSummary expandIcon={<ChevronUp />}>
-                                                <Button
-                                                    disabled={Boolean(entity?.is_hired)}
-                                                    type="button"
-                                                    size="sm"
-                                                    variant="danger"
-                                                    onClick={(v) =>
-                                                        form.setValues({
-                                                            ...form.values,
-                                                            employers: form.values?.employers?.filter(
-                                                                (v, idx) => idx != i
-                                                            ),
-                                                        })
-                                                    }
-                                                >
-                                                    <XCircle /> {t("REMOVE")}
-                                                </Button>
-                                                <span style={{ marginLeft: "10px" }}>
-                                                    {e.name || t("NEW_EMPLOYER")}
-                                                </span>
+                                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
+                                                    <span >
+                                                        <b>{e.name || t("NEW_EMPLOYER")}</b>
+                                                    </span>
+                                                    <Button
+                                                        disabled={Boolean(entity?.is_hired)}
+                                                        type="button"
+                                                        size="sm"
+                                                        style={{ marginLeft: "10px" }}
+                                                        variant="danger"
+                                                        onClick={(v) =>
+                                                            form.setValues({
+                                                                ...form.values,
+                                                                employers: form.values?.employers?.filter(
+                                                                    (v, idx) => idx != i
+                                                                ),
+                                                            })
+                                                        }
+                                                    >
+                                                        <XCircle /> {t("REMOVE")}
+                                                    </Button>
+                                                </div>
+
                                             </AccordionSummary>
                                             <AccordionDetails>
                                                 <Row>
@@ -174,9 +178,24 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         readOnly={Boolean(entity?.is_hired)}
                                                         className="col-12 mt-2"
                                                         name={`employers[${i}].name`}
-                                                        label="NAME"
+                                                        label="COMPANY_NAME"
                                                         required
                                                         placeholder="ENTER_COMPANY_NAME"
+                                                        formik={form}
+                                                    />
+                                                    <BaseInput
+                                                        className="col-12 mt-2"
+                                                        readOnly={Boolean(entity?.is_hired)}
+                                                        name={`employers[${i}].title`}
+                                                        label="TITLE"
+                                                        placeholder="ENTER_JOB_TITLE"
+                                                        formik={form}
+                                                    />
+                                                    <BaseInput
+                                                        className="col-12 mt-2"
+                                                        name={`employers[${i}].manager_name`}
+                                                        label="MANAGER_OR_REPRESENTATIVE"
+                                                        placeholder="ENTER_MANAGER"
                                                         formik={form}
                                                     />
                                                     <BaseInput
@@ -201,7 +220,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         ((curentCompanyCheck?.id != form.values?.employers[i]?.id) || !form.values?.employers[i]?.is_current) && <BaseInput
                                                             className="col-6 mt-2"
                                                             readOnly={Boolean(entity?.is_hired)}
-                                                            required
                                                             name={`employers[${i}].end_at`}
                                                             label="THROUGH"
                                                             type="date"
@@ -209,48 +227,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         />
                                                     }
                                                     <BaseInput
-                                                        className="col-12 mt-2"
-                                                        readOnly={Boolean(entity?.is_hired)}
-                                                        name={`employers[${i}].title`}
-                                                        label="TITLE"
-                                                        placeholder="ENTER_JOB_TITLE"
-                                                        formik={form}
-                                                    />
-                                                    <BaseInput
                                                         className="col-md-6 mt-2"
-                                                        name={`employers[${i}].manager_name`}
-                                                        required
-                                                        label="MANAGER_OR_REPRESENTATIVE"
-                                                        placeholder="ENTER_MANAGER"
-                                                        formik={form}
-                                                    />
-                                                    <BaseInput
-                                                        className="col-6 mt-2"
-                                                        readOnly={Boolean(entity?.is_hired)}
-                                                        name={`employers[${i}].city`}
-                                                        label="CITY"
-                                                        placeholder="ENTER_CITY"
-                                                        formik={form}
-                                                    />
-                                                    <StateSelect
-                                                        className="col-6 mt-2"
-                                                        readOnly={Boolean(entity?.is_hired)}
-                                                        name={`employers[${i}].state`}
-                                                        label="STATE"
-                                                        placeholder="SELECT_STATE"
-                                                        formik={form}
-                                                    />
-                                                    <BaseInput
-                                                        className="col-6 mt-2"
-                                                        readOnly={Boolean(entity?.is_hired)}
-                                                        name={`employers[${i}].zip_code`}
-                                                        label="ZIP_CODE"
-                                                        placeholder="ENTER_ZIP_CODE"
-                                                        formik={form}
-                                                    />
-                                                    <BaseInput
-                                                        className="col-md-6 mt-2"
-                                                        required
                                                         name={`employers[${i}].address`}
                                                         placeholder="ENTER_ADDRESS_LINE1"
                                                         label="ADDRESS_LINE_1"
@@ -263,6 +240,32 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         label="ADDRESS_LINE_2"
                                                         formik={form}
                                                     />
+
+                                                    <BaseInput
+                                                        className="col-5 mt-2"
+                                                        readOnly={Boolean(entity?.is_hired)}
+                                                        name={`employers[${i}].city`}
+                                                        label="CITY"
+                                                        placeholder="ENTER_CITY"
+                                                        formik={form}
+                                                    />
+                                                    <StateSelect
+                                                        className="col-4 mt-2"
+                                                        readOnly={Boolean(entity?.is_hired)}
+                                                        name={`employers[${i}].state`}
+                                                        label="STATE"
+                                                        placeholder="SELECT_STATE"
+                                                        formik={form}
+                                                    />
+                                                    <BaseInput
+                                                        className="col-3 mt-2"
+                                                        readOnly={Boolean(entity?.is_hired)}
+                                                        name={`employers[${i}].zip_code`}
+                                                        label="ZIP_CODE"
+                                                        placeholder="ENTER_ZIP_CODE"
+                                                        formik={form}
+                                                    />
+
                                                     <BaseInputPhone
                                                         className="col-12 mt-2"
                                                         readOnly={Boolean(entity?.is_hired)}
@@ -302,6 +305,11 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         label="JOB_DESIGNATED_AS_SATEFY_SENSITIVE"
                                                         formik={form}
                                                     />
+                                                    <div style={{ display: "flex", justifyContent: "right" }}>
+                                                        <Button className="theme-secondary-btn" disabled={form.isSubmitting || isSubmitting || form.values.employers[i].email === '' || form.values.employers[i].email === null || !form.values.employers[i].can_contact || !form.values.employers[i].is_subject_to_fmcsrs} >
+                                                            Send Background request
+                                                        </Button>
+                                                    </div>
                                                 </Row>
                                             </AccordionDetails>
                                         </Accordion>
