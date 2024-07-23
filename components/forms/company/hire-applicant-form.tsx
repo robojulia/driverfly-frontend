@@ -46,6 +46,9 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
     const routeToEmployees = () =>
         router.push("/dashboard/company/compliance/employee-directory");
 
+    const routeToApplicants = () =>
+        router.push("/dashboard/company/applicants");
+
     const hireApplicantForm = useFormik({
         initialValues: new HireApplicantDto(),
         validationSchema: HireApplicantDto.yupSchema(),
@@ -82,9 +85,14 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
                 {
                     label: "HIRE",
                     className: "btn theme-primary-btn",
-                    hide: !Boolean(form.values?.id) || Boolean(entity?.is_hired),
+                    hide: !Boolean(entity?.id) || Boolean(entity?.is_hired),
                     onClick: () =>
                         hireApplicantForm.setValues({ applicantId: entity?.id }),
+                },
+                {
+                    label: "BACK",
+                    className: "btn theme-general-btn",
+                    onClick: routeToApplicants,
                 },
             ]}
         >

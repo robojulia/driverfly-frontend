@@ -130,6 +130,7 @@ export function ApplicantBasicDetailsForm(props: ApplicantBasicDetailsFormProps)
 			form.setValues(
 				{
 					...entity,
+					extras,
 				});
 		} else {
 			await form.setValues(
