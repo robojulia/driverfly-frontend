@@ -27,6 +27,7 @@ import BaseInput from "../base-input";
 import BaseInputPhone from "../base-input-phone";
 import StateSelect from "../state-select";
 import { BaseFormProps } from "./base-form-props";
+import OverlyPopover from "../../popover/overly-popover";
 
 export interface ApplicantWorkHistoryFormProps extends BaseFormProps<ApplicantEntity> {
     isSubmitting: boolean;
@@ -42,6 +43,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
     const applicantApi = new ApplicantApi();
 
     const [curentCompanyCheck, setCurentCompanyCheck] = useState<ApplicantEmployerEntity>();
+    const [isUpdated, setIsUpdated] = useState<boolean>(false)
     const [jobs, setJobs] = useState<JobEntity[]>([]);
 
     const form = useFormik({
@@ -217,7 +219,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         formik={form}
                                                     />
                                                     {
-                                                        ((curentCompanyCheck?.id != form.values?.employers[i]?.id) || !form.values?.employers[i]?.is_current) && <BaseInput
+                                                        ((curentCompanyCheck?.id != form.values?.employers[i]?.id) || !form.values?.employers[i]?.is_current) ? <BaseInput
                                                             className="col-6 mt-2"
                                                             readOnly={Boolean(entity?.is_hired)}
                                                             name={`employers[${i}].end_at`}
@@ -225,6 +227,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                             type="date"
                                                             formik={form}
                                                         />
+                                                            : (<div className="col-6 "></div>)
                                                     }
                                                     <BaseInput
                                                         className="col-md-6 mt-2"
@@ -306,9 +309,23 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         formik={form}
                                                     />
                                                     <div style={{ display: "flex", justifyContent: "right" }}>
-                                                        <Button className="theme-secondary-btn" disabled={form.isSubmitting || isSubmitting || form.values.employers[i].email === '' || form.values.employers[i].email === null || !form.values.employers[i].can_contact || !form.values.employers[i].is_subject_to_fmcsrs} >
-                                                            Send Background request
-                                                        </Button>
+                                                        {form?.isSubmitting || isSubmitting || form?.values?.employers[i]?.email === '' || form?.values?.employers[i]?.email === null || !form?.values?.employers[i]?.can_contact || !form?.values?.employers[i]?.is_subject_to_fmcsrs ?
+                                                            (
+                                                                <OverlyPopover
+                                                                    str={`${t("PLEASE")} ${form?.values?.employers[i]?.email === '' ? `${t("PROVIDE_EMAIL_ADDRESS")}` : ""} 
+                                                                   ${!form?.values?.employers[i]?.can_contact ? form?.values?.employers[i]?.email === '' ? `, ${t("TOGGLE_ON_YOU_CONTACT")}` : t("TOGGLE_ON_YOU_CONTACT") : ""}
+                                                                    ${!form?.values?.employers[i]?.is_subject_to_fmcsrs ? t("TOGGLE_ON_FMCSRs") : ""} ${t("FOR_PAST_EMPLOYER")}`}>
+                                                                    <Button className="theme-secondary-btn"
+                                                                        disabled={true} >
+                                                                        {t("SEND_BACKGROUND_REQUEST")}
+                                                                    </Button>
+                                                                </OverlyPopover>
+                                                            ) :
+                                                            (
+                                                                <Button className="theme-secondary-btn">
+                                                                    {t("SEND_BACKGROUND_REQUEST")}
+                                                                </Button>
+                                                            )}
                                                     </div>
                                                 </Row>
                                             </AccordionDetails>
