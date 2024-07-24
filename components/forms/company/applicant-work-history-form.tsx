@@ -43,7 +43,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
     const applicantApi = new ApplicantApi();
 
     const [curentCompanyCheck, setCurentCompanyCheck] = useState<ApplicantEmployerEntity>();
-    const [isUpdated, setIsUpdated] = useState<boolean>(false)
+    const [isUpdatedApplicant, setIsUpdatedApplicant] = useState<boolean>(false)
     const [jobs, setJobs] = useState<JobEntity[]>([]);
 
     const form = useFormik({
@@ -63,8 +63,10 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                 formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
                 setEntity(values)
                 setIsSubmitting(false)
+                setIsUpdatedApplicant(true)
             } catch (e) {
                 setIsSubmitting(false)
+                setIsUpdatedApplicant(false)
                 if (
                     !globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
                 )
@@ -312,9 +314,9 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         {form?.isSubmitting || isSubmitting || form?.values?.employers[i]?.email === '' || form?.values?.employers[i]?.email === null || !form?.values?.employers[i]?.can_contact || !form?.values?.employers[i]?.is_subject_to_fmcsrs ?
                                                             (
                                                                 <OverlyPopover
-                                                                    str={`${t("PLEASE")} ${form?.values?.employers[i]?.email === '' ? `${t("PROVIDE_EMAIL_ADDRESS")}` : ""} 
-                                                                   ${!form?.values?.employers[i]?.can_contact ? form?.values?.employers[i]?.email === '' ? `, ${t("TOGGLE_ON_YOU_CONTACT")}` : t("TOGGLE_ON_YOU_CONTACT") : ""}
-                                                                    ${!form?.values?.employers[i]?.is_subject_to_fmcsrs ? t("TOGGLE_ON_FMCSRs") : ""} ${t("FOR_PAST_EMPLOYER")}`}>
+                                                                    str={`${t("PLEASE")} ${form?.values?.employers[i]?.email === '' ? t("PROVIDE_EMAIL_ADDRESS") : ""} 
+                                                                    ${!form?.values?.employers[i]?.can_contact ? form?.values?.employers[i]?.email === '' ? `, ${t("TOGGLE_ON_YOU_CONTACT")}` : t("TOGGLE_ON_YOU_CONTACT") : ""}
+                                                                    ${!form?.values?.employers[i]?.is_subject_to_fmcsrs ? form?.values?.employers[i]?.email === '' || !form?.values?.employers[i]?.can_contact ? `, ${t("TOGGLE_ON_FMCSRs")}` : t("TOGGLE_ON_FMCSRs") : ""} ${t("FOR_PAST_EMPLOYER")}`}>
                                                                     <Button className="theme-secondary-btn"
                                                                         disabled={true} >
                                                                         {t("SEND_BACKGROUND_REQUEST")}
