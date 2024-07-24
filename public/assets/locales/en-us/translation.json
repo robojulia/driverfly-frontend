@@ -377,6 +377,8 @@
   "TOGGLE_ON_YOU_CONTACT": "toggle on 'You may contact this company'",
   "TOGGLE_ON_FMCSRs": "toggle on 'Subject to the FMCSRs'",
   "FOR_PAST_EMPLOYER": "for this past employer",
+  "REQUEST_VOE":"Request Voe",
+  "REQUEST_VOE_MESSAGE":" To save the changes, click on the ‘Update’ button. To send request for Verification of Employment, click on the ‘Send Background Request’ button.",
   "PAST_DUIS": "Past DUIs",
   "HAS_DUIS": "Has DUIs",
   "has_past_duis": "Do you have past DUI's?",

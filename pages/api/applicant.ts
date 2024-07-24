@@ -18,6 +18,7 @@ import { UpsertApplicantJotformDto } from "../../models/jot-form/upsert-applican
 import { UpsertApplicantVoeformDto } from "../../models/jot-form/upsert-applicant-voe.dto";
 import BaseApi from "./_baseApi";
 import { Pagination } from "../../types/pagination.type";
+import { SendBackgroundRequestDto } from "../../models/applicant/send-background-request.dto";
 
 export default class ApplicantApi extends BaseApi {
   baseUrl: string = "applicants";
@@ -44,6 +45,13 @@ export default class ApplicantApi extends BaseApi {
 
   async update(id: number, dto: ApplicantEntity): Promise<ApplicantEntity> {
     const { data } = await this.put(this.baseUrl + "/" + id, dto);
+
+    return data;
+  }
+
+
+  async sendVoeRequest(dto: SendBackgroundRequestDto): Promise<ApplicantEntity> {
+    const { data } = await this.post(`${this.baseUrl}/send-background-request`, dto);
 
     return data;
   }
