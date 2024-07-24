@@ -30,6 +30,7 @@ export class ApplicantEmployerEntity {
 
 	voe_submitted?: boolean;
 	voe_attempts?: any;
+	auto_voe_attempts?: any;
 
 	voeData?: ApplicantVoeEntity;
 	documents?: DocumentEntity[];
