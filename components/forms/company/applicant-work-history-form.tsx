@@ -10,24 +10,22 @@ import {
 import { toast } from "react-toastify";
 
 import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
-import { useAuth } from "../../../hooks/use-auth";
 import { useTranslation } from "../../../hooks/use-translation";
 import { ApplicantEmployerEntity } from "../../../models/applicant/applicant-employer.entity";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
-import { JobEntity } from "../../../models/job/job.entity";
 import ApplicantApi from "../../../pages/api/applicant";
-import JobApi from "../../../pages/api/job";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { focusOnErrorField } from "../../../utils/form-error";
 import { useEffectAsync } from "../../../utils/react";
 import { formFailed, formSuccess } from "../../../utils/toast";
+import OverlyPopover from "../../popover/overly-popover";
 import ViewCard from "../../view-details/view-card";
+import ViewModal from "../../view-details/view-modal";
 import BaseCheck from "../base-check";
 import BaseInput from "../base-input";
 import BaseInputPhone from "../base-input-phone";
 import StateSelect from "../state-select";
 import { BaseFormProps } from "./base-form-props";
-import OverlyPopover from "../../popover/overly-popover";
 
 export interface ApplicantWorkHistoryFormProps extends BaseFormProps<ApplicantEntity> {
     isSubmitting: boolean;
@@ -36,15 +34,16 @@ export interface ApplicantWorkHistoryFormProps extends BaseFormProps<ApplicantEn
 
 export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
     let { className, entity, setEntity, isSubmitting, setIsSubmitting } = props;
-    let { user } = useAuth();
     const { t } = useTranslation();
 
 
     const applicantApi = new ApplicantApi();
 
     const [curentCompanyCheck, setCurentCompanyCheck] = useState<ApplicantEmployerEntity>();
+    const [applicantData, setApplicantData] = useState<ApplicantEntity>();
     const [isUpdatedApplicant, setIsUpdatedApplicant] = useState<boolean>(false)
-    const [jobs, setJobs] = useState<JobEntity[]>([]);
+    const [requestVoeMessage, setRequestVoeMessage] = useState<string>("")
+    const [showModel, setShowModel] = useState<boolean>(false)
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
@@ -75,12 +74,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
         },
     });
 
-    useEffectAsync(async () => {
-        const api = new JobApi();
-        const jobs = await api.list();
-        setJobs(jobs);
-    }, [user]);
-
 
     useEffectAsync(async () => {
 
@@ -96,12 +89,28 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                     type: ApplicantType.COMPANY,
                 });
         }
+        setApplicantData(entity);
     }, [entity]);
 
 
 
     const currentCompanyCheckBox = (employerId) => {
         return curentCompanyCheck?.is_current ? (Boolean(employerId?.id !== curentCompanyCheck?.id)) : false
+    }
+
+    const handleSendBackgroundRequest = async (i: number) => {
+        if (!isUpdatedApplicant) {
+            setRequestVoeMessage(`You are about to change email to ${form.values.employers[i].email}. To save the changes, click on the ‘Update’ button. To send request for Verification of Employment, click on the ‘Send Background Request’ button`)
+            setShowModel(true)
+        } else {
+            const sendVoeRequest = await applicantApi.sendVoeRequest({
+                applicant: entity,
+                employer: form.values.employers[i],
+                delay: 0
+            })
+            console.log("Handle send background request", sendVoeRequest)
+            // Handle API call
+        }
     }
 
     useEffect(() => {
@@ -324,7 +333,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                                 </OverlyPopover>
                                                             ) :
                                                             (
-                                                                <Button className="theme-secondary-btn">
+                                                                <Button onClick={() => handleSendBackgroundRequest(i)} className="theme-secondary-btn">
                                                                     {t("SEND_BACKGROUND_REQUEST")}
                                                                 </Button>
                                                             )}
@@ -346,7 +355,19 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                     </ViewCard>
                 </Col>
             </Row>
-
+            <ViewModal
+                title={t("REQUEST_VOE")}
+                show={showModel}
+                onCloseClick={() => setShowModel(false)}
+            >
+                {
+                    (<Row>
+                        <p>
+                            {requestVoeMessage}
+                        </p>
+                    </Row>)
+                }
+            </ViewModal>
         </Form>
     );
 }
