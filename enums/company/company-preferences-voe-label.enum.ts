@@ -1,0 +1,3 @@
+export enum CompanyPreferenceVoeLabel {
+    AUTOMATE_VOE_REQUEST_TO_PAST_EMPLOYEES = "AUTOMATE_VOE_REQUEST_TO_PAST_EMPLOYEES",
+}
