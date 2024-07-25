@@ -20,7 +20,6 @@ import { useEffectAsync } from "../../../utils/react";
 import { formFailed, formSuccess } from "../../../utils/toast";
 import OverlyPopover from "../../popover/overly-popover";
 import ViewCard from "../../view-details/view-card";
-import ViewModal from "../../view-details/view-modal";
 import BaseCheck from "../base-check";
 import BaseInput from "../base-input";
 import BaseInputPhone from "../base-input-phone";
@@ -33,17 +32,14 @@ export interface ApplicantWorkHistoryFormProps extends BaseFormProps<ApplicantEn
 }
 
 export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
-    let { className, entity, setEntity, isSubmitting, setIsSubmitting } = props;
+    let { className, entity, setEntity, isSubmitting, setIsSubmitting, onSaveComplete } = props;
     const { t } = useTranslation();
 
 
     const applicantApi = new ApplicantApi();
 
     const [curentCompanyCheck, setCurentCompanyCheck] = useState<ApplicantEmployerEntity>();
-    const [applicantData, setApplicantData] = useState<ApplicantEntity>();
-    const [isUpdatedApplicant, setIsUpdatedApplicant] = useState<boolean>(false)
-    const [requestVoeMessage, setRequestVoeMessage] = useState<string>("")
-    const [showModel, setShowModel] = useState<boolean>(false)
+    const [sendVoeEmailsHistory, setSendVoeEmailsHistory] = useState<string[]>([])
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
@@ -62,10 +58,9 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                 formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
                 setEntity(values)
                 setIsSubmitting(false)
-                setIsUpdatedApplicant(true)
+                if (onSaveComplete) onSaveComplete(form?.values)
             } catch (e) {
                 setIsSubmitting(false)
-                setIsUpdatedApplicant(false)
                 if (
                     !globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
                 )
@@ -89,7 +84,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                     type: ApplicantType.COMPANY,
                 });
         }
-        setApplicantData(entity);
     }, [entity]);
 
 
@@ -99,17 +93,16 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
     }
 
     const handleSendBackgroundRequest = async (i: number) => {
-        if (!isUpdatedApplicant) {
-            setRequestVoeMessage(`You are about to change email to ${form.values.employers[i].email}. To save the changes, click on the ‘Update’ button. To send request for Verification of Employment, click on the ‘Send Background Request’ button`)
-            setShowModel(true)
-        } else {
-            const sendVoeRequest = await applicantApi.sendVoeRequest({
+        try {
+            const res = await applicantApi.sendVoeRequest({
                 applicant: entity,
-                employer: form.values.employers[i],
-                delay: 0
+                employer: form.values.employers[i]
             })
-            console.log("Handle send background request", sendVoeRequest)
-            // Handle API call
+            setEntity(res)
+            setSendVoeEmailsHistory([...sendVoeEmailsHistory, form?.values?.employers[i]?.email])
+            toast.success(t("SUCCESSFULLY_SENT_VOE"))
+        } catch (e) {
+            globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
         }
     }
 
@@ -320,17 +313,42 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         formik={form}
                                                     />
                                                     <div style={{ display: "flex", justifyContent: "right" }}>
-                                                        {form?.isSubmitting || isSubmitting || form?.values?.employers[i]?.email === '' || form?.values?.employers[i]?.email === null || !form?.values?.employers[i]?.can_contact || !form?.values?.employers[i]?.is_subject_to_fmcsrs ?
-                                                            (
-                                                                <OverlyPopover
-                                                                    str={`${t("PLEASE")} ${form?.values?.employers[i]?.email === '' ? t("PROVIDE_EMAIL_ADDRESS") : ""} 
-                                                                    ${!form?.values?.employers[i]?.can_contact ? form?.values?.employers[i]?.email === '' ? `, ${t("TOGGLE_ON_YOU_CONTACT")}` : t("TOGGLE_ON_YOU_CONTACT") : ""}
-                                                                    ${!form?.values?.employers[i]?.is_subject_to_fmcsrs ? form?.values?.employers[i]?.email === '' || !form?.values?.employers[i]?.can_contact ? `, ${t("TOGGLE_ON_FMCSRs")}` : t("TOGGLE_ON_FMCSRs") : ""} ${t("FOR_PAST_EMPLOYER")}`}>
-                                                                    <Button className="theme-secondary-btn"
-                                                                        disabled={true} >
-                                                                        {t("SEND_BACKGROUND_REQUEST")}
-                                                                    </Button>
-                                                                </OverlyPopover>
+                                                        {form?.isSubmitting || isSubmitting || form?.values?.employers[i]?.email === '' || form?.values?.employers[i]?.email === null || form?.values?.employers[i]?.email == entity?.employers[i]?.email || sendVoeEmailsHistory.join(",").includes(form?.values?.employers[i]?.email) || !form?.values?.employers[i]?.can_contact || !form?.values?.employers[i]?.is_subject_to_fmcsrs ?
+                                                            (<>
+                                                                {form?.values?.employers[i]?.email === '' || form?.values?.employers[i]?.email === null || !form?.values?.employers[i]?.can_contact || !form?.values?.employers[i]?.is_subject_to_fmcsrs ? (
+                                                                    <>
+                                                                        <OverlyPopover
+                                                                            str={`${t("PLEASE")} ${form?.values?.employers[i]?.email === '' ? t("PROVIDE_EMAIL_ADDRESS") : ""} 
+                                                                            ${!form?.values?.employers[i]?.can_contact ? form?.values?.employers[i]?.email === '' ? `, ${t("TOGGLE_ON_YOU_CONTACT")}` : t("TOGGLE_ON_YOU_CONTACT") : ""}
+                                                                            ${!form?.values?.employers[i]?.is_subject_to_fmcsrs ? form?.values?.employers[i]?.email === '' || !form?.values?.employers[i]?.can_contact ? `, ${t("TOGGLE_ON_FMCSRs")}` : t("TOGGLE_ON_FMCSRs") : ""} ${t("FOR_PAST_EMPLOYER")}`}>
+                                                                            <Button className="theme-secondary-btn"
+                                                                                disabled={true} >
+                                                                                {t("SEND_BACKGROUND_REQUEST")}
+                                                                            </Button>
+                                                                        </OverlyPopover>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        {form?.values?.employers[i]?.email == entity?.employers[i]?.email ? (
+                                                                            <OverlyPopover
+                                                                                str={t("EMAIL_NOT_CHANGED")}>
+                                                                                <Button className="theme-secondary-btn"
+                                                                                    disabled={true} >
+                                                                                    {t("SEND_BACKGROUND_REQUEST")}
+                                                                                </Button>
+                                                                            </OverlyPopover>
+                                                                        ) : (
+                                                                            <OverlyPopover
+                                                                                str={t("REQUEST_ALREADY_MADE")}>
+                                                                                <Button className="theme-secondary-btn"
+                                                                                    disabled={true} >
+                                                                                    {t("SEND_BACKGROUND_REQUEST")}
+                                                                                </Button>
+                                                                            </OverlyPopover>
+                                                                        )}
+                                                                    </>
+                                                                )}
+                                                            </>
                                                             ) :
                                                             (
                                                                 <Button onClick={() => handleSendBackgroundRequest(i)} className="theme-secondary-btn">
@@ -355,19 +373,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                     </ViewCard>
                 </Col>
             </Row>
-            <ViewModal
-                title={t("REQUEST_VOE")}
-                show={showModel}
-                onCloseClick={() => setShowModel(false)}
-            >
-                {
-                    (<Row>
-                        <p>
-                            {requestVoeMessage}
-                        </p>
-                    </Row>)
-                }
-            </ViewModal>
         </Form>
     );
 }
