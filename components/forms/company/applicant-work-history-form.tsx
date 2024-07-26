@@ -10,17 +10,15 @@ import {
 import { toast } from "react-toastify";
 
 import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
-import { useAuth } from "../../../hooks/use-auth";
 import { useTranslation } from "../../../hooks/use-translation";
 import { ApplicantEmployerEntity } from "../../../models/applicant/applicant-employer.entity";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
-import { JobEntity } from "../../../models/job/job.entity";
 import ApplicantApi from "../../../pages/api/applicant";
-import JobApi from "../../../pages/api/job";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { focusOnErrorField } from "../../../utils/form-error";
 import { useEffectAsync } from "../../../utils/react";
 import { formFailed, formSuccess } from "../../../utils/toast";
+import OverlyPopover from "../../popover/overly-popover";
 import ViewCard from "../../view-details/view-card";
 import BaseCheck from "../base-check";
 import BaseInput from "../base-input";
@@ -34,15 +32,14 @@ export interface ApplicantWorkHistoryFormProps extends BaseFormProps<ApplicantEn
 }
 
 export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
-    let { className, entity, setEntity, isSubmitting, setIsSubmitting } = props;
-    let { user } = useAuth();
+    let { className, entity, setEntity, isSubmitting, setIsSubmitting, onSaveComplete } = props;
     const { t } = useTranslation();
 
 
     const applicantApi = new ApplicantApi();
 
     const [curentCompanyCheck, setCurentCompanyCheck] = useState<ApplicantEmployerEntity>();
-    const [jobs, setJobs] = useState<JobEntity[]>([]);
+    const [sendVoeEmailsHistory, setSendVoeEmailsHistory] = useState<string[]>([])
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
@@ -61,6 +58,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                 formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
                 setEntity(values)
                 setIsSubmitting(false)
+                if (onSaveComplete) onSaveComplete(form?.values)
             } catch (e) {
                 setIsSubmitting(false)
                 if (
@@ -70,12 +68,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
             }
         },
     });
-
-    useEffectAsync(async () => {
-        const api = new JobApi();
-        const jobs = await api.list();
-        setJobs(jobs);
-    }, [user]);
 
 
     useEffectAsync(async () => {
@@ -98,6 +90,20 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
 
     const currentCompanyCheckBox = (employerId) => {
         return curentCompanyCheck?.is_current ? (Boolean(employerId?.id !== curentCompanyCheck?.id)) : false
+    }
+
+    const handleSendBackgroundRequest = async (i: number) => {
+        try {
+            const res = await applicantApi.sendVoeRequest({
+                applicant: entity,
+                employer: form.values.employers[i]
+            })
+            setEntity(res)
+            setSendVoeEmailsHistory([...sendVoeEmailsHistory, form?.values?.employers[i]?.email])
+            toast.success(t("SUCCESSFULLY_SENT_VOE"))
+        } catch (e) {
+            globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
+        }
     }
 
     useEffect(() => {
@@ -148,25 +154,29 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                             expanded={hasError || undefined}
                                         >
                                             <AccordionSummary expandIcon={<ChevronUp />}>
-                                                <Button
-                                                    disabled={Boolean(entity?.is_hired)}
-                                                    type="button"
-                                                    size="sm"
-                                                    variant="danger"
-                                                    onClick={(v) =>
-                                                        form.setValues({
-                                                            ...form.values,
-                                                            employers: form.values?.employers?.filter(
-                                                                (v, idx) => idx != i
-                                                            ),
-                                                        })
-                                                    }
-                                                >
-                                                    <XCircle /> {t("REMOVE")}
-                                                </Button>
-                                                <span style={{ marginLeft: "10px" }}>
-                                                    {e.name || t("NEW_EMPLOYER")}
-                                                </span>
+                                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}>
+                                                    <span >
+                                                        <b>{e.name || t("NEW_EMPLOYER")}</b>
+                                                    </span>
+                                                    <Button
+                                                        disabled={Boolean(entity?.is_hired)}
+                                                        type="button"
+                                                        size="sm"
+                                                        style={{ marginLeft: "10px" }}
+                                                        variant="danger"
+                                                        onClick={(v) =>
+                                                            form.setValues({
+                                                                ...form.values,
+                                                                employers: form.values?.employers?.filter(
+                                                                    (v, idx) => idx != i
+                                                                ),
+                                                            })
+                                                        }
+                                                    >
+                                                        <XCircle /> {t("REMOVE")}
+                                                    </Button>
+                                                </div>
+
                                             </AccordionSummary>
                                             <AccordionDetails>
                                                 <Row>
@@ -174,9 +184,24 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         readOnly={Boolean(entity?.is_hired)}
                                                         className="col-12 mt-2"
                                                         name={`employers[${i}].name`}
-                                                        label="NAME"
+                                                        label="COMPANY_NAME"
                                                         required
                                                         placeholder="ENTER_COMPANY_NAME"
+                                                        formik={form}
+                                                    />
+                                                    <BaseInput
+                                                        className="col-12 mt-2"
+                                                        readOnly={Boolean(entity?.is_hired)}
+                                                        name={`employers[${i}].title`}
+                                                        label="TITLE"
+                                                        placeholder="ENTER_JOB_TITLE"
+                                                        formik={form}
+                                                    />
+                                                    <BaseInput
+                                                        className="col-12 mt-2"
+                                                        name={`employers[${i}].manager_name`}
+                                                        label="MANAGER_OR_REPRESENTATIVE"
+                                                        placeholder="ENTER_MANAGER"
                                                         formik={form}
                                                     />
                                                     <BaseInput
@@ -198,59 +223,18 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         formik={form}
                                                     />
                                                     {
-                                                        ((curentCompanyCheck?.id != form.values?.employers[i]?.id) || !form.values?.employers[i]?.is_current) && <BaseInput
+                                                        ((curentCompanyCheck?.id != form.values?.employers[i]?.id) || !form.values?.employers[i]?.is_current) ? <BaseInput
                                                             className="col-6 mt-2"
                                                             readOnly={Boolean(entity?.is_hired)}
-                                                            required
                                                             name={`employers[${i}].end_at`}
                                                             label="THROUGH"
                                                             type="date"
                                                             formik={form}
                                                         />
+                                                            : (<div className="col-6 "></div>)
                                                     }
                                                     <BaseInput
-                                                        className="col-12 mt-2"
-                                                        readOnly={Boolean(entity?.is_hired)}
-                                                        name={`employers[${i}].title`}
-                                                        label="TITLE"
-                                                        placeholder="ENTER_JOB_TITLE"
-                                                        formik={form}
-                                                    />
-                                                    <BaseInput
                                                         className="col-md-6 mt-2"
-                                                        name={`employers[${i}].manager_name`}
-                                                        required
-                                                        label="MANAGER_OR_REPRESENTATIVE"
-                                                        placeholder="ENTER_MANAGER"
-                                                        formik={form}
-                                                    />
-                                                    <BaseInput
-                                                        className="col-6 mt-2"
-                                                        readOnly={Boolean(entity?.is_hired)}
-                                                        name={`employers[${i}].city`}
-                                                        label="CITY"
-                                                        placeholder="ENTER_CITY"
-                                                        formik={form}
-                                                    />
-                                                    <StateSelect
-                                                        className="col-6 mt-2"
-                                                        readOnly={Boolean(entity?.is_hired)}
-                                                        name={`employers[${i}].state`}
-                                                        label="STATE"
-                                                        placeholder="SELECT_STATE"
-                                                        formik={form}
-                                                    />
-                                                    <BaseInput
-                                                        className="col-6 mt-2"
-                                                        readOnly={Boolean(entity?.is_hired)}
-                                                        name={`employers[${i}].zip_code`}
-                                                        label="ZIP_CODE"
-                                                        placeholder="ENTER_ZIP_CODE"
-                                                        formik={form}
-                                                    />
-                                                    <BaseInput
-                                                        className="col-md-6 mt-2"
-                                                        required
                                                         name={`employers[${i}].address`}
                                                         placeholder="ENTER_ADDRESS_LINE1"
                                                         label="ADDRESS_LINE_1"
@@ -263,6 +247,32 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         label="ADDRESS_LINE_2"
                                                         formik={form}
                                                     />
+
+                                                    <BaseInput
+                                                        className="col-5 mt-2"
+                                                        readOnly={Boolean(entity?.is_hired)}
+                                                        name={`employers[${i}].city`}
+                                                        label="CITY"
+                                                        placeholder="ENTER_CITY"
+                                                        formik={form}
+                                                    />
+                                                    <StateSelect
+                                                        className="col-4 mt-2"
+                                                        readOnly={Boolean(entity?.is_hired)}
+                                                        name={`employers[${i}].state`}
+                                                        label="STATE"
+                                                        placeholder="SELECT_STATE"
+                                                        formik={form}
+                                                    />
+                                                    <BaseInput
+                                                        className="col-3 mt-2"
+                                                        readOnly={Boolean(entity?.is_hired)}
+                                                        name={`employers[${i}].zip_code`}
+                                                        label="ZIP_CODE"
+                                                        placeholder="ENTER_ZIP_CODE"
+                                                        formik={form}
+                                                    />
+
                                                     <BaseInputPhone
                                                         className="col-12 mt-2"
                                                         readOnly={Boolean(entity?.is_hired)}
@@ -302,6 +312,50 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         label="JOB_DESIGNATED_AS_SATEFY_SENSITIVE"
                                                         formik={form}
                                                     />
+                                                    <div style={{ display: "flex", justifyContent: "right" }}>
+                                                        {form?.isSubmitting || isSubmitting || form?.values?.employers[i]?.email === '' || form?.values?.employers[i]?.email === null || form?.values?.employers[i]?.email == entity?.employers[i]?.email || sendVoeEmailsHistory.join(",").includes(form?.values?.employers[i]?.email) || !form?.values?.employers[i]?.can_contact || !form?.values?.employers[i]?.is_subject_to_fmcsrs ?
+                                                            (<>
+                                                                {form?.values?.employers[i]?.email === '' || form?.values?.employers[i]?.email === null || !form?.values?.employers[i]?.can_contact || !form?.values?.employers[i]?.is_subject_to_fmcsrs ? (
+                                                                    <>
+                                                                        <OverlyPopover
+                                                                            str={`${t("PLEASE")} ${form?.values?.employers[i]?.email === '' ? t("PROVIDE_EMAIL_ADDRESS") : ""} 
+                                                                            ${!form?.values?.employers[i]?.can_contact ? form?.values?.employers[i]?.email === '' ? `, ${t("TOGGLE_ON_YOU_CONTACT")}` : t("TOGGLE_ON_YOU_CONTACT") : ""}
+                                                                            ${!form?.values?.employers[i]?.is_subject_to_fmcsrs ? form?.values?.employers[i]?.email === '' || !form?.values?.employers[i]?.can_contact ? `, ${t("TOGGLE_ON_FMCSRs")}` : t("TOGGLE_ON_FMCSRs") : ""} ${t("FOR_PAST_EMPLOYER")}`}>
+                                                                            <Button className="theme-secondary-btn"
+                                                                                disabled={true} >
+                                                                                {t("SEND_BACKGROUND_REQUEST")}
+                                                                            </Button>
+                                                                        </OverlyPopover>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        {form?.values?.employers[i]?.email == entity?.employers[i]?.email ? (
+                                                                            <OverlyPopover
+                                                                                str={t("EMAIL_NOT_CHANGED")}>
+                                                                                <Button className="theme-secondary-btn"
+                                                                                    disabled={true} >
+                                                                                    {t("SEND_BACKGROUND_REQUEST")}
+                                                                                </Button>
+                                                                            </OverlyPopover>
+                                                                        ) : (
+                                                                            <OverlyPopover
+                                                                                str={t("REQUEST_ALREADY_MADE")}>
+                                                                                <Button className="theme-secondary-btn"
+                                                                                    disabled={true} >
+                                                                                    {t("SEND_BACKGROUND_REQUEST")}
+                                                                                </Button>
+                                                                            </OverlyPopover>
+                                                                        )}
+                                                                    </>
+                                                                )}
+                                                            </>
+                                                            ) :
+                                                            (
+                                                                <Button onClick={() => handleSendBackgroundRequest(i)} className="theme-secondary-btn">
+                                                                    {t("SEND_BACKGROUND_REQUEST")}
+                                                                </Button>
+                                                            )}
+                                                    </div>
                                                 </Row>
                                             </AccordionDetails>
                                         </Accordion>
@@ -319,7 +373,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                     </ViewCard>
                 </Col>
             </Row>
-
         </Form>
     );
 }

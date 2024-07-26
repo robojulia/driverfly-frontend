@@ -825,7 +825,7 @@ export class ApplicantEntity {
 
   static yupSchemaForApplicantWorkHistory() {
     return yup.object({
-      employers: yup.array(ApplicantEmployerEntity.yupSchema()),
+      employers: yup.array(ApplicantEmployerEntity.yupEditApplicantSchema()),
     });
   }
 
