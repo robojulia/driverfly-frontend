@@ -78,6 +78,7 @@ export default function Applicants() {
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
     const [filters, setFilters] = useState<SearchApplicantDto>();
     const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingsMetaInitialValues);
+    const [filtersChanged, setFiltersChanged] = useState<boolean>(false);
 
     const fetchApplicant = async () => {
         setLoading(true)
@@ -90,19 +91,24 @@ export default function Applicants() {
             ],
             ...filters,
             is_paginated: true,
-            page: filters?.page === 0 ? 1 : pagingMeta?.currentPage,
+            page: filtersChanged ? 1 : pagingMeta?.currentPage,
             limit: pagingMeta?.itemsPerPage,
         });
         setApplicants((data as Pagination<ApplicantEntity>)?.items);
+        setFiltersChanged(false)
         setPagingMeta({
             ...pagingMeta,
-            currentPage: filters?.page === 0 ? 1 : pagingMeta?.currentPage,
+            currentPage: filtersChanged ? 1 : pagingMeta?.currentPage,
             totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems
         });
         setTimeout(() => setLoading(false), 1000);
     }
 
     useEffectAsync(async () => await fetchApplicant(), [user, jobId, viewMode, filters, pagingMeta?.currentPage, pagingMeta?.itemsPerPage]);
+
+    React.useMemo(() => (
+        setFiltersChanged(true)
+    ), [filters]);
 
     const onViewClick = (id: number) => {
         router.push(`${router.pathname}/${id}`);
