@@ -59,7 +59,7 @@ export default function Dashboard() {
         let todayDate = new Date();
         if (company?.id) {
             const a = await applicantApi.list({ withHired: true });
-            setApplicants(a);
+            setApplicants((a as ApplicantEntity[]));
             const e = await employeeApi.list({ status: [EmployeeStatus.ACTIVE] });
             setEmployees(e);
             const j = (await jobApi.list())?.filter(

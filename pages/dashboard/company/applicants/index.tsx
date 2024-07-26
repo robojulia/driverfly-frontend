@@ -2,7 +2,7 @@ import { FormControlLabel, FormGroup, Switch } from '@mui/material';
 import { useFormik } from "formik";
 import Link from "next/link";
 import { NextRouter, useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Accordion, Button, ButtonGroup, Col, Row } from "react-bootstrap";
 import { EyeFill, PencilFill } from 'react-bootstrap-icons';
 import { toast } from "react-toastify";
@@ -20,8 +20,9 @@ import ViewModal from "../../../../components/view-details/view-modal";
 import { ApplicantReasonCodeFired, ApplicantReasonCodeNotInterested, ApplicantReasonCodeNotQualified, ApplicantReasonCodeQuit } from "../../../../enums/applicants/applicant-reason-codes.enum";
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
 import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
-import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
+import { JobGeography } from '../../../../enums/jobs/job-geography.enum';
 import { DriverEndorsement } from '../../../../enums/users/driver-endorsement.enum';
+import { VehicleTransmissionType } from '../../../../enums/vehicles/vehicle-transmission-type.enum';
 import { useAuth } from "../../../../hooks/use-auth";
 import { TranslateInterface, useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";
@@ -33,9 +34,10 @@ import { buildAddress } from "../../../../utils/common";
 import * as numbers from "../../../../utils/number";
 import { useEffectAsync } from "../../../../utils/react";
 import ApplicantApi from "../../../api/applicant";
-import { JobGeography } from '../../../../enums/jobs/job-geography.enum';
-import { VehicleTransmissionType } from '../../../../enums/vehicles/vehicle-transmission-type.enum';
-import { Status } from '../../../../enums/status.enum';
+import joinArrayElements from '../../../../utils/join-in-order.utils';
+import CustomPagination from '../../../../components/pagination/custom-pagination';
+import { Pagination, PagingMeta } from '../../../../types/pagination.type';
+import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
 
 
 const ViewMode = {
@@ -54,6 +56,14 @@ interface ConsolodatedApplicantJob extends ApplicantJobEntity {
     qualification_fail_reason?: string[];
 }
 
+const pagingsMetaInitialValues = (): PagingMeta => ({
+    currentPage: 1,
+    totalItems: 0,
+    itemsPerPage: 20,
+    totalPages: 0,
+    itemCount: 0
+})
+
 export default function Applicants() {
     const { t } = useTranslation();
 
@@ -67,6 +77,7 @@ export default function Applicants() {
     const [loading, setLoading] = useState<boolean>(true);
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
     const [filters, setFilters] = useState<SearchApplicantDto>();
+    const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingsMetaInitialValues);
 
     const fetchApplicant = async () => {
         setLoading(true)
@@ -77,13 +88,21 @@ export default function Applicants() {
                 "applicant_dac",
                 "applicant_extras",
             ],
-            ...filters
+            ...filters,
+            is_paginated: true,
+            page: filters?.page === 0 ? 1 : pagingMeta?.currentPage,
+            limit: pagingMeta?.itemsPerPage,
         });
-        setApplicants(data);
+        setApplicants((data as Pagination<ApplicantEntity>)?.items);
+        setPagingMeta({
+            ...pagingMeta,
+            currentPage: filters?.page === 0 ? 1 : pagingMeta?.currentPage,
+            totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems
+        });
         setTimeout(() => setLoading(false), 1000);
     }
 
-    useEffectAsync(async () => await fetchApplicant(), [user, jobId, viewMode, filters]);
+    useEffectAsync(async () => await fetchApplicant(), [user, jobId, viewMode, filters, pagingMeta?.currentPage, pagingMeta?.itemsPerPage]);
 
     const onViewClick = (id: number) => {
         router.push(`${router.pathname}/${id}`);
@@ -105,6 +124,9 @@ export default function Applicants() {
         setApplicants([]);
 
         await router.push(router);
+        if (value === ViewMode.job) {
+            toast.info(t("TOGGLE_ON_APPLICANTS"))
+        }
     }
 
     const onChangeStatus = async (e: React.ChangeEvent<HTMLSelectElement>, applicant: ApplicantEntity, job: JobEntity) => {
@@ -196,7 +218,7 @@ export default function Applicants() {
                         <FormGroup style={{ float: "right" }}>
                             <FormControlLabel
                                 control={<Switch value={viewMode == ViewMode.applicant ? ViewMode.job : ViewMode.applicant} checked={viewMode == ViewMode.job} onChange={onViewModeChange} />}
-                                label={t("VIEW_BY_{name}", { name: t(viewMode == ViewMode.applicant ? "JOB" : "APPLICANT") })}
+                                label={t("VIEW_BY_{name}", { name: t(viewMode == ViewMode.applicant ? "JOB" : "JOB") })}
                             />
                         </FormGroup>
                     </div>
@@ -213,7 +235,7 @@ export default function Applicants() {
                                     <span className="sr-only">Loading...</span>
                                 </div>
                                 : <>
-                                    {viewMode == ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                                    {viewMode == ViewMode.applicant && <ApplicantView totalItems={pagingMeta?.totalItems} setPagingMeta={setPagingMeta} pagingMeta={pagingMeta} router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
                                     {viewMode == ViewMode.job && <JobView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
                                 </>}
                         </Col>
@@ -425,14 +447,23 @@ interface ViewProps {
     onEditClick: (applicantId: number) => void;
     router: NextRouter;
     t: TranslateInterface;
+    pagingMeta?: PagingMeta,
+    totalItems?: number;
+    setPagingMeta?: React.Dispatch<React.SetStateAction<PagingMeta>>;
 }
 
 function ApplicantView(props: ViewProps) {
-    const { router, applicants, onChangeStatus, onViewClick, onEditClick, t } = props;
-
+    const { router, applicants, onChangeStatus, onViewClick, onEditClick, t, totalItems, setPagingMeta, pagingMeta } = props;
     const { hasPermission } = useAuth();
+    const handlePageChange = (page: number, perPage: number) => {
+        setPagingMeta((prevPagingMeta: PagingMeta) => ({
+            ...prevPagingMeta,
+            currentPage: page,
+            itemsPerPage: perPage
+        }));
+    };
 
-    const items: ConsolodatedApplicant[] = applicants.map(applicant => {
+    const items: ConsolodatedApplicant[] = applicants?.map(applicant => {
         return {
             ...applicant,
             jobs: applicant.jobs?.map(aJob => {
@@ -488,21 +519,21 @@ function ApplicantView(props: ViewProps) {
                         id: "city",
                         name: "CITY",
                         wrap: true,
-                        selector: applicant => applicant.city,
+                        selector: applicant => applicant?.city,
                     },
                     {
                         id: "state",
                         name: "STATE",
                         wrap: true,
-                        selector: applicant => applicant.state,
+                        selector: applicant => applicant?.state,
                     },
 
                     {
                         id: "phone",
                         name: "PHONE",
                         wrap: true,
-                        selector: applicant => applicant.phone,
-                        cell: applicant => <OverlyPopover str={applicant.phone}>{applicant.phone}</OverlyPopover>
+                        selector: applicant => applicant?.phone,
+                        cell: applicant => <OverlyPopover str={applicant?.phone}>{applicant?.phone}</OverlyPopover>
                     },
                     {
                         id: "email",
@@ -515,7 +546,7 @@ function ApplicantView(props: ViewProps) {
                         id: "license_type",
                         name: `CDL_TYPE`,
                         wrap: true,
-                        selector: applicant => applicant?.license_type === t("NONE_TYPE") ? t("DriverLicenseType.NONE") : applicant?.license_type || t("NONE"),
+                        selector: applicant => applicant?.license_type === DriverLicenseType.NO_CDL ? t("DriverLicenseType.NONE") : applicant?.license_type || t("DriverLicenseType.NONE"),
                     },
                     {
                         id: "years_cdl_experience",
@@ -527,14 +558,7 @@ function ApplicantView(props: ViewProps) {
                         id: "transmission_type",
                         name: "TRANSMISSION_EXPERIENCE",
                         wrap: true,
-                        selector: applicant => applicant.transmission_type ? t(`VehicleTransmissionType.${applicant.transmission_type}`) : null,
-                        cell: applicant =>
-                        (<ShowEnumFromString
-                            popover_header={t('VehicleTransmissionType')}
-                            labelPrefix={applicant.transmission_type?.length > 0 ? "VehicleTransmissionType" : ""}
-                            popover={true}
-                            value={applicant.transmission_type}
-                            enumArray={VehicleTransmissionType} />)
+                        selector: applicant => applicant.transmission_type ? joinArrayElements(applicant?.transmission_type, "OTHER", "VehicleTransmissionType") : t("NONE"),
                     },
                     {
                         id: "date_added",
@@ -565,14 +589,14 @@ function ApplicantView(props: ViewProps) {
                         name: "STATUS",
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant.status ? t(`Status.${applicant.status}`) : null,
+                        selector: applicant => applicant.current_application_status ? t(`ApplicantStatus.${applicant.current_application_status}`) : null,
                         cell: applicant =>
                         (<ShowEnumFromString
-                            popover_header={t('Status')}
-                            labelPrefix={applicant.status?.length > 0 ? "Status" : ""}
+                            popover_header={t('ApplicantStatus')}
+                            labelPrefix={applicant.current_application_status?.length > 0 ? "ApplicantStatus" : ""}
                             popover={true}
-                            value={applicant.status}
-                            enumArray={Status} />)
+                            value={applicant.current_application_status}
+                            enumArray={ApplicantStatus} />)
                     },
                     {
                         id: "assigned_to",
@@ -587,22 +611,14 @@ function ApplicantView(props: ViewProps) {
                         name: "ENDORSEMENTS",
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant.endorsements ? t(`DriverEndorsement.${applicant.endorsements}`) : null,
-                        cell: applicant =>
-                        (<ShowEnumFromString
-                            popover_header={t('ENDORSEMENTS')}
-                            labelPrefix={applicant.endorsements?.length > 0 ? "DriverEndorsement" : ""}
-                            popover={true}
-                            value={applicant.endorsements}
-                            enumArray={DriverEndorsement} />)
+                        selector: applicant => applicant.endorsements ? joinArrayElements(applicant?.endorsements, "OTHER", "DriverEndorsement") : t("NONE"),
                     },
-
                     {
                         id: "license_restrictions",
                         name: "License_Restrictions",
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant.license_restrictions?.join(",") || t("NONE"),
+                        selector: applicant => applicant.license_restrictions ? joinArrayElements(applicant?.license_restrictions, "OTHER", undefined) : t("NONE"),
                     },
                     {
                         id: "is_owner_operator",
@@ -616,12 +632,7 @@ function ApplicantView(props: ViewProps) {
                         name: `PREFERRED_LOCATION`,
                         wrap: true,
                         hide: 1,
-                        selector: applicant => applicant?.preferred_location ? t(`JobGeography.${applicant?.preferred_location}`) : null,
-                        cell: applicant =>
-                        (<ShowEnumFromString
-                            labelPrefix={applicant?.preferred_location?.length > 0 ? "JobGeography" : ""}
-                            value={applicant?.preferred_location}
-                            enumArray={JobGeography} />)
+                        selector: applicant => applicant.preferred_location ? joinArrayElements(applicant?.preferred_location, "OTHER", undefined) : t("NONE"),
 
                     }
 
@@ -629,11 +640,6 @@ function ApplicantView(props: ViewProps) {
                 hideSetting
                 items={items}
                 actions={row => [
-                    // {
-                    //     icon: EyeFill,
-                    //     label: "VIEW",
-                    //     onClick: (e) => onViewClick(row.id)
-                    // },
                     {
                         icon: PencilFill,
                         label: "EDIT",
@@ -722,6 +728,12 @@ function ApplicantView(props: ViewProps) {
                         items={data.jobs}
                     />
                 )}
+            />
+            <CustomPagination
+                recordsPerPageOptions={[20, 50, 100]}
+                onPageChange={handlePageChange}
+                pagingMeta={pagingMeta}
+                setPagingMeta={setPagingMeta}
             />
         </div>
 

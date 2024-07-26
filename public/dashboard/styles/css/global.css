@@ -74,7 +74,7 @@
 }
 
 .dashboardsidebar li {
-  padding: 16px 10px;
+  padding: 16px 0px;
 }
 
 .dashboardsidebar li ul li {
@@ -1049,7 +1049,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .contact-support {
   right: 2%;
-  bottom: 2%;
+  bottom: 18%;
   position: fixed;
   cursor: pointer;
   z-index: 9999;
@@ -1067,4 +1067,55 @@ input[type="number"]::-webkit-outer-spin-button {
   text-align: center;
   line-height: 30px;
   cursor: pointer;
+}
+.css-cp01gg-control {
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  width: 100%;
+  
+}
+.css-cp01gg-control:focus {
+  border: 1px solid red !important;
+
+}
+.css-cp01gg-control:focus-visible {
+border: 1px solid red !important;
+
+}
+
+  
+.css-cp01gg-control>div {
+  padding: 9px;
+}
+
+.css-x2yrli-multiValue {
+  background: #d3d3d3;
+  border-radius: 4px;
+  margin-right: 5px;
+  margin-top: 5px;
+  margin-bottom: 3px;
+}
+
+.css-gpltqi-ValueContainer {
+  padding-left: 10px;
+}
+
+.css-1g4bxky-MultiValueGeneric {
+  padding: 3px;
+  font-size: small !important;
+}
+
+
+.multiselect-border{
+  padding: 0.05rem 0.6rem 0.05rem 0.475rem;
+  border-radius: 4px !important;
+  border: 1px solid #d3d3d3 !important;
+
+}
+.Filter_Select{
+ border: 1px solid black !important;
+}
+
+.Filter_Select:focus {
+  border: 1px solid red !important;
 }

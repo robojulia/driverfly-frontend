@@ -70,6 +70,8 @@ export class EmployeeEntity {
   termination_date?: Date;
 
   static employeeFormYupSchema() {
+    const { t } = useTranslation();
+
     return yup.object({
       first_name: yup.string().trim().required().nullable(),
       last_name: yup.string().trim().required().nullable(),
@@ -78,7 +80,7 @@ export class EmployeeEntity {
       birthdate: yup
         .date()
         .nullable()
-        .test("age", "You must be at least 18 years old", function (value) {
+        .test("age", t("IMPORT_AGE_ERROR"), function (value) {
           if (!value) return true;
 
           const currentDate = new Date();
@@ -172,15 +174,24 @@ export class EmployeeEntity {
   }
 
   static yupSchemaForImportEmployees() {
+    const { t } = useTranslation();
+
     return yup.object({
       first_name: yup.string().optional().nullable().trim(),
       last_name: yup.string().optional().nullable().trim(),
-      phone: yup.string().nullable(),
+      phone: yup.string().nullable().test({
+        name: 'phone',
+        message: t("IMPORT_PHONE_ERROR"),
+        test: (value) => {
+          var patt = new RegExp(/^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{4}$/);
+          return patt.test(value);
+        },
+      }),
       email: yup.string().email().optional().nullable(),
       birthdate: yup
         .date()
         .nullable()
-        .test("age", "You must be at least 18 years old", function (value) {
+        .test("age", t("IMPORT_AGE_ERROR"), function (value) {
           if (!value) return true;
 
           const currentDate = new Date();
@@ -197,7 +208,7 @@ export class EmployeeEntity {
       license_number: yup.string().required().nullable(),
       license_expiry: yup
         .date()
-        .typeError("INVALID_DATE")
+        .typeError(t("IMPORT_DATE_ERROR"))
         .min(
           moment().endOf("day").add(0.5, "years"),
           "LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
@@ -218,7 +229,14 @@ export class EmployeeEntity {
       highest_degree: (yup.string() as any).enum(EducationLevel).nullable(),
       authorized_to_work_in_us: yup.bool().nullable(),
       emergency_contact_name: yup.string().nullable(),
-      emergency_contact_number: yup.string().nullable(),
+      emergency_contact_number: yup.string().nullable().test({
+        name: 'emergency_contact_number',
+        message: t("IMPORT_PHONE_ERROR"),
+        test: (value) => {
+          var patt = new RegExp(/^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{4}$/);
+          return patt.test(value);
+        },
+      }),
       emergency_contact_relationship: yup.string().nullable(),
       preferred_location: yup
         .array((yup.string() as any).enum(JobGeography))

@@ -15,9 +15,10 @@ import { SearchApplicantDto } from "../../../models/applicant/search-applicant.d
 import { UserEntity } from "../../../models/user/user.entity";
 import UserApi from "../../../pages/api/user";
 import { useEffectAsync } from "../../../utils/react";
+import stateList from "../../../utils/stateList";
 import BaseInput from "../base-input";
+import BaseMultiSelect from "../base-multiselect";
 import BaseSelect from "../base-select";
-import StateSelect from "../state-select";
 
 export interface ApplicantFilterFormProps {
     onSearch?: (values: SearchApplicantDto) => void;
@@ -33,7 +34,7 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
         initialValues: new SearchApplicantDto(),
         validationSchema: SearchApplicantDto.yupSchema(),
         onSubmit: async (values) => {
-            onSearch(values)
+            onSearch({ ...values, page: 0 })
         },
         onReset: async () => {
             onSearch({})
@@ -46,7 +47,6 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
         setCompanyUsers(data?.filter((u) => u.status == Status.ACTIVE));
     }, []);
 
-    // uncomment this in debug mode
     React.useEffect(() => {
         console.log("filteer form.values", form.values);
     }, [form.values])
@@ -63,19 +63,21 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                         className="col-md-3 mt-1 mb-3"
                         name="name"
                         displayPlaceholder
+                        placeholder="ENTER_APPLICANT_NAME"
                         formik={form}
                     />
-                    <BaseSelect
-                        className="col-md-3 mt-1 mb-3"
-                        placeholder="cdl_type"
-                        name="license_type"
-                        labelPrefix="DriverLicenseType"
-                        enumType={DriverLicenseType}
+                    <BaseMultiSelect
+                        className="col-md-3 z-999  mt-1"
+                        placeholder="SELECT_ENDORSEMENTS"
+                        name="endorsements"
                         formik={form}
-                    />
+                        showNone
+                        labelPrefix="DriverEndorsement"
+                        enumType={DriverEndorsement} />
+
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
-                        placeholder="LEAD_TYPE"
+                        placeholder="SELECT_LEAD_TYPE"
                         name="type"
                         labelPrefix="ApplicantType"
                         enumType={ApplicantType}
@@ -83,20 +85,20 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                     />
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
-                        placeholder="ENDORSEMENTS"
-                        name="endorsements"
-                        labelPrefix="DriverEndorsement"
-                        enumType={DriverEndorsement}
+                        placeholder="SELECT_CDL_TYPE"
+                        name="license_type"
+                        labelPrefix="DriverLicenseType"
+                        enumType={DriverLicenseType}
                         formik={form}
                     />
-                    <BaseSelect
-                        className="col-md-3 mt-1 mb-3"
-                        placeholder="License_Restrictions"
+                    <BaseMultiSelect
+                        className="col-md-3 z-3  mt-1"
+                        placeholder="SELECT_LICENSE_RESTRICTIONS"
                         name="license_restrictions"
-                        labelPrefix="LicenseRestrictions"
-                        enumType={LicenseRestrictions}
                         formik={form}
-                    />
+                        showNone
+                        labelPrefix="LicenseRestrictions"
+                        enumType={LicenseRestrictions} />
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
                         placeholder="AUTOMATED_RECRUITING_LEAD"
@@ -104,60 +106,63 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                         enumType={BooleanType}
                         formik={form}
                     />
-                    <StateSelect
-                        className="col-md-3 mt-1 mb-3"
+
+                    <BaseMultiSelect
+                        className="col-md-3 z-2  mt-1"
+                        placeholder="SELECT_APPLICANT_STATUS"
+                        name="status"
+                        labelPrefix="ApplicantStatus"
+                        hideOptions={[ApplicantStatus.OTHER]}
+                        enumType={ApplicantStatus}
+                        formik={form} />
+                    <BaseMultiSelect
+                        className="col-md-3  mt-1"
+                        placeholder="SELECT_STATE"
                         name="state"
-                        placeholder="STATE"
+                        options={stateList}
                         formik={form}
                     />
                     <BaseInput
                         className="col-md-3 mt-1 mb-3"
                         name="city"
+                        placeholder="ENTER_CITY"
                         displayPlaceholder
                         formik={form}
                     />
-                    <BaseSelect
-                        className="col-md-3 mt-1 mb-3"
-                        placeholder="STATUS"
-                        name="status"
-                        labelPrefix="ApplicantStatus"
-                        hideOptions={[ApplicantStatus.OTHER]}
-                        enumType={ApplicantStatus}
-                        formik={form}
-                    />
-                    <BaseSelect
-                        className="col-md-3 mt-1 mb-3"
-                        placeholder="ASSIGNED_RECRUITER"
+                    <BaseMultiSelect
+                        className="col-md-3 z-2  mt-1"
+                        placeholder="SELECT_ASSIGNED_RECRUITER"
                         displayPlaceholder
                         options={companyUsers}
                         name="assignedUserId"
                         valueKey="id"
-                        createLabel={(c) => `${c.name} (#${c.id}) `}
-                        formik={form}
-                    />
+                        showNone
+                        showNoneLabel="Unassigned"
+                        createLabel={(c) => `${c?.name} (#${c?.id}) `}
+                        formik={form} />
                     <BaseInput
                         className="col-md-3 mt-1 mb-3"
                         name="years_cdl_experience"
                         displayPlaceholder
+                        placeholder="ENTER_YEARS_OF_CDL"
                         type='number'
                         formik={form}
                     />
-                    <BaseSelect
-                        className="col-md-3 mt-1 mb-3"
-                        placeholder="PREFERRED_LOCATION"
+                    <BaseMultiSelect
+                        className="col-md-3 z-2  mt-1"
+                        placeholder="SELECT_PREFERRED_LOCATION"
                         name="preferred_location"
                         labelPrefix="JobGeography"
                         enumType={JobGeography}
-                        formik={form}
-                    />
-                    <BaseSelect
-                        className="col-md-3 mt-1 mb-3"
-                        placeholder="TRANSMISSION_EXPERIENCE"
+                        formik={form} />
+                    <BaseMultiSelect
+                        className="col-md-3 z-2 mt-1"
+                        placeholder="SELECT_TRANSMISSION_EXPERIENCE"
                         name="transmission_type"
                         labelPrefix="VehicleTransmissionType"
                         enumType={VehicleTransmissionType}
-                        formik={form}
-                    />
+                        showNone
+                        formik={form} />
                     <BaseSelect
                         className="col-md-3 mt-1 mb-3"
                         placeholder="OWNER_OP_COMPANY_DRIVER"

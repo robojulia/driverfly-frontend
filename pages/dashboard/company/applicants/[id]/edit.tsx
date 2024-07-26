@@ -2,26 +2,26 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
+import OnboardingChecklist from "../../../../../components/applicants/onboarding-checklist";
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
-import { ApplicantForm } from "../../../../../components/forms/company/applicant-form";
+import { EditApplicantForm } from "../../../../../components/forms/company/edit-applicant-form";
 import ChildPageLayout from "../../../../../components/layouts/page/child-page-layout";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
-import OnboardingChecklist from "../../../../../components/applicants/onboarding-checklist";
 
 export default function EditApplicant({ id }) {
     const router = useRouter();
     const { t } = useTranslation();
 
     const backPath = "/dashboard/company/applicants";
-    // const backPath = `/dashboard/company/applicants/${id}`;
 
-    // const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
     const goBack = () => window.setTimeout(() => router.back(), 2000);
 
     const [applicant, setApplicant] = useState(new ApplicantEntity());
+    const [refetchApplicant, setRefetchApplicant] = useState<boolean>(false);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     useEffectAsync(async () => {
         if (id) {
@@ -38,7 +38,11 @@ export default function EditApplicant({ id }) {
             toast.error(t("UNABLE_TO_FIND_{name}", { name: "APPLICANT" }, { translateProps: true }));
             goBack();
         }
-    }, [id]);
+    }, [id, refetchApplicant]);
+
+    const onSaveComplete = () => {
+        setRefetchApplicant(!refetchApplicant)
+    }
 
     return (
         <ChildPageLayout
@@ -49,9 +53,13 @@ export default function EditApplicant({ id }) {
             )}
             backPath={backPath}
         >
-            <ApplicantForm
+
+            <EditApplicantForm
                 entity={applicant}
-                onSaveComplete={goBack}
+                setEntity={setApplicant}
+                isSubmitting={isSubmitting}
+                setIsSubmitting={setIsSubmitting}
+                onSaveComplete={onSaveComplete}
             />
             {applicant?.id && (
                 <Row>

@@ -10,3 +10,10 @@ export type PagingMeta = {
     totalItems: number;
     totalPages: number;
 }
+
+
+export type PagingMetaDto = {
+    currentPage: number;
+    totalRecords: number;
+    recordsPerPage: number;
+}

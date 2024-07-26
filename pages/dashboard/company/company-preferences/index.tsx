@@ -25,6 +25,7 @@ import { CompanyPreferenceJotformLabel } from "../../../../enums/company/company
 import { JobEmploymentType } from "../../../../enums/jobs/job-employment-type.enum";
 import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
 import { useEffectAsync } from "../../../../utils/react";
+import { CompanyPreferenceVoeLabel } from "../../../../enums/company/company-preferences-voe-label.enum";
 
 export default function CompanyPreference() {
 	enum WhatsThisOptionsEnum {
@@ -36,9 +37,9 @@ export default function CompanyPreference() {
 
 	const [showModal, setShowModal] = useState<boolean>(false);
 	const [showReferModal, setShowReferModal] = useState<boolean>(false);
-	const [lipboard, setClipBoard] =  useState<boolean>(false);
 	const [showAutoRecruitingModal, setShowAutoRecruitingModal] =
 		useState<boolean>(false);
+	const [showAutoVoeModal, setShowAutoVoeModal] = useState<boolean>(false);
 
 	const [modalAction, setModalAction] = useState<{
 		label:
@@ -119,7 +120,6 @@ export default function CompanyPreference() {
 			try {
 				const data = await Promise.all(
 					Object.values(values).map(async (preference) => {
-						console.log("preference ----", preference);
 						if (preference.value) {
 							if (preference.id)
 								preference = await api.preferences.update(
@@ -156,7 +156,6 @@ export default function CompanyPreference() {
 		if (user.company) {
 			const api = new CompanyApi();
 			let data = await api.preferences.list(user.company.id);
-			console.log(" pre first time ", data);
 			if (
 				!data?.find(
 					(d) =>
@@ -164,7 +163,6 @@ export default function CompanyPreference() {
 						CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM
 				)
 			) {
-				console.log("first time ");
 				const referProgram: CompanyPreferenceEntity =
 					await api.preferences.create(user?.company?.id, {
 						category: CompanyPreferenceCategory.AUTO_RECRUITING,
@@ -172,13 +170,12 @@ export default function CompanyPreference() {
 							CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM,
 						value: true,
 					});
-				console.log("second time ", referProgram);
 				data = [...data, { ...referProgram }];
 			}
 			setPreferences(data);
 			populateForm(
 				data?.filter(
-					(pref) => pref?.category == CompanyPreferenceCategory.JOTFORM || pref?.category == CompanyPreferenceCategory.ENHANCEMENT
+					(pref) => [CompanyPreferenceCategory.JOTFORM, CompanyPreferenceCategory.ENHANCEMENT].includes(pref?.category)
 				)
 			);
 		}
@@ -190,7 +187,6 @@ export default function CompanyPreference() {
 	 */
 	const populateForm = function (preferences) {
 		preferences.forEach((v) => {
-			console.log("v.label", v);
 			const label = v.label?.toLowerCase();
 			if (label in form.values) {
 				form.initialValues[label] = v;
@@ -207,9 +203,30 @@ export default function CompanyPreference() {
 				value: !pref.value,
 			});
 		} else {
-			pref = await api.preferences.create(user?.company?.id, {	
+			pref = await api.preferences.create(user?.company?.id, {
 				category: CompanyPreferenceCategory.AUTO_RECRUITING,
 				label,
+				value: true,
+			});
+		}
+		if (!!pref) setModalAction(null);
+		setPreferences([
+			...(preferences?.filter((p) => p?.id != pref?.id) ?? []),
+			{ ...pref },
+		]);
+	};
+
+	const handleAutoVoeChange = async () => {
+		let pref = await preferences?.find((p) => p.category == CompanyPreferenceCategory.VOE && p?.label == CompanyPreferenceVoeLabel.AUTOMATE_VOE_REQUEST_TO_PAST_EMPLOYEES);
+		if (pref?.id) {
+			pref = await api.preferences.update(user?.company?.id, pref?.id, {
+				...pref,
+				value: !pref.value,
+			});
+		} else {
+			pref = await api.preferences.create(user?.company?.id, {
+				category: CompanyPreferenceCategory.VOE,
+				label: CompanyPreferenceVoeLabel.AUTOMATE_VOE_REQUEST_TO_PAST_EMPLOYEES,
 				value: true,
 			});
 		}
@@ -224,7 +241,7 @@ export default function CompanyPreference() {
 	const tooltipReferBack = (
 		<Tooltip id="my-tooltip">{t("TOOLTIP_REFER_BACK")}</Tooltip>
 	);
-	
+
 	return (
 		<>
 			<PageLayout title="DIGITAL_HIRING_APPLICATION_AUTO_RECRUITING">
@@ -289,14 +306,14 @@ export default function CompanyPreference() {
 						bodyClass="pt-0"
 					>
 						<div>
-							<h3 className="text-center" style={{color:"#335665", fontWeight:"bolder"}}>{t("AUTO_RECRUITING")}</h3>
-							<p className="text-center" style={{fontSize:'larger', fontStyle:"italic"}}>{t("LOOKING_TO_SCALE_UP")}</p>
+							<h3 className="text-center" style={{ color: "#335665", fontWeight: "bolder" }}>{t("AUTO_RECRUITING")}</h3>
+							<p className="text-center" style={{ fontSize: 'larger', fontStyle: "italic" }}>{t("LOOKING_TO_SCALE_UP")}</p>
 							<p>{t("AUTO_RECRUITING_TEXT_1")}</p>
 							<ul >
-								<li style={{listStyleType: "circle"}}>
+								<li style={{ listStyleType: "circle" }}>
 									<p><b>{t("AUTO_RECRUITING_TEXT_2_TITLE")}</b>{t("AUTO_RECRUITING_TEXT_2")}</p>
 								</li>
-								<li style={{listStyleType: "circle"}}>
+								<li style={{ listStyleType: "circle" }}>
 									<p><b>{t("AUTO_RECRUITING_TEXT_3_TITLE")}</b>{t("AUTO_RECRUITING_TEXT_3")}</p>
 								</li>
 							</ul>
@@ -305,7 +322,7 @@ export default function CompanyPreference() {
 								<span> {t("REFER_BACK_PROGRAM_TEXT_3_PART_1")}</span>
 								<span> </span>
 								<Link href={""}>
-									<a style={{color:'#33acb9', textDecoration:"underline"}}>
+									<a style={{ color: '#33acb9', textDecoration: "underline" }}>
 										{t("REFER_BACK_PROGRAM_TEXT_3_PART_2")}
 									</a>
 								</Link>
@@ -323,7 +340,6 @@ export default function CompanyPreference() {
 						closeText="CANCEL"
 					>
 						<>
-							{console.log("lskdlksldklsd", modalAction)}
 							<h2 className="text-center">
 								{t("AUTO_RECURUITING_REGISTRATION")}
 							</h2>
@@ -341,6 +357,23 @@ export default function CompanyPreference() {
 								</Button>
 							</div>
 						</>
+					</ViewModal>
+				)}
+				{/* auto voe */}
+				{showAutoVoeModal && (
+					<ViewModal
+						show={showAutoVoeModal}
+						onCloseClick={() => setShowAutoVoeModal(false)}
+						closeText="CANCEL"
+						headerClass="border-0 pt-2 pb-0 px-4"
+						noCloseBtn
+						centered
+						bodyClass="pt-0"
+					>
+						<div>
+							<h3 className="text-center" style={{ color: "#335665", fontWeight: "bolder" }}>{t("AUTOMATE_VOE_REQUEST_TO_PAST_EMPLOYEES")}</h3>
+							<p>{t("AUTOMATE_VOE_REQUEST_TO_PAST_EMPLOYEES_TEXT_1")}</p>
+						</div>
 					</ViewModal>
 				)}
 
@@ -416,6 +449,29 @@ export default function CompanyPreference() {
 								label:
 									CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING,
 							})
+						}
+					/>
+				</div>
+
+				<div className="d-flex align-item-start my-4">
+					<p>{t("AUTOMATE_VOE_REQUEST_TO_PAST_EMPLOYEES")}</p>
+					<p
+						className="ml-1 text-blue cursor-pointer hover:underline"
+						onClick={() => setShowAutoVoeModal(true)}
+						style={{ fontSize: "12px" }}
+					>
+						<em>{t("WHATS_THIS")}</em>
+					</p>
+					<BaseCheck
+						className="mt-2 col float-left"
+						checked={Boolean(
+							preferences?.find(
+								(p) =>
+									p.category == CompanyPreferenceCategory.VOE && p?.label == CompanyPreferenceVoeLabel.AUTOMATE_VOE_REQUEST_TO_PAST_EMPLOYEES
+							)?.value
+						)}
+						onChange={() =>
+							handleAutoVoeChange()
 						}
 					/>
 				</div>

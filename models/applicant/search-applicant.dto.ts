@@ -14,11 +14,14 @@ export class SearchApplicantDto {
   type?: ApplicantType;
   endorsements?: DriverEndorsement;
   city?: string;
+  is_paginated?: boolean;
   preferred_location?: JobGeography;
   state?: string;
   is_owner_operator?: boolean;
-  license_restrictions?: LicenseRestrictions;
+  license_restrictions?: LicenseRestrictions | LicenseRestrictions[];
   years_cdl_experience?: number;
+  limit?: number;
+  page?: number;
   license_type?: DriverLicenseType;
   transmission_type?: VehicleTransmissionType;
   assignedUserId?: number;
@@ -29,22 +32,18 @@ export class SearchApplicantDto {
 
   static yupSchema() {
     return yup.object({
-      status: (yup.string() as any).enum(ApplicantStatus).nullable(),
+      status: (yup.array() as any).nullable(),
       type: (yup.string() as any).enum(ApplicantType).nullable(),
-      endorsements: (yup.string() as any).enum(DriverEndorsement).nullable(),
+      endorsements: (yup.array() as any).nullable(),
       city: yup.string().nullable(),
-      preferred_location: (yup.string() as any).enum(JobGeography).nullable(),
-      state: yup.string().nullable(),
+      preferred_location: (yup.array() as any).nullable(),
+      state: (yup.array() as any).nullable(),
       is_owner_operator: yup.boolean().nullable(),
-      license_restrictions: (yup.string() as any)
-        .enum(LicenseRestrictions)
-        .nullable(),
+      license_restrictions: (yup.array() as any).nullable(),
       years_cdl_experience: yup.number().nullable(),
       license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
-      transmission_type: (yup.string() as any)
-        .enum(VehicleTransmissionType)
-        .nullable(),
-      assignedUserId: yup.number().nullable(),
+      transmission_type: (yup.array() as any).nullable(),
+      assignedUserId: (yup.array() as any).nullable(),
     });
   }
 }
