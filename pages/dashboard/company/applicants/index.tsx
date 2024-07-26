@@ -546,7 +546,7 @@ function ApplicantView(props: ViewProps) {
                         id: "license_type",
                         name: `CDL_TYPE`,
                         wrap: true,
-                        selector: applicant => applicant?.license_type === DriverLicenseType.NO_CDL ? t("DriverLicenseType.NONE") : applicant?.license_type || t("DriverLicenseType.NONE"),
+                        selector: applicant => applicant?.license_type === DriverLicenseType.NO_CDL || applicant?.license_type === null ? t("DriverLicenseType.NONE") : t(`DriverLicenseType.${applicant.license_type}`) || t("DriverLicenseType.NONE"),
                     },
                     {
                         id: "years_cdl_experience",
