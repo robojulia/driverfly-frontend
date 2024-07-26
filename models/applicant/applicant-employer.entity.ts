@@ -80,21 +80,17 @@ export class ApplicantEmployerEntity {
 			address: yup.string().optional().trim().nullable(),
 			address_2: yup.string().optional().trim().nullable(),
 			start_at: yup.date().max(new Date()).nullable(),
-			end_at: yup.date().when('is_current', {
-				is: is_current => !is_current,
-				then: yup.date().test({
-					test: (value, context) => {
-						const start_date = context.resolve(yup.ref('start_at'));
-						if (!Boolean(value)) return true;
-						if (value > start_date) return true;
+			end_at: yup.date().test({
+				test: (value, context) => {
+					const start_date = context.resolve(yup.ref('start_at'));
+					if (!Boolean(value)) return true;
+					if (value > start_date) return true;
 
-						return context.createError({
-							path: context.path,
-							message: 'END_DATE_MUST_BE_AFTER_START_DATE'
-						})
-					}
+					return context.createError({
+						path: context.path,
+						message: 'END_DATE_MUST_BE_AFTER_START_DATE'
+					})
 				}
-				)
 			}).nullable(),
 			title: yup.string().nullable().trim(),
 			street: yup.string().nullable().trim(),
