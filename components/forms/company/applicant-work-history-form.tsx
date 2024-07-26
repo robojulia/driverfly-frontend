@@ -40,11 +40,13 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
 
     const [curentCompanyCheck, setCurentCompanyCheck] = useState<ApplicantEmployerEntity>();
     const [sendVoeEmailsHistory, setSendVoeEmailsHistory] = useState<string[]>([])
+    const [isSubmittingVoe, setIsSubmittingVoe] = useState<boolean>(false)
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
         validationSchema: ApplicantEntity.yupSchemaForApplicantWorkHistory(),
         onSubmit: async (values) => {
+            setIsSubmittingVoe(true)
             setIsSubmitting(true)
             try {
                 if (entity?.id) {
@@ -58,9 +60,11 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                 formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
                 setEntity(values)
                 setIsSubmitting(false)
+                setIsSubmittingVoe(false)
                 if (onSaveComplete) onSaveComplete(form?.values)
             } catch (e) {
                 setIsSubmitting(false)
+                setIsSubmittingVoe(false)
                 if (
                     !globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
                 )
@@ -93,6 +97,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
     }
 
     const handleSendBackgroundRequest = async (i: number) => {
+        setIsSubmittingVoe(true)
         try {
             const res = await applicantApi.sendVoeRequest({
                 applicant: entity,
@@ -101,7 +106,9 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
             setEntity(res)
             setSendVoeEmailsHistory([...sendVoeEmailsHistory, form?.values?.employers[i]?.email])
             toast.success(t("SUCCESSFULLY_SENT_VOE"))
+            setIsSubmittingVoe(false)
         } catch (e) {
+            setIsSubmittingVoe(false)
             globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
         }
     }
@@ -351,7 +358,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                             </>
                                                             ) :
                                                             (
-                                                                <Button onClick={() => handleSendBackgroundRequest(i)} className="theme-secondary-btn">
+                                                                <Button disabled={isSubmittingVoe} onClick={() => handleSendBackgroundRequest(i)} className="theme-secondary-btn">
                                                                     {t("SEND_BACKGROUND_REQUEST")}
                                                                 </Button>
                                                             )}
