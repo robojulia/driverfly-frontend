@@ -19,30 +19,31 @@ export function CameraComponent({ form, name }: CameraCompProps) {
     const { t } = useTranslation();
 
     const handleCameraEvents = (): void => {
-        if (!!!(camera?.current?.getNumberOfCameras() > 0)) return
+        if (camera.current && camera.current.getNumberOfCameras() > 0) {
+            const img = camera.current.takePhoto();
+            if (!img || typeof img !== 'string') return;
 
-        const img = camera?.current?.takePhoto()
-        if (!!!(img)) return
-        setImage(img)
+            setImage(img);
 
-        const byteCharacters = atob(img.split(',')[1]);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
+            const byteCharacters = atob(img.split(',')[1]);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: 'image/jpeg' });
+            const imgPath = URL.createObjectURL(blob);
+
+            let extensionStart = img.indexOf("/") + 1;
+            let extensionEnd = img.indexOf(";");
+            let extension = img.slice(extensionStart, extensionEnd);
+
+            form.setFieldValue(`${name ?? "document"}.file_base64`, img.split(',')[1]);
+            form.setFieldValue(`${name ?? "document"}.path`, imgPath);
+            form.setFieldValue(`${name ?? "document"}.mime_type`, `image/${extension}`);
+            form.setFieldValue(`${name ?? "document"}.name`, `${date.toISOString()}.${extension}`);
         }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: 'image/jpeg' });
-        const imgPath = URL.createObjectURL(blob)
-
-        let extensionStart = img.indexOf("/") + 1;
-        let extensionEnd = img.indexOf(";");
-        let extension = img.slice(extensionStart, extensionEnd);
-
-        form.setFieldValue(`${name ?? "document"}.file_base64`, img.split(',')[1])
-        form.setFieldValue(`${name ?? "document"}.path`, imgPath)
-        form.setFieldValue(`${name ?? "document"}.mime_type`, `image/${extension}`)
-        form.setFieldValue(`${name ?? "document"}.name`, `${date.toISOString()}.${extension}`)
-    }
+    };
 
     return (
         <div className={`${styles.align__text_left} ${styles.bold}`}>
