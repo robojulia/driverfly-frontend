@@ -13,7 +13,7 @@ interface CameraCompProps {
 export function CameraComponent({ form, name }: CameraCompProps) {
 
     const camera = useRef<CameraType>(null);
-    const [image, setImage] = useState<string>(null);
+    const [image, setImage] = useState<string | ImageData>(null);
 
     const date = new Date()
     const { t } = useTranslation();
