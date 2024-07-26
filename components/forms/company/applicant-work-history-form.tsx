@@ -229,7 +229,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                             name={`employers[${i}].end_at`}
                                                             label="THROUGH"
                                                             type="date"
-                                                            max={new Date().toISOString().split("T")[0]}
                                                             formik={form}
                                                         />
                                                             : (<div className="col-6 "></div>)
