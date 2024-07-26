@@ -318,7 +318,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                                 {form?.values?.employers[i]?.email === '' || form?.values?.employers[i]?.email === null || !form?.values?.employers[i]?.can_contact || !form?.values?.employers[i]?.is_subject_to_fmcsrs ? (
                                                                     <>
                                                                         <OverlyPopover
-                                                                            str={`${t("PLEASE")} ${form?.values?.employers[i]?.email === '' ? t("PROVIDE_EMAIL_ADDRESS") : ""} 
+                                                                            str={`${t("PLEASE")} ${form?.values?.employers[i]?.email === '' || form?.values?.employers[i]?.email === null ? t("PROVIDE_EMAIL_ADDRESS") : ""} 
                                                                             ${!form?.values?.employers[i]?.can_contact ? form?.values?.employers[i]?.email === '' ? `, ${t("TOGGLE_ON_YOU_CONTACT")}` : t("TOGGLE_ON_YOU_CONTACT") : ""}
                                                                             ${!form?.values?.employers[i]?.is_subject_to_fmcsrs ? form?.values?.employers[i]?.email === '' || !form?.values?.employers[i]?.can_contact ? `, ${t("TOGGLE_ON_FMCSRs")}` : t("TOGGLE_ON_FMCSRs") : ""} ${t("FOR_PAST_EMPLOYER")}`}>
                                                                             <Button className="theme-secondary-btn"
