@@ -298,7 +298,7 @@ export default class ApplicantApi extends BaseApi {
       employerId: number
     ): Promise<ApplicantEmployerEntity> => {
       const { data } = await this.get(
-        `${this.employer.baseUrl(applicantId)}/${employerId}/send-voew-request`
+        `${this.employer.baseUrl(applicantId)}/${employerId}/send-voe-request`
       );
 
       return data;
