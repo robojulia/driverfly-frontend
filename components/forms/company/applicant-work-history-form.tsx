@@ -320,14 +320,14 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         formik={form}
                                                     />
                                                     <div style={{ display: "flex", justifyContent: "right" }}>
-                                                        {form?.isSubmitting || isSubmitting || form?.values?.employers[i]?.email === '' || form?.values?.employers[i]?.email === null || form?.values?.employers[i]?.email == entity?.employers[i]?.email || sendVoeEmailsHistory.join(",").includes(form?.values?.employers[i]?.email) || !form?.values?.employers[i]?.can_contact || !form?.values?.employers[i]?.is_subject_to_fmcsrs ?
+                                                        {hasErrorsAtIndex(form, i) || form?.isSubmitting || isSubmitting || typeof (form?.values?.employers[i]?.email) != "string" || form?.values?.employers[i]?.email == "" || (form?.values?.employers[i]?.email != "" && form?.values?.employers[i]?.email == entity?.employers[i]?.email) || sendVoeEmailsHistory.join(",").includes(form?.values?.employers[i]?.email) || !form?.values?.employers[i]?.can_contact || !form?.values?.employers[i]?.is_subject_to_fmcsrs ?
                                                             (<>
-                                                                {form?.values?.employers[i]?.email === '' || form?.values?.employers[i]?.email === null || !form?.values?.employers[i]?.can_contact || !form?.values?.employers[i]?.is_subject_to_fmcsrs ? (
+                                                                {form?.isSubmitting || isSubmitting || typeof (form?.values?.employers[i]?.email) != "string" || form?.values?.employers[i]?.email == "" || !form?.values?.employers[i]?.can_contact || !form?.values?.employers[i]?.is_subject_to_fmcsrs ? (
                                                                     <>
                                                                         <OverlyPopover
-                                                                            str={`${t("PLEASE")} ${form?.values?.employers[i]?.email === '' || form?.values?.employers[i]?.email === null ? t("PROVIDE_EMAIL_ADDRESS") : ""} 
-                                                                            ${!form?.values?.employers[i]?.can_contact ? form?.values?.employers[i]?.email === '' ? `, ${t("TOGGLE_ON_YOU_CONTACT")}` : t("TOGGLE_ON_YOU_CONTACT") : ""}
-                                                                            ${!form?.values?.employers[i]?.is_subject_to_fmcsrs ? form?.values?.employers[i]?.email === '' || !form?.values?.employers[i]?.can_contact ? `, ${t("TOGGLE_ON_FMCSRs")}` : t("TOGGLE_ON_FMCSRs") : ""} ${t("FOR_PAST_EMPLOYER")}`}>
+                                                                            str={`${t("PLEASE")} ${typeof (form?.values?.employers[i]?.email) != "string" || form?.values?.employers[i]?.email == "" ? t("PROVIDE_EMAIL_ADDRESS") : ""} 
+                                                                            ${!form?.values?.employers[i]?.can_contact ? typeof (form?.values?.employers[i]?.email) != "string" || form?.values?.employers[i]?.email == "" ? `, ${t("TOGGLE_ON")} ${t("TOGGLE_ON_YOU_CONTACT")}` : `${t("TOGGLE_ON")} ${t("TOGGLE_ON_YOU_CONTACT")}` : ""}
+                                                                            ${!form?.values?.employers[i]?.is_subject_to_fmcsrs ? typeof (form?.values?.employers[i]?.email) != "string" || form?.values?.employers[i]?.email == "" || !form?.values?.employers[i]?.can_contact ? !form?.values?.employers[i]?.can_contact ? `and  ${t("TOGGLE_ON_FMCSRs")}` : `, ${t("TOGGLE_ON")} ${t("TOGGLE_ON_FMCSRs")}` : `${t("TOGGLE_ON")} ${t("TOGGLE_ON_FMCSRs")}` : ""} ${t("FOR_PAST_EMPLOYER")}`}>
                                                                             <Button className="theme-secondary-btn"
                                                                                 disabled={true} >
                                                                                 {t("SEND_BACKGROUND_REQUEST")}
@@ -336,23 +336,24 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                                     </>
                                                                 ) : (
                                                                     <>
-                                                                        {form?.values?.employers[i]?.email == entity?.employers[i]?.email ? (
-                                                                            <OverlyPopover
-                                                                                str={t("EMAIL_NOT_CHANGED")}>
-                                                                                <Button className="theme-secondary-btn"
-                                                                                    disabled={true} >
-                                                                                    {t("SEND_BACKGROUND_REQUEST")}
-                                                                                </Button>
-                                                                            </OverlyPopover>
-                                                                        ) : (
-                                                                            <OverlyPopover
-                                                                                str={t("REQUEST_ALREADY_MADE")}>
-                                                                                <Button className="theme-secondary-btn"
-                                                                                    disabled={true} >
-                                                                                    {t("SEND_BACKGROUND_REQUEST")}
-                                                                                </Button>
-                                                                            </OverlyPopover>
-                                                                        )}
+                                                                        {hasErrorsAtIndex(form, i) ? (
+                                                                            <>
+                                                                                <OverlyPopover
+                                                                                    str={t("FILL_EMPLOYERS_FIELDS")}>
+                                                                                    <Button className="theme-secondary-btn"
+                                                                                        disabled={true} >
+                                                                                        {t("SEND_BACKGROUND_REQUEST")}
+                                                                                    </Button>
+                                                                                </OverlyPopover>
+                                                                            </>
+                                                                        ) : <OverlyPopover
+                                                                            str={t("REQUEST_ALREADY_MADE")}>
+                                                                            <Button className="theme-secondary-btn"
+                                                                                disabled={true} >
+                                                                                {t("SEND_BACKGROUND_REQUEST")}
+                                                                            </Button>
+                                                                        </OverlyPopover>
+                                                                        }
                                                                     </>
                                                                 )}
                                                             </>
@@ -382,4 +383,12 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
             </Row>
         </Form>
     );
+}
+
+function hasErrorsAtIndex(form, index: number): boolean {
+    if (form.errors && Array.isArray(form.errors.employers) && form.errors.employers[index]) {
+        const errorObject = form.errors.employers[index];
+        return Object.keys(errorObject).length > 0;
+    }
+    return false;
 }
