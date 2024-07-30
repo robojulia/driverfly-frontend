@@ -36,6 +36,7 @@ import ViewDocumentHistory from "../../documents/view-history";
 import BaseRadio from "../../forms/base-radio";
 import SafetyPerformanceHistory from "../safety-performance-history";
 import { PlusCircle } from "react-bootstrap-icons";
+import BaseInput from "../../forms/base-input";
 
 export default function OnboardingChecklist(
   props: ViewApplicantOnboardingChecklistProps
@@ -146,11 +147,11 @@ export default function OnboardingChecklist(
   };
 
   /* This is a functional component in TypeScript React that renders a list of buttons for a
-	  given document and type. It conditionally renders the buttons based on whether the document type
-	  matches the given type and whether the type is SAFETY_PERFORMANCE_HISTORY. The buttons include
-	  ViewDocumentButton, AddDocumentButton, DownloadDocumentButton, DeleteDocumentButton, and
-	  ViewDocumentHistory. If the type is SAFETY_PERFORMANCE_HISTORY, it renders the
-	  SafetyPerformanceHistory component instead of the buttons. */
+    given document and type. It conditionally renders the buttons based on whether the document type
+    matches the given type and whether the type is SAFETY_PERFORMANCE_HISTORY. The buttons include
+    ViewDocumentButton, AddDocumentButton, DownloadDocumentButton, DeleteDocumentButton, and
+    ViewDocumentHistory. If the type is SAFETY_PERFORMANCE_HISTORY, it renders the
+    SafetyPerformanceHistory component instead of the buttons. */
   const ButtonList = ({ document, type }) => (
     <>
       {(!form.values.document?.type || form.values.document?.type != type) && (
@@ -452,7 +453,18 @@ export default function OnboardingChecklist(
                                 );
                               }}
                             />
-
+                            <BaseInput
+                              name={`details`}
+                              className="float-left ml-2 my-2 w-40"
+                              label={`Details`}
+                              value={dacForm.values.details}
+                              onChange={({ target: { value } }) => {
+                                dacForm.setFieldValue(
+                                  "details",
+                                  value
+                                );
+                              }}
+                            />
                             <div className="d-flex justify-content-end w-40">
                               <Button
                                 disabled={
