@@ -13,6 +13,7 @@ import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
 import { useTranslation } from "../../../hooks/use-translation";
 import { ApplicantEmployerEntity } from "../../../models/applicant/applicant-employer.entity";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
+import { CurrentEmploymentHistoryDto } from "../../../models/jot-form/long-form/current-emplyment-history/index.dto";
 import ApplicantApi from "../../../pages/api/applicant";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { focusOnErrorField } from "../../../utils/form-error";
@@ -30,23 +31,31 @@ export interface ApplicantWorkHistoryFormProps extends BaseFormProps<ApplicantEn
     isSubmitting: boolean;
     setIsSubmitting(value: boolean): void;
 }
+interface WorkHistoryMetaData {
+    curentCompanyCheck: CurrentEmploymentHistoryDto;
+    sendVoeEmailsHistory: string[];
+    isSubmittingVoe: boolean;
+}
+
+const workHistoryMetaDataInitialState: WorkHistoryMetaData = {
+    curentCompanyCheck: null,
+    sendVoeEmailsHistory: [],
+    isSubmittingVoe: false,
+}
 
 export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
     let { className, entity, setEntity, isSubmitting, setIsSubmitting, onSaveComplete } = props;
     const { t } = useTranslation();
 
-
     const applicantApi = new ApplicantApi();
 
-    const [curentCompanyCheck, setCurentCompanyCheck] = useState<ApplicantEmployerEntity>();
-    const [sendVoeEmailsHistory, setSendVoeEmailsHistory] = useState<string[]>([])
-    const [isSubmittingVoe, setIsSubmittingVoe] = useState<boolean>(false)
+    const [workHistoryMetaData, setWorkHistoryMetaData] = useState(workHistoryMetaDataInitialState);
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
         validationSchema: ApplicantEntity.yupSchemaForApplicantWorkHistory(),
         onSubmit: async (values) => {
-            setIsSubmittingVoe(true)
+            setWorkHistoryMetaData(prev => ({ ...prev, isSubmittingVoe: true }));
             setIsSubmitting(true)
             try {
                 if (entity?.id) {
@@ -60,11 +69,11 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                 formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
                 setEntity(values)
                 setIsSubmitting(false)
-                setIsSubmittingVoe(false)
+                setWorkHistoryMetaData(prev => ({ ...prev, isSubmittingVoe: false }));
                 if (onSaveComplete) onSaveComplete(form?.values)
             } catch (e) {
                 setIsSubmitting(false)
-                setIsSubmittingVoe(false)
+                setWorkHistoryMetaData(prev => ({ ...prev, isSubmittingVoe: false }));
                 if (
                     !globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
                 )
@@ -93,29 +102,35 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
 
 
     const currentCompanyCheckBox = (employerId) => {
-        return curentCompanyCheck?.is_current ? (Boolean(employerId?.id !== curentCompanyCheck?.id)) : false
+        return workHistoryMetaData?.curentCompanyCheck?.is_current ? (Boolean(employerId?.id !== workHistoryMetaData?.curentCompanyCheck?.id)) : false
     }
 
     const handleSendBackgroundRequest = async (i: number) => {
-        setIsSubmittingVoe(true)
+        setWorkHistoryMetaData(prev => ({ ...prev, isSubmittingVoe: true }));
+
         try {
             const res = await applicantApi.sendVoeRequest({
                 applicant: entity,
                 employer: form.values.employers[i]
             })
             setEntity(res)
-            setSendVoeEmailsHistory([...sendVoeEmailsHistory, form?.values?.employers[i]?.email])
+            setWorkHistoryMetaData(prev => ({
+                ...prev,
+                sendVoeEmailsHistory: [...prev.sendVoeEmailsHistory, form?.values?.employers[i]?.email],
+                isSubmittingVoe: false
+            }));
             toast.success(t("SUCCESSFULLY_SENT_VOE"))
-            setIsSubmittingVoe(false)
+            setWorkHistoryMetaData(prev => ({ ...prev, isSubmittingVoe: false }));
+
         } catch (e) {
-            setIsSubmittingVoe(false)
+            setWorkHistoryMetaData(prev => ({ ...prev, isSubmittingVoe: false }));
             globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
         }
     }
 
     useEffect(() => {
         const currentCompanyExists = form.values?.employers?.find((e) => e.is_current);
-        setCurentCompanyCheck(currentCompanyExists)
+        setWorkHistoryMetaData((prev) => ({ ...prev, curentCompanyCheck: currentCompanyExists }));
     }, [form.values])
 
     useEffect(() => focusOnErrorField(form), [form.submitCount])
@@ -230,7 +245,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         formik={form}
                                                     />
                                                     {
-                                                        ((curentCompanyCheck?.id != form.values?.employers[i]?.id) || !form.values?.employers[i]?.is_current) ? <BaseInput
+                                                        ((workHistoryMetaData?.curentCompanyCheck?.id != form.values?.employers[i]?.id) || !form.values?.employers[i]?.is_current) ? <BaseInput
                                                             className="col-6 mt-2"
                                                             readOnly={Boolean(entity?.is_hired)}
                                                             name={`employers[${i}].end_at`}
@@ -320,49 +335,66 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         formik={form}
                                                     />
                                                     <div style={{ display: "flex", justifyContent: "right" }}>
-                                                        {hasErrorsAtIndex(form, i) || form?.isSubmitting || isSubmitting || typeof (form?.values?.employers[i]?.email) != "string" || form?.values?.employers[i]?.email == "" || (form?.values?.employers[i]?.email != "" && form?.values?.employers[i]?.email == entity?.employers[i]?.email) || sendVoeEmailsHistory.join(",").includes(form?.values?.employers[i]?.email) || !form?.values?.employers[i]?.can_contact || !form?.values?.employers[i]?.is_subject_to_fmcsrs ?
-                                                            (<>
-                                                                {form?.isSubmitting || isSubmitting || typeof (form?.values?.employers[i]?.email) != "string" || form?.values?.employers[i]?.email == "" || !form?.values?.employers[i]?.can_contact || !form?.values?.employers[i]?.is_subject_to_fmcsrs ? (
-                                                                    <>
-                                                                        <OverlyPopover
-                                                                            str={`${t("PLEASE")} ${typeof (form?.values?.employers[i]?.email) != "string" || form?.values?.employers[i]?.email == "" ? t("PROVIDE_EMAIL_ADDRESS") : ""} 
-                                                                            ${!form?.values?.employers[i]?.can_contact ? typeof (form?.values?.employers[i]?.email) != "string" || form?.values?.employers[i]?.email == "" ? `, ${t("TOGGLE_ON")} ${t("TOGGLE_ON_YOU_CONTACT")}` : `${t("TOGGLE_ON")} ${t("TOGGLE_ON_YOU_CONTACT")}` : ""}
-                                                                            ${!form?.values?.employers[i]?.is_subject_to_fmcsrs ? typeof (form?.values?.employers[i]?.email) != "string" || form?.values?.employers[i]?.email == "" || !form?.values?.employers[i]?.can_contact ? !form?.values?.employers[i]?.can_contact ? `and  ${t("TOGGLE_ON_FMCSRs")}` : `, ${t("TOGGLE_ON")} ${t("TOGGLE_ON_FMCSRs")}` : `${t("TOGGLE_ON")} ${t("TOGGLE_ON_FMCSRs")}` : ""} ${t("FOR_PAST_EMPLOYER")}`}>
-                                                                            <Button className="theme-secondary-btn"
-                                                                                disabled={true} >
-                                                                                {t("SEND_BACKGROUND_REQUEST")}
-                                                                            </Button>
-                                                                        </OverlyPopover>
-                                                                    </>
-                                                                ) : (
-                                                                    <>
-                                                                        {hasErrorsAtIndex(form, i) ? (
-                                                                            <>
-                                                                                <OverlyPopover
-                                                                                    str={t("FILL_EMPLOYERS_FIELDS")}>
-                                                                                    <Button className="theme-secondary-btn"
-                                                                                        disabled={true} >
-                                                                                        {t("SEND_BACKGROUND_REQUEST")}
-                                                                                    </Button>
-                                                                                </OverlyPopover>
-                                                                            </>
-                                                                        ) : <OverlyPopover
-                                                                            str={t("REQUEST_ALREADY_MADE")}>
-                                                                            <Button className="theme-secondary-btn"
-                                                                                disabled={true} >
-                                                                                {t("SEND_BACKGROUND_REQUEST")}
-                                                                            </Button>
-                                                                        </OverlyPopover>
-                                                                        }
-                                                                    </>
-                                                                )}
-                                                            </>
-                                                            ) :
-                                                            (
-                                                                <Button disabled={isSubmittingVoe} onClick={() => handleSendBackgroundRequest(i)} className="theme-secondary-btn">
+                                                        {(() => {
+                                                            const employer = form.values?.employers[i];
+                                                            const email = employer?.email;
+                                                            const emailInvalid = typeof email !== "string" || email === "";
+                                                            const canContact = employer?.can_contact;
+                                                            const isSubjectToFmcsrs = employer?.is_subject_to_fmcsrs;
+                                                            const emailAlreadySent = workHistoryMetaData?.sendVoeEmailsHistory?.includes(email) || email === entity?.employers[i]?.email;
+
+                                                            let message = "";
+
+                                                            if (emailInvalid || !canContact || !isSubjectToFmcsrs) {
+                                                                message = `${t("PLEASE")}`;
+
+                                                                if (emailInvalid) {
+                                                                    message += ` ${t("PROVIDE_EMAIL_ADDRESS")}`;
+                                                                }
+                                                                if (!canContact) {
+                                                                    message += `${emailInvalid ? " and" : ""} ${t("TOGGLE_ON")} ${t("TOGGLE_ON_YOU_CONTACT")}`;
+                                                                }
+                                                                if (!isSubjectToFmcsrs) {
+                                                                    message += `${emailInvalid || !canContact ? !canContact ? "," : " and" : ""} ${!canContact ? "" : t("TOGGLE_ON")} ${t("TOGGLE_ON_FMCSRs")}`;
+                                                                }
+                                                                message += ` ${t("FOR_PAST_EMPLOYER")}`;
+                                                            } else if (hasErrorsAtIndex(form, i)) {
+                                                                message += ` ${t("FILL_EMPLOYERS_FIELDS")}`;
+                                                            }
+                                                            else {
+                                                                message += ` ${t("REQUEST_ALREADY_MADE")}`;
+                                                            }
+
+
+                                                            if (
+                                                                hasErrorsAtIndex(form, i) ||
+                                                                form.isSubmitting ||
+                                                                isSubmitting ||
+                                                                emailInvalid ||
+                                                                email === entity?.employers[i]?.email ||
+                                                                emailAlreadySent ||
+                                                                !canContact ||
+                                                                !isSubjectToFmcsrs
+                                                            ) {
+                                                                return (
+                                                                    <OverlyPopover str={message}>
+                                                                        <Button className="theme-secondary-btn" disabled>
+                                                                            {t("SEND_BACKGROUND_REQUEST")}
+                                                                        </Button>
+                                                                    </OverlyPopover>
+                                                                );
+                                                            }
+
+                                                            return (
+                                                                <Button
+                                                                    disabled={workHistoryMetaData?.isSubmittingVoe}
+                                                                    onClick={() => handleSendBackgroundRequest(i)}
+                                                                    className="theme-secondary-btn"
+                                                                >
                                                                     {t("SEND_BACKGROUND_REQUEST")}
                                                                 </Button>
-                                                            )}
+                                                            );
+                                                        })()}
                                                     </div>
                                                 </Row>
                                             </AccordionDetails>
