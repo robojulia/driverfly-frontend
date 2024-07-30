@@ -103,7 +103,7 @@ export default class EmployeeApi extends BaseApi {
 			return data;
 		},
 		sendVoeRequest: async (employeeId: number, employerId: number): Promise<EmployeeEmployerEntity> => {
-			const { data } = await this.get(`${this.employer.baseUrl(employeeId)}/${employerId}/send-voew-request`);
+			const { data } = await this.get(`${this.employer.baseUrl(employeeId)}/${employerId}/send-voe-request`);
 
 			return data;
 		},
