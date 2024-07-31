@@ -111,6 +111,7 @@ export default function OnboardingChecklist(
     if (dac) {
       data.id = dac.id;
       data.value = !!dac.value;
+      data.details = dac.details;
     }
     dacForm.setValues(data);
   };
@@ -379,9 +380,10 @@ export default function OnboardingChecklist(
               <tr>
                 <th colSpan={2}>{t("TYPE")}</th>
                 {Boolean(props.showCompleted) && (
-                  <th colSpan={1}>{t("COMPLETED?")}</th>
+                  <th colSpan={1} className="text-center">{t("COMPLETED?")}</th>
                 )}
-                <th colSpan={2}>{t("UPDATED_AT")}</th>
+                <th colSpan={1} className="text-center">{t("DATE")}</th>
+                <th colSpan={1} className="text-center">{t("DETAILS")}</th>
                 <th colSpan={1}></th>
               </tr>
             </thead>
@@ -405,9 +407,18 @@ export default function OnboardingChecklist(
                         />
                       </td>
                     )}
-                    <td colSpan={2}>
+                    <td colSpan={1} className="text-center">
                       {dac?.last_updated_at ? (
                         <ShowFormattedDate date={dac?.last_updated_at} />
+                      ) : (
+                        <span className="text-danger font-italic">
+                          {t(`NOT_AVAILABLE`)}
+                        </span>
+                      )}
+                    </td>
+                    <td colSpan={1} className="text-center">
+                      {dac?.details ? (
+                        dac?.details
                       ) : (
                         <span className="text-danger font-italic">
                           {t(`NOT_AVAILABLE`)}
@@ -454,9 +465,10 @@ export default function OnboardingChecklist(
                               }}
                             />
                             <BaseInput
-                              name={`details`}
-                              className="float-left ml-2 my-2 w-40"
-                              label={`Details`}
+                              name={"DETAILS"}
+                              className=" d-flex justify-content-center align-items-end float-left ml-2 my-1 w-40"
+                              label={"DETAILS"}
+                              placeholder=""
                               value={dacForm.values.details}
                               onChange={({ target: { value } }) => {
                                 dacForm.setFieldValue(
