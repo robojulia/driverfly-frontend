@@ -445,38 +445,40 @@ export default function OnboardingChecklist(
                           </div>
                         ) : (
                           <Form onSubmit={dacForm.handleSubmit}>
-                            <BaseRadio
-                              name={`value`}
-                              className="float-left ml-2 my-2 w-40"
-                              label={`ApplicantDac.${value}`}
-                              labelPrefix="BooleanType"
-                              enumType={BooleanType}
-                              required
-                              value={
-                                dacForm.values.value
-                                  ? BooleanType.YES
-                                  : BooleanType.NO
-                              }
-                              onChange={({ target: { value } }) => {
-                                dacForm.setFieldValue(
-                                  "value",
-                                  value == BooleanType.YES ? true : false
-                                );
-                              }}
-                            />
-                            <BaseInput
-                              name={"DETAILS"}
-                              className=" d-flex justify-content-center align-items-end float-left ml-2 my-1 w-40"
-                              label={"DETAILS"}
-                              placeholder=""
-                              value={dacForm.values.details}
-                              onChange={({ target: { value } }) => {
-                                dacForm.setFieldValue(
-                                  "details",
-                                  value
-                                );
-                              }}
-                            />
+                            <div style={{ display: 'flex', flexDirection: "column", justifyContent: "center" }}>
+                              <BaseRadio
+                                name={`value`}
+                                className="float-left ml-2 my-2 w-40"
+                                label={`ApplicantDac.${value}`}
+                                labelPrefix="BooleanType"
+                                enumType={BooleanType}
+                                required
+                                value={
+                                  dacForm.values.value
+                                    ? BooleanType.YES
+                                    : BooleanType.NO
+                                }
+                                onChange={({ target: { value } }) => {
+                                  dacForm.setFieldValue(
+                                    "value",
+                                    value == BooleanType.YES ? true : false
+                                  );
+                                }}
+                              />
+                              <BaseInput
+                                name={"DETAILS"}
+                                className=" d-flex justify-content-center align-items-end float-left ml-2 my-1 w-40"
+                                label={"DETAILS"}
+                                placeholder=""
+                                value={dacForm.values.details}
+                                onChange={({ target: { value } }) => {
+                                  dacForm.setFieldValue(
+                                    "details",
+                                    value
+                                  );
+                                }}
+                              />
+                            </div>
                             <div className="d-flex justify-content-end w-40">
                               <Button
                                 disabled={
