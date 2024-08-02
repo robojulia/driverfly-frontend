@@ -1032,7 +1032,7 @@ export class ApplicantEntity {
   static yupSchemaForApplicantDocumentsForm() {
     return yup.object({
       documents: (
-        yup.array(DocumentEntity.yupSchema(ApplicantDocumentType)) as any
+        yup.array(DocumentEntity.yupSchema()) as any
       ).unique("type"),
     });
   }
