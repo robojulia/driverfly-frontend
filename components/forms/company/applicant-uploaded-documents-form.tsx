@@ -75,18 +75,20 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
 
     useEffectAsync(async () => {
         if (!!entity?.id) {
-            form.setValues(
-                {
-                    ...entity,
-                    documents: entity?.documents?.filter((v) =>
-                        !Object.values(ApplicantDocumentType).includes(
-                            v?.type as ApplicantDocumentType
-                        ) ||
-                        !Object.values(ApplicantOnBoardingChecklist).includes(
-                            v?.type as ApplicantOnBoardingChecklist
+            form.setValues({
+                ...entity,
+                documents: entity?.documents?.filter(
+                    (v) =>
+                        !(
+                            Object.values(ApplicantDocumentType).includes(
+                                v?.type as ApplicantDocumentType
+                            ) ||
+                            Object.values(ApplicantOnBoardingChecklist).includes(
+                                v?.type as ApplicantOnBoardingChecklist
+                            )
                         )
-                    ),
-                });
+                ),
+            });
         } else {
             await form.setValues(
                 {
