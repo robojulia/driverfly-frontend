@@ -18,9 +18,10 @@ import { focusOnErrorField } from "../../../utils/form-error";
 import { useEffectAsync } from "../../../utils/react";
 import { formFailed, formSuccess } from "../../../utils/toast";
 import ViewCard from "../../view-details/view-card";
-import BaseSelect from "../base-select";
+import BaseInput from "../base-input";
 import FileInput from "../file-input";
 import { BaseFormProps } from "./base-form-props";
+import { ApplicantOnBoardingChecklist } from "../../../enums/applicants/applicant-onboarding-checklist.enum";
 
 export interface ApplicantUploadedDocumentsFormProps extends BaseFormProps<ApplicantEntity> {
     isSubmitting: boolean;
@@ -46,8 +47,11 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
                             ...values.documents,
                             ...entity.documents?.filter(
                                 (v) =>
-                                    !Object.values(ApplicantDocumentType).includes(
-                                        v.type as ApplicantDocumentType
+                                    Object.values(ApplicantDocumentType).includes(
+                                        v?.type as ApplicantDocumentType
+                                    ) ||
+                                    Object.values(ApplicantOnBoardingChecklist).includes(
+                                        v?.type as ApplicantOnBoardingChecklist
                                     )
                             ),
                         ]?.filter((v) => !!v),
@@ -75,8 +79,11 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
                 {
                     ...entity,
                     documents: entity?.documents?.filter((v) =>
-                        Object.values(ApplicantDocumentType).includes(
-                            v.type as ApplicantDocumentType
+                        !Object.values(ApplicantDocumentType).includes(
+                            v?.type as ApplicantDocumentType
+                        ) ||
+                        !Object.values(ApplicantOnBoardingChecklist).includes(
+                            v?.type as ApplicantOnBoardingChecklist
                         )
                     ),
                 });
@@ -105,10 +112,11 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
                             <Button
                                 size="sm"
                                 disabled={
-                                    Boolean(
-                                        form.values?.documents?.length ===
-                                        Object.keys(ApplicantDocumentType).length
-                                    ) || Boolean(entity?.is_hired)
+                                    // Boolean(
+                                    //     form.values?.documents?.length ===
+                                    //     Object.keys(ApplicantDocumentType).length
+                                    // ) ||
+                                    Boolean(entity?.is_hired)
                                 }
                                 onClick={() =>
                                     form.setValues({
@@ -137,12 +145,10 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
                                     {form.values?.documents?.map((entity, i) => (
                                         <tr key={i}>
                                             <td>
-                                                <BaseSelect
+                                                <BaseInput
                                                     name={`documents[${i}].type`}
                                                     required
-                                                    placeholder="SELECT_DOCUMENT_TYPE"
-                                                    labelPrefix="ApplicantDocumentType"
-                                                    enumType={ApplicantDocumentType}
+                                                    placeholder="DOCUMENT_TYPE"
                                                     readOnly={
                                                         Boolean(!!entity?.id && !entity?.file_base64) ||
                                                         Boolean(props?.entity?.is_hired)
