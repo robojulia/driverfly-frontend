@@ -82,7 +82,7 @@ export default function JobApply({ job, setEncourageModal }) {
                                     (preference) => preference.label == document.type && preference.value == SharePreference.NEVER
                                 )
                             );
-                        } else data.documents = data.documents?.filter((document) => document.type == ApplicantDocumentType.RESUME);
+                        } else data.documents = data.documents?.filter((document) => document.type == ApplicantDocumentType.RESUME_OPTIONAL);
                     }
                     setApplicant(data);
                 }

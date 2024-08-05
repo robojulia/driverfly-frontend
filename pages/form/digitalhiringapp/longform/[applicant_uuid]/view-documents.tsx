@@ -26,8 +26,8 @@ export default function Documents({ entity }: DocumentsProps) {
 					{entity?.documents
 						?.filter((document) =>
 							[
-								ApplicantDocumentType.DRIVERS_LICENSE,
-								ApplicantDocumentType.MEDICAL_CARD,
+								ApplicantDocumentType.DRIVER_LICENSE,
+								ApplicantDocumentType.MEDICAL_EXAMINER_CERTIFICATE_MEDICAL_CARD,
 							]?.includes(document.type as ApplicantDocumentType)
 						)
 						?.map((document) => (

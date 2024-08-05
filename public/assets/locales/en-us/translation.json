@@ -1259,11 +1259,11 @@
   "THROUGH": "Through",
   "REMOVE": "Remove",
   "ApplicantDocumentType": {
-    "RESUME": "Resume",
-    "DRIVERS_LICENSE": "Drivers License",
-    "MEDICAL_CARD": "Medical Card",
-    "MVR": "Motor Vehicle Record (MVR)",
-    "PHYSICAL": "DOT Long Form Physical"
+    "RESUME_OPTIONAL": "Resume",
+    "DRIVER_LICENSE": "Driver License",
+    "MEDICAL_EXAMINER_CERTIFICATE_MEDICAL_CARD": "Medical Card",
+    "MOTOR_VEHICLE_RECORD_MVR": "Motor Vehicle Record (MVR)",
+    "MEDICAL_EXAMINATION_REPORT_LONG_FORM": "DOT Long Form Physical"
   },
   "CompanyDocumentType": {
     "TRAINING_DOCUMENTS": "Training Documents",

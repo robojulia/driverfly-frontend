@@ -23,10 +23,10 @@ export function DriverLicense() {
 	}: JotFormContextType = useContext(JotformContext);
 
 	const isDriverLicense = (v: DocumentEntity): boolean =>
-		v?.type == ApplicantDocumentType.DRIVERS_LICENSE;
+		v?.type == ApplicantDocumentType.DRIVER_LICENSE;
 
 	const isNotDriverLicense = (v: DocumentEntity): boolean =>
-		v?.type != ApplicantDocumentType.DRIVERS_LICENSE;
+		v?.type != ApplicantDocumentType.DRIVER_LICENSE;
 
 	const { t } = useTranslation();
 	const router = useRouter();
@@ -80,7 +80,7 @@ export function DriverLicense() {
 		form.setValues({
 			document: doc ?? {
 				...new DocumentEntity(),
-				type: ApplicantDocumentType.DRIVERS_LICENSE,
+				type: ApplicantDocumentType.DRIVER_LICENSE,
 			},
 			mediaOptions: false
 		});
