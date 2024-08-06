@@ -111,6 +111,10 @@ export default function Applicants() {
         setFiltersChanged(true)
     ), [filters]);
 
+    useEffect(() => {
+        setFilters({})
+    }, [viewMode])
+
     const onViewClick = (id: number) => {
         router.push(`${router.pathname}/${id}`);
     }
@@ -204,7 +208,20 @@ export default function Applicants() {
                     actions={(
                         <div style={{ display: "flex", justifyContent: "end", alignItems: "center" }}>
                             <Accordion.Button className="mr-3 text-black theme-filter-btn" style={{ width: "auto", fontSize: ".95rem", lineHeight: "1.5", padding: ".25rem 1.5rem", borderRadius: ".2rem" }} >
-                                <div className="mr-2">{t("FILTERS")}</div>
+                                {viewMode === ViewMode.applicant && (
+                                    <Accordion.Button
+                                        className="mr-3 text-black theme-filter-btn"
+                                        style={{
+                                            width: "auto",
+                                            fontSize: ".95rem",
+                                            lineHeight: "1.5",
+                                            padding: ".25rem 1.5rem",
+                                            borderRadius: ".2rem",
+                                        }}
+                                    >
+                                        <div className="mr-2">{t("FILTERS")}</div>
+                                    </Accordion.Button>
+                                )}
                             </Accordion.Button>
                             {
                                 canCreate &&
@@ -233,9 +250,11 @@ export default function Applicants() {
                     <Row>
 
                         <Col className='force-overflow p-0'>
-                            <Accordion.Body >
-                                <ApplicantFilterForm onSearch={setFilters} />
-                            </Accordion.Body>
+                            {viewMode === ViewMode.applicant && (
+                                <Accordion.Body>
+                                    <ApplicantFilterForm onSearch={setFilters} />
+                                </Accordion.Body>
+                            )}
 
                             {loading
                                 ? <div className="spinner-border mt-3 ml-1" role="status">
