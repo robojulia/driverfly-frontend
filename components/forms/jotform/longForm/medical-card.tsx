@@ -19,8 +19,8 @@ export function MedicalCard() {
 		method: { setApplicant, stepNext, stepBack },
 	}: JotFormContextType = useContext(JotformContext);
 
-	const isMedicalCard = (v: DocumentEntity): boolean => v.type == ApplicantDocumentType.MEDICAL_EXAMINER_CERTIFICATE_MEDICAL_CARD;
-	const isNotMedicalCard = (v: DocumentEntity): boolean => v.type != ApplicantDocumentType.MEDICAL_EXAMINER_CERTIFICATE_MEDICAL_CARD;
+	const isMedicalCard = (v: DocumentEntity): boolean => v.type == ApplicantDocumentType.MEDICAL_CARD;
+	const isNotMedicalCard = (v: DocumentEntity): boolean => v.type != ApplicantDocumentType.MEDICAL_CARD;
 	const router = useRouter();
 	const isMissingDocRouteActive = router.route.includes('longform/[applicant_uuid]/missing-document')
 	const isLongFormRouteActive = router.route.includes('digitalhiringapp/longform/[applicant_uuid]');
@@ -70,7 +70,7 @@ export function MedicalCard() {
 		form.setValues({
 			document: doc ?? {
 				...(new DocumentEntity()),
-				type: ApplicantDocumentType.MEDICAL_EXAMINER_CERTIFICATE_MEDICAL_CARD,
+				type: ApplicantDocumentType.MEDICAL_CARD,
 			},
 			mediaOptions: false
 		});
@@ -79,7 +79,7 @@ export function MedicalCard() {
 
 	return (
 		<>
-			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("MEDICAL_EXAMINER_CERTIFICATE_MEDICAL_CARD_UPLOAD_TITLE")}</h1>
+			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("MEDICAL_CARD_UPLOAD_TITLE")}</h1>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 
 				<BaseCheck

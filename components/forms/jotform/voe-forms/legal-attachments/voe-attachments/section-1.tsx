@@ -16,6 +16,8 @@ export function VerificationOfEmploymentSection1({ applicant, employer }: Sectio
     const signature = applicant?.extras?.find(sign => sign?.type == ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION)
     const date_VOE = applicant?.extras?.find(sign => sign?.type == ApplicantExtras.APPLY_DATE)
     useEffect(() => {
+        console.log("applicant", applicant);
+        
         console.log("employer from comp ", employer)
         console.log("applicant from comp ", applicant?.company?.users[0])
     }, [])
