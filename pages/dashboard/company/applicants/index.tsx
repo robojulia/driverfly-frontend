@@ -112,7 +112,7 @@ export default function Applicants() {
     ), [filters]);
 
     useEffect(() => {
-        setFilters({})
+        setFilters(new SearchApplicantDto())
     }, [viewMode])
 
     const onViewClick = (id: number) => {
@@ -207,22 +207,20 @@ export default function Applicants() {
                     title="APPLICANTS"
                     actions={(
                         <div style={{ display: "flex", justifyContent: "end", alignItems: "center" }}>
-                            <Accordion.Button className="mr-3 text-black theme-filter-btn" style={{ width: "auto", fontSize: ".95rem", lineHeight: "1.5", padding: ".25rem 1.5rem", borderRadius: ".2rem" }} >
-                                {viewMode === ViewMode.applicant && (
-                                    <Accordion.Button
-                                        className="mr-3 text-black theme-filter-btn"
-                                        style={{
-                                            width: "auto",
-                                            fontSize: ".95rem",
-                                            lineHeight: "1.5",
-                                            padding: ".25rem 1.5rem",
-                                            borderRadius: ".2rem",
-                                        }}
-                                    >
-                                        <div className="mr-2">{t("FILTERS")}</div>
-                                    </Accordion.Button>
-                                )}
-                            </Accordion.Button>
+                            {viewMode === ViewMode.applicant && (
+                                <Accordion.Button
+                                    className="mr-3 text-black theme-filter-btn"
+                                    style={{
+                                        width: "auto",
+                                        fontSize: ".95rem",
+                                        lineHeight: "1.5",
+                                        padding: ".25rem 1.5rem",
+                                        borderRadius: ".2rem",
+                                    }}
+                                >
+                                    <div className="mr-2">{t("FILTERS")}</div>
+                                </Accordion.Button>
+                            )}
                             {
                                 canCreate &&
                                 <ButtonGroup size="sm" style={{ float: "right" }}>
