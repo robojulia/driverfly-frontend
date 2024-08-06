@@ -38,6 +38,7 @@ import joinArrayElements from '../../../../utils/join-in-order.utils';
 import CustomPagination from '../../../../components/pagination/custom-pagination';
 import { Pagination, PagingMeta } from '../../../../types/pagination.type';
 import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
+import JobApi from '../../../api/job';
 
 
 const ViewMode = {
@@ -749,41 +750,28 @@ function ApplicantView(props: ViewProps) {
 function JobView(props: ViewProps) {
     const { router, applicants, onChangeStatus, onViewClick, onEditClick, t } = props;
 
-    const { hasPermission } = useAuth();
+    const { company, hasPermission } = useAuth();
+
+    const [loading, setLoading] = useState<boolean>(true);
+    const [jobs, setJobs] = useState<JobEntity[]>([]);
+
 
     let items: ConsolodatedJob[] = [];
 
-    let jobMap: { [jobId: number]: ConsolodatedJob } = {};
 
-    applicants.forEach(applicant => {
-        applicant.jobs?.forEach((aJob) => {
-            let job = jobMap[aJob.job.id] || (jobMap[aJob.job.id] = {
-                ...aJob.job
-            });
-
-            const requirements = evaluateJobRequirements(applicant, aJob.job);
-            requirements.qualification_fail_reason = requirements.qualification_fail_reason.map(v => {
-                if (typeof v == "string") return t(v);
-
-                return t(v.key, { name: v.name }, { translateProps: true });
-            });
-
-            if (!job.applicants) job.applicants = [];
-
-            job.applicants.push({
-                ...aJob,
-                job: null,
-                ...requirements,
-                applicant: {
-                    ...applicant,
-                    jobs: null,
-                }
-            });
+    const fetchJobs = async () => {
+        setLoading(true)
+        const api = new JobApi();
+        const data = await api.applicants({
+            companyId: company?.id
         });
+        setJobs(data as JobEntity[]);
+        setTimeout(() => setLoading(false), 1000);
+    }
 
-    });
+    useEffectAsync(async () => await fetchJobs(), []);
 
-    items = Object.values(jobMap);
+    items = jobs;
 
     return (<ViewDataTable<ConsolodatedJob>
         customStyles={{
