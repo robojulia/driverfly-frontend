@@ -22,6 +22,7 @@ import BaseInput from "../base-input";
 import FileInput from "../file-input";
 import { BaseFormProps } from "./base-form-props";
 import { ApplicantOnBoardingChecklist } from "../../../enums/applicants/applicant-onboarding-checklist.enum";
+import ShowFormattedDate from "../../jobs/show-formatted-date";
 
 export interface ApplicantUploadedDocumentsFormProps extends BaseFormProps<ApplicantEntity> {
     isSubmitting: boolean;
@@ -140,6 +141,7 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
                                     <tr>
                                         <th>{t("TYPE")}</th>
                                         <th>{t("DOCUMENT")}</th>
+                                        <th className="text-center">{t("upload_date")}</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -167,6 +169,9 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
                                                     allowedSizeInByte={3145728}
                                                     formik={form}
                                                 />
+                                            </td>
+                                            <td className="text-center">
+                                                {form?.values?.documents[i]?.created_at ? <ShowFormattedDate date={form?.values?.documents[i]?.created_at} /> : (<span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>)}
                                             </td>
                                             <td>
                                                 <a

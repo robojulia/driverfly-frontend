@@ -37,6 +37,7 @@ import BaseRadio from "../../forms/base-radio";
 import SafetyPerformanceHistory from "../safety-performance-history";
 import { PlusCircle } from "react-bootstrap-icons";
 import BaseInput from "../../forms/base-input";
+import BaseCheck from "../../forms/base-check";
 
 export default function OnboardingChecklist(
   props: ViewApplicantOnboardingChecklistProps
@@ -380,7 +381,7 @@ export default function OnboardingChecklist(
               <tr>
                 <th colSpan={2}>{t("TYPE")}</th>
                 {Boolean(props.showCompleted) && (
-                  <th colSpan={1} className="text-center">{t("COMPLETED?")}</th>
+                  <th colSpan={1} className="text-center"></th>
                 )}
                 <th colSpan={1} className="text-center">{t("DATE")}</th>
                 <th colSpan={1} className="text-center">{t("DETAILS")}</th>
@@ -397,9 +398,8 @@ export default function OnboardingChecklist(
                     <td colSpan={2}> {t(`ApplicantDac.${value}`)}</td>
                     {Boolean(props.showCompleted) && (
                       <td colSpan={1} className="text-center">
-                        <input
+                        <BaseCheck
                           className=""
-                          type="radio"
                           disabled
                           checked={Boolean(
                             dac?.type && dac.type == value && dac.value
