@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import styles from "../../../../../styles/digitalhiringapp.module.css";
-import {
-	ApplicantEntity,
-	ApplicantExtrasEntity,
-} from "../../../../../models/applicant";
-import JotformContext from "../../../../../context/jotform-context";
 import {
 	getLongFormPages,
 	getLongFormStyle,
 } from "../../../../../components/forms/jotform/jotform-pages";
-import ApplicantApi from "../../../../api/applicant";
+import JotformContext from "../../../../../context/jotform-context";
+import {
+	ApplicantEntity,
+	ApplicantExtrasEntity,
+} from "../../../../../models/applicant";
 import { CompanyEntity } from "../../../../../models/company/company.entity";
+import styles from "../../../../../styles/digitalhiringapp.module.css";
+import ApplicantApi from "../../../../api/applicant";
 import CompanyApi from "../../../../api/company";
 
 export interface LongFormProps {
@@ -89,14 +89,16 @@ export async function getServerSideProps({ query }) {
 		const entity: ApplicantEntity = await applicantApi.getByUuidToken(
 			applicant_uuid
 		);
+		console.log("applicant", entity);
 
 		if (!!!entity) return { notFound: true };
-        const companyApi = new CompanyApi();
-        const company: CompanyEntity = await companyApi.employer.getById(entity?.company?.id);
-
+		const companyApi = new CompanyApi();
+		const company: CompanyEntity = await companyApi.employer.getById(entity?.company?.id);
 
 		return { props: { entity, company } };
 	} catch (error) {
+		console.error("error", error.message);
+
 		return { notFound: true };
 	}
 }
