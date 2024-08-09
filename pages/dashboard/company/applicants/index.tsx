@@ -755,17 +755,15 @@ function JobView(props: ViewProps) {
   const [jobs, setJobs] = useState<ConsolodatedJob[]>([]);
 
 
-
   const fetchJobs = async () => {
     const api = new JobApi();
     const data = await api.applicants({
-      companyId: company?.id,
+      companyId: company?.id
     });
     setJobs(data as JobEntity[]);
-  };
+  }
 
   useEffectAsync(async () => await fetchJobs(), []);
-
 
   for (const [, job] of jobs?.entries()) {
     job.applicants?.map((applicant) => {
@@ -783,7 +781,7 @@ function JobView(props: ViewProps) {
     })
   }
 
-  return <ViewDataTable<ConsolodatedJob>
+  return (<ViewDataTable<ConsolodatedJob>
     customStyles={{
       headRow: {
         style: {
@@ -940,6 +938,5 @@ function JobView(props: ViewProps) {
         items={data.applicants}
       />
     )}
-  />
+  />);
 }
-
