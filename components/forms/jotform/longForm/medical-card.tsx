@@ -19,8 +19,8 @@ export function MedicalCard() {
 		method: { setApplicant, stepNext, stepBack },
 	}: JotFormContextType = useContext(JotformContext);
 
-	const isMedicalCard = (v: DocumentEntity): boolean => v.type == ApplicantDocumentType.MEDICAL_CARD;
-	const isNotMedicalCard = (v: DocumentEntity): boolean => v.type != ApplicantDocumentType.MEDICAL_CARD;
+	const isMedicalCard = (v: DocumentEntity): boolean => v.type == ApplicantDocumentType.MEDICAL_EXAMINER_CERTIFICATE_MEDICAL_CARD;
+	const isNotMedicalCard = (v: DocumentEntity): boolean => v.type != ApplicantDocumentType.MEDICAL_EXAMINER_CERTIFICATE_MEDICAL_CARD;
 	const router = useRouter();
 	const isMissingDocRouteActive = router.route.includes('longform/[applicant_uuid]/missing-document')
 	const isLongFormRouteActive = router.route.includes('digitalhiringapp/longform/[applicant_uuid]');
@@ -70,7 +70,7 @@ export function MedicalCard() {
 		form.setValues({
 			document: doc ?? {
 				...(new DocumentEntity()),
-				type: ApplicantDocumentType.MEDICAL_CARD,
+				type: ApplicantDocumentType.MEDICAL_EXAMINER_CERTIFICATE_MEDICAL_CARD,
 			},
 			mediaOptions: false
 		});
