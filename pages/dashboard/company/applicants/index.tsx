@@ -752,28 +752,38 @@ function JobView(props: ViewProps) {
 
     const { company, hasPermission } = useAuth();
 
-    const [loading, setLoading] = useState<boolean>(true);
-    const [jobs, setJobs] = useState<JobEntity[]>([]);
+    const [jobs, setJobs] = useState<ConsolodatedJob[]>([]);
 
-
-    let items: ConsolodatedJob[] = [];
 
 
     const fetchJobs = async () => {
-        setLoading(true)
         const api = new JobApi();
         const data = await api.applicants({
-            companyId: company?.id
+            companyId: company?.id,
         });
         setJobs(data as JobEntity[]);
-        setTimeout(() => setLoading(false), 1000);
-    }
+    };
 
     useEffectAsync(async () => await fetchJobs(), []);
 
-    items = jobs;
 
-    return (<ViewDataTable<ConsolodatedJob>
+    for (const [, job] of jobs?.entries()) {
+        job.applicants?.map((applicant) => {
+            const requirements = evaluateJobRequirements(applicant?.applicant, job);
+            requirements.qualification_fail_reason =
+                requirements.qualification_fail_reason.map((v) => {
+                    if (typeof v == "string") return t(v);
+
+                    return t(v.key, { name: v.name }, { translateProps: true });
+                });
+
+            applicant["qualification_fail_reason"] = requirements?.qualification_fail_reason
+            applicant["meets_basic_qualifications"] = requirements?.meets_basic_qualifications
+
+        })
+    }
+
+    return <ViewDataTable<ConsolodatedJob>
         customStyles={{
             headRow: {
                 style: {
@@ -817,7 +827,7 @@ function JobView(props: ViewProps) {
                 selector: job => `${numbers.toCurrency(job.min_weekly_pay)} - ${numbers.toCurrency(job.max_weekly_pay)}`,
             },
         ]}
-        items={items}
+        items={jobs}
         expandableRowsComponent={({ data }) => (
             <ViewDataTable<ConsolodatedApplicantJob>
                 customStyles={{
@@ -930,5 +940,5 @@ function JobView(props: ViewProps) {
                 items={data.applicants}
             />
         )}
-    />);
+    />
 }
