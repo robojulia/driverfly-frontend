@@ -68,7 +68,7 @@ export function CompanyForm(props: CompanyFormProps) {
 		>
 			<Row>
 				<BaseInput
-					className="col-12"
+					className="col-12 mt-2"
 					label={t("NAME")}
 					name={`name`}
 					required
@@ -76,30 +76,39 @@ export function CompanyForm(props: CompanyFormProps) {
 					formik={form}
 				/>
 				<BaseInput
-					className="col-12"
+					className="col-12 mt-2"
 					label={t("HEADQUATERS")}
 					name={`location`}
 					placeholder={t("ADD_HEADQUATERS_LOCATION")}
 					formik={form}
 				/>
 				<BaseInput
-					className="col-12"
+					className="col-12 mt-2"
 					label={t("WEBSITE")}
 					name={`website`}
 					placeholder="http://www.example.com"
 					formik={form}
 				/>
 				{Boolean(showClickToCopy) &&
-					<BaseClickToCopyInput
-						label="COMPANY_JOBS_PAGE"
-						className="rounded"
-						value={`${process.env.FRONTEND_BASE_URL ?? ""}employer/${user?.company?.slug
-							}`}
-						tooltipText={t("CLICK_TO_COPY")}
-					/>
+					<>
+						<BaseClickToCopyInput
+							label="COMPANY_JOBS_PAGE"
+							className="rounded"
+							value={`${process.env.FRONTEND_BASE_URL ?? ""}employer/${user?.company?.slug
+								}`}
+							tooltipText={t("CLICK_TO_COPY")}
+						/>
+						<BaseClickToCopyInput
+							label="COMPANY_EMEDDED_JOBS_PAGE"
+							className="rounded mt-2"
+							value={`${process.env.FRONTEND_BASE_URL ?? ""}embedded?companyId=${user?.company?.id
+								}`}
+							tooltipText={t("CLICK_TO_COPY")}
+						/>
+					</>
 				}
 				<BaseTextArea
-					className="col-12"
+					className="col-12 mt-2"
 					label={t("ABOUT")}
 					name={`about`}
 					rows={3}
@@ -107,7 +116,7 @@ export function CompanyForm(props: CompanyFormProps) {
 					formik={form}
 				/>
 				<FileInput
-					className="col-12"
+					className="col-12 mt-2"
 					label={`COMPANY_LOGO`}
 					id="imgpurpose"
 					name={`photo`}
@@ -121,7 +130,7 @@ export function CompanyForm(props: CompanyFormProps) {
 				</UncontrolledTooltip>
 
 				<BaseInputPhone
-					className="col-3"
+					className="col-3 mt-2"
 					label="PHONE"
 					name="phone"
 					placeholder="PHONE"
