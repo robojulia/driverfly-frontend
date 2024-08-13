@@ -785,13 +785,13 @@ function JobView(props: ViewProps) {
 
 
     for (const [, job] of jobs?.entries()) {
-        job.applicants?.map((applicant) => {
+        job?.applicants?.map((applicant) => {
             const requirements = evaluateJobRequirements(applicant?.applicant, job);
             requirements.qualification_fail_reason =
-                requirements.qualification_fail_reason.map((v) => {
+                requirements?.qualification_fail_reason?.map((v) => {
                     if (typeof v == "string") return t(v);
 
-                    return t(v.key, { name: v.name }, { translateProps: true });
+                    return t(v?.key, { name: v?.name }, { translateProps: true });
                 });
 
             applicant["qualification_fail_reason"] = requirements?.qualification_fail_reason
@@ -813,35 +813,35 @@ function JobView(props: ViewProps) {
             {
                 id: "Id",
                 name: "ID",
-                selector: job => job.id,
+                selector: job => job?.id,
                 hidable: true,
             },
             {
                 id: "job",
                 name: "JOB",
-                selector: job => job.title,
+                selector: job => job?.title,
                 hidable: false,
-                cell: (j) => (<Link href={`/dashboard/company/jobs/${j.id}`} ><a>{j.title}</a></Link>),
+                cell: (j) => (<Link href={`/dashboard/company/jobs/${j?.id}`} ><a>{j?.title}</a></Link>),
             },
             {
                 id: "location",
                 name: "LOCATION",
-                selector: job => buildAddress(job.location),
+                selector: job => buildAddress(job?.location),
             },
             {
                 id: "geography",
                 name: "GEOGRAPHY",
-                selector: job => job.geography ? t(`JobGeography.${job.geography}`) : "",
+                selector: job => job?.geography ? t(`JobGeography.${job?.geography}`) : "",
             },
             {
                 id: "type",
                 name: "TYPE",
-                selector: job => job.employment_type ? t(`JobEmploymentType.${job.employment_type}`) : "",
+                selector: job => job?.employment_type ? t(`JobEmploymentType.${job?.employment_type}`) : "",
             },
             {
                 id: "weekly_range",
                 name: "WEEKLY_RANGE",
-                selector: job => `${numbers.toCurrency(job.min_weekly_pay)} - ${numbers.toCurrency(job.max_weekly_pay)}`,
+                selector: job => `${numbers?.toCurrency(job?.min_weekly_pay)} - ${numbers?.toCurrency(job?.max_weekly_pay)}`,
             },
         ]}
         items={jobs}
@@ -858,29 +858,29 @@ function JobView(props: ViewProps) {
                 columns={[
                     {
                         name: "ID",
-                        selector: aJob => aJob.applicant.id,
+                        selector: aJob => aJob?.applicant?.id,
                     },
                     {
                         name: "NAME",
-                        selector: aJob => getApplicantName(aJob.applicant),
+                        selector: aJob => getApplicantName(aJob?.applicant),
                         cell: aJob => (
-                            <Link href={`${router.pathname}/${aJob.applicant.id}/edit`}>
-                                <a>{getApplicantName(aJob.applicant)}</a>
+                            <Link href={`${router.pathname}/${aJob?.applicant?.id}/edit`}>
+                                <a>{getApplicantName(aJob?.applicant)}</a>
                             </Link>
                         ),
                         hidable: false,
                     },
                     {
                         name: "CITY",
-                        selector: aJob => aJob.applicant.city,
+                        selector: aJob => aJob?.applicant?.city,
                     },
                     {
                         name: "STATE",
-                        selector: aJob => aJob.applicant.state,
+                        selector: aJob => aJob?.applicant?.state,
                     },
                     {
                         name: "DATE_APPLIED",
-                        selector: aJob => new Date(aJob.created_at).toDateString(),
+                        selector: aJob => new Date(aJob?.created_at)?.toDateString(),
                         hidable: false,
                     },
                     {
@@ -895,12 +895,12 @@ function JobView(props: ViewProps) {
                     },
                     {
                         name: "MEETS_BASIC_QUALIFICATIONS",
-                        selector: aJob => t(aJob.meets_basic_qualifications ? "YES" : "NO"),
+                        selector: aJob => t(aJob?.meets_basic_qualifications ? "YES" : "NO"),
                         hidable: false,
                     },
                     {
                         name: "REASONS_IF_NO",
-                        selector: aJob => aJob.qualification_fail_reason?.join(),
+                        selector: aJob => aJob?.qualification_fail_reason?.join(),
                         hidable: false,
                     },
                     {
@@ -908,7 +908,7 @@ function JobView(props: ViewProps) {
                         name: "DATE_ADDED",
                         selector: aJob => aJob?.applicant?.created_at,
                         cell: aJob => (
-                            <ShowFormattedDate date={aJob.applicant.created_at} />
+                            <ShowFormattedDate date={aJob?.applicant?.created_at} />
                         ),
                         hidable: false,
                     },
@@ -919,7 +919,7 @@ function JobView(props: ViewProps) {
                     },
                     {
                         cell: aJob => {
-                            const hideStatus = Boolean(applicants?.find(a => a.id == aJob.applicant.id)?.jobs?.find(j => j?.id != aJob?.id && j?.status?.startsWith("COMPLETED_")))
+                            const hideStatus = Boolean(applicants?.find(a => a?.id == aJob?.applicant.id)?.jobs?.find(j => j?.id != aJob?.id && j?.status?.startsWith("COMPLETED_")))
                                 ? [
                                     ApplicantStatus.COMPLETED_EMPLOYED,
                                     ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
@@ -929,9 +929,9 @@ function JobView(props: ViewProps) {
                             return (
                                 <BaseSelect
                                     hideOptions={hideStatus}
-                                    name={aJob.applicant.id.toString()}
+                                    name={aJob?.applicant?.id?.toString()}
                                     value=""
-                                    onChange={e => onChangeStatus(e, aJob.applicant, data)}
+                                    onChange={e => onChangeStatus(e, aJob?.applicant, data)}
                                     placeholder={"CHANGE_STATUS"}
                                     labelPrefix="ApplicantStatus"
                                     enumType={ApplicantStatus}
@@ -945,12 +945,12 @@ function JobView(props: ViewProps) {
                     {
                         icon: EyeFill,
                         label: "VIEW",
-                        onClick: (e) => onViewClick(row.applicant.id)
+                        onClick: (e) => onViewClick(row?.applicant.id)
                     },
                     {
                         icon: PencilFill,
                         label: "EDIT",
-                        onClick: (e) => onEditClick(row.applicant.id),
+                        onClick: (e) => onEditClick(row?.applicant?.id),
                         hide: !hasPermission("CanUpdateApplicant")
                     },
                 ]}
