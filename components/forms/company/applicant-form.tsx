@@ -68,6 +68,7 @@ import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
 import ViewModal from "../../view-details/view-modal";
 import { ReferralSourceForm } from "../admin/referral-source-form";
 import { JobForm } from "./job-form";
+import ShowFormattedDate from "../../jobs/show-formatted-date";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
@@ -1795,6 +1796,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									<tr>
 										<th>{t("TYPE")}</th>
 										<th>{t("DOCUMENT")}</th>
+										<th className="text-center">{t("upload_date")}</th>
 										<th></th>
 									</tr>
 								</thead>
@@ -1802,12 +1804,10 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									{form.values?.documents?.map((entity, i) => (
 										<tr key={i}>
 											<td>
-												<BaseSelect
+												<BaseInput
 													name={`documents[${i}].type`}
 													required
-													placeholder="SELECT_DOCUMENT_TYPE"
-													labelPrefix="ApplicantDocumentType"
-													enumType={ApplicantDocumentType}
+													placeholder="DOCUMENT_TYPE"
 													readOnly={
 														Boolean(!!entity?.id && !entity?.file_base64) ||
 														Boolean(props?.entity?.is_hired)
@@ -1824,6 +1824,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													allowedSizeInByte={3145728}
 													formik={form}
 												/>
+											</td>
+											<td className="text-center">
+												{form?.values?.documents[i]?.created_at ? <ShowFormattedDate date={form?.values?.documents[i]?.created_at} /> : (<span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>)}
 											</td>
 											<td>
 												<a

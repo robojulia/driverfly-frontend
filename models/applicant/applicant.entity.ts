@@ -426,7 +426,7 @@ export class ApplicantEntity {
       ).unique("type", { mapper: ApplicantEquipmentEntity.key }),
       employers: yup.array(ApplicantEmployerEntity.yupSchema()),
       documents: (
-        yup.array(DocumentEntity.yupSchema(ApplicantDocumentType)) as any
+        yup.array(DocumentEntity.yupSchema()) as any
       ).unique("type"), //modify file error messages
       jobs: (yup.array(ApplicantJobEntity.yupSchema()) as any).unique("job.id"),
       assignedUserId: yup.number().optional().nullable(),
