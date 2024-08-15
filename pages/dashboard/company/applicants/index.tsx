@@ -82,27 +82,29 @@ export default function Applicants() {
     const [filtersChanged, setFiltersChanged] = useState<boolean>(false);
 
     const fetchApplicant = async () => {
-        setLoading(true)
-        const api = new ApplicantApi();
-        const data = await api.list({
-            jobId: jobId as any as number,
-            without: [
-                "applicant_dac",
-                "applicant_extras",
-            ],
-            ...filters,
-            is_paginated: true,
-            page: filtersChanged ? 1 : pagingMeta?.currentPage,
-            limit: pagingMeta?.itemsPerPage,
-        });
-        setApplicants((data as Pagination<ApplicantEntity>)?.items);
-        setFiltersChanged(false)
-        setPagingMeta({
-            ...pagingMeta,
-            currentPage: filtersChanged ? 1 : pagingMeta?.currentPage,
-            totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems
-        });
-        setTimeout(() => setLoading(false), 1000);
+        if (viewMode !== ViewMode.job) {
+            setLoading(true)
+            const api = new ApplicantApi();
+            const data = await api.list({
+                jobId: jobId as any as number,
+                without: [
+                    "applicant_dac",
+                    "applicant_extras",
+                ],
+                ...filters,
+                is_paginated: true,
+                page: filtersChanged ? 1 : pagingMeta?.currentPage,
+                limit: pagingMeta?.itemsPerPage,
+            });
+            setApplicants((data as Pagination<ApplicantEntity>)?.items);
+            setFiltersChanged(false)
+            setPagingMeta({
+                ...pagingMeta,
+                currentPage: filtersChanged ? 1 : pagingMeta?.currentPage,
+                totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems
+            });
+            setTimeout(() => setLoading(false), 1000);
+        }
     }
 
     useEffectAsync(async () => await fetchApplicant(), [user, jobId, viewMode, filters, pagingMeta?.currentPage, pagingMeta?.itemsPerPage]);
