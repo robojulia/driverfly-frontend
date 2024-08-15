@@ -1796,7 +1796,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									<tr>
 										<th>{t("TYPE")}</th>
 										<th>{t("DOCUMENT")}</th>
-										<th className="text-center">{t("upload_date")}</th>
 										<th></th>
 									</tr>
 								</thead>
@@ -1824,9 +1823,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													allowedSizeInByte={3145728}
 													formik={form}
 												/>
-											</td>
-											<td className="text-center">
-												{form?.values?.documents[i]?.created_at ? <ShowFormattedDate date={form?.values?.documents[i]?.created_at} /> : (<span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>)}
 											</td>
 											<td>
 												<a
