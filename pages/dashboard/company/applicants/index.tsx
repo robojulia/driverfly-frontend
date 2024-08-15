@@ -82,7 +82,7 @@ export default function Applicants() {
     const [filtersChanged, setFiltersChanged] = useState<boolean>(false);
 
     const fetchApplicant = async () => {
-        if (viewMode !== ViewMode.job) {
+        if (viewMode === ViewMode.applicant) {
             setLoading(true)
             const api = new ApplicantApi();
             const data = await api.list({
@@ -107,7 +107,7 @@ export default function Applicants() {
         }
     }
 
-    useEffectAsync(async () => await fetchApplicant(), [user, jobId, viewMode, filters, pagingMeta?.currentPage, pagingMeta?.itemsPerPage]);
+    useEffectAsync(async () => await fetchApplicant(), [user, jobId, filters, pagingMeta?.currentPage, pagingMeta?.itemsPerPage]);
 
     React.useMemo(() => (
         setFiltersChanged(true)
@@ -163,7 +163,7 @@ export default function Applicants() {
                 default:
                     const api = new ApplicantApi();
 
-                    await api.jobs.update(applicant.id, job.id, { status: value });
+                    await api?.jobs?.update(applicant?.id, job?.id, { status: value });
 
                     await router.reload();
                     break;
@@ -178,9 +178,9 @@ export default function Applicants() {
             try {
                 const api = new ApplicantApi();
 
-                await api.jobs.update(e.applicant.id, e.job.id, e);
+                await api?.jobs?.update(e?.applicant?.id, e?.job?.id, e);
 
-                await router.reload();
+                await router?.reload();
 
                 applicantJobForm.resetForm();
             } catch (e) {
