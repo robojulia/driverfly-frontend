@@ -866,7 +866,7 @@ function JobView(props: ViewProps) {
                         name: "NAME",
                         selector: aJob => getApplicantName(aJob?.applicant),
                         cell: aJob => (
-                            <Link href={`${router.pathname}/${aJob?.applicant?.id}/edit`}>
+                            <Link href={`${router?.pathname}/${aJob?.applicant?.id}/edit`}>
                                 <a>{getApplicantName(aJob?.applicant)}</a>
                             </Link>
                         ),
@@ -921,7 +921,7 @@ function JobView(props: ViewProps) {
                     },
                     {
                         cell: aJob => {
-                            const hideStatus = Boolean(applicants?.find(a => a?.id == aJob?.applicant.id)?.jobs?.find(j => j?.id != aJob?.id && j?.status?.startsWith("COMPLETED_")))
+                            const hideStatus = Boolean(applicants?.find(a => a?.id == aJob?.applicant?.id)?.jobs?.find(j => j?.id != aJob?.id && j?.status?.startsWith("COMPLETED_")))
                                 ? [
                                     ApplicantStatus.COMPLETED_EMPLOYED,
                                     ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
@@ -947,7 +947,7 @@ function JobView(props: ViewProps) {
                     {
                         icon: EyeFill,
                         label: "VIEW",
-                        onClick: (e) => onViewClick(row?.applicant.id)
+                        onClick: (e) => onViewClick(row?.applicant?.id)
                     },
                     {
                         icon: PencilFill,
