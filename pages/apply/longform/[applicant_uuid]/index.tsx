@@ -1,31 +1,30 @@
-import { NextPageContext } from "next";
-import { useState } from "react";
-import "react-toastify/dist/ReactToastify.css";
-import {
-	getQuickApplyPages,
-	getQuickApplyStyle,
-} from "../../../../components/forms/jotform/quick-apply-pages";
+import { useEffect, useState } from "react";
+import { getLongFormPages, getLongFormStyle } from "../../../../components/forms/jotform/jotform-pages";
 import JotformContext from "../../../../context/jotform-context";
-import {
-	ApplicantEntity, ApplicantExtrasEntity
-} from "../../../../models/applicant";
-import { CompanyPreferenceEntity } from "../../../../models/company/company-preferences.entity";
+import { ApplicantEntity, ApplicantExtrasEntity } from "../../../../models/applicant";
 import { CompanyEntity } from "../../../../models/company/company.entity";
 import ApplicantApi from "../../../api/applicant";
 import CompanyApi from "../../../api/company";
 import styles from "../../../../styles/digitalhiringapp.module.css";
 
-export interface QuickApplyProps {
+
+export interface LongFormProps {
 	entity: ApplicantEntity;
 	company: CompanyEntity;
-	preferences: CompanyPreferenceEntity[];
 }
-export default function QuickApply({ entity, company, preferences }: QuickApplyProps) {
+
+export default function LongForm({ entity, company }: LongFormProps) {
+
 	const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
-	const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>(entity.extras);
-	const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
+	const [applicantExtras, setApplicantExtras] = useState<
+		ApplicantExtrasEntity[]
+	>(entity.extras);
+
+	const updateApplicantExtras = (
+		applicantExtrasEntity: ApplicantExtrasEntity
+	) =>
 		setApplicantExtras((oldApx) => {
-			oldApx = oldApx?.filter((v) => (v.type != applicantExtrasEntity?.type));
+			oldApx = oldApx?.filter((v) => v.type != applicantExtrasEntity?.type);
 			return !!oldApx
 				? [...oldApx, { ...applicantExtrasEntity }]
 				: [{ ...applicantExtrasEntity }];
@@ -35,20 +34,23 @@ export default function QuickApply({ entity, company, preferences }: QuickApplyP
 	const stepNext = (): void => setSteps(steps + 1);
 	const stepBack = (): void => setSteps(steps - 1);
 
+	useEffect(() => {
+		console.log("from index applicant", applicant);
+		console.log("from index applicantExtras", applicantExtras);
+	}, []);
+
 	return (
 		<JotformContext.Provider
 			value={{
 				state: {
 					applicant,
 					applicantExtras,
-					companyPreferences: preferences,
 					steps,
 					company,
 				},
 				method: {
 					setApplicant,
 					updateApplicantExtras,
-					setApplicantExtras,
 					stepNext,
 					stepBack,
 				},
@@ -56,7 +58,7 @@ export default function QuickApply({ entity, company, preferences }: QuickApplyP
 		>
 			<div className={styles.container}>
 				<div className={styles.main}>
-					<div className={styles.main_form} style={getQuickApplyStyle(steps)}>
+					<div className={styles.main_form} style={getLongFormStyle(steps)}>
 						{/* uncomment this during development */}
 						{/* <BaseInput
 							value={steps}
@@ -64,7 +66,7 @@ export default function QuickApply({ entity, company, preferences }: QuickApplyP
 							max={26}
 							type="number"
 							onChange={({ target: { value } }) => setSteps(parseInt(value))} /> */}
-						{getQuickApplyPages(steps)}
+						{getLongFormPages(steps)}
 					</div>
 				</div>
 			</div>
@@ -72,9 +74,9 @@ export default function QuickApply({ entity, company, preferences }: QuickApplyP
 	);
 }
 
-export async function getServerSideProps({ query }: NextPageContext) {
+export async function getServerSideProps({ query }) {
 	try {
-		const applicant_uuid = String(query?.applicant_uuid);
+		const { applicant_uuid } = query || {};
 
 		if (!!!applicant_uuid) return { notFound: true };
 
@@ -82,23 +84,16 @@ export async function getServerSideProps({ query }: NextPageContext) {
 		const entity: ApplicantEntity = await applicantApi.getByUuidToken(
 			applicant_uuid
 		);
+		console.log("applicant", entity);
 
 		if (!!!entity) return { notFound: true };
-
 		const companyApi = new CompanyApi();
-		const company: CompanyEntity = await companyApi.employer.getById(
-			entity?.company?.id
-		);
-		const preferences: CompanyPreferenceEntity[] =
-			await companyApi.preferences.list(company.id);
-		entity.company = company;
+		const company: CompanyEntity = await companyApi.employer.getById(entity?.company?.id);
 
-		return { props: { entity, company, preferences } };
+		return { props: { entity, company } };
 	} catch (error) {
-		console.error(
-			`form/quick-apply: Exception when attempting to fetch details : ${query}`,
-			error.message
-		);
+		console.error("error", error.message);
+
 		return { notFound: true };
 	}
 }

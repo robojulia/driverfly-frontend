@@ -8,12 +8,12 @@ export class NamesDto {
     return yup.object({
       first_name: yup
         .string()
-        .matches(/^[A-Za-z ]*$/, "Please enter valid name")
+        .matches(/^[A-Za-zÀ-ÖØ-öø-ÿ '-]*$/, "Please enter a valid name")
         .required()
         .nullable(),
       last_name: yup
         .string()
-        .matches(/^[A-Za-z ]*$/, "Please enter valid name")
+        .matches(/^[A-Za-zÀ-ÖØ-öø-ÿ '-]*$/, "Please enter a valid name")
         .required()
         .nullable(),
     });

@@ -97,7 +97,7 @@ export function CdlExperience() {
 
 	return (
 		<>
-            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("cdl_experince")}</h1>
+			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("cdl_experince")}</h1>
 
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={`${styles.bold} my-3`}>
@@ -116,7 +116,7 @@ export function CdlExperience() {
 
 
 
-				{!!form.values.license_type && form.values.license_type !== DriverLicenseType.NO_CDL && (
+				{!!form.values.license_type && (
 					<>
 						<Row className={styles.bold}>
 							<BaseInput

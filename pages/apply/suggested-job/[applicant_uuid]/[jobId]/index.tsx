@@ -1,20 +1,14 @@
 import { useState } from "react";
-import {
-    getLongFormStyle,
-    getSuggestedJobPages,
-} from "../../../../../../components/forms/jotform/jotform-pages";
-import JotformContext from "../../../../../../context/jotform-context";
-import {
-    ApplicantEntity,
-    ApplicantExtrasEntity,
-} from "../../../../../../models/applicant";
-import { CompanyEntity } from "../../../../../../models/company/company.entity";
-import { JobEntity } from "../../../../../../models/job/job.entity";
-import styles from "../../../../../../styles/digitalhiringapp.module.css";
-import ApplicantApi from "../../../../../api/applicant";
-import CompanyApi from "../../../../../api/company";
-import JobApi from "../../../../../api/job";
-import { ApplicantExtras } from "../../../../../../enums/applicants/applicant-extras.enum";
+import { getLongFormStyle, getSuggestedJobPages } from "../../../../../components/forms/jotform/jotform-pages";
+import JotformContext from "../../../../../context/jotform-context";
+import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
+import { ApplicantEntity, ApplicantExtrasEntity } from "../../../../../models/applicant";
+import { CompanyEntity } from "../../../../../models/company/company.entity";
+import { JobEntity } from "../../../../../models/job/job.entity";
+import ApplicantApi from "../../../../api/applicant";
+import CompanyApi from "../../../../api/company";
+import JobApi from "../../../../api/job";
+import styles from "../../../../../styles/digitalhiringapp.module.css";
 
 export interface SuggestedJobsProps {
     entity: ApplicantEntity;
@@ -27,8 +21,6 @@ export default function SuggestedJobs({
     job,
     company,
 }: SuggestedJobsProps) {
-    console.log("entity", entity);
-
     const [jobs, setJobs] = useState<JobEntity[]>([job]);
     const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
     const [applicantExtras, setApplicantExtras] = useState<
