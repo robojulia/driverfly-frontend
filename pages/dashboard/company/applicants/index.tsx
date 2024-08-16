@@ -419,7 +419,7 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
         results?.qualification_fail_reason?.push("YEARS_OF_CDL_EXPERIENCE_TOO_LOW");
     }
 
-    if (applicant.accident_count > 0) {
+    if (applicant?.accident_count > 0) {
         if (job?.must_have_clean_mvr) {
             results.meets_basic_qualifications = false;
             results?.qualification_fail_reason?.push("DOES_NOT_HAVE_CLEAN_MVR");
