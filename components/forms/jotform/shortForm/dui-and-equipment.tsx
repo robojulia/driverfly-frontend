@@ -27,8 +27,8 @@ export function DuiAndEquipment() {
     const form = useFormik({
         initialValues: {
             equipment_experience: [],
-            has_past_dui: false,
-            dui_years: [],
+            // has_past_dui: false,
+            // dui_years: [],
         },
         validationSchema: yup.object({
             equipment_experience: (
@@ -44,12 +44,12 @@ export function DuiAndEquipment() {
                 )
                 .nullable(),
         }),
-        onSubmit: ({ equipment_experience, has_past_dui, dui_years }) => {
+        onSubmit: ({ equipment_experience }) => {
             setApplicant({
                 ...applicant,
                 equipment_experience,
-                has_past_dui,
-                dui_years,
+                // has_past_dui,
+                // dui_years,
             });
             stepNext();
         },
@@ -59,19 +59,19 @@ export function DuiAndEquipment() {
     });
 
     useEffect(() => {
-        const { equipment_experience, has_past_dui, dui_years } = applicant;
+        const { equipment_experience } = applicant;
 
         form.setValues({
             ...form.values,
             equipment_experience,
-            has_past_dui,
-            dui_years,
+            // has_past_dui,
+            // dui_years,
         });
     }, [applicant]);
 
     return (
         <>
-            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("DUI_AND_EQUIPEMENTS")}</h1>
+            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("EQUIPMENT_DRIVEN")}</h1>
             <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
                 <Row>
                     <ViewCard
@@ -156,7 +156,7 @@ export function DuiAndEquipment() {
                             </>
                         )}
                     </ViewCard>
-                    <BaseCheck
+                    {/* <BaseCheck
                         className="col-12 mt-2"
                         label="HAS_DUIS"
                         name="has_past_dui"
@@ -223,7 +223,7 @@ export function DuiAndEquipment() {
                                 )}
                             </ViewCard>
                         </Col>
-                    )}
+                    )} */}
                 </Row>
                 <Row className="mt-4">
                     <Col>
