@@ -414,15 +414,15 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
         qualification_fail_reason: []
     };
 
-    if (applicant.years_cdl_experience < job.min_years_experience) {
+    if (applicant?.years_cdl_experience < job?.min_years_experience) {
         results.meets_basic_qualifications = false;
-        results.qualification_fail_reason.push("YEARS_OF_CDL_EXPERIENCE_TOO_LOW");
+        results?.qualification_fail_reason?.push("YEARS_OF_CDL_EXPERIENCE_TOO_LOW");
     }
 
     if (applicant.accident_count > 0) {
-        if (job.must_have_clean_mvr) {
+        if (job?.must_have_clean_mvr) {
             results.meets_basic_qualifications = false;
-            results.qualification_fail_reason.push("DOES_NOT_HAVE_CLEAN_MVR");
+            results?.qualification_fail_reason?.push("DOES_NOT_HAVE_CLEAN_MVR");
         }
         else if (job?.mvr_requirements?.length) {
             // complicated check around max violations
@@ -430,35 +430,35 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
             // we just want to pull the max number
             // and check against that
             const mvr = job?.mvr_requirements?.reduce((p, c) => {
-                if (p.max_count >= c.max_count) return p;
+                if (p?.max_count >= c?.max_count) return p;
 
                 return c;
             });
 
-            if (mvr && mvr.max_count > applicant.accident_count) {
+            if (mvr && mvr?.max_count > applicant?.accident_count) {
                 results.meets_basic_qualifications = false;
-                results.qualification_fail_reason.push("VIOLATION_COUNT_GREATER_THAN_MAX");
+                results?.qualification_fail_reason?.push("VIOLATION_COUNT_GREATER_THAN_MAX");
             }
         }
     }
 
-    if (!applicant.can_pass_drug_test && job.must_pass_drug_test) {
+    if (!applicant?.can_pass_drug_test && job?.must_pass_drug_test) {
         results.meets_basic_qualifications = false;
-        results.qualification_fail_reason.push("CANNOT_PASS_DRUG_TEST");
+        results?.qualification_fail_reason?.push("CANNOT_PASS_DRUG_TEST");
     }
 
-    job.required_skills?.forEach(skill => {
+    job?.required_skills?.forEach(skill => {
         // cannot process OTHER type
-        if (skill.type != JobEquipmentType.OTHER) {
-            const experience = applicant?.equipment_experience?.find(v => v.type == skill.type);
+        if (skill?.type != JobEquipmentType.OTHER) {
+            const experience = applicant?.equipment_experience?.find(v => v?.type == skill?.type);
 
             if (!experience) {
                 results.meets_basic_qualifications = false;
-                results.qualification_fail_reason.push({ key: "DOES_NOT_HAVE_{name}_EXPERIENCE", name: `JobEquipmentType.${skill.type}` });
+                results?.qualification_fail_reason?.push({ key: "DOES_NOT_HAVE_{name}_EXPERIENCE", name: `JobEquipmentType.${skill?.type}` });
             }
-            else if (experience.years < skill.years) {
+            else if (experience?.years < skill?.years) {
                 results.meets_basic_qualifications = false;
-                results.qualification_fail_reason.push({ key: "YEARS_OF_{name}_EXPERIENCE_TOO_LOW", name: `JobEquipmentType.${skill.type}` });
+                results?.qualification_fail_reason?.push({ key: "YEARS_OF_{name}_EXPERIENCE_TOO_LOW", name: `JobEquipmentType.${skill?.type}` });
             }
         }
     });
