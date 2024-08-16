@@ -384,22 +384,22 @@ Applicants.getLayout = function getLayout(page) {
 }
 
 function getApplicantName(applicant: ApplicantEntity) {
-    return `${applicant.first_name} ${applicant.last_name}`;
+    return `${applicant?.first_name} ${applicant?.last_name}`;
 }
 
 function getApplicantStatus(applicantJob: ApplicantJobEntity, t: TranslateInterface) {
-    switch (applicantJob.status) {
-        case ApplicantStatus.OTHER: return applicantJob.status_other;
+    switch (applicantJob?.status) {
+        case ApplicantStatus.OTHER: return applicantJob?.status_other;
         case ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v == ApplicantReasonCodeNotQualified.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeNotQualified.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob?.status}`)} (${applicantJob?.reason_codes?.map(v => v == ApplicantReasonCodeNotQualified.OTHER ? applicantJob?.reason_codes_other : t(`ApplicantReasonCodeNotQualified.${v}`))?.join(", ")})`;
         case ApplicantStatus.INACTIVE_CONTACTED_UNINTERESTED:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v == ApplicantReasonCodeNotInterested.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeNotInterested.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob?.status}`)} (${applicantJob?.reason_codes?.map(v => v == ApplicantReasonCodeNotInterested.OTHER ? applicantJob?.reason_codes_other : t(`ApplicantReasonCodeNotInterested.${v}`))?.join(", ")})`;
         case ApplicantStatus.INACTIVE_QUIT:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v == ApplicantReasonCodeQuit.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeQuit.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob?.status}`)} (${applicantJob?.reason_codes?.map(v => v == ApplicantReasonCodeQuit.OTHER ? applicantJob?.reason_codes_other : t(`ApplicantReasonCodeQuit.${v}`))?.join(", ")})`;
         case ApplicantStatus.INACTIVE_FIRED:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v == ApplicantReasonCodeFired.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeFired.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob?.status}`)} (${applicantJob?.reason_codes?.map(v => v == ApplicantReasonCodeFired.OTHER ? applicantJob?.reason_codes_other : t(`ApplicantReasonCodeFired.${v}`))?.join(", ")})`;
         default:
-            return t(`ApplicantStatus.${applicantJob.status}`);
+            return t(`ApplicantStatus.${applicantJob?.status}`);
     }
 
     if (applicantJob.reason_codes?.length > 0 || applicantJob.reason_codes_other) {
