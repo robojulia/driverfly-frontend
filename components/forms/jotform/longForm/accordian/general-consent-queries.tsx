@@ -111,7 +111,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                 >
                     {t(
                         "APPLICANT_{APPLY_DATE}",
-                        { APPLY_DATE: `${apply_date?.value ? ShowUsFormattedDateTime(apply_date?.value) : ""}` },
+                        { APPLY_DATE: `${apply_date?.value ? ShowUsFormattedDateTime(new Date(apply_date?.value)) : ""}` },
                         { translateProps: true }
                     )}
                 </h6>
