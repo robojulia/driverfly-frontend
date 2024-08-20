@@ -68,6 +68,24 @@ const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
       value = value.split("T")[0];
     }
 
+    if (type === "date") {
+      const currentOnChange = onChange;
+
+      onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let { value } = e?.target;
+
+        // Split the value into year, month, and day components
+        const [year, month, day] = value?.split('-');
+
+        // Restrict the year part to 4 digits
+        if (year && year?.length > 4) {
+          e.target.value = `${year?.slice(0, 4)}-${month || ''}-${day || ''}`;
+        }
+
+        if (currentOnChange) currentOnChange(e);
+      };
+    }
+
     /* This code snippet is handling keyboard events for input fields based on the `type` property. */
     if (type == "int" || type == "integer") {
       type = "number";
