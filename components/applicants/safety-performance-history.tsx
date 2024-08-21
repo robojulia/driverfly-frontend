@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Send } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
+import { ApplicantOnBoardingChecklist } from "../../enums/applicants/applicant-onboarding-checklist.enum";
 import { DocumentableType } from "../../enums/documents/documentable-type.enum";
 import { useTranslation } from "../../hooks/use-translation";
 import { ApplicantEmployerEntity } from "../../models/applicant";
@@ -30,7 +31,6 @@ import ViewDataTable from "../view-details/view-data-table";
 import ViewDetails from "../view-details/view-details";
 import ViewModal from "../view-details/view-modal";
 import ViewPdf from "../view-details/view-pdf";
-import { ApplicantOnBoardingChecklist } from "../../enums/applicants/applicant-onboarding-checklist.enum";
 
 export default function SafetyPerformanceHistory({
     buttonClass,
@@ -89,7 +89,7 @@ export default function SafetyPerformanceHistory({
 
     useEffect(() => {
         return () => {
-            setEmployers([])
+            resetEmployers()
         }
     }, []);
 
@@ -110,13 +110,20 @@ export default function SafetyPerformanceHistory({
             docType
         );
 
-        setEmployers([
-            ...employers.filter((v) => v.id != employer.id),
+        const updatedEmployers = [
+            ...applicant?.employers?.filter((v) => v.id != employer.id),
             {
                 ...employer,
+                voe_submitted: false,
                 documents: employer.documents?.filter((v) => v.type != docType),
             },
-        ]);
+        ]
+        await applicantApi.update(applicant.id, {
+            ...applicant,
+            employers: updatedEmployers
+        })
+
+        setEmployers(updatedEmployers);
         resetIsLoading();
     };
 
