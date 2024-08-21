@@ -7,6 +7,7 @@ import { AccordianProps } from "../../../../../types/jotform/accordian.type";
 import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../../models/applicant";
+import { ShowUsFormattedDateTime } from "../../../../../utils/show-us-formatted-date-time";
 
 export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
     const {
@@ -48,7 +49,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
     return (
         <>
             <Row >
-                <h1 
+                <h1
                     className={`${styles.paragraph} ${styles.align__text_left}`} >
                     {t(
                         "{COMPANY_NAME}",
@@ -67,9 +68,9 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                 </p>
             </Row>
             <Row className={styles.align__text_left}>
-                <h6 
+                <h6
                     className={`${styles.paragraph} ${styles.align__text_left}`}
-                
+
                 >
                     {t(
                         "APPLICANT_FULL_NAME_{NAME}",
@@ -82,7 +83,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
             <Row className={styles.align__text_left}>
                 <h6
                     className={`${styles.paragraph} ${styles.align__text_left}`}
-                
+
                 >
                     {t(
                         "APPLICANT_{cdl_number}",
@@ -94,7 +95,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
             <Row className={styles.align__text_left}>
                 <h6
                     className={`${styles.paragraph} ${styles.align__text_left}`}
-                
+
                 >
                     {t(
                         "APPLICANT_{COMPANY_NAME}",
@@ -106,11 +107,11 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
             <Row className={styles.align__text_left}>
                 <h6
                     className={`${styles.paragraph} ${styles.align__text_left}`}
-                
+
                 >
                     {t(
                         "APPLICANT_{APPLY_DATE}",
-                        { APPLY_DATE: `${apply_date?.value}` },
+                        { APPLY_DATE: `${apply_date?.value ? ShowUsFormattedDateTime(new Date(apply_date?.value)) : ""}` },
                         { translateProps: true }
                     )}
                 </h6>

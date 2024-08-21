@@ -384,22 +384,22 @@ Applicants.getLayout = function getLayout(page) {
 }
 
 function getApplicantName(applicant: ApplicantEntity) {
-    return `${applicant.first_name} ${applicant.last_name}`;
+    return `${applicant?.first_name} ${applicant?.last_name}`;
 }
 
 function getApplicantStatus(applicantJob: ApplicantJobEntity, t: TranslateInterface) {
-    switch (applicantJob.status) {
-        case ApplicantStatus.OTHER: return applicantJob.status_other;
+    switch (applicantJob?.status) {
+        case ApplicantStatus.OTHER: return applicantJob?.status_other;
         case ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v == ApplicantReasonCodeNotQualified.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeNotQualified.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob?.status}`)} (${applicantJob?.reason_codes?.map(v => v == ApplicantReasonCodeNotQualified.OTHER ? applicantJob?.reason_codes_other : t(`ApplicantReasonCodeNotQualified.${v}`))?.join(", ")})`;
         case ApplicantStatus.INACTIVE_CONTACTED_UNINTERESTED:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v == ApplicantReasonCodeNotInterested.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeNotInterested.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob?.status}`)} (${applicantJob?.reason_codes?.map(v => v == ApplicantReasonCodeNotInterested.OTHER ? applicantJob?.reason_codes_other : t(`ApplicantReasonCodeNotInterested.${v}`))?.join(", ")})`;
         case ApplicantStatus.INACTIVE_QUIT:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v == ApplicantReasonCodeQuit.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeQuit.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob?.status}`)} (${applicantJob?.reason_codes?.map(v => v == ApplicantReasonCodeQuit.OTHER ? applicantJob?.reason_codes_other : t(`ApplicantReasonCodeQuit.${v}`))?.join(", ")})`;
         case ApplicantStatus.INACTIVE_FIRED:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v == ApplicantReasonCodeFired.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeFired.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob?.status}`)} (${applicantJob?.reason_codes?.map(v => v == ApplicantReasonCodeFired.OTHER ? applicantJob?.reason_codes_other : t(`ApplicantReasonCodeFired.${v}`))?.join(", ")})`;
         default:
-            return t(`ApplicantStatus.${applicantJob.status}`);
+            return t(`ApplicantStatus.${applicantJob?.status}`);
     }
 
     if (applicantJob.reason_codes?.length > 0 || applicantJob.reason_codes_other) {
@@ -414,15 +414,15 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
         qualification_fail_reason: []
     };
 
-    if (applicant.years_cdl_experience < job.min_years_experience) {
+    if (applicant?.years_cdl_experience < job?.min_years_experience) {
         results.meets_basic_qualifications = false;
-        results.qualification_fail_reason.push("YEARS_OF_CDL_EXPERIENCE_TOO_LOW");
+        results?.qualification_fail_reason?.push("YEARS_OF_CDL_EXPERIENCE_TOO_LOW");
     }
 
-    if (applicant.accident_count > 0) {
-        if (job.must_have_clean_mvr) {
+    if (applicant?.accident_count > 0) {
+        if (job?.must_have_clean_mvr) {
             results.meets_basic_qualifications = false;
-            results.qualification_fail_reason.push("DOES_NOT_HAVE_CLEAN_MVR");
+            results?.qualification_fail_reason?.push("DOES_NOT_HAVE_CLEAN_MVR");
         }
         else if (job?.mvr_requirements?.length) {
             // complicated check around max violations
@@ -430,35 +430,35 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
             // we just want to pull the max number
             // and check against that
             const mvr = job?.mvr_requirements?.reduce((p, c) => {
-                if (p.max_count >= c.max_count) return p;
+                if (p?.max_count >= c?.max_count) return p;
 
                 return c;
             });
 
-            if (mvr && mvr.max_count > applicant.accident_count) {
+            if (mvr && mvr?.max_count > applicant?.accident_count) {
                 results.meets_basic_qualifications = false;
-                results.qualification_fail_reason.push("VIOLATION_COUNT_GREATER_THAN_MAX");
+                results?.qualification_fail_reason?.push("VIOLATION_COUNT_GREATER_THAN_MAX");
             }
         }
     }
 
-    if (!applicant.can_pass_drug_test && job.must_pass_drug_test) {
+    if (!applicant?.can_pass_drug_test && job?.must_pass_drug_test) {
         results.meets_basic_qualifications = false;
-        results.qualification_fail_reason.push("CANNOT_PASS_DRUG_TEST");
+        results?.qualification_fail_reason?.push("CANNOT_PASS_DRUG_TEST");
     }
 
-    job.required_skills?.forEach(skill => {
+    job?.required_skills?.forEach(skill => {
         // cannot process OTHER type
-        if (skill.type != JobEquipmentType.OTHER) {
-            const experience = applicant?.equipment_experience?.find(v => v.type == skill.type);
+        if (skill?.type != JobEquipmentType.OTHER) {
+            const experience = applicant?.equipment_experience?.find(v => v?.type == skill?.type);
 
             if (!experience) {
                 results.meets_basic_qualifications = false;
-                results.qualification_fail_reason.push({ key: "DOES_NOT_HAVE_{name}_EXPERIENCE", name: `JobEquipmentType.${skill.type}` });
+                results?.qualification_fail_reason?.push({ key: "DOES_NOT_HAVE_{name}_EXPERIENCE", name: `JobEquipmentType.${skill?.type}` });
             }
-            else if (experience.years < skill.years) {
+            else if (experience?.years < skill?.years) {
                 results.meets_basic_qualifications = false;
-                results.qualification_fail_reason.push({ key: "YEARS_OF_{name}_EXPERIENCE_TOO_LOW", name: `JobEquipmentType.${skill.type}` });
+                results?.qualification_fail_reason?.push({ key: "YEARS_OF_{name}_EXPERIENCE_TOO_LOW", name: `JobEquipmentType.${skill?.type}` });
             }
         }
     });
@@ -866,7 +866,7 @@ function JobView(props: ViewProps) {
                         name: "NAME",
                         selector: aJob => getApplicantName(aJob?.applicant),
                         cell: aJob => (
-                            <Link href={`${router.pathname}/${aJob?.applicant?.id}/edit`}>
+                            <Link href={`${router?.pathname}/${aJob?.applicant?.id}/edit`}>
                                 <a>{getApplicantName(aJob?.applicant)}</a>
                             </Link>
                         ),
@@ -921,7 +921,7 @@ function JobView(props: ViewProps) {
                     },
                     {
                         cell: aJob => {
-                            const hideStatus = Boolean(applicants?.find(a => a?.id == aJob?.applicant.id)?.jobs?.find(j => j?.id != aJob?.id && j?.status?.startsWith("COMPLETED_")))
+                            const hideStatus = Boolean(applicants?.find(a => a?.id == aJob?.applicant?.id)?.jobs?.find(j => j?.id != aJob?.id && j?.status?.startsWith("COMPLETED_")))
                                 ? [
                                     ApplicantStatus.COMPLETED_EMPLOYED,
                                     ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
@@ -947,7 +947,7 @@ function JobView(props: ViewProps) {
                     {
                         icon: EyeFill,
                         label: "VIEW",
-                        onClick: (e) => onViewClick(row?.applicant.id)
+                        onClick: (e) => onViewClick(row?.applicant?.id)
                     },
                     {
                         icon: PencilFill,

@@ -4,6 +4,7 @@ import { ApplicantExtras } from "../../../../../../enums/applicants/applicant-ex
 import { useTranslation } from "../../../../../../hooks/use-translation";
 import { ApplicantEmployerEntity, ApplicantEntity } from "../../../../../../models/applicant";
 import styles from "../../../../../../styles/digitalhiringapp.module.css";
+import { ShowUsFormattedDateTime } from "../../../../../../utils/show-us-formatted-date-time";
 
 export interface Section1Props {
     applicant: ApplicantEntity,
@@ -17,7 +18,7 @@ export function VerificationOfEmploymentSection1({ applicant, employer }: Sectio
     const date_VOE = applicant?.extras?.find(sign => sign?.type == ApplicantExtras.APPLY_DATE)
     useEffect(() => {
         console.log("applicant", applicant);
-        
+
         console.log("employer from comp ", employer)
         console.log("applicant from comp ", applicant?.company?.users[0])
     }, [])
@@ -123,7 +124,7 @@ export function VerificationOfEmploymentSection1({ applicant, employer }: Sectio
                             {t("DATE:")}
                         </h5>
                         <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                            {date_VOE?.value}
+                            {date_VOE?.value ? ShowUsFormattedDateTime(new Date(date_VOE?.value)) : ""}
                         </p>
                     </div>
                 </Col>

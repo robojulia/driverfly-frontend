@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import { useContext, useEffect } from "react";
-import { Button, Col, Row, Table } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
@@ -12,7 +12,6 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantExperienceEntity } from "../../../../models/applicant";
 import styles from "../../../../styles/digitalhiringapp.module.css";
 import ViewCard from "../../../view-details/view-card";
-import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
 import BaseSelect from "../../base-select";
 
@@ -27,8 +26,6 @@ export function DuiAndEquipment() {
     const form = useFormik({
         initialValues: {
             equipment_experience: [],
-            has_past_dui: false,
-            dui_years: [],
         },
         validationSchema: yup.object({
             equipment_experience: (
@@ -44,12 +41,10 @@ export function DuiAndEquipment() {
                 )
                 .nullable(),
         }),
-        onSubmit: ({ equipment_experience, has_past_dui, dui_years }) => {
+        onSubmit: ({ equipment_experience }) => {
             setApplicant({
                 ...applicant,
                 equipment_experience,
-                has_past_dui,
-                dui_years,
             });
             stepNext();
         },
@@ -59,19 +54,17 @@ export function DuiAndEquipment() {
     });
 
     useEffect(() => {
-        const { equipment_experience, has_past_dui, dui_years } = applicant;
+        const { equipment_experience } = applicant;
 
         form.setValues({
             ...form.values,
             equipment_experience,
-            has_past_dui,
-            dui_years,
         });
     }, [applicant]);
 
     return (
         <>
-            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("DUI_AND_EQUIPEMENTS")}</h1>
+            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("EQUIPMENT_DRIVEN")}</h1>
             <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
                 <Row>
                     <ViewCard
@@ -156,74 +149,6 @@ export function DuiAndEquipment() {
                             </>
                         )}
                     </ViewCard>
-                    <BaseCheck
-                        className="col-12 mt-2"
-                        label="HAS_DUIS"
-                        name="has_past_dui"
-                        formik={form}
-                    />
-                    {form.values?.has_past_dui && (
-                        <Col xs="12" className="mt-2">
-                            <ViewCard
-                                title="PAST_DUIS"
-                                actions={
-                                    <Button
-                                        size="sm"
-                                        onClick={() =>
-                                            form.setValues({
-                                                ...form.values,
-                                                dui_years: [...(form.values?.dui_years || []), ""],
-                                            })
-                                        }
-                                    >
-                                        <PlusCircle /> {t("ADD")}
-                                    </Button>
-                                }
-                            >
-                                {form.values?.dui_years?.length > 0 && (
-                                    <Table striped>
-                                        <thead>
-                                            <tr>
-                                                <th colSpan={2}>{t("YEAR")}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {form.values?.dui_years?.map((entity, i) => (
-                                                <tr key={i}>
-                                                    <td className="w-100">
-                                                        <BaseInput
-                                                            name={`dui_years[${i}]`}
-                                                            placeholder="YEAR"
-                                                            type="int"
-                                                            required
-                                                            min={new Date().getFullYear() - 5}
-                                                            max={new Date().getFullYear()}
-                                                            formik={form}
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <a
-                                                            href="#"
-                                                            onClick={() =>
-                                                                form.setValues({
-                                                                    ...form.values,
-                                                                    dui_years: form.values?.dui_years?.filter(
-                                                                        (v, idx) => i != idx
-                                                                    ),
-                                                                })
-                                                            }
-                                                        >
-                                                            <DashCircle color="red" />
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </Table>
-                                )}
-                            </ViewCard>
-                        </Col>
-                    )}
                 </Row>
                 <Row className="mt-4">
                     <Col>

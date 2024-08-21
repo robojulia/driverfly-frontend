@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Row } from "react-bootstrap";
-import ApplicantSafetyBackground from "../../../../../components/applicants/applicant-safety-background";
-import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
-import ApplicantExtrasDetails from "../../../../../components/applicants/jotform/applicant-profile";
-import BaseRecaptcha from "../../../../../components/forms/base-recaptcha";
-import PageLayout from "../../../../../components/layouts/page/page-layout";
-import { useTranslation } from "../../../../../hooks/use-translation";
-import { ApplicantEntity } from "../../../../../models/applicant";
-import ApplicantApi from "../../../../api/applicant";
-import DocumentApi from "../../../../api/document";
+import ApplicantSafetyBackground from "../../../../components/applicants/applicant-safety-background";
+import ViewApplicantDetail from "../../../../components/applicants/applicant-view-details";
+import ApplicantExtrasDetails from "../../../../components/applicants/jotform/applicant-profile";
+import BaseRecaptcha from "../../../../components/forms/base-recaptcha";
+import PageLayout from "../../../../components/layouts/page/page-layout";
+import { useTranslation } from "../../../../hooks/use-translation";
+import { ApplicantEntity } from "../../../../models/applicant";
+import ApplicantApi from "../../../api/applicant";
+import DocumentApi from "../../../api/document";
 
 export interface LongFormProps {
 	entity: ApplicantEntity;

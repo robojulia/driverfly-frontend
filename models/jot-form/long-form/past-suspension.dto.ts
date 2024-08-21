@@ -4,6 +4,8 @@ import { ApplicantExtrasEntity } from "../../applicant/applicant-extras.entity";
 export class PastSuspensionDto {
   is_past_license_suspended: boolean;
   PAST_LICENSE_SUSPENSION: ApplicantExtrasEntity;
+  has_past_dui: boolean;
+  dui_years: string[];
 
   static yupSchema() {
     return yup.object({
@@ -14,6 +16,15 @@ export class PastSuspensionDto {
           is: (v) => !!v,
           then: ApplicantExtrasEntity.yupSchema(),
         })
+        .nullable(),
+      has_past_dui: yup.bool().nullable(),
+      dui_years: yup
+        .array(
+          yup
+            .number()
+            .min(new Date().getFullYear() - 5)
+            .max(new Date().getFullYear())
+        )
         .nullable(),
     });
   }
