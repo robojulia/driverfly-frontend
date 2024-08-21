@@ -3,7 +3,7 @@ import { ApplicantEmployerEntity } from "./applicant-employer.entity";
 import { ApplicantEntity } from "./applicant.entity";
 import { ReasonsForLeavingEmployment } from "../../enums/users/reasons-for-leaving-employment";
 import { BooleanType } from "../../enums/jotform/boolean-type.enum";
- 
+
 
 export class ApplicantVoeEntity {
 	constructor() { }
@@ -41,7 +41,24 @@ export class ApplicantVoeEntity {
 		return yup.object({
 			position: yup.string().required().nullable(),
 			start_date: yup.date().required().nullable(),
-			end_date: yup.date().required().nullable(),
+			end_date: yup
+				.date()
+				.required()
+				.test({
+					test: (value, context) => {
+						const start_date = context.resolve(
+							yup.ref("start_date")
+						);
+						if (!Boolean(value)) return true;
+						if (value > start_date) return true;
+
+						return context.createError({
+							path: context.path,
+							message: "END_DATE_MUST_BE_AFTER_START_DATE",
+						});
+					},
+				})
+				.nullable(),
 			did_drive_check: yup
 				.mixed<BooleanType>()
 				.oneOf(Object.values(BooleanType))
