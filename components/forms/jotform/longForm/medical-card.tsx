@@ -23,7 +23,7 @@ export function MedicalCard() {
 	const isNotMedicalCard = (v: DocumentEntity): boolean => v.type != ApplicantDocumentType.MEDICAL_EXAMINER_CERTIFICATE_MEDICAL_CARD;
 	const router = useRouter();
 	const isMissingDocRouteActive = router.route.includes('longform/[applicant_uuid]/missing-document')
-	const isLongFormRouteActive = router.route.includes('digitalhiringapp/longform/[applicant_uuid]');
+	const isLongFormRouteActive = router.route.includes('apply/longform/[applicant_uuid]');
 	const dhaRouteActive = router.route.includes('apply/[slug]')
 
 	const { t } = useTranslation();
