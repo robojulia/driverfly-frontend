@@ -1,16 +1,18 @@
 import { NextPageContext } from "next";
 import { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
-import { getFullFormPages, getFullFormStyle } from "../../../../components/forms/jotform/jotform-pages";
-import JotformContext from "../../../../context/jotform-context";
-import { Status } from "../../../../enums/status.enum";
-import { ApplicantEntity, ApplicantExtrasEntity } from "../../../../models/applicant";
-import { UtmReferral } from "../../../../models/auth/utm-referral.interface";
-import { CompanyPreferenceEntity } from "../../../../models/company/company-preferences.entity";
-import { CompanyEntity } from "../../../../models/company/company.entity";
-import { JobEntity } from "../../../../models/job/job.entity";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import CompanyApi from "../../../api/company";
+
+import styles from "../../../styles/digitalhiringapp.module.css";
+import { getFullFormStyle, getFullFormPages } from "../../../components/forms/jotform/jotform-pages";
+import JotformContext from "../../../context/jotform-context";
+import { Status } from "../../../enums/status.enum";
+import { ApplicantEntity, ApplicantExtrasEntity } from "../../../models/applicant";
+import { UtmReferral } from "../../../models/auth/utm-referral.interface";
+import { CompanyPreferenceEntity } from "../../../models/company/company-preferences.entity";
+import { CompanyEntity } from "../../../models/company/company.entity";
+import { JobEntity } from "../../../models/job/job.entity";
+import CompanyApi from "../../api/company";
+
 
 export interface FullFormProps {
 	employer: CompanyEntity;

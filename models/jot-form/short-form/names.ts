@@ -6,16 +6,8 @@ export class NamesDto {
 
   static yupSchema() {
     return yup.object({
-      first_name: yup
-        .string()
-        .matches(/^[A-Za-z ]*$/, "Please enter valid name")
-        .required()
-        .nullable(),
-      last_name: yup
-        .string()
-        .matches(/^[A-Za-z ]*$/, "Please enter valid name")
-        .required()
-        .nullable(),
+      first_name: yup.string().required().nullable().trim(),
+      last_name: yup.string().required().nullable().trim(),
     });
   }
 }

@@ -1,17 +1,11 @@
 import { useState } from "react";
-import styles from "../../../../../styles/digitalhiringapp.module.css";
-import {
-	ApplicantEntity,
-	ApplicantExtrasEntity,
-} from "../../../../../models/applicant";
-import JotformContext from "../../../../../context/jotform-context";
-import {
-	getLongFormStyle,
-	getMissingDocumentsPages,
-} from "../../../../../components/forms/jotform/jotform-pages";
-import ApplicantApi from "../../../../api/applicant";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getLongFormStyle, getMissingDocumentsPages } from "../../../../components/forms/jotform/jotform-pages";
+import JotformContext from "../../../../context/jotform-context";
+import { ApplicantEntity, ApplicantExtrasEntity } from "../../../../models/applicant";
+import ApplicantApi from "../../../api/applicant";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export interface MissingDocumentsProps {
 	entity: ApplicantEntity;

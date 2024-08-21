@@ -1,14 +1,12 @@
 import { useState } from "react";
-import styles from "../../../../../styles/digitalhiringapp.module.css";
-import {
-	ApplicantEntity,
-} from "../../../../../models/applicant";
-import ApplicantApi from "../../../../api/applicant";
 import { Col, Row } from "react-bootstrap";
-import { useTranslation } from "../../../../../hooks/use-translation";
-import { ViewDocumentButton } from "../../../../../components/documents/buttons";
-import { ApplicantDocumentType } from "../../../../../enums/applicants/applicant-document-type.enum";
-import ViewPdf from "../../../../../components/view-details/view-pdf";
+import { ViewDocumentButton } from "../../../../components/documents/buttons";
+import ViewPdf from "../../../../components/view-details/view-pdf";
+import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
+import { useTranslation } from "../../../../hooks/use-translation";
+import { ApplicantEntity } from "../../../../models/applicant";
+import ApplicantApi from "../../../api/applicant";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export interface DocumentsProps {
 	entity: ApplicantEntity;
