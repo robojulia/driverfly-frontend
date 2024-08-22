@@ -125,8 +125,8 @@ export function PastSuspension() {
 															placeholder="YEAR"
 															type="int"
 															required
-															min={new Date().getFullYear() - 5}
-															max={new Date().getFullYear()}
+															min={1900}
+															max="9999"
 															formik={form}
 														/>
 													</td>

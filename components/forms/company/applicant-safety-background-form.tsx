@@ -83,6 +83,11 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
 
     useEffect(() => focusOnErrorField(form), [form.submitCount])
 
+    useEffect(() => {
+        console.log("Applicant safety Form values", form.values)
+        console.log("Applicant safety Form errors", form.errors)
+    }, [form.errors, form.values])
+
     return (
         <Form
             onSubmit={form.handleSubmit}
