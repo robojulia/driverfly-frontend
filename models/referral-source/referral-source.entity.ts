@@ -25,6 +25,6 @@ export class ReferralSourceEntity {
     }
 
     static getReferralUrl(host: string, entity: ReferralSourceEntity, slug: string) {
-        return `${host}/form/digitalhiringapp/${slug}?utm_source=${entity?.source}&utm_medium=${entity?.medium}&utm_campaign=${entity?.code}&referral_name=${entity?.name}`;
+        return `${host}/apply/${slug}?utm_source=${entity?.source}&utm_medium=${entity?.medium}&utm_campaign=${entity?.code}&referral_name=${entity?.name}`;
     }
 }

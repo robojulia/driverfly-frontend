@@ -19,12 +19,7 @@ export class PastSuspensionDto {
         .nullable(),
       has_past_dui: yup.bool().nullable(),
       dui_years: yup
-        .array(
-          yup
-            .number()
-            .min(new Date().getFullYear() - 5)
-            .max(new Date().getFullYear())
-        )
+        .array(yup.number().min(1900).max(new Date().getFullYear()))
         .nullable(),
     });
   }
