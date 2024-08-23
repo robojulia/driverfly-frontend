@@ -256,6 +256,25 @@ export function ContinueLongForm() {
 							<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
 								{t("PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PROCEED")}
 							</h6>
+
+							{Boolean(
+								companyPrefferedEmploymentType?.includes(JobEmploymentType.W2)
+							) &&
+								!Boolean(
+									applicant?.extras.some(
+										(v) => v.type == ApplicantExtras.REQUIRE_W2_EMPLOYMENT
+									)
+								) && (
+									<>
+										<h4
+											className={`${styles.paragraph} ${styles.margin__top} text-warning p-1`}
+										>
+											{t("{company_name}_W2_VALIDATION", {
+												company_name: applicant?.company?.name || company.name,
+											})}
+										</h4>
+									</>
+								)}
 						</>
 					) : (Boolean(
 						companyPrefferedEmploymentType?.includes(
@@ -283,24 +302,7 @@ export function ContinueLongForm() {
 							</h6>
 						</>
 					) : (
-						Boolean(
-							companyPrefferedEmploymentType?.includes(JobEmploymentType.W2)
-						) &&
-						!Boolean(
-							applicant?.extras.some(
-								(v) => v.type == ApplicantExtras.REQUIRE_W2_EMPLOYMENT
-							)
-						) && (
-							<>
-								<h4
-									className={`${styles.paragraph} ${styles.margin__top} text-warning p-1`}
-								>
-									{t("{company_name}_W2_VALIDATION", {
-										company_name: applicant?.company?.name || company.name,
-									})}
-								</h4>
-							</>
-						)
+						""
 					)}
 				</Row>
 				<Row className="mt-3">
