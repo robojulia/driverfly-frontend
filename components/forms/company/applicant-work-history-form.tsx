@@ -27,7 +27,6 @@ import BaseInputPhone from "../base-input-phone";
 import StateSelect from "../state-select";
 import { BaseFormProps } from "./base-form-props";
 import { LoaderIcon } from "../../loading/loader-icon";
-import { isArray } from "util";
 
 export interface ApplicantWorkHistoryFormProps extends BaseFormProps<ApplicantEntity> {
     isSubmitting: boolean;
