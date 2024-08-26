@@ -285,6 +285,11 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	useEffect(() => {
 		const currentCompanyExists = form.values?.employers?.find((e) => e.is_current);
 		setCurentCompanyCheck(currentCompanyExists)
+		form?.values?.employers?.forEach(employer => {
+			if (employer?.is_current) {
+				employer.end_at = null;
+			}
+		});
 	}, [form.values])
 
 	const today = new Date();
@@ -300,6 +305,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		console.log("form.values", form.values);
 		console.log("form.errors", form.errors);
 	}, [form.values, form.errors]);
+
+
 
 	useEffect(() => focusOnErrorField(form), [form.submitCount])
 
