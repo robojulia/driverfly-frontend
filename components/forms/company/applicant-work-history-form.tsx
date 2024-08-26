@@ -27,6 +27,7 @@ import BaseInputPhone from "../base-input-phone";
 import StateSelect from "../state-select";
 import { BaseFormProps } from "./base-form-props";
 import { LoaderIcon } from "../../loading/loader-icon";
+import { isArray } from "util";
 
 export interface ApplicantWorkHistoryFormProps extends BaseFormProps<ApplicantEntity> {
     isSubmitting: boolean;
@@ -132,6 +133,11 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
     useEffect(() => {
         const currentCompanyExists = form.values?.employers?.find((e) => e.is_current);
         setWorkHistoryMetaData((prev) => ({ ...prev, curentCompanyCheck: currentCompanyExists }));
+        form?.values?.employers?.forEach(employer => {
+            if (employer?.is_current) {
+                employer.end_at = null;
+            }
+        });
     }, [form.values])
 
     useEffect(() => focusOnErrorField(form), [form.submitCount])
