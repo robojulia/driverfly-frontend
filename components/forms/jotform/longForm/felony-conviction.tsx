@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseTextArea from "../../base-text-area";
@@ -7,22 +7,26 @@ import BaseCheck from "../../base-check";
 import styles from "../../../../styles/digitalhiringapp.module.css";
 import { FelonyConvictionDto } from "../../../../models/jot-form/long-form/felony-conviction.dto";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
-import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
-import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+
 
 export function FelonyConviction() {
 	const {
-		state: { applicant, applicantExtras },
-		method: { updateApplicantExtras, stepNext, stepBack },
+		state: { applicant },
+		method: { setApplicant, stepNext, stepBack },
 	}: JotFormContextType = useContext(JotformContext);
+
+	const [hasCriminalHistory, setHasCriminalHistory] = useState<boolean>();
 
 	const { t } = useTranslation();
 	const form = useFormik({
 		initialValues: new FelonyConvictionDto(),
 		validationSchema: FelonyConvictionDto.yupSchema(),
 		onSubmit: (values) => {
-			const { CONVICTED_OF_FELONY } = values;
-			updateApplicantExtras(CONVICTED_OF_FELONY);
+			const { criminal_history } = values;
+			setApplicant({
+				...applicant,
+				criminal_history,
+			});
 			stepNext();
 		},
 		onReset: (values) => {
@@ -31,17 +35,12 @@ export function FelonyConviction() {
 	});
 
 	useEffect(() => {
-		const apx = applicantExtras?.find(
-			(v) => v.type == ApplicantExtras.CONVICTED_OF_FELONY
-		);
+		const { criminal_history } = applicant;
 		form.setValues({
 			...form.values,
-			CONVICTED_OF_FELONY: !!apx?.type
-				? apx
-				: new ApplicantExtrasEntity(ApplicantExtras.CONVICTED_OF_FELONY),
-			is_convicted_felony: !!apx?.value,
+			criminal_history: criminal_history
 		});
-	}, [applicantExtras]);
+	}, [applicant]);
 
 	useEffect(() => {
 		console.log("values", form.values);
@@ -50,41 +49,45 @@ export function FelonyConviction() {
 
 	return (
 		<>
-		<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("FELONY_CONVICTION")}</h1>
+			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("FELONY_CONVICTION")}</h1>
 
-		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-			<Row className={styles.paragraph__left}>
-				<BaseCheck
-					className="col"
-					name="is_convicted_felony"
-					label="EVER_FELONY_QUESTION"
-					formik={form}
-				/>
-			</Row>
-			{form.values.is_convicted_felony ? (
-				<Row className={`${styles.align__text_left} ${styles.bold}`}>
-					<BaseTextArea
-						className="float-left mt-3"
-						name="CONVICTED_OF_FELONY.value"
-						label="PAST_CONVICTION"
-						formik={form}
+			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+				<Row className={styles.paragraph__left}>
+					<BaseCheck
+						className="col"
+						label="EVER_FELONY_QUESTION"
+						checked={hasCriminalHistory}
+						onChange={({ target: { value } }) => {
+							setHasCriminalHistory(!!value);
+							if (!value) {
+								form.setFieldValue("criminal_history", null);
+							}
+						}}
 					/>
 				</Row>
-			) : null}
 
-			<Row className="mt-5">
-				<Col>
-					<Button className="float-right" type="reset">
-						{t("BACK")}
-					</Button>
-				</Col>
-				<Col>
-					<Button className="float-left" type="submit">
-						{t("NEXT")}
-					</Button>
-				</Col>
-			</Row>
-		</Form>
+				{hasCriminalHistory &&
+					<BaseTextArea
+						className="col-12 mt-2"
+						label="PAST_CONVICTION"
+						name="criminal_history"
+						formik={form}
+					/>
+				}
+
+				<Row className="mt-5">
+					<Col>
+						<Button className="float-right" type="reset">
+							{t("BACK")}
+						</Button>
+					</Col>
+					<Col>
+						<Button className="float-left" type="submit">
+							{t("NEXT")}
+						</Button>
+					</Col>
+				</Row>
+			</Form>
 		</>
 	);
 }

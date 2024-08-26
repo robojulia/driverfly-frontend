@@ -3,12 +3,13 @@ import { ApplicantAccidentEntity } from "../../applicant/applicant-accidentr.ent
 
 export class AccidentHistoryDto {
 	accident_count: number;
+	accident_details?: string;
 	accident_history?: ApplicantAccidentEntity[];
 
 	static yupSchema() {
 		return yup.object({
 			accident_count: yup.number()
-				.required()	
+				.required()
 				.when(
 					'accident_history',
 					(accident_history: ApplicantAccidentEntity[], schema) =>
@@ -17,7 +18,8 @@ export class AccidentHistoryDto {
 							.nullable()
 				)
 				.nullable(),
-			accident_history: yup.array().of( ApplicantAccidentEntity.yupSchema()),
+			accident_details: yup.string().nullable(),
+			accident_history: yup.array().of(ApplicantAccidentEntity.yupSchema()),
 		});
 	}
 }
@@ -45,4 +47,3 @@ export class AccidentHistoryDto {
 // }
 
 
- 
