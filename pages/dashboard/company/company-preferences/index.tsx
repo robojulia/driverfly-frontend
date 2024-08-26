@@ -81,16 +81,16 @@ export default function CompanyPreference() {
 				label: CompanyPreferenceJotformLabel.JOB_GEOGRAPHY,
 				value: [],
 			} as CompanyPreferenceEntity,
-			minimum_accidents: {
+			maximum_accidents: {
 				...new CompanyPreferenceEntity(),
 				category: CompanyPreferenceCategory.JOTFORM,
-				label: CompanyPreferenceJotformLabel.MINIMUM_ACCIDENTS,
+				label: CompanyPreferenceJotformLabel.MAXIMUM_ACCIDENTS,
 				value: 0,
 			} as CompanyPreferenceEntity,
-			minimum_moving_violations: {
+			maximum_moving_violations: {
 				...new CompanyPreferenceEntity(),
 				category: CompanyPreferenceCategory.JOTFORM,
-				label: CompanyPreferenceJotformLabel.MIN_MOVING_VIOLATIONS,
+				label: CompanyPreferenceJotformLabel.MAXIMUM_MOVING_VIOLATIONS,
 				value: 0,
 			} as CompanyPreferenceEntity,
 			years_cdl_experience: {
@@ -109,8 +109,8 @@ export default function CompanyPreference() {
 
 		validationSchema: yup.object({
 			cdl_clas: CompanyPreferenceEntity.yupSchema(),
-			minimum_moving_violations: CompanyPreferenceEntity.yupSchema(),
-			minimum_accidents: CompanyPreferenceEntity.yupSchema(),
+			maximum_moving_violations: CompanyPreferenceEntity.yupSchema(),
+			maximum_accidents: CompanyPreferenceEntity.yupSchema(),
 			years_cdl_experience: CompanyPreferenceEntity.yupSchema(),
 			employment_type: CompanyPreferenceEntity.yupSchema(),
 			job_geography: CompanyPreferenceEntity.yupSchema(),
@@ -536,7 +536,7 @@ export default function CompanyPreference() {
 						<BaseInput
 							className="col-md-4 mt-4"
 							label="MAX_ACCIDENTS"
-							name="minimum_accidents.value"
+							name="maximum_accidents.value"
 							type="number"
 							displayPlaceholder
 							formik={form}
@@ -544,8 +544,8 @@ export default function CompanyPreference() {
 
 						<BaseInput
 							className="col-md-4 mt-4"
-							label="MIN_MOVING_VIOLATIONS"
-							name="minimum_moving_violations.value"
+							label="MAX_MOVING_VIOLATIONS"
+							name="maximum_moving_violations.value"
 							type="number"
 							displayPlaceholder
 							formik={form}
