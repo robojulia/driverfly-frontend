@@ -185,7 +185,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                 <BaseCheck
                                     className="col-12 mt-2"
                                     disabled={Boolean(entity?.is_hired)}
-                                    label="criminal_history_last_3_years"
+                                    label="FELONY_MISDEMANOR_CONVICTIONS"
                                     checked={hasCriminalHistory}
                                     onChange={({ target: { value } }) => {
                                         setHasCriminalHistory(!!value);
@@ -198,7 +198,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                     <BaseTextArea
                                         className="col-12 mt-2"
                                         readOnly={Boolean(entity?.is_hired)}
-                                        label="DETAILS"
+                                        label="PAST_CONVICTION"
                                         name="criminal_history"
                                         formik={form}
                                     />

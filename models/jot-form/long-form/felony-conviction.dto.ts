@@ -4,6 +4,7 @@ import { ApplicantExtrasEntity } from "../../applicant/applicant-extras.entity";
 
 export class FelonyConvictionDto {
   is_convicted_felony: boolean;
+  criminal_history?: string;
   CONVICTED_OF_FELONY: ApplicantExtrasEntity;
 
   static yupSchema() {

@@ -8,6 +8,7 @@ import { ApplicantMovingViolationEntity } from "../../../../models/applicant/app
 import { ViolationHistoryDto } from "../../../../models/jot-form/long-form/violation-history.dto";
 import styles from "../../../../styles/digitalhiringapp.module.css";
 import BaseInput from "../../base-input";
+import BaseTextArea from "../../base-text-area";
 
 export function ViolationHistory() {
 	const {
@@ -20,11 +21,12 @@ export function ViolationHistory() {
 		initialValues: new ViolationHistoryDto(),
 		validationSchema: ViolationHistoryDto.yupSchema(),
 		onSubmit: (values) => {
-			const { moving_violation_history, moving_violations_count } = values;
+			const { moving_violation_history, moving_violations_count, moving_violations_details } = values;
 			try {
 				// updateApplicantExtras(VIOLATION_DETAILS);
 				setApplicant({
 					...applicant,
+					moving_violations_details,
 					moving_violations_count,
 					moving_violation_history
 				});
@@ -50,6 +52,7 @@ export function ViolationHistory() {
 			// VIOLATION_DETAILS: !!apx_detail?.type
 			// 	? apx_detail
 			// 	: new ApplicantExtrasEntity(ApplicantExtras.VIOLATION_DETAILS),
+			moving_violations_details: applicant?.moving_violations_details || null,
 			moving_violations_count: applicant?.moving_violations_count || 0,
 			moving_violation_history: applicant?.moving_violation_history
 		});
@@ -74,7 +77,13 @@ export function ViolationHistory() {
 						formik={form}
 					/>
 				</Row>
-
+				{form.values.moving_violations_count > 0 && (
+					<BaseTextArea
+						label="VIOLATION_DETAILS"
+						name="moving_violations_details"
+						formik={form}
+					/>
+				)}
 				{form.values.moving_violation_history?.length > 0 && (
 					<>
 						{form.values?.moving_violation_history?.map((entity, i) => (
@@ -142,6 +151,7 @@ export function ViolationHistory() {
 						))}
 					</>
 				)}
+
 				{(
 					Boolean(form?.values?.moving_violations_count > 0)
 					&& Boolean(form?.values?.moving_violations_count > (form?.values?.moving_violation_history ?? []).length)

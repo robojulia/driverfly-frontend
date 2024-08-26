@@ -131,15 +131,17 @@ export function CdlExperience() {
 								formik={form}
 							/>
 						</Row>
-						<Row>
-							<BaseCheck
-								className="my-3"
-								required
-								name="is_owner_operator"
-								label="is_owner_operator_question"
-								formik={form}
-							/>
-						</Row>
+						{form.values.license_type !== DriverLicenseType.NO_CDL && (
+							<Row>
+								<BaseCheck
+									className="my-3"
+									required
+									name="is_owner_operator"
+									label="is_owner_operator_question"
+									formik={form}
+								/>
+							</Row>
+						)}
 					</>
 				)}
 				{Boolean(form.values.is_owner_operator) && (
