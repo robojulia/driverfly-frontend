@@ -124,7 +124,7 @@ export function VerificationOfEmploymentSection1({ applicant, employer }: Sectio
                             {t("DATE:")}
                         </h5>
                         <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                            {date_VOE?.value ? ShowUsFormattedDateTime(new Date(date_VOE?.value)) : ""}
+                            {date_VOE?.value ? ShowUsFormattedDateTime(new Date(date_VOE?.value, true)) : ""}
                         </p>
                     </div>
                 </Col>
