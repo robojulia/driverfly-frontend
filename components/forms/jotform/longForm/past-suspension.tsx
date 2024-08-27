@@ -7,8 +7,6 @@ import BaseCheck from "../../base-check";
 import styles from "../../../../styles/digitalhiringapp.module.css";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { PastSuspensionDto } from "../../../../models/jot-form/long-form/past-suspension.dto";
-import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
-import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { PlusCircle, DashCircle } from "react-bootstrap-icons";
 import ViewCard from "../../../view-details/view-card";
 import BaseInput from "../../base-input";
@@ -16,8 +14,8 @@ import BaseInput from "../../base-input";
 export function PastSuspension() {
 
 	const {
-		state: { applicant, applicantExtras },
-		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+		state: { applicant },
+		method: { setApplicant, stepNext, stepBack },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
@@ -25,12 +23,13 @@ export function PastSuspension() {
 		initialValues: new PastSuspensionDto(),
 		validationSchema: PastSuspensionDto.yupSchema(),
 		onSubmit: (values) => {
-			const { PAST_LICENSE_SUSPENSION } = values;
-			updateApplicantExtras(PAST_LICENSE_SUSPENSION);
+			const { license_revoked, license_revoked_details, has_past_dui, dui_years } = values;
 			setApplicant({
 				...applicant,
-				has_past_dui: values?.has_past_dui,
-				dui_years: values?.dui_years,
+				has_past_dui: has_past_dui,
+				dui_years: dui_years,
+				license_revoked: license_revoked,
+				license_revoked_details: license_revoked_details,
 			});
 			stepNext();
 		},
@@ -40,20 +39,14 @@ export function PastSuspension() {
 	});
 
 	useEffect(() => {
-		const apx = applicantExtras?.find(
-			(v) => v.type == ApplicantExtras.PAST_LICENSE_SUSPENSION
-		);
-
 		form.setValues({
 			...form.values,
 			has_past_dui: applicant?.has_past_dui,
 			dui_years: applicant?.dui_years,
-			PAST_LICENSE_SUSPENSION: !!apx?.type
-				? apx
-				: new ApplicantExtrasEntity(ApplicantExtras.PAST_LICENSE_SUSPENSION),
-			is_past_license_suspended: !!apx?.value,
+			license_revoked: applicant?.license_revoked,
+			license_revoked_details: applicant?.license_revoked_details,
 		});
-	}, [applicantExtras, applicant]);
+	}, [applicant]);
 
 	useEffect(() => {
 		console.log("values", form?.values);
@@ -69,16 +62,16 @@ export function PastSuspension() {
 					<BaseCheck
 						className="float-left col"
 						required
-						name="is_past_license_suspended"
+						name="license_revoked"
 						label="LICENSE_PREVILLAGES"
 						formik={form}
 					/>
 				</Row>
-				{form.values.is_past_license_suspended ? (
+				{form.values.license_revoked ? (
 					<Row className={`${styles.align__text_left} ${styles.bold}`}>
 						<BaseTextArea
 							className="mt-3"
-							name="PAST_LICENSE_SUSPENSION.value"
+							name="license_revoked_details"
 							label="EXPLAIN_SUSPENSION"
 							formik={form}
 						/>
