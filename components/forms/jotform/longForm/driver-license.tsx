@@ -23,16 +23,16 @@ export function DriverLicense() {
 	}: JotFormContextType = useContext(JotformContext);
 
 	const isDriverLicense = (v: DocumentEntity): boolean =>
-		v?.type == ApplicantDocumentType.DRIVERS_LICENSE;
+		v?.type == ApplicantDocumentType.DRIVER_LICENSE;
 
 	const isNotDriverLicense = (v: DocumentEntity): boolean =>
-		v?.type != ApplicantDocumentType.DRIVERS_LICENSE;
+		v?.type != ApplicantDocumentType.DRIVER_LICENSE;
 
 	const { t } = useTranslation();
 	const router = useRouter();
 	const isMissingDocRouteActive = router.route.includes('longform/[applicant_uuid]/missing-document');
-	const isLongFormRouteActive = router.route.includes('digitalhiringapp/longform/[applicant_uuid]');
-	const dhaRouteActive = router.route.includes('digitalhiringapp/[slug]')
+	const isLongFormRouteActive = router.route.includes('apply/longform/[applicant_uuid]');
+	const dhaRouteActive = router.route.includes('apply/[slug]')
 
 
 	const form = useFormik({
@@ -80,7 +80,7 @@ export function DriverLicense() {
 		form.setValues({
 			document: doc ?? {
 				...new DocumentEntity(),
-				type: ApplicantDocumentType.DRIVERS_LICENSE,
+				type: ApplicantDocumentType.DRIVER_LICENSE,
 			},
 			mediaOptions: false
 		});

@@ -38,6 +38,7 @@ import joinArrayElements from '../../../../utils/join-in-order.utils';
 import CustomPagination from '../../../../components/pagination/custom-pagination';
 import { Pagination, PagingMeta } from '../../../../types/pagination.type';
 import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
+import JobApi from '../../../api/job';
 
 
 const ViewMode = {
@@ -78,31 +79,43 @@ export default function Applicants() {
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
     const [filters, setFilters] = useState<SearchApplicantDto>();
     const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingsMetaInitialValues);
+    const [filtersChanged, setFiltersChanged] = useState<boolean>(false);
 
     const fetchApplicant = async () => {
-        setLoading(true)
-        const api = new ApplicantApi();
-        const data = await api.list({
-            jobId: jobId as any as number,
-            without: [
-                "applicant_dac",
-                "applicant_extras",
-            ],
-            ...filters,
-            is_paginated: true,
-            page: filters?.page === 0 ? 1 : pagingMeta?.currentPage,
-            limit: pagingMeta?.itemsPerPage,
-        });
-        setApplicants((data as Pagination<ApplicantEntity>)?.items);
-        setPagingMeta({
-            ...pagingMeta,
-            currentPage: filters?.page === 0 ? 1 : pagingMeta?.currentPage,
-            totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems
-        });
-        setTimeout(() => setLoading(false), 1000);
+        if (viewMode === ViewMode.applicant) {
+            setLoading(true)
+            const api = new ApplicantApi();
+            const data = await api.list({
+                jobId: jobId as any as number,
+                without: [
+                    "applicant_dac",
+                    "applicant_extras",
+                ],
+                ...filters,
+                is_paginated: true,
+                page: filtersChanged ? 1 : pagingMeta?.currentPage,
+                limit: pagingMeta?.itemsPerPage,
+            });
+            setApplicants((data as Pagination<ApplicantEntity>)?.items);
+            setFiltersChanged(false)
+            setPagingMeta({
+                ...pagingMeta,
+                currentPage: filtersChanged ? 1 : pagingMeta?.currentPage,
+                totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems
+            });
+            setTimeout(() => setLoading(false), 1000);
+        }
     }
 
-    useEffectAsync(async () => await fetchApplicant(), [user, jobId, viewMode, filters, pagingMeta?.currentPage, pagingMeta?.itemsPerPage]);
+    useEffectAsync(async () => await fetchApplicant(), [user, jobId, filters, pagingMeta?.currentPage, pagingMeta?.itemsPerPage]);
+
+    React.useMemo(() => (
+        setFiltersChanged(true)
+    ), [filters]);
+
+    useEffect(() => {
+        setFilters(new SearchApplicantDto())
+    }, [viewMode])
 
     const onViewClick = (id: number) => {
         router.push(`${router.pathname}/${id}`);
@@ -150,7 +163,7 @@ export default function Applicants() {
                 default:
                     const api = new ApplicantApi();
 
-                    await api.jobs.update(applicant.id, job.id, { status: value });
+                    await api?.jobs?.update(applicant?.id, job?.id, { status: value });
 
                     await router.reload();
                     break;
@@ -165,9 +178,9 @@ export default function Applicants() {
             try {
                 const api = new ApplicantApi();
 
-                await api.jobs.update(e.applicant.id, e.job.id, e);
+                await api?.jobs?.update(e?.applicant?.id, e?.job?.id, e);
 
-                await router.reload();
+                await router?.reload();
 
                 applicantJobForm.resetForm();
             } catch (e) {
@@ -196,9 +209,20 @@ export default function Applicants() {
                     title="APPLICANTS"
                     actions={(
                         <div style={{ display: "flex", justifyContent: "end", alignItems: "center" }}>
-                            <Accordion.Button className="mr-3 text-black theme-filter-btn" style={{ width: "auto", fontSize: ".95rem", lineHeight: "1.5", padding: ".25rem 1.5rem", borderRadius: ".2rem" }} >
-                                <div className="mr-2">{t("FILTERS")}</div>
-                            </Accordion.Button>
+                            {viewMode === ViewMode.applicant && (
+                                <Accordion.Button
+                                    className="mr-3 text-black theme-filter-btn"
+                                    style={{
+                                        width: "auto",
+                                        fontSize: ".95rem",
+                                        lineHeight: "1.5",
+                                        padding: ".25rem 1.5rem",
+                                        borderRadius: ".2rem",
+                                    }}
+                                >
+                                    <div className="mr-2">{t("FILTERS")}</div>
+                                </Accordion.Button>
+                            )}
                             {
                                 canCreate &&
                                 <ButtonGroup size="sm" style={{ float: "right" }}>
@@ -226,9 +250,11 @@ export default function Applicants() {
                     <Row>
 
                         <Col className='force-overflow p-0'>
-                            <Accordion.Body >
-                                <ApplicantFilterForm onSearch={setFilters} />
-                            </Accordion.Body>
+                            {viewMode === ViewMode.applicant && (
+                                <Accordion.Body>
+                                    <ApplicantFilterForm onSearch={setFilters} />
+                                </Accordion.Body>
+                            )}
 
                             {loading
                                 ? <div className="spinner-border mt-3 ml-1" role="status">
@@ -358,22 +384,22 @@ Applicants.getLayout = function getLayout(page) {
 }
 
 function getApplicantName(applicant: ApplicantEntity) {
-    return `${applicant.first_name} ${applicant.last_name}`;
+    return `${applicant?.first_name} ${applicant?.last_name}`;
 }
 
 function getApplicantStatus(applicantJob: ApplicantJobEntity, t: TranslateInterface) {
-    switch (applicantJob.status) {
-        case ApplicantStatus.OTHER: return applicantJob.status_other;
+    switch (applicantJob?.status) {
+        case ApplicantStatus.OTHER: return applicantJob?.status_other;
         case ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v == ApplicantReasonCodeNotQualified.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeNotQualified.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob?.status}`)} (${applicantJob?.reason_codes?.map(v => v == ApplicantReasonCodeNotQualified.OTHER ? applicantJob?.reason_codes_other : t(`ApplicantReasonCodeNotQualified.${v}`))?.join(", ")})`;
         case ApplicantStatus.INACTIVE_CONTACTED_UNINTERESTED:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v == ApplicantReasonCodeNotInterested.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeNotInterested.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob?.status}`)} (${applicantJob?.reason_codes?.map(v => v == ApplicantReasonCodeNotInterested.OTHER ? applicantJob?.reason_codes_other : t(`ApplicantReasonCodeNotInterested.${v}`))?.join(", ")})`;
         case ApplicantStatus.INACTIVE_QUIT:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v == ApplicantReasonCodeQuit.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeQuit.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob?.status}`)} (${applicantJob?.reason_codes?.map(v => v == ApplicantReasonCodeQuit.OTHER ? applicantJob?.reason_codes_other : t(`ApplicantReasonCodeQuit.${v}`))?.join(", ")})`;
         case ApplicantStatus.INACTIVE_FIRED:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v == ApplicantReasonCodeFired.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeFired.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob?.status}`)} (${applicantJob?.reason_codes?.map(v => v == ApplicantReasonCodeFired.OTHER ? applicantJob?.reason_codes_other : t(`ApplicantReasonCodeFired.${v}`))?.join(", ")})`;
         default:
-            return t(`ApplicantStatus.${applicantJob.status}`);
+            return t(`ApplicantStatus.${applicantJob?.status}`);
     }
 
     if (applicantJob.reason_codes?.length > 0 || applicantJob.reason_codes_other) {
@@ -388,15 +414,15 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
         qualification_fail_reason: []
     };
 
-    if (applicant.years_cdl_experience < job.min_years_experience) {
+    if (applicant?.years_cdl_experience < job?.min_years_experience) {
         results.meets_basic_qualifications = false;
-        results.qualification_fail_reason.push("YEARS_OF_CDL_EXPERIENCE_TOO_LOW");
+        results?.qualification_fail_reason?.push("YEARS_OF_CDL_EXPERIENCE_TOO_LOW");
     }
 
-    if (applicant.accident_count > 0) {
-        if (job.must_have_clean_mvr) {
+    if (applicant?.accident_count > 0) {
+        if (job?.must_have_clean_mvr) {
             results.meets_basic_qualifications = false;
-            results.qualification_fail_reason.push("DOES_NOT_HAVE_CLEAN_MVR");
+            results?.qualification_fail_reason?.push("DOES_NOT_HAVE_CLEAN_MVR");
         }
         else if (job?.mvr_requirements?.length) {
             // complicated check around max violations
@@ -404,35 +430,35 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
             // we just want to pull the max number
             // and check against that
             const mvr = job?.mvr_requirements?.reduce((p, c) => {
-                if (p.max_count >= c.max_count) return p;
+                if (p?.max_count >= c?.max_count) return p;
 
                 return c;
             });
 
-            if (mvr && mvr.max_count > applicant.accident_count) {
+            if (mvr && mvr?.max_count > applicant?.accident_count) {
                 results.meets_basic_qualifications = false;
-                results.qualification_fail_reason.push("VIOLATION_COUNT_GREATER_THAN_MAX");
+                results?.qualification_fail_reason?.push("VIOLATION_COUNT_GREATER_THAN_MAX");
             }
         }
     }
 
-    if (!applicant.can_pass_drug_test && job.must_pass_drug_test) {
+    if (!applicant?.can_pass_drug_test && job?.must_pass_drug_test) {
         results.meets_basic_qualifications = false;
-        results.qualification_fail_reason.push("CANNOT_PASS_DRUG_TEST");
+        results?.qualification_fail_reason?.push("CANNOT_PASS_DRUG_TEST");
     }
 
-    job.required_skills?.forEach(skill => {
+    job?.required_skills?.forEach(skill => {
         // cannot process OTHER type
-        if (skill.type != JobEquipmentType.OTHER) {
-            const experience = applicant?.equipment_experience?.find(v => v.type == skill.type);
+        if (skill?.type != JobEquipmentType.OTHER) {
+            const experience = applicant?.equipment_experience?.find(v => v?.type == skill?.type);
 
             if (!experience) {
                 results.meets_basic_qualifications = false;
-                results.qualification_fail_reason.push({ key: "DOES_NOT_HAVE_{name}_EXPERIENCE", name: `JobEquipmentType.${skill.type}` });
+                results?.qualification_fail_reason?.push({ key: "DOES_NOT_HAVE_{name}_EXPERIENCE", name: `JobEquipmentType.${skill?.type}` });
             }
-            else if (experience.years < skill.years) {
+            else if (experience?.years < skill?.years) {
                 results.meets_basic_qualifications = false;
-                results.qualification_fail_reason.push({ key: "YEARS_OF_{name}_EXPERIENCE_TOO_LOW", name: `JobEquipmentType.${skill.type}` });
+                results?.qualification_fail_reason?.push({ key: "YEARS_OF_{name}_EXPERIENCE_TOO_LOW", name: `JobEquipmentType.${skill?.type}` });
             }
         }
     });
@@ -743,43 +769,40 @@ function ApplicantView(props: ViewProps) {
 function JobView(props: ViewProps) {
     const { router, applicants, onChangeStatus, onViewClick, onEditClick, t } = props;
 
-    const { hasPermission } = useAuth();
+    const { company, hasPermission } = useAuth();
 
-    let items: ConsolodatedJob[] = [];
+    const [jobs, setJobs] = useState<ConsolodatedJob[]>([]);
 
-    let jobMap: { [jobId: number]: ConsolodatedJob } = {};
 
-    applicants.forEach(applicant => {
-        applicant.jobs?.forEach((aJob) => {
-            let job = jobMap[aJob.job.id] || (jobMap[aJob.job.id] = {
-                ...aJob.job
-            });
 
-            const requirements = evaluateJobRequirements(applicant, aJob.job);
-            requirements.qualification_fail_reason = requirements.qualification_fail_reason.map(v => {
-                if (typeof v == "string") return t(v);
-
-                return t(v.key, { name: v.name }, { translateProps: true });
-            });
-
-            if (!job.applicants) job.applicants = [];
-
-            job.applicants.push({
-                ...aJob,
-                job: null,
-                ...requirements,
-                applicant: {
-                    ...applicant,
-                    jobs: null,
-                }
-            });
+    const fetchJobs = async () => {
+        const api = new JobApi();
+        const data = await api.applicants({
+            companyId: company?.id,
         });
+        setJobs(data as JobEntity[]);
+    };
 
-    });
+    useEffectAsync(async () => await fetchJobs(), []);
 
-    items = Object.values(jobMap);
 
-    return (<ViewDataTable<ConsolodatedJob>
+    for (const [, job] of jobs?.entries()) {
+        job?.applicants?.map((applicant) => {
+            const requirements = evaluateJobRequirements(applicant?.applicant, job);
+            requirements.qualification_fail_reason =
+                requirements?.qualification_fail_reason?.map((v) => {
+                    if (typeof v == "string") return t(v);
+
+                    return t(v?.key, { name: v?.name }, { translateProps: true });
+                });
+
+            applicant["qualification_fail_reason"] = requirements?.qualification_fail_reason
+            applicant["meets_basic_qualifications"] = requirements?.meets_basic_qualifications
+
+        })
+    }
+
+    return <ViewDataTable<ConsolodatedJob>
         customStyles={{
             headRow: {
                 style: {
@@ -792,38 +815,38 @@ function JobView(props: ViewProps) {
             {
                 id: "Id",
                 name: "ID",
-                selector: job => job.id,
+                selector: job => job?.id,
                 hidable: true,
             },
             {
                 id: "job",
                 name: "JOB",
-                selector: job => job.title,
+                selector: job => job?.title,
                 hidable: false,
-                cell: (j) => (<Link href={`/dashboard/company/jobs/${j.id}`} ><a>{j.title}</a></Link>),
+                cell: (j) => (<Link href={`/dashboard/company/jobs/${j?.id}`} ><a>{j?.title}</a></Link>),
             },
             {
                 id: "location",
                 name: "LOCATION",
-                selector: job => buildAddress(job.location),
+                selector: job => buildAddress(job?.location),
             },
             {
                 id: "geography",
                 name: "GEOGRAPHY",
-                selector: job => job.geography ? t(`JobGeography.${job.geography}`) : "",
+                selector: job => job?.geography ? t(`JobGeography.${job?.geography}`) : "",
             },
             {
                 id: "type",
                 name: "TYPE",
-                selector: job => job.employment_type ? t(`JobEmploymentType.${job.employment_type}`) : "",
+                selector: job => job?.employment_type ? t(`JobEmploymentType.${job?.employment_type}`) : "",
             },
             {
                 id: "weekly_range",
                 name: "WEEKLY_RANGE",
-                selector: job => `${numbers.toCurrency(job.min_weekly_pay)} - ${numbers.toCurrency(job.max_weekly_pay)}`,
+                selector: job => `${numbers?.toCurrency(job?.min_weekly_pay)} - ${numbers?.toCurrency(job?.max_weekly_pay)}`,
             },
         ]}
-        items={items}
+        items={jobs}
         expandableRowsComponent={({ data }) => (
             <ViewDataTable<ConsolodatedApplicantJob>
                 customStyles={{
@@ -837,29 +860,29 @@ function JobView(props: ViewProps) {
                 columns={[
                     {
                         name: "ID",
-                        selector: aJob => aJob.applicant.id,
+                        selector: aJob => aJob?.applicant?.id,
                     },
                     {
                         name: "NAME",
-                        selector: aJob => getApplicantName(aJob.applicant),
+                        selector: aJob => getApplicantName(aJob?.applicant),
                         cell: aJob => (
-                            <Link href={`${router.pathname}/${aJob.applicant.id}/edit`}>
-                                <a>{getApplicantName(aJob.applicant)}</a>
+                            <Link href={`${router?.pathname}/${aJob?.applicant?.id}/edit`}>
+                                <a>{getApplicantName(aJob?.applicant)}</a>
                             </Link>
                         ),
                         hidable: false,
                     },
                     {
                         name: "CITY",
-                        selector: aJob => aJob.applicant.city,
+                        selector: aJob => aJob?.applicant?.city,
                     },
                     {
                         name: "STATE",
-                        selector: aJob => aJob.applicant.state,
+                        selector: aJob => aJob?.applicant?.state,
                     },
                     {
                         name: "DATE_APPLIED",
-                        selector: aJob => new Date(aJob.created_at).toDateString(),
+                        selector: aJob => new Date(aJob?.created_at)?.toDateString(),
                         hidable: false,
                     },
                     {
@@ -874,12 +897,12 @@ function JobView(props: ViewProps) {
                     },
                     {
                         name: "MEETS_BASIC_QUALIFICATIONS",
-                        selector: aJob => t(aJob.meets_basic_qualifications ? "YES" : "NO"),
+                        selector: aJob => t(aJob?.meets_basic_qualifications ? "YES" : "NO"),
                         hidable: false,
                     },
                     {
                         name: "REASONS_IF_NO",
-                        selector: aJob => aJob.qualification_fail_reason?.join(),
+                        selector: aJob => aJob?.qualification_fail_reason?.join(),
                         hidable: false,
                     },
                     {
@@ -887,7 +910,7 @@ function JobView(props: ViewProps) {
                         name: "DATE_ADDED",
                         selector: aJob => aJob?.applicant?.created_at,
                         cell: aJob => (
-                            <ShowFormattedDate date={aJob.applicant.created_at} />
+                            <ShowFormattedDate date={aJob?.applicant?.created_at} />
                         ),
                         hidable: false,
                     },
@@ -898,7 +921,7 @@ function JobView(props: ViewProps) {
                     },
                     {
                         cell: aJob => {
-                            const hideStatus = Boolean(applicants?.find(a => a.id == aJob.applicant.id)?.jobs?.find(j => j?.id != aJob?.id && j?.status?.startsWith("COMPLETED_")))
+                            const hideStatus = Boolean(applicants?.find(a => a?.id == aJob?.applicant?.id)?.jobs?.find(j => j?.id != aJob?.id && j?.status?.startsWith("COMPLETED_")))
                                 ? [
                                     ApplicantStatus.COMPLETED_EMPLOYED,
                                     ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
@@ -908,9 +931,9 @@ function JobView(props: ViewProps) {
                             return (
                                 <BaseSelect
                                     hideOptions={hideStatus}
-                                    name={aJob.applicant.id.toString()}
+                                    name={aJob?.applicant?.id?.toString()}
                                     value=""
-                                    onChange={e => onChangeStatus(e, aJob.applicant, data)}
+                                    onChange={e => onChangeStatus(e, aJob?.applicant, data)}
                                     placeholder={"CHANGE_STATUS"}
                                     labelPrefix="ApplicantStatus"
                                     enumType={ApplicantStatus}
@@ -924,17 +947,17 @@ function JobView(props: ViewProps) {
                     {
                         icon: EyeFill,
                         label: "VIEW",
-                        onClick: (e) => onViewClick(row.applicant.id)
+                        onClick: (e) => onViewClick(row?.applicant?.id)
                     },
                     {
                         icon: PencilFill,
                         label: "EDIT",
-                        onClick: (e) => onEditClick(row.applicant.id),
+                        onClick: (e) => onEditClick(row?.applicant?.id),
                         hide: !hasPermission("CanUpdateApplicant")
                     },
                 ]}
                 items={data.applicants}
             />
         )}
-    />);
+    />
 }

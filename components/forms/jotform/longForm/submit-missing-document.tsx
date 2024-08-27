@@ -24,9 +24,9 @@ export function SubmitMissingDocuments() {
 	}: JotFormContextType = useContext(JotformContext);
 
 	const isDriverLicense = (v: DocumentEntity): boolean =>
-		v.type == ApplicantDocumentType.DRIVERS_LICENSE;
+		v.type == ApplicantDocumentType.DRIVER_LICENSE;
 	const isNotDriverLicense = (v: DocumentEntity): boolean =>
-		v.type != ApplicantDocumentType.DRIVERS_LICENSE;
+		v.type != ApplicantDocumentType.DRIVER_LICENSE;
 
 	const { t } = useTranslation();
 	const form = useFormik({
@@ -57,7 +57,7 @@ export function SubmitMissingDocuments() {
 		form.setValues({
 			document: doc ?? {
 				...new DocumentEntity(),
-				type: ApplicantDocumentType.DRIVERS_LICENSE,
+				type: ApplicantDocumentType.DRIVER_LICENSE,
 			},
 			mediaOptions: false
 		});

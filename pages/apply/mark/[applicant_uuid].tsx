@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useTranslation } from "../../../../hooks/use-translation";
-import ApplicantApi from "../../../api/applicant";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { ApplicantFormStatus } from "../../../../enums/applicants/applicant-form-status.enum";
-import { Button, Col, Row } from "react-bootstrap";
+import { Button, Row } from "react-bootstrap";
+import styles from "../../../styles/digitalhiringapp.module.css";
+import { ApplicantFormStatus } from "../../../enums/applicants/applicant-form-status.enum";
+import { useTranslation } from "../../../hooks/use-translation";
+import ApplicantApi from "../../api/applicant";
 
 export interface ApplicantHireStatusProps {
     applicant_uuid: string,

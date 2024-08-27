@@ -426,7 +426,7 @@ export class ApplicantEntity {
       ).unique("type", { mapper: ApplicantEquipmentEntity.key }),
       employers: yup.array(ApplicantEmployerEntity.yupSchema()),
       documents: (
-        yup.array(DocumentEntity.yupSchema(ApplicantDocumentType)) as any
+        yup.array(DocumentEntity.yupSchema()) as any
       ).unique("type"), //modify file error messages
       jobs: (yup.array(ApplicantJobEntity.yupSchema()) as any).unique("job.id"),
       assignedUserId: yup.number().optional().nullable(),
@@ -825,7 +825,7 @@ export class ApplicantEntity {
 
   static yupSchemaForApplicantWorkHistory() {
     return yup.object({
-      employers: yup.array(ApplicantEmployerEntity.yupSchema()),
+      employers: yup.array(ApplicantEmployerEntity.yupEditApplicantSchema()),
     });
   }
 
@@ -1032,7 +1032,7 @@ export class ApplicantEntity {
   static yupSchemaForApplicantDocumentsForm() {
     return yup.object({
       documents: (
-        yup.array(DocumentEntity.yupSchema(ApplicantDocumentType)) as any
+        yup.array(DocumentEntity.yupSchema()) as any
       ).unique("type"),
     });
   }

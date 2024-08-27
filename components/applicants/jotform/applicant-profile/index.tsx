@@ -14,48 +14,48 @@ export default function ApplicantExtrasDetails({
 	applicant,
 }: ApplicantSafetyBackgroundProps) {
 	const { t } = useTranslation();
-	const hear_about_us = applicant.extras.find(
+	const hear_about_us = applicant.extras?.find(
 		(ex) => ex?.type == ApplicantExtras.HEAR_ABOUT_US
 	);
-	const job_apply_date = applicant.extras.find(
+	const job_apply_date = applicant.extras?.find(
 		(ex) => ex?.type == ApplicantExtras.APPLY_DATE
 	);
-	const qualified_for_manual_transmission = applicant.transmission_type.includes(
+	const qualified_for_manual_transmission = applicant.transmission_type?.includes(
 		VehicleTransmissionType.MANUAL
 	);
 
-	const past_license_suspension = applicant.extras.find(
+	const past_license_suspension = applicant.extras?.find(
 		(ex) => ex?.type == ApplicantExtras.PAST_LICENSE_SUSPENSION
 	);
-	const unable_to_perform_job = applicant.extras.find(
+	const unable_to_perform_job = applicant.extras?.find(
 		(ex) => ex?.type == ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
 	);
-	const convicted_of_felony = applicant.extras.find(
+	const convicted_of_felony = applicant.extras?.find(
 		(ex) => ex?.type == ApplicantExtras.CONVICTED_OF_FELONY
 	);
-	const dot_regulation = applicant.extras.find(
+	const dot_regulation = applicant.extras?.find(
 		(ex) => ex?.type == ApplicantExtras.DOT_REGULATION
 	);
 
-	const cdl_details = applicant.extras.find(
+	const cdl_details = applicant.extras?.find(
 		(ex) => ex?.type == ApplicantExtras.CDL_NUMBER
 	);
-	const other_requirement = applicant.extras.find(
+	const other_requirement = applicant.extras?.find(
 		(ex) => ex?.type == ApplicantExtras.OTHER_ABSOLUTELY_REQUIREMENTS
 	);
 	const w2_employment = applicant.extras.find(
 		(ex) => ex?.type == ApplicantExtras.REQUIRE_W2_EMPLOYMENT
 	);
 
-	const accident_details = applicant.extras.find(
+	const accident_details = applicant.extras?.find(
 		(ex) => ex?.type == ApplicantExtras.ACCIDENT_DETAILS
 	);
-	const violation_details = applicant.extras.find(
+	const violation_details = applicant.extras?.find(
 		(ex) => ex?.type == ApplicantExtras.VIOLATION_DETAILS
 	);
-	const current_employer = applicant.employers.find(v => !!v.is_current)
+	const current_employer = applicant.employers?.find(v => !!v.is_current)
 
-	const past_employers = applicant.employers.filter(v => !!!v.is_current);
+	const past_employers = applicant.employers?.filter(v => !!!v.is_current);
 
 	return (
 		<>

@@ -1,14 +1,20 @@
-import { JobPayMethod } from "../../enums/jobs/job-pay-method.enum"
+import { useEffect } from "react";
+import { JobPayMethod } from "../../enums/jobs/job-pay-method.enum";
 import { useTranslation } from "../../hooks/use-translation";
 import { SearchJobFilterProps } from "../../types/search-filter/job-search-filter.type";
-import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
+import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion";
 import ViewMoreRadioFilter from "./view-more-radio-filter";
 
 export default function PayStructure(props: SearchJobFilterProps) {
 
     const { t } = useTranslation();
     const { state, method } = props
-    const { handleChange } = method
+    const { handleChange, setFilters } = method
+    useEffect(() => {
+        if (!state.filters.pay_structure || state.filters.pay_structure == JobPayMethod.OPEN_TO_NEGOTIATE) {
+            setFilters({ ...state.filters, min_weekly_pay: null, max_weekly_pay: null })
+        }
+    }, [state.filters.pay_structure])
     return (
         <FindJobFilterAccordion {...props} header={t("pay_structure")}>
             <ViewMoreRadioFilter
@@ -17,7 +23,7 @@ export default function PayStructure(props: SearchJobFilterProps) {
                 name="pay_structure"
                 labelPrefix="JobPayMethod"
                 enums={JobPayMethod} />
-            {state.filters.pay_structure && <div className="d-flex justify-content-space-between mt-3">
+            {state.filters.pay_structure && state.filters.pay_structure !== JobPayMethod.OPEN_TO_NEGOTIATE && <div className="d-flex justify-content-space-between mt-3">
                 <input
                     step={0.01}
                     min={0}

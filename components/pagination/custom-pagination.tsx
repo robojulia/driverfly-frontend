@@ -1,9 +1,10 @@
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
-import { Box, IconButton, MenuItem, Pagination, Select, Typography } from '@mui/material';
+import { Box, IconButton, MenuItem, Pagination, PaginationItem, Select, Typography } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 import React from 'react';
 import { useTranslation } from '../../hooks/use-translation';
 import { PagingMeta } from '../../types/pagination.type';
+import OverlyPopover from '../popover/overly-popover';
 
 interface CustomPaginationProps {
     recordsPerPageOptions: number[];
@@ -55,9 +56,12 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({ recordsPerPageOptio
     return (
         <Box display="flex" alignItems="center" style={{ marginTop: '2%', display: 'flex', justifyContent: 'right' }}>
             <Typography style={{ fontSize: "0.875rem" }}>{`${(pagingMeta?.currentPage - 1) * (pagingMeta?.itemsPerPage) + (pagingMeta?.totalItems === 0 || pagingMeta?.totalItems == undefined ? 0 : 1)}-${Math.min(pagingMeta?.currentPage * pagingMeta?.itemsPerPage, pagingMeta?.totalItems) || 0} of ${pagingMeta?.totalItems || 0} ${t('RECORDS')}`}</Typography>
-            <IconButton onClick={handlePrevFivePages} disabled={pagingMeta?.currentPage <= 5}>
-                <ArrowBack />
-            </IconButton>
+            <OverlyPopover str={t("{type}_PAGES_{pageNumber}", { type: "Previous", pageNumber: 5 })}>
+                <IconButton onClick={handlePrevFivePages} disabled={pagingMeta?.currentPage <= 5}>
+                    <ArrowBack />
+                </IconButton>
+            </OverlyPopover>
+
             <Pagination
                 count={totalPages}
                 page={pagingMeta?.currentPage}
@@ -69,9 +73,11 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({ recordsPerPageOptio
                     "& .MuiPagination-ul": { backgroundColor: "#FAFBFF !important" },
                 }}
             />
-            <IconButton onClick={handleNextFivePages} disabled={pagingMeta?.currentPage > totalPages - 5}>
-                <ArrowForward />
-            </IconButton>
+            <OverlyPopover str={t("{type}_PAGES_{pageNumber}", { type: "Next", pageNumber: 5 })}>
+                <IconButton onClick={handleNextFivePages} disabled={pagingMeta?.currentPage > totalPages - 5}>
+                    <ArrowForward />
+                </IconButton>
+            </OverlyPopover>
             <Select
                 value={pagingMeta?.itemsPerPage}
                 onChange={handleRecordsPerPageChange}

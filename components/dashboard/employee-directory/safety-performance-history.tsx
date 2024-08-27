@@ -149,7 +149,7 @@ export default function SafetyPerformanceHistory({
                             onClick={() => handleDeleteDocument(employer, type)}
                         />
                     }
-                    {(Boolean(showResendButton) || Boolean(employer?.is_subject_to_fmcsrs)
+                    {/* {(Boolean(showResendButton) || Boolean(employer?.is_subject_to_fmcsrs)
                         &&
                         <OverlyPopover
                             str={
@@ -169,7 +169,7 @@ export default function SafetyPerformanceHistory({
                                 </OverlyPopover>
                             </Button>
                         </OverlyPopover>
-                    )}
+                    )} */}
                     {Boolean(showHistory)
                         && <ViewDocumentHistory
                             document={document}

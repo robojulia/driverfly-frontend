@@ -83,6 +83,11 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
 
     useEffect(() => focusOnErrorField(form), [form.submitCount])
 
+    useEffect(() => {
+        console.log("Applicant safety Form values", form.values)
+        console.log("Applicant safety Form errors", form.errors)
+    }, [form.errors, form.values])
+
     return (
         <Form
             onSubmit={form.handleSubmit}
@@ -180,7 +185,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                 <BaseCheck
                                     className="col-12 mt-2"
                                     disabled={Boolean(entity?.is_hired)}
-                                    label="criminal_history_last_3_years"
+                                    label="FELONY_MISDEMANOR_CONVICTIONS"
                                     checked={hasCriminalHistory}
                                     onChange={({ target: { value } }) => {
                                         setHasCriminalHistory(!!value);
@@ -193,7 +198,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                     <BaseTextArea
                                         className="col-12 mt-2"
                                         readOnly={Boolean(entity?.is_hired)}
-                                        label="DETAILS"
+                                        label="PAST_CONVICTION"
                                         name="criminal_history"
                                         formik={form}
                                     />
@@ -452,7 +457,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                             className="col-12 mt-2"
                                             readOnly={Boolean(entity?.is_hired)}
                                             label="details"
-                                            name="`	`"
+                                            name="license_revoked_details"
                                             formik={form}
                                         />
                                     )}
@@ -472,13 +477,13 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                             formik={form}
                                         />
                                     )}
-                                    <BaseCheck
+                                    {/* <BaseCheck
                                         className="col-12 mt-2"
                                         disabled={Boolean(entity?.is_hired)}
                                         label="has_had_tickets_last_5_years"
                                         name="tickets"
                                         formik={form}
-                                    />
+                                    /> */}
                                     {form.values?.tickets && (
                                         <BaseTextArea
                                             className="col-12 mt-2"

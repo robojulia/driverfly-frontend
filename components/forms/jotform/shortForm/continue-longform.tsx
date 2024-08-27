@@ -63,13 +63,13 @@ export function ContinueLongForm() {
 
 	const companyPrefferedAccidentCountLimit: number =
 		companyPreferences?.find(
-			({ label }) => label == CompanyPreferenceJotformLabel.MINIMUM_ACCIDENTS
+			({ label }) => label == CompanyPreferenceJotformLabel.MAXIMUM_ACCIDENTS
 		)?.value ?? 0;
 
-	const companyPrefferedMinViolationLimit: number =
+	const companyPrefferedMaxViolationLimit: number =
 		companyPreferences?.find(
 			({ label }) =>
-				label == CompanyPreferenceJotformLabel.MIN_MOVING_VIOLATIONS
+				label == CompanyPreferenceJotformLabel.MAXIMUM_MOVING_VIOLATIONS
 		)?.value ?? 0;
 
 	const companyPrefferedLocations: JobGeography[] =
@@ -166,7 +166,7 @@ export function ContinueLongForm() {
 								className={`${styles.paragraph} ${styles.margin__top} text-warning  p-1`}
 							>
 								{t(
-									"{company_name}_PREFERED_MIN_ACCIDENT_COUNT_{preffered_accident_count}",
+									"{company_name}_PREFERED_MAX_ACCIDENT_COUNT_{preffered_accident_count}",
 									{
 										company_name: applicant?.company?.name || company.name,
 										preffered_accident_count:
@@ -191,18 +191,18 @@ export function ContinueLongForm() {
 						</>
 					) : Boolean(
 						applicant?.moving_violations_count >
-						companyPrefferedMinViolationLimit
+						companyPrefferedMaxViolationLimit
 					) ? (
 						<>
 							<h4
 								className={`${styles.paragraph} ${styles.margin__top} text-warning  p-1`}
 							>
 								{t(
-									"{company_name}_PREFERED_MIN_VIOLATION_COUNT_{preffered_violation_count}",
+									"{company_name}_PREFERED_MAX_VIOLATION_COUNT_{preffered_violation_count}",
 									{
 										company_name: applicant?.company?.name || company.name,
 										preffered_violation_count:
-											companyPrefferedMinViolationLimit,
+											companyPrefferedMaxViolationLimit,
 									}
 								)}
 							</h4>
@@ -213,7 +213,7 @@ export function ContinueLongForm() {
 									"PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PREFERED_MIN_VIOLATION_COUNT_{preffered_violation_count}",
 									{
 										preffered_violation_count:
-											companyPrefferedMinViolationLimit,
+											companyPrefferedMaxViolationLimit,
 									}
 								)}
 							</h6>
@@ -256,6 +256,25 @@ export function ContinueLongForm() {
 							<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
 								{t("PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PROCEED")}
 							</h6>
+
+							{Boolean(
+								companyPrefferedEmploymentType?.includes(JobEmploymentType.W2)
+							) &&
+								!Boolean(
+									applicant?.extras.some(
+										(v) => v.type == ApplicantExtras.REQUIRE_W2_EMPLOYMENT
+									)
+								) && (
+									<>
+										<h4
+											className={`${styles.paragraph} ${styles.margin__top} text-warning p-1`}
+										>
+											{t("{company_name}_W2_VALIDATION", {
+												company_name: applicant?.company?.name || company.name,
+											})}
+										</h4>
+									</>
+								)}
 						</>
 					) : (Boolean(
 						companyPrefferedEmploymentType?.includes(
@@ -283,24 +302,7 @@ export function ContinueLongForm() {
 							</h6>
 						</>
 					) : (
-						Boolean(
-							companyPrefferedEmploymentType?.includes(JobEmploymentType.W2)
-						) &&
-						!Boolean(
-							applicant?.extras.some(
-								(v) => v.type == ApplicantExtras.REQUIRE_W2_EMPLOYMENT
-							)
-						) && (
-							<>
-								<h4
-									className={`${styles.paragraph} ${styles.margin__top} text-warning p-1`}
-								>
-									{t("{company_name}_W2_VALIDATION", {
-										company_name: applicant?.company?.name || company.name,
-									})}
-								</h4>
-							</>
-						)
+						""
 					)}
 				</Row>
 				<Row className="mt-3">

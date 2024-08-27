@@ -1,11 +1,11 @@
-import styles from "../../../../../styles/voe.module.css";
-import ApplicantApi from "../../../../api/applicant";
-import { ApplicantEmployerEntity, ApplicantEntity, ApplicantVoeEntity } from "../../../../../models/applicant";
 import { Col, Row } from "react-bootstrap";
-import { useTranslation } from "../../../../../hooks/use-translation";
+import { formatDate } from "../../../../../components/jobs/show-formatted-date";
 import ViewCard from "../../../../../components/view-details/view-card";
 import ViewDetails from "../../../../../components/view-details/view-details";
-import ShowFormattedDate, { formatDate } from "../../../../../components/jobs/show-formatted-date";
+import { useTranslation } from "../../../../../hooks/use-translation";
+import { ApplicantEmployerEntity, ApplicantEntity, ApplicantVoeEntity } from "../../../../../models/applicant";
+import styles from "../../../../../styles/voe.module.css";
+import ApplicantApi from "../../../../api/applicant";
 
 export interface VoeFormProps {
     applicant: ApplicantEntity;
@@ -46,11 +46,13 @@ export default function ViewVoeForm({ applicant, employer, voeData }: VoeFormPro
                         />
                     </ViewCard>
                     <ViewCard title="WAS_EMPLOYED_AS">
+                        {console.log("voeData.end_date", voeData.end_date)
+                        }
                         <ViewDetails
                             obj={{
-                                POSITION: voeData.position,
-                                START_DATE: formatDate(voeData.start_date, true),
-                                END_DATE: formatDate(voeData.end_date, true),
+                                POSITION: voeData.position || t('N/A'),
+                                START_DATE: voeData.start_date ? formatDate(voeData.start_date, true) : t('N/A'),
+                                END_DATE: voeData.end_date ? formatDate(voeData.end_date, true) : t('N/A'),
                             }}
                         />
                     </ViewCard>

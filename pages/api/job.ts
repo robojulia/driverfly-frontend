@@ -3,6 +3,7 @@ import BaseApi from "./_baseApi";
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import { SearchJobsDto } from "../../models/job/search-jobs-dto";
 import { Pagination } from "../../types/pagination.type";
+import { ApplicantJobsListingDto } from "../../models/job/applicant-jobs-listing.dto";
 
 export default class JobApi extends BaseApi {
     baseUrl: string = "jobs";
@@ -41,6 +42,12 @@ export default class JobApi extends BaseApi {
         const { data } = await this.get(`${this.baseUrl}/search`, { params });
         return data;
     }
+
+    async applicants(params: ApplicantJobsListingDto): Promise<Pagination<JobEntity> | JobEntity[]> {
+        const { data } = await this.get(`${this.baseUrl}/applicants-job-listing`, { params });
+        return data;
+    }
+
 
     async keywordSearchQuery(params: string): Promise<any> {
         const { data } = await this.get(`${this.baseUrl}/keyword-search-query`, { params });

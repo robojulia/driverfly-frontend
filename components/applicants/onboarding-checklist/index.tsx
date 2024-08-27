@@ -36,6 +36,8 @@ import ViewDocumentHistory from "../../documents/view-history";
 import BaseRadio from "../../forms/base-radio";
 import SafetyPerformanceHistory from "../safety-performance-history";
 import { PlusCircle } from "react-bootstrap-icons";
+import BaseInput from "../../forms/base-input";
+import BaseCheck from "../../forms/base-check";
 
 export default function OnboardingChecklist(
   props: ViewApplicantOnboardingChecklistProps
@@ -110,6 +112,7 @@ export default function OnboardingChecklist(
     if (dac) {
       data.id = dac.id;
       data.value = !!dac.value;
+      data.details = dac.details;
     }
     dacForm.setValues(data);
   };
@@ -146,11 +149,11 @@ export default function OnboardingChecklist(
   };
 
   /* This is a functional component in TypeScript React that renders a list of buttons for a
-	  given document and type. It conditionally renders the buttons based on whether the document type
-	  matches the given type and whether the type is SAFETY_PERFORMANCE_HISTORY. The buttons include
-	  ViewDocumentButton, AddDocumentButton, DownloadDocumentButton, DeleteDocumentButton, and
-	  ViewDocumentHistory. If the type is SAFETY_PERFORMANCE_HISTORY, it renders the
-	  SafetyPerformanceHistory component instead of the buttons. */
+    given document and type. It conditionally renders the buttons based on whether the document type
+    matches the given type and whether the type is SAFETY_PERFORMANCE_HISTORY. The buttons include
+    ViewDocumentButton, AddDocumentButton, DownloadDocumentButton, DeleteDocumentButton, and
+    ViewDocumentHistory. If the type is SAFETY_PERFORMANCE_HISTORY, it renders the
+    SafetyPerformanceHistory component instead of the buttons. */
   const ButtonList = ({ document, type }) => (
     <>
       {(!form.values.document?.type || form.values.document?.type != type) && (
@@ -378,9 +381,10 @@ export default function OnboardingChecklist(
               <tr>
                 <th colSpan={2}>{t("TYPE")}</th>
                 {Boolean(props.showCompleted) && (
-                  <th colSpan={1}>{t("COMPLETED?")}</th>
+                  <th colSpan={1} className="text-center"></th>
                 )}
-                <th colSpan={2}>{t("UPDATED_AT")}</th>
+                <th colSpan={1} className="text-center">{t("DATE")}</th>
+                <th colSpan={1} className="text-center">{t("DETAILS")}</th>
                 <th colSpan={1}></th>
               </tr>
             </thead>
@@ -394,9 +398,8 @@ export default function OnboardingChecklist(
                     <td colSpan={2}> {t(`ApplicantDac.${value}`)}</td>
                     {Boolean(props.showCompleted) && (
                       <td colSpan={1} className="text-center">
-                        <input
+                        <BaseCheck
                           className=""
-                          type="radio"
                           disabled
                           checked={Boolean(
                             dac?.type && dac.type == value && dac.value
@@ -404,9 +407,18 @@ export default function OnboardingChecklist(
                         />
                       </td>
                     )}
-                    <td colSpan={2}>
+                    <td colSpan={1} className="text-center">
                       {dac?.last_updated_at ? (
                         <ShowFormattedDate date={dac?.last_updated_at} />
+                      ) : (
+                        <span className="text-danger font-italic">
+                          {t(`NOT_AVAILABLE`)}
+                        </span>
+                      )}
+                    </td>
+                    <td colSpan={1} className="text-center">
+                      {dac?.details ? (
+                        dac?.details
                       ) : (
                         <span className="text-danger font-italic">
                           {t(`NOT_AVAILABLE`)}
@@ -433,26 +445,40 @@ export default function OnboardingChecklist(
                           </div>
                         ) : (
                           <Form onSubmit={dacForm.handleSubmit}>
-                            <BaseRadio
-                              name={`value`}
-                              className="float-left ml-2 my-2 w-40"
-                              label={`ApplicantDac.${value}`}
-                              labelPrefix="BooleanType"
-                              enumType={BooleanType}
-                              required
-                              value={
-                                dacForm.values.value
-                                  ? BooleanType.YES
-                                  : BooleanType.NO
-                              }
-                              onChange={({ target: { value } }) => {
-                                dacForm.setFieldValue(
-                                  "value",
-                                  value == BooleanType.YES ? true : false
-                                );
-                              }}
-                            />
-
+                            <div style={{ display: 'flex', flexDirection: "column", justifyContent: "center" }}>
+                              <BaseRadio
+                                name={`value`}
+                                className="float-left ml-2 my-2 w-40"
+                                label={`ApplicantDac.${value}`}
+                                labelPrefix="BooleanType"
+                                enumType={BooleanType}
+                                required
+                                value={
+                                  dacForm.values.value
+                                    ? BooleanType.YES
+                                    : BooleanType.NO
+                                }
+                                onChange={({ target: { value } }) => {
+                                  dacForm.setFieldValue(
+                                    "value",
+                                    value == BooleanType.YES ? true : false
+                                  );
+                                }}
+                              />
+                              <BaseInput
+                                name={"DETAILS"}
+                                className=" d-flex justify-content-center align-items-end float-left ml-2 my-1 w-40"
+                                label={"DETAILS"}
+                                placeholder=""
+                                value={dacForm.values.details}
+                                onChange={({ target: { value } }) => {
+                                  dacForm.setFieldValue(
+                                    "details",
+                                    value
+                                  );
+                                }}
+                              />
+                            </div>
                             <div className="d-flex justify-content-end w-40">
                               <Button
                                 disabled={

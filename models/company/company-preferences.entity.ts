@@ -43,11 +43,11 @@ export class CompanyPreferenceEntity {
                             then: yup.bool().required().default(false)
                         })
                         .when("label", {
-                            is: CompanyPreferenceJotformLabel.MINIMUM_ACCIDENTS,
+                            is: CompanyPreferenceJotformLabel.MAXIMUM_ACCIDENTS,
                             then: yup.number().min(0).required().nullable()
                         })
                         .when("label", {
-                            is: CompanyPreferenceJotformLabel.MIN_MOVING_VIOLATIONS,
+                            is: CompanyPreferenceJotformLabel.MAXIMUM_MOVING_VIOLATIONS,
                             then: yup.number().min(0).required().nullable()
                         })
                         .when("label", {
