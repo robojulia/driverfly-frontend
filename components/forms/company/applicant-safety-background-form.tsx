@@ -457,7 +457,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                             className="col-12 mt-2"
                                             readOnly={Boolean(entity?.is_hired)}
                                             label="details"
-                                            name="`	`"
+                                            name="license_revoked_details"
                                             formik={form}
                                         />
                                     )}
@@ -477,13 +477,13 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                             formik={form}
                                         />
                                     )}
-                                    <BaseCheck
+                                    {/* <BaseCheck
                                         className="col-12 mt-2"
                                         disabled={Boolean(entity?.is_hired)}
                                         label="has_had_tickets_last_5_years"
                                         name="tickets"
                                         formik={form}
-                                    />
+                                    /> */}
                                     {form.values?.tickets && (
                                         <BaseTextArea
                                             className="col-12 mt-2"
