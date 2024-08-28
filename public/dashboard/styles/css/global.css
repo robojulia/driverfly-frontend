@@ -35,7 +35,7 @@
 
 .dashboardsidebar aside {
   background: linear-gradient(to bottom right, #1b4454ba, #2ec8c4);
-  height: 891px;
+  /* height: 891px; */
 }
 
 .dashboardsidebar aside:hover {
@@ -1048,8 +1048,8 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .contact-support {
-  right: 2%;
-  bottom: 18%;
+  right: 1.6%;
+  bottom: 1%;
   position: fixed;
   cursor: pointer;
   z-index: 9999;
