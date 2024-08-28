@@ -5,6 +5,7 @@ import { Col, Row } from 'react-bootstrap'
 import { ArrowRight, DashCircle, PlusCircle } from 'react-bootstrap-icons'
 import Button from "react-bootstrap/Button"
 import { toast } from 'react-toastify'
+import styles from "../styles/digitalhiringapp.module.css";
 import { ApplicantDocumentType } from '../enums/applicants/applicant-document-type.enum'
 import { ApplicantExtras } from "../enums/applicants/applicant-extras.enum"
 import { BooleanTypeExtra } from "../enums/jotform/bool-and-not-sure.enum"
@@ -41,28 +42,36 @@ export default function JobApply({ job, setEncourageModal }) {
 
     const [showModal, setShowModal] = useState(false);
     const [showForm, setShowForm] = useState(true);
+    const [showDrugErrorMessage, setShowDrugErrorMessage] = useState<boolean>(false);
+
     const [applicant, setApplicant] = useState<ApplicantEntity>();
 
     const apply_form = useFormik({
         initialValues: new ApplicantEntity(),
         validationSchema: ApplicantEntity.yupSchemaForApplyForm(),
         onSubmit: async (dto, { resetForm }) => {
-            dto.years_cdl_experience = Number(dto.years_cdl_experience);
-            dto.moving_violations_count = Number(dto.moving_violations_count);
-            dto.accident_count = Number(dto.accident_count);
-            dto.extras = [...dto.extras, { ...new ApplicantExtrasEntity(ApplicantExtras.HEAR_ABOUT_US), value: HearAboutUsType.JOB_BOARD }]
-
-            try {
-                const response = await jobApi.apply(job.id, dto);
-                setApplicant(response)
-                toast.success(t('job_applied_success_message'))
+            if (!Boolean(dto?.can_pass_drug_test)) {
+                setShowDrugErrorMessage(true)
+                setEncourageModal(false)
                 setShowForm(false);
-                // resetForm()
-                // setEncourageModal(true)
-            }
-            catch (e) {
-                globalAjaxExceptionHandler(e, { formik: apply_form, toast: toast, t: t });
-                if (e.response?.data?.message == "ApplicantJobService.APPLICANT_ALREADY_APPLIED") setShowModal(false)
+            } else {
+                dto.years_cdl_experience = Number(dto.years_cdl_experience);
+                dto.moving_violations_count = Number(dto.moving_violations_count);
+                dto.accident_count = Number(dto.accident_count);
+                dto.extras = [...dto.extras, { ...new ApplicantExtrasEntity(ApplicantExtras.HEAR_ABOUT_US), value: HearAboutUsType.JOB_BOARD }]
+
+                try {
+                    const response = await jobApi.apply(job.id, dto);
+                    setApplicant(response)
+                    toast.success(t('job_applied_success_message'))
+                    setShowForm(false);
+                    // resetForm()
+                    // setEncourageModal(true)
+                }
+                catch (e) {
+                    globalAjaxExceptionHandler(e, { formik: apply_form, toast: toast, t: t });
+                    if (e.response?.data?.message == "ApplicantJobService.APPLICANT_ALREADY_APPLIED") setShowModal(false)
+                }
             }
         }
     });
@@ -111,9 +120,18 @@ export default function JobApply({ job, setEncourageModal }) {
 
     const onCloseClick = () => {
         // apply_form.resetForm()
-        setShowModal(false);
-        setShowForm(true);
-        setEncourageModal(true)
+
+        if (Boolean(showDrugErrorMessage)) {
+            setEncourageModal(false)
+            setShowModal(false);
+            setShowForm(true);
+            setShowDrugErrorMessage(false);
+        } else {
+            setEncourageModal(true)
+            setShowModal(false);
+            setShowForm(true);
+            setShowDrugErrorMessage(false);
+        }
     }
 
 
@@ -377,15 +395,37 @@ export default function JobApply({ job, setEncourageModal }) {
                         </Row>
                     </form>
                     : <Row>
-                        <p>
-                            {!user?.id ? (<>
+                        {Boolean(showDrugErrorMessage) ?
+                            <Row>
+                                <h6
+                                    className={`${styles.paragraph} ${styles.margin__top} text-danger p-1`}
+                                >
+                                    {t("DRUG_TEST_VALIDATION")}
+                                </h6>
+                                <h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
+                                    {t("DRUG_TEST_VALIDATION_FAIL_MESSAGE")}
+                                </h6>
+                                <h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
+                                    {t("DRUG_TEST_VALIDATION_FAIL_MESSAGE_REVIEW_SAP")} <Link href={"https://www.transportation.gov/odapc/employee#SAP"} >{t("SAP_RESOURCE_PAGE")}</Link>.
+                                </h6>
+                                <h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
+                                    {t("DRUG_TEST_VALIDATION_FAIL_MESSAGE_ENCOURAGE_REVIEW")} <Link href={" https://www.naadac.org/sap-directory?"} >{t("HERE")}</Link>
+                                </h6>
+                                <h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
+                                    {t("DRUG_TEST_VALIDATION_FAIL_MESSAGE_RESUBMIT_FORM")}
+                                </h6>
+                            </Row>
+                            : (
+                                <p>
+                                    {!user?.id ? (<>
 
-                                {t('QUICK_APPLY_MESSAGE_{JOB}_{COMPANY}', { JOB: job.title, COMPANY: job.company.name })}
-                                <Link href={`/apply/quick-apply/${applicant.uuid_token}`} >{t('COMPLETE_APPLICATION')}</Link>
-                            </>
-                            ) : t("job_applied_success_message")}
+                                        {t('QUICK_APPLY_MESSAGE_{JOB}_{COMPANY}', { JOB: job?.title, COMPANY: job?.company?.name })}
+                                        <Link href={`/apply/quick-apply/${applicant?.uuid_token}`} >{t('COMPLETE_APPLICATION')}</Link>
+                                    </>
+                                    ) : t("job_applied_success_message")}
 
-                        </p>
+                                </p>
+                            )}
                     </Row>
                 }
             </ViewModal >
