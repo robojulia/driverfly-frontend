@@ -755,12 +755,14 @@ function ApplicantView(props: ViewProps) {
                     />
                 )}
             />
-            <CustomPagination
-                recordsPerPageOptions={[20, 50, 100]}
-                onPageChange={handlePageChange}
-                pagingMeta={pagingMeta}
-                setPagingMeta={setPagingMeta}
-            />
+            <div style={{ marginRight: "7%" }}>
+                <CustomPagination
+                    recordsPerPageOptions={[20, 50, 100]}
+                    onPageChange={handlePageChange}
+                    pagingMeta={pagingMeta}
+                    setPagingMeta={setPagingMeta}
+                />
+            </div>
         </div>
 
     );

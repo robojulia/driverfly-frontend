@@ -14,6 +14,7 @@ import { JobEmploymentType } from "../../../../enums/jobs/job-employment-type.en
 import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
 import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import Link from "next/link";
 
 export function ContinueLongForm() {
 	const {
@@ -32,7 +33,7 @@ export function ContinueLongForm() {
 	useEffect(() => {
 		if (Boolean(showSuccess) && Boolean(applicant)) {
 			!Boolean(applicant?.can_pass_drug_test)
-				? toast.error(t("UNABLE_TO_SAVE_INFORMATION"))
+				? ""
 				: toast.success(t("successfully_saved_information"));
 			setShowSuccess(false);
 		}
@@ -89,7 +90,7 @@ export function ContinueLongForm() {
 	}
 
 	function Content(): React.JSX.Element {
-		if (!Boolean(applicant?.can_pass_drug_test))
+		if (!Boolean(applicant?.can_pass_drug_test)) {
 			return (
 				<Row>
 					<h6
@@ -100,220 +101,231 @@ export function ContinueLongForm() {
 					<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
 						{t("DRUG_TEST_VALIDATION_FAIL_MESSAGE")}
 					</h6>
+					<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
+						{t("DRUG_TEST_VALIDATION_FAIL_MESSAGE_REVIEW_SAP")} <Link href={"https://www.transportation.gov/odapc/employee#SAP"} >{t("SAP_RESOURCE_PAGE")}</Link>.
+					</h6>
+					<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
+						{t("DRUG_TEST_VALIDATION_FAIL_MESSAGE_ENCOURAGE_REVIEW")} <Link href={" https://www.naadac.org/sap-directory?"} >{t("HERE")}</Link>
+					</h6>
+					<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
+						{t("DRUG_TEST_VALIDATION_FAIL_MESSAGE_RESUBMIT_FORM")}
+					</h6>
 				</Row>
 			);
-
-		return (
-			<>
-				<Row>
-					<h1 className={styles.carrierName}>
-						{t("{company_name}_THANKS", {
-							company_name: applicant?.company?.name || company.name,
-						})}
-					</h1>
-				</Row>
-				<Row className="mt-3">
-					{Boolean(companyPrefferedCDL.length) &&
-						!Boolean(companyPrefferedCDL?.includes(applicant?.license_type)) ? (
-						<h6
-							className={`${styles.paragraph} ${styles.margin__top} bg-danger text-light  p-1`}
-						>
-							{t(
-								"{company_name}_REQUIRES_{cdl_category}",
-								{
-									company_name: applicant?.company?.name || company.name,
-									cdl_category: companyPrefferedCDL
-										?.map((v) => t(`DriverLicenseType.${v}`))
-										?.join(", "),
-								},
-								{ translateProps: true }
-							)}
-						</h6>
-					) : Boolean(
-						applicant?.years_cdl_experience < companyPrefferedMinExperience
-					) ? (
-						<>
-							<h4
-								className={`${styles.paragraph} ${styles.margin__top} text-warning  p-1`}
+		} else {
+			return (
+				<>
+					<Row>
+						<h1 className={styles.carrierName}>
+							{t("{company_name}_THANKS", {
+								company_name: applicant?.company?.name || company.name,
+							})}
+						</h1>
+					</Row>
+					<Row className="mt-3">
+						{Boolean(companyPrefferedCDL.length) &&
+							!Boolean(companyPrefferedCDL?.includes(applicant?.license_type)) ? (
+							<h6
+								className={`${styles.paragraph} ${styles.margin__top} bg-danger text-light  p-1`}
 							>
 								{t(
-									"{company_name}_PREFERED_MIN_CDL_EXPERIENCE_VALIDATION_{preffered_experience}",
+									"{company_name}_REQUIRES_{cdl_category}",
 									{
 										company_name: applicant?.company?.name || company.name,
-										preffered_experience: companyPrefferedMinExperience,
-									}
-								)}
-							</h4>
-							<h6
-								className={`${styles.paragraph} ${styles.margin__top} text-bold  p-1`}
-							>
-								{t(
-									"MIN_EXPERIECE_VALIDATION_MESSAGE_PREFERED_MIN_CDL_{preffered_experience}",
-									{
-										preffered_experience: companyPrefferedMinExperience,
-									}
-								)}
-							</h6>
-							<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
-								{t("PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PROCEED")}
-							</h6>
-						</>
-					) : Boolean(
-						applicant?.accident_count > companyPrefferedAccidentCountLimit
-					) ? (
-						<>
-							<h4
-								className={`${styles.paragraph} ${styles.margin__top} text-warning  p-1`}
-							>
-								{t(
-									"{company_name}_PREFERED_MAX_ACCIDENT_COUNT_{preffered_accident_count}",
-									{
-										company_name: applicant?.company?.name || company.name,
-										preffered_accident_count:
-											companyPrefferedAccidentCountLimit,
-									}
-								)}
-							</h4>
-							<h6
-								className={`${styles.paragraph} ${styles.margin__top} text-bold  p-1`}
-							>
-								{t(
-									"PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_MIN_ACCIDENT_COUNT_{preffered_accident_count}",
-									{
-										preffered_accident_count:
-											companyPrefferedAccidentCountLimit,
-									}
-								)}
-							</h6>
-							<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
-								{t("PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PROCEED")}
-							</h6>
-						</>
-					) : Boolean(
-						applicant?.moving_violations_count >
-						companyPrefferedMaxViolationLimit
-					) ? (
-						<>
-							<h4
-								className={`${styles.paragraph} ${styles.margin__top} text-warning  p-1`}
-							>
-								{t(
-									"{company_name}_PREFERED_MAX_VIOLATION_COUNT_{preffered_violation_count}",
-									{
-										company_name: applicant?.company?.name || company.name,
-										preffered_violation_count:
-											companyPrefferedMaxViolationLimit,
-									}
-								)}
-							</h4>
-							<h6
-								className={`${styles.paragraph} ${styles.margin__top} text-bold  p-1`}
-							>
-								{t(
-									"PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PREFERED_MIN_VIOLATION_COUNT_{preffered_violation_count}",
-									{
-										preffered_violation_count:
-											companyPrefferedMaxViolationLimit,
-									}
-								)}
-							</h6>
-							<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
-								{t("PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PROCEED")}
-							</h6>
-						</>
-					) : (
-						Boolean(companyPrefferedLocations?.length) &&
-						!Boolean(applicantHasPreferredLocation())
-					) ? (
-						<>
-							<h4
-								className={`${styles.paragraph} ${styles.margin__top} text-warning  p-1`}
-							>
-								{t(
-									"{company_name}_PREFERED_ROUTES_VALIDATION_{preffered_routes}",
-									{
-										company_name: applicant?.company?.name || company.name,
-										preffered_routes: companyPrefferedLocations
-											?.map((v) => t(`JobGeography.${v}`))
-											?.join(", "),
-									},
-									{ translateProps: true }
-								)}
-							</h4>
-							<h6
-								className={`${styles.paragraph} ${styles.margin__top} text-bold  p-1`}
-							>
-								{t(
-									"PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PREFERED_ROUTES_VALIDATION_{preffered_routes}",
-									{
-										preffered_routes: companyPrefferedLocations
-											?.map((v) => t(`JobGeography.${v}`))
+										cdl_category: companyPrefferedCDL
+											?.map((v) => t(`DriverLicenseType.${v}`))
 											?.join(", "),
 									},
 									{ translateProps: true }
 								)}
 							</h6>
-							<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
-								{t("PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PROCEED")}
-							</h6>
+						) : Boolean(
+							applicant?.years_cdl_experience < companyPrefferedMinExperience
+						) ? (
+							<>
+								<h4
+									className={`${styles.paragraph} ${styles.margin__top} text-warning  p-1`}
+								>
+									{t(
+										"{company_name}_PREFERED_MIN_CDL_EXPERIENCE_VALIDATION_{preffered_experience}",
+										{
+											company_name: applicant?.company?.name || company.name,
+											preffered_experience: companyPrefferedMinExperience,
+										}
+									)}
+								</h4>
+								<h6
+									className={`${styles.paragraph} ${styles.margin__top} text-bold  p-1`}
+								>
+									{t(
+										"MIN_EXPERIECE_VALIDATION_MESSAGE_PREFERED_MIN_CDL_{preffered_experience}",
+										{
+											preffered_experience: companyPrefferedMinExperience,
+										}
+									)}
+								</h6>
+								<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
+									{t("PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PROCEED")}
+								</h6>
+							</>
+						) : Boolean(
+							applicant?.accident_count > companyPrefferedAccidentCountLimit
+						) ? (
+							<>
+								<h4
+									className={`${styles.paragraph} ${styles.margin__top} text-warning  p-1`}
+								>
+									{t(
+										"{company_name}_PREFERED_MAX_ACCIDENT_COUNT_{preffered_accident_count}",
+										{
+											company_name: applicant?.company?.name || company.name,
+											preffered_accident_count:
+												companyPrefferedAccidentCountLimit,
+										}
+									)}
+								</h4>
+								<h6
+									className={`${styles.paragraph} ${styles.margin__top} text-bold  p-1`}
+								>
+									{t(
+										"PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_MIN_ACCIDENT_COUNT_{preffered_accident_count}",
+										{
+											preffered_accident_count:
+												companyPrefferedAccidentCountLimit,
+										}
+									)}
+								</h6>
+								<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
+									{t("PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PROCEED")}
+								</h6>
+							</>
+						) : Boolean(
+							applicant?.moving_violations_count >
+							companyPrefferedMaxViolationLimit
+						) ? (
+							<>
+								<h4
+									className={`${styles.paragraph} ${styles.margin__top} text-warning  p-1`}
+								>
+									{t(
+										"{company_name}_PREFERED_MAX_VIOLATION_COUNT_{preffered_violation_count}",
+										{
+											company_name: applicant?.company?.name || company.name,
+											preffered_violation_count:
+												companyPrefferedMaxViolationLimit,
+										}
+									)}
+								</h4>
+								<h6
+									className={`${styles.paragraph} ${styles.margin__top} text-bold  p-1`}
+								>
+									{t(
+										"PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PREFERED_MIN_VIOLATION_COUNT_{preffered_violation_count}",
+										{
+											preffered_violation_count:
+												companyPrefferedMaxViolationLimit,
+										}
+									)}
+								</h6>
+								<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
+									{t("PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PROCEED")}
+								</h6>
+							</>
+						) : (
+							Boolean(companyPrefferedLocations?.length) &&
+							!Boolean(applicantHasPreferredLocation())
+						) ? (
+							<>
+								<h4
+									className={`${styles.paragraph} ${styles.margin__top} text-warning  p-1`}
+								>
+									{t(
+										"{company_name}_PREFERED_ROUTES_VALIDATION_{preffered_routes}",
+										{
+											company_name: applicant?.company?.name || company.name,
+											preffered_routes: companyPrefferedLocations
+												?.map((v) => t(`JobGeography.${v}`))
+												?.join(", "),
+										},
+										{ translateProps: true }
+									)}
+								</h4>
+								<h6
+									className={`${styles.paragraph} ${styles.margin__top} text-bold  p-1`}
+								>
+									{t(
+										"PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PREFERED_ROUTES_VALIDATION_{preffered_routes}",
+										{
+											preffered_routes: companyPrefferedLocations
+												?.map((v) => t(`JobGeography.${v}`))
+												?.join(", "),
+										},
+										{ translateProps: true }
+									)}
+								</h6>
+								<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
+									{t("PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PROCEED")}
+								</h6>
 
-							{Boolean(
-								companyPrefferedEmploymentType?.includes(JobEmploymentType.W2)
-							) &&
-								!Boolean(
-									applicant?.extras.some(
-										(v) => v.type == ApplicantExtras.REQUIRE_W2_EMPLOYMENT
-									)
-								) && (
-									<>
-										<h4
-											className={`${styles.paragraph} ${styles.margin__top} text-warning p-1`}
-										>
-											{t("{company_name}_W2_VALIDATION", {
-												company_name: applicant?.company?.name || company.name,
-											})}
-										</h4>
-									</>
-								)}
-						</>
-					) : (Boolean(
-						companyPrefferedEmploymentType?.includes(
-							JobEmploymentType.OWNER_OPERATOR
-						)
-					) && !Boolean(applicant?.is_owner_operator)
-					) ? (
-						<>
-							<h4
-								className={`${styles.paragraph} ${styles.margin__top} text-warning p-1`}
-							>
-								{t("{company_name}_OWNER_OPERATOR_VALIDATION", {
-									company_name: applicant?.company?.name || company.name,
-								})}
-							</h4>
-							<h6
-								className={`${styles.paragraph} ${styles.margin__top} text-bold p-1`}
-							>
-								{t("OWNER_OPERATOR_VALIDATION_SHORT")}
-							</h6>
-							<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
-								{t("{{company_name}}_OWNER_OPERATOR_VALIDATION_LONG", {
-									company_name: applicant?.company?.name || company.name,
-								})}
-							</h6>
-						</>
-					) : (
-						""
-					)}
-				</Row>
-				<Row className="mt-3">
-					<Col className="text-center">
-						<Button onClick={() => stepNext()}>
-							{t("CONTINUE_APPLICATION")}
-						</Button>
-					</Col>
-				</Row>
-			</>
-		);
+								{Boolean(
+									companyPrefferedEmploymentType?.includes(JobEmploymentType.W2)
+								) &&
+									!Boolean(
+										applicant?.extras.some(
+											(v) => v.type == ApplicantExtras.REQUIRE_W2_EMPLOYMENT
+										)
+									) && (
+										<>
+											<h4
+												className={`${styles.paragraph} ${styles.margin__top} text-warning p-1`}
+											>
+												{t("{company_name}_W2_VALIDATION", {
+													company_name: applicant?.company?.name || company.name,
+												})}
+											</h4>
+										</>
+									)}
+							</>
+						) : (Boolean(
+							companyPrefferedEmploymentType?.includes(
+								JobEmploymentType.OWNER_OPERATOR
+							)
+						) && !Boolean(applicant?.is_owner_operator)
+						) ? (
+							<>
+								<h4
+									className={`${styles.paragraph} ${styles.margin__top} text-warning p-1`}
+								>
+									{t("{company_name}_OWNER_OPERATOR_VALIDATION", {
+										company_name: applicant?.company?.name || company.name,
+									})}
+								</h4>
+								<h6
+									className={`${styles.paragraph} ${styles.margin__top} text-bold p-1`}
+								>
+									{t("OWNER_OPERATOR_VALIDATION_SHORT")}
+								</h6>
+								<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
+									{t("{{company_name}}_OWNER_OPERATOR_VALIDATION_LONG", {
+										company_name: applicant?.company?.name || company.name,
+									})}
+								</h6>
+							</>
+						) : (
+							""
+						)}
+					</Row>
+					<Row className="mt-3">
+						<Col className="text-center">
+							<Button onClick={() => stepNext()}>
+								{t("CONTINUE_APPLICATION")}
+							</Button>
+						</Col>
+					</Row>
+				</>
+			);
+		}
+
 	}
 
 	return (

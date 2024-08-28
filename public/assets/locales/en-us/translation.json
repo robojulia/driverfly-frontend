@@ -2163,7 +2163,11 @@
     "DIGITAL_HIRING_APP": "Digital Hiring App"
   },
   "DRUG_TEST_VALIDATION": "You answered that you cannot pass a drug test.",
-  "DRUG_TEST_VALIDATION_FAIL_MESSAGE": "Please note that the company has indicated that they require that drivers pass drug test during hiring process. Please continue this application to be considered for this job and in the event you are not a good fit, DriverFly will work to get you alternative job options accordingly.",
+  "SAP_RESOURCE_PAGE":"SAP resource page",
+  "DRUG_TEST_VALIDATION_FAIL_MESSAGE": "Please note that all US registered trucking companies require that drivers pass drug tests during the hiring process... i.e. you WILL be tested and if you fail you WILL have to go through the SAP program.",
+  "DRUG_TEST_VALIDATION_FAIL_MESSAGE_REVIEW_SAP": "If you would like to continue on in your career journey as a truck driver, we strongly encourage you review the ",
+  "DRUG_TEST_VALIDATION_FAIL_MESSAGE_ENCOURAGE_REVIEW": "To find support resources, you can find a SAP professional ",
+  "DRUG_TEST_VALIDATION_FAIL_MESSAGE_RESUBMIT_FORM": "If you feel you selected the drug testing question in error, please go back and resubmit your application.",
   "{company_name}_OWNER_OPERATOR_VALIDATION": "Warning: {{company_name}} may be looking for owner operators only.",
   "{company_name}_W2_VALIDATION": "Warning: {{company_name}} may be looking for Salaried (W2).",
   "OWNER_OPERATOR_VALIDATION_SHORT": "Please double check the job listing accordingly.",

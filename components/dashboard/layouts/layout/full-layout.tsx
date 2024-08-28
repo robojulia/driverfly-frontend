@@ -210,7 +210,7 @@ const FullLayout = ({ children }) => {
 						{/********Content Area**********/}
 						<div className="header dashboard-container" ref={dashboardContainer}>
 							{/********Middle Content**********/}
-							<Container className="p-4 wrapper " fluid>
+							<Container className="px-4 pt-4 wrapper " fluid>
 								<div>{children}</div>
 							</Container>
 						</div>

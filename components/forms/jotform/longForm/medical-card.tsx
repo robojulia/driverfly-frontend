@@ -24,6 +24,7 @@ export function MedicalCard() {
 	const router = useRouter();
 	const isMissingDocRouteActive = router.route.includes('longform/[applicant_uuid]/missing-document')
 	const isLongFormRouteActive = router.route.includes('apply/longform/[applicant_uuid]');
+	const quickApplyRouteActive = router.route.includes('apply/quick-apply')
 	const dhaRouteActive = router.route.includes('apply/[slug]')
 
 	const { t } = useTranslation();
@@ -44,7 +45,7 @@ export function MedicalCard() {
 				// resetForm();
 				stepNext();
 			}
-			else if (dhaRouteActive) {
+			else if (dhaRouteActive || quickApplyRouteActive) {
 				if (!!document.file_base64) {
 					const documents: DocumentEntity[] = applicant.documents?.filter(isNotMedicalCard)
 					setApplicant({
