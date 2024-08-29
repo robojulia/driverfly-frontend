@@ -15,6 +15,7 @@ import { DriverLicenseType } from "../../../../enums/users/driver-license-type.e
 import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import Link from "next/link";
+import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
 
 export function ContinueLongForm() {
 	const {
@@ -88,6 +89,23 @@ export function ContinueLongForm() {
 		}
 		return false;
 	}
+
+	const companyName = applicant?.company?.name || company.name;
+	const preferredRoutes = companyPrefferedLocations?.map(v => t(`JobGeography.${v}`))?.join(", ");
+
+	const w2Condition = companyPrefferedEmploymentType?.includes(JobEmploymentType.W2) &&
+		!applicant?.extras.some(v => v.type === ApplicantExtras.REQUIRE_W2_EMPLOYMENT && v.value === BooleanPreferenceType.YES);
+
+	const contractCondition = companyPrefferedEmploymentType?.includes(JobEmploymentType.CONTRACT) &&
+		!applicant?.extras.some(v => v.type === ApplicantExtras.REQUIRE_W2_EMPLOYMENT && v.value === BooleanPreferenceType.NO);
+
+	const employmentTypeMessage = w2Condition && contractCondition
+		? `and ${t("EMPLOYMENT_TYPE")} ${t("JobEmploymentType.W2")}, ${t("JobEmploymentType.CONTRACT")}`
+		: w2Condition
+			? `and ${t("EMPLOYMENT_TYPE")} ${t("JobEmploymentType.W2")}`
+			: contractCondition
+				? `and ${t("EMPLOYMENT_TYPE")} ${t("JobEmploymentType.CONTRACT")}`
+				: "";
 
 	function Content(): React.JSX.Element {
 		if (!Boolean(applicant?.can_pass_drug_test)) {
@@ -227,64 +245,31 @@ export function ContinueLongForm() {
 										}
 									)}
 								</h6>
-								<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
-									{t("PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PROCEED")}
-								</h6>
+
 							</>
 						) : (
 							Boolean(companyPrefferedLocations?.length) &&
 							!Boolean(applicantHasPreferredLocation())
 						) ? (
 							<>
-								<h4
-									className={`${styles.paragraph} ${styles.margin__top} text-warning  p-1`}
-								>
-									{t(
-										"{company_name}_PREFERED_ROUTES_VALIDATION_{preffered_routes}",
-										{
-											company_name: applicant?.company?.name || company.name,
-											preffered_routes: companyPrefferedLocations
-												?.map((v) => t(`JobGeography.${v}`))
-												?.join(", "),
-										},
-										{ translateProps: true }
-									)}
+								<h4 className={`${styles.paragraph} ${styles.margin__top} text-warning p-1`}>
+									{t("{company_name}_PREFERED_ROUTES_VALIDATION_{preffered_routes}_{employment_type}", {
+										company_name: companyName,
+										preffered_routes: preferredRoutes,
+										employment_type: employmentTypeMessage || "",
+									}, { translateProps: true })}
 								</h4>
-								<h6
-									className={`${styles.paragraph} ${styles.margin__top} text-bold  p-1`}
-								>
-									{t(
-										"PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PREFERED_ROUTES_VALIDATION_{preffered_routes}",
-										{
-											preffered_routes: companyPrefferedLocations
-												?.map((v) => t(`JobGeography.${v}`))
-												?.join(", "),
-										},
-										{ translateProps: true }
-									)}
+
+								<h6 className={`${styles.paragraph} ${styles.margin__top} text-bold p-1`}>
+									{t("PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PREFERED_ROUTES_VALIDATION_{preffered_routes}_{employment_type}", {
+										preffered_routes: preferredRoutes,
+										employment_type: employmentTypeMessage || "",
+									}, { translateProps: true })}
 								</h6>
+
 								<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
 									{t("PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PROCEED")}
 								</h6>
-
-								{Boolean(
-									companyPrefferedEmploymentType?.includes(JobEmploymentType.W2)
-								) &&
-									!Boolean(
-										applicant?.extras.some(
-											(v) => v.type == ApplicantExtras.REQUIRE_W2_EMPLOYMENT
-										)
-									) && (
-										<>
-											<h4
-												className={`${styles.paragraph} ${styles.margin__top} text-warning p-1`}
-											>
-												{t("{company_name}_W2_VALIDATION", {
-													company_name: applicant?.company?.name || company.name,
-												})}
-											</h4>
-										</>
-									)}
 							</>
 						) : (Boolean(
 							companyPrefferedEmploymentType?.includes(
