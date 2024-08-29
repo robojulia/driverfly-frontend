@@ -17,7 +17,6 @@ export class ContactDto {
         .max(5, "Must be exactly 5 digits"),
       authorize_to_communicate: yup
         .string()
-        .default(BooleanTypeExtra.YES)
         .required()
         .nullable(),
     });
