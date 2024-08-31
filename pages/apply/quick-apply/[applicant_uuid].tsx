@@ -74,8 +74,17 @@ export async function getServerSideProps({ query }: NextPageContext) {
 		if (!!!applicant_uuid) return { notFound: true };
 
 		const applicantApi = new ApplicantApi();
-		const entity: ApplicantEntity = await applicantApi.getByUuidToken(
-			applicant_uuid
+		const entity: ApplicantEntity = await applicantApi.fetchByUuidToken(
+			applicant_uuid,
+			{
+				withRelations: [
+					"extras",
+					"documents",
+					"employers",
+					"accident_history",
+					"moving_violation_history",
+				]
+			}
 		);
 
 		if (!!!entity) return { notFound: true };

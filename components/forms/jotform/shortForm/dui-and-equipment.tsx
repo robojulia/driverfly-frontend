@@ -10,10 +10,10 @@ import JotformContext, {
 import { JobEquipmentType } from "../../../../enums/jobs/job-equipment-type.enum";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantExperienceEntity } from "../../../../models/applicant";
-import styles from "../../../../styles/digitalhiringapp.module.css";
 import ViewCard from "../../../view-details/view-card";
 import BaseInput from "../../base-input";
 import BaseSelect from "../../base-select";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export function DuiAndEquipment() {
     const {
