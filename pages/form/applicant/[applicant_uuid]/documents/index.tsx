@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
 import { useFormik } from "formik";
+import { useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import styles from "../../../../../styles/digitalhiringapp.module.css";
+import { toast } from "react-toastify";
+import BaseCheck from "../../../../../components/forms/base-check";
+import FileInput from "../../../../../components/forms/file-input";
+import { CameraComponent } from "../../../../../components/forms/jotform/longForm/camera";
+import { ApplicantDocumentType } from "../../../../../enums/applicants/applicant-document-type.enum";
+import { useTranslation } from "../../../../../hooks/use-translation";
 import {
     ApplicantEntity,
 } from "../../../../../models/applicant";
-import ApplicantApi from "../../../../api/applicant";
-import { ApplicantDocumentType } from "../../../../../enums/applicants/applicant-document-type.enum";
 import { ApplicantMissingDocumentsDto } from "../../../../../models/applicant/applicant-missing-documents.dto";
-import BaseCheck from "../../../../../components/forms/base-check";
-import { CameraComponent } from "../../../../../components/forms/jotform/longForm/camera";
-import FileInput from "../../../../../components/forms/file-input";
-import { useTranslation } from "../../../../../hooks/use-translation";
 import { DocumentEntity } from "../../../../../models/documents/document.entity";
-import { toast } from "react-toastify";
+import ApplicantApi from "../../../../api/applicant";
+import styles from "../../../../../styles/digitalhiringapp.module.css";
 
 export interface MissingDocumentsProps {
     entity: ApplicantEntity;
@@ -76,7 +76,7 @@ export default function MissingDocuments({ entity, types }: MissingDocumentsProp
                                                 <FileInput
                                                     className="my-3"
                                                     name={`documents[${i}]`}
-													accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
+                                                    accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
                                                     allowedSizeInByte={3145728}
                                                     formik={form}
                                                 />
@@ -115,7 +115,14 @@ export async function getServerSideProps({ query }) {
         if (!!!types.length) return { notFound: true };
 
         const applicantApi = new ApplicantApi();
-        const entity: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid);
+        const entity: ApplicantEntity = await applicantApi.fetchByUuidToken(
+            applicant_uuid,
+            {
+                withRelations: [
+                    "documents"
+                ]
+            }
+        );
 
         if (!!!entity) return { notFound: true };
 
