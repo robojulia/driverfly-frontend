@@ -1,20 +1,10 @@
-import { useContext } from "react";
 import { Col, Row } from "react-bootstrap";
-import JotformContext, { JotFormContextType } from "../../../../../../context/jotform-context";
-import { ApplicantExtras } from "../../../../../../enums/applicants/applicant-extras.enum";
 import { useTranslation } from "../../../../../../hooks/use-translation";
 import styles from "../../../../../../styles/digitalhiringapp.module.css";
 
 export function VerificationOfEmploymentSection2() {
 
-    const {
-        state: { applicant, applicantExtras },
-        method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
-    }: JotFormContextType = useContext(JotformContext);
     const { t } = useTranslation();
-    const current_employer =  applicant?.extras?.find(
-        (v) => v.type == ApplicantExtras.CURRENT_EMPLOYER
-    );
     return (
         <>
             <Row>
