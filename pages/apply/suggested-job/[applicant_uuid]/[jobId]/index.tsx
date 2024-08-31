@@ -85,8 +85,19 @@ export async function getServerSideProps({ query }) {
         if (!Boolean(applicant_uuid) || !Boolean(jobId)) return { notFound: true };
 
         const applicantApi = new ApplicantApi();
-        const entity: ApplicantEntity = await applicantApi.getByUuidToken(
-            applicant_uuid
+        const entity: ApplicantEntity = await applicantApi.fetchByUuidToken(
+            applicant_uuid,
+            {
+                withRelations: [
+                    "jobs",
+                    "extras",
+                    "documents",
+                    "employers",
+                    "employer.voeData",
+                    "accident_history",
+                    "moving_violation_history",
+                ]
+            }
         );
 
         const jobApi = new JobApi();
