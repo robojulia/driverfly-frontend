@@ -57,7 +57,7 @@ export function PastEmploymentHistory() {
 
 		form.setValues({
 			...form.values,
-			employers: employers.length > 0 ? employers : [],
+			employers: employers?.length > 0 ? employers : [],
 			is_previous_employed: !!employers?.length,
 		});
 	}, [applicant]);

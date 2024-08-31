@@ -1,12 +1,12 @@
-import { useContext, useEffect } from "react";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { Form, Button, Col, Row } from "react-bootstrap";
-import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
+import { useContext, useEffect } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
+import { useTranslation } from "../../../../hooks/use-translation";
+import { EmergenyContactDto } from "../../../../models/jot-form/long-form/emergency-contact.dto";
 import BaseInput from "../../base-input";
 import BaseInputPhone from "../../base-input-phone";
-import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
-import { EmergenyContactDto } from "../../../../models/jot-form/long-form/emergency-contact.dto";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export function EmergencyContact() {
 	const {
@@ -60,7 +60,7 @@ export function EmergencyContact() {
 
 	return (
 		<>
-		<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("EMERGENCY_CONTACT_DETAILS")}</h1>
+			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("EMERGENCY_CONTACT_DETAILS")}</h1>
 
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={`${styles.align__text_left} ${styles.bold}`}>

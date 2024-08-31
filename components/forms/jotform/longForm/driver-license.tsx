@@ -11,10 +11,10 @@ import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-do
 import { useTranslation } from "../../../../hooks/use-translation";
 import { DocumentEntity } from "../../../../models/documents/document.entity";
 import { DocumentsDto } from "../../../../models/jot-form/long-form/documents.dto";
-import styles from "../../../../styles/digitalhiringapp.module.css";
 import BaseCheck from "../../base-check";
 import FileInput from "../../file-input";
 import { CameraComponent } from "./camera";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export function DriverLicense() {
 	const {

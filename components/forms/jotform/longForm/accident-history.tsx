@@ -1,20 +1,20 @@
 import { useFormik } from "formik";
-import React, { useContext, useEffect } from "react";
-import { Button, Col, Row, Form } from "react-bootstrap";
+import { useContext, useEffect } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import { DashCircle, PlusCircle } from "react-bootstrap-icons";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { useTranslation } from "../../../../hooks/use-translation";
+import { ApplicantAccidentEntity } from "../../../../models/applicant/applicant-accidentr.entity";
+import { AccidentHistoryDto } from "../../../../models/jot-form/long-form/accident-history.dto";
 import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { AccidentHistoryDto } from "../../../../models/jot-form/long-form/accident-history.dto";
-import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
-import { DashCircle, PlusCircle } from "react-bootstrap-icons";
-import { ApplicantAccidentEntity } from "../../../../models/applicant/applicant-accidentr.entity";
 import BaseTextArea from "../../base-text-area";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export function AccidentHistory() {
 	const {
-		state: { applicant, applicantExtras },
-		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+		state: { applicant },
+		method: { setApplicant, stepNext, stepBack },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();

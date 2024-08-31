@@ -1,19 +1,19 @@
-import { useContext, useEffect } from "react";
-import Form from "react-bootstrap/Form";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { Button, Col, Row } from "react-bootstrap";
-import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
-import { useTranslation } from "../../../../hooks/use-translation";
-import { EducationLevel } from "../../../../enums/users/education-level.enum";
+import { useContext, useEffect } from "react";
+import { Button, Col, Row } from "react-bootstrap";
+import Form from "react-bootstrap/Form";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
+import { EducationLevel } from "../../../../enums/users/education-level.enum";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { HighestLevelEducationDto } from "../../../../models/jot-form/long-form/highest-level-education.dto";
+import BaseSelect from "../../base-select";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export function HighestLevelEducation() {
 
 	const {
-		state: { applicant, applicantExtras },
-		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+		state: { applicant },
+		method: { setApplicant, stepNext, stepBack },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
@@ -50,7 +50,7 @@ export function HighestLevelEducation() {
 			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("TELL_ABOUT_YOUR_EDUCATION")}</h1>
 
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-		
+
 				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseSelect
 						className="col my-3"

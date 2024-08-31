@@ -1,15 +1,15 @@
 import { useFormik } from "formik";
 import { useContext, useEffect } from "react";
-import { Button, Col, Row, Form, Table } from "react-bootstrap";
-import { useTranslation } from "../../../../hooks/use-translation";
-import BaseTextArea from "../../base-text-area";
-import BaseCheck from "../../base-check";
-import styles from "../../../../styles/digitalhiringapp.module.css";
+import { Button, Col, Form, Row, Table } from "react-bootstrap";
+import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { PastSuspensionDto } from "../../../../models/jot-form/long-form/past-suspension.dto";
-import { PlusCircle, DashCircle } from "react-bootstrap-icons";
 import ViewCard from "../../../view-details/view-card";
+import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
+import BaseTextArea from "../../base-text-area";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export function PastSuspension() {
 

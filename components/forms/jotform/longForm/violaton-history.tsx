@@ -6,14 +6,14 @@ import JotformContext, { JotFormContextType } from "../../../../context/jotform-
 import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantMovingViolationEntity } from "../../../../models/applicant/applicant-moving-violation.entity";
 import { ViolationHistoryDto } from "../../../../models/jot-form/long-form/violation-history.dto";
-import styles from "../../../../styles/digitalhiringapp.module.css";
 import BaseInput from "../../base-input";
 import BaseTextArea from "../../base-text-area";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export function ViolationHistory() {
 	const {
-		state: { applicant, applicantExtras },
-		method: { updateApplicantExtras, stepBack, stepNext, setApplicant },
+		state: { applicant },
+		method: { stepBack, stepNext, setApplicant },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
@@ -23,7 +23,6 @@ export function ViolationHistory() {
 		onSubmit: (values) => {
 			const { moving_violation_history, moving_violations_count, moving_violations_details } = values;
 			try {
-				// updateApplicantExtras(VIOLATION_DETAILS);
 				setApplicant({
 					...applicant,
 					moving_violations_details,
@@ -42,16 +41,8 @@ export function ViolationHistory() {
 	});
 
 	useEffect(() => {
-		console.log("extrasss", applicantExtras);
-
-		// const apx_detail = applicantExtras?.find(
-		// 	(v) => v.type == ApplicantExtras.VIOLATION_DETAILS
-		// );
 		form.setValues({
 			...form.values,
-			// VIOLATION_DETAILS: !!apx_detail?.type
-			// 	? apx_detail
-			// 	: new ApplicantExtrasEntity(ApplicantExtras.VIOLATION_DETAILS),
 			moving_violations_details: applicant?.moving_violations_details || null,
 			moving_violations_count: applicant?.moving_violations_count || 0,
 			moving_violation_history: applicant?.moving_violation_history
