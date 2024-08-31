@@ -37,8 +37,15 @@ export async function getServerSideProps({ query }) {
 		if (!!!applicant_uuid || !!!employer_uuid) return { notFound: true };
 
 		const applicantApi = new ApplicantApi();
-		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid);
-		const employer: ApplicantEmployerEntity = await applicantApi.employer.getByUuidToken(employer_uuid);
+		const applicant: ApplicantEntity = await applicantApi.fetchByUuidToken(
+			applicant_uuid,
+			{
+				withRelations: [
+					"employers",
+					"employers.voeData",
+				]
+			});
+		const employer: ApplicantEmployerEntity = applicant.employers?.find(({ uuid_token }) => (uuid_token == employer_uuid));
 
 		if (!!!applicant || !!!employer || applicant.id != employer?.applicant?.id) return { notFound: true }
 
