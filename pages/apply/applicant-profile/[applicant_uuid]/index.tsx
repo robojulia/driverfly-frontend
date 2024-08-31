@@ -8,33 +8,19 @@ import PageLayout from "../../../../components/layouts/page/page-layout";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../models/applicant";
 import ApplicantApi from "../../../api/applicant";
-import DocumentApi from "../../../api/document";
 
 export interface LongFormProps {
 	entity: ApplicantEntity;
 	no_bot?: boolean
 }
 
-export default function Dashboard({ entity, no_bot }: LongFormProps) {
+export default function ApplicantProfile({ entity, no_bot }: LongFormProps) {
 
 	const [recaptchaToken, setRecaptchaToken] = useState<string>(null);
 
 	const onChange = (value) => setRecaptchaToken(value)
 
 	const { t } = useTranslation();
-	const [pdf, setPdf] = useState({});
-	const viewDocumentClick = async (id, name) => {
-		const api = new DocumentApi();
-
-		const document = await api.getSignedUrl(entity.id);
-
-		if (document) {
-			setPdf({
-				name: `${t(name)} (${document.name})`,
-				url: document.path,
-			});
-		}
-	};
 
 	return (
 		<>
@@ -79,8 +65,16 @@ export async function getServerSideProps({ query }) {
 		if (!!!applicant_uuid) return { notFound: true };
 
 		const applicantApi = new ApplicantApi();
-		const entity: ApplicantEntity = await applicantApi.getByUuidToken(
-			applicant_uuid
+		const entity: ApplicantEntity = await applicantApi.fetchByUuidToken(
+			applicant_uuid,
+			{
+				withRelations: [
+					'extras',
+					'equipment_experience',
+					'equipment_owned',
+					'employers',
+				]
+			}
 		);
 
 		if (!!!entity) return { notFound: true };

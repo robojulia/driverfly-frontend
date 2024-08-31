@@ -1,14 +1,11 @@
-import { Button, Col, Row } from "react-bootstrap";
-import { useTranslation } from "../../hooks/use-translation";
-import React from "react";
+import { Col, Row } from "react-bootstrap";
 import { JobEquipmentType } from "../../enums/jobs/job-equipment-type.enum";
+import { BooleanType } from "../../enums/jotform/boolean-type.enum";
+import { useTranslation } from "../../hooks/use-translation";
+import { ViewApplicantDetailProps } from "../../types/applicant/view-application-detail-props.type";
 import { calculateAge } from "../../utils/date";
 import ViewCard from "../view-details/view-card";
 import ViewDetails from "../view-details/view-details";
-import { ViewApplicantDetailProps } from "../../types/applicant/view-application-detail-props.type";
-import { ApplicantExtras } from "../../enums/applicants/applicant-extras.enum";
-import { BooleanType } from "../../enums/jotform/boolean-type.enum";
-import { UtmReferral } from "../../models/auth/utm-referral.interface";
 export function ViewApplicantUtm({ utm }) {
 	const { t } = useTranslation();
 	return (<ul>
@@ -20,9 +17,7 @@ export function ViewApplicantUtm({ utm }) {
 }
 export default function ViewApplicantDetail({
 	applicant,
-	protectedFields,
 	hideAssignTo,
-	hideCurrentStatus,
 }: ViewApplicantDetailProps) {
 	const { t } = useTranslation();
 
@@ -37,7 +32,6 @@ export default function ViewApplicantDetail({
 
 	return (
 		<>
-
 			<ViewCard title={`${applicant.first_name} ${applicant.last_name}`}>
 				<Row>
 					<Col className="px-2">
