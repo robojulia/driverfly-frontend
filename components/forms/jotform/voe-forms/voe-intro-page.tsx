@@ -7,7 +7,7 @@ import styles from "../../../../styles/voe.module.css";
 
 export function IntroPage() {
 	const {
-		state: { applicant, voe, employer },
+		state: { applicant, employer },
 		method: { stepNext },
 	}: VoeFormContextType = useContext(VoeFormContext);
 	const { t } = useTranslation();
