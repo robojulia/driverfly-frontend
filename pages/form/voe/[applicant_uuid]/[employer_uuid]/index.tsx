@@ -35,7 +35,7 @@ export default function VoeForm({ applicant, employer, voeData }: VoeFormProps) 
 		console.log("voeData", voeData);
 	}, [voeData]);
 	useEffect(() => {
-		setVoe(voeData)
+		setVoe(voeData || new ApplicantVoeEntity())
 	}, [voeData]);
 
 	return (
@@ -89,7 +89,7 @@ export async function getServerSideProps({ query }) {
 		if (!!!applicant || !!!employer || applicant.id != employer.applicant.id)
 			return { notFound: true };
 
-		const voeData = employer.voeData;
+		const voeData: ApplicantVoeEntity = employer?.voeData;
 
 		return { props: { applicant, employer, voeData } };
 	} catch (error) {
