@@ -36,23 +36,23 @@ export default function ViewVoeForm({ applicant, employer, voeData }: VoeFormPro
                         <ViewDetails
                             default={t("NOT_ANSWERED")}
                             obj={{
-                                EMPLOYED_BY_US: Boolean(voeData.was_employed) ? t("YES") : t("NO"),
-                                VOE_DRIVER_QUES: Boolean(voeData.drived_vehicle) ? t("YES") : t("NO"),
-                                SAFETY_PERFORMANCE_REPORT: Boolean(voeData.safety_performance)
+                                EMPLOYED_BY_US: Boolean(voeData?.was_employed) ? t("YES") : t("NO"),
+                                VOE_DRIVER_QUES: Boolean(voeData?.drived_vehicle) ? t("YES") : t("NO"),
+                                SAFETY_PERFORMANCE_REPORT: Boolean(voeData?.safety_performance)
                                     ? t("YES")
                                     : t("NO"),
-                                ACCIDENT_REGISTER: Boolean(voeData.registered_accidents_details) ? t("YES") : t("NO"),
+                                ACCIDENT_REGISTER: Boolean(voeData?.registered_accidents_details) ? t("YES") : t("NO"),
                             }}
                         />
                     </ViewCard>
                     <ViewCard title="WAS_EMPLOYED_AS">
-                        {console.log("voeData.end_date", voeData.end_date)
+                        {console.log("voeData?.end_date", voeData?.end_date)
                         }
                         <ViewDetails
                             obj={{
-                                POSITION: voeData.position || t('N/A'),
-                                START_DATE: voeData.start_date ? formatDate(voeData.start_date, true) : t('N/A'),
-                                END_DATE: voeData.end_date ? formatDate(voeData.end_date, true) : t('N/A'),
+                                POSITION: voeData?.position || t('N/A'),
+                                START_DATE: voeData?.start_date ? formatDate(voeData?.start_date, true) : t('N/A'),
+                                END_DATE: voeData?.end_date ? formatDate(voeData?.end_date, true) : t('N/A'),
                             }}
                         />
                     </ViewCard>
@@ -60,17 +60,17 @@ export default function ViewVoeForm({ applicant, employer, voeData }: VoeFormPro
                     <Row className={`${styles.align__text_left} ${styles.paragraph}`}>
                         <label className={`${styles.bold}`}>{t("VEHICLE_TYPE")}</label>
                         <Col className={`${styles.align__text_left} ${styles.paragraph}`}>
-                            <p>{voeData.drived_vehicle ?? t('N/A')}</p>
+                            <p>{voeData?.drived_vehicle ?? t('N/A')}</p>
                         </Col>
                     </Row>
 
-                    {Boolean(voeData.registered_accidents_details) &&
+                    {Boolean(voeData?.registered_accidents_details) &&
                         <Row className={`${styles.align__text_left}${styles.paragraph}`}>
                             <label className={`${styles.bold}`}>
                                 {t("ACCIDENTS_REPORTED_TO_GOVERNMENT")}
                             </label>
                             <Col className={`${styles.align__text_left}  ${styles.paragraph}`}>
-                                <p>{voeData.accidents_reported_to_government ?? t('N/A')}</p>
+                                <p>{voeData?.accidents_reported_to_government ?? t('N/A')}</p>
                             </Col>
                         </Row>
                     }
@@ -78,12 +78,12 @@ export default function ViewVoeForm({ applicant, employer, voeData }: VoeFormPro
                     <ViewCard title="SUBMISSION_DETAILS">
                         <ViewDetails
                             obj={{
-                                REASON_TO_LEAVE_EMPLOYMENT: t(voeData.reason_to_leave ? `ReasonsForLeavingEmployment.${voeData.reason_to_leave}` : "N/A"),
-                                FULL_NAME: voeData.focal_person_name,
-                                title: voeData.focal_person_title,
-                                phone: voeData.focal_person_phone,
-                                email: voeData.focal_person_email,
-                                DATE: formatDate(voeData.signed_date),
+                                REASON_TO_LEAVE_EMPLOYMENT: t(voeData?.reason_to_leave ? `ReasonsForLeavingEmployment.${voeData?.reason_to_leave}` : "N/A"),
+                                FULL_NAME: voeData?.focal_person_name,
+                                title: voeData?.focal_person_title,
+                                phone: voeData?.focal_person_phone,
+                                email: voeData?.focal_person_email,
+                                DATE: formatDate(voeData?.signed_date),
                             }}
                         />
                     </ViewCard>
@@ -92,7 +92,7 @@ export default function ViewVoeForm({ applicant, employer, voeData }: VoeFormPro
                         <label className={`${styles.bold} text-black`}>{t("SIGNATURE")}</label>
                         <Col className="">
                             <img
-                                src={voeData.signature}
+                                src={voeData?.signature}
                                 style={{
                                     width: "100%",
                                     height: "200px",
