@@ -158,49 +158,47 @@ export default function OnboardingChecklist(
     <>
       {(!form.values.document?.type || form.values.document?.type != type) && (
         <div className="d-flex">
-          {type != ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY ? (
-            <>
-              {!document?.name?.includes(".doc") && (
-                <ViewDocumentButton
-                  document={document}
-                  onClick={() => handleViewDocument(document.id, setPdf)}
-                />
-              )}
-              {Boolean(props.canEdit) && (
-                <AddDocumentButton
-                  document={document}
-                  type={type}
-                  t={t}
-                  onClick={() => handleUpdateDocument(type, document?.id)}
-                />
-              )}
-              <DownloadDocumentButton
-                document={document}
-                onClick={() => handleDownloadDocument(document.id)}
-              />
-              {Boolean(props.canEdit) && (
-                <DeleteDocumentButton
-                  document={document}
-                  onClick={() => handleDeleteDocument(type)}
-                />
-              )}
-              {Boolean(props.showHistory) && (
-                <ViewDocumentHistory
-                  canDelete={!applicant.is_hired}
-                  typePrefix="ApplicantOnBoardingChecklist"
-                  document={document}
-                  type={type}
-                  documentable_id={applicant.id}
-                  documentable_type={DocumentableType.APPLICANTS}
-                />
-              )}
-            </>
-          ) : (
+          {!document?.name?.includes(".doc") && (
+            <ViewDocumentButton
+              document={document}
+              onClick={() => handleViewDocument(document.id, setPdf)}
+            />
+          )}
+          {Boolean(props.canEdit) && (
+            <AddDocumentButton
+              document={document}
+              type={type}
+              t={t}
+              onClick={() => handleUpdateDocument(type, document?.id)}
+            />
+          )}
+          <DownloadDocumentButton
+            document={document}
+            onClick={() => handleDownloadDocument(document.id)}
+          />
+          {Boolean(props.canEdit) && (
+            <DeleteDocumentButton
+              document={document}
+              onClick={() => handleDeleteDocument(type)}
+            />
+          )}
+          {type == ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY && (
             <SafetyPerformanceHistory
+              buttonClass="mr-2 w-100"
               applicant={applicant}
               canEditSafetyPerformance={props.canEditSafetyPerformance}
               showHistory={props.showHistory}
               showResendButton={props.showResendButton}
+            />
+          )}
+          {Boolean(props.showHistory) && (
+            <ViewDocumentHistory
+              canDelete={!applicant.is_hired}
+              typePrefix="ApplicantOnBoardingChecklist"
+              document={document}
+              type={type}
+              documentable_id={applicant.id}
+              documentable_type={DocumentableType.APPLICANTS}
             />
           )}
         </div>
@@ -208,15 +206,7 @@ export default function OnboardingChecklist(
     </>
   );
 
-  /**
-   * This is a TypeScript React component that displays the last updated date of a document, unless the
-   * document type is ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY.
-   * @param  - The function `UpdatedAt` takes two parameters:
-   */
   const UpdatedAt = ({ document, type }) => {
-    if (type == ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY)
-      return <></>;
-
     return (
       <>
         {document ? (

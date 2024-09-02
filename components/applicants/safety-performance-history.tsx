@@ -33,14 +33,6 @@ import ViewDetails from "../view-details/view-details";
 import ViewModal from "../view-details/view-modal";
 import ViewPdf from "../view-details/view-pdf";
 import { DocumentEntity } from "../../models/documents/document.entity";
-class ApplicantAuthorizeToVoeDocumentDto {
-    document?: DocumentEntity;
-    static yupSchema() {
-        return yup.object({
-            document: DocumentEntity.yupSchema()
-        });
-    }
-}
 
 export default function SafetyPerformanceHistory({
     buttonClass,
@@ -57,9 +49,6 @@ export default function SafetyPerformanceHistory({
 
     const [employers, setEmployers] = useState<ApplicantEmployerEntity[]>([]);
     const resetEmployers = () => setEmployers([]);
-
-    const [authorizationForVoeDocument, setAuthorizationForVoeDocument] = useState<DocumentEntity>()
-    const resetAuthorizationForVoeDocument = () => setAuthorizationForVoeDocument(new DocumentEntity());
 
     const [isLoading, setIsLoading] = useState<{
         id: number;
@@ -93,37 +82,11 @@ export default function SafetyPerformanceHistory({
         },
     });
 
-    const authorizationForVoeForm = useFormik({
-        initialValues: new ApplicantAuthorizeToVoeDocumentDto(),
-        validationSchema: ApplicantAuthorizeToVoeDocumentDto.yupSchema(),
-        onSubmit: async ({ document }, { resetForm }) => {
-            try {
-                const doc = await applicantApi.documents.create(
-                    applicant.id,
-                    document
-                );
-
-                if (document.id) {
-                    applicant.documents = applicant.documents?.filter(
-                        (v) => v.id != document.id
-                    );
-                }
-                applicant.documents?.push(doc);
-
-                toast.success(t("DOCUMENT_UPLOAD_SUCCESS_MESSAGE"));
-                resetForm();
-            } catch (e) {
-                globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t });
-            }
-        },
-    });
 
     useEffectAsync(async () => {
         if (!!applicant.id) {
             const data = await applicantApi.employer.list(applicant.id);
             setEmployers(data);
-            const document = (await applicantApi.getById(applicant.id))?.documents?.find(({ type }) => (type == ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY));
-            setAuthorizationForVoeDocument(document);
         }
     }, [applicant]);
 
@@ -132,12 +95,6 @@ export default function SafetyPerformanceHistory({
             resetEmployers()
         }
     }, []);
-
-    useEffect(() => {
-        console.log("authorizationForVoeForm.values", authorizationForVoeForm.values);
-        console.log("authorizationForVoeForm.errors", authorizationForVoeForm.errors);
-
-    }, [authorizationForVoeForm.values, authorizationForVoeForm.errors]);
 
     /**
      * It deletes a document from the applicant's profile.
@@ -308,110 +265,15 @@ export default function SafetyPerformanceHistory({
         </>
     );
 
-    const deleteAuthorizedToVoeDocumentHandler = async (document: DocumentEntity): Promise<void> => {
-        // setIsLoading({ action: "DELETE", id: employer?.id });
-        await applicantApi.documents.delete(
-            applicant?.id,
-            document?.type
-        );
-
-        resetAuthorizationForVoeDocument();
-        // resetIsLoading();
-    };
-
-    function AuthorizationForVoe() {
-        return (
-            <div className="d-flex w-100 mt-2  ">
-                {!authorizationForVoeForm.values?.document?.type
-                    && <>
-                        {!authorizationForVoeDocument?.name?.includes(".doc") &&
-                            <ViewDocumentButton
-                                className="btn btn-success py-2 mr-2 w-100"
-                                document={authorizationForVoeDocument}
-                                onClick={() => handleViewDocument(authorizationForVoeDocument.id, setPdf)}
-                            />
-                        }
-                        <DownloadDocumentButton
-                            document={authorizationForVoeDocument}
-                            onClick={() => handleDownloadDocument(authorizationForVoeDocument.id)}
-                        />
-                        {!applicant?.is_hired && Boolean(canEditSafetyPerformance) && (<>
-                            <AddDocumentButton
-                                document={authorizationForVoeDocument}
-                                t={t}
-                                onClick={() =>
-                                    authorizationForVoeForm.setFieldValue("document", { type: ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY, id: authorizationForVoeDocument?.id ?? null })
-                                }
-                            />
-                            <DeleteDocumentButton
-                                isLoading={
-                                    isLoading?.action == "DELETE" &&
-                                    isLoading.id == authorizationForVoeDocument?.id
-                                }
-                                document={authorizationForVoeDocument}
-                                onClick={() => deleteAuthorizedToVoeDocumentHandler(authorizationForVoeDocument)}
-                            />
-                        </>)}
-                        {Boolean(showHistory) && (
-                            <ViewDocumentHistory
-                                typePrefix="ApplicantOnBoardingChecklist"
-                                document={authorizationForVoeDocument}
-                                type={ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY}
-                                documentable_id={applicant.id}
-                                documentable_type={DocumentableType.APPLICANTS}
-                            />
-                        )}
-                    </>
-                }
-                {!applicant?.is_hired && authorizationForVoeForm.values?.document?.type && (
-                    <form
-                        className="mt-2 mr-2 w-100"
-                        onSubmit={authorizationForVoeForm?.handleSubmit}
-                    >
-                        <FileInput
-                            name='document'
-                            accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
-                            formik={authorizationForVoeForm}
-                            allowedSizeInByte={3145728}
-                        />
-                        <div className="mt-2 d-flex w-100 ">
-                            <Button
-                                disabled={
-                                    authorizationForVoeForm?.isSubmitting ||
-                                    !authorizationForVoeForm?.isValid ||
-                                    authorizationForVoeForm?.isValidating
-                                }
-                                className="mr-2 w-50 theme-primary-btn"
-                                type="submit"
-                            >
-                                {t(`SAVE`)}{" "}
-                                <LoaderIcon isLoading={authorizationForVoeForm?.isSubmitting} />
-                            </Button>
-                            <Button
-                                type="button"
-                                className="w-50 bg-danger"
-                                onClick={() => {
-                                    authorizationForVoeForm?.resetForm();
-                                }}
-                            >
-                                {t(`CANCEL`)}
-                            </Button>
-                        </div>
-                    </form>
-                )
-                }
-            </div>
-        )
-    }
     return (
         <>
             <Button
                 disabled={!employers.length}
                 className={buttonClass ?? "w-100"}
-                title={t("VIEW")}
+                title={t("PAST_EMP_QDF_DESCRITION")}
                 onClick={() => setShowModal(true)}
             >
-                {t(!!employers.length ? "VIEW" : "NOT_AVAILABLE")}
+                {t(!!employers.length ? "VOE_LIST" : "VOE_LIST_NOT_AVAILABLE")}
             </Button>
 
             <ViewModal
@@ -419,28 +281,11 @@ export default function SafetyPerformanceHistory({
                 onCloseClick={() => {
                     setShowModal(false);
                     form.resetForm();
-                    authorizationForVoeForm.resetForm();
                 }}
                 closeText="CANCEL"
                 title="PAST_EMPLOYER"
             >
                 <>
-                    <Row className="">
-                        <Col>
-                            <Table bordered striped>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            {t("VERIFICATION_OF_EMPLOYMENT")}
-                                        </td>
-                                        <td>
-                                            <AuthorizationForVoe />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </Table>
-                        </Col>
-                    </Row>
                     <ViewDataTable<ApplicantEmployerEntity>
                         description="PAST_EMP_QDF_DESCRITION"
                         customStyles={{
