@@ -54,7 +54,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({ recordsPerPageOptio
     };
 
     return (
-        <Box display="flex" alignItems="center" style={{ marginTop: '2%', display: 'flex', justifyContent: 'right' }}>
+        <Box display="flex" alignItems="center" style={{ display: 'flex', justifyContent: 'right' }}>
             <Typography style={{ fontSize: "0.875rem" }}>{`${(pagingMeta?.currentPage - 1) * (pagingMeta?.itemsPerPage) + (pagingMeta?.totalItems === 0 || pagingMeta?.totalItems == undefined ? 0 : 1)}-${Math.min(pagingMeta?.currentPage * pagingMeta?.itemsPerPage, pagingMeta?.totalItems) || 0} of ${pagingMeta?.totalItems || 0} ${t('RECORDS')}`}</Typography>
             <OverlyPopover str={t("{type}_PAGES_{pageNumber}", { type: "Previous", pageNumber: 5 })}>
                 <IconButton onClick={handlePrevFivePages} disabled={pagingMeta?.currentPage <= 5}>

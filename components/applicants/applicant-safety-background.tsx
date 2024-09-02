@@ -1,9 +1,8 @@
 import { Col, Row } from 'react-bootstrap';
 import { useTranslation } from '../../hooks/use-translation';
-import React from 'react';
+import { ViewApplicantDetailProps } from '../../types/applicant/view-application-detail-props.type';
 import ViewCard from '../view-details/view-card';
 import ViewDetails from '../view-details/view-details';
-import { ViewApplicantDetailProps } from '../../types/applicant/view-application-detail-props.type';
 
 interface ApplicantSafetyBackgroundProps extends ViewApplicantDetailProps { }
 

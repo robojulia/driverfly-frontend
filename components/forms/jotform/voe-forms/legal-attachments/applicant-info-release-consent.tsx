@@ -1,5 +1,5 @@
-import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
+import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant";
 export interface ApplicantInfoReleaseConsentProps {
     applicant?: ApplicantEntity;

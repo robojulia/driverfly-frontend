@@ -15,7 +15,7 @@ export interface DriverApplicationProps {
 }
 export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationProps) {
 	const {
-		state: { applicant, applicantExtras, jobs, company },
+		state: { applicant, applicantExtras, company },
 		method: { setApplicant, updateApplicantExtras, stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 
@@ -57,8 +57,6 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 	useEffect(() => {
 		console.log("form.values", form.values);
 		console.log("form.errors", form.errors);
-		console.log("jobs", jobs);
-
 	}, [form.values, form.errors]);
 
 	useEffect(() => {

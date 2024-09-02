@@ -6,8 +6,8 @@ import VoeFormContext, {
 } from "../../../../context/voeform-context";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantVoeEntity } from "../../../../models/applicant/applicant-voe.entity";
-import styles from "../../../../styles/voe.module.css";
 import BaseCheck from "../../base-check";
+import styles from "../../../../styles/voe.module.css";
 
 export function EmployedByUs() {
 	const {

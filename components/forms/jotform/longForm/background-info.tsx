@@ -1,20 +1,18 @@
-import { useContext, useEffect } from "react";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { Form, Button, Col, Row } from "react-bootstrap";
-import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
-import BaseInput from "../../base-input";
-import { BackgroundInfoDto } from "../../../../models/jot-form/long-form/background-info.dto";
+import { useContext, useEffect } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
-import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
-import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import { useTranslation } from "../../../../hooks/use-translation";
+import { BackgroundInfoDto } from "../../../../models/jot-form/long-form/background-info.dto";
+import BaseInput from "../../base-input";
 import StateSelect from "../../state-select";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export function BackgroundInfo() {
 
 	const {
-		state: { applicant, applicantExtras },
-		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+		state: { applicant },
+		method: { setApplicant, stepNext, stepBack },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();

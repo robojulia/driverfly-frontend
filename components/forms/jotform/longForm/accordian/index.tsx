@@ -1,22 +1,22 @@
-import { toast, ToastContainer } from "react-toastify";
-import { ArrowDownCircleFill, ArrowUpCircleFill } from "react-bootstrap-icons";
 import { useFormik } from "formik";
 import { useContext, useEffect, useState } from "react";
-import { Button, Col, Row, Form } from "react-bootstrap";
-import { useTranslation } from "../../../../../hooks/use-translation";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import { ArrowDownCircleFill, ArrowUpCircleFill } from "react-bootstrap-icons";
+import { toast, ToastContainer } from "react-toastify";
 import JotformContext, {
 	JotFormContextType,
 } from "../../../../../context/jotform-context";
+import { useTranslation } from "../../../../../hooks/use-translation";
+import { ApplicantEntity } from "../../../../../models/applicant";
+import { AccordianDto } from "../../../../../models/jot-form/long-form/accordian.dto";
 import ApplicantApi from "../../../../../pages/api/applicant";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
-import { AccordianDto } from "../../../../../models/jot-form/long-form/accordian.dto";
-import { VerificationOfEmployment } from "./verification-of-employment";
-import { DisclosureAuthorization } from "./disclosure-authorization";
-import { ImportantDisclosureBackgroundPsp } from "./important-disclosure-background-psp";
-import { GeneralConsentQueries } from "./general-consent-queries";
 import { LoaderIcon } from "../../../../loading/loader-icon";
+import { DisclosureAuthorization } from "./disclosure-authorization";
+import { GeneralConsentQueries } from "./general-consent-queries";
+import { ImportantDisclosureBackgroundPsp } from "./important-disclosure-background-psp";
+import { VerificationOfEmployment } from "./verification-of-employment";
 import styles from "../../../../../styles/digitalhiringapp.module.css";
-import { ApplicantEntity } from "../../../../../models/applicant";
 
 
 export function AccordianPage() {

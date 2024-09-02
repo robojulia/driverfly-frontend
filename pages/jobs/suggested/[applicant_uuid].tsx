@@ -59,7 +59,13 @@ export async function getServerSideProps({ query }: GetServerSidePropsContext) {
 
         const applicantApi = new ApplicantApi();
         const applicant: ApplicantEntity = await applicantApi
-            .getByUuidToken(applicant_uuid);
+            .fetchByUuidToken(
+                applicant_uuid,
+                {
+                    withRelations: [
+                        "company",
+                    ]
+                });
 
         if (!!!applicant) return { notFound: true };
 

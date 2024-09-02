@@ -1,12 +1,12 @@
 import { useFormik } from "formik";
 import { useContext, useEffect } from "react";
-import { Button, Col, Row, Form } from "react-bootstrap";
-import { useTranslation } from "../../../../hooks/use-translation";
-import BaseTextArea from "../../base-text-area";
-import BaseCheck from "../../base-check";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { DrugTestDto } from "../../../../models/jot-form/long-form/drug-test.dto";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
+import { useTranslation } from "../../../../hooks/use-translation";
+import { DrugTestDto } from "../../../../models/jot-form/long-form/drug-test.dto";
+import BaseCheck from "../../base-check";
+import BaseTextArea from "../../base-text-area";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export function DrugTest() {
 	const {

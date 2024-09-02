@@ -1,9 +1,8 @@
-import React from "react";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import "react-toastify/dist/ReactToastify.css";
-import ApplicantApi from "../../../api/applicant";
 import { VerificationOfEmploymentSection2 } from "../../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-2";
+import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
+import ApplicantApi from "../../../api/applicant";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export interface VerificationOfEmploymentSection2PageProps {
 	entity: ApplicantEntity
@@ -34,8 +33,13 @@ export async function getServerSideProps({ query }) {
 		if (!!!applicant_uuid) return { notFound: true };
 
 		const applicantApi = new ApplicantApi();
-		const entity: ApplicantEntity = await applicantApi.getByUuidToken(
-			applicant_uuid
+		const entity: ApplicantEntity = await applicantApi.fetchByUuidToken(
+			applicant_uuid,
+			{
+				withRelations: [
+					"company",
+				]
+			}
 		);
 
 		if (!!!entity) return { notFound: true };
