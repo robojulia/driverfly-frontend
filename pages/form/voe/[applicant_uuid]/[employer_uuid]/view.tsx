@@ -123,6 +123,7 @@ export async function getServerSideProps({ query }) {
                 withRelations: [
                     "company",
                     "employers",
+                    "employers.voeData",
                 ]
             })
         const employer: ApplicantEmployerEntity = applicant.employers?.find(({ uuid_token }) => uuid_token == employer_uuid)
