@@ -1,18 +1,18 @@
-import * as yup from "yup";
-import { useContext, useEffect } from "react";
-import Form from "react-bootstrap/Form";
-import { Button, Col, Row, Table } from "react-bootstrap";
 import { useFormik } from "formik";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { useTranslation } from "../../../../hooks/use-translation";
-import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
+import { useContext, useEffect } from "react";
+import { Button, Col, Row } from "react-bootstrap";
+import Form from "react-bootstrap/Form";
+import * as yup from "yup";
 import JotformContext, {
     JotFormContextType,
 } from "../../../../context/jotform-context";
-import BaseCheckList from "../../base-check-list";
-import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
 import { LicenseRestrictions } from "../../../../enums/applicants/applicant-license-restrictions-type.enum";
+import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
+import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
+import { useTranslation } from "../../../../hooks/use-translation";
+import BaseCheckList from "../../base-check-list";
 import BaseInput from "../../base-input";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export function TransmissionAndEndorsement() {
     const {
@@ -88,13 +88,22 @@ export function TransmissionAndEndorsement() {
 
     return (
         <>
-            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("TRANSMISSION_AND_ENDORSEMENT")}</h1>
+            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("CDL_ENDORSEMENT_AND_RESTRICTIONS")}</h1>
 
             <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
                 <Row>
                     <p className="text-black mt-2 mb-2">
                         <strong>{t("PLEASE_SELECT_ENDORSEMENT")}</strong>
                     </p>
+                    <BaseCheckList
+                        className="col-12"
+                        label="TRANSMISSION_EXPERIENCE"
+                        name="transmission_type"
+                        labelPrefix="VehicleTransmissionType"
+                        enumType={VehicleTransmissionType}
+                        formik={form}
+                        cols="2"
+                    />
                     <BaseCheckList
                         className="col-12 text-black"
                         label="ENDORSEMENTS"
@@ -117,17 +126,8 @@ export function TransmissionAndEndorsement() {
                             />
                         )}
                     <BaseCheckList
-                        className="col-12"
-                        label="TRANSMISSION_EXPERIENCE"
-                        name="transmission_type"
-                        labelPrefix="VehicleTransmissionType"
-                        enumType={VehicleTransmissionType}
-                        formik={form}
-                        cols="2"
-                    />
-                    <BaseCheckList
-                        className="col-12 p-1 "
-                        label="License_Restrictions"
+                        className="col-12  text-black "
+                        label="DHA_CDL_RESTRICTIONS"
                         name="license_restrictions"
                         labelPrefix="LicenseRestrictions"
                         enumType={LicenseRestrictions}

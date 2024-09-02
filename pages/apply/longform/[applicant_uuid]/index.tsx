@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
-import { getLongFormPages, getLongFormStyle } from "../../../../components/forms/jotform/jotform-pages";
+import {
+	getLongFormPages,
+	getLongFormStyle,
+} from "../../../../components/forms/jotform/jotform-pages";
 import JotformContext from "../../../../context/jotform-context";
-import { ApplicantEntity, ApplicantExtrasEntity } from "../../../../models/applicant";
+import {
+	ApplicantEntity,
+	ApplicantExtrasEntity,
+} from "../../../../models/applicant";
 import { CompanyEntity } from "../../../../models/company/company.entity";
 import ApplicantApi from "../../../api/applicant";
 import CompanyApi from "../../../api/company";
 import styles from "../../../../styles/digitalhiringapp.module.css";
-
 
 export interface LongFormProps {
 	entity: ApplicantEntity;
@@ -14,7 +19,6 @@ export interface LongFormProps {
 }
 
 export default function LongForm({ entity, company }: LongFormProps) {
-
 	const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
 	const [applicantExtras, setApplicantExtras] = useState<
 		ApplicantExtrasEntity[]
@@ -75,25 +79,37 @@ export default function LongForm({ entity, company }: LongFormProps) {
 }
 
 export async function getServerSideProps({ query }) {
-	try {
-		const { applicant_uuid } = query || {};
+	// try {
+	const { applicant_uuid } = query || {};
 
-		if (!!!applicant_uuid) return { notFound: true };
+	if (!!!applicant_uuid) return { notFound: true };
 
-		const applicantApi = new ApplicantApi();
-		const entity: ApplicantEntity = await applicantApi.getByUuidToken(
-			applicant_uuid
-		);
-		console.log("applicant", entity);
+	const applicantApi = new ApplicantApi();
+	const params = {
+		withRelations: [
+			"extras",
+			"documents",
+			"employers",
+			"accident_history",
+			"moving_violation_history",
+		],
+	};
+	const entity: ApplicantEntity = await applicantApi.fetchByUuidToken(
+		applicant_uuid,
+		params
+	);
+	console.log("applicant", entity);
 
-		if (!!!entity) return { notFound: true };
-		const companyApi = new CompanyApi();
-		const company: CompanyEntity = await companyApi.employer.getById(entity?.company?.id);
+	if (!!!entity) return { notFound: true };
+	const companyApi = new CompanyApi();
+	const company: CompanyEntity = await companyApi.employer.getById(
+		entity?.company?.id
+	);
 
-		return { props: { entity, company } };
-	} catch (error) {
-		console.error("error", error.message);
+	return { props: { entity, company } };
+	// } catch (error) {
+	// 	console.error("error", error.message);
 
-		return { notFound: true };
-	}
+	// 	return { notFound: true };
+	// }
 }

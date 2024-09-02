@@ -1,20 +1,20 @@
 import { useFormik } from "formik";
 import { useContext, useEffect } from "react";
-import { Button, Col, Row, Form } from "react-bootstrap";
-import { useTranslation } from "../../../../hooks/use-translation";
-import BaseTextArea from "../../base-text-area";
-import BaseCheck from "../../base-check";
-import styles from "../../../../styles/digitalhiringapp.module.css";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
-import { UnableForJobDto } from "../../../../models/jot-form/long-form/unable-for-job.dto";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import { UnableForJobDto } from "../../../../models/jot-form/long-form/unable-for-job.dto";
+import BaseCheck from "../../base-check";
+import BaseTextArea from "../../base-text-area";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export function UnableForJob() {
 
 	const {
-		state: { applicant, applicantExtras },
-		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+		state: { applicantExtras },
+		method: { updateApplicantExtras, stepNext, stepBack },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
@@ -53,42 +53,42 @@ export function UnableForJob() {
 
 	return (
 		<>
-		<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("DISABLE_FOR_JOB")}</h1>
+			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("DISABLE_FOR_JOB")}</h1>
 
-		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-			<Row className={styles.paragraph__left}>
-				<BaseCheck
-					className="col"
-					required
-					name="is_unable_to_perform"
-					label="REASON_UNABLE_TO_PERFORM"
-					formik={form}
-				/>
-			</Row>
-			{form.values.is_unable_to_perform ? (
-				<Row className={`${styles.align__text_left} ${styles.bold}`}>
-					<BaseTextArea
-						className="mt-3"
-						name="REASON_FOR_UNABLE_TO_PERFORM_JOB.value"
-						label="EXPLAIN_SUSPENSION"
+			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+				<Row className={styles.paragraph__left}>
+					<BaseCheck
+						className="col"
+						required
+						name="is_unable_to_perform"
+						label="REASON_UNABLE_TO_PERFORM"
 						formik={form}
 					/>
 				</Row>
-			) : null}
+				{form.values.is_unable_to_perform ? (
+					<Row className={`${styles.align__text_left} ${styles.bold}`}>
+						<BaseTextArea
+							className="mt-3"
+							name="REASON_FOR_UNABLE_TO_PERFORM_JOB.value"
+							label="EXPLAIN_SUSPENSION"
+							formik={form}
+						/>
+					</Row>
+				) : null}
 
-			<Row className="mt-5">
-				<Col>
-					<Button className="float-right" type="reset">
-						{t("BACK")}
-					</Button>
-				</Col>
-				<Col>
-					<Button className="float-left" type="submit">
-						{t("NEXT")}
-					</Button>
-				</Col>
-			</Row>
-		</Form>
+				<Row className="mt-5">
+					<Col>
+						<Button className="float-right" type="reset">
+							{t("BACK")}
+						</Button>
+					</Col>
+					<Col>
+						<Button className="float-left" type="submit">
+							{t("NEXT")}
+						</Button>
+					</Col>
+				</Row>
+			</Form>
 		</>
 	);
 }

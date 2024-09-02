@@ -1,20 +1,20 @@
-import { useContext, useEffect, useState } from "react";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { Form, Button, Col, Row } from "react-bootstrap";
 import { useFormik } from "formik";
-import { useTranslation } from "../../../../hooks/use-translation";
-import BaseInput from "../../base-input";
-import BaseInputPhone from "../../base-input-phone";
-import BaseCheck from "../../base-check";
-import { CurrentEmploymentHistoryPageDto } from "../../../../models/jot-form/long-form/current-employment-history-page.dto";
+import { useContext, useEffect } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import JotformContext, {
 	JotFormContextType,
 } from "../../../../context/jotform-context";
-import StateSelect from "../../state-select";
-import { LoaderIcon } from "../../../loading/loader-icon";
-import { CurrentEmploymentHistoryDto } from "../../../../models/jot-form/long-form/current-emplyment-history/index.dto";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantEmployerEntity } from "../../../../models/applicant";
+import { CurrentEmploymentHistoryPageDto } from "../../../../models/jot-form/long-form/current-employment-history-page.dto";
+import { CurrentEmploymentHistoryDto } from "../../../../models/jot-form/long-form/current-emplyment-history/index.dto";
+import { LoaderIcon } from "../../../loading/loader-icon";
+import BaseCheck from "../../base-check";
+import BaseInput from "../../base-input";
+import BaseInputPhone from "../../base-input-phone";
+import StateSelect from "../../state-select";
 import { PastEmployerNameInput } from "./past-employer-name-input";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export function EmploymentHistory() {
 	const {

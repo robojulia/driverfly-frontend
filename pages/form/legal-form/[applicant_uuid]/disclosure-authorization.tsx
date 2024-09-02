@@ -1,18 +1,14 @@
-import React, { useEffect } from "react";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
-import "react-toastify/dist/ReactToastify.css";
-import ApplicantApi from "../../../api/applicant";
 import DisclosureAttachment from "../../../../components/forms/jotform/voe-forms/legal-attachments/disclosure-attachment";
-
+import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
+import ApplicantApi from "../../../api/applicant";
+import styles from "../../../../styles/digitalhiringapp.module.css";
+import "react-toastify/dist/ReactToastify.css";
 
 export interface DisclosureAttachmentPageProps {
 	applicant: ApplicantEntity
 }
 
 export default function DisclosureAttachmentPage({ applicant }: DisclosureAttachmentPageProps) {
-
-	
 	return (
 		<div>
 			<div className={styles.main}>
@@ -31,8 +27,14 @@ export async function getServerSideProps({ query }) {
 		if (!!!applicant_uuid) return { notFound: true };
 
 		const applicantApi = new ApplicantApi();
-		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(
-			applicant_uuid
+		const applicant: ApplicantEntity = await applicantApi.fetchByUuidToken(
+			applicant_uuid,
+			{
+				withRelations: [
+					"extras",
+					"company",
+				]
+			}
 		);
 
 		if (!!!applicant) return { notFound: true };

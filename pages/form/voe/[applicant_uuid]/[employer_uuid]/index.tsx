@@ -6,8 +6,8 @@ import {
 	ApplicantEntity,
 	ApplicantVoeEntity,
 } from "../../../../../models/applicant";
-import styles from "../../../../../styles/voe.module.css";
 import ApplicantApi from "../../../../api/applicant";
+import styles from "../../../../../styles/voe.module.css";
 
 export interface VoeFormProps {
 	applicant: ApplicantEntity;
@@ -35,7 +35,7 @@ export default function VoeForm({ applicant, employer, voeData }: VoeFormProps) 
 		console.log("voeData", voeData);
 	}, [voeData]);
 	useEffect(() => {
-		setVoe(voeData)
+		setVoe(voeData || new ApplicantVoeEntity())
 	}, [voeData]);
 
 	return (
@@ -74,16 +74,22 @@ export async function getServerSideProps({ query }) {
 
 		const applicantApi = new ApplicantApi();
 
-		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(
-			applicant_uuid
+		const applicant: ApplicantEntity = await applicantApi.fetchByUuidToken(
+			applicant_uuid,
+			{
+				withRelations: [
+					"company",
+					"employers",
+					"employers.voeData",
+				]
+			}
 		);
-		const employer: ApplicantEmployerEntity =
-			await applicantApi.employer.getByUuidToken(employer_uuid);
+		const employer: ApplicantEmployerEntity = applicant.employers.find(({ uuid_token }) => uuid_token == employer_uuid);
 
 		if (!!!applicant || !!!employer || applicant.id != employer.applicant.id)
 			return { notFound: true };
 
-		const voeData = await applicantApi.voeform.fetch(applicant_uuid, employer_uuid)
+		const voeData: ApplicantVoeEntity = employer?.voeData;
 
 		return { props: { applicant, employer, voeData } };
 	} catch (error) {

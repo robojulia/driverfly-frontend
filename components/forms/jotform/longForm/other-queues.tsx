@@ -1,27 +1,27 @@
-import { useContext, useEffect } from "react";
-import Form from "react-bootstrap/Form";
-import { DashCircle, PlusCircle } from "react-bootstrap-icons";
-import { Button, Col, Row } from "react-bootstrap";
 import { useFormik } from "formik";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import BaseInput from "../../base-input";
-import { useTranslation } from "../../../../hooks/use-translation";
+import { useContext, useEffect } from "react";
+import { Button, Col, Row } from "react-bootstrap";
+import { DashCircle, PlusCircle } from "react-bootstrap-icons";
+import Form from "react-bootstrap/Form";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
-import { OtherQueuesDto } from "../../../../models/jot-form/long-form/other-queues.dto";
-import { CdlExtras } from "../../../../models/jot-form/long-form/cdl-object/index.dto";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import { CdlExtras } from "../../../../models/jot-form/long-form/cdl-object/index.dto";
+import { OtherQueuesDto } from "../../../../models/jot-form/long-form/other-queues.dto";
+import BaseInput from "../../base-input";
 import StateSelect from "../../state-select";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export function OtherQueues() {
 
     const {
-        state: { applicant, applicantExtras },
+        state: { applicantExtras },
         method: { updateApplicantExtras, stepNext, stepBack },
     }: JotFormContextType = useContext(JotformContext);
 
     const { t } = useTranslation();
-	const current_date = new Date();
+    const current_date = new Date();
 
 
     const form = useFormik({
@@ -52,104 +52,104 @@ export function OtherQueues() {
                 ? apx_cdl
                 : new ApplicantExtrasEntity(ApplicantExtras.CDL_NUMBER),
         });
-    }, [applicant, applicantExtras]);
+    }, [applicantExtras]);
 
     return (
         <>
-			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("HAVE_ANY_ACTIVE_DRIVERS_LICENSE")}</h1>
+            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("HAVE_ANY_ACTIVE_DRIVERS_LICENSE")}</h1>
             <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-            {form.values.CDL_NUMBER?.value?.length > 0 && (
-                <>
-                    {form.values.CDL_NUMBER?.value?.map((entity, i) => (
-                        <Row key={i} className={`${styles.bold} single-past-employer-items my-3`}>
-                            <BaseInput
-                                name={`CDL_NUMBER.value[${i}].license_number`}
-                                className="col-md-4 my-3"
-                                placeholder="driver's_license_number"
-                                label="driver's_license_number"
-                                required
-                                formik={form}
-                            />
-                            <StateSelect
-                                className="col-md-4 my-3"
-                                name={`CDL_NUMBER.value[${i}].state`}
-                                placeholder="SELECT_STATE"
-                                label="state_issued"
-                                required
-                                formik={form}
-                            />
-                            <BaseInput
-                                className="col-md-4 my-3"
-                                type="date"
-                                name={`CDL_NUMBER.value[${i}].date`}
-                                placeholder="expiration_date"
-                                min={(new Date(current_date.getFullYear(), current_date.getMonth() + 6, current_date.getDate())).toISOString().split("T")[0]}
-                                label="expiration_date"
-                                required
-                                formik={form}
-                            />
+                {form.values.CDL_NUMBER?.value?.length > 0 && (
+                    <>
+                        {form.values.CDL_NUMBER?.value?.map((entity, i) => (
+                            <Row key={i} className={`${styles.bold} single-past-employer-items my-3`}>
+                                <BaseInput
+                                    name={`CDL_NUMBER.value[${i}].license_number`}
+                                    className="col-md-4 my-3"
+                                    placeholder="driver's_license_number"
+                                    label="driver's_license_number"
+                                    required
+                                    formik={form}
+                                />
+                                <StateSelect
+                                    className="col-md-4 my-3"
+                                    name={`CDL_NUMBER.value[${i}].state`}
+                                    placeholder="SELECT_STATE"
+                                    label="state_issued"
+                                    required
+                                    formik={form}
+                                />
+                                <BaseInput
+                                    className="col-md-4 my-3"
+                                    type="date"
+                                    name={`CDL_NUMBER.value[${i}].date`}
+                                    placeholder="expiration_date"
+                                    min={(new Date(current_date.getFullYear(), current_date.getMonth() + 6, current_date.getDate())).toISOString().split("T")[0]}
+                                    label="expiration_date"
+                                    required
+                                    formik={form}
+                                />
 
-                            <Button
-                                className="rounded-lg"
-                                variant="outline-danger close_btn w-25 mx-auto my-2"
-                                onClick={() =>
-                                    form.setValues({
-                                        ...form.values,
-                                        CDL_NUMBER: {
-                                            ...form.values.CDL_NUMBER,
-                                            value: form.values.CDL_NUMBER?.value?.filter(
-                                                (v, idx) => i != idx
-                                            ),
-                                        },
-                                    })
-                                }
-                            >
-                                <DashCircle /></Button>
-                            <div className='Row' style={{ height: '3px', borderBottom: 'solid 2px #8d8c8c', marginTop: '0px' }}></div >
+                                <Button
+                                    className="rounded-lg"
+                                    variant="outline-danger close_btn w-25 mx-auto my-2"
+                                    onClick={() =>
+                                        form.setValues({
+                                            ...form.values,
+                                            CDL_NUMBER: {
+                                                ...form.values.CDL_NUMBER,
+                                                value: form.values.CDL_NUMBER?.value?.filter(
+                                                    (v, idx) => i != idx
+                                                ),
+                                            },
+                                        })
+                                    }
+                                >
+                                    <DashCircle /></Button>
+                                <div className='Row' style={{ height: '3px', borderBottom: 'solid 2px #8d8c8c', marginTop: '0px' }}></div >
 
-                        </Row>
-                    ))}
+                            </Row>
+                        ))}
 
-                </>
-            )}
-            <Row>
-                <div className="mt-4 float-left d-flex justify-left">
-                    <Button
-                        className="w-100 py-2"
-                        size="sm"
-                        onClick={() =>
-                            form.setValues({
-                                ...form.values,
-                                CDL_NUMBER: {
-                                    ...form.values.CDL_NUMBER,
-                                    value: [
-                                        ...(form.values.CDL_NUMBER?.value || []),
-                                        new CdlExtras(),
-                                    ],
-                                },
-                            })
-                        }
-                    >
-                        <PlusCircle /> {t("TITLE_ADD_CDL_DETAIL")}
-                    </Button>
-                </div>
-            </Row>
+                    </>
+                )}
+                <Row>
+                    <div className="mt-4 float-left d-flex justify-left">
+                        <Button
+                            className="w-100 py-2"
+                            size="sm"
+                            onClick={() =>
+                                form.setValues({
+                                    ...form.values,
+                                    CDL_NUMBER: {
+                                        ...form.values.CDL_NUMBER,
+                                        value: [
+                                            ...(form.values.CDL_NUMBER?.value || []),
+                                            new CdlExtras(),
+                                        ],
+                                    },
+                                })
+                            }
+                        >
+                            <PlusCircle /> {t("TITLE_ADD_CDL_DETAIL")}
+                        </Button>
+                    </div>
+                </Row>
 
 
-            <Row className="mt-4">
-                <Col>
-                    <Button className="float-right" type="reset">
-                        {t("BACK")}
-                    </Button>
-                </Col>
+                <Row className="mt-4">
+                    <Col>
+                        <Button className="float-right" type="reset">
+                            {t("BACK")}
+                        </Button>
+                    </Col>
 
-                <Col>
-                    <Button className="float-left" type="submit">
-                        {t("NEXT")}
-                    </Button>
-                </Col>
-            </Row>
-        </Form>
+                    <Col>
+                        <Button className="float-left" type="submit">
+                            {t("NEXT")}
+                        </Button>
+                    </Col>
+                </Row>
+            </Form>
         </>
     );
 }

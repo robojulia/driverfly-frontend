@@ -1,6 +1,5 @@
-import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
-import { useEffect } from "react";
+import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant";
 
 

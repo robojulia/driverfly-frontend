@@ -20,6 +20,9 @@ import BaseApi from "./_baseApi";
 import { Pagination } from "../../types/pagination.type";
 import { SendBackgroundRequestDto } from "../../models/applicant/send-background-request.dto";
 
+interface FetchByUuidTokenParams {
+  withRelations?: string[];
+}
 export default class ApplicantApi extends BaseApi {
   baseUrl: string = "applicants";
   constructor() {
@@ -133,6 +136,14 @@ export default class ApplicantApi extends BaseApi {
   async getByUuidToken(uuid_token: string): Promise<ApplicantEntity> {
     const { data } = await this.get(
       this.buildUrl(this.baseUrl + `/fetch-applicant/${uuid_token}`)
+    );
+
+    return data;
+  }
+
+  async fetchByUuidToken(uuid_token: string, params?: FetchByUuidTokenParams,): Promise<ApplicantEntity> {
+    const { data } = await this.get(
+      this.buildUrl(this.baseUrl + `/fetch-by-uuid/${uuid_token}`, params)
     );
 
     return data;

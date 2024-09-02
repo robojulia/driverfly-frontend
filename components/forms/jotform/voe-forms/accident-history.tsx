@@ -8,11 +8,11 @@ import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 import { ReasonsForLeavingEmployment } from "../../../../enums/users/reasons-for-leaving-employment";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantVoeEntity } from "../../../../models/applicant/applicant-voe.entity";
-import styles from "../../../../styles/voe.module.css";
 import BaseInput from "../../base-input";
 import BaseRadio from "../../base-radio";
 import BaseSelect from "../../base-select";
 import BaseTextArea from "../../base-text-area";
+import styles from "../../../../styles/voe.module.css";
 
 export function AccidentHistory() {
 	const {

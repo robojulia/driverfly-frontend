@@ -1,8 +1,8 @@
+import Link from "next/link";
 import { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import Link from "next/link";
-import styles from "../../../../styles/digitalhiringapp.module.css";
 import { useTranslation } from "../../../../hooks/use-translation";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export function ThankyouPage() {
     const { t } = useTranslation();

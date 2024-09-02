@@ -4,10 +4,9 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { useTranslation } from "../../../../hooks/use-translation";
 import styles from "../../../../styles/digitalhiringapp.module.css";
-export function HalfWay() {
 
+export function HalfWay() {
 	const {
-		state: { applicant },
 		method: { stepNext, stepBack },
 	}: JotFormContextType = useContext(JotformContext);
 
@@ -24,7 +23,7 @@ export function HalfWay() {
 
 	return (
 		<>
-		<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("HALF_WAY_DONE")}</h1>
+			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("HALF_WAY_DONE")}</h1>
 
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<div className="d-flex justify-content-center mt-n4 w-100" style={{ height: '200px' }}>
