@@ -121,19 +121,18 @@ export default function JobApply({ job, setEncourageModal }) {
     const onCloseClick = () => {
         // apply_form.resetForm()
 
-        if (Boolean(showDrugErrorMessage)) {
-            setEncourageModal(false)
+        if (!!applicant?.id) {
             setShowModal(false);
             setShowForm(true);
             setShowDrugErrorMessage(false);
-        } else {
             setEncourageModal(true)
+        } else {
             setShowModal(false);
             setShowForm(true);
             setShowDrugErrorMessage(false);
+            setEncourageModal(false)
         }
     }
-
 
     useEffect(() => {
         console.log("values", apply_form.values);
