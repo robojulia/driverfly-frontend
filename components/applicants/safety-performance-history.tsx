@@ -1,7 +1,6 @@
-import * as yup from "yup";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
-import { Button, Col, Row, Table } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import { Send } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
 import { ApplicantOnBoardingChecklist } from "../../enums/applicants/applicant-onboarding-checklist.enum";
@@ -32,7 +31,6 @@ import ViewDataTable from "../view-details/view-data-table";
 import ViewDetails from "../view-details/view-details";
 import ViewModal from "../view-details/view-modal";
 import ViewPdf from "../view-details/view-pdf";
-import { DocumentEntity } from "../../models/documents/document.entity";
 
 export default function SafetyPerformanceHistory({
     buttonClass,
@@ -81,7 +79,6 @@ export default function SafetyPerformanceHistory({
             }
         },
     });
-
 
     useEffectAsync(async () => {
         if (!!applicant.id) {
@@ -285,139 +282,137 @@ export default function SafetyPerformanceHistory({
                 closeText="CANCEL"
                 title="PAST_EMPLOYER"
             >
-                <>
-                    <ViewDataTable<ApplicantEmployerEntity>
-                        description="PAST_EMP_QDF_DESCRITION"
-                        customStyles={{
-                            headRow: {
-                                style: {
-                                    background:
-                                        "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
-                                    color: "white",
-                                },
+                <ViewDataTable<ApplicantEmployerEntity>
+                    description="PAST_EMP_QDF_DESCRITION"
+                    customStyles={{
+                        headRow: {
+                            style: {
+                                background:
+                                    "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                                color: "white",
                             },
-                        }}
-                        columns={[
-                            {
-                                name: "COMPANY_NAME",
-                                selector: (emp) => emp.name,
-                                // cell: (emp) => <OverlyPopover slice_at={5} str={emp.name} />,
-                                width: "25%",
-                            },
-                            {
-                                width: "70%",
-                                cell: (emp) => {
-                                    const doc = emp.documents?.find(
-                                        (v) =>
-                                            v.type ==
-                                            ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY
-                                    );
-                                    return (
-                                        <>
-                                            <ButtonList
-                                                employer={emp}
-                                                type={
-                                                    ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY
-                                                }
-                                                document={doc}
-                                            />
-                                            {!applicant?.is_hired &&
-                                                form?.values?.employer?.id == emp.id && (
-                                                    <form
-                                                        className="mt-2 mr-2 w-100"
-                                                        onSubmit={form?.handleSubmit}
-                                                    >
-                                                        <FileInput
-                                                            name={`document`}
-                                                            accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
-                                                            formik={form}
-                                                            allowedSizeInByte={3145728}
-                                                        />
-                                                        <div className="mt-2 d-flex w-100 ">
-                                                            <Button
-                                                                disabled={
-                                                                    form?.isSubmitting ||
-                                                                    !form?.isValid ||
-                                                                    form?.isValidating
-                                                                }
-                                                                className="mr-2 w-50 theme-primary-btn"
-                                                                type="submit"
-                                                            >
-                                                                {t(`SAVE`)}{" "}
-                                                                <LoaderIcon isLoading={form?.isSubmitting} />
-                                                            </Button>
-                                                            <Button
-                                                                type="button"
-                                                                className="w-50 bg-danger"
-                                                                onClick={() => {
-                                                                    form?.resetForm();
-                                                                }}
-                                                            >
-                                                                {t(`CANCEL`)}
-                                                            </Button>
-                                                        </div>
-                                                    </form>
-                                                )}
-                                        </>
-                                    );
-                                },
-                                hidable: false,
-                            },
-                        ]}
-                        items={employers}
-                        expandableRowsComponent={({ data }) => (
-                            <>
-                                {console.log({ data })}
-                                <Row className="mt-2">
-                                    <Col>
-                                        <ViewDetails
-                                            default={t("NOT_ANSWERED")}
-                                            obj={{
-                                                APPLICANT_NAME: `${applicant.first_name} ${applicant.last_name}`,
-                                                MANAGER_OR_REPRESENTATIVE: data.manager_name,
-                                                EMAIL: data.email,
-                                            }}
+                        },
+                    }}
+                    columns={[
+                        {
+                            name: "COMPANY_NAME",
+                            selector: (emp) => emp.name,
+                            // cell: (emp) => <OverlyPopover slice_at={5} str={emp.name} />,
+                            width: "25%",
+                        },
+                        {
+                            width: "70%",
+                            cell: (emp) => {
+                                const doc = emp.documents?.find(
+                                    (v) =>
+                                        v.type ==
+                                        ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY
+                                );
+                                return (
+                                    <>
+                                        <ButtonList
+                                            employer={emp}
+                                            type={
+                                                ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY
+                                            }
+                                            document={doc}
                                         />
-                                    </Col>
-                                    <Col>
-                                        <ViewDetails
-                                            default={t("NOT_ANSWERED")}
-                                            obj={{
-                                                VOE_SUBMITTED:
-                                                    data?.voe_submitted || Boolean(data?.documents?.length)
-                                                        ? t("YES")
-                                                        : t("NO"),
-                                                AUTHORIZED_TO_COMMUNICATE: Boolean(data.can_contact)
-                                                    ? t("YES")
-                                                    : t("NO"),
-                                                SUBJECT_TO_FMCR: Boolean(data.is_subject_to_fmcsrs)
-                                                    ? t("YES")
-                                                    : t("NO"),
-                                            }}
-                                        />
-                                    </Col>
-                                </Row>
-                                <Row className="mb-2">
-                                    <Col md={6}>
-                                        <label>{t("VOE_ATTEMPT_COUNT")}</label>
-                                        <ol className="list-group">
-                                            {data.voe_attempts?.length ? (
-                                                data.voe_attempts.map((v, i) => (
-                                                    <li className="list-group-item">
-                                                        <strong>{i + 1}</strong>:{" "}
-                                                        <ShowFormattedDate date={v} />
-                                                    </li>
-                                                ))
-                                            ) : (
-                                                <li className="list-group-item">0</li>
+                                        {!applicant?.is_hired &&
+                                            form?.values?.employer?.id == emp.id && (
+                                                <form
+                                                    className="mt-2 mr-2 w-100"
+                                                    onSubmit={form?.handleSubmit}
+                                                >
+                                                    <FileInput
+                                                        name={`document`}
+                                                        accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
+                                                        formik={form}
+                                                        allowedSizeInByte={3145728}
+                                                    />
+                                                    <div className="mt-2 d-flex w-100 ">
+                                                        <Button
+                                                            disabled={
+                                                                form?.isSubmitting ||
+                                                                !form?.isValid ||
+                                                                form?.isValidating
+                                                            }
+                                                            className="mr-2 w-50 theme-primary-btn"
+                                                            type="submit"
+                                                        >
+                                                            {t(`SAVE`)}{" "}
+                                                            <LoaderIcon isLoading={form?.isSubmitting} />
+                                                        </Button>
+                                                        <Button
+                                                            type="button"
+                                                            className="w-50 bg-danger"
+                                                            onClick={() => {
+                                                                form?.resetForm();
+                                                            }}
+                                                        >
+                                                            {t(`CANCEL`)}
+                                                        </Button>
+                                                    </div>
+                                                </form>
                                             )}
-                                        </ol>
-                                    </Col>
-                                </Row>
-                            </>
-                        )}
-                    />
-                </>
+                                    </>
+                                );
+                            },
+                            hidable: false,
+                        },
+                    ]}
+                    items={employers}
+                    expandableRowsComponent={({ data }) => (
+                        <>
+                            {console.log({ data })}
+                            <Row className="mt-2">
+                                <Col>
+                                    <ViewDetails
+                                        default={t("NOT_ANSWERED")}
+                                        obj={{
+                                            APPLICANT_NAME: `${applicant.first_name} ${applicant.last_name}`,
+                                            MANAGER_OR_REPRESENTATIVE: data.manager_name,
+                                            EMAIL: data.email,
+                                        }}
+                                    />
+                                </Col>
+                                <Col>
+                                    <ViewDetails
+                                        default={t("NOT_ANSWERED")}
+                                        obj={{
+                                            VOE_SUBMITTED:
+                                                data?.voe_submitted || Boolean(data?.documents?.length)
+                                                    ? t("YES")
+                                                    : t("NO"),
+                                            AUTHORIZED_TO_COMMUNICATE: Boolean(data.can_contact)
+                                                ? t("YES")
+                                                : t("NO"),
+                                            SUBJECT_TO_FMCR: Boolean(data.is_subject_to_fmcsrs)
+                                                ? t("YES")
+                                                : t("NO"),
+                                        }}
+                                    />
+                                </Col>
+                            </Row>
+                            <Row className="mb-2">
+                                <Col md={6}>
+                                    <label>{t("VOE_ATTEMPT_COUNT")}</label>
+                                    <ol className="list-group">
+                                        {data.voe_attempts?.length ? (
+                                            data.voe_attempts.map((v, i) => (
+                                                <li className="list-group-item">
+                                                    <strong>{i + 1}</strong>:{" "}
+                                                    <ShowFormattedDate date={v} />
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <li className="list-group-item">0</li>
+                                        )}
+                                    </ol>
+                                </Col>
+                            </Row>
+                        </>
+                    )}
+                />
             </ViewModal>
             <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
         </>
