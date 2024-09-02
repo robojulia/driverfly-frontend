@@ -98,7 +98,7 @@ export default function SafetyPerformanceHistory({
      * @param {ApplicantOnBoardingChecklist | string} docType - The type of document you want to
      * delete.
      */
-    const handleDeleteDocument = async (
+    const deleteEmployerVoeDocumentHandler = async (
         employer: ApplicantEmployerEntity,
         docType: ApplicantOnBoardingChecklist | string
     ): Promise<void> => {
@@ -210,7 +210,7 @@ export default function SafetyPerformanceHistory({
                                         isLoading.id == document?.id
                                     }
                                     document={document}
-                                    onClick={() => handleDeleteDocument(employer, type)}
+                                    onClick={() => deleteEmployerVoeDocumentHandler(employer, type)}
                                 />
                             )}
                             {Boolean(showResendButton) &&
@@ -267,10 +267,10 @@ export default function SafetyPerformanceHistory({
             <Button
                 disabled={!employers.length}
                 className={buttonClass ?? "w-100"}
-                title={t("VIEW")}
+                title={t("PAST_EMP_QDF_DESCRITION")}
                 onClick={() => setShowModal(true)}
             >
-                {t(!!employers.length ? "VIEW" : "NOT_AVAILABLE")}
+                {t(!!employers.length ? "VOE_LIST" : "VOE_LIST_NOT_AVAILABLE")}
             </Button>
 
             <ViewModal
@@ -320,7 +320,7 @@ export default function SafetyPerformanceHistory({
                                         {!applicant?.is_hired &&
                                             form?.values?.employer?.id == emp.id && (
                                                 <form
-                                                    className="mt-2 mr-2"
+                                                    className="mt-2 mr-2 w-100"
                                                     onSubmit={form?.handleSubmit}
                                                 >
                                                     <FileInput
