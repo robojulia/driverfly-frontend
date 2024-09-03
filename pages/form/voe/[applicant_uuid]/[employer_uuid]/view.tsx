@@ -130,7 +130,7 @@ export async function getServerSideProps({ query }) {
 
         if (!!!applicant || !!!employer || applicant.id != employer.applicant.id) return { notFound: true }
 
-        const voeData = employer.voeData;
+        const voeData = employer.voeData || new ApplicantVoeEntity();
 
         return { props: { applicant, employer, voeData } }
     } catch (error) {
