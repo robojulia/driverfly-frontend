@@ -15,8 +15,8 @@ export interface VoeFormProps {
 	voeData?: ApplicantVoeEntity;
 }
 
-export default function VoeForm({ applicant, employer, voeData }: VoeFormProps) {
-	const [voe, setVoe] = useState<ApplicantVoeEntity>(new ApplicantVoeEntity());
+export default function VoeForm({ applicant, employer }: VoeFormProps) {
+	const [voe, setVoe] = useState<ApplicantVoeEntity>(employer?.voeData || new ApplicantVoeEntity());
 
 	const updateVoe = (applicantVoeEntity: ApplicantVoeEntity) =>
 		setVoe({ ...voe, ...applicantVoeEntity });
@@ -31,12 +31,6 @@ export default function VoeForm({ applicant, employer, voeData }: VoeFormProps) 
 	useEffect(() => {
 		console.log("voe", voe);
 	}, [voe]);
-	useEffect(() => {
-		console.log("voeData", voeData);
-	}, [voeData]);
-	useEffect(() => {
-		setVoe(voeData || new ApplicantVoeEntity())
-	}, [voeData]);
 
 	return (
 		<VoeFormContext.Provider
@@ -89,9 +83,7 @@ export async function getServerSideProps({ query }) {
 		if (!!!applicant || !!!employer || applicant.id != employer.applicant.id)
 			return { notFound: true };
 
-		const voeData: ApplicantVoeEntity = employer?.voeData || new ApplicantVoeEntity();
-
-		return { props: { applicant, employer, voeData } };
+		return { props: { applicant, employer } };
 	} catch (error) {
 		console.log("error", error.message);
 

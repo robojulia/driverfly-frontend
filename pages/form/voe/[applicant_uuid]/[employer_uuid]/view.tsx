@@ -10,12 +10,12 @@ import styles from "../../../../../styles/voe.module.css";
 export interface VoeFormProps {
     applicant: ApplicantEntity;
     employer: ApplicantEmployerEntity;
-    voeData: ApplicantVoeEntity;
 }
 
-export default function ViewVoeForm({ applicant, employer, voeData }: VoeFormProps) {
+export default function ViewVoeForm({ applicant, employer }: VoeFormProps) {
 
     const { t } = useTranslation();
+    const { voeData } = employer;
 
     return (
         <div className={styles.container}>
@@ -130,9 +130,7 @@ export async function getServerSideProps({ query }) {
 
         if (!!!applicant || !!!employer || applicant.id != employer.applicant.id) return { notFound: true }
 
-        const voeData = employer.voeData || new ApplicantVoeEntity();
-
-        return { props: { applicant, employer, voeData } }
+        return { props: { applicant, employer } }
     } catch (error) {
         return { notFound: true }
     }
