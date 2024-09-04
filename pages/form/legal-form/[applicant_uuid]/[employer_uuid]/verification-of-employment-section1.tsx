@@ -41,6 +41,8 @@ export async function getServerSideProps({ query }) {
 			applicant_uuid,
 			{
 				withRelations: [
+					"company",
+					"company.users",
 					"employers",
 					"employers.voeData",
 				]
