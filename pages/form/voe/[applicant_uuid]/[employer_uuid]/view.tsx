@@ -3,7 +3,8 @@ import { formatDate } from "../../../../../components/jobs/show-formatted-date";
 import ViewCard from "../../../../../components/view-details/view-card";
 import ViewDetails from "../../../../../components/view-details/view-details";
 import { useTranslation } from "../../../../../hooks/use-translation";
-import { ApplicantEmployerEntity, ApplicantEntity, ApplicantVoeEntity } from "../../../../../models/applicant";
+import { ApplicantEmployerEntity, ApplicantEntity } from "../../../../../models/applicant";
+import { ShowUsFormattedDateTime } from "../../../../../utils/show-us-formatted-date-time";
 import ApplicantApi from "../../../../api/applicant";
 import styles from "../../../../../styles/voe.module.css";
 
@@ -83,7 +84,7 @@ export default function ViewVoeForm({ applicant, employer }: VoeFormProps) {
                                 title: voeData?.focal_person_title,
                                 phone: voeData?.focal_person_phone,
                                 email: voeData?.focal_person_email,
-                                DATE: formatDate(voeData?.signed_date),
+                                DATE: ShowUsFormattedDateTime(voeData?.signed_date, true),
                             }}
                         />
                     </ViewCard>

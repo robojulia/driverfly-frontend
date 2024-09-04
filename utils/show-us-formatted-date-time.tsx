@@ -1,5 +1,5 @@
 
-export function ShowUsFormattedDateTime(date: Date, skipTime?: boolean) {
+export function ShowUsFormattedDateTime(date: Date | string, skipTime?: boolean) {
     if (!date) return ``;
 
     date = typeof date == 'string' ? new Date(date) : date;
