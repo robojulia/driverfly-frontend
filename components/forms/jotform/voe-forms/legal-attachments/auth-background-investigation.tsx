@@ -1,6 +1,7 @@
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant";
+import { ShowUsFormattedDateTime } from "../../../../../utils/show-us-formatted-date-time";
 
 export interface AuthBackgroundProps {
     applicant?: ApplicantEntity;
@@ -82,7 +83,7 @@ export default function AuthBackgroundInvestigation({ applicant }: AuthBackgroun
             <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className='Col'>
                     <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>{"DATE:"}</p>
-                    <p style={{ color: 'black', display: 'inline' }}>{date?.value ? date?.value : ` ${t("NULL")}`}</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{date?.value ? ShowUsFormattedDateTime(date?.value, true) : ` ${t("NULL")}`}</p>
                 </div>
             </div>
 

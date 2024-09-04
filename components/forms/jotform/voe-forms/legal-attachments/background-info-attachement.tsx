@@ -1,5 +1,3 @@
-import { Col, Row } from 'react-bootstrap'
-import styles from "../../../../../styles/digitalhiringapp.module.css";
 
 
 export function BackgroundInfoAttachment() {
