@@ -574,9 +574,13 @@ export class ApplicantEntity {
         .nullable(),
       criminal_history: yup.string().nullable(),
       can_pass_drug_test: yup.boolean().nullable(),
-      accident_count: yup.number().min(0).nullable(),
-      moving_violations_count: yup.number().min(0).nullable(),
+      accident_count: yup.number().required().min(0).nullable(),
+      moving_violations_count: yup.number().required().min(0).nullable(),
       authorized_to_work_in_us: yup.bool().nullable(),
+      authorize_to_communicate: yup
+        .string()
+        .required()
+        .nullable(),
       accident_details: yup.string().nullable(),
       license_revoked: yup.bool().nullable(),
       license_revoked_details: yup
