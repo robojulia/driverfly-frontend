@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import { ArrowRight, CurrencyDollar } from "react-bootstrap-icons";
 import { useAuth } from '../../hooks/use-auth';
 import { useTranslation } from '../../hooks/use-translation';
@@ -119,16 +119,32 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
             <ViewModal
                 show={user == null && encourageModal == true}
                 closeText="CANCEL"
-                title="DRIVERFLY"
             >
-                <Row>
-                    <p>
-                        {t('GET_REGISTERED_MESSAGE')}
-                        <Link href="/signup">
-                            <a className='ml-1 primary '>{t("SIGN_UP")}</a>
-                        </Link>
-                    </p>
-                </Row>
+                <>
+                    <Row >
+                        <p className='d-flex justify-content-center align-items-center text-green-500' style={{ color: "green" }}>
+                            <b>
+                                {t('CONGRATS_ON_APPLYING')}
+                            </b>
+                        </p>
+                    </Row>
+                    <Row >
+                        <div className='mb-2 d-flex justify-content-center align-items-center'>
+                            <Button href='/signup'>
+                                {t('PLEASE_PROCEED_WITH_REGISTRATION')}
+                            </Button>
+                        </div>
+                    </Row>
+                    <Row>
+                        <div className='mt-2 d-flex justify-content-center align-items-center'>
+                            <p>
+                                <b>
+                                    {t('GET_REGISTERED_MESSAGE_QUICK_APPLY')}
+                                </b>
+                            </p>
+                        </div>
+                    </Row>
+                </>
             </ViewModal>
         </section>
     )
