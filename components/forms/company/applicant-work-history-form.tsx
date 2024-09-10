@@ -345,64 +345,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                                         />
                                                         <div style={{ display: "flex", justifyContent: "right" }}>
                                                             {(() => {
-                                                                const employer = form.values?.employers[i];
-                                                                const email = employer?.email;
-                                                                const emailInvalid = typeof email !== "string" || email === "";
-                                                                const canContact = employer?.can_contact;
-                                                                const isSubjectToFmcsrs = employer?.is_subject_to_fmcsrs;
-                                                                const emailAlreadySent = workHistoryMetaData?.sendVoeEmailsHistory?.includes(email) || email === entity?.employers[i]?.email;
-
-                                                                let message = "";
-
-                                                                if (emailInvalid || !canContact || !isSubjectToFmcsrs) {
-                                                                    message = `${t("PLEASE")}`;
-
-                                                                    if (emailInvalid) {
-                                                                        message += ` ${t("PROVIDE_EMAIL_ADDRESS")}`;
-                                                                    }
-                                                                    if (!canContact) {
-                                                                        message += `${emailInvalid ? " and" : ""} ${t("TOGGLE_ON")} ${t("TOGGLE_ON_YOU_CONTACT")}`;
-                                                                    }
-                                                                    if (!isSubjectToFmcsrs) {
-                                                                        message += `${emailInvalid || !canContact ? !canContact ? "," : " and" : ""} ${!canContact ? "" : t("TOGGLE_ON")} ${t("TOGGLE_ON_FMCSRs")}`;
-                                                                    }
-                                                                    message += ` ${t("FOR_PAST_EMPLOYER")}`;
-                                                                } else if (hasErrorsAtIndex(form, i)) {
-                                                                    message += ` ${t("FILL_EMPLOYERS_FIELDS")}`;
-                                                                }
-                                                                else {
-                                                                    message += ` ${t("REQUEST_ALREADY_MADE")}`;
-                                                                }
-
-
-                                                                if (
-                                                                    hasErrorsAtIndex(form, i) ||
-                                                                    form.isSubmitting ||
-                                                                    isSubmitting ||
-                                                                    emailInvalid ||
-                                                                    email === entity?.employers[i]?.email ||
-                                                                    emailAlreadySent ||
-                                                                    !canContact ||
-                                                                    !isSubjectToFmcsrs
-                                                                ) {
-                                                                    return (
-                                                                        <OverlyPopover str={message}>
-                                                                            <Button className="theme-secondary-btn" disabled>
-                                                                                {t("SEND_BACKGROUND_REQUEST")}
-                                                                            </Button>
-                                                                        </OverlyPopover>
-                                                                    );
-                                                                }
-
-                                                                return (
-                                                                    <Button
-                                                                        disabled={workHistoryMetaData?.isSubmittingVoe}
-                                                                        onClick={() => handleSendBackgroundRequest(i)}
-                                                                        className="theme-secondary-btn"
-                                                                    >
-                                                                        {t("SEND_BACKGROUND_REQUEST")}
-                                                                    </Button>
-                                                                );
+                                                                return renderSendBackgroundRequestButton(form, i, workHistoryMetaData, entity, isSubmitting, handleSendBackgroundRequest, t);
                                                             })()}
                                                         </div>
                                                     </Row>
@@ -433,4 +376,81 @@ function hasErrorsAtIndex(form, index: number): boolean {
         return Object.keys(errorObject).length > 0;
     }
     return false;
+}
+
+
+const renderSendBackgroundRequestButton = (
+    form: ReturnType<typeof useFormik>,
+    i: number,
+    workHistoryMetaData: WorkHistoryMetaData,
+    entity: ApplicantEntity,
+    isSubmitting: boolean,
+    handleSendBackgroundRequest: (i: number) => Promise<void>,
+    t: (key: string) => string
+) => {
+    const employer = form.values?.employers[i];
+    const email = employer?.email;
+
+    const emailInvalid = typeof email !== "string" || email === "";
+    const canContact = employer?.can_contact;
+    const isSubjectToFmcsrs = employer?.is_subject_to_fmcsrs;
+
+    const entityEmployer = entity?.employers?.find(e => e.id === employer?.id);
+    const emailAlreadySent = employer?.id ? workHistoryMetaData?.sendVoeEmailsHistory?.includes(email) || email === entityEmployer?.email : false;
+
+    let message = "";
+
+    if (emailInvalid || !canContact || !isSubjectToFmcsrs) {
+        message = `${t("PLEASE")}`;
+
+        if (emailInvalid) {
+            message += ` ${t("PROVIDE_EMAIL_ADDRESS")}`;
+        }
+        if (!canContact) {
+            message += `${emailInvalid ? " and" : ""} ${t("TOGGLE_ON")} ${t("TOGGLE_ON_YOU_CONTACT")}`;
+        }
+        if (!isSubjectToFmcsrs) {
+            message += `${emailInvalid || !canContact ? !canContact ? "," : " and" : ""} ${!canContact ? "" : t("TOGGLE_ON")} ${t("TOGGLE_ON_FMCSRs")}`;
+        }
+        message += ` ${t("FOR_PAST_EMPLOYER")}`;
+    } else if (hasErrorsAtIndex(form, i)) {
+        message += ` ${t("FILL_EMPLOYERS_FIELDS")}`;
+    }
+    else {
+        message += ` ${t("REQUEST_ALREADY_MADE")}`;
+    }
+
+    const commonConditions =
+        hasErrorsAtIndex(form, i) ||
+        form.isSubmitting ||
+        isSubmitting ||
+        emailInvalid ||
+        !canContact ||
+        !isSubjectToFmcsrs;
+
+    const isNewRecord = !employer.id;
+
+    if (
+        isNewRecord || employer?.voe_attempts == null
+            ? commonConditions
+            : (commonConditions || emailAlreadySent)
+    ) {
+        return (
+            <OverlyPopover str={message}>
+                <Button className="theme-secondary-btn" disabled>
+                    {t("SEND_BACKGROUND_REQUEST")}
+                </Button>
+            </OverlyPopover>
+        );
+    }
+
+    return (
+        <Button
+            disabled={workHistoryMetaData?.isSubmittingVoe}
+            onClick={() => handleSendBackgroundRequest(i)}
+            className="theme-secondary-btn"
+        >
+            {t("SEND_BACKGROUND_REQUEST")}
+        </Button>
+    );
 }
