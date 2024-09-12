@@ -24,10 +24,10 @@ export class DrivingExperienceDto {
         .nullable(),
       license_number: yup
         .string()
-        .when("license_state", {
-          is: (value) => value == "AL",
-          then: yup.string().max(8),
-        })
+        // .when("license_state", {
+        //   is: (value) => value == "AL",
+        //   then: yup.string().max(8),
+        // })
         .required()
         .nullable(),
     });
