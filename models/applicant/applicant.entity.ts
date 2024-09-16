@@ -630,7 +630,6 @@ export class ApplicantEntity {
       birthdate: yup.date().nullable(),
       address_1: yup.string().nullable(),
       address_2: yup.string().nullable(),
-      street: yup.string().nullable(),
       city: yup.string().nullable(),
       state: yup.string().nullable(),
       zip_code: yup.string().nullable(),
