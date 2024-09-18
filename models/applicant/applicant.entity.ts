@@ -305,24 +305,15 @@ export class ApplicantEntity {
       license_expiry: yup
         .date()
         .typeError("INVALID_DATE")
-        .test({
-          test: (value, context) => {
-            if (!Boolean(value)) return true;
-            else {
-              return (
-                yup
-                  .date()
-                  .min(moment().endOf("day").add(6, "months"))
-                  .isValidSync(value) ||
-                context.createError({
-                  path: context.path,
-                  message: "LICENSE_MUST_BE_VALID_FOR_6_MONTHS",
-                })
-              );
-            }
-          },
-        })
-        .nullable(),
+        .test(
+          'is-expired',
+          'LICENSE_HAS_EXPIRED',
+          (value) => moment(value).isAfter(moment().startOf('day'))
+        )
+        .min(
+          moment().endOf("day").add(0.5, "years"),
+          "LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
+        ).nullable(),
       license_state: yup.string().nullable(),
       license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
       years_cdl_experience: yup.number().min(0).nullable(),
@@ -637,15 +628,33 @@ export class ApplicantEntity {
       license_expiry: yup
         .date()
         .typeError("INVALID_DATE")
-        .test(
-          'is-expired',
-          'LICENSE_HAS_EXPIRED',
-          (value) => moment(value).isAfter(moment().startOf('day'))
-        )
-        .min(
-          moment().endOf("day").add(0.5, "years"),
-          "LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
-        ),
+        .test({
+          name: 'is-expired',
+          message: 'LICENSE_HAS_EXPIRED',
+          test: function (value) {
+            if (!value) return true;
+            return moment(value).isAfter(moment().startOf('day'));
+          },
+        })
+        .test({
+          test: (value, context) => {
+            if (!Boolean(value)) return true;
+            else {
+              return (
+                yup
+                  .date()
+                  .min(moment().endOf("day").add(6, "months"))
+                  .isValidSync(value) ||
+                context.createError({
+                  path: context.path,
+                  message: "LICENSE_MUST_BE_VALID_FOR_6_MONTHS",
+                })
+
+              );
+            }
+          },
+        })
+        .nullable(),
       license_state: yup.string().nullable(),
       license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
       years_cdl_experience: yup.number().min(0).nullable(),
@@ -756,15 +765,33 @@ export class ApplicantEntity {
       license_expiry: yup
         .date()
         .typeError("INVALID_DATE")
-        .test(
-          'is-expired',
-          'LICENSE_HAS_EXPIRED',
-          (value) => moment(value).isAfter(moment().startOf('day'))
-        )
-        .min(
-          moment().endOf("day").add(0.5, "years"),
-          "LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
-        ),
+        .test({
+          name: 'is-expired',
+          message: 'LICENSE_HAS_EXPIRED',
+          test: function (value) {
+            if (!value) return true;
+            return moment(value).isAfter(moment().startOf('day'));
+          },
+        })
+        .test({
+          test: (value, context) => {
+            if (!Boolean(value)) return true;
+            else {
+              return (
+                yup
+                  .date()
+                  .min(moment().endOf("day").add(6, "months"))
+                  .isValidSync(value) ||
+                context.createError({
+                  path: context.path,
+                  message: "LICENSE_MUST_BE_VALID_FOR_6_MONTHS",
+                })
+
+              );
+            }
+          },
+        })
+        .nullable(),
       license_state: yup.string().nullable(),
       license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
       years_cdl_experience: yup.number().min(0).nullable(),
