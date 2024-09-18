@@ -678,11 +678,7 @@ export function ApplicantBasicDetailsForm(props: ApplicantBasicDetailsFormProps)
 					</ViewCard>
 				</Col>
 			</Row>
-			{Boolean(entity?.id) && (
-				<Row className="mt-2">
-					<ViewSuggestedJobs applicant={entity} />
-				</Row>
-			)}
+
 		</Form>
 	);
 }

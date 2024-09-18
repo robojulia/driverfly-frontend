@@ -13,6 +13,7 @@ import { ApplicantUploadedDocumentsForm } from "./applicant-uploaded-documents-f
 import { ApplicantWorkHistoryForm } from "./applicant-work-history-form";
 import { BaseFormProps } from "./base-form-props";
 import { HireApplicantForm } from "./hire-applicant-form";
+import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
 
 export interface EditApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 	isSubmitting: boolean;
@@ -21,7 +22,7 @@ export interface EditApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 
 export function EditApplicantForm(props: EditApplicantFormProps) {
 	return (
-		<React.Fragment>
+		<>
 			<HireApplicantForm entity={props?.entity} className={props?.className} />
 			<ApplicantBasicDetailsForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} />
 			<Row>
@@ -43,6 +44,13 @@ export function EditApplicantForm(props: EditApplicantFormProps) {
 			<ApplicantSafetyBackgroundForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} />
 			<ApplicantUploadedDocumentsForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} />
 			<ApplicantJobsAppliedForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} onSaveComplete={props?.onSaveComplete} />
-		</React.Fragment>
+			<Row>
+				{Boolean(props?.entity?.id) && (
+					<Row className="mt-2">
+						<ViewSuggestedJobs applicant={props?.entity} />
+					</Row>
+				)}
+			</Row>
+		</>
 	);
 }
