@@ -1,8 +1,10 @@
 
-import React from "react";
 
-import { Col, Row } from "react-bootstrap";
+import { useRouter } from "next/router";
+import { Button, Col, Row } from "react-bootstrap";
+import { useTranslation } from "../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
+import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
 import { ApplicantAlreadyWorkedForm } from "./applicant-already-worked-form";
 import { ApplicantBasicDetailsForm } from "./applicant-basic-details-form";
 import { ApplicantEquipmentExperienceForm } from "./applicant-equipment-experience-form";
@@ -13,7 +15,6 @@ import { ApplicantUploadedDocumentsForm } from "./applicant-uploaded-documents-f
 import { ApplicantWorkHistoryForm } from "./applicant-work-history-form";
 import { BaseFormProps } from "./base-form-props";
 import { HireApplicantForm } from "./hire-applicant-form";
-import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
 
 export interface EditApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 	isSubmitting: boolean;
@@ -21,9 +22,24 @@ export interface EditApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 }
 
 export function EditApplicantForm(props: EditApplicantFormProps) {
+	const { t } = useTranslation();
+	const router = useRouter();
+	const routeToApplicants = () =>
+		router.push("/dashboard/company/applicants");
 	return (
 		<>
-			<HireApplicantForm entity={props?.entity} className={props?.className} />
+			<Row>
+				<Col xs="12" className="text-end">
+					<HireApplicantForm entity={props?.entity} className={props?.className} />
+					<Button
+						type="button"
+						className={`btn theme-general-btn mr-2`}
+						onClick={() => routeToApplicants()}
+					>
+						{t("BACK")}
+					</Button>
+				</Col>
+			</Row>
 			<ApplicantBasicDetailsForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} />
 			<Row>
 				<Col md="6" >
