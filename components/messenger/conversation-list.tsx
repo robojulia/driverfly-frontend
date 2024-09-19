@@ -73,9 +73,9 @@ export function ConversationListItem(props: ConversationListItemProps) {
                 <div className="pt-1">
                     <p className="fw-bold mb-0">{entity.chattable_name}</p>
                     {entity.lastMessage && (
-                        <p className="small text-muted">
+                        <div className="small text-muted">
                             <OverlyPopover slice_at={entity.lastMessage.text.length > 70 ? 70 : 0} str={entity?.lastMessage?.text} />
-                        </p>
+                        </div>
                     )}
                 </div>
             </div>
