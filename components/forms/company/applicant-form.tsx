@@ -443,16 +443,18 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										name={`is_automated_recruiting_lead`}
 										formik={form}
 									/>
-									<BaseInput
-										readOnly
+									<BaseSelect
+										readOnly={Boolean(entity?.is_hired)}
 										className="col-12 p-0 px-lg-2"
 										label="LEAD_TYPE"
 										name="type"
+										formik={form}
 										displayPlaceholder
-										value={t(`ApplicantType.${form.values?.type || ApplicantType.COMPANY}`)}
+										enumType={ApplicantType}
+										labelPrefix="ApplicantType"
 									/>
 									<BaseSelect
-										readOnly={!canCreateReferral || Boolean(entity?.is_hired)}
+										readOnly={Boolean(entity?.is_hired)}
 										className="col-12 p-0 px-lg-2"
 										label="REFERRAL_SOURCE"
 										name="referralSource.id"
