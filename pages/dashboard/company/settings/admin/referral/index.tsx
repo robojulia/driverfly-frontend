@@ -29,22 +29,22 @@ export default function ReferralList({ host }: { host: string }) {
 	const { user, isSuperAdmin, isCompanyAdmin, hasPermission } = useAuth();
 
 	const [referralSources, setReferralSources] = useState<ReferralSourceEntity[]>([
-		{
-			id: 1,
-			name: "Kom",
-			code: "123456",
-			referrals: 5,
-			createdAt: new Date()
-		}
+		// {
+		// 	id: 1,
+		// 	name: "Kom",
+		// 	code: "123456",
+		// 	referrals: 5,
+		// 	createdAt: new Date()
+		// }
 	]);
 
 	const columnSettingKey = getDataTableColumnKey("admin", user, "referral-sources");
 
 	useEffectAsync(async () => {
-		if (!isCompanyAdmin) {
-			router.push("/dashboard/company/");
-			return;
-		}
+		// if (!isCompanyAdmin) {
+		// 	router.push("/dashboard/company/");
+		// 	return;
+		// }
 		const api = new ReferralSourceApi();
 
 		try {

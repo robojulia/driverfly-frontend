@@ -465,7 +465,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										createLabel={(v) => buildReferral(v)}
 										options={(!!referralSources?.length) ? referralSources.filter(v => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id) : referralSources}
 										append={
-											canCreateReferral && !entity?.is_hired &&
+											!entity?.is_hired &&
 											<Button
 												variant="btn create_btn"
 												onClick={() => setCreateReferral(true)}
