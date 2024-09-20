@@ -165,7 +165,7 @@ const FullLayout = ({ children }) => {
 							pathname: "/dashboard/company/settings/admin/referral",
 							icon: PersonHearts,
 							text: "REFERRAL_SOURCES",
-							visible: isCompanyAdmin,
+							// visible: isCompanyAdmin,
 							startsWith: true,
 						},
 					],
