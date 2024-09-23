@@ -543,17 +543,17 @@ export default function CompanyPreference() {
 						/>
 
 						<BaseInput
-							className="col-md-4 mt-4"
+							className="col-md-3 mt-4"
 							label="MAX_MOVING_VIOLATIONS"
 							name="maximum_moving_violations.value"
 							type="number"
 							displayPlaceholder
 							formik={form}
 						/>
-					</Row>
 
+					</Row>
 					<Row className="mt-3">
-						<Col className="">
+						{/* <Col className="">
 							<OverlayTrigger
 								trigger={["hover", "focus"]}
 								delay={{ show: 0, hide: 0 }}
@@ -561,8 +561,8 @@ export default function CompanyPreference() {
 							>
 								<Button>{t("REFER_BACK_QUESTION")}</Button>
 							</OverlayTrigger>
-						</Col>
-						<Col className="text-end">
+						</Col> */}
+						<Col className="col-md-11 mt-3 text-start" style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }} md={3}>
 							<Button
 								type="submit"
 								variant="primary"
