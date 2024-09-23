@@ -133,7 +133,7 @@ export class JobEntity {
                     .enum(JobEmploymentType)
                     .required()
                     .nullable(),
-                equipment_type: yup.array((yup.string() as any).enum(JobEquipmentType)),
+                equipment_type: yup.array((yup.string() as any).enum(JobEquipmentType)).nullable(),
                 equipment_type_other: yup
                     .string()
                     .when("equipment_type", {
@@ -141,7 +141,7 @@ export class JobEntity {
                         then: yup.string().required().nullable(),
                     })
                     .nullable(),
-                delivery_type: yup.array((yup.string() as any).enum(JobDeliveryType)),
+                delivery_type: yup.array((yup.string() as any).enum(JobDeliveryType)).nullable(),
                 team_drivers: (yup.string() as any).enum(JobTeamDriver).nullable(),
                 //yup.array(
                 pay_method: (yup.string() as any)
@@ -283,7 +283,7 @@ export class JobEntity {
                         otherwise: numberRangeEnd("min_weekly_pay", 0, true).required()
                     })
                     .nullable(),
-                benefits: yup.array((yup.string() as any).enum(JobBenefits)),
+                benefits: yup.array((yup.string() as any).enum(JobBenefits)).nullable(),
                 benefits_other: yup
                     .string()
                     .when("benefits", {
@@ -309,16 +309,16 @@ export class JobEntity {
 
                 required_endorsement: yup.array(
                     (yup.string() as any).enum(DriverEndorsement)
-                ),
+                ).nullable(),
                 transmission_type_expereince: yup.array(
                     (yup.string() as any).enum(VehicleTransmissionType)
                 ),
                 must_pass_drug_test: yup.boolean().default(true),
-                drug_test_type: yup.array((yup.string() as any).enum(JobDrugTestType)),
+                drug_test_type: yup.array((yup.string() as any).enum(JobDrugTestType)).nullable(),
                 must_have_clean_mvr: yup.boolean().default(true),
                 mvr_requirements: (yup.array(JobMvrEntity.yupSchema()) as any).unique(
                     "type"
-                ),
+                ).nullable(),
                 accept_sap_graduates: yup.boolean().default(false),
                 must_have_clean_criminal_history: yup.boolean().default(true),
                 criminal_history: (
