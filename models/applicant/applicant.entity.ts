@@ -140,6 +140,14 @@ export class ApplicantEntity {
         .date()
         .typeError("INVALID_DATE")
         .test({
+          name: "is-expired",
+          message: "LICENSE_HAS_EXPIRED",
+          test: function (value) {
+            if (!value) return true;
+            return moment(value).isAfter(moment().startOf("day"));
+          },
+        })
+        .test({
           test: (value, context) => {
             if (!Boolean(value)) return true;
             else {
