@@ -190,7 +190,9 @@ export default function SafetyPerformanceHistory({
                 className={buttonClass ?? "w-100"}
                 title={t("VIEW")}
                 onClick={() => handleClick()}
-            >{t("VIEW")}</Button>
+            >
+                {t(!!employers.length ? "VOE_LIST" : "VOE_LIST_NOT_AVAILABLE")}
+            </Button>
 
             <ViewModal
                 show={Boolean(employers.length)}

@@ -1778,12 +1778,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 						actions={
 							<Button
 								size="sm"
-								disabled={
-									Boolean(
-										form.values?.documents?.length ===
-										Object.keys(ApplicantDocumentType).length
-									) || Boolean(entity?.is_hired)
-								}
 								onClick={() =>
 									form.setValues({
 										...form.values,
