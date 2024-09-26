@@ -93,7 +93,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
         docType: EmployeeAdditionalFilesEnum | string
     ): Promise<void> => {
         await employeeApi.documents.delete(employee?.id, docType);
-        setDocuments(employee?.documents?.filter((v) => v.type != docType));
+        setDocuments(documents?.filter((v) => v.type != docType));
     };
 
     /**
