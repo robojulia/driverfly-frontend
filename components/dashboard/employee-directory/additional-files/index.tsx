@@ -72,12 +72,12 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                     document
                 );
 
-                if (document.id) {
-                    setDocuments([
-                        ...documents.filter((v) => v.id != uploadedDocument.id),
-                        uploadedDocument,
-                    ]);
-                }
+                setDocuments([
+                    ...(document.id
+                        ? documents.filter((v) => v.id != uploadedDocument.id)
+                        : documents),
+                    uploadedDocument,
+                ]);
                 toast.success(t("DOCUMENT_UPLOAD_SUCCESS_MESSAGE"));
                 resetForm();
             } catch (e) {
