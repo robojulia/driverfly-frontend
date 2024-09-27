@@ -73,9 +73,11 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                 );
 
                 if (document.id) {
-                    setDocuments(documents.filter((v) => v.id != uploadedDocument.id));
+                    setDocuments([
+                        ...documents.filter((v) => v.id != uploadedDocument.id),
+                        uploadedDocument,
+                    ]);
                 }
-                documents.push(uploadedDocument);
                 toast.success(t("DOCUMENT_UPLOAD_SUCCESS_MESSAGE"));
                 resetForm();
             } catch (e) {
@@ -246,8 +248,8 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                                     <td colSpan={2} className="border border-2 w-50">
                                                         {form.values?.document?.id != document.id
                                                             ? <ButtonList document={document} type={document.type} />
-                                                            : <form
-                                                                onSubmit={() => form.handleSubmit()}
+                                                            : <Form
+                                                                onSubmit={form.handleSubmit}
                                                                 onReset={() => form.resetForm()}
                                                             >
                                                                 <FileInput
@@ -276,7 +278,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                                                         {t(`CANCEL`)}
                                                                     </Button>
                                                                 </div>
-                                                            </form>
+                                                            </Form>
                                                         }
                                                     </td>
                                                 </tr>
