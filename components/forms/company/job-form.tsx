@@ -338,7 +338,7 @@ export function JobForm(props: JobFormProps) {
         form.setValues({
             ...form.values,
             required_equipment: [
-                ...form.values.required_equipment,
+                ...form?.values?.required_equipment || [],
                 {
                     type: null,
                     quantity: null,
