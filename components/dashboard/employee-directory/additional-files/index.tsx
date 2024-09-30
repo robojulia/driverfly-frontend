@@ -139,7 +139,6 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
             <ViewDocumentHistory
                 document={document}
                 type={type}
-                typePrefix="EmployeeDqf"
                 documentable_id={employee.id}
                 documentable_type={DocumentableType.EMPLOYEE}
             />
