@@ -331,3 +331,8 @@ export default function Call() {
 Call.getLayout = function getLayout(page) {
     return <FullLayout>{page}</FullLayout>;
 };
+
+
+export async function getServerSideProps({ query }) {
+    return { notFound: true };
+}

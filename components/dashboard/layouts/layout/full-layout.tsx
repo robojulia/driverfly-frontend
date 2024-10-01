@@ -74,12 +74,12 @@ const FullLayout = ({ children }) => {
 			text: "MESSAGES",
 			startsWith: true
 		},
-		{
-			pathname: "/dashboard/company/call",
-			icon: TelephoneFill,
-			text: "CALL",
-			startsWith: true
-		},
+		// {
+		// 	pathname: "/dashboard/company/call",
+		// 	icon: TelephoneFill,
+		// 	text: "CALL",
+		// 	startsWith: true
+		// },
 		{
 			pathname: "/dashboard/company/compliance/employee-directory",
 			icon: GeoAltFill,
