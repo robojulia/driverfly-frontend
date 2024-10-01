@@ -24,7 +24,8 @@ export default function ViewEmployeeDetails({
 							obj={{
 								PHONE: employee.phone,
 								EMAIL: employee.email,
-								STREET: employee.street,
+								CURRENT_COMPANY_STREET_ADDRESS_LINE_1: employee.address_1,
+								CURRENT_COMPANY_STREET_ADDRESS_LINE_2: employee.address_2,
 								CITY: employee.city,
 								STATE_AND_ZIP: `${employee?.state || ""} ${employee?.zip_code || ""
 									}`.trim(),
