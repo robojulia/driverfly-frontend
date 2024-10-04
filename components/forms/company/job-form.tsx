@@ -91,8 +91,8 @@ export function JobForm(props: JobFormProps) {
     useEffect(() => {
         form.setValues({
             ...(entity || {}),
-            schedule: entity?.schedule || JobSchedule.OPEN_TO_NEGOTIATE,
-            pay_method: entity?.pay_method || JobPayMethod.OPEN_TO_NEGOTIATE,
+            schedule: entity?.schedule,
+            pay_method: entity?.pay_method,
             min_weekly_pay: Boolean(entity?.min_weekly_pay)
                 ? entity.min_weekly_pay
                 : null,
@@ -944,6 +944,7 @@ export function JobForm(props: JobFormProps) {
                                         name="cdl_class"
                                         labelPrefix="DriverLicenseType"
                                         required
+                                        displayPlaceholder
                                         enumType={DriverLicenseType}
                                         formik={form}
                                     />
