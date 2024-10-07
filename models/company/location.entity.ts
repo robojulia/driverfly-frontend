@@ -18,10 +18,10 @@ export class LocationEntity {
 
     static yupSchema() {
         return yup.object({
-            street: yup.string().nullable(),
+            street: yup.string().required().nullable(),
             city: cityRegexValidation().required(),
             state: yup.string().required().nullable(),
-            zip_code: zipCodeRegexValidation(),
+            zip_code: zipCodeRegexValidation().required(),
         });
     }
 

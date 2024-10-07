@@ -53,7 +53,7 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 								default={t("NOT_ANSWERED")}
 								obj={{
 									POSITION: employee?.job?.title,
-									TERMINAL: employee?.job?.location?.city,
+									TERMINAL: `${employee?.job?.location?.street ?? ""}, ${employee?.job?.location?.city ?? ""},  ${employee?.job?.location?.state ?? ""}, ${employee?.job?.location?.zip_code ?? ""}`,
 									MANAGER: employee?.manager?.name ? employee?.manager?.name : t('NO_MANAGER_ASSIGNED'),
 								}}
 							/>

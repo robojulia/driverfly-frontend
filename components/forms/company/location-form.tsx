@@ -42,7 +42,7 @@ export function LocationForm(props: LocationFormProps) {
             }
             catch (e) {
                 console.error("Unable to save entity", e);
-                globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast, defaultMessage: t("Forms.FAIL_{action}_{name}", { action: !!entity?.id ? "Forms.UPDATED" : "Forms.CREATED", name: "TERMINAL" }, { translateProps: true })});
+                globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast, defaultMessage: t("Forms.FAIL_{action}_{name}", { action: !!entity?.id ? "Forms.UPDATED" : "Forms.CREATED", name: "TERMINAL" }, { translateProps: true }) });
                 if (onSaveError) onSaveError(e);
             }
         },
@@ -51,7 +51,7 @@ export function LocationForm(props: LocationFormProps) {
     useEffect(() => {
         if (entity && !form.dirty)
             form.setValues(entity);
-    }, [ entity ]);
+    }, [entity]);
 
     return (
         <EntityForm
@@ -59,15 +59,16 @@ export function LocationForm(props: LocationFormProps) {
             onSubmit={form.handleSubmit}
             id={entity?.id}
             formik={form}
-            >
+        >
             <Row className="my-2">
                 <BaseInput
                     className="col-12"
                     label="STREET"
                     name="street"
+                    required
                     placeholder="STREET"
                     formik={form}
-                    />
+                />
                 <BaseInput
                     className="col-md-4 mt-3"
                     label="CITY"
@@ -75,7 +76,7 @@ export function LocationForm(props: LocationFormProps) {
                     required
                     placeholder="CITY"
                     formik={form}
-                    />
+                />
                 <StateSelect
                     className="col-md-4 mt-3"
                     label="STATE"
@@ -83,14 +84,15 @@ export function LocationForm(props: LocationFormProps) {
                     required
                     placeholder="STATE"
                     formik={form}
-                    />
+                />
                 <BaseInput
                     className="col-md-4 mt-3"
                     label="ZIP_CODE"
+                    required
                     name="zip_code"
                     placeholder="ZIP_CODE"
                     formik={form}
-                    />
+                />
             </Row>
         </EntityForm>
     );
