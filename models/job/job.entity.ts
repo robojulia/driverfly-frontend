@@ -294,7 +294,7 @@ export class JobEntity {
                 vehicles: (yup.array(BasicEntity.yupSchema()) as any)
                     .unique("id", "SELECT_UNIQUE_VEHICLE_MESSAGE")
                     .nullable(),
-                cdl_class: (yup.string() as any).enum(DriverLicenseType).nullable(),
+                cdl_class: (yup.string() as any).enum(DriverLicenseType).required().nullable(),
                 min_years_experience: yup.number().min(0).nullable(),
                 min_experience_in_months: yup.number().min(0).max(11).nullable(),
                 min_experience_in_years: yup.number().min(0).nullable(),
