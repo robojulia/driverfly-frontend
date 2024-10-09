@@ -284,7 +284,7 @@ export function ConversationForm(props: ConversationFormProps) {
                                                 required
                                                 placeholder="MESSAGE"
                                             />
-                                            {entity.chattable_type == ChattableType.APPLICANT && (
+                                            {/* {entity.chattable_type == ChattableType.APPLICANT && (
                                                 <>
                                                     <BaseCheckList
                                                         className="mt-2"
@@ -297,8 +297,8 @@ export function ConversationForm(props: ConversationFormProps) {
                                                         )}
                                                     />
                                                 </>
-                                            )}
-                                            {props.applicant.uuid_token
+                                            )} */}
+                                            {/* {props.applicant.uuid_token
                                                 && props.applicant?.documents?.length != Object.keys(ApplicantDocumentType)?.length
                                                 && (
                                                     <small
@@ -310,10 +310,10 @@ export function ConversationForm(props: ConversationFormProps) {
                                                     >
                                                         {t("REQUEST_FOR_MISSING_DOCUMENTS")}
                                                     </small>
-                                                )}
+                                                )} */}
                                         </div>
                                     </Collapse>
-                                    <Collapse in={!!canAttach}>
+                                    {/* <Collapse in={!!canAttach}>
                                         <div id="collapse-select">
                                             <BaseCheckList
                                                 labelPrefix="ApplicantDocumentType"
@@ -342,7 +342,7 @@ export function ConversationForm(props: ConversationFormProps) {
                                                 {t("CANCEL")}
                                             </small>
                                         </div>
-                                    </Collapse>
+                                    </Collapse> */}
                                 </Col>
                                 <Col md={2}>
                                     <div className="d-flex justify-content-center align-items-center h-100">
