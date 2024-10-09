@@ -58,7 +58,7 @@ export default function Dashboard() {
     useEffectAsync(async () => {
         let todayDate = new Date();
         if (company?.id) {
-            const a = await applicantApi.list({ withHired: true });
+            const a = await applicantApi.list({ withHired: true, is_paginated: false });
             setApplicants((a as ApplicantEntity[]));
             const e = await employeeApi.list({ status: [EmployeeStatus.ACTIVE] });
             setEmployees(e);
