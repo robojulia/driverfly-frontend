@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useMemo } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { Icon } from "react-bootstrap-icons";
 import { useTranslation } from "../../../hooks/use-translation";
@@ -31,8 +31,7 @@ export interface EntityFormProps {
 export default function EntityForm(props: EntityFormProps) {
     const { t } = useTranslation();
 
-    let { id, canSubmit, forbidSubmit, formik, className, onSubmit, children } =
-        props;
+    let { id, canSubmit, forbidSubmit, formik, className, onSubmit, children } = props;
 
     const action = t(props.submitLabel ?? (id ? "UPDATE" : "ADD"));
 
@@ -41,7 +40,8 @@ export default function EntityForm(props: EntityFormProps) {
         if (!onSubmit) onSubmit = formik.handleSubmit;
     }
 
-    const Actions = () => (
+    // Memoize the Actions component to prevent unnecessary re-renders
+    const MemoizedActions = useMemo(() => (
         <Row>
             <Col xs="12" className="text-end">
                 {props?.actions?.map(
@@ -76,17 +76,18 @@ export default function EntityForm(props: EntityFormProps) {
                 )}
             </Col>
         </Row>
-    );
+    ), [props.actions, canSubmit, forbidSubmit, formik?.isSubmitting, action, t]);
+
     return (
         <Form className={className} onSubmit={onSubmit}>
             {props?.actionButtonDown ? (
                 <>
                     {children}
-                    <Actions />
+                    {MemoizedActions}
                 </>
             ) : (
                 <>
-                    <Actions />
+                    {MemoizedActions}
                     {children}
                 </>
             )}

@@ -124,15 +124,12 @@ export function PastEmploymentHistory() {
 											required
 											formik={form}
 										/>
-										<PastEmployerNameInput
-											index={i}
+										<BaseInput
 											className="col-md-6 my-3"
-											name={`employers[${i}]`}
-											annotation="name"
+											name={`employers[${i}].name`}
 											label="PREVIOUS_COMPANY_NAME"
-											placeholder="SEARCH_OR_CREATE_NEW"
-											formik={form}
 											required
+											formik={form}
 										/>
 										<BaseInput
 											className="col-md-6 my-3"

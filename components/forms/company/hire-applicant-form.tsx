@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { Col, Row } from "react-bootstrap";
+import { useMemo, useState } from "react";
+import { Button, Col, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 import { useAuth } from "../../../hooks/use-auth";
@@ -36,18 +36,8 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
         setJobs(jobs);
     }, [user]);
 
-    const form = useFormik({
-        initialValues: new ApplicantEntity(),
-        validationSchema: ApplicantEntity.yupSchemaForApplyForm(),
-        onSubmit: async (values) => {
-        }
-    });
-
     const routeToEmployees = () =>
         router.push("/dashboard/company/compliance/employee-directory");
-
-    const routeToApplicants = () =>
-        router.push("/dashboard/company/applicants");
 
     const hireApplicantForm = useFormik({
         initialValues: new HireApplicantDto(),
@@ -65,8 +55,8 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
             } catch (e) {
                 globalAjaxExceptionHandler(e, {
                     formik: hireApplicantForm,
-                    t: t,
-                    toast: toast,
+                    t,
+                    toast,
                 });
             }
         },
@@ -76,26 +66,20 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
         setJobs([...jobs, job]);
         setCreateJob(false);
     };
+
+    const jobOptions = useMemo(() => jobs, [jobs]);
+
     return (
-        <EntityForm
-            id={entity?.id}
-            hideSubmitButton={true}
-            className={className}
-            actions={[
-                {
-                    label: "HIRE",
-                    className: "btn theme-primary-btn",
-                    hide: !Boolean(entity?.id) || Boolean(entity?.is_hired),
-                    onClick: () =>
-                        hireApplicantForm.setValues({ applicantId: entity?.id }),
-                },
-                {
-                    label: "BACK",
-                    className: "btn theme-general-btn",
-                    onClick: routeToApplicants,
-                },
-            ]}
-        >
+        <>
+            {Boolean(entity?.id) && !Boolean(entity?.is_hired) &&
+                <Button
+                    type="button"
+                    className={`btn theme-primary-btn mr-2`}
+                    onClick={() => hireApplicantForm.setValues({ applicantId: entity?.id })}
+                >
+                    {t("HIRE")}
+                </Button>
+            }
             <ViewModal
                 title={t("HIRE")}
                 show={Boolean(hireApplicantForm.values?.applicantId)}
@@ -111,6 +95,7 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
                     <Row className="py-3 px-5">
                         <Col>
                             <BaseSelect
+                                autoFocus
                                 name={`jobId`}
                                 readOnly={Boolean(entity?.is_hired)}
                                 required
@@ -119,7 +104,7 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
                                     { name: "JOB" },
                                     { translateProps: true }
                                 )}
-                                options={jobs}
+                                options={jobOptions}
                                 labelKey="title"
                                 label="JOB"
                                 valueKey="id"
@@ -134,7 +119,7 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
                                 {t("CREATE_{name}", { name: "JOB" }, { translateProps: true })}
                             </button>
                         </Col>
-                    </Row>
+                    </Row >
                 </EntityForm>
             </ViewModal>
             <ViewModal
@@ -144,6 +129,6 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
             >
                 <JobForm onSaveComplete={onJobAdded} />
             </ViewModal>
-        </EntityForm>
+        </>
     );
 }

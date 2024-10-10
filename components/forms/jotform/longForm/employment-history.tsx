@@ -120,15 +120,11 @@ export function EmploymentHistory() {
 						</Row>
 
 						<Row className={`${styles.align__text_left} ${styles.bold}`}>
-							<PastEmployerNameInput
+							<BaseInput
 								className="col-md-6 my-3"
-								name="employer"
-								annotation="name"
+								name="employer.name"
 								label="CURRENT_COMPANY_NAME"
-								placeholder="SEARCH_OR_CREATE_NEW"
 								formik={form}
-								required
-								is_current
 							/>
 							<BaseInput
 								className="col-md-6 my-3"

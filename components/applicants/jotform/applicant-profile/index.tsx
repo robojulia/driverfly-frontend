@@ -207,9 +207,9 @@ export default function ApplicantExtrasDetails({
 									current_employer?.phone,
 								CURRENT_COMPANY_POSITION:
 									current_employer?.title,
-								CURRENT_COMPANY_STREET_ADDRESS_LINE_1:
+								ADDRESS_LINE_1:
 									current_employer?.address,
-								CURRENT_COMPANY_STREET_ADDRESS_LINE_2:
+								ADDRESS_LINE_2:
 									current_employer?.address_2,
 								zip_code: current_employer?.zip_code,
 								fcr: current_employer?.is_subject_to_drug_tests

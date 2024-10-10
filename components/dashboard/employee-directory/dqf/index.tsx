@@ -93,47 +93,44 @@ export default function DQF(props: ViewEmployeeDqfProps) {
     const ButtonList = ({ document, type }): JSX.Element =>
         (!form.values.document?.type || form.values.document?.type != type) && (
             <div className="d-flex">
-                {type != EmployeeDqf.SAFETY_PERFORMANCE_HISTORY ? (
-                    <>
-                        <ViewDocumentButton
-                            document={document}
-                            onClick={() => handleViewDocument(document.id, setPdf)}
-                        />
-                        {Boolean(props.canEdit) && (
-                            <AddDocumentButton
-                                document={document}
-                                type={type}
-                                t={t}
-                                onClick={() => handleUpdateDocument(type, document?.id)}
-                            />
-                        )}
-                        <DownloadDocumentButton
-                            document={document}
-                            onClick={() => handleDownloadDocument(document.id)}
-                        />
-                        {Boolean(props.canEdit) && (
-                            <DeleteDocumentButton
-                                document={document}
-                                onClick={() => handleDeleteDocument(type)}
-                            />
-                        )}
-                        {Boolean(props.showHistory) && (
-                            <ViewDocumentHistory
-                                document={document}
-                                type={type}
-                                typePrefix="EmployeeDqf"
-                                documentable_id={employee.id}
-                                documentable_type={DocumentableType.EMPLOYEE}
-                            />
-                        )}
-                    </>
-                ) : (
-                    // <></>
+                <ViewDocumentButton
+                    document={document}
+                    onClick={() => handleViewDocument(document.id, setPdf)}
+                />
+                {Boolean(props.canEdit) && (
+                    <AddDocumentButton
+                        document={document}
+                        type={type}
+                        t={t}
+                        onClick={() => handleUpdateDocument(type, document?.id)}
+                    />
+                )}
+                <DownloadDocumentButton
+                    document={document}
+                    onClick={() => handleDownloadDocument(document.id)}
+                />
+                {Boolean(props.canEdit) && (
+                    <DeleteDocumentButton
+                        document={document}
+                        onClick={() => handleDeleteDocument(type)}
+                    />
+                )}
+                {type == EmployeeDqf.SAFETY_PERFORMANCE_HISTORY && (
                     <SafetyPerformanceHistory
+                        buttonClass="mr-2 w-50"
                         employee={employee}
                         canEditSafetyPerformance={props.canEditSafetyPerformance}
                         showHistory={props.showHistory}
                         showResendButton={props.showResendButton}
+                    />
+                )}
+                {Boolean(props.showHistory) && (
+                    <ViewDocumentHistory
+                        document={document}
+                        type={type}
+                        typePrefix="EmployeeDqf"
+                        documentable_id={employee.id}
+                        documentable_type={DocumentableType.EMPLOYEE}
                     />
                 )}
             </div>
@@ -192,7 +189,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                                                 <td colSpan={1} className="border border-2 w-50">
                                                     <ButtonList document={document} type={type} />
                                                     {(form.values?.document?.type == type)
-                                                        && <Form onSubmit={form.handleSubmit} >
+                                                        && <Form onSubmit={form.handleSubmit} onReset={() => form.resetForm()}>
                                                             <FileInput
                                                                 name={`document`}
                                                                 accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
@@ -206,9 +203,8 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                                                                     type="submit"
                                                                 >{t(`SAVE`)} <LoaderIcon isLoading={form.isSubmitting} /></Button>
                                                                 <Button
-                                                                    type="button"
+                                                                    type="reset"
                                                                     className="mr-2 w-50 bg-danger"
-                                                                    onClick={() => { form.resetForm() }}
                                                                 >{t(`CANCEL`)}</Button>
                                                             </div>
                                                         </Form>

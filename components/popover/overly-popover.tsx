@@ -56,7 +56,7 @@ export default function OverlyPopover({
                 overlay={popover}
             >
                 {children ?
-                    <span>{children}</span>
+                    <>{children}</>
                     :
                     <span >
                         {icon ?? null}

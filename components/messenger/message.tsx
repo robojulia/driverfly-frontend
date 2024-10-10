@@ -33,7 +33,7 @@ export function Message(props: MessageProps) {
                             {message.text}
                             <p className="text-muted small mb-0">
                                 <Clock /> <When date={message.created_at} />
-                                {message.status && <> -- <span className={message.status == MessageStatus.FAILED ? "text-danger" : ""} >{message.status}</span></>}
+                                {message.status && <> -- <span className={message.status == MessageStatus.FAILED ? "text-danger" : ""} >{[MessageStatus.QUEUED, MessageStatus.SENDING].includes(message.status) ? MessageStatus.SENT : message.status}</span></>}
                                 {Boolean(message.error_message)
                                     && message.error_code == 21211
                                     && <OverlyPopover str={message.error_message}>

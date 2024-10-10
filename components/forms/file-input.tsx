@@ -128,7 +128,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
         if (value?.id) {
             const api = new DocumentApi();
             const document = await api.getSignedUrl(value.id);
-            console.log(document);
+            // console.log("fetched document", { document });
             setViewDoc(document.path);
         } else if (value?.path) {
             setViewDoc(value.path);
@@ -203,8 +203,8 @@ export default function FileInput({ documentType, formik, accept, required, clas
                 </InputGroup>
                 {touched && error && typeof error != "object" ? <span className="text-danger small">{typeof error == "string" ? t(error) : JSON.stringify(error)}</span> : null}
             </div>
-            {value?.mime_type == "application/pdf" &&
-                <ViewPdf name={value?.name} url={viewDoc} onCloseClick={close} />}
+            {/* {value?.mime_type == "application/pdf" && }*/}
+            <ViewPdf name={value?.name} url={viewDoc} onCloseClick={close} />
             {value?.mime_type?.includes("image/") &&
                 <ViewModal show={!!viewDoc} title={value?.name} onCloseClick={close}>
                     <img className="img-thumbnail" src={viewDoc} />

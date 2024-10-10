@@ -11,35 +11,43 @@ export default function MessageList() {
     const { t } = useTranslation();
 
     const getOptions = async (query: string, cancellationToken: CancelTokenSource) => {
-        const applicantApi = new ApplicantApi();
-        const employeeApi = new EmployeeApi();
+        // const applicantApi = new ApplicantApi();
+        // const employeeApi = new EmployeeApi();
 
-        const applicants = (await applicantApi.search({
-            last_name: query,
-            first_name: query,
-            // email: query,
-            phone: query
-        }, {
-            cancelToken: cancellationToken.token
-        }))?.filter(ap => !!ap?.phone);
-        const employees = (await employeeApi.search({
-            last_name: query,
-            first_name: query,
-            phone: query,
-        }, {
-            cancelToken: cancellationToken.token
-        }))?.filter(ap => !!ap?.phone);
+        // const names = query.split(' ').filter((name) => name);
+        // const [first_name, last_name] = names
+        // console.log("[first_name, last_name]", first_name, last_name);
+
+        // function hasNumber(myString) {
+        //     return /\d/.test(myString);
+        // }
+
+        // const applicants = (await applicantApi.search({
+        //     first_name,
+        //     last_name: last_name || first_name,
+        //     // email: query,
+        //     phone: hasNumber(query) ? query : null
+        // }, {
+        //     cancelToken: cancellationToken.token
+        // }))?.filter(ap => !!ap?.phone);
+        // const employees = (await employeeApi.search({
+        //     last_name: query,
+        //     first_name: query,
+        //     phone: query,
+        // }, {
+        //     cancelToken: cancellationToken.token
+        // }))?.filter(ap => !!ap?.phone);
 
         return [
-            ...applicants?.map(v => ({
-                // text: `${v.first_name} ${v.last_name} (${t("ChattableType." + Boolean(v?.user?.id) ? ChattableType.USER : ChattableType.APPLICANT)}) `,
-                text: `${v.first_name} ${v.last_name} (${t("ChattableType." + ChattableType.APPLICANT)})`,
-                value: {
-                    chattable_type: Boolean(v.user) ? ChattableType.USER : ChattableType.APPLICANT,
-                    chattable_id: v.user?.id || v.id,
-                    chattable_name: v.user?.name || `${v.first_name} ${v.last_name}`
-                }
-            })),
+            // ...applicants?.map(v => ({
+            //     // text: `${v.first_name} ${v.last_name} (${t("ChattableType." + Boolean(v?.user?.id) ? ChattableType.USER : ChattableType.APPLICANT)}) `,
+            //     text: `${v.first_name} ${v.last_name} (${t("ChattableType." + ChattableType.APPLICANT)})`,
+            //     value: {
+            //         chattable_type: Boolean(v.user) ? ChattableType.USER : ChattableType.APPLICANT,
+            //         chattable_id: v.user?.id || v.id,
+            //         chattable_name: v.user?.name || `${v.first_name} ${v.last_name}`
+            //     }
+            // })),
             // ...employees?.map(v => ({
             //     text: `${v.first_name} ${v.last_name} (${t("ChattableType." + ChattableType.EMPLOYEE)})`,
             //     value: {

@@ -1,35 +1,39 @@
-import { Button, Col, Form, Row, Table } from "react-bootstrap";
 import { FormikErrors, useFormik } from "formik";
-import { toast } from "react-toastify";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Button, Col, Form, Row, Table } from "react-bootstrap";
 import { ThreeCircles } from "react-loader-spinner";
+import { toast } from "react-toastify";
 import { useAuth } from "../../../../hooks/use-auth";
-import { useEffectAsync } from "../../../../utils/react";
 import { useTranslation } from "../../../../hooks/use-translation";
-import ViewCard from "../../../view-details/view-card";
-import FileInput from "../../../forms/file-input";
-import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
-import ShowFormattedDate from "../../../jobs/show-formatted-date";
-import ViewPdf from "../../../view-details/view-pdf";
-import { EmployeeAdditionalFilesProps } from "../../../../types/employee/employee-additional-files-props.type";
-import EmployeeApi from "../../../../pages/api/employee";
 import { EmployeeDocumentDto } from "../../../../models/employee/employee-document-dto";
 import { EmployeeEntity } from "../../../../models/employee/employee.entity";
+import EmployeeApi from "../../../../pages/api/employee";
+import { EmployeeAdditionalFilesProps } from "../../../../types/employee/employee-additional-files-props.type";
+import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
+import { useEffectAsync } from "../../../../utils/react";
+import FileInput from "../../../forms/file-input";
+import ShowFormattedDate from "../../../jobs/show-formatted-date";
+import ViewCard from "../../../view-details/view-card";
+import ViewPdf from "../../../view-details/view-pdf";
 
+import { DocumentableType } from "../../../../enums/documents/documentable-type.enum";
+import { EmployeeAdditionalFilesEnum } from "../../../../enums/employee/employee-additional-files.enum";
+import {
+    handleDownloadDocument,
+    handleViewDocument,
+} from "../../../../utils/documents/button-actions";
 import {
     AddDocumentButton,
     DeleteDocumentButton,
     DownloadDocumentButton,
     ViewDocumentButton,
 } from "../../../documents/buttons";
-import {
-    handleDownloadDocument,
-    handleViewDocument,
-} from "../../../../utils/documents/button-actions";
 import ViewDocumentHistory from "../../../documents/view-history";
-import { DocumentableType } from "../../../../enums/documents/documentable-type.enum";
-import { EmployeeAdditionalFilesEnum } from "../../../../enums/employee/employee-additional-files.enum";
 import { LoaderIcon } from "../../../loading/loader-icon";
+import { DashCircle, PlusCircle } from "react-bootstrap-icons";
+import { DocumentEntity } from "../../../../models/documents/document.entity";
+import { EmployeeDqf } from "../../../../enums/employee/employee-dqf.enum";
+import BaseInput from "../../../forms/base-input";
 
 export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
     const { t } = useTranslation();
@@ -37,9 +41,12 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
     const employeeApi = new EmployeeApi();
 
     const [employee, setEmployee] = useState<EmployeeEntity>(null);
+    const [documents, setDocuments] = useState<DocumentEntity[]>([]);
 
     useEffectAsync(async () => {
-        if (props.employee?.id) setEmployee(props.employee);
+        const data = await employeeApi.getById(props?.employee?.id);
+        setEmployee(data);
+        setDocuments(data.documents?.filter(v => !Object.values(EmployeeDqf).includes(v.type as EmployeeDqf)))
     }, [user]);
 
     const [pdf, setPdf] = useState({});
@@ -48,18 +55,29 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
         initialValues: new EmployeeDocumentDto(),
         validationSchema: EmployeeDocumentDto.yupSchema(),
         onSubmit: async ({ document }, { resetForm }) => {
+            if (
+                (!document.id &&
+                    documents.find((v) => v.type == document.type)) ||
+                (document.id &&
+                    documents.find(
+                        (v) => v.type == document.type && v.id != document.id
+                    ))
+            ) {
+                form.setFieldError("document.type", "DOCUMENT_TYPE_UNIQUE");
+                return;
+            }
             try {
-                const employeeDocumentUpload = await employeeApi.documents.create(
+                const uploadedDocument = await employeeApi.documents.create(
                     employee.id,
                     document
                 );
 
-                if (document.id) {
-                    employee.documents = employee.documents.filter(
-                        (v) => v.id != employeeDocumentUpload.id
-                    );
-                }
-                employee.documents.push(employeeDocumentUpload);
+                setDocuments([
+                    ...(document.id
+                        ? documents.filter((v) => v.id != uploadedDocument.id)
+                        : documents),
+                    uploadedDocument,
+                ]);
                 toast.success(t("DOCUMENT_UPLOAD_SUCCESS_MESSAGE"));
                 resetForm();
             } catch (e) {
@@ -77,10 +95,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
         docType: EmployeeAdditionalFilesEnum | string
     ): Promise<void> => {
         await employeeApi.documents.delete(employee?.id, docType);
-        setEmployee({
-            ...employee,
-            documents: employee?.documents?.filter((v) => v.type != docType),
-        });
+        setDocuments(documents?.filter((v) => v.type != docType));
     };
 
     /**
@@ -96,39 +111,39 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
         form.setFieldValue("document", { type, id: documentId ?? null });
 
     const ButtonList = ({ document, type }): JSX.Element =>
-        (!form.values.document?.type || form.values.document?.type != type) && (
-            <div className="d-flex">
-                <ViewDocumentButton
-                    document={document}
-                    onClick={() => handleViewDocument(document.id, setPdf)}
-                />
-                {props.canEdit &&
-                    <AddDocumentButton
-                        document={document}
-                        type={type}
-                        t={t}
-                        onClick={() => handleUpdateDocument(type, document?.id)}
-                    />
-                }
-                <DownloadDocumentButton
-                    document={document}
-                    onClick={() => handleDownloadDocument(document.id)}
-                />
-                {props.canEdit &&
-                    <DeleteDocumentButton
-                        document={document}
-                        onClick={() => handleDeleteDocument(type)}
-                    />
-                }
-                <ViewDocumentHistory
+    // (!form.values.document?.type || form.values.document?.type != type) &&
+    (
+        <div className="d-flex">
+            <ViewDocumentButton
+                document={document}
+                onClick={() => handleViewDocument(document.id, setPdf)}
+            />
+            {props.canEdit &&
+                <AddDocumentButton
                     document={document}
                     type={type}
-                    typePrefix="EmployeeDqf"
-                    documentable_id={employee.id}
-                    documentable_type={DocumentableType.EMPLOYEE}
+                    t={t}
+                    onClick={() => handleUpdateDocument(type, document?.id)}
                 />
-            </div>
-        );
+            }
+            <DownloadDocumentButton
+                document={document}
+                onClick={() => handleDownloadDocument(document.id)}
+            />
+            {props.canEdit &&
+                <DeleteDocumentButton
+                    document={document}
+                    onClick={() => handleDeleteDocument(type)}
+                />
+            }
+            <ViewDocumentHistory
+                document={document}
+                type={type}
+                documentable_id={employee.id}
+                documentable_type={DocumentableType.EMPLOYEE}
+            />
+        </div>
+    );
 
     const UpdatedAt = ({ document, type }): JSX.Element => (
         <>
@@ -140,39 +155,102 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
         </>
     );
 
+    useEffect(() => {
+        console.log("forrm.values", form.values)
+        console.log("forrm.errors", form.errors)
+    }, [form.values, form.errors])
     return (
         <div className="employee_directory_tabs">
             <Row>
                 <Col>
                     {!!employee ? (
-                        <ViewCard title="DOCUMENTS">
+                        <ViewCard
+                            title="UPLOADED_DOCUMENTS"
+                            actions={
+                                <Button
+                                    size="sm"
+                                    onClick={() =>
+                                        form.setValues({ document: { ...(new DocumentEntity()), documentable_id: employee.id } })
+                                    }
+                                >
+                                    <PlusCircle /> {t("ADD")}
+                                </Button>
+                            }
+                        >
+                            {/* {documents?.length && <>{t("NONE")}</>} */}
+                            {form.values?.document?.documentable_id && !form.values?.document?.id && (
+                                <form onSubmit={form.handleSubmit} onReset={() => form.resetForm()}>
+                                    <Table striped>
+                                        <thead>
+                                            <tr>
+                                                <th>{t("TYPE")}</th>
+                                                <th>{t("DOCUMENT")}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <BaseInput
+                                                        name={`document.type`}
+                                                        required
+                                                        placeholder="DOCUMENT_TYPE"
+                                                        formik={form}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <FileInput
+                                                        name={`document`}
+                                                        required
+                                                        accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
+                                                        allowedSizeInByte={3145728}
+                                                        formik={form}
+                                                    />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </Table>
+                                    <div className="d-flex w-100 mb-3">
+                                        <Button
+                                            type="submit"
+                                            className="mr-1 w-50 theme-primary-btn"
+                                        >
+                                            {t("SAVE")}
+                                        </Button>
+                                        <Button
+                                            type="reset"
+                                            className="ml-1 w-50"
+                                        >
+                                            {t("CANCEL")}
+                                        </Button>
+                                    </div>
+                                </form>
+                            )}
                             <Table striped>
                                 <thead>
                                     <tr>
                                         <th colSpan={2}>{t("TYPE")}</th>
                                         <th colSpan={2}>{t("UPDATED_AT")}</th>
-                                        <th colSpan={1}></th>
+                                        <th colSpan={2}></th>
                                     </tr>
                                 </thead>
-
                                 <tbody>
-                                    {Object.values(EmployeeAdditionalFilesEnum).map(
-                                        (type: EmployeeAdditionalFilesEnum, i) => {
-                                            const document: any = employee?.documents?.find(
-                                                (v) => v.type == type
-                                            );
+                                    {documents?.map(
+                                        (document, i) => {
                                             return (
                                                 <tr key={i}>
                                                     <td colSpan={2}>
-                                                        {t(`EmployeeAdditionalFilesEnum.${type}`)}
+                                                        {t(`${document.type}`)}
                                                     </td>
                                                     <td colSpan={2} className="w-25">
-                                                        <UpdatedAt document={document} type={type} />
+                                                        <UpdatedAt document={document} type={document.type} />
                                                     </td>
-                                                    <td colSpan={1} className="border border-2 w-50">
-                                                        <ButtonList document={document} type={type} />
-                                                        {form.values?.document?.type == type && (
-                                                            <Form onSubmit={form.handleSubmit}>
+                                                    <td colSpan={2} className="border border-2 w-50">
+                                                        {form.values?.document?.id != document.id
+                                                            ? <ButtonList document={document} type={document.type} />
+                                                            : <Form
+                                                                onSubmit={form.handleSubmit}
+                                                                onReset={() => form.resetForm()}
+                                                            >
                                                                 <FileInput
                                                                     name={`document`}
                                                                     accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
@@ -189,21 +267,18 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                                                         className="mr-2 w-50 theme-primary-btn"
                                                                         type="submit"
                                                                     >
-                                                                        {t(`SAVE`)}{" "}
-                                                                        <LoaderIcon isLoading={form.isSubmitting} />
+                                                                        {t(`SAVE`)}
+                                                                        <LoaderIcon isLoading={!!form.values?.document?.id && form.isSubmitting} />
                                                                     </Button>
                                                                     <Button
-                                                                        type="button"
+                                                                        type="reset"
                                                                         className="mr-2 w-50 bg-danger"
-                                                                        onClick={() => {
-                                                                            form.resetForm();
-                                                                        }}
                                                                     >
                                                                         {t(`CANCEL`)}
                                                                     </Button>
                                                                 </div>
                                                             </Form>
-                                                        )}
+                                                        }
                                                     </td>
                                                 </tr>
                                             );

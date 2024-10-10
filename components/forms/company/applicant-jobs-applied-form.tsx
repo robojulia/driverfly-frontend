@@ -165,6 +165,9 @@ export function ApplicantJobsAppliedForm(props: ApplicantJobsAppliedFormProps) {
 													ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE,
 												]
 												: [];
+										const jobDetails = jobs?.find(job => job?.id === entity?.job?.id);
+										!!entity?.job?.title ? entity?.job?.title : !!entity?.job ? entity.job["title"] = jobDetails?.title : ""
+
 										return (
 											<tr key={i}>
 												<td>

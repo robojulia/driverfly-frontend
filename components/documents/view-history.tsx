@@ -132,7 +132,7 @@ export default function ViewDocumentHistory({
                     columns={[
                         {
                             name: "TYPE",
-                            selector: doc => t(`${typePrefix}.${doc.type}`),
+                            selector: doc => typePrefix ? t(`${typePrefix}.${doc.type}`) : doc.type,
                             hidable: false
                         },
                         {
