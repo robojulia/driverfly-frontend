@@ -108,7 +108,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
         type: EmployeeAdditionalFilesEnum,
         documentId?: number
     ): Promise<void> | Promise<FormikErrors<EmployeeDocumentDto>> =>
-        form.setFieldValue("document", { type, id: documentId ?? null });
+        form.setFieldValue("document", documents?.find(v => v.type == type) || { type });
 
     const ButtonList = ({ document, type }): JSX.Element =>
     // (!form.values.document?.type || form.values.document?.type != type) &&
@@ -183,7 +183,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                     <Table striped>
                                         <thead>
                                             <tr>
-                                                <th>{t("TYPE")}</th>
+                                                <th>{t("DOCUMENT_NAME")}</th>
                                                 <th>{t("DOCUMENT")}</th>
                                             </tr>
                                         </thead>
@@ -193,7 +193,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                                     <BaseInput
                                                         name={`document.type`}
                                                         required
-                                                        placeholder="DOCUMENT_TYPE"
+                                                        placeholder="DOCUMENT_NAME"
                                                         formik={form}
                                                     />
                                                 </td>
@@ -251,6 +251,14 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                                                 onSubmit={form.handleSubmit}
                                                                 onReset={() => form.resetForm()}
                                                             >
+                                                                <BaseInput
+                                                                    // label="TYPE"
+                                                                    name={`document.type`}
+                                                                    required
+                                                                    placeholder="DOCUMENT_NAME"
+                                                                    formik={form}
+                                                                    className="mb-2"
+                                                                />
                                                                 <FileInput
                                                                     name={`document`}
                                                                     accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
