@@ -183,7 +183,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                     <Table striped>
                                         <thead>
                                             <tr>
-                                                <th>{t("TYPE")}</th>
+                                                <th>{t("DOCUMENT_NAME")}</th>
                                                 <th>{t("DOCUMENT")}</th>
                                             </tr>
                                         </thead>
@@ -193,7 +193,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                                     <BaseInput
                                                         name={`document.type`}
                                                         required
-                                                        placeholder="DOCUMENT_TYPE"
+                                                        placeholder="DOCUMENT_NAME"
                                                         formik={form}
                                                     />
                                                 </td>
@@ -255,7 +255,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                                                     // label="TYPE"
                                                                     name={`document.type`}
                                                                     required
-                                                                    placeholder="DOCUMENT_TYPE"
+                                                                    placeholder="DOCUMENT_NAME"
                                                                     formik={form}
                                                                     className="mb-2"
                                                                 />

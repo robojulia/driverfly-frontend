@@ -1790,6 +1790,7 @@
   "VOE_LIST_NOT_AVAILABLE": "Employers not listed",
   "HISTORY": "History",
   "DOCUMENT_HISTORY": "Document History",
+  "DOCUMENT_NAME": "Document Name",
   "SECTION_I": "Section I.",
   "TO_BE_COMPLETED_BY_THE_NEW_EMPLOYER": "To be completed by the new employer, signed by the employee, and transmitted to the previous employer:",
   "EMPLOYEE_NAME_NAUTILUS_{employee_name}": "Employee Name: {{employee_name}}",
