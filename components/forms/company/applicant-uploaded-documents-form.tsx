@@ -154,7 +154,7 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
                                                     required
                                                     placeholder="DOCUMENT_TYPE"
                                                     readOnly={
-                                                        Boolean(!!entity?.id && !entity?.file_base64) ||
+                                                        // Boolean(!!entity?.id && !entity?.file_base64) ||
                                                         Boolean(props?.entity?.is_hired)
                                                     }
                                                     formik={form}

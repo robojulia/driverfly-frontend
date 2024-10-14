@@ -108,7 +108,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
         type: EmployeeAdditionalFilesEnum,
         documentId?: number
     ): Promise<void> | Promise<FormikErrors<EmployeeDocumentDto>> =>
-        form.setFieldValue("document", { type, id: documentId ?? null });
+        form.setFieldValue("document", documents?.find(v => v.type == type) || { type });
 
     const ButtonList = ({ document, type }): JSX.Element =>
     // (!form.values.document?.type || form.values.document?.type != type) &&
@@ -251,6 +251,14 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                                                 onSubmit={form.handleSubmit}
                                                                 onReset={() => form.resetForm()}
                                                             >
+                                                                <BaseInput
+                                                                    // label="TYPE"
+                                                                    name={`document.type`}
+                                                                    required
+                                                                    placeholder="DOCUMENT_TYPE"
+                                                                    formik={form}
+                                                                    className="mb-2"
+                                                                />
                                                                 <FileInput
                                                                     name={`document`}
                                                                     accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
