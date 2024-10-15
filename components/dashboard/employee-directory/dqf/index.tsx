@@ -160,7 +160,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                             <Table striped>
                                 <thead>
                                     <tr>
-                                        <th colSpan={2}>{t("TYPE")}</th>
+                                        <th colSpan={2}>{t("DOCUMENT_NAME")}</th>
                                         {
                                             Boolean(props.showCompleted) && <th colSpan={2}>{t("COMPLETED?")}</th>
                                         }

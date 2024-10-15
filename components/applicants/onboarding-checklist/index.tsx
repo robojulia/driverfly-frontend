@@ -237,7 +237,7 @@ export default function OnboardingChecklist(
           <Table striped>
             <thead>
               <tr>
-                <th colSpan={2}>{t("TYPE")}</th>
+                <th colSpan={2}>{t("DOCUMENT_NAME")}</th>
                 <th colSpan={2}>{t("UPDATED_AT")}</th>
                 {/* <th colSpan={2}>{t("UPLOAD_METHOD")}</th> */}
                 <th colSpan={1}></th>
@@ -305,7 +305,7 @@ export default function OnboardingChecklist(
           <Table striped>
             <thead>
               <tr>
-                <th colSpan={2}>{t("TYPE")}</th>
+                <th colSpan={2}>{t("DOCUMENT_NAME")}</th>
                 {/* <th colSpan={2}>{t("AUTO_UPLOAD?")}</th> */}
                 <th colSpan={1}></th>
               </tr>

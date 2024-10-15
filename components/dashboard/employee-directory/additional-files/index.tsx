@@ -228,7 +228,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                             <Table striped>
                                 <thead>
                                     <tr>
-                                        <th colSpan={2}>{t("TYPE")}</th>
+                                        <th colSpan={2}>{t("DOCUMENT_NAME")}</th>
                                         <th colSpan={2}>{t("UPDATED_AT")}</th>
                                         <th colSpan={2}></th>
                                     </tr>
