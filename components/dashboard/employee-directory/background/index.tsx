@@ -7,6 +7,7 @@ import { useTranslation } from '../../../../hooks/use-translation';
 import { ViewApplicantBackgroundProps } from '../../../../types/applicant/view-application-background-props.type';
 import ViewEmployeeDetails from '../../../employee/view-employee-detail';
 import ViewDetails from '../../../view-details/view-details';
+import moment from 'moment';
 
 
 export default function Background({ employee }: ViewApplicantBackgroundProps) {
@@ -63,8 +64,12 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 								default={t("NOT_ANSWERED")}
 								obj={{
 									// DATE_HIRED: job?.hired_at ? new Date(job?.hired_at).toDateString() : t("N/A"),
-									BIRTHDATE: employee?.birthdate ? new Date(employee?.birthdate).toDateString() : t("N/A"),
-									HIRE_DATE: employee?.hire_date ? new Date(employee?.hire_date).toDateString() : t("N/A"),
+									BIRTHDATE: employee?.birthdate
+										? moment.utc(employee.birthdate).format('ddd MMM DD YYYY')
+										: t("N/A"),
+									HIRE_DATE: employee?.hire_date
+										? moment.utc(employee.hire_date).format('ddd MMM DD YYYY')
+										: t("N/A"),
 								}}
 							/>
 						</Col>
