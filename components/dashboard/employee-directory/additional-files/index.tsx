@@ -252,7 +252,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                                                 onReset={() => form.resetForm()}
                                                             >
                                                                 <BaseInput
-                                                                    // label="TYPE"
+                                                                    label="DOCUMENT_NAME"
                                                                     name={`document.type`}
                                                                     required
                                                                     placeholder="DOCUMENT_NAME"
