@@ -1797,7 +1797,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							<Table striped>
 								<thead>
 									<tr>
-										<th>{t("TYPE")}</th>
+										<th>{t("DOCUMENT_NAME")}</th>
 										<th>{t("DOCUMENT")}</th>
 										<th className="text-center">{t("upload_date")}</th>
 										<th></th>
@@ -1810,7 +1810,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 												<BaseInput
 													name={`documents[${i}].type`}
 													required
-													placeholder="DOCUMENT_TYPE"
+													placeholder="DOCUMENT_NAME"
 													readOnly={
 														Boolean(!!entity?.id && !entity?.file_base64) ||
 														Boolean(props?.entity?.is_hired)
