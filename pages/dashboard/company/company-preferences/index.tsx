@@ -239,7 +239,7 @@ export default function CompanyPreference() {
 
 	const tooltip = <Tooltip id="my-tooltip">{t("REFER_BACK_DETAILS")}</Tooltip>;
 	const tooltipReferBack = (
-		<Tooltip id="my-tooltip">{t("TOOLTIP_REFER_BACK")}</Tooltip>
+		<></>
 	);
 
 	return (
