@@ -60,7 +60,7 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 	}, [form.values, form.errors]);
 
 	useEffect(() => {
-		const { first_name, last_name } = applicant;
+		const { first_name, last_name, is_automated_recruiting_lead } = applicant;
 		const apx = applicantExtras?.find(
 			(v) => v.type == ApplicantExtras.APPLY_DATE
 		);
@@ -83,7 +83,7 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 				: new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
 			first_name: first_name || null,
 			last_name: last_name || null,
-			is_automated_recruiting_lead: Boolean(isAutoRecruitmentLead),
+			is_automated_recruiting_lead: isAutoRecruitmentLead == null ? Boolean(is_automated_recruiting_lead) : Boolean(isAutoRecruitmentLead),
 		});
 
 	}, [applicant]);
