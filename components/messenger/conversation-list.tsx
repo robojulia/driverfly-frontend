@@ -52,7 +52,7 @@ export function ConversationList(props: ConversationListProps) {
                     </Col>
                     {onItemDelete && (
                         <OverlyPopover str="DELETE_CONVERSATIONS" placement="right-start">
-                            <Archive className="ml-1 mt-2" role="button" color="red" onClick={(e) => onItemDelete(c)} />
+                            <Archive title="ARCHIVE_CONVERSATIONS" className="ml-1 mt-2" role="button" color="red" onClick={(e) => onItemDelete(c)} />
                         </OverlyPopover>
                     )}
                 </li>
