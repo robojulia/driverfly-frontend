@@ -18,6 +18,8 @@ export default function ShowEnumFromString(props: ShowEnumFromStringProps): JSX.
 
     const { t } = useTranslation();
 
+    if (value == null) return (<>{t("NOT_AVAILABLE")}</>);
+
     separator = separator ?? ','
     value = (Array.isArray(value) ? value.toString() : `${value}`).split(separator)
 
