@@ -82,6 +82,7 @@ export default function Search(props) {
         if (!!!searchQuery) typeaheadRef.current.clear()
 
         setClose()
+        setIsLoading(false);
     }, [searchQuery])
 
     return (
