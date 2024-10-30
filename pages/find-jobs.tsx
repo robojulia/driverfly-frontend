@@ -26,6 +26,12 @@ import {
 import { useEffectAsync } from "../utils/react";
 import JobApi from "./api/job";
 
+const scrollToTop = () => {
+	window.scrollTo({
+		top: 0,
+		behavior: 'smooth',
+	});
+};
 export default function FindJobs(props) {
 	let { params } = props;
 
@@ -166,11 +172,13 @@ export default function FindJobs(props) {
 		}
 	}, []);
 
-	useEffect(() => {
-		if (filters.min_years_experience) {
-			console.log("Minimum years of experience : ", filters.min_years_experience);
-		}
-	}, [filters]);
+	// useEffect(() => {
+	// 	if (filters.min_years_experience) {
+	// 		console.log("Minimum years of experience : ", filters.min_years_experience);
+	// 	}
+	// }, [filters]);
+
+	useEffect(() => scrollToTop(), [filters.page])
 
 	return (
 		<JobContext.Provider
