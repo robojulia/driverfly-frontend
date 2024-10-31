@@ -297,6 +297,14 @@ export function Messenger(props) {
         [lastMessage]
     );
 
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            await fetchConversations();
+        }, 120000); // 120000 ms = 2 minutes
+
+        return () => clearInterval(interval); // Clean up on component unmount
+    }, []);
+
     const canCreate = true;
 
     return (
