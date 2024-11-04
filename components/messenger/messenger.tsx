@@ -156,7 +156,7 @@ export function Messenger(props) {
     function handleOutboundMessageStatus(
         message: ConversationMessageEntity
     ): void {
-        setSocketData({ event: SocketEventType.INBOUND_MESSAGE, message });
+        setSocketData({ event: SocketEventType.OUTBOUND_MESSAGE_STATUS, message });
     }
 
     useEffectAsync(async () => {
@@ -173,7 +173,7 @@ export function Messenger(props) {
 
     async function fetchConversations() {
         const c = await conversationApi.list();
-        setConversations(c.reverse());
+        setConversations(c?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id));
     }
 
     useEffectAsync(async () => {
