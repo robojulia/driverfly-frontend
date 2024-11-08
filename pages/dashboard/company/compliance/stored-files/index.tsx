@@ -31,6 +31,8 @@ import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
 import ComplianceApi from "../../../../api/compliance";
 import EmployeeApi from "../../../../api/employee";
+import { EmployeeStatus } from "../../../../../enums/applicants/employee-status.enum";
+import { LoaderIcon } from "../../../../../components/loading/loader-icon";
 
 export default function StoredFiles() {
   const { user } = useAuth();
@@ -67,18 +69,28 @@ export default function StoredFiles() {
   const [files, setFiles] = useState<DocumentEntity[]>([]);
   const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
   const [employees, setEmployees] = useState<EmployeeEntity[]>([]);
+  const [isFetchingFiles, setIsFetchingFiles] = useState<boolean>(false);
+  const [isFetchingApplicants, setIsFetchingApplicants] = useState<boolean>(false);
+  const [isFetchingEmployees, setIsFetchingEmployees] = useState<boolean>(false);
 
   const [pdf, setPdf] = useState({});
 
   useEffectAsync(
     async () => {
+      setIsFetchingFiles(false);
       const v = await complianceApi.filesList();
       setFiles(v);
-      const a = await applicantApi.list();
-      setApplicants((a as ApplicantEntity[])?.filter(({ email }) => !!email));
+      setIsFetchingFiles(true);
 
+      setIsFetchingApplicants(true);
+      const a = await applicantApi.list({ is_paginated: false });
+      setApplicants((a as ApplicantEntity[])?.filter(({ email }) => !!email));
+      setIsFetchingApplicants(false);
+
+      setIsFetchingEmployees(true);
       const e = await employeeApi.list();
-      setEmployees(e?.filter(({ email }) => !!email));
+      setEmployees(e?.filter(({ email, status }) => !!email && status == EmployeeStatus.ACTIVE));
+      setIsFetchingEmployees(false);
     },
     [user],
     () => {
@@ -143,6 +155,8 @@ export default function StoredFiles() {
         }))
       );
     };
+
+    if (isFetchingApplicants) return <LoaderIcon isLoading />
 
     return (
       <>
@@ -238,6 +252,8 @@ export default function StoredFiles() {
       );
     };
 
+    if (isFetchingEmployees) return <LoaderIcon isLoading />
+
     return (
       <>
         <ViewDataTable<EmployeeEntity>
@@ -330,115 +346,118 @@ export default function StoredFiles() {
         </Button>
       }
     >
-      <ViewDataTable<DocumentEntity>
-        columnSettingKey={columnSettingKey}
-        customStyles={{
-          headRow: {
-            style: {
-              background:
-                "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
-              color: "white",
+      {(isFetchingFiles)
+        ? <LoaderIcon isLoading />
+        : <ViewDataTable<DocumentEntity>
+          columnSettingKey={columnSettingKey}
+          customStyles={{
+            headRow: {
+              style: {
+                background:
+                  "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                color: "white",
+              },
             },
-          },
-        }}
-        columns={[
-          {
-            id: "id",
-            name: "ID",
-            maxWidth: "20%",
-            minWidth: "20%",
-            selector: (file) => file.id,
-            hidable: false,
-          },
-          {
-            id: "file_name",
-            name: "file_name",
-            maxWidth: "25%",
-            minWidth: "25%",
-            cell: (file) => <OverlyPopover str={file.name} slice_at={50} />,
-            hidable: false,
-          },
-          {
-            id: "type",
-            name: "type",
-            maxWidth: "20%",
-            minWidth: "20%",
-            cell: (file, rowIndex, column) => (
-              <ShowEnumFromString
-                popover
-                labelPrefix="CompanyDocumentType"
-                value={file.type}
-                enumArray={CompanyDocumentType}
-              />
-            ),
-            selector: (file) => file.type,
-          },
-          {
-            id: "upload_date",
-            name: "upload_date",
-            maxWidth: "20%",
-            minWidth: "20%",
-            selector: (file) => file.created_at,
-            cell: (file) => <ShowFormattedDate date={file.created_at} />,
-          },
-          {
-            maxWidth: "15%",
-            minWidth: "15%",
-            style: {
-              "justify-content": "flex-end",
-              "padding-right": "0px",
+          }}
+          columns={[
+            {
+              id: "id",
+              name: "ID",
+              maxWidth: "20%",
+              minWidth: "20%",
+              selector: (file) => file.id,
+              hidable: false,
             },
-            cell: (file) => (
-              <>
-                <button
-                  type="button"
-                  className="theme-primary-btn mr-2 px-4 py-2"
-                  onClick={() => setDocumentId(file.id)}
-                >
-                  <Send />
-                </button>
-                {file?.name?.includes(".doc") ? (
-                  <Link href={file.path} legacyBehavior>
-                    <button className="btn-success mr-0 px-4 py-2">
-                      <CloudArrowDown />
+            {
+              id: "file_name",
+              name: "file_name",
+              maxWidth: "25%",
+              minWidth: "25%",
+              cell: (file) => <OverlyPopover str={file.name} slice_at={50} />,
+              hidable: false,
+            },
+            {
+              id: "type",
+              name: "type",
+              maxWidth: "20%",
+              minWidth: "20%",
+              cell: (file, rowIndex, column) => (
+                <ShowEnumFromString
+                  popover
+                  labelPrefix="CompanyDocumentType"
+                  value={file.type}
+                  enumArray={CompanyDocumentType}
+                />
+              ),
+              selector: (file) => file.type,
+            },
+            {
+              id: "upload_date",
+              name: "upload_date",
+              maxWidth: "20%",
+              minWidth: "20%",
+              selector: (file) => file.created_at,
+              cell: (file) => <ShowFormattedDate date={file.created_at} />,
+            },
+            {
+              maxWidth: "15%",
+              minWidth: "15%",
+              style: {
+                "justify-content": "flex-end",
+                "padding-right": "0px",
+              },
+              cell: (file) => (
+                <>
+                  <button
+                    type="button"
+                    className="theme-primary-btn mr-2 px-4 py-2"
+                    onClick={() => setDocumentId(file.id)}
+                  >
+                    <Send />
+                  </button>
+                  {file?.name?.includes(".doc") ? (
+                    <Link href={file.path} legacyBehavior>
+                      <button className="btn-success mr-0 px-4 py-2">
+                        <CloudArrowDown />
+                      </button>
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      className="theme-secondary-btn mr-0 px-4 py-2"
+                      onClick={() =>
+                        handleViewDocument(
+                          file.id,
+                          setPdf,
+                          `${t("CompanyDocumentType." + file?.type)} (${file.name
+                          })`
+                        )
+                      }
+                    >
+                      <Eye />
                     </button>
-                  </Link>
-                ) : (
-                  <button
-                    type="button"
-                    className="theme-secondary-btn mr-0 px-4 py-2"
-                    onClick={() =>
-                      handleViewDocument(
-                        file.id,
-                        setPdf,
-                        `${t("CompanyDocumentType." + file?.type)} (${file.name
-                        })`
-                      )
-                    }
-                  >
-                    <Eye />
-                  </button>
-                )}
-                <div className="p-2 ">
-                  <button
-                    className="btn btn-danger py-1 px-3 "
-                    type="button"
-                    onClick={() =>
-                      setConfirmationModal({
-                        value: !confirmationModal.value,
-                        fileId: file.id,
-                      })
-                    }
-                  >
-                    <Trash />
-                  </button>
-                </div>
-              </>
-            ),
-          },
-        ]}
-        items={files}
-      />
+                  )}
+                  <div className="p-2 ">
+                    <button
+                      className="btn btn-danger py-1 px-3 "
+                      type="button"
+                      onClick={() =>
+                        setConfirmationModal({
+                          value: !confirmationModal.value,
+                          fileId: file.id,
+                        })
+                      }
+                    >
+                      <Trash />
+                    </button>
+                  </div>
+                </>
+              ),
+            },
+          ]}
+          items={files}
+        />
+      }
       <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
 
       {/* Model for Upload file */}
