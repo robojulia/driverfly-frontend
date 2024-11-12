@@ -118,8 +118,7 @@ export function Messenger(props) {
                 <>
                     {t("NEW_MESSAGE_FROM")}
                     <span className="text-theme">
-                        Testing
-                        {conversation?.chattable_name || conversation?.chattable_type}
+                        {message?.conversation?.chattable_name}
                     </span>
                 </>,
                 {
