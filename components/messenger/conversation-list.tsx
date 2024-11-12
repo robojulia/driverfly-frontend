@@ -71,7 +71,7 @@ export function ConversationListItem(props: ConversationListItemProps) {
         <div className="d-flex justify-content-between">
             <div className="d-flex flex-row" >
                 <div className="pt-1">
-                    <p className={`fw-bold mb-0 ${entity.unread == 1 && "text-theme"}`}>{entity.chattable_name}</p>
+                    <p className={`fw-bold mb-0 ${entity.unread > 0 && "text-theme"}`}>{entity.chattable_name}</p>
                     {entity.lastMessage && (
                         <div className="small text-muted">
                             <OverlyPopover slice_at={entity.lastMessage.text.length > 70 ? 70 : 0} str={entity?.lastMessage?.text} />
