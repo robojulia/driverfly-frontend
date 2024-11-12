@@ -77,10 +77,10 @@ export default function StoredFiles() {
 
   useEffectAsync(
     async () => {
-      setIsFetchingFiles(false);
+      setIsFetchingFiles(true);
       const v = await complianceApi.filesList();
       setFiles(v);
-      setIsFetchingFiles(true);
+      setIsFetchingFiles(false);
 
       setIsFetchingApplicants(true);
       const a = await applicantApi.list({ is_paginated: false });
