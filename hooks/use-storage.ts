@@ -3,6 +3,7 @@ type UseStorageReturnValue = {
     getItem: (key: string, type?: StorageType) => string;
     setItem: (key: string, value: string, type?: StorageType) => boolean;
     removeItem: (key: string, type?: StorageType) => void;
+    clearStorageItemsWithPrefix: (prefix: string, type?: StorageType) => void;
 };
 
 const useStorage = (): UseStorageReturnValue => {
@@ -27,10 +28,23 @@ const useStorage = (): UseStorageReturnValue => {
         window[storageType(type)].removeItem(key);
     };
 
+    const clearStorageItemsWithPrefix = (prefix: string, type?: StorageType) => {
+
+        for (let i = 0; i < window[storageType(type)].length; i++) {
+            const key = window[storageType(type)].key(i);
+
+            if (key && key.startsWith(prefix)) {
+                window[storageType(type)].removeItem(key);
+                i--;
+            }
+        }
+    }
+
     return {
         getItem,
         setItem,
         removeItem,
+        clearStorageItemsWithPrefix,
     };
 };
 

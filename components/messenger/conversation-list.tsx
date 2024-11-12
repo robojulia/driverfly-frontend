@@ -1,9 +1,9 @@
-import { XCircle, Archive } from "react-bootstrap-icons";
+import { Col } from "react-bootstrap";
+import { Archive } from "react-bootstrap-icons";
 import { useTranslation } from "../../hooks/use-translation";
 import { ConversationEntity } from "../../models/conversation/conversation.entity";
-import When from "../view-details/when";
-import { Col } from "react-bootstrap";
 import OverlyPopover from "../popover/overly-popover";
+import When from "../view-details/when";
 
 export interface ConversationListProps {
     items?: ConversationEntity[];
@@ -51,8 +51,8 @@ export function ConversationList(props: ConversationListProps) {
                         <ConversationListItem entity={c} />
                     </Col>
                     {onItemDelete && (
-                        <OverlyPopover str="DELETE_CONVERSATIONS" placement="right-start">
-                            <Archive className="ml-1 mt-2" role="button" color="red" onClick={(e) => onItemDelete(c)} />
+                        <OverlyPopover str="ARCHIVE_CONVERSATIONS" placement="right-start">
+                            <Archive title="ARCHIVE_CONVERSATIONS" className="ml-1 mt-2" role="button" color="red" onClick={(e) => onItemDelete(c)} />
                         </OverlyPopover>
                     )}
                 </li>
@@ -71,7 +71,7 @@ export function ConversationListItem(props: ConversationListItemProps) {
         <div className="d-flex justify-content-between">
             <div className="d-flex flex-row" >
                 <div className="pt-1">
-                    <p className="fw-bold mb-0">{entity.chattable_name}</p>
+                    <p className={`fw-bold mb-0 ${entity.unread == 1 && "text-theme"}`}>{entity.chattable_name}</p>
                     {entity.lastMessage && (
                         <div className="small text-muted">
                             <OverlyPopover slice_at={entity.lastMessage.text.length > 70 ? 70 : 0} str={entity?.lastMessage?.text} />

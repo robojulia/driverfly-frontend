@@ -156,7 +156,7 @@ export function Messenger(props) {
     function handleOutboundMessageStatus(
         message: ConversationMessageEntity
     ): void {
-        setSocketData({ event: SocketEventType.INBOUND_MESSAGE, message });
+        setSocketData({ event: SocketEventType.OUTBOUND_MESSAGE_STATUS, message });
     }
 
     useEffectAsync(async () => {
@@ -173,7 +173,7 @@ export function Messenger(props) {
 
     async function fetchConversations() {
         const c = await conversationApi.list();
-        setConversations(c.reverse());
+        setConversations(c?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id));
     }
 
     useEffectAsync(async () => {
@@ -293,9 +293,20 @@ export function Messenger(props) {
     const lastMessage = React.createRef<HTMLLIElement>();
 
     useEffect(
-        () => lastMessage.current?.scrollIntoView({ behavior: "smooth" }),
+        () => {
+            (lastMessage.current?.scrollIntoView({ behavior: "smooth" }));
+            return () => { }
+        },
         [lastMessage]
     );
+
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            await fetchConversations();
+        }, 120000); // 120000 ms = 2 minutes
+
+        return () => clearInterval(interval); // Clean up on component unmount
+    }, []);
 
     const canCreate = true;
 

@@ -2725,3 +2725,8 @@ input::-webkit-inner-spin-button {
 .bg-primary {
     background-color: #009f94 !important;
 }
+
+
+.text-theme {
+    color: #4ca7a8;
+}

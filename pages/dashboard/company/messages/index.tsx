@@ -2,10 +2,7 @@ import { CancelTokenSource } from "axios";
 import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
 import PageLayout from "../../../../components/layouts/page/page-layout";
 import { Messenger } from "../../../../components/messenger/messenger";
-import { ChattableType } from "../../../../enums/conversation/chattable-type.enum";
 import { useTranslation } from "../../../../hooks/use-translation";
-import ApplicantApi from "../../../api/applicant";
-import EmployeeApi from "../../../api/employee";
 
 export default function MessageList() {
     const { t } = useTranslation();

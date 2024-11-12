@@ -1,12 +1,13 @@
 import axios, { CancelTokenSource } from "axios";
 import { useFormik } from "formik";
-import React, { ChangeEvent } from "react";
-import { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Card, Col, Collapse, Form, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { ChattableType } from "../../enums/conversation/chattable-type.enum";
+import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
 import { UserPreferenceCommunicationLabel } from "../../enums/users/user-preferences-communication-label.enum";
+import useStorage from "../../hooks/use-storage";
 import { useTranslation } from "../../hooks/use-translation";
+import { ApplicantEntity } from "../../models/applicant";
 import {
     ConversationEntity,
     CreateConversationDto,
@@ -14,14 +15,12 @@ import {
 import { UserPreferenceEntity } from "../../models/user/user-preference.entity";
 import { ConversationApi } from "../../pages/api/conversation";
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
+import { buildArrayQueryString } from "../../utils/common";
 import ComboBox, { ComboboxItem } from "../controls/combobox";
 import BaseTextArea from "../forms/base-text-area";
-import { Message } from "./message";
-import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
-import BaseCheckList from "../forms/base-check-list";
-import { ApplicantEntity } from "../../models/applicant";
-import { buildArrayQueryString } from "../../utils/common";
 import { LoaderIcon } from "../loading/loader-icon";
+import { Message } from "./message";
+import { useAuth } from "../../hooks/use-auth";
 
 export interface ConversationFormProps {
     entity?: ConversationEntity;
@@ -50,25 +49,32 @@ export function ConversationForm(props: ConversationFormProps) {
 
     const { t } = useTranslation();
 
-    const [canAttach, setCanAttach] = useState<boolean>(false);
-    const enableAttachments = (): void => setCanAttach(true);
-    const disableAttachments = (): void => {
-        setCanAttach(false);
-        setDocumentTypes([]);
-    };
+    const { user } = useAuth();
+    const {
+        getItem: getDraft,
+        setItem: setDraft,
+        removeItem: removeDraft,
+    } = useStorage();
+
+    // const [canAttach, setCanAttach] = useState<boolean>(false);
+    // const enableAttachments = (): void => setCanAttach(true);
+    // const disableAttachments = (): void => {
+    //     setCanAttach(false);
+    //     setDocumentTypes([]);
+    // };
 
     const [documentTypes, setDocumentTypes] = useState<ApplicantDocumentType[]>(
         []
     );
-    const handleMissingDocumentChange = ({
-        target: { value },
-    }: ChangeEvent<HTMLInputElement>): void => {
-        setDocumentTypes(
-            documentTypes.includes(value as ApplicantDocumentType)
-                ? documentTypes.filter((t) => t != value)
-                : [...documentTypes, value as ApplicantDocumentType]
-        );
-    };
+    // const handleMissingDocumentChange = ({
+    //     target: { value },
+    // }: ChangeEvent<HTMLInputElement>): void => {
+    //     setDocumentTypes(
+    //         documentTypes.includes(value as ApplicantDocumentType)
+    //             ? documentTypes.filter((t) => t != value)
+    //             : [...documentTypes, value as ApplicantDocumentType]
+    //     );
+    // };
 
     const api = new ConversationApi();
     const form = useFormik({
@@ -110,7 +116,8 @@ export function ConversationForm(props: ConversationFormProps) {
                     },
                     false
                 );
-                disableAttachments();
+                removeDraft(`draft_user_${user.id}_${entity.chattable_type}_${entity.chattable_id}`)
+                // disableAttachments();
             } catch (e) {
                 console.error("Unable to save convo info", e);
 
@@ -120,12 +127,15 @@ export function ConversationForm(props: ConversationFormProps) {
     });
 
     useEffect(() => {
-        if (entity?.chattable_id != form?.values?.chattable_id) disableAttachments()
+        const { chattable_id, chattable_name, chattable_type } = entity;
+        const value = getDraft(`draft_user_${user.id}_${entity.chattable_type}_${entity.chattable_id}`)
 
         form.setValues({
             ...form.values,
-            ...entity,
-            message: null,
+            chattable_id,
+            chattable_name,
+            chattable_type,
+            message: value
         });
     }, [entity]);
 
@@ -157,6 +167,7 @@ export function ConversationForm(props: ConversationFormProps) {
             chattable_type: value?.chattable_type,
             chattable_id: value?.chattable_id,
             chattable_name: value?.chattable_name,
+            message: getDraft(`draft_user_${user.id}_${entity.chattable_type}_${entity.chattable_id}`) || ""
         }
         form.setValues(values);
 
@@ -218,7 +229,7 @@ export function ConversationForm(props: ConversationFormProps) {
 
     return (
         <Card>
-            <Card.Header style={{cursor:"default", color:'black'}} >
+            <Card.Header style={{ cursor: "default", color: 'black' }} >
                 {(() => {
                     if (entity.id) return (
                         <>
@@ -275,16 +286,20 @@ export function ConversationForm(props: ConversationFormProps) {
                         <Form className="form-outline" onSubmit={form.handleSubmit}>
                             <Row>
                                 <Col md={10}>
-                                    <Collapse in={!!!canAttach}>
-                                        <div id="collapse-text">
-                                            <BaseTextArea
-                                                name="message"
-                                                formik={form}
-                                                readOnly={!entity.id && !canCreate}
-                                                required
-                                                placeholder="MESSAGE"
-                                            />
-                                            {/* {entity.chattable_type == ChattableType.APPLICANT && (
+                                    {/* <Collapse in={!!!canAttach}> */}
+                                    <div id="collapse-text">
+                                        <BaseTextArea
+                                            name="message"
+                                            formik={form}
+                                            readOnly={!entity.id && !canCreate}
+                                            required
+                                            placeholder="MESSAGE"
+                                            onChange={({ target: { value } }) => {
+                                                setDraft(`draft_user_${user.id}_${form.values.chattable_type}_${form.values.chattable_id}`, value)
+                                                form.setFieldValue("message", value);
+                                            }}
+                                        />
+                                        {/* {entity.chattable_type == ChattableType.APPLICANT && (
                                                 <>
                                                     <BaseCheckList
                                                         className="mt-2"
@@ -298,7 +313,7 @@ export function ConversationForm(props: ConversationFormProps) {
                                                     />
                                                 </>
                                             )} */}
-                                            {/* {props.applicant.uuid_token
+                                        {/* {props.applicant.uuid_token
                                                 && props.applicant?.documents?.length != Object.keys(ApplicantDocumentType)?.length
                                                 && (
                                                     <small
@@ -311,8 +326,8 @@ export function ConversationForm(props: ConversationFormProps) {
                                                         {t("REQUEST_FOR_MISSING_DOCUMENTS")}
                                                     </small>
                                                 )} */}
-                                        </div>
-                                    </Collapse>
+                                    </div>
+                                    {/* </Collapse> */}
                                     {/* <Collapse in={!!canAttach}>
                                         <div id="collapse-select">
                                             <BaseCheckList
@@ -347,7 +362,7 @@ export function ConversationForm(props: ConversationFormProps) {
                                 <Col md={2}>
                                     <div className="d-flex justify-content-center align-items-center h-100">
                                         <button
-                                            disabled={(canAttach && !documentTypes.length) || form.isSubmitting}
+                                            disabled={form.isSubmitting}
                                             type="submit"
                                             className=" btn btn-info float-end"
                                         >

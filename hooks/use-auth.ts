@@ -125,6 +125,8 @@ export function useAuth() {
         removeUser,
     } = useToken();
 
+    const { clearStorageItemsWithPrefix } = useStorage();
+
     const router = useRouter();
 
     const userContext = useUserContext();
@@ -143,6 +145,7 @@ export function useAuth() {
 
     async function logout() {
         removeUser();
+        clearStorageItemsWithPrefix(`draft_user_${userContext?.user?.id}_`)
         userContext.setUser(null);
     }
 
