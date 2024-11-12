@@ -113,12 +113,13 @@ export function Messenger(props) {
                 )
                 ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
             setConversations(updatedConversations);
-            toast(
-                t(
-                    "NEW_MESSAGE_{from}",
-                    { from: message?.conversation?.chattable_name ?? "APPLICANT" },
-                    { translateProps: true }
-                ),
+            toast.info(
+                <>
+                    {t("NEW_MESSAGE_FROM")}
+                    <span className="text-theme">
+                        {conversation?.chattable_name || conversation?.chattable_type}
+                    </span>
+                </>,
                 {
                     onClick: () =>
                         onConversationClick(
