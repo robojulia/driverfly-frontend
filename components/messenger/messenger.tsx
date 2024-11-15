@@ -110,7 +110,7 @@ export function Messenger(props) {
                 ?.map((c) =>
                     c.id == message?.conversation?.id
                         ? { ...c, ...message?.conversation, lastMessage: message, unread: c.unread++ }
-                        : c
+                        : { ...c, unread: c.unread++ }
                 )
                 ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
             setConversations(updatedConversations);
