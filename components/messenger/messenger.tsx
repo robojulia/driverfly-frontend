@@ -68,6 +68,7 @@ export function Messenger(props) {
         message: ConversationMessageEntity
     ): Promise<void> {
         console.log("Inbound message", message)
+
         if (message?.conversation?.id == conversation?.id) {
             // let messages: ConversationMessageEntity[] =
             //     conversation?.messages?.filter((m) => m?.id != message?.id) ?? [];
@@ -106,14 +107,15 @@ export function Messenger(props) {
             setConversation(updatedConversation);
 
         } else {
-            const updatedConversations = conversations
-                ?.map((c) =>
-                    c.id == message?.conversation?.id
-                        ? { ...c, ...message?.conversation, lastMessage: message, unread: c.unread++ }
-                        : { ...c, unread: c.unread++ }
-                )
-                ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
-            setConversations(updatedConversations);
+            await fetchConversations();
+            // const updatedConversations = conversations
+            //     ?.map((c) =>
+            //         c.id == message?.conversation?.id
+            //             ? { ...c, ...message?.conversation, lastMessage: message, unread: c.unread++ }
+            //             : { ...c, unread: c.unread++ }
+            //     )
+            //     ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
+            // setConversations(updatedConversations);
             toast.info(
                 <>
                     {t("NEW_MESSAGE_FROM")}
