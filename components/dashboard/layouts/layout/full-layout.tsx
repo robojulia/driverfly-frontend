@@ -179,7 +179,7 @@ const FullLayout = ({ children }) => {
 	];
 	//  Code below is to set scroll to top on each child page
 	const dashboardContainer = useRef(null)
-	const resetScrollEffect = ({ element: { current } }) => { if (router.pathname == "/dashboard/company/jobs/[id]") current.scrollTop = 0 }
+	const resetScrollEffect = ({ element: { current } }) => { current.scrollTop = 0 }
 	useEffect(() => resetScrollEffect({ element: dashboardContainer }), [children])
 
 	return (

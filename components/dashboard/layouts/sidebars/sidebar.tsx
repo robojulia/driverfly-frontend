@@ -5,6 +5,7 @@ import { Icon } from "react-bootstrap-icons";
 import { useMediaQuery } from "react-responsive";
 import { useAuth } from "../../../../hooks/use-auth";
 import { TranslateInterface, useTranslation } from "../../../../hooks/use-translation";
+import { useEffect } from "react";
 
 export interface SidebarProps {
     open?: boolean;
@@ -69,7 +70,7 @@ function SidebarArea({ children }) {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-            
+
         </div>
     );
 }
@@ -139,6 +140,8 @@ interface SidebarLinkProps {
 }
 
 function SidebarLink(props: SidebarLinkProps) {
+    const router = useRouter();
+
     let { isMobile, t, currentPath } = props;
     let { icon: Cmp, pathname, items, text } = props.item;
 
@@ -146,8 +149,8 @@ function SidebarLink(props: SidebarLinkProps) {
 
     return (
         <li className={IsSelected(props.item, currentPath) ? "active" : ""}>
-            <Link href={pathname}>
-                <a href="#">
+            <Link href={pathname} scroll={true} >
+                <a>
                     {
                         Cmp &&
                         <span className="float-left">
