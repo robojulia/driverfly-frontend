@@ -477,6 +477,7 @@
   "HELLO_{name}": "Hello {{name}}",
   "vehicle_info": "Vehicle Info",
   "location": "Location",
+  "INVALID_LOCATION": "Please provide valid US Address",
   "new_location": "New Location",
   "add_new_job": "Add New Job",
   "new_job": "New Job",
