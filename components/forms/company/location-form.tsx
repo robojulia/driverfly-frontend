@@ -89,7 +89,7 @@ export function LocationForm(props: LocationFormProps) {
                         className="col-12"
                         label="STREET"
                         name="street"
-                        required
+                        // required
                         placeholder="STREET"
                         formik={form}
                     />
@@ -112,7 +112,7 @@ export function LocationForm(props: LocationFormProps) {
                     <BaseInput
                         className="col-md-4 mt-3"
                         label="ZIP_CODE"
-                        required
+                        // required
                         name="zip_code"
                         placeholder="ZIP_CODE"
                         formik={form}
