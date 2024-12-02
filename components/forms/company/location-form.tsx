@@ -56,6 +56,7 @@ export function LocationForm(props: LocationFormProps) {
 
         const mapboxApi = new MapboxApi();
         const results = await mapboxApi.forwardGeocoding(address)
+        // console.log({ results });
 
         if (!!results?.features?.some((v) => (v?.relevance == 1))) {
             setError(null);
