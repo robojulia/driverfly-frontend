@@ -2,8 +2,7 @@ import { NextPageContext } from "next";
 import { useEffect, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
 
-import styles from "../../../styles/digitalhiringapp.module.css";
-import { getFullFormStyle, getFullFormPages } from "../../../components/forms/jotform/jotform-pages";
+import { getFullFormPages, getFullFormStyle } from "../../../components/forms/jotform/jotform-pages";
 import JotformContext from "../../../context/jotform-context";
 import { Status } from "../../../enums/status.enum";
 import { ApplicantEntity, ApplicantExtrasEntity } from "../../../models/applicant";
@@ -11,17 +10,21 @@ import { UtmReferral } from "../../../models/auth/utm-referral.interface";
 import { CompanyPreferenceEntity } from "../../../models/company/company-preferences.entity";
 import { CompanyEntity } from "../../../models/company/company.entity";
 import { JobEntity } from "../../../models/job/job.entity";
+import styles from "../../../styles/digitalhiringapp.module.css";
 import CompanyApi from "../../api/company";
+import JobApi from "../../api/job";
 
 
 export interface FullFormProps {
 	employer: CompanyEntity;
 	preferences: CompanyPreferenceEntity[];
 	utm?: UtmReferral;
+	employerJobs?: JobEntity[];
 }
-export default function FullForm({ employer, preferences, utm }: FullFormProps) {
+export default function FullForm({ employer, preferences, utm, employerJobs }: FullFormProps) {
 
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
+	const [companyJobs, setCompanyJobs] = useState<JobEntity[]>(employerJobs);
 	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
 	const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>([]);
 	const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
@@ -47,6 +50,7 @@ export default function FullForm({ employer, preferences, utm }: FullFormProps) 
 				state: {
 					applicant,
 					jobs,
+					companyJobs,
 					applicantExtras,
 					companyPreferences: preferences,
 					steps,
@@ -56,8 +60,10 @@ export default function FullForm({ employer, preferences, utm }: FullFormProps) 
 				method: {
 					setApplicant,
 					setJobs,
+					setCompanyJobs,
 					updateApplicantExtras,
 					setApplicantExtras,
+					setSteps,
 					stepNext,
 					stepBack
 				}
@@ -102,6 +108,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
 		}
 
 		const companyApi = new CompanyApi();
+		const jobApi = new JobApi()
 		const employer: CompanyEntity = await companyApi.employer.getBySlug(slug);
 		const preferences: CompanyPreferenceEntity[] = await companyApi.preferences.list(employer.id)
 
@@ -114,7 +121,12 @@ export async function getServerSideProps({ query }: NextPageContext) {
 			return { notFound: true };
 		}
 
-		return { props: { employer, preferences, utm } }
+		const employerJobs = await jobApi.search({
+			companyId: employer?.id,
+			withoutPagination: true
+		}) as JobEntity[]
+
+		return { props: { employer, preferences, utm, employerJobs } }
 	} catch (error) {
 		console.error(`form/jotform: Exception when attempting to fetch details for companyId: ${query?.companyId}`, error.message);
 		return { notFound: true }
