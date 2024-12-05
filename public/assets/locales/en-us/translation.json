@@ -2012,7 +2012,7 @@
   "IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS": "IMPORTANT DISCLOSURE REGARDING BACKGROUND REPORTS FROM THE PSP ONLINE SERVICE",
   "SHOW_IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS": "SHOW IMPORTANT DISCLOSURE REGARDING BACKGROUND REPORTS FROM THE PSP ONLINE SERVICE",
   "HIDE_IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS": "HIDE IMPORTANT DISCLOSURE REGARDING BACKGROUND REPORTS FROM THE PSP ONLINE SERVICE",
-  "{company_name}_DRUG_TEST_DOT": "Please be honest as {{company_name}} will require you to take a drug test, and as per DOT regulations, you will be required to go through SAP training if you fail it",
+  "{company_name}_DRUG_TEST_DOT": "Please be honest as {{company_name}} will require you to take a pre-employment drug screening as required by DOT regulations.",
   "TYPE_CDL_CLASS": "CDL Class Type",
   "{name}_carrier": "{{name}}",
   "MUST_ADD_FILE": "Must add file",
