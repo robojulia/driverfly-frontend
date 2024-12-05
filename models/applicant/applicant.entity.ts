@@ -121,6 +121,7 @@ export class ApplicantEntity {
   is_automated_recruiting_lead?: boolean;
   authorize_to_communicate?: BooleanTypeExtra;
   routes?: JobSchedule[];
+  ssn?: string;
 
   static yupSchema() {
     return yup.object({
@@ -278,6 +279,7 @@ export class ApplicantEntity {
       assignedUserId: yup.number().optional().nullable(),
       // is_hired: yup.bool().nullable(),
       remarks: yup.string().optional().nullable(),
+      ssn: yup.string().optional().nullable(),
 
       extras: yup.array(ApplicantExtrasEntity.yupSchema()),
     });
@@ -475,6 +477,7 @@ export class ApplicantEntity {
         .min(0)
         .nullable(),
 
+      ssn: yup.string().optional().nullable(),
       extras: yup.array(ApplicantExtrasEntity.yupSchema()),
     });
   }
@@ -830,6 +833,7 @@ export class ApplicantEntity {
       emergency_contact_name: yup.string().nullable(),
       emergency_contact_number: yup.string().nullable(),
       emergency_contact_relationship: yup.string().nullable(),
+      ssn: yup.string().optional().nullable(),
     });
   }
 

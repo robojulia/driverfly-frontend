@@ -13,7 +13,7 @@ export interface Section1Props {
 export function VerificationOfEmploymentSection1({ applicant, employer }: Section1Props) {
 
     const { t } = useTranslation();
-    const social_security_number = applicant?.extras?.find(v => v?.type == ApplicantExtras?.EMPLOYEE_SS_OR_ID)
+    const social_security_number = applicant?.ssn
     const signature = applicant?.extras?.find(sign => sign?.type == ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION)
     const date_VOE = applicant?.extras?.find(sign => sign?.type == ApplicantExtras.APPLY_DATE)
     useEffect(() => {
@@ -51,8 +51,8 @@ export function VerificationOfEmploymentSection1({ applicant, employer }: Sectio
 
             <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className='Col'>
-                    <p style={{ color: 'black', fontWeight: '100', display: 'inline' }}>{t("EMPLOYEE_SS_OR_ID:")}</p>
-                    <p style={{ color: 'black', display: 'inline' }}>{social_security_number?.value ? social_security_number?.value : ` ${t("NULL")}`}</p>
+                    <p style={{ color: 'black', fontWeight: '100', display: 'inline' }}>{t("EMPLOYEE_SSN:")}</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{social_security_number || ` ${t("N/A")}`}</p>
                 </div>
             </div>
             <Row className={styles.align__text_left}>

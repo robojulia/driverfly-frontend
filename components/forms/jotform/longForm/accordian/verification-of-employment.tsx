@@ -40,10 +40,6 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
         form.setFieldValue("SIGNATURE_VOE_AUTHORIZATION.value", signatureValue);
     };
     useEffect(() => {
-        const apx_ss_id = applicantExtras?.find(
-            (v) => v.type == ApplicantExtras.EMPLOYEE_SS_OR_ID
-        );
-
         const apx_sign_voe_authorization = applicantExtras?.find(
             (v) => v.type == ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION
         );
@@ -58,15 +54,13 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                 : new ApplicantExtrasEntity(
                     ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION
                 ),
-            EMPLOYEE_SS_OR_ID: !!apx_ss_id?.type
-                ? apx_ss_id
-                : new ApplicantExtrasEntity(ApplicantExtras.EMPLOYEE_SS_OR_ID),
+            ssn: applicant.ssn,
         });
     }, [applicant]);
 
     const handleInput = (value: string) => {
         const formattedSSN = formatSSN(value);
-        form.setFieldValue("EMPLOYEE_SS_OR_ID.value", formattedSSN);
+        form.setFieldValue("ssn", formattedSSN);
         return formattedSSN;
     };
     const current_company = applicant?.employers?.find((v) => !!v?.is_current);
@@ -106,8 +100,8 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                         <Row className={styles.align__text_left}>
                             <BaseInput
                                 className="col my-3"
-                                name="EMPLOYEE_SS_OR_ID.value"
-                                label="EMPLOYEE_SS_OR_BUSINESS"
+                                name="ssn"
+                                label="EMPLOYEE_SSN"
                                 type="password"
                                 onChange={({ target: { value } }) => handleInput(value)}
                                 formik={form}
@@ -195,7 +189,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                     <h6>{t("PLEASE_NOTE_THE_FOLLOWING_EMPLOYERS")} </h6>
                 </Row>
                 <Row className={styles.align__text_left}>
-                    <h4  className={`${styles.titlechildren} mt-3`}>{t("I-B")}</h4>
+                    <h4 className={`${styles.titlechildren} mt-3`}>{t("I-B")}</h4>
                     {!!current_company?.is_current && (
                         <>
                             <b>

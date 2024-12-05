@@ -1800,6 +1800,7 @@
   "APPLICANT_NAME_NAUTILUS": "Applicant Name: NAUTILUS",
   "BUSINESS_TAX_NUMBER": "BUSINESS_TAX_NUMBER",
   "EMPLOYEE_SS_OR_BUSINESS": "Employee SS or Business Tax ID Number",
+  "EMPLOYEE_SSN": "Employee SS Number",
   "I_HEREBY_AUTHORIZE_RELEASE_OF_BUSINESS": "I hereby authorize release of information from my Department of Transportation regulated drug and alcohol testing records by my previous employer(s), listed in Section I-B, to the employer listed in Section I-A. This release is in accordance with DOT Regulation 49 CFR Part 40, Section 40.25. I understand that information to be released in Section II-B by my previous employer(s), is limited to the following DOT-regulated testing items:",
   "ALCOHOL_TESTS_WITH_A_RESULT": "1. Alcohol tests with a result of 0.04 or higher;",
   "VERIFY_POSITIVE_DRUG_TESTS": "2. Verified positive drug tests;",
