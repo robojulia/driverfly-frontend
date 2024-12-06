@@ -88,6 +88,9 @@ export class ApplicantEntity {
   moving_violations?: boolean = false;
   moving_violations_count?: number;
   moving_violations_details?: string;
+	all_violations?: boolean;
+	all_violations_count?: number;
+	all_violations_details?: string;
   must_pass_drug_test?: boolean = true;
   positive_drug_test?: boolean = false;
   positive_drug_test_details?: string;

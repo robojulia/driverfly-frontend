@@ -330,6 +330,7 @@
   "qualifications": "Qualifications",
   "voilations": "Voilations",
   "voilations_in_last_3_years": "Number of moving violations in the last 3 years",
+  "ALL_VIOLATION_IN_LAST_3_YEARS": "Number of all violations in the last 3 years",
   "MOVING_VIOLATIONS_DETAILS": "Moving violations details",
   "pdf": "PDF",
   "UNRECOGNIZED_DOCUMENT_TYPE": "UNRECOGNIZED DOCUMENT TYPE",

@@ -26,6 +26,7 @@ export default function ApplicantSafetyBackground({ applicant }: ApplicantSafety
                             criminal_history_last_3_years: applicant.criminal_history,
                             accidents_last_5_years: applicant.accident_count,
                             voilations_in_last_3_years: applicant.moving_violations_count,
+                            ALL_VIOLATION_IN_LAST_3_YEARS: applicant.all_violations_count,
                             accident_details: {
                                 show: applicant.accident_count > 0,
                                 text: applicant.accident_details

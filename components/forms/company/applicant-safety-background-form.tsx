@@ -333,7 +333,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                     </div>
                                 )}
 
-                                {/* Violation sectiion */}
+                                {/* Moving Violation sectiion */}
                                 <BaseInput
                                     className="col my-3"
                                     readOnly={Boolean(entity?.is_hired)}
@@ -439,6 +439,31 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                                     </div>
                                                 </Row>
                                             ))}
+                                        </ViewCard>
+                                    </div>
+                                )}
+
+                                {/* All Violation sectiion */}
+                                <BaseInput
+                                    className="col my-3"
+                                    readOnly={Boolean(entity?.is_hired)}
+                                    label="ALL_VIOLATION_IN_LAST_3_YEARS"
+                                    name="all_violations_count"
+                                    type="number"
+                                    step={1}
+                                    min={0}
+                                    placeholder="ENTER_NO_OF_VIOLATIONS"
+                                    formik={form}
+                                />
+                                {form.values.all_violations_count > 0 && (
+                                    <div className="col-12 mt-2">
+                                        <ViewCard title="VIOLATION_DETAILS">
+                                            <BaseTextArea
+                                                readOnly={Boolean(entity?.is_hired)}
+                                                label="VIOLATION_DETAILS"
+                                                name="all_violations_details"
+                                                formik={form}
+                                            />
                                         </ViewCard>
                                     </div>
                                 )}

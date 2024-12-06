@@ -57,6 +57,7 @@ export default function JobApply({ job, setEncourageModal }) {
             } else {
                 dto.years_cdl_experience = Number(dto.years_cdl_experience);
                 dto.moving_violations_count = Number(dto.moving_violations_count);
+                dto.all_violations_count = Number(dto.all_violations_count);
                 dto.accident_count = Number(dto.accident_count);
                 dto.extras = [...dto.extras, { ...new ApplicantExtrasEntity(ApplicantExtras.HEAR_ABOUT_US), value: HearAboutUsType.JOB_BOARD }]
 
@@ -105,6 +106,7 @@ export default function JobApply({ job, setEncourageModal }) {
         } else {
             data.years_cdl_experience = 0;
             data.moving_violations_count = 0;
+            data.all_violations_count = 0;
             data.accident_count = 0;
         }
 
@@ -346,6 +348,17 @@ export default function JobApply({ job, setEncourageModal }) {
                                 step={1}
                                 min={0}
                                 label="voilations_in_last_3_years"
+                                placeholder="PLACEHOLDER_FOR_DIGITS"
+                                formik={apply_form}
+                            />
+                            <BaseInput
+                                className="col mt-3"
+                                required
+                                name="all_violations_count"
+                                type="number"
+                                step={1}
+                                min={0}
+                                label="ALL_VIOLATION_IN_LAST_3_YEARS"
                                 placeholder="PLACEHOLDER_FOR_DIGITS"
                                 formik={apply_form}
                             />

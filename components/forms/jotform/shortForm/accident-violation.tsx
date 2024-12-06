@@ -1,14 +1,14 @@
 import { useFormik } from "formik";
-import { useTranslation } from "../../../../hooks/use-translation";
-import React, { useContext, useEffect, useState } from "react";
-import { Form, Button, Col, Row, Table, Modal } from "react-bootstrap";
-import BaseInput from "../../base-input";
-import BaseCheck from "../../base-check";
-import { AccidentViolationDto } from "../../../../models/jot-form/short-form/accident-violation.dto";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
-import styles from "../../../../styles/digitalhiringapp.module.css";
 import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
+import { useTranslation } from "../../../../hooks/use-translation";
+import { AccidentViolationDto } from "../../../../models/jot-form/short-form/accident-violation.dto";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import ViewModal from "../../../view-details/view-modal";
+import BaseCheck from "../../base-check";
+import BaseInput from "../../base-input";
 
 
 export function AccidentViolation() {
@@ -22,12 +22,7 @@ export function AccidentViolation() {
 	const [showModal, setShowModal] = useState(false);
 
 	const handleSubmit = (values: AccidentViolationDto) => {
-		const {
-			can_pass_drug_test,
-			moving_violations_count,
-			authorized_to_work_in_us,
-			accident_count
-		} = values;
+		const { authorized_to_work_in_us } = values;
 
 		if (authorized_to_work_in_us === false) {
 			setShowModal(true);
@@ -41,6 +36,7 @@ export function AccidentViolation() {
 			...applicant,
 			can_pass_drug_test: values.can_pass_drug_test,
 			moving_violations_count: values.moving_violations_count,
+			all_violations_count: values.all_violations_count,
 			authorized_to_work_in_us: values.authorized_to_work_in_us,
 			accident_count: values.accident_count
 		});
@@ -55,27 +51,28 @@ export function AccidentViolation() {
 			stepBack();
 		},
 	});
-	useEffect(() => {
+
+	const applicantValues = useMemo(() => {
 		const {
 			can_pass_drug_test,
 			moving_violations_count,
+			all_violations_count,
 			authorized_to_work_in_us,
-			accident_count
+			accident_count,
 		} = applicant;
-		form.setValues({
+
+		return {
 			can_pass_drug_test: can_pass_drug_test || null,
 			moving_violations_count: moving_violations_count || 0,
+			all_violations_count: all_violations_count || 0,
 			authorized_to_work_in_us: authorized_to_work_in_us || null,
 			accident_count: accident_count || 0,
-		});
-	}, []);
-	useEffect(() => {
-		console.log("applicant", applicant.license_type);
-		console.log("checkeeee", Boolean(applicant.license_type == DriverLicenseType.NO_CDL));
+		};
+	}, [applicant]);
 
-		console.log("values", form.values);
-		console.log("error", form.errors);
-	}, [form.values, form.errors]);
+	useEffect(() => {
+		form.setValues(applicantValues);
+	}, [applicantValues]);
 
 	return (
 		<>
@@ -104,6 +101,19 @@ export function AccidentViolation() {
 						step={1}
 						min={0}
 						label="voilations_in_last_3_years"
+						placeholder="PLACEHOLDER_FOR_DIGITS"
+						formik={form}
+					/>
+				</Row>
+				<Row className={styles.bold}>
+					<BaseInput
+						className="col my-3"
+						required
+						name="all_violations_count"
+						type="number"
+						step={1}
+						min={0}
+						label="ALL_VIOLATION_IN_LAST_3_YEARS"
 						placeholder="PLACEHOLDER_FOR_DIGITS"
 						formik={form}
 					/>
