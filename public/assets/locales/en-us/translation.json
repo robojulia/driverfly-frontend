@@ -280,7 +280,8 @@
     "BACHELOR": "Bachelor",
     "MASTER": "Master",
     "ASSOCIATE": "Associate",
-    "DOCTORAL": "Doctoral"
+    "DOCTORAL": "Doctoral",
+    "SOME_COLLEGE": "Some College"
   },
   "DriverLicenseType": {
     "NONE": "No CDL",
