@@ -309,7 +309,9 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                 <Row className={`${styles.align__text_left} ${styles.highlight}`}>
                     <h6>{t("PLEASE_NOTE_THE_FOLLOWING")} </h6>
                 </Row>
-                <Row className={styles.blur}>
+                <Row
+                //  className={styles.blur}
+                >
                     <Row className={styles.align__text_left}>
                         <Col>
                             <h3 className={`${styles.paragraph} ${styles.align__text_left}`}>{t("SECTION_II")}</h3>
