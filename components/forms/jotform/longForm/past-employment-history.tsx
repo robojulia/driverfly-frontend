@@ -1,20 +1,19 @@
-import { useContext, useEffect, useState } from "react";
 import { useFormik } from "formik";
+import { useContext, useEffect } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
-import { Form, Button, Col, Row } from "react-bootstrap";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { useTranslation } from "../../../../hooks/use-translation";
-import BaseInput from "../../base-input";
-import BaseInputPhone from "../../base-input-phone";
-import BaseCheck from "../../base-check";
 import JotformContext, {
 	JotFormContextType,
 } from "../../../../context/jotform-context";
-import StateSelect from "../../state-select";
-import { PastEmploymentPageDto } from "../../../../models/jot-form/long-form/past-employment-page.dto";
-import { PastEmploymentHistoryDto } from "../../../../models/jot-form/long-form/past-employment-history/index.dto";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantEmployerEntity } from "../../../../models/applicant";
-import { PastEmployerNameInput } from "./past-employer-name-input";
+import { PastEmploymentHistoryDto } from "../../../../models/jot-form/long-form/past-employment-history/index.dto";
+import { PastEmploymentPageDto } from "../../../../models/jot-form/long-form/past-employment-page.dto";
+import styles from "../../../../styles/digitalhiringapp.module.css";
+import BaseCheck from "../../base-check";
+import BaseInput from "../../base-input";
+import BaseInputPhone from "../../base-input-phone";
+import StateSelect from "../../state-select";
 
 export function PastEmploymentHistory() {
 	const {
@@ -24,28 +23,32 @@ export function PastEmploymentHistory() {
 
 	const { t } = useTranslation();
 
+	function updateApplicat({
+		employers: past_employers,
+		is_previous_employed,
+	}: PastEmploymentPageDto) {
+		const all_employers: ApplicantEmployerEntity[] = is_previous_employed
+			? past_employers
+			: [];
+		const current_employer: ApplicantEmployerEntity =
+			applicant?.employers?.find((v) => !!v.is_current);
+		if (current_employer) all_employers.push(current_employer);
+
+		setApplicant({
+			...applicant,
+			employers: all_employers,
+		});
+	}
+
 	const form = useFormik({
 		initialValues: new PastEmploymentPageDto(),
 		validationSchema: PastEmploymentPageDto.yupSchema(),
-		onSubmit: ({
-			employers: past_employers,
-			is_previous_employed,
-		}: PastEmploymentPageDto) => {
-			const all_employers: ApplicantEmployerEntity[] = is_previous_employed
-				? past_employers
-				: [];
-			const current_employer: ApplicantEmployerEntity =
-				applicant?.employers?.find((v) => !!v.is_current);
-			if (current_employer) all_employers.push(current_employer);
-
-			setApplicant({
-				...applicant,
-				employers: all_employers,
-			});
-
+		onSubmit: (values: PastEmploymentPageDto) => {
+			updateApplicat(values);
 			stepNext();
 		},
-		onReset: (values) => {
+		onReset: (values: PastEmploymentPageDto) => {
+			updateApplicat(values);
 			stepBack();
 		},
 	});
@@ -62,7 +65,6 @@ export function PastEmploymentHistory() {
 		});
 	}, [applicant]);
 
-
 	useEffect(() => {
 		console.log("form.values", {
 			employerslength: form?.values?.employers?.length,
@@ -70,6 +72,7 @@ export function PastEmploymentHistory() {
 		});
 		console.log("form.errors", form.errors);
 	}, [form.values, form.errors]);
+
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<h4
