@@ -94,7 +94,8 @@ export function PastEmploymentHistory() {
 				className={`${styles.heading__sty} pt-0 mt-2 fs-6 text-start`}
 				style={{ color: "gray" }}
 			>
-				{t("ADD_EMPLOYMENT_HISTORY_SUB_HEADING")}
+				{t("ADD_EMPLOYMENT_HISTORY_SUB_HEADING")}{" "}
+				{t("EMPLOYMENT_HISTORY_DATE_NOTE")}
 			</h5>
 			<Row className={styles.align__text_left}>
 				<BaseCheck
