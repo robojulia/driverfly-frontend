@@ -89,7 +89,7 @@ export function EmploymentHistory() {
 					style={{ color: "gray" }}
 				>
 					{t(
-						"EMPLOYMENT_HISTORY_NOTE",
+						"EMPLOYMENT_HISTORY_NOTE_{number}",
 						{ number: applicant?.years_cdl_experience > 3 ? 10 : 3 },
 						{ translateProps: true }
 					)}
