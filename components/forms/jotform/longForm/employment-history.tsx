@@ -84,6 +84,16 @@ export function EmploymentHistory() {
 			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("EMPLOYMENT_HISTORY")}</h1>
 
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+				<h4
+					className={`${styles.heading__sty} mt-0 mb-3 pb-0 fs-5 text-start`}
+					style={{ color: "gray" }}
+				>
+					{t(
+						"EMPLOYMENT_HISTORY_NOTE",
+						{ number: applicant?.years_cdl_experience > 3 ? 10 : 3 },
+						{ translateProps: true }
+					)}
+				</h4>
 				<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 					{t("HONEST_ABOUT_PAST_EMP")}
 				</p>

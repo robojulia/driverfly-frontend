@@ -2205,6 +2205,7 @@
   "PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PREFERED_ROUTES_VALIDATION_{preffered_routes}_{employment_type}": "Please note that the company has indicated that they are looking for Route types {{preffered_routes}} {{employment_type}} at the moment. Please continue this application to be considered for this job and in the event you are not a good fit, DriverFly will work to get you alternative job options accordingly.",
   "ADD_EMPLOYMENT_HISTORY_NUMBER_{number}": "Please provide last {{number}} years of Employment History",
   "ADD_EMPLOYMENT_HISTORY_SUB_HEADING": "You can leave the extra sections empty",
+  "EMPLOYMENT_HISTORY_NOTE_{number}": "You are required by law to provide the past {{number}} years of work history, of which the past 3 years must be verifiable. Do not leave anything out. If there are any gaps of employment longer than a month, there will be a section on the next page to include.",
   "PROCEED": "Proceed",
   "ALREADY_AN_APPLICANT": "Looks like you already have some pre-existing data entered into our system.",
   "DO_YOU_WISH_TO_PROCEED_WITH_PREVIOUS_PROFILE": "Would you like to pick up where you left off or start from scratch?",

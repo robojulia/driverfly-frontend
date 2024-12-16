@@ -75,7 +75,7 @@ export function PastEmploymentHistory() {
 
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-			<h4
+			{/* <h4
 				className={`${styles.heading__sty} mt-0 mb-0 pb-0 fs-5 text-start`}
 				style={{ color: "gray" }}
 			>
@@ -84,18 +84,18 @@ export function PastEmploymentHistory() {
 					{ number: applicant?.years_cdl_experience > 3 ? 10 : 3 },
 					{ translateProps: true }
 				)}
-			</h4>
+			</h4> */}
+			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("PAST_EMPLOYMENT_HISTORY")}</h1>
+
+			<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+				{t("HONEST_ABOUT_PAST_EMPLOYMENT")}
+			</p>
 			<h5
 				className={`${styles.heading__sty} pt-0 mt-2 fs-6 text-start`}
 				style={{ color: "gray" }}
 			>
 				{t("ADD_EMPLOYMENT_HISTORY_SUB_HEADING")}
 			</h5>
-			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("PAST_EMPLOYMENT_HISTORY")}</h1>
-
-			<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-				{t("HONEST_ABOUT_PAST_EMPLOYMENT")}
-			</p>
 			<Row className={styles.align__text_left}>
 				<BaseCheck
 					className="mt-2 col-md-8 float-left"
