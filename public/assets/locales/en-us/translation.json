@@ -1383,6 +1383,7 @@
   },
   "SHARING": "Sharing",
   "SHARE_PAST_EMPLOYMENT": "Automatically Share past employers",
+  "EMPLOYMENT_GAP_DETAILS_LABEL": "if you have any gaps in employment longer than a month, list those gaps and explain why",
   "PREFERRED_EMPLOYMENT_TYPE": "Preferred employment type",
   "ADD": "Add",
   "ADD_AN_APPLICANT": "Add an Applicant",

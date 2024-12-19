@@ -16,6 +16,7 @@ import BaseInputPhone from "../../base-input-phone";
 import StateSelect from "../../state-select";
 import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 import BaseRadio from "../../base-radio";
+import BaseTextArea from "../../base-text-area";
 
 export function PastEmploymentHistory() {
 	const {
@@ -305,6 +306,16 @@ export function PastEmploymentHistory() {
 					</Row>
 				)}
 
+			{!!form?.values?.is_previous_employed &&
+				<Row>
+					<BaseTextArea
+						className="mt-3"
+						label="EMPLOYMENT_GAP_DETAILS_LABEL"
+						formik={form}
+						name="employment_gap_details"
+					/>
+				</Row>
+			}
 			<Row className="mt-5">
 				<Col>
 					<Button className="float-right" type="reset">

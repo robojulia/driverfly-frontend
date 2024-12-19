@@ -125,6 +125,7 @@ export class ApplicantEntity {
   authorize_to_communicate?: BooleanTypeExtra;
   routes?: JobSchedule[];
   ssn?: string;
+  employment_gap_details?: string;
 
   static yupSchema() {
     return yup.object({
@@ -481,6 +482,7 @@ export class ApplicantEntity {
         .nullable(),
 
       ssn: yup.string().optional().nullable(),
+      employment_gap_details: yup.string().optional().nullable(),
       extras: yup.array(ApplicantExtrasEntity.yupSchema()),
     });
   }
@@ -859,6 +861,7 @@ export class ApplicantEntity {
   static yupSchemaForApplicantWorkHistory() {
     return yup.object({
       employers: yup.array(ApplicantEmployerEntity.yupEditApplicantSchema()),
+      employment_gap_details: yup.string().optional().nullable(),
     });
   }
 

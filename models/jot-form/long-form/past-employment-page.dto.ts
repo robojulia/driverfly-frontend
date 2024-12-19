@@ -4,6 +4,7 @@ import { PastEmploymentHistoryDto } from "./past-employment-history/index.dto";
 export class PastEmploymentPageDto {
 	is_previous_employed: boolean;
 	employers: PastEmploymentHistoryDto[];
+	employment_gap_details?: string;
 
 	static yupSchema() {
 		return yup.object().shape({
@@ -15,6 +16,7 @@ export class PastEmploymentPageDto {
 					then: yup.array(PastEmploymentHistoryDto.derivedYupSchema()).nullable(),
 				})
 				.nullable(),
+			employment_gap_details: yup.string().optional().nullable(),
 		});
 	}
 }
