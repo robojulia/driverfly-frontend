@@ -118,6 +118,13 @@ const FullLayout = ({ children }) => {
 					permissions: "CanViewCompany",
 				},
 				{
+					pathname: "/dashboard/company/settings/locations",
+					icon: GeoAltFill,
+					text: "TERMINALS",
+					permissions: "CanViewLocation",
+					startsWith: true
+				},
+				{
 					pathname: "/dashboard/company/settings/companies",
 					icon: Hospital,
 					text: "COMPANIES",
@@ -136,13 +143,6 @@ const FullLayout = ({ children }) => {
 					pathname: "/dashboard/company/settings/managers",
 					icon: PersonLinesFill,
 					text: "MANAGERS",
-					startsWith: true
-				},
-				{
-					pathname: "/dashboard/company/settings/locations",
-					icon: GeoAltFill,
-					text: "TERMINALS",
-					permissions: "CanViewLocation",
 					startsWith: true
 				},
 				{
