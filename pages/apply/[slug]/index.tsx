@@ -23,6 +23,8 @@ export interface FullFormProps {
 }
 export default function FullForm({ employer, preferences, utm, employerJobs }: FullFormProps) {
 
+	// console.log({ employer });
+
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
 	const [companyJobs, setCompanyJobs] = useState<JobEntity[]>(employerJobs);
 	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());

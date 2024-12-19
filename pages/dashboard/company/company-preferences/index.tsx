@@ -152,7 +152,7 @@ export default function CompanyPreference() {
 	});
 
 	useEffectAsync(async () => {
-		setShowModal(true)
+		// setShowModal(true)
 		if (user.company) {
 			const api = new CompanyApi();
 			let data = await api.preferences.list(user.company.id);
@@ -526,7 +526,11 @@ export default function CompanyPreference() {
 						/>
 						<BaseInput
 							className="col-md-4 mt-4"
-							label="years_cdl_experience"
+							label={t(
+								`MINIMUM_YEARS_OF_{type}_EXPERRIENCE`,
+								{ type: "CDL" },
+								{ translateProps: true }
+							)}
 							name="years_cdl_experience.value"
 							type="number"
 							displayPlaceholder
