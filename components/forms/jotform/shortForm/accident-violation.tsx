@@ -9,6 +9,8 @@ import styles from "../../../../styles/digitalhiringapp.module.css";
 import ViewModal from "../../../view-details/view-modal";
 import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
+import BaseRadio from "../../base-radio";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 
 
 export function AccidentViolation() {
@@ -79,12 +81,23 @@ export function AccidentViolation() {
 			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("ACCIDENTS_AND_VIOLATIONS")}</h1>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row >
-					<BaseCheck
-						className="col my-3"
-						required
-						name="can_pass_drug_test"
-						label="can_pass_drug_test"
-						formik={form}
+					<BaseRadio
+						name={`can_pass_drug_test`}
+						className="float-left ml-2 my-2 w-40"
+						label={`can_pass_drug_test`}
+						labelPrefix="BooleanType"
+						enumType={BooleanType}
+						value={
+							form.values.can_pass_drug_test === true
+								? BooleanType.YES
+								: (form.values.can_pass_drug_test === false && BooleanType.NO)
+						}
+						onChange={({ target: { value } }) => {
+							form.setFieldValue(
+								"can_pass_drug_test",
+								value === BooleanType.YES ? true : (value === BooleanType.NO && false)
+							);
+						}}
 					/>
 				</Row>
 				<Row >

@@ -15,6 +15,8 @@ import BaseInputPhone from "../../base-input-phone";
 import StateSelect from "../../state-select";
 import { PastEmployerNameInput } from "./past-employer-name-input";
 import styles from "../../../../styles/digitalhiringapp.module.css";
+import BaseRadio from "../../base-radio";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 
 export function EmploymentHistory() {
 	const {
@@ -98,12 +100,23 @@ export function EmploymentHistory() {
 					{t("HONEST_ABOUT_PAST_EMP")}
 				</p>
 				<Row className={styles.align__text_left}>
-					<BaseCheck
-						className="mt-2 col float-left"
-						required
-						label="CURRENTLY_EMPLYED_QUESTION"
-						name="is_current_employed"
-						formik={form}
+					<BaseRadio
+						name={`is_current_employed`}
+						className="float-left ml-2 my-2 w-40"
+						label={`CURRENTLY_EMPLYED_QUESTION`}
+						labelPrefix="BooleanType"
+						enumType={BooleanType}
+						value={
+							form.values.is_current_employed === true
+								? BooleanType.YES
+								: (form.values.is_current_employed === false && BooleanType.NO)
+						}
+						onChange={({ target: { value } }) => {
+							form.setFieldValue(
+								"is_current_employed",
+								value === BooleanType.YES ? true : (value === BooleanType.NO && false)
+							);
+						}}
 					/>
 				</Row>
 				{!!form.values?.is_current_employed && (

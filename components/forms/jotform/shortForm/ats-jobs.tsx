@@ -9,6 +9,8 @@ import { useEffectAsync } from "../../../../utils/react";
 import { LoaderIcon } from "../../../loading/loader-icon";
 import BaseCheck from "../../base-check";
 import BaseSelect from "../../base-select";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
+import BaseRadio from "../../base-radio";
 
 export function AtsJobs() {
 
@@ -68,20 +70,31 @@ export function AtsJobs() {
             >
 
                 <Row className="w-100 d-flex justify-content-center">
-                    <BaseCheck
+                    <BaseRadio
+                        name={`applying_for_job`}
+                        className="float-left ml-2 my-2 w-40"
+                        label={`are_you_applying_to_particular_job`}
+                        labelPrefix="BooleanType"
+                        enumType={BooleanType}
+                        value={
+                            form.values.applying_for_job === true
+                                ? BooleanType.YES
+                                : (form.values.applying_for_job === false && BooleanType.NO)
+                        }
+                        onChange={({ target: { value } }) => {
+                            form.setFieldValue(
+                                "applying_for_job",
+                                value === BooleanType.YES ? true : (value === BooleanType.NO && false)
+                            );
+                        }}
                         disabled={jobCount == -1}
-                        label="are_you_applying_to_particular_job"
-                        className="col-md-6 my-3 "
-                        required
-                        name="applying_for_job"
-                        formik={form}
                     />
                 </Row>
-                <Row className="w-100 d-flex justify-content-center">
-                    <Col md="6">
+                <Row className="w-100 d-flex ">
+                    <Col md="12">
                         {jobCount > 0 && <>
                             <BaseSelect
-                                className="my-3 font-weight-bold"
+                                className="my-1 font-weight-bold"
                                 label="POSITION"
                                 formik={form}
                                 name="jobId"

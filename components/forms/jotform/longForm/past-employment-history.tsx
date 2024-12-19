@@ -14,6 +14,8 @@ import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
 import BaseInputPhone from "../../base-input-phone";
 import StateSelect from "../../state-select";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
+import BaseRadio from "../../base-radio";
 
 export function PastEmploymentHistory() {
 	const {
@@ -98,11 +100,23 @@ export function PastEmploymentHistory() {
 				{t("EMPLOYMENT_HISTORY_DATE_NOTE")}
 			</h5>
 			<Row className={styles.align__text_left}>
-				<BaseCheck
-					className="mt-2 col-md-8 float-left"
-					name="is_previous_employed"
-					label="PREVIOUSLY_EMPLOYED"
-					formik={form}
+				<BaseRadio
+					name={`is_previous_employed`}
+					className="float-left ml-2 my-2 w-40"
+					label={`PREVIOUSLY_EMPLOYED`}
+					labelPrefix="BooleanType"
+					enumType={BooleanType}
+					value={
+						form.values.is_previous_employed === true
+							? BooleanType.YES
+							: (form.values.is_previous_employed === false && BooleanType.NO)
+					}
+					onChange={({ target: { value } }) => {
+						form.setFieldValue(
+							"is_previous_employed",
+							value === BooleanType.YES ? true : (value === BooleanType.NO && false)
+						);
+					}}
 				/>
 			</Row>
 			{!!form?.values?.is_previous_employed &&

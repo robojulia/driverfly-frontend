@@ -2,12 +2,12 @@ import { useFormik } from "formik";
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { FelonyConvictionDto } from "../../../../models/jot-form/long-form/felony-conviction.dto";
-import BaseCheck from "../../base-check";
-import BaseTextArea from "../../base-text-area";
 import styles from "../../../../styles/digitalhiringapp.module.css";
-
+import BaseRadio from "../../base-radio";
+import BaseTextArea from "../../base-text-area";
 
 export function FelonyConviction() {
 	const {
@@ -40,6 +40,7 @@ export function FelonyConviction() {
 			...form.values,
 			criminal_history: criminal_history
 		});
+		setHasCriminalHistory(!!criminal_history)
 	}, [applicant]);
 
 	useEffect(() => {
@@ -53,13 +54,20 @@ export function FelonyConviction() {
 
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={styles.paragraph__left}>
-					<BaseCheck
-						className="col"
-						label="EVER_FELONY_QUESTION"
-						checked={hasCriminalHistory}
+					<BaseRadio
+						name={`is_owner_operator`}
+						className="float-left ml-2 my-2 w-40"
+						label={`EVER_FELONY_QUESTION`}
+						labelPrefix="BooleanType"
+						enumType={BooleanType}
+						value={
+							!!hasCriminalHistory 
+								? BooleanType.YES
+								: (hasCriminalHistory === false && BooleanType.NO)
+						}
 						onChange={({ target: { value } }) => {
-							setHasCriminalHistory(!!value);
-							if (!value) {
+							setHasCriminalHistory(value === BooleanType.YES ? true : (value === BooleanType.NO && false));
+							if (value !== BooleanType.YES) {
 								form.setFieldValue("criminal_history", null);
 							}
 						}}

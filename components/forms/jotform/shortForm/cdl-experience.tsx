@@ -11,6 +11,8 @@ import { useContext, useEffect } from "react";
 import styles from "../../../../styles/digitalhiringapp.module.css";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant";
+import BaseRadio from "../../base-radio";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 
 
 export function CdlExperience() {
@@ -133,12 +135,23 @@ export function CdlExperience() {
 						</Row>
 						{form.values.license_type !== DriverLicenseType.NO_CDL && (
 							<Row>
-								<BaseCheck
-									className="my-3"
-									required
-									name="is_owner_operator"
-									label="is_owner_operator_question"
-									formik={form}
+								<BaseRadio
+									name={`is_owner_operator`}
+									className="float-left ml-2 my-2 w-40"
+									label={`is_owner_operator_question`}
+									labelPrefix="BooleanType"
+									enumType={BooleanType}
+									value={
+										form.values.is_owner_operator === true
+											? BooleanType.YES
+											: (form.values.is_owner_operator === false && BooleanType.NO)
+									}
+									onChange={({ target: { value } }) => {
+										form.setFieldValue(
+											"is_owner_operator",
+											value === BooleanType.YES ? true : (value === BooleanType.NO && false)
+										);
+									}}
 								/>
 							</Row>
 						)}
