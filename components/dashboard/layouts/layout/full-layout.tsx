@@ -100,6 +100,13 @@ const FullLayout = ({ children }) => {
 			text: "DIGITAL_HIRING_APPLICATION",
 		},
 		{
+			pathname: "/dashboard/company/settings/vehicles",
+			icon: CardImage,
+			text: "VEHICLES",
+			permissions: "CanViewVehicle",
+			startsWith: true
+		},
+		{
 			pathname: "/dashboard/company/settings",
 			icon: GearFill,
 			text: "SETTINGS",
@@ -129,13 +136,6 @@ const FullLayout = ({ children }) => {
 					pathname: "/dashboard/company/settings/managers",
 					icon: PersonLinesFill,
 					text: "MANAGERS",
-					startsWith: true
-				},
-				{
-					pathname: "/dashboard/company/settings/vehicles",
-					icon: CardImage,
-					text: "VEHICLES",
-					permissions: "CanViewVehicle",
 					startsWith: true
 				},
 				{
