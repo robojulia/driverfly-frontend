@@ -677,17 +677,17 @@ export class ApplicantEntity {
       preferred_location: yup
         .array((yup.string() as any).enum(JobGeography))
         .nullable(),
-      license_restrictions: yup
-        .array((yup.string() as any).enum(LicenseRestrictions))
-        .nullable(),
-      license_restrictions_other: yup
-        .string()
-        .trim()
-        // .when("license_restrictions", {
-        // 	is: v => v && v.includes(LicenseRestrictions.OTHER),
-        // 	then: yup.string().trim().required(),
-        // })
-        .nullable(),
+      // license_restrictions: yup
+      //   .array((yup.string() as any).enum(LicenseRestrictions))
+      //   .nullable(),
+      // license_restrictions_other: yup
+      //   .string()
+      //   .trim()
+      //   // .when("license_restrictions", {
+      //   // 	is: v => v && v.includes(LicenseRestrictions.OTHER),
+      //   // 	then: yup.string().trim().required(),
+      //   // })
+      //   .nullable(),
       can_pass_drug_test: yup.bool().nullable(),
       is_owner_operator: yup.bool().nullable(),
       transmission_type: yup
