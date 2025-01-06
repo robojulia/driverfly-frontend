@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { Button, Form, Table } from "react-bootstrap";
 import { ThreeCircles } from "react-loader-spinner";
 import { toast } from "react-toastify";
@@ -15,13 +15,15 @@ import ShowFormattedDate from "../../jobs/show-formatted-date";
 import ViewCard from "../../view-details/view-card";
 import ViewPdf from "../../view-details/view-pdf";
 
-import { ApplicantDac } from "../../../enums/applicants/applicant-dac.enum";
 import { ApplicantOnBoardingChecklist } from "../../../enums/applicants/applicant-onboarding-checklist.enum";
+import { CompanyPreferenceCategory } from "../../../enums/company/company-preference-category.enum";
 import { CompanyPreferenceOnboardingChecklistLabel } from "../../../enums/company/company-preferences-onboarding-checklist-label.enum";
 import { DocumentableType } from "../../../enums/documents/documentable-type.enum";
 import { BooleanType } from "../../../enums/jotform/boolean-type.enum";
 import { ApplicantDacEntity } from "../../../models/applicant";
+import { CompanyPreferenceEntity } from "../../../models/company/company-preferences.entity";
 import { DocumentEntity } from "../../../models/documents/document.entity";
+import CompanyApi from "../../../pages/api/company";
 import { ViewApplicantOnboardingChecklistProps } from "../../../types/applicant/view-application-onboarding-checklist-props.type";
 import {
   handleDownloadDocument,
@@ -37,11 +39,10 @@ import ViewDocumentHistory from "../../documents/view-history";
 import BaseCheck from "../../forms/base-check";
 import BaseInput from "../../forms/base-input";
 import BaseRadio from "../../forms/base-radio";
+import { CompanyPreferencesDacForm } from "../../forms/company/company-preferences-dac-form";
 import { CompanyPreferencesOnboardingChecklistForm } from "../../forms/company/company-preferences-onboarding-checklist-form";
+import { LoaderIcon } from "../../loading/loader-icon";
 import SafetyPerformanceHistory from "../safety-performance-history";
-import { CompanyPreferenceEntity } from "../../../models/company/company-preferences.entity";
-import { CompanyPreferenceCategory } from "../../../enums/company/company-preference-category.enum";
-import CompanyApi from "../../../pages/api/company";
 
 export default function OnboardingChecklist(
   props: ViewApplicantOnboardingChecklistProps
@@ -52,27 +53,45 @@ export default function OnboardingChecklist(
   const companyApi = new CompanyApi();
 
   const [editList, setEditList] = useState<boolean>(false);
-  const [companyOnboardingChecklist, setCompanyOnboardingChecklist] = useState<CompanyPreferenceEntity>();
+  const [companyOnboardingPreferences, setCompanyOnboardingPreferences] =
+    useState<CompanyPreferenceEntity[]>();
   const [pdf, setPdf] = useState({});
   const [applicant, setApplicant] = useState<ApplicantEntity>(null);
 
   useEffectAsync(async () => {
-    if (props.applicant?.id) {
-      const v = await applicantApi.getById(props.applicant?.id);
-      setApplicant(v);
-    }
-    if (user?.company) {
-      const [onboardingChecklist] = await companyApi.preferences.list(
-        user.company.id,
-        { category: CompanyPreferenceCategory.ONBOARDING_CHECKLIST, label: CompanyPreferenceOnboardingChecklistLabel.APPLICANT }
-      );
-      setCompanyOnboardingChecklist(onboardingChecklist)
+    try {
+      if (props.applicant?.id) {
+        const v = await applicantApi.getById(props.applicant?.id);
+        setApplicant(v);
+      }
+      if (user?.company) {
+        const preferences = await companyApi.preferences.list(user.company.id, {
+          category: CompanyPreferenceCategory.ONBOARDING_CHECKLIST,
+        });
+        setCompanyOnboardingPreferences(preferences);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   }, [user]);
 
-  // useEffect(() => {
-  //   console.log("companyOnboardingChecklist", companyOnboardingChecklist);
-  // }, [companyOnboardingChecklist]);
+  const companyOnboardingChecklist = useMemo(
+    () =>
+      companyOnboardingPreferences?.find(
+        ({ label }) =>
+          label == CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DOCUMETS
+      ),
+    [companyOnboardingPreferences, user]
+  );
+
+  const companyDaclist = useMemo(
+    () =>
+      companyOnboardingPreferences?.find(
+        ({ label }) =>
+          label == CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DAC
+      ),
+    [companyOnboardingPreferences, user]
+  );
 
   const form = useFormik({
     initialValues: new ApplicantDocumentDto(),
@@ -123,12 +142,15 @@ export default function OnboardingChecklist(
     },
   });
 
-  const handleDacChangeClick = async (type: any, dac?: ApplicantDacEntity) => {
+  const handleDacChangeClick = async (
+    type: string,
+    applicatDacItem?: ApplicantDacEntity
+  ) => {
     const data: ApplicantDacEntity = { type };
-    if (dac) {
-      data.id = dac.id;
-      data.value = !!dac.value;
-      data.details = dac.details;
+    if (applicatDacItem) {
+      data.id = applicatDacItem.id;
+      data.value = !!applicatDacItem.value;
+      data.details = applicatDacItem.details;
     }
     dacForm.setValues(data);
   };
@@ -359,33 +381,41 @@ export default function OnboardingChecklist(
               {Boolean(props.showCompleted) && (
                 <th colSpan={1} className="text-center"></th>
               )}
-              <th colSpan={1} className="text-center">{t("DATE")}</th>
-              <th colSpan={1} className="text-center">{t("DETAILS")}</th>
+              <th colSpan={1} className="text-center">
+                {t("DATE")}
+              </th>
+              <th colSpan={1} className="text-center">
+                {t("DETAILS")}
+              </th>
               <th colSpan={1}></th>
             </tr>
           </thead>
           <tbody>
-            {Object.values(ApplicantDac).map((value: ApplicantDac, i) => {
-              const dac: ApplicantDacEntity = applicant?.dac?.find(
-                (v) => v.type == value
+            {companyDaclist?.value?.map((companyDacItemType: string, i) => {
+              const applicatDacItem: ApplicantDacEntity = applicant?.dac?.find(
+                (v) => v.type == companyDacItemType
               );
               return (
                 <tr key={i}>
-                  <td colSpan={2}> {t(`ApplicantDac.${value}`)}</td>
+                  <td colSpan={2}> {companyDacItemType}</td>
                   {Boolean(props.showCompleted) && (
                     <td colSpan={1} className="text-center">
                       <BaseCheck
                         className=""
                         disabled
-                        checked={Boolean(
-                          dac?.type && dac.type == value && dac.value
-                        )}
+                        checked={
+                          applicatDacItem?.type &&
+                          applicatDacItem?.type == companyDacItemType &&
+                          applicatDacItem?.value
+                        }
                       />
                     </td>
                   )}
                   <td colSpan={1} className="text-center">
-                    {dac?.last_updated_at ? (
-                      <ShowFormattedDate date={dac?.last_updated_at} />
+                    {applicatDacItem?.last_updated_at ? (
+                      <ShowFormattedDate
+                        date={applicatDacItem?.last_updated_at}
+                      />
                     ) : (
                       <span className="text-danger font-italic">
                         {t(`NOT_AVAILABLE`)}
@@ -393,8 +423,8 @@ export default function OnboardingChecklist(
                     )}
                   </td>
                   <td colSpan={1} className="text-center">
-                    {dac?.details ? (
-                      dac?.details
+                    {applicatDacItem?.details ? (
+                      applicatDacItem?.details
                     ) : (
                       <span className="text-danger font-italic">
                         {t(`NOT_AVAILABLE`)}
@@ -403,7 +433,7 @@ export default function OnboardingChecklist(
                   </td>
                   <td colSpan={1}>
                     <div className="w-100">
-                      {dacForm.values.type != value ? (
+                      {dacForm?.values?.type != companyDacItemType ? (
                         <div className="d-flex justify-content-between">
                           <Button
                             className="ml- w-100"
@@ -413,7 +443,10 @@ export default function OnboardingChecklist(
                               form.isValidating
                             }
                             onClick={() => {
-                              handleDacChangeClick(value, dac);
+                              handleDacChangeClick(
+                                companyDacItemType,
+                                applicatDacItem
+                              );
                             }}
                           >
                             {t("CHANGE")}
@@ -421,11 +454,17 @@ export default function OnboardingChecklist(
                         </div>
                       ) : (
                         <Form onSubmit={dacForm.handleSubmit}>
-                          <div style={{ display: 'flex', flexDirection: "column", justifyContent: "center" }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "center",
+                            }}
+                          >
                             <BaseRadio
                               name={`value`}
                               className="float-left ml-2 my-2 w-40"
-                              label={`ApplicantDac.${value}`}
+                              label={companyDacItemType}
                               labelPrefix="BooleanType"
                               enumType={BooleanType}
                               required
@@ -442,34 +481,28 @@ export default function OnboardingChecklist(
                               }}
                             />
                             <BaseInput
-                              name={"DETAILS"}
+                              name={"details"}
                               className=" d-flex justify-content-center align-items-end float-left ml-2 my-1 w-40"
                               label={"DETAILS"}
                               placeholder=""
-                              value={dacForm.values.details}
-                              onChange={({ target: { value } }) => {
-                                dacForm.setFieldValue(
-                                  "details",
-                                  value
-                                );
-                              }}
+                              formik={dacForm}
                             />
                           </div>
-                          <div className="d-flex justify-content-end w-40">
+                          <div className="d-flex justify-content-end w-100 mt-2">
                             <Button
                               disabled={
                                 dacForm.isSubmitting ||
                                 !dacForm.isValid ||
                                 dacForm.isValidating
                               }
-                              className=" theme-primary-btn"
+                              className=" theme-primary-btn w-50"
                               type="submit"
                             >
-                              {t(`SAVE`)}
+                              {t(`SAVE`)} <LoaderIcon isLoading={dacForm.isSubmitting} />
                             </Button>
                             <Button
                               type="button"
-                              className="ml-2 bg-danger"
+                              className="ml-2 bg-danger w-50"
                               onClick={() => {
                                 dacForm.resetForm();
                               }}
@@ -488,7 +521,7 @@ export default function OnboardingChecklist(
         </Table>
         <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
       </>
-    )
+    );
   }
 
   // useEffect(() => {
@@ -496,44 +529,70 @@ export default function OnboardingChecklist(
   //   console.log("dacForm.errors", dacForm.errors);
   // }, [dacForm.errors, dacForm.values]);
 
-  if (!applicant?.id) return (
-    <div className="d-flex justify-content-center align-items-center">
-      <ThreeCircles
-        height={50}
-        width={50}
-        color="#5bb0b9"
-        ariaLabel="ball-triangle-loading"
-        visible={true}
-      />
-    </div>
-  )
+  if (!applicant?.id)
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+        <ThreeCircles
+          height={50}
+          width={50}
+          color="#5bb0b9"
+          ariaLabel="ball-triangle-loading"
+          visible={true}
+        />
+      </div>
+    );
 
   return (
     <ViewCard
       title={props.title ?? "DOCUMENTS"}
       actions={
         <>
-          {!editList && <Button size="sm" onClick={() => setEditList(true)}>
-            {t("EDIT_LIST")}
-          </Button>}
+          {
+            <Button size="sm" onClick={() => setEditList(!editList)}>
+              {editList ? t("CANCEL") : t("EDIT_LIST")}
+            </Button>
+          }
         </>
       }
     >
-      {editList
-        ? <CompanyPreferencesOnboardingChecklistForm
-          className="m-5"
-          companyOnboardingChecklist={companyOnboardingChecklist}
-          onSaveComplete={(newChecklist: CompanyPreferenceEntity) => {
-            setEditList(false)
-            setCompanyOnboardingChecklist(newChecklist);
-          }}
-        />
-        : <ChecklistItems />
-      }
+      {editList ? (
+        <>
+          <CompanyPreferencesOnboardingChecklistForm
+            className="m-5"
+            companyOnboardingChecklist={companyOnboardingChecklist}
+            onSaveComplete={(newChecklist: CompanyPreferenceEntity) => {
+              setCompanyOnboardingPreferences([
+                ...companyOnboardingPreferences?.filter(
+                  (v) =>
+                    v.label !==
+                    CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DOCUMETS
+                ),
+                newChecklist,
+              ]);
+            }}
+          />
+          <hr/>
+          <CompanyPreferencesDacForm
+            className="m-5"
+            companyDaclist={companyDaclist}
+            onSaveComplete={(newDac: CompanyPreferenceEntity) => {
+              setCompanyOnboardingPreferences([
+                ...companyOnboardingPreferences?.filter(
+                  (v) =>
+                    v.label !==
+                    CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DAC
+                ),
+                newDac,
+              ]);
+            }}
+          />
+        </>
+      ) : (
+        <ChecklistItems />
+      )}
     </ViewCard>
   );
 }
-
 
 const UpdatedAt = ({ document }) => {
   return (

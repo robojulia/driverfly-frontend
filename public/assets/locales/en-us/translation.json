@@ -703,6 +703,7 @@
   "ENTER_APPLICANT_NAME": "Enter applicant name",
   "SELECT_DOCUMENT_TYPE": "Select document type",
   "DOCUMENT_TYPE_UNIQUE": "Document type must not be duplicated in list",
+  "DAC_UNIQUE": "Checklist Item must not be duplicated",
   "SELECT_LEAD_TYPE": "Select lead type",
   "SELECT_JOB": "Select job",
   "SELECT_STATUS": "Select status",

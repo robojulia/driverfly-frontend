@@ -45,13 +45,12 @@ export function CompanyPreferencesOnboardingChecklistForm(
 			onboardingChecklist: {
 				...new CompanyPreferenceEntity(),
 				category: CompanyPreferenceCategory.ONBOARDING_CHECKLIST,
-				label: CompanyPreferenceOnboardingChecklistLabel.APPLICANT,
+				label: CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DOCUMETS,
 				value: [],
 			} as CompanyPreferenceEntity,
 		},
 		validationSchema: yup.object({
-			onboardingChecklistonboardingChecklist:
-				CompanyPreferenceEntity.yupSchema(),
+			onboardingChecklist: CompanyPreferenceEntity.yupSchema(),
 		}),
 		onSubmit: async ({ onboardingChecklist }, { setValues }) => {
 			try {
@@ -89,7 +88,7 @@ export function CompanyPreferencesOnboardingChecklistForm(
 			onboardingChecklist: {
 				...form.values.onboardingChecklist,
 				...companyOnboardingChecklist,
-			}
+			},
 		});
 	}, [companyOnboardingChecklist]);
 
@@ -145,6 +144,7 @@ export function CompanyPreferencesOnboardingChecklistForm(
 		>
 			<Row className="my-3">
 				<BaseSelect
+					label="ONBOARDING_CHECKLIST"
 					value={item}
 					hideOptions={form.values.onboardingChecklist?.value}
 					placeholder="ONBOARDING_CHECKLIST"
@@ -156,14 +156,16 @@ export function CompanyPreferencesOnboardingChecklistForm(
 						setItem(value as ApplicantOnBoardingChecklist)
 					}
 				/>
-				<Button
-					disabled={!item}
-					className="col-1"
-					type="button"
-					onClick={handleAddItem}
-				>
-					{t("ADD")}
-				</Button>
+				<div className="col-1 mt-4 pt-2">
+					<Button
+						className=""
+						disabled={!item}
+						type="button"
+						onClick={handleAddItem}
+					>
+						{t("ADD")}
+					</Button>
+				</div>
 			</Row>
 			<div className="mt-5">{checklistItems}</div>
 		</EntityForm>

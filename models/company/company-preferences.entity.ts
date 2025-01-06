@@ -77,8 +77,19 @@ export class CompanyPreferenceEntity {
                     is: CompanyPreferenceCategory.ONBOARDING_CHECKLIST,
                     then: yup.mixed()
                         .when("label", {
-                            is: CompanyPreferenceOnboardingChecklistLabel.APPLICANT,
+                            is: CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DOCUMETS,
                             then: yup.array((yup.string() as any).required().enum(ApplicantOnBoardingChecklist)).nullable()
+                        })
+                        .when("label", {
+                            is: CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DAC,
+                            then: yup.array()
+                                .of(yup.string().required())
+                                .test(
+                                    'unique',
+                                    'Items in the array must be unique',
+                                    (value) => Array.isArray(value) && new Set(value).size === value.length
+                                )
+                                .nullable(),
                         })
                 })
         });
