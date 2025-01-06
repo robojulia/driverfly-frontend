@@ -98,7 +98,6 @@ export function PastEmploymentHistory() {
 				style={{ color: "gray" }}
 			>
 				{t("ADD_EMPLOYMENT_HISTORY_SUB_HEADING")}{" "}
-				{t("EMPLOYMENT_HISTORY_DATE_NOTE")}
 			</h5>
 			<Row className={styles.align__text_left}>
 				<BaseRadio
@@ -176,6 +175,7 @@ export function PastEmploymentHistory() {
 										/>
 									</Row>
 									<Row className={styles.bold}>
+										{t("EMPLOYMENT_HISTORY_DATE_NOTE")}
 										<BaseInput
 											className="col-md-6 my-3"
 											required

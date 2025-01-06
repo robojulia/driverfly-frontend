@@ -158,6 +158,7 @@ export function EmploymentHistory() {
 						</Row>
 
 						<Row className={styles.bold}>
+							{t("EMPLOYMENT_HISTORY_DATE_NOTE")}
 							<BaseInput
 								className="col-md-6 my-3"
 								required
