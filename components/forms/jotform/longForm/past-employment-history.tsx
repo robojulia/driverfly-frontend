@@ -175,7 +175,9 @@ export function PastEmploymentHistory() {
 										/>
 									</Row>
 									<Row className={styles.bold}>
-										{t("EMPLOYMENT_HISTORY_DATE_NOTE")}
+										<span className="text-dark">
+											{t("EMPLOYMENT_HISTORY_DATE_NOTE")}
+										</span>
 										<BaseInput
 											className="col-md-6 my-3"
 											required

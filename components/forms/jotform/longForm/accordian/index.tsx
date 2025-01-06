@@ -40,7 +40,8 @@ export function AccordianPage() {
 
 			applicant.ssn = values.ssn;
 			try {
-				const filtered_extras = applicantExtras?.filter((v) => v.value !== null);
+				const filtered_extras = applicantExtras?.filter((v) => v?.value != null || v?.value != undefined);
+				
 				let response: ApplicantEntity;
 				if (applicant?.id) {
 					response = await applicantApi.jotform.update(applicant.id, {
