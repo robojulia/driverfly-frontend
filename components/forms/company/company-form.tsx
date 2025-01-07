@@ -145,7 +145,7 @@ export function CompanyForm(props: CompanyFormProps) {
 					formik={form}
 				/>
 				{viewLogo &&
-					<div className="col-6">
+					<div className="col-12">
 						<img className="img-thumbnail" src={viewLogo} />
 					</div>
 				}
