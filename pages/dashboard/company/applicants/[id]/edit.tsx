@@ -53,7 +53,6 @@ export default function EditApplicant({ id }) {
             )}
             backPath={backPath}
         >
-
             <EditApplicantForm
                 entity={applicant}
                 setEntity={setApplicant}
@@ -66,7 +65,7 @@ export default function EditApplicant({ id }) {
                     <Col>
                         <OnboardingChecklist
                             showHistory
-                            title="ONBOARDING_CHECKLIST"
+                            title="ONBOARDING_DOCUMENTS"
                             applicant={applicant}
                             canEdit={!Boolean(applicant?.is_hired)}
                             showCompleted={true}

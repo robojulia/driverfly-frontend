@@ -144,10 +144,10 @@ export function CompanyPreferencesOnboardingChecklistForm(
 		>
 			<Row className="my-3">
 				<BaseSelect
-					label="ONBOARDING_CHECKLIST"
+					label="ONBOARDING_DOCUMENTS"
 					value={item}
 					hideOptions={form.values.onboardingChecklist?.value}
-					placeholder="ONBOARDING_CHECKLIST"
+					placeholder="ONBOARDING_DOCUMENTS"
 					className="col-8 offset-1"
 					name="onboardingChecklist"
 					enumType={ApplicantOnBoardingChecklist}

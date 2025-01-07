@@ -60,13 +60,11 @@ export function EditApplicantForm(props: EditApplicantFormProps) {
 			<ApplicantSafetyBackgroundForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} />
 			<ApplicantUploadedDocumentsForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} />
 			<ApplicantJobsAppliedForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} onSaveComplete={props?.onSaveComplete} />
-			<Row>
-				{Boolean(props?.entity?.id) && (
-					<Row className="mt-2">
-						<ViewSuggestedJobs applicant={props?.entity} />
-					</Row>
-				)}
-			</Row>
+			{Boolean(props?.entity?.id) && (
+				<Row className="mt-2">
+					<ViewSuggestedJobs applicant={props?.entity} />
+				</Row>
+			)}
 		</>
 	);
 }
