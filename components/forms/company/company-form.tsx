@@ -66,14 +66,17 @@ export function CompanyForm(props: CompanyFormProps) {
 	}, [entity]);
 
 	useEffectAsync(async () => {
-		if (form.values?.photo?.id) {
-			const api = new DocumentApi();
-			const document = await api.getSignedUrl(form?.values?.photo?.id);
-			setViewLogo(document?.path);
-		} else if (form.values?.photo?.path) {
-			setViewLogo(form.values.photo.path);
-		}
-	}, [form.values.photo]);
+		if (!form.values?.photo) {
+			setViewLogo("");
+		} else
+			if (form.values?.photo?.id) {
+				const api = new DocumentApi();
+				const document = await api.getSignedUrl(form?.values?.photo?.id);
+				setViewLogo(document?.path);
+			} else if (form.values?.photo?.path) {
+				setViewLogo(form.values.photo.path);
+			}
+	}, [form.values?.photo]);
 
 	return (
 		<EntityForm
@@ -141,9 +144,11 @@ export function CompanyForm(props: CompanyFormProps) {
 					documentType={"PHOTO"}
 					formik={form}
 				/>
-				<div className="col-12">
-					<img className="img-thumbnail" src={viewLogo}  />
-				</div>
+				{viewLogo &&
+					<div className="col-6">
+						<img className="img-thumbnail" src={viewLogo} />
+					</div>
+				}
 				<UncontrolledTooltip delay={0} placement="top" target="imgpurpose">
 					{t("IMAGE_PURPOSE")}
 				</UncontrolledTooltip>
