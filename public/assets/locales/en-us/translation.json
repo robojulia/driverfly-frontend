@@ -479,6 +479,7 @@
   "BENEFITS": "Benefits",
   "HELLO_{name}": "Hello {{name}}",
   "vehicle_info": "Vehicle Info",
+  "VEHICLE_ASSIGNED": "Vehicle Assigned",
   "location": "Location",
   "INVALID_LOCATION": "Please provide valid US Address",
   "new_location": "New Location",

@@ -21,6 +21,7 @@ import { UserEntity } from "../user/user.entity";
 import { ApplicantAccidentEntity } from "./applicant-accidentr.entity";
 import { ApplicantJobStatusHistoryEntity } from "./applicant-job-status-history.entity";
 import { ApplicantMovingViolationEntity } from "./applicant-moving-violation.entity";
+import { ApplicantVehicleEntity } from "./applicant-vehicle-entity";
 import { ApplicantVoeEntity } from "./applicant-voe.entity";
 import {
   ApplicantDacEntity,
@@ -88,9 +89,9 @@ export class ApplicantEntity {
   moving_violations?: boolean = false;
   moving_violations_count?: number;
   moving_violations_details?: string;
-	all_violations?: boolean;
-	all_violations_count?: number;
-	all_violations_details?: string;
+  all_violations?: boolean;
+  all_violations_count?: number;
+  all_violations_details?: string;
   must_pass_drug_test?: boolean = true;
   positive_drug_test?: boolean = false;
   positive_drug_test_details?: string;
@@ -126,6 +127,7 @@ export class ApplicantEntity {
   routes?: JobSchedule[];
   ssn?: string;
   employment_gap_details?: string;
+  vehicles?: ApplicantVehicleEntity[];
 
   static yupSchema() {
     return yup.object({
@@ -319,15 +321,14 @@ export class ApplicantEntity {
       license_expiry: yup
         .date()
         .typeError("INVALID_DATE")
-        .test(
-          'is-expired',
-          'LICENSE_HAS_EXPIRED',
-          (value) => moment(value).isAfter(moment().startOf('day'))
+        .test("is-expired", "LICENSE_HAS_EXPIRED", (value) =>
+          moment(value).isAfter(moment().startOf("day"))
         )
         .min(
           moment().endOf("day").add(0.5, "years"),
           "LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
-        ).nullable(),
+        )
+        .nullable(),
       license_state: yup.string().nullable(),
       license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
       years_cdl_experience: yup.number().min(0).nullable(),
@@ -430,9 +431,7 @@ export class ApplicantEntity {
         yup.array(ApplicantEquipmentEntity.yupSchema()) as any
       ).unique("type", { mapper: ApplicantEquipmentEntity.key }),
       employers: yup.array(ApplicantEmployerEntity.yupSchema()),
-      documents: (
-        yup.array(DocumentEntity.yupSchema()) as any
-      ).unique("type"), //modify file error messages
+      documents: (yup.array(DocumentEntity.yupSchema()) as any).unique("type"), //modify file error messages
       jobs: (yup.array(ApplicantJobEntity.yupSchema()) as any).unique("job.id"),
       assignedUserId: yup.number().optional().nullable(),
       // is_hired: yup.bool().nullable(),
@@ -584,10 +583,7 @@ export class ApplicantEntity {
       accident_count: yup.number().required().min(0).nullable(),
       moving_violations_count: yup.number().required().min(0).nullable(),
       authorized_to_work_in_us: yup.bool().nullable(),
-      authorize_to_communicate: yup
-        .string()
-        .required()
-        .nullable(),
+      authorize_to_communicate: yup.string().required().nullable(),
       accident_details: yup.string().nullable(),
       license_revoked: yup.bool().nullable(),
       license_revoked_details: yup
@@ -645,11 +641,11 @@ export class ApplicantEntity {
         .date()
         .typeError("INVALID_DATE")
         .test({
-          name: 'is-expired',
-          message: 'LICENSE_HAS_EXPIRED',
+          name: "is-expired",
+          message: "LICENSE_HAS_EXPIRED",
           test: function (value) {
             if (!value) return true;
-            return moment(value).isAfter(moment().startOf('day'));
+            return moment(value).isAfter(moment().startOf("day"));
           },
         })
         .test({
@@ -665,7 +661,6 @@ export class ApplicantEntity {
                   path: context.path,
                   message: "LICENSE_MUST_BE_VALID_FOR_6_MONTHS",
                 })
-
               );
             }
           },
@@ -750,7 +745,6 @@ export class ApplicantEntity {
     });
   }
 
-
   static yupSchemaForApplicantBasicDetailsForm() {
     return yup.object({
       first_name: yup.string().required().nullable().trim(),
@@ -782,11 +776,11 @@ export class ApplicantEntity {
         .date()
         .typeError("INVALID_DATE")
         .test({
-          name: 'is-expired',
-          message: 'LICENSE_HAS_EXPIRED',
+          name: "is-expired",
+          message: "LICENSE_HAS_EXPIRED",
           test: function (value) {
             if (!value) return true;
-            return moment(value).isAfter(moment().startOf('day'));
+            return moment(value).isAfter(moment().startOf("day"));
           },
         })
         .test({
@@ -802,7 +796,6 @@ export class ApplicantEntity {
                   path: context.path,
                   message: "LICENSE_MUST_BE_VALID_FOR_6_MONTHS",
                 })
-
               );
             }
           },
@@ -817,10 +810,7 @@ export class ApplicantEntity {
       license_restrictions: yup
         .array((yup.string() as any).enum(LicenseRestrictions))
         .nullable(),
-      license_restrictions_other: yup
-        .string()
-        .trim()
-        .nullable(),
+      license_restrictions_other: yup.string().trim().nullable(),
       can_pass_drug_test: yup.bool().nullable(),
       is_owner_operator: yup.bool().nullable(),
       transmission_type: yup
@@ -829,10 +819,7 @@ export class ApplicantEntity {
       endorsements: yup
         .array((yup.string() as any).enum(DriverEndorsement))
         .nullable(),
-      endorsements_other: yup
-        .string()
-        .trim()
-        .nullable(),
+      endorsements_other: yup.string().trim().nullable(),
       highest_degree: (yup.string() as any).enum(EducationLevel).nullable(),
       authorized_to_work_in_us: yup.boolean().optional().nullable(),
       emergency_contact_name: yup.string().nullable(),
@@ -1026,7 +1013,6 @@ export class ApplicantEntity {
           },
         })
         .nullable(),
-
     });
   }
 
@@ -1067,9 +1053,7 @@ export class ApplicantEntity {
 
   static yupSchemaForApplicantDocumentsForm() {
     return yup.object({
-      documents: (
-        yup.array(DocumentEntity.yupSchema()) as any
-      ).unique("type"),
+      documents: (yup.array(DocumentEntity.yupSchema()) as any).unique("type"),
     });
   }
 
@@ -1078,5 +1062,13 @@ export class ApplicantEntity {
       jobs: (yup.array(ApplicantJobEntity.yupSchema()) as any).unique("job.id"),
     });
   }
-}
 
+  static yupSchemaForApplicantVehicleAssiigedForm() {
+    return yup.object({
+      vehicles: (
+        yup.array(ApplicantVehicleEntity.yupSchema()) as any
+      )
+        .unique("vehicle.id"),
+    });
+  }
+}
