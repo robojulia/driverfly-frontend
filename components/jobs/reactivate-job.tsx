@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, ButtonGroup, ButtonProps } from "react-bootstrap";
 import { Recycle } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
@@ -14,7 +14,7 @@ export interface ReactivateJobProps extends ButtonProps {
     onComplete?: (job?: JobEntity) => void;
 }
 
-export function ReactivateJob(props: ReactivateJobProps) {
+export function ReactivateJobButton(props: ReactivateJobProps) {
     const { job, onComplete, ...rest } = props;
 
     if (!isExpired(job.expiry_date)) return <></>;
@@ -22,17 +22,17 @@ export function ReactivateJob(props: ReactivateJobProps) {
     const jobApi = new JobApi();
     const { t } = useTranslation();
 
-    const [showDialog, setShowDialog] = useState(false);
-    const [expiryDate, setExpiryDate] = useState<string | Date>(job?.expiry_date);
+    const [showDialog, setShowDialog] = React.useState(false);
+    const [expiryDate, setExpiryDate] = React.useState<string | Date>(job?.expiry_date);
 
-    async function onClick(e: React.MouseEvent) {
+    function onClick(e: React.MouseEvent) {
         setShowDialog(true);
         setExpiryDate(job?.expiry_date);
     }
 
     const onCloseClick = () => setShowDialog(false);
 
-    async function onConfirmClick(e: React.MouseEvent) {
+    const onConfirmClick = React.useCallback(async (e: React.MouseEvent) => {
         try {
             const data = await jobApi.update(+job.id, {
                 ...job,
@@ -44,7 +44,7 @@ export function ReactivateJob(props: ReactivateJobProps) {
         } finally {
             setShowDialog(false);
         }
-    }
+    }, [expiryDate, job])
 
     return (
         <>
@@ -53,7 +53,7 @@ export function ReactivateJob(props: ReactivateJobProps) {
             </Button>
             <ViewModal
                 show={showDialog}
-                title="DELETE_CONFIRMATION"
+                title="REACTIVATE_JOB"
                 closeText="CANCEL"
                 onCloseClick={onCloseClick}
                 footer={

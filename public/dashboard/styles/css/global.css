@@ -21,7 +21,8 @@
   color: #000;
 }
 
-.ellipsis_remove .rdt_TableHead .brFloq ,.ellipsis_remove .rdt_TableHead .hmdZnu {
+.ellipsis_remove .rdt_TableHead .brFloq,
+.ellipsis_remove .rdt_TableHead .hmdZnu {
   white-space: unset !important;
   text-overflow: unset !important;
   overflow: unset !important;
@@ -73,15 +74,15 @@
   /* color: #1b4454; */
 }
 
-.dashboardsidebar li {
+.dashboardsidebar .sidebarArea li {
   padding: 16px 0px;
 }
 
-.dashboardsidebar li ul li {
+.dashboardsidebar .sidebarArea li ul li {
   padding: 16px 0px;
 }
 
-.dashboardsidebar li ul li:first-child {
+.dashboardsidebar .sidebarArea li ul li:first-child {
   padding: 30px 0px 11px 0px;
 }
 
@@ -1068,22 +1069,25 @@ input[type="number"]::-webkit-outer-spin-button {
   line-height: 30px;
   cursor: pointer;
 }
+
 .css-cp01gg-control {
   border: 1px solid #ced4da;
   border-radius: .25rem;
   width: 100%;
-  
+
 }
+
 .css-cp01gg-control:focus {
   border: 1px solid red !important;
 
 }
+
 .css-cp01gg-control:focus-visible {
-border: 1px solid red !important;
+  border: 1px solid red !important;
 
 }
 
-  
+
 .css-cp01gg-control>div {
   padding: 9px;
 }
@@ -1106,14 +1110,15 @@ border: 1px solid red !important;
 }
 
 
-.multiselect-border{
+.multiselect-border {
   padding: 0.05rem 0.6rem 0.05rem 0.475rem;
   border-radius: 4px !important;
   border: 1px solid #d3d3d3 !important;
 
 }
+
 .Filter_Select{
- border: 1px solid black !important;
+  border: 1px solid black !important;
 }
 
 .Filter_Select:focus {

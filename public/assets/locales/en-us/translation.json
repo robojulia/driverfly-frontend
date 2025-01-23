@@ -2099,6 +2099,8 @@
   "EXPIRATION_DATE_MUST_BE_IN_FUTURE": "The expiration date must be a future date.",
   "EXPIRING_AT_{date}": "Expiring at {{date}}",
   "EXPIRED": "Expired",
+  "ACTIVE": "Active",
+  "REACTIVATE_JOB": "Reactivate Job",
   "REACTIVATE": "Reactivate",
   "{company_name}_{applicant_name}_IN_CONNECTION_WITH_YOUR_APPLICANT": "I, {{applicant_name}}, hereby provide consent to {{company_name}} to conduct a limited query of the FMCSA Commercial Driver’s License Drug and Alcohol Clearinghouse (Clearinghouse) to determine whether drug or alcohol violation information about me exists in the Clearinghouse.",
   "{company_name}_I_UNDERSTAND_THAT_IF_THE_LIMITED_QUERY": "I understand that if the limited query conducted by {{company_name}} indicates that drug or alcohol violation information about me exists in the Clearinghouse, FMCSA will not disclose that information to {{company_name}} without first obtaining additional specific consent from me.",

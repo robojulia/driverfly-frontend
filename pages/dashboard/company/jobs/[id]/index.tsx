@@ -10,7 +10,7 @@ import { useTranslation } from "../../../../../hooks/use-translation";
 import { useEffectAsync } from "../../../../../utils/react";
 
 import { DeleteButton } from "../../../../../components/buttons/delete-button";
-import { ReactivateJob } from "../../../../../components/jobs/reactivate-job";
+import { ReactivateJobButton } from "../../../../../components/jobs/reactivate-job";
 import ViewJobDetail from "../../../../../components/jobs/view-job-detail";
 import { JobEntity } from "../../../../../models/job/job.entity";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
@@ -80,7 +80,7 @@ export default function ViewJob({ id }) {
             title={title}
             actions={(
                 <ButtonGroup>
-                    <ReactivateJob
+                    <ReactivateJobButton
                         variant="outline-success"
                         job={job}
                         className="border-0"
