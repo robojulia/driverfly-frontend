@@ -19,6 +19,7 @@ import EntityForm from "../../../../../components/layouts/page/entity-form";
 import PageLayout from "../../../../../components/layouts/page/page-layout";
 import { TabbedLayout } from "../../../../../components/layouts/page/tabbed-layout";
 import { ListActionOptions } from "../../../../../components/list-actions/list-actions";
+import CustomPagination from "../../../../../components/pagination/custom-pagination";
 import OverlyPopover from "../../../../../components/popover/overly-popover";
 import ViewDataTable, { ViewTableColumn, getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
 import ViewModal from "../../../../../components/view-details/view-modal";
@@ -28,69 +29,37 @@ import { useAuth } from "../../../../../hooks/use-auth";
 import useLastPage from "../../../../../hooks/use-last-page";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { EmployeeEntity } from "../../../../../models/employee/employee.entity";
+import { Pagination, PagingMeta } from "../../../../../types/pagination.type";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import { useEffectAsync } from "../../../../../utils/react";
 import EmployeeApi from "../../../../api/employee";
 
+enum ViewModeType { EMPLOYEE = "EMPLOYEE", PAST_EMPLOYEE = "PAST_EMPLOYEE" }
+
+const pagingsMetaInitialValues = (): PagingMeta => ({
+    currentPage: 1,
+    totalItems: 0,
+    itemsPerPage: 20,
+    totalPages: 0,
+    itemCount: 0
+})
+
 export default function EmployeeDirectory() {
 
     const { user, hasPermission } = useAuth();
-    const can = {
-        viewUser: hasPermission("CanViewEmployee"),
-        editUser: hasPermission("CanEditEmployee"),
-        deleteUser: hasPermission("CanDeleteEmployee"),
-    };
-
-    const columnSettingKey = getDataTableColumnKey("company", user, "employee-directory");
+    const { setPreviousPath } = useLastPage();
+    const router = useRouter();
     const { t } = useTranslation();
     const employeeApi = new EmployeeApi();
-    const router = useRouter()
-
-    const { setPreviousPath } = useLastPage();
-    setPreviousPath(router.asPath)
-
-    enum ViewModeType { EMPLOYEE = "EMPLOYEE", PAST_EMPLOYEE = "PAST_EMPLOYEE" }
 
     const [viewMode, setViewMode] = useState<ViewModeType>(ViewModeType.EMPLOYEE)
     const [loading, setLoading] = useState<boolean>(true);
     const [employees, setEmployees] = useState<EmployeeEntity[]>([])
-    const resetEmployees = () => setEmployees([])
-    const filterEmployees = (id: number) => setEmployees(employees.filter(v => v.id != id))
     const [modalAction, setModalAction] = useState<{
         entity: EmployeeEntity,
         type: "VIEW" | "DELETE" | "MOVE_TO_PAST_EMPLOYEE",
     }>(null)
-
-    const resetModalAction = (): void => setModalAction(null)
-
-    useEffect(() => {
-        setViewMode(router.query.viewMode as ViewModeType ?? ViewModeType.EMPLOYEE)
-    }, [router])
-
-    useEffectAsync(async () => {
-        viewMode == ViewModeType.EMPLOYEE ? fetchEmployee() : fetchPastEmployee()
-    }, [user, viewMode]);
-
-    const onViewModeChange = async ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
-        value = viewMode == ViewModeType.EMPLOYEE ? ViewModeType.PAST_EMPLOYEE : ViewModeType.EMPLOYEE
-        resetEmployees()
-        router.query.viewMode = value;
-        await router.push(router);
-    }
-
-    const fetchEmployee = async (): Promise<void> => {
-        setLoading(true);
-        const data = await employeeApi.list({ status: [EmployeeStatus.ACTIVE] });
-        setEmployees(data);
-        setTimeout(() => setLoading(false), 1000);
-    }
-
-    const fetchPastEmployee = async (): Promise<void> => {
-        setLoading(true);
-        const data = await employeeApi.list({ status: [EmployeeStatus.QUIT, EmployeeStatus.FIRED] });
-        setEmployees(data);
-        setTimeout(() => setLoading(false), 1000);
-    }
+    const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingsMetaInitialValues);
 
     const tabs = {
         BACKGROUND: <Background
@@ -111,6 +80,76 @@ export default function EmployeeDirectory() {
         // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };
 
+    const can = {
+        viewUser: hasPermission("CanViewEmployee"),
+        editUser: hasPermission("CanEditEmployee"),
+        deleteUser: hasPermission("CanDeleteEmployee"),
+    };
+    const columnSettingKey = getDataTableColumnKey("company", user, "employee-directory");
+    const resetEmployees = () => setEmployees([])
+    const resetPagingMeta = () => setPagingMeta(pagingsMetaInitialValues)
+    const filterEmployees = (id: number) => setEmployees(employees.filter(v => v.id != id))
+    const resetModalAction = (): void => setModalAction(null)
+
+    useEffect(() => {
+        setPreviousPath(router.asPath)
+        setViewMode(router.query.viewMode as ViewModeType ?? ViewModeType.EMPLOYEE)
+    }, [router])
+
+    useEffectAsync(async () => {
+        viewMode == ViewModeType.EMPLOYEE ? fetchEmployee() : fetchPastEmployee()
+    }, [user, viewMode, pagingMeta?.currentPage, pagingMeta?.itemsPerPage]);
+
+    const onViewModeChange = async ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+        value = viewMode == ViewModeType.EMPLOYEE ? ViewModeType.PAST_EMPLOYEE : ViewModeType.EMPLOYEE
+        resetEmployees();
+        resetPagingMeta();
+        router.query.viewMode = value;
+        await router.push(router);
+    }
+
+    const fetchEmployee = async (): Promise<void> => {
+        setLoading(true);
+        const data = await employeeApi.list({
+            status: [EmployeeStatus.ACTIVE],
+            is_paginated: true,
+            limit: pagingMeta?.itemsPerPage,
+            page: pagingMeta.currentPage,
+        });
+        setEmployees((data as Pagination<EmployeeEntity>)?.items);
+        setPagingMeta({
+            ...pagingMeta,
+            currentPage: pagingMeta?.currentPage || 1,
+            totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems
+        });
+        setTimeout(() => setLoading(false), 1000);
+    }
+
+    const fetchPastEmployee = async (): Promise<void> => {
+        setLoading(true);
+        const data = await employeeApi.list({
+            status: [EmployeeStatus.QUIT, EmployeeStatus.FIRED],
+            is_paginated: true,
+            limit: pagingMeta?.itemsPerPage,
+            page: pagingMeta.currentPage,
+        });
+        setEmployees((data as Pagination<EmployeeEntity>)?.items);
+        setPagingMeta({
+            ...pagingMeta,
+            currentPage: pagingMeta?.currentPage || 1,
+            totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems
+        });
+        setTimeout(() => setLoading(false), 1000);
+    }
+
+    const handlePageChange = (page: number, perPage: number) => {
+        setPagingMeta((prevPagingMeta: PagingMeta) => ({
+            ...prevPagingMeta,
+            currentPage: page,
+            itemsPerPage: perPage
+        }));
+    };
+
     const moveToPastForm = useFormik({
         initialValues: new EmployeeEntity(),
         validationSchema: EmployeeEntity.yupSchemaForMarking(),
@@ -127,8 +166,6 @@ export default function EmployeeDirectory() {
             }
         },
     });
-    // useEffect(() => console.log("moveToPastForm", moveToPastForm.errors), [moveToPastForm.errors])
-    // useEffect(() => console.log("viewMode", viewMode), [viewMode])
 
     const onViewClick = async (entity: EmployeeEntity): Promise<void> => {
         const v = await employeeApi.getById(entity?.id)
@@ -175,7 +212,7 @@ export default function EmployeeDirectory() {
                 name: 'NAME',
                 cell: data => <span
                     role="button"
-                    className="bg-priamry cursor-pointer enlarge-font"
+                    className="bg-priamry cursor-pointer"
                     onClick={() => onViewClick(data)}
                 >{data?.first_name + ' ' + data?.last_name}</span>,
             },
@@ -337,20 +374,31 @@ export default function EmployeeDirectory() {
                     <span className="sr-only">Loading...</span>
                 </div>
                 :
-                <ViewDataTable<EmployeeEntity>
-                    columnSettingKey={columnSettingKey}
-                    customStyles={{
-                        headRow: {
-                            style: {
-                                background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
-                                color: "white"
+                <>
+                    <ViewDataTable<EmployeeEntity>
+                        columnSettingKey={columnSettingKey}
+                        customStyles={{
+                            headRow: {
+                                style: {
+                                    background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                                    color: "white"
+                                },
                             },
-                        },
-                    }}
-                    columns={tableColumns()}
-                    actions={data => (viewMode != ViewModeType.EMPLOYEE) ? null : tableActions(data)}
-                    items={employees}
-                />}
+                        }}
+                        columns={tableColumns()}
+                        actions={data => (viewMode != ViewModeType.EMPLOYEE) ? null : tableActions(data)}
+                        items={employees}
+                    />
+                    <div style={{ marginRight: "7%" }}>
+                        <CustomPagination
+                            recordsPerPageOptions={[20, 50, 100]}
+                            onPageChange={handlePageChange}
+                            pagingMeta={pagingMeta}
+                            setPagingMeta={setPagingMeta}
+                        />
+                    </div>
+                </>
+            }
 
             {/* TabbedLayout modal component with items passed as a prop `tabs` */}
             <ViewModal title="VIEW_DETAILS" show={!!(modalAction?.type == "VIEW")} onCloseClick={resetModalAction} size='xl' >

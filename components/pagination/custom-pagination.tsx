@@ -1,5 +1,5 @@
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
-import { Box, IconButton, MenuItem, Pagination, PaginationItem, Select, Typography } from '@mui/material';
+import { Box, IconButton, MenuItem, Pagination, Select, Typography } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 import React from 'react';
 import { useTranslation } from '../../hooks/use-translation';
