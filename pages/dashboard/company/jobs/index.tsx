@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
 
 import { PenFill, Plus, Recycle } from 'react-bootstrap-icons';
@@ -14,24 +14,42 @@ import JobApi from "../../../api/job";
 
 import moment from "moment";
 import Link from "next/link";
-import { Button, ButtonGroup } from "react-bootstrap";
+import { Button, ButtonGroup, Col, FormGroup, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import BaseInput from "../../../../components/forms/base-input";
 import { TabbedLayout } from "../../../../components/layouts/page/tabbed-layout";
 import OverlyPopover from "../../../../components/popover/overly-popover";
-import ViewDataTable, { getDataTableColumnKey } from "../../../../components/view-details/view-data-table";
+import ViewDataTable, { getDataTableColumnKey, ViewTableColumn } from "../../../../components/view-details/view-data-table";
 import ViewModal from "../../../../components/view-details/view-modal";
 import { useAuth } from "../../../../hooks/use-auth";
 import { buildAddress } from "../../../../utils/common";
 import { isExpired } from "../../../../utils/date";
 import { useEffectAsync } from "../../../../utils/react";
+import { Pagination, PagingMeta } from "../../../../types/pagination.type";
+import { ExpiryStatus } from "../../../../enums/jobs/expiry-status.enum";
+import { FormControlLabel, Switch } from "@mui/material";
+import CustomPagination from "../../../../components/pagination/custom-pagination";
+
+enum ViewModeType { ACTIVE = "ACTIVE", EXPIRED = "EXPIRED" }
+
+const pagingsMetaInitialValues = (): PagingMeta => ({
+    currentPage: 1,
+    totalItems: 0,
+    itemsPerPage: 20,
+    totalPages: 0,
+    itemCount: 0
+})
 
 export default function JobListing() {
 
+    const [jobs, setJobs] = React.useState<JobEntity[]>([]);
     const [activeJobs, setActiveJobs] = React.useState<JobEntity[]>([]);
     const [expiredJobs, setExpiredJobs] = React.useState<JobEntity[]>([]);
     const [reactivateJob, setReactivateJob] = React.useState<JobEntity>();
     const [expiryDate, setExpiryDate] = React.useState<string | Date>();
+    const [pagingMeta, setPagingMeta] = React.useState<PagingMeta>(pagingsMetaInitialValues);
+    const [loading, setLoading] = React.useState<boolean>(true);
+    const [viewMode, setViewMode] = React.useState<ViewModeType>(ViewModeType.ACTIVE)
 
     const { user, hasPermission } = useAuth();
     const { t } = useTranslation();
@@ -39,20 +57,53 @@ export default function JobListing() {
     const jobApi = new JobApi();
 
     const columnSettingKey = getDataTableColumnKey("company", user, "jobs");
+    const resetPagingMeta = () => setPagingMeta(pagingsMetaInitialValues)
+
+    const fetchJobs = async (expiry_status: ExpiryStatus): Promise<void> => {
+        setLoading(true);
+        const data = await jobApi.list({
+            is_paginated: true,
+            limit: pagingMeta?.itemsPerPage,
+            page: pagingMeta.currentPage,
+            expiry_status
+        });
+        setJobs((data as Pagination<JobEntity>)?.items);
+        setPagingMeta({
+            ...pagingMeta,
+            currentPage: pagingMeta?.currentPage || 1,
+            totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems
+        });
+        setTimeout(() => setLoading(false), 1000);
+    }
 
     useEffectAsync(async () => {
         console.log("refresh fired");
-        const v = await jobApi.list();
-
-        const currentDate = new Date();
-        const active = v.filter(job => job.expiry_date && new Date(job.expiry_date) >= currentDate);
-        const expired = v.filter(job => job.expiry_date && new Date(job.expiry_date) < currentDate);
-
-        setExpiredJobs(expired);
-        setActiveJobs(active);
     }, [user], () => {
         console.log("unloading page...")
     });
+
+    useEffect(() => {
+        setViewMode(router.query.viewMode as ViewModeType ?? ViewModeType.ACTIVE);
+    }, [router])
+
+    useEffectAsync(async () => {
+        viewMode == ViewModeType.ACTIVE ? fetchJobs(ExpiryStatus.ACTIVE) : fetchJobs(ExpiryStatus.EXPIRED);
+    }, [user, viewMode, pagingMeta?.currentPage, pagingMeta?.itemsPerPage]);
+
+    const onViewModeChange = async ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+        value = viewMode == ViewModeType.ACTIVE ? ViewModeType.EXPIRED : ViewModeType.ACTIVE;
+        resetPagingMeta();
+        router.query.viewMode = value;
+        await router.push(router);
+    }
+
+    const handlePageChange = (page: number, perPage: number) => {
+        setPagingMeta((prevPagingMeta: PagingMeta) => ({
+            ...prevPagingMeta,
+            currentPage: page,
+            itemsPerPage: perPage
+        }));
+    };
 
     /**
      * 
@@ -104,18 +155,161 @@ export default function JobListing() {
         }
     }, [expiryDate, reactivateJob])
 
+
+    const tableColumns = (): ViewTableColumn<JobEntity>[] => {
+        const data: ViewTableColumn<JobEntity>[] = [
+            {
+                id: "id",
+                name: "ID",
+                selector: j => j.id,
+            },
+            {
+                id: "job_title",
+                name: "job_title",
+                cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.title}</a></Link>),
+                selector: job => job.title,
+                hidable: false
+            },
+            {
+                id: "location",
+                name: "location",
+                cell: job => (<OverlyPopover skipTranslate={true} header={t('location')} str={buildAddress(job.location || {})} />),
+                selector: job => buildAddress(job.location || {})
+            },
+            {
+                id: "drivers_needed",
+                name: "drivers_needed",
+                selector: j => j.drivers_needed,
+            },
+            {
+                id: "applicantsCount",
+                name: "APPLICANTS",
+                cell: j => (<Link href={`/dashboard/company/applicants?jobId=${j.id}&viewMode=applicant`}><a className="btn btn-link"><span className="badge badge-pill badge-primary">{j.applicantsCount}</span></a></Link>),
+                selector: j => j.applicantsCount,
+            },
+            {
+                id: "created_at",
+                name: "CREATED_AT",
+                cell: job => job?.created_at ? moment(job?.created_at).format('DD MMM YYYY') : null,
+            },
+            {
+                id: "expiration_date",
+                name: "expiration_date",
+                cell: j => j.expiry_date ? moment(j.expiry_date).format('DD MMM YYYY') : null,
+                selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null,
+            },
+            {
+                id: "geography",
+                name: "GEOGRAPHY",
+                selector: j => j.geography ? t("JobGeography." + j.geography) : null,
+            },
+            {
+                id: "schedule",
+                name: "SCHEDULE",
+                cell: job => (<OverlyPopover labelPrefix="JobSchedule" skipTranslate={false} header={t('SCHEDULE')} str={job.schedule} />),
+                selector: job => t(`JobSchedule.${job.schedule}`)
+            },
+            {
+                id: "employment_type",
+                name: "EMPLOYMENT_TYPE",
+                cell: job => (<OverlyPopover labelPrefix="JobEmploymentType" skipTranslate={false} header={t('EMPLOYMENT_TYPE')} str={job.employment_type} />),
+                selector: job => t(`JobEmploymentType.${job.employment_type}`)
+            },
+            {
+                id: "delivery_type",
+                name: "DELIVERY_TYPE",
+                cell: j =>
+                (<ShowEnumFromString
+                    popover_header={t('DELIVERY_TYPE')}
+                    labelPrefix="JobDeliveryType"
+                    popover={true}
+                    value={j.delivery_type}
+                    enumArray={JobDeliveryType} />
+                ),
+                selector: job => t(`JobDeliveryType.${job.delivery_type}`),
+            },
+            {
+                id: "team_drivers",
+                name: "TEAM_DRIVERS",
+                cell: job => (<OverlyPopover labelPrefix="JobTeamDriver" skipTranslate={false} header={t('TEAM_DRIVERS')} str={job.team_drivers} />),
+                selector: job => t(`JobTeamDriver.${job.team_drivers}`),
+            },
+
+        ]
+        if (viewMode == ViewModeType.EXPIRED) {
+        } else {
+        }
+
+        return data
+    }
+
+    const getActions = (job: JobEntity) => {
+        const actions = [
+            {
+                onClick: e => onEditClick(job.id),
+                icon: PenFill,
+                label: "EDIT",
+                hide: !can.editJob
+            }
+        ];
+
+        if (job.expiry_date && new Date(job.expiry_date) < new Date()) {
+            actions.push({
+                onClick: e => onReactivateClick(job),
+                icon: Recycle,
+                label: "REACTIVATE",
+                hide: !can.editJob
+            });
+        }
+
+        // {
+        //     onClick: e => onDeleteClick(j.id),
+        //     icon: TrashFill,
+        //     label: "DELETE", 
+        //     hide: !can.deleteJob
+        // },
+
+        return actions;
+    };
+
     return (
         <PageLayout
             title="JOBS"
             actions={
-                <Button variant="primary" onClick={onAddClick}>
-                    <Plus /> {t("CREATE")}
-                </Button>
+                <>
+                    <Row>
+                        <Col>
+                            <Button variant="primary" onClick={onAddClick}>
+                                <Plus /> {t("CREATE")}
+                            </Button>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <FormGroup style={{ float: "right", display: 'flex', alignItems: 'center' }}>
+                                <span className="p-4">{t("VIEW_BY_{name}", { name: "EXPIRED" }, { translateProps: true })}</span>
+                                <FormControlLabel
+                                    className="mt-2"
+                                    control={<Switch
+                                        value={viewMode == ViewModeType.ACTIVE ? ViewModeType.EXPIRED : ViewModeType.ACTIVE}
+                                        checked={viewMode == ViewModeType.ACTIVE}
+                                        onChange={onViewModeChange} />}
+                                    label=''
+                                />
+                                <span className="">{t("VIEW_BY_{name}", { name: "ACTIVE" }, { translateProps: true })}</span>
+                            </FormGroup>
+                        </Col>
+                    </Row>
+                </>
             }
         >
-            <TabbedLayout
-                items={{
-                    ACTIVE: (<ViewDataTable<JobEntity>
+            {loading
+                ? <div className="spinner-border mt-3 ml-1" role="status">
+                    <span className="sr-only">Loading...</span>
+                </div>
+                :
+                <>
+                    <ViewDataTable<JobEntity>
                         columnSettingKey={columnSettingKey}
                         customStyles={{
                             headRow: {
@@ -125,217 +319,19 @@ export default function JobListing() {
                                 },
                             },
                         }}
-                        columns={[
-                            {
-                                id: "id",
-                                name: "ID",
-                                selector: j => j.id,
-                            },
-                            {
-                                id: "job_title",
-                                name: "job_title",
-                                cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.title}</a></Link>),
-                                selector: job => job.title,
-                                hidable: false
-                            },
-                            {
-                                id: "location",
-                                name: "location",
-                                cell: job => (<OverlyPopover skipTranslate={true} header={t('location')} str={buildAddress(job.location || {})} />),
-                                selector: job => buildAddress(job.location || {})
-                            },
-                            {
-                                id: "drivers_needed",
-                                name: "drivers_needed",
-                                selector: j => j.drivers_needed,
-                            },
-                            {
-                                id: "applicantsCount",
-                                name: "APPLICANTS",
-                                cell: j => (<Link href={`/dashboard/company/applicants?jobId=${j.id}&viewMode=applicant`}><a className="btn btn-link"><span className="badge badge-pill badge-primary">{j.applicantsCount}</span></a></Link>),
-                                selector: j => j.applicantsCount,
-                            },
-                            {
-                                id: "created_at",
-                                name: "CREATED_AT",
-                                cell: job => job?.created_at ? moment(job?.created_at).format('DD MMM YYYY') : null,
-                            },
-                            {
-                                id: "expiration_date",
-                                name: "expiration_date",
-                                cell: j => j.expiry_date ? moment(j.expiry_date).format('DD MMM YYYY') : null,
-                                selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null,
-                            },
-                            {
-                                id: "geography",
-                                name: "GEOGRAPHY",
-                                selector: j => j.geography ? t("JobGeography." + j.geography) : null,
-                            },
-                            {
-                                id: "schedule",
-                                name: "SCHEDULE",
-                                cell: job => (<OverlyPopover labelPrefix="JobSchedule" skipTranslate={false} header={t('SCHEDULE')} str={job.schedule} />),
-                                selector: job => t(`JobSchedule.${job.schedule}`)
-                            },
-                            {
-                                id: "employment_type",
-                                name: "EMPLOYMENT_TYPE",
-                                cell: job => (<OverlyPopover labelPrefix="JobEmploymentType" skipTranslate={false} header={t('EMPLOYMENT_TYPE')} str={job.employment_type} />),
-                                selector: job => t(`JobEmploymentType.${job.employment_type}`)
-                            },
-                            {
-                                id: "delivery_type",
-                                name: "DELIVERY_TYPE",
-                                cell: j =>
-                                (<ShowEnumFromString
-                                    popover_header={t('DELIVERY_TYPE')}
-                                    labelPrefix="JobDeliveryType"
-                                    popover={true}
-                                    value={j.delivery_type}
-                                    enumArray={JobDeliveryType} />
-                                ),
-                                selector: job => t(`JobDeliveryType.${job.delivery_type}`),
-                            },
-                            {
-                                id: "team_drivers",
-                                name: "TEAM_DRIVERS",
-                                cell: job => (<OverlyPopover labelPrefix="JobTeamDriver" skipTranslate={false} header={t('TEAM_DRIVERS')} str={job.team_drivers} />),
-                                selector: job => t(`JobTeamDriver.${job.team_drivers}`),
-                            },
-
-                        ]}
-                        actions={j => ([
-
-                            {
-                                onClick: e => onEditClick(j.id),
-                                icon: PenFill,
-                                label: "EDIT",
-                                hide: !can.editJob
-                            },
-                            // {
-                            //     onClick: e => onDeleteClick(j.id),
-                            //     icon: TrashFill,
-                            //     label: "DELETE",
-                            //     hide: !can.deleteJob
-                            // },
-                        ])}
-                        items={activeJobs}
+                        columns={tableColumns()}
+                        actions={job => getActions(job)}
+                        items={jobs}
                     />
-                    ),
-                    EXPIRED: (<ViewDataTable<JobEntity>
-                        columnSettingKey={columnSettingKey}
-                        customStyles={{
-                            headRow: {
-                                style: {
-                                    background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
-                                    color: "white"
-                                },
-                            },
-                        }}
-                        columns={[
-                            {
-                                id: "id",
-                                name: "ID",
-                                selector: j => j.id,
-                            },
-                            {
-                                id: "job_title",
-                                name: "job_title",
-                                cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.title}</a></Link>),
-                                selector: job => job.title,
-                                hidable: false
-                            },
-                            {
-                                id: "location",
-                                name: "location",
-                                cell: job => (<OverlyPopover skipTranslate={true} header={t('location')} str={buildAddress(job.location || {})} />),
-                                selector: job => buildAddress(job.location || {})
-                            },
-                            {
-                                id: "drivers_needed",
-                                name: "drivers_needed",
-                                selector: j => j.drivers_needed,
-                            },
-                            {
-                                id: "applicantsCount",
-                                name: "APPLICANTS",
-                                cell: j => (<Link href={`/dashboard/company/applicants?jobId=${j.id}&viewMode=applicant`}><a className="btn btn-link"><span className="badge badge-pill badge-primary">{j.applicantsCount}</span></a></Link>),
-                                selector: j => j.applicantsCount,
-                            },
-                            {
-                                id: "created_at",
-                                name: "CREATED_AT",
-                                cell: job => job?.created_at ? moment(job?.created_at).format('DD MMM YYYY') : null,
-                            },
-                            {
-                                id: "expiration_date",
-                                name: "expiration_date",
-                                cell: j => j.expiry_date ? moment(j.expiry_date).format('DD MMM YYYY') : null,
-                                selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null,
-                            },
-                            {
-                                id: "geography",
-                                name: "GEOGRAPHY",
-                                selector: j => j.geography ? t("JobGeography." + j.geography) : null,
-                            },
-                            {
-                                id: "schedule",
-                                name: "SCHEDULE",
-                                cell: job => (<OverlyPopover labelPrefix="JobSchedule" skipTranslate={false} header={t('SCHEDULE')} str={job.schedule} />),
-                                selector: job => t(`JobSchedule.${job.schedule}`)
-                            },
-                            {
-                                id: "employment_type",
-                                name: "EMPLOYMENT_TYPE",
-                                cell: job => (<OverlyPopover labelPrefix="JobEmploymentType" skipTranslate={false} header={t('EMPLOYMENT_TYPE')} str={job.employment_type} />),
-                                selector: job => t(`JobEmploymentType.${job.employment_type}`)
-                            },
-                            {
-                                id: "delivery_type",
-                                name: "DELIVERY_TYPE",
-                                cell: j =>
-                                (<ShowEnumFromString
-                                    popover_header={t('DELIVERY_TYPE')}
-                                    labelPrefix="JobDeliveryType"
-                                    popover={true}
-                                    value={j.delivery_type}
-                                    enumArray={JobDeliveryType} />
-                                ),
-                                selector: job => t(`JobDeliveryType.${job.delivery_type}`),
-                            },
-                            {
-                                id: "team_drivers",
-                                name: "TEAM_DRIVERS",
-                                cell: job => (<OverlyPopover labelPrefix="JobTeamDriver" skipTranslate={false} header={t('TEAM_DRIVERS')} str={job.team_drivers} />),
-                                selector: job => t(`JobTeamDriver.${job.team_drivers}`),
-                            },
-
-                        ]}
-                        actions={job => ([
-                            {
-                                onClick: e => onEditClick(job.id),
-                                icon: PenFill,
-                                label: "EDIT",
-                                hide: !can.editJob
-                            },
-                            {
-                                onClick: e => onReactivateClick(job),
-                                icon: Recycle,
-                                label: "REACTIVATE",
-                                hide: !can.editJob
-                            },
-                            // {
-                            //     onClick: e => onDeleteClick(j.id),
-                            //     icon: TrashFill,
-                            //     label: "DELETE",
-                            //     hide: !can.deleteJob
-                            // },
-                        ])}
-                        items={expiredJobs}
-                    />
-                    )
-                }}
-            />
+                    <div style={{ marginRight: "7%" }}>
+                        <CustomPagination
+                            recordsPerPageOptions={[20, 50, 100]}
+                            onPageChange={handlePageChange}
+                            pagingMeta={pagingMeta}
+                            setPagingMeta={setPagingMeta}
+                        />
+                    </div>
+                </>}
             <ViewModal
                 show={!!reactivateJob?.id}
                 title="REACTIVATE_JOB"
