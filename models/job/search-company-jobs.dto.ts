@@ -5,5 +5,5 @@ export class SearchCompanyJobsDto {
 	limit?: number;
 	page?: number;
 	is_paginated?: boolean;
-	expiry_status: ExpiryStatus;
+	expiry_status?: ExpiryStatus;
 }

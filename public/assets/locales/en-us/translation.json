@@ -844,6 +844,8 @@
   "EDIT_VEHICLE": "Edit Vehicle",
   "CREATE_VEHICLE": "Create Vehicle",
   "CREATE": "Create",
+  "CLONE": "Clone",
+  "SELECT_JOB_TO_CLONE": "Select Job to Clone",
   "DELETED_USERS": "Deleted Users",
   "OTHER": "Other",
   "TRAILER_TYPE": "Trailer Type",

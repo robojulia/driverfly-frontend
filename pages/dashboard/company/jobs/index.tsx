@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
 
-import { PenFill, Plus, Recycle } from 'react-bootstrap-icons';
+import { Files, PenFill, Plus, Recycle } from 'react-bootstrap-icons';
 
 import PageLayout from "../../../../components/layouts/page/page-layout";
 
@@ -12,23 +12,23 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import { JobEntity } from "../../../../models/job/job.entity";
 import JobApi from "../../../api/job";
 
+import { FormControlLabel, Switch } from "@mui/material";
 import moment from "moment";
 import Link from "next/link";
 import { Button, ButtonGroup, Col, FormGroup, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import BaseInput from "../../../../components/forms/base-input";
-import { TabbedLayout } from "../../../../components/layouts/page/tabbed-layout";
+import BaseSelect from "../../../../components/forms/base-select";
+import CustomPagination from "../../../../components/pagination/custom-pagination";
 import OverlyPopover from "../../../../components/popover/overly-popover";
 import ViewDataTable, { getDataTableColumnKey, ViewTableColumn } from "../../../../components/view-details/view-data-table";
 import ViewModal from "../../../../components/view-details/view-modal";
+import { ExpiryStatus } from "../../../../enums/jobs/expiry-status.enum";
 import { useAuth } from "../../../../hooks/use-auth";
+import { Pagination, PagingMeta } from "../../../../types/pagination.type";
 import { buildAddress } from "../../../../utils/common";
 import { isExpired } from "../../../../utils/date";
 import { useEffectAsync } from "../../../../utils/react";
-import { Pagination, PagingMeta } from "../../../../types/pagination.type";
-import { ExpiryStatus } from "../../../../enums/jobs/expiry-status.enum";
-import { FormControlLabel, Switch } from "@mui/material";
-import CustomPagination from "../../../../components/pagination/custom-pagination";
 
 enum ViewModeType { ACTIVE = "ACTIVE", EXPIRED = "EXPIRED" }
 
@@ -43,13 +43,13 @@ const pagingsMetaInitialValues = (): PagingMeta => ({
 export default function JobListing() {
 
     const [jobs, setJobs] = React.useState<JobEntity[]>([]);
-    const [activeJobs, setActiveJobs] = React.useState<JobEntity[]>([]);
-    const [expiredJobs, setExpiredJobs] = React.useState<JobEntity[]>([]);
     const [reactivateJob, setReactivateJob] = React.useState<JobEntity>();
     const [expiryDate, setExpiryDate] = React.useState<string | Date>();
     const [pagingMeta, setPagingMeta] = React.useState<PagingMeta>(pagingsMetaInitialValues);
     const [loading, setLoading] = React.useState<boolean>(true);
     const [viewMode, setViewMode] = React.useState<ViewModeType>(ViewModeType.ACTIVE)
+    const [showCloneModal, setShowCloneModal] = React.useState<boolean>(false);
+    const [jobOptions, setJobOptions] = React.useState<JobEntity[]>([]);
 
     const { user, hasPermission } = useAuth();
     const { t } = useTranslation();
@@ -119,11 +119,11 @@ export default function JobListing() {
         router.push(`${router.pathname}/${id}/edit`);
     }
 
-    const onDeleteClick = async (id: number) => {
-        await jobApi.remove(id);
+    // const onDeleteClick = async (id: number) => {
+    //     await jobApi.remove(id);
 
-        setActiveJobs(activeJobs.filter(v => v.id != id));
-    }
+    //     setJobs(activeJobs.filter(v => v.id != id));
+    // }
 
     const can = {
         editJob: hasPermission("CanUpdateJob"),
@@ -146,8 +146,6 @@ export default function JobListing() {
                 ...reactivateJob,
                 expiry_date: expiryDate,
             });
-            setActiveJobs([...activeJobs, updatedJob])
-            setExpiredJobs([...expiredJobs?.filter(v => v.id != updatedJob?.id)])
         } catch (e) {
             toast.error("UNABLE_TO_SAVE_INFORMATION");
         } finally {
@@ -155,6 +153,24 @@ export default function JobListing() {
         }
     }, [expiryDate, reactivateJob])
 
+    const fetchJobOptions = async () => {
+        const data: JobEntity[] = (await jobApi.list({
+            is_paginated: false,
+        })) as JobEntity[];
+        setJobOptions(data);
+    }
+
+    useEffect(() => {
+        fetchJobOptions();
+    }, [jobs]);
+
+    const onCloneClick = () => {
+        setShowCloneModal(true);
+    };
+
+    const onCloseCloneModal = () => {
+        setShowCloneModal(false);
+    };
 
     const tableColumns = (): ViewTableColumn<JobEntity>[] => {
         const data: ViewTableColumn<JobEntity>[] = [
@@ -279,9 +295,14 @@ export default function JobListing() {
                 <>
                     <Row>
                         <Col>
-                            <Button variant="primary" onClick={onAddClick}>
-                                <Plus /> {t("CREATE")}
-                            </Button>
+                            <ButtonGroup size="sm">
+                                <Button variant="primary" onClick={onAddClick}>
+                                    <Plus /> {t("CREATE")}
+                                </Button>
+                                <Button variant="" className="theme-general-btn" onClick={onCloneClick}>
+                                    <Files /> {t("CLONE")}
+                                </Button>
+                            </ButtonGroup>
                         </Col>
                     </Row>
                     <Row>
@@ -361,7 +382,37 @@ export default function JobListing() {
                     error={isExpired(expiryDate) && "EXPIRATION_DATE_MUST_BE_IN_FUTURE"}
                 />
             </ViewModal>
-
+            <ViewModal
+                show={showCloneModal}
+                title="SELECT_JOB_TO_CLONE"
+                closeText="CANCEL"
+                onCloseClick={onCloseCloneModal}
+                size="lg"
+            >
+                <Row className="py-3 px-5">
+                    <Col>
+                        <BaseSelect
+                            autoFocus
+                            name={`jobId`}
+                            required
+                            placeholder={t(
+                                "SELECT_{name}",
+                                { name: "JOB" },
+                                { translateProps: true }
+                            )}
+                            options={jobOptions}
+                            labelKey="title"
+                            label="JOB"
+                            valueKey="id"
+                            onChange={({ target: { value } }) => {
+                                router.push(
+                                    `${router.pathname}/create?clone=${value}`
+                                );
+                            }}
+                        />
+                    </Col>
+                </Row >
+            </ViewModal>
         </PageLayout>
     )
 
