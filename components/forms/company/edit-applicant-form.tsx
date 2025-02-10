@@ -28,7 +28,7 @@ export function EditApplicantForm(props: EditApplicantFormProps) {
 		router.push("/dashboard/company/applicants");
 	return (
 		<>
-			<Row>
+			<Row className="px-2">
 				<Col xs="12" className="text-end">
 					<HireApplicantForm entity={props?.entity} className={props?.className} />
 					<Button
@@ -40,8 +40,10 @@ export function EditApplicantForm(props: EditApplicantFormProps) {
 					</Button>
 				</Col>
 			</Row>
-			<ApplicantBasicDetailsForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} />
-			<Row>
+			<Row className="px-2">
+				<ApplicantBasicDetailsForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} />
+			</Row>
+			<Row className="px-2">
 				<Col md="6" >
 					<ApplicantEquipmentExperienceForm isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} entity={props?.entity} className={props?.className} setEntity={props?.setEntity} />
 				</Col>
@@ -49,7 +51,7 @@ export function EditApplicantForm(props: EditApplicantFormProps) {
 					<ApplicantVehicleAssiigedForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} />
 				</Col>
 			</Row>
-			<Row>
+			<Row className="px-2">
 				<Col md="6" >
 					<ApplicantWorkHistoryForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} />
 				</Col>
@@ -57,12 +59,20 @@ export function EditApplicantForm(props: EditApplicantFormProps) {
 					<ApplicantAlreadyWorkedForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} />
 				</Col>
 			</Row>
-			<ApplicantSafetyBackgroundForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} />
-			<ApplicantUploadedDocumentsForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} />
-			<ApplicantJobsAppliedForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} onSaveComplete={props?.onSaveComplete} />
+			<Row className="px-2">
+				<ApplicantSafetyBackgroundForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} />
+			</Row>
+			<Row className="px-2">
+				<ApplicantUploadedDocumentsForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} />
+			</Row>
+			<Row className="px-2">
+				<ApplicantJobsAppliedForm entity={props?.entity} isSubmitting={props?.isSubmitting} setIsSubmitting={props?.setIsSubmitting} className={props?.className} setEntity={props?.setEntity} onSaveComplete={props?.onSaveComplete} />
+			</Row>
 			{Boolean(props?.entity?.id) && (
 				<Row className="mt-2">
-					<ViewSuggestedJobs applicant={props?.entity} />
+					<Col md="12">
+						<ViewSuggestedJobs applicant={props?.entity} />
+					</Col>
 				</Row>
 			)}
 		</>

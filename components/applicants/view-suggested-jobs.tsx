@@ -29,12 +29,12 @@ export default function ViewSuggestedJobs({ applicant, company }: ViewSuggestedJ
     return (
         <>
             {applicantSuggestedJobs && (
-                <div >
+                < >
                     <ApplicantConsiderFor
                         applicant={applicant}
                         applicantSuggestedJobs={applicantSuggestedJobs}
                     />
-                 </div>
+                </>
             )}
         </>
     );

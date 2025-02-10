@@ -241,7 +241,7 @@ export default function OnboardingChecklist(
   function ChecklistItems() {
     return (
       <>
-        <h4 className="mt-2">{t("COMPLETED")}</h4>
+        <h6 className="mt-2">{t("COMPLETED")}</h6>
         <Table striped>
           <thead>
             <tr>
@@ -309,7 +309,7 @@ export default function OnboardingChecklist(
             )}
           </tbody>
         </Table>
-        <h4 className="mt-5">{t("UPLOAD_FILES")}</h4>
+        <h6 className="mt-5">{t("UPLOAD_FILES")}</h6>
         <Table striped>
           <thead>
             <tr>
@@ -373,7 +373,7 @@ export default function OnboardingChecklist(
             )}
           </tbody>
         </Table>
-        <h4 className="mt-5">{t("CHECKLIST_ITEMS")}</h4>
+        <h6 className="mt-5">{t("CHECKLIST_ITEMS")}</h6>
         <Table striped>
           <thead>
             <tr>
