@@ -43,7 +43,7 @@ export default function CreateJob() {
 
     return (
         <ChildPageLayout
-            title={t("CREATE_{name}", { name: "JOB" }, { translateProps: true })}
+            title={job?.id ? t("JOBS") : t("CREATE_{name}", { name: "JOB" }, { translateProps: true })}
         >
             {!Boolean(job) ?
                 <JobForm
