@@ -12,6 +12,7 @@ import DQF from "../../../../../components/dashboard/employee-directory/dqf";
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
 import BaseCheckList from "../../../../../components/forms/base-check-list";
+import BaseInput from "../../../../../components/forms/base-input";
 import BaseSelect from "../../../../../components/forms/base-select";
 import BaseTextArea from "../../../../../components/forms/base-text-area";
 import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
@@ -196,6 +197,7 @@ export default function EmployeeDirectory() {
     const onMoveToPastEmploeeClick = async (): Promise<void> => {
         setModalAction({ ...modalAction, type: "MOVE_TO_PAST_EMPLOYEE" })
         moveToPastForm.setFieldValue("id", modalAction?.entity?.id);
+        moveToPastForm.setFieldValue("hire_date", modalAction?.entity?.hire_date);
     }
 
     const tableColumns = (): ViewTableColumn<EmployeeEntity>[] => {
@@ -457,6 +459,13 @@ export default function EmployeeDirectory() {
                 >
                     <Row className="py-3 px-5">
                         <Col md="12">
+                            <BaseInput
+                                type="date"
+                                label="TERMINATION_DATE"
+                                formik={moveToPastForm}
+                                name={`termination_date`}
+                                required
+                            />
                             <BaseSelect
                                 label="STATUS"
                                 formik={moveToPastForm}

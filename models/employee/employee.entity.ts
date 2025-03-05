@@ -170,6 +170,29 @@ export class EmployeeEntity {
           then: yup.string().trim().required().nullable(),
         })
         .nullable(),
+      termination_date: yup
+        .date()
+        .required()
+        .test(
+          "is-after-hire-date",
+          "TERMINATION_DATE_MUST_BE_AFTER_HIRE_DATE",
+          function (value) {
+            const hire_date = this.resolve(yup.ref("hire_date")); // Get the hire_date from the context
+
+            if (!value) return true;
+
+            // Convert both dates to Date objects (if they aren't already)
+            const hireDate =
+              hire_date instanceof Date
+                ? hire_date
+                : new Date(hire_date as string);
+            const terminationDate =
+              value instanceof Date ? value : new Date(value as string);
+
+            return terminationDate > hireDate;
+          }
+        )
+        .nullable(),
     });
   }
 
@@ -179,14 +202,19 @@ export class EmployeeEntity {
     return yup.object({
       first_name: yup.string().optional().nullable().trim(),
       last_name: yup.string().optional().nullable().trim(),
-      phone: yup.string().nullable().test({
-        name: 'phone',
-        message: t("IMPORT_PHONE_ERROR"),
-        test: (value) => {
-          var patt = new RegExp(/^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{4}$/);
-          return patt.test(value);
-        },
-      }),
+      phone: yup
+        .string()
+        .nullable()
+        .test({
+          name: "phone",
+          message: t("IMPORT_PHONE_ERROR"),
+          test: (value) => {
+            var patt = new RegExp(
+              /^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{4}$/
+            );
+            return patt.test(value);
+          },
+        }),
       email: yup.string().email().optional().nullable(),
       birthdate: yup
         .date()
@@ -229,14 +257,19 @@ export class EmployeeEntity {
       highest_degree: (yup.string() as any).enum(EducationLevel).nullable(),
       authorized_to_work_in_us: yup.bool().nullable(),
       emergency_contact_name: yup.string().nullable(),
-      emergency_contact_number: yup.string().nullable().test({
-        name: 'emergency_contact_number',
-        message: t("IMPORT_PHONE_ERROR"),
-        test: (value) => {
-          var patt = new RegExp(/^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{4}$/);
-          return patt.test(value);
-        },
-      }),
+      emergency_contact_number: yup
+        .string()
+        .nullable()
+        .test({
+          name: "emergency_contact_number",
+          message: t("IMPORT_PHONE_ERROR"),
+          test: (value) => {
+            var patt = new RegExp(
+              /^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{4}$/
+            );
+            return patt.test(value);
+          },
+        }),
       emergency_contact_relationship: yup.string().nullable(),
       preferred_location: yup
         .array((yup.string() as any).enum(JobGeography))
