@@ -7,6 +7,8 @@ import { WorkedBeforeDto } from "../../../../models/jot-form/long-form/worked-be
 import styles from "../../../../styles/digitalhiringapp.module.css";
 import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
+import BaseRadio from "../../base-radio";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 
 export function WorkedBefore() {
 	const {
@@ -31,8 +33,8 @@ export function WorkedBefore() {
 	useEffect(() => {
 		form.setValues({
 			...form.values,
-			already_applied_to_company: applicant.already_applied_to_company,
-			already_worked_to_company: applicant.already_worked_to_company,
+			already_applied_to_company: applicant.already_applied_to_company || null,
+			already_worked_to_company: applicant.already_worked_to_company || null,
 			already_worked_start_date: applicant.already_worked_start_date,
 			already_worked_end_date: applicant.already_worked_end_date,
 		});
@@ -49,24 +51,62 @@ export function WorkedBefore() {
 
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row>
-					<BaseCheck
-						className="float-left col"
-						required
-						name="already_applied_to_company"
-						label="APPLIED_HERE_BEFORE"
-						formik={form}
+					<BaseRadio
+						name={`already_applied_to_company`}
+						className="float-left ml-2 my-2 w-40"
+						label={`APPLIED_HERE_BEFORE`}
+						labelPrefix="BooleanType"
+						enumType={BooleanType}
+						value={
+							form.values.already_applied_to_company === true
+								? BooleanType.YES
+								: (form.values.already_applied_to_company === false && BooleanType.NO)
+						}
+						onChange={({ target: { value } }) => {
+							form.setFieldValue(
+								"already_applied_to_company",
+								value === BooleanType.YES ? true : (value === BooleanType.NO && false)
+							);
+							if (value === BooleanType.NO) {
+								form.setFieldValue(
+									"already_worked_to_company",
+									null
+								);
+							}
+						}}
 					/>
 				</Row>
 				{form.values?.already_applied_to_company ? (
 					<>
 						<Row >
 							<Col>
-								<BaseCheck
-									className="my-3 col float-left p-0"
-									required
-									name="already_worked_to_company"
-									label="WORKED_HERE_BEFORE"
-									formik={form}
+								<BaseRadio
+									name={`already_worked_to_company`}
+									className="float-left ml-2 my-2 w-40"
+									label={`WORKED_HERE_BEFORE`}
+									labelPrefix="BooleanType"
+									enumType={BooleanType}
+									value={
+										form.values.already_worked_to_company === true
+											? BooleanType.YES
+											: (form.values.already_worked_to_company === false && BooleanType.NO)
+									}
+									onChange={({ target: { value } }) => {
+										form.setFieldValue(
+											"already_worked_to_company",
+											value === BooleanType.YES ? true : (value === BooleanType.NO && false)
+										);
+										if (value === BooleanType.NO) {
+											form.setFieldValue(
+												"already_worked_start_date",
+												null
+											);
+											form.setFieldValue(
+												"already_worked_end_date",
+												null
+											);
+										}
+									}}
 								/>
 							</Col>
 						</Row>

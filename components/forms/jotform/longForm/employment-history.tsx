@@ -15,6 +15,8 @@ import BaseInputPhone from "../../base-input-phone";
 import StateSelect from "../../state-select";
 import { PastEmployerNameInput } from "./past-employer-name-input";
 import styles from "../../../../styles/digitalhiringapp.module.css";
+import BaseRadio from "../../base-radio";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 
 export function EmploymentHistory() {
 	const {
@@ -84,16 +86,37 @@ export function EmploymentHistory() {
 			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("EMPLOYMENT_HISTORY")}</h1>
 
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+				<h4
+					className={`${styles.heading__sty} mt-0 mb-3 pb-0 fs-5 text-start`}
+					style={{ color: "gray" }}
+				>
+					{t(
+						"EMPLOYMENT_HISTORY_NOTE_{number}",
+						{ number: applicant?.years_cdl_experience > 3 ? 10 : 3 },
+						{ translateProps: true }
+					)}
+				</h4>
 				<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 					{t("HONEST_ABOUT_PAST_EMP")}
 				</p>
 				<Row className={styles.align__text_left}>
-					<BaseCheck
-						className="mt-2 col float-left"
-						required
-						label="CURRENTLY_EMPLYED_QUESTION"
-						name="is_current_employed"
-						formik={form}
+					<BaseRadio
+						name={`is_current_employed`}
+						className="float-left ml-2 my-2 w-40"
+						label={`CURRENTLY_EMPLYED_QUESTION`}
+						labelPrefix="BooleanType"
+						enumType={BooleanType}
+						value={
+							form.values.is_current_employed === true
+								? BooleanType.YES
+								: (form.values.is_current_employed === false && BooleanType.NO)
+						}
+						onChange={({ target: { value } }) => {
+							form.setFieldValue(
+								"is_current_employed",
+								value === BooleanType.YES ? true : (value === BooleanType.NO && false)
+							);
+						}}
 					/>
 				</Row>
 				{!!form.values?.is_current_employed && (
@@ -135,6 +158,9 @@ export function EmploymentHistory() {
 						</Row>
 
 						<Row className={styles.bold}>
+							<span className="text-dark">
+								{t("EMPLOYMENT_HISTORY_DATE_NOTE")}
+							</span>
 							<BaseInput
 								className="col-md-6 my-3"
 								required

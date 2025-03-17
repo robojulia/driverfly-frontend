@@ -7,6 +7,8 @@ import { DrugTestDto } from "../../../../models/jot-form/long-form/drug-test.dto
 import BaseCheck from "../../base-check";
 import BaseTextArea from "../../base-text-area";
 import styles from "../../../../styles/digitalhiringapp.module.css";
+import BaseRadio from "../../base-radio";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 
 export function DrugTest() {
 	const {
@@ -36,7 +38,7 @@ export function DrugTest() {
 
 		form.setValues({
 			...form.values,
-			positive_drug_test: applicant?.positive_drug_test,
+			positive_drug_test: applicant?.positive_drug_test || null,
 			positive_drug_test_details: applicant?.positive_drug_test_details
 		});
 	}, [applicant]);
@@ -52,11 +54,29 @@ export function DrugTest() {
 
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={styles.paragraph__left}>
-					<BaseCheck
-						className="col"
-						name="positive_drug_test"
-						label="DRUG_TEST_TESTIMONY_QUESTION"
-						formik={form}
+					<BaseRadio
+						name={`positive_drug_test`}
+						className="float-left ml-2 my-2 w-40"
+						label={`DRUG_TEST_TESTIMONY_QUESTION`}
+						labelPrefix="BooleanType"
+						enumType={BooleanType}
+						value={
+							form.values.positive_drug_test === true
+								? BooleanType.YES
+								: (form.values.positive_drug_test === false && BooleanType.NO)
+						}
+						onChange={({ target: { value } }) => {
+							form.setFieldValue(
+								"positive_drug_test",
+								value === BooleanType.YES ? true : (value === BooleanType.NO && false)
+							);
+							if (value === BooleanType.YES ? true : (value === BooleanType.NO && false)) {
+								form.setFieldValue(
+									"positive_drug_test_details",
+									null
+								);
+							}
+						}}
 					/>
 				</Row>
 				{form.values.positive_drug_test ? (

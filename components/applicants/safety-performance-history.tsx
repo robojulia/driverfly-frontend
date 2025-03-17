@@ -85,7 +85,7 @@ export default function SafetyPerformanceHistory({
             const data = await applicantApi.employer.list(applicant.id);
             setEmployers(data);
         }
-    }, [applicant]);
+    }, [applicant?.employers]);
 
     useEffect(() => {
         return () => {

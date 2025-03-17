@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import BaseClickToCopyInput from "../../../components/forms/base-click-to-copy-input";
@@ -17,6 +17,9 @@ import BaseInputPhone from "../base-input-phone";
 import BaseTextArea from "../base-text-area";
 import FileInput from "../file-input";
 import { BaseFormProps } from "./base-form-props";
+import Image from "next/image";
+import DocumentApi from "../../../pages/api/document";
+import { useEffectAsync } from "../../../utils/react";
 
 
 
@@ -28,6 +31,9 @@ export function CompanyForm(props: CompanyFormProps) {
 	const { user } = useAuth();
 	const { t } = useTranslation();
 	let { className, entity, onSaveComplete, onSaveError, showClickToCopy } = props;
+
+	const [viewLogo, setViewLogo] = useState("");
+
 
 	const form = useFormik({
 		initialValues: new CompanyEntity(),
@@ -58,6 +64,19 @@ export function CompanyForm(props: CompanyFormProps) {
 		if (entity && !form.dirty)
 			form.setValues(entity);
 	}, [entity]);
+
+	useEffectAsync(async () => {
+		if (!form.values?.photo) {
+			setViewLogo("");
+		} else
+			if (form.values?.photo?.id) {
+				const api = new DocumentApi();
+				const document = await api.getSignedUrl(form?.values?.photo?.id);
+				setViewLogo(document?.path);
+			} else if (form.values?.photo?.path) {
+				setViewLogo(form.values.photo.path);
+			}
+	}, [form.values?.photo]);
 
 	return (
 		<EntityForm
@@ -125,6 +144,11 @@ export function CompanyForm(props: CompanyFormProps) {
 					documentType={"PHOTO"}
 					formik={form}
 				/>
+				{viewLogo &&
+					<div className="col-12">
+						<img className="img-thumbnail" src={viewLogo} />
+					</div>
+				}
 				<UncontrolledTooltip delay={0} placement="top" target="imgpurpose">
 					{t("IMAGE_PURPOSE")}
 				</UncontrolledTooltip>

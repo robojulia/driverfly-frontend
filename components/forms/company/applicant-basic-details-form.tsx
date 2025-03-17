@@ -169,7 +169,7 @@ export function ApplicantBasicDetailsForm(props: ApplicantBasicDetailsFormProps)
 			onReset={form.handleReset}
 		>
 			<Row>
-				<Col className="p-0 px-lg-2 mt-3">
+				<Col md="12" className="p-2 mt-2">
 					<ViewCard title="BASIC_DETAILS">
 						<Row className="mb-2">
 							<Col md="4" className="px-2">

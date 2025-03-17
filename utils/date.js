@@ -28,7 +28,7 @@ function dateRange(start_at, end_at, default_end_at) {
     if (end_at && typeof end_at == "string") end_at = new Date(end_at);
 
     if (start_at && end_at) return `${start_at.toDateString()} - ${end_at.toDateString()}`;
-    
+
     if (start_at && default_end_at) return `${start_at.toDateString()} - ${default_end_at}`;
 
     if (start_at) return `${start_at.toDateString()}`;
@@ -36,7 +36,15 @@ function dateRange(start_at, end_at, default_end_at) {
     // assume bad data
 }
 
+function isExpired(dateString) {
+    const givenDate = new Date(dateString);
+    const currentDate = new Date();
+
+    return givenDate < currentDate;
+}
+
 export {
     calculateAge,
-    dateRange
+    dateRange,
+    isExpired
 };

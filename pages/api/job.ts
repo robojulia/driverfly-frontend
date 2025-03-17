@@ -1,9 +1,10 @@
-import { JobEntity } from "../../models/job/job.entity";
-import BaseApi from "./_baseApi";
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
+import { ApplicantJobsListingDto } from "../../models/job/applicant-jobs-listing.dto";
+import { JobEntity } from "../../models/job/job.entity";
+import { SearchCompanyJobsDto } from "../../models/job/search-company-jobs.dto";
 import { SearchJobsDto } from "../../models/job/search-jobs-dto";
 import { Pagination } from "../../types/pagination.type";
-import { ApplicantJobsListingDto } from "../../models/job/applicant-jobs-listing.dto";
+import BaseApi from "./_baseApi";
 
 export default class JobApi extends BaseApi {
     baseUrl: string = "jobs";
@@ -33,8 +34,8 @@ export default class JobApi extends BaseApi {
         await this.delete(`${this.baseUrl}/${id}`);
     }
 
-    async list(): Promise<JobEntity[]> {
-        const { data } = await this.get(this.baseUrl);
+    async list(dto?:SearchCompanyJobsDto): Promise<Pagination<JobEntity> |  JobEntity[]> {
+        const { data } = await this.get(`${this.buildUrl(this.baseUrl, dto)}`);
         return data;
     }
 

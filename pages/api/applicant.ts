@@ -11,14 +11,15 @@ import { ApplicantDacEntity } from "../../models/applicant/applicant-dac.entity"
 import { ApplicantJobEntity } from "../../models/applicant/applicant-job.entity";
 import { ApplicantNoteEntity } from "../../models/applicant/applicant-note.entity";
 import { ApplicantSuggestedJobEntity } from "../../models/applicant/applicant-suggested-job.entity";
+import { ApplicantVehicleEntity } from "../../models/applicant/applicant-vehicle-entity";
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
+import { SendBackgroundRequestDto } from "../../models/applicant/send-background-request.dto";
 import { DocumentEntity } from "../../models/documents/document.entity";
 import { VerifyOTPDto } from "../../models/jot-form/OTP/verify-otp.dto";
 import { UpsertApplicantJotformDto } from "../../models/jot-form/upsert-applicant-jotform.dto";
 import { UpsertApplicantVoeformDto } from "../../models/jot-form/upsert-applicant-voe.dto";
-import BaseApi from "./_baseApi";
 import { Pagination } from "../../types/pagination.type";
-import { SendBackgroundRequestDto } from "../../models/applicant/send-background-request.dto";
+import BaseApi from "./_baseApi";
 
 interface FetchByUuidTokenParams {
   withRelations?: string[];
@@ -449,4 +450,40 @@ export default class ApplicantApi extends BaseApi {
       return data;
     },
   };
+
+  vehicle = {
+    baseUrl: (applicantId: number, applicantVehicleId?: number) =>
+      `${this.baseUrl}/${applicantId}/vehicle/${applicantVehicleId || ""}`,
+    list: async (applicantId: number) => {
+      const { data } = await this.get(this.vehicle.baseUrl(applicantId));
+
+      return data;
+    },
+    create: async (
+      applicantId: number,
+      dto?: ApplicantVehicleEntity
+    ): Promise<ApplicantVehicleEntity> => {
+      const { data } = await this.post(this.vehicle.baseUrl(applicantId), dto);
+
+      return data;
+    },
+    update: async (
+      applicantVehicleId: number,
+      applicantId: number,
+      dto: ApplicantVehicleEntity
+    ): Promise<ApplicantVehicleEntity> => {
+      const { data } = await this.put(
+        this.vehicle.baseUrl(applicantId, applicantVehicleId),
+        dto
+      );
+
+      return data;
+    },
+    remove: async (applicantId: number, applicantVehicleId: number): Promise<any> => {
+      const { data } = await this.delete(this.vehicle.baseUrl(applicantId, applicantVehicleId));
+
+      return data;
+    },
+  };
+
 }

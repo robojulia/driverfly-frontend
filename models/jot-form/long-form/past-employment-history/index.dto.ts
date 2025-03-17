@@ -35,7 +35,7 @@ export class PastEmploymentHistoryDto extends ApplicantEmployerEntity {
 			  }
 			  )
 			.nullable(),
-			email: yup.string().email().required().nullable(),
+			email: yup.string().optional().required().nullable(),
 			can_contact: yup.boolean().default(false).optional().nullable(),
 			address: yup
 				.string()

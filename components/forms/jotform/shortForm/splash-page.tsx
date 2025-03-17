@@ -6,15 +6,15 @@ import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export function SplashPage() {
 	const {
-		state: { applicant, company },
-		method: { stepNext }
+		state: { steps, applicant, company, companyJobs },
+		method: { stepNext, setSteps }
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 
 	return (
 		<>
-			<Form onSubmit={() => stepNext()}>
+			<Form onSubmit={() => companyJobs.length > 0 ? stepNext() : setSteps(steps + 2)}>
 				<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
 					{t("{name}_carrier", { name: applicant?.company?.name || company.name }, { translateProps: true })}
 				</h1>

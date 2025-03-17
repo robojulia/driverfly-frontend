@@ -11,6 +11,7 @@ export type JotFormContextType = {
 	state: {
 		applicant?: ApplicantEntity;
 		company?: CompanyEntity;
+		companyJobs?: JobEntity[];
 		jobs?: JobEntity[];
 		companyPreferences?: CompanyPreferenceEntity[];
 		applicantExtras?: ApplicantExtrasEntity[];
@@ -20,8 +21,10 @@ export type JotFormContextType = {
 	method: {
 		setApplicant?: (e?: any) => void;
 		setJobs?: (e?: any) => void;
+		setCompanyJobs?: (e?: any) => void;
 		updateApplicantExtras?: (e?: any) => void;
 		setApplicantExtras?: (e?: any) => void;
+		setSteps?: (e?: any) => void;
 		stepNext?: () => void;
 		stepBack?: () => void;
 	};
@@ -32,6 +35,7 @@ const JotformContext = createContext<JotFormContextType>({
 		applicant: null,
 		applicantExtras: [],
 		jobs: [],
+		companyJobs: [],
 		companyPreferences: [],
 		steps: 0,
 		utm: {
@@ -46,6 +50,9 @@ const JotformContext = createContext<JotFormContextType>({
 		setApplicant: (e?: any) => { },
 		setApplicantExtras: (e?: any) => { },
 		updateApplicantExtras: (e?: any) => { },
+		setJobs: (e?: any) => { },
+		setCompanyJobs: (e?: any) => { },
+		setSteps: (e?: any) => { },
 		stepNext: () => { },
 		stepBack: () => { },
 	},

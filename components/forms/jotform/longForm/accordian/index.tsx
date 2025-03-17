@@ -38,8 +38,10 @@ export function AccordianPage() {
 		onSubmit: async (values) => {
 			const applicantApi = new ApplicantApi();
 
+			applicant.ssn = values.ssn;
 			try {
-				const filtered_extras = applicantExtras?.filter((v) => !!v.value);
+				const filtered_extras = applicantExtras?.filter((v) => v?.value != null || v?.value != undefined);
+				
 				let response: ApplicantEntity;
 				if (applicant?.id) {
 					response = await applicantApi.jotform.update(applicant.id, {
@@ -66,7 +68,6 @@ export function AccordianPage() {
 	});
 
 	useEffect(() => {
-		updateApplicantExtras(form.values.EMPLOYEE_SS_OR_ID);
 		updateApplicantExtras(form.values.DISCLOSURE_AND_AUTHORIZATION_DATE);
 		updateApplicantExtras(form.values.IMPORTANT_DISCLOSURE_BACKGROUND_DATE);
 		updateApplicantExtras(form.values.GENERAL_CONSENT);
@@ -76,11 +77,11 @@ export function AccordianPage() {
 		updateApplicantExtras(form.values.SIGNATURE_GENERAL_CONSENT);
 	}, [form.values]);
 
-	useEffect(() => {
-		console.log("form values", form.values);
-		console.log("form errors", form.errors);
-		console.log("boolean errors", Object.keys(form.errors));
-	}, [form.values, form.errors]);
+	// useEffect(() => {
+	// 	console.log("form values", form.values);
+	// 	console.log("form errors", form.errors);
+	// 	console.log("boolean errors", Object.keys(form.errors));
+	// }, [form.values, form.errors]);
 
 	// useEffect(() => {
 	// 	console.log("in use error")

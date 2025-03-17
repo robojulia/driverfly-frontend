@@ -66,7 +66,7 @@ export default function Pagination() {
                     }
 
                     {
-                        pageIndex?.current < pagingMeta?.totalPages &&
+                        pageIndex?.current + 1 < pagingMeta?.totalPages &&
                         <li onClick={() => handlePaging(pagingMeta?.totalPages)}>
                             <span className="next page-numbers " role="button" >
                                 {t('LAST_PAGE')}

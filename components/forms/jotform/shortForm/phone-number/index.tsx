@@ -21,9 +21,10 @@ import { socketInitializer } from "./socketInitializer";
 
 export function PhoneNumber() {
     const {
-        state: { applicant },
+        state: { applicant, companyJobs, steps },
         method: {
             setApplicant,
+            setSteps,
             stepNext,
             stepBack,
             // setApplicantExtras
@@ -66,7 +67,7 @@ export function PhoneNumber() {
             }
         },
         onReset: (values) => {
-            stepBack();
+            companyJobs.length > 0 ? stepBack() : setSteps(steps - 2)
         },
     });
 

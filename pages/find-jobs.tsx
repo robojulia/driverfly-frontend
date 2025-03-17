@@ -2,12 +2,13 @@ import "bootstrap/dist/css/bootstrap.css";
 import { GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import "react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css";
 import { toast } from "react-toastify";
 import FilterResult from "../components/filter-results/filter-results";
 import ResultCount from "../components/find-jobs/result-count";
 import Sort from "../components/find-jobs/sort";
+import UsJobsList from "../components/find-jobs/us-job-list";
 import JobsList from "../components/jobslisting/jobslist";
 import { PublicLayout } from "../components/layouts/public-layout";
 import { LoaderIcon } from "../components/loading/loader-icon";
@@ -24,14 +25,10 @@ import {
 	pagingMetaInitialValues,
 } from "../utils/job-filter";
 import { useEffectAsync } from "../utils/react";
+import { scrollToTop } from "../utils/scroll";
 import JobApi from "./api/job";
 
-const scrollToTop = () => {
-	window.scrollTo({
-		top: 0,
-		behavior: 'smooth',
-	});
-};
+
 export default function FindJobs(props) {
 	let { params } = props;
 
@@ -41,25 +38,17 @@ export default function FindJobs(props) {
 
 	const [loading, setLoading] = useState<boolean>(true);
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
-
-	const [pagingMeta, setPagingMeta] = useState<PagingMeta>(
-		pagingMetaInitialValues
-	);
-	const resetPagingMeta = (): void => setPagingMeta(pagingMetaInitialValues);
-
+	const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingMetaInitialValues);
 	const [searchQuery, setSearchQuery] = useState<string>();
-	const resetSearchQuery = (): void => setSearchQuery("");
-
 	const [filters, setFilters] = useState<SearchJobsDto>({ ...params });
-	const resetFilters = (): void => setFilters(filtersInitialsValues);
-
 	const [location, setLocation] = useState<JobSearchLocation>(null);
-	const resetLocation = (): void => setLocation(null);
+	const [range, setRange] = useState<string>(`${filters.location?.range || 50}`);
 
-	const [range, setRange] = useState<string>(
-		`${filters.location?.range || 50}`
-	);
-	const resetRange = (): void => setRange(null);
+	const resetPagingMeta = (): void => setPagingMeta(pagingMetaInitialValues);
+	const resetSearchQuery = (): void => setSearchQuery("");
+	const resetFilters = (): void => setFilters(filtersInitialsValues);
+	const resetLocation = (): void => setLocation(null);
+	const resetRange = (): void => setRange("");
 
 	const handleReset = (): void => {
 		resetSearchQuery();
@@ -67,7 +56,6 @@ export default function FindJobs(props) {
 		resetFilters();
 		resetLocation();
 		resetRange();
-
 	};
 
 	const setFiltersByKeyValue = (key: string, value: any): void => {
@@ -149,15 +137,16 @@ export default function FindJobs(props) {
 			await jobApi
 				.search({ ...(filters as any) })
 				.then(({ items, meta }: Pagination<JobEntity>) => {
-					console.log({ items, meta, filters });
+					// console.log({ items, meta, filters });
 					setJobs(items);
 					setPagingMeta(meta);
 				});
 		} catch (e) {
 			console.log("Error", e.message, e);
 			toast.error(t("FIND_JOB_ERROR_GENERAL"));
+		} finally {
+			setLoading(false);
 		}
-		setLoading(false);
 	};
 
 	useEffectAsync(fetchJobs, [filters]);
@@ -172,38 +161,35 @@ export default function FindJobs(props) {
 		}
 	}, []);
 
-	// useEffect(() => {
-	// 	if (filters.min_years_experience) {
-	// 		console.log("Minimum years of experience : ", filters.min_years_experience);
-	// 	}
-	// }, [filters]);
+	useEffect(() => scrollToTop(), [filters.page]);
 
-	useEffect(() => scrollToTop(), [filters.page])
+	const contextValue = useMemo(
+		() => ({
+			state: {
+				jobs,
+				pagingMeta,
+				filters,
+				location,
+				range,
+				searchQuery,
+			},
+			method: {
+				handleChange,
+				setFilters,
+				setLocation,
+				setRange,
+				setFiltersByKeyValue,
+				applyFilters: fetchJobs,
+				setSearchQuery,
+				handleReset,
+				handlePaging: setPagingMeta,
+			},
+		}),
+		[jobs, pagingMeta, filters, location, range, searchQuery]
+	);
 
 	return (
-		<JobContext.Provider
-			value={{
-				state: {
-					jobs,
-					pagingMeta,
-					filters,
-					location,
-					range,
-					searchQuery,
-				},
-				method: {
-					handleChange,
-					setFilters,
-					setLocation,
-					setRange,
-					setFiltersByKeyValue,
-					applyFilters: fetchJobs,
-					setSearchQuery,
-					handleReset,
-					handlePaging: setPagingMeta,
-				},
-			}}
-		>
+		<JobContext.Provider value={contextValue}>
 			<Head>
 				<title>{t("FIND_JOBS_META_TITLE")}</title>
 				<meta
@@ -227,6 +213,11 @@ export default function FindJobs(props) {
 							</div>
 
 							<JobsList />
+
+							{!jobs.length && !!filters.location && !loading && (
+								<UsJobsList />
+							)}
+
 						</div>
 					</div>
 				</div>

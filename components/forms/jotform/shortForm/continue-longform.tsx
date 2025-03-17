@@ -19,9 +19,10 @@ import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferenc
 
 export function ContinueLongForm() {
 	const {
-		state: { applicant, company },
+		state: { applicant, company, applicantExtras },
 		method: { stepNext },
 	}: JotFormContextType = useContext(JotformContext);
+	stepNext();
 
 	const { t } = useTranslation();
 	const companyApi = new CompanyApi();
@@ -33,12 +34,19 @@ export function ContinueLongForm() {
 
 	useEffect(() => {
 		if (Boolean(showSuccess) && Boolean(applicant)) {
-			!Boolean(applicant?.can_pass_drug_test)
-				? ""
-				: toast.success(t("successfully_saved_information"));
+			// !Boolean(applicant?.can_pass_drug_test)
+			// 	? ""
+			// 	: toast.success(t("successfully_saved_information"));
 			setShowSuccess(false);
 		}
 	}, [applicant?.can_pass_drug_test]);
+
+	// useEffect(() => {
+	// 	console.log("applicantExtras", applicantExtras);
+	// 	if (!applicantExtras?.find(v => v.type == ApplicantExtras.BAD_FIT_REASON)?.value) {
+	// 		stepNext();
+	// 	}
+	// }, [applicantExtras]);
 
 	useEffectAsync(async () => {
 		if (applicant?.company) {
@@ -133,13 +141,13 @@ export function ContinueLongForm() {
 		} else {
 			return (
 				<>
-					<Row>
+					{/* <Row>
 						<h1 className={styles.carrierName}>
 							{t("{company_name}_THANKS", {
 								company_name: applicant?.company?.name || company.name,
 							})}
 						</h1>
-					</Row>
+					</Row> */}
 					<Row className="mt-3">
 						{Boolean(companyPrefferedCDL.length) &&
 							!Boolean(companyPrefferedCDL?.includes(applicant?.license_type)) ? (
