@@ -113,6 +113,10 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				values.moving_violations_count = 0
 			}
 
+			if (values.all_violations_count === undefined) {
+				values.all_violations_count = 0
+			}
+
 			try {
 				if (entity?.id) {
 					values = await applicantApi.update(entity.id, {
@@ -1254,6 +1258,12 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										</Accordion>
 									);
 								})}
+								<BaseTextArea
+									className="mt-3"
+									label="EMPLOYMENT_GAP_DETAILS_LABEL"
+									formik={form}
+									name="employment_gap_details"
+								/>
 							</>
 						)}
 					</ViewCard>
@@ -1695,6 +1705,32 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													</div>
 												</Row>
 											))}
+										</ViewCard>
+									</div>
+								)}
+
+								{/* All  Violation sectiion */}
+								<BaseInput
+									className="col my-3"
+									readOnly={Boolean(entity?.is_hired)}
+									label="ALL_VIOLATION_IN_LAST_3_YEARS"
+									name="all_violations_count"
+									type="number"
+									step={1}
+									min={0}
+									placeholder="ENTER_NO_OF_VIOLATIONS"
+									formik={form}
+								/>
+								{form.values.all_violations_count > 0 && (
+									<div className="col-12 mt-2">
+										<ViewCard title="VIOLATION_DETAILS">
+											<BaseTextArea
+												// className="col-12 mt-2"
+												readOnly={Boolean(entity?.is_hired)}
+												label="VIOLATION_DETAILS"
+												name="all_violations_details"
+												formik={form}
+											/>
 										</ViewCard>
 									</div>
 								)}

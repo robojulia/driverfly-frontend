@@ -6,6 +6,7 @@ import { SearchEmployeeDto } from '../../models/employee/search-employee.dto';
 import { EmployeeDqf } from '../../enums/employee/employee-dqf.enum';
 import { EmployeeEmployerEntity } from './../../models/employee/employee-employer.entity';
 import BaseApi from "./_baseApi";
+import { Pagination } from "../../types/pagination.type";
 
 export default class EmployeeApi extends BaseApi {
 	baseUrl: string = "employee";
@@ -13,7 +14,7 @@ export default class EmployeeApi extends BaseApi {
 		super();
 	}
 
-	async list(dto?: SearchEmployeeDto): Promise<EmployeeEntity[]> {
+	async list(dto?: SearchEmployeeDto): Promise<Pagination<EmployeeEntity> | EmployeeEntity[]> {
 		const { data } = await this.get(`${this.buildUrl(this.baseUrl, dto)}`);
 
 		return data;

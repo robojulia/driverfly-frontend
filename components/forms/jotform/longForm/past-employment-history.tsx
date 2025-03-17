@@ -1,20 +1,22 @@
-import { useContext, useEffect, useState } from "react";
 import { useFormik } from "formik";
+import { useContext, useEffect } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
-import { Form, Button, Col, Row } from "react-bootstrap";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { useTranslation } from "../../../../hooks/use-translation";
-import BaseInput from "../../base-input";
-import BaseInputPhone from "../../base-input-phone";
-import BaseCheck from "../../base-check";
 import JotformContext, {
 	JotFormContextType,
 } from "../../../../context/jotform-context";
-import StateSelect from "../../state-select";
-import { PastEmploymentPageDto } from "../../../../models/jot-form/long-form/past-employment-page.dto";
-import { PastEmploymentHistoryDto } from "../../../../models/jot-form/long-form/past-employment-history/index.dto";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantEmployerEntity } from "../../../../models/applicant";
-import { PastEmployerNameInput } from "./past-employer-name-input";
+import { PastEmploymentHistoryDto } from "../../../../models/jot-form/long-form/past-employment-history/index.dto";
+import { PastEmploymentPageDto } from "../../../../models/jot-form/long-form/past-employment-page.dto";
+import styles from "../../../../styles/digitalhiringapp.module.css";
+import BaseCheck from "../../base-check";
+import BaseInput from "../../base-input";
+import BaseInputPhone from "../../base-input-phone";
+import StateSelect from "../../state-select";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
+import BaseRadio from "../../base-radio";
+import BaseTextArea from "../../base-text-area";
 
 export function PastEmploymentHistory() {
 	const {
@@ -24,28 +26,32 @@ export function PastEmploymentHistory() {
 
 	const { t } = useTranslation();
 
+	function updateApplicat({
+		employers: past_employers,
+		is_previous_employed,
+	}: PastEmploymentPageDto) {
+		const all_employers: ApplicantEmployerEntity[] = is_previous_employed
+			? past_employers
+			: [];
+		const current_employer: ApplicantEmployerEntity =
+			applicant?.employers?.find((v) => !!v.is_current);
+		if (current_employer) all_employers.push(current_employer);
+
+		setApplicant({
+			...applicant,
+			employers: all_employers,
+		});
+	}
+
 	const form = useFormik({
 		initialValues: new PastEmploymentPageDto(),
 		validationSchema: PastEmploymentPageDto.yupSchema(),
-		onSubmit: ({
-			employers: past_employers,
-			is_previous_employed,
-		}: PastEmploymentPageDto) => {
-			const all_employers: ApplicantEmployerEntity[] = is_previous_employed
-				? past_employers
-				: [];
-			const current_employer: ApplicantEmployerEntity =
-				applicant?.employers?.find((v) => !!v.is_current);
-			if (current_employer) all_employers.push(current_employer);
-
-			setApplicant({
-				...applicant,
-				employers: all_employers,
-			});
-
+		onSubmit: (values: PastEmploymentPageDto) => {
+			updateApplicat(values);
 			stepNext();
 		},
-		onReset: (values) => {
+		onReset: (values: PastEmploymentPageDto) => {
+			updateApplicat(values);
 			stepBack();
 		},
 	});
@@ -62,7 +68,6 @@ export function PastEmploymentHistory() {
 		});
 	}, [applicant]);
 
-
 	useEffect(() => {
 		console.log("form.values", {
 			employerslength: form?.values?.employers?.length,
@@ -70,9 +75,10 @@ export function PastEmploymentHistory() {
 		});
 		console.log("form.errors", form.errors);
 	}, [form.values, form.errors]);
+
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-			<h4
+			{/* <h4
 				className={`${styles.heading__sty} mt-0 mb-0 pb-0 fs-5 text-start`}
 				style={{ color: "gray" }}
 			>
@@ -81,24 +87,36 @@ export function PastEmploymentHistory() {
 					{ number: applicant?.years_cdl_experience > 3 ? 10 : 3 },
 					{ translateProps: true }
 				)}
-			</h4>
-			<h5
-				className={`${styles.heading__sty} pt-0 mt-2 fs-6 text-start`}
-				style={{ color: "gray" }}
-			>
-				{t("ADD_EMPLOYMENT_HISTORY_SUB_HEADING")}
-			</h5>
+			</h4> */}
 			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("PAST_EMPLOYMENT_HISTORY")}</h1>
 
 			<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 				{t("HONEST_ABOUT_PAST_EMPLOYMENT")}
 			</p>
+			<h5
+				className={`${styles.heading__sty} pt-0 mt-2 fs-6 text-start`}
+				style={{ color: "gray" }}
+			>
+				{t("ADD_EMPLOYMENT_HISTORY_SUB_HEADING")}{" "}
+			</h5>
 			<Row className={styles.align__text_left}>
-				<BaseCheck
-					className="mt-2 col-md-8 float-left"
-					name="is_previous_employed"
-					label="PREVIOUSLY_EMPLOYED"
-					formik={form}
+				<BaseRadio
+					name={`is_previous_employed`}
+					className="float-left ml-2 my-2 w-40"
+					label={`PREVIOUSLY_EMPLOYED`}
+					labelPrefix="BooleanType"
+					enumType={BooleanType}
+					value={
+						form.values.is_previous_employed === true
+							? BooleanType.YES
+							: (form.values.is_previous_employed === false && BooleanType.NO)
+					}
+					onChange={({ target: { value } }) => {
+						form.setFieldValue(
+							"is_previous_employed",
+							value === BooleanType.YES ? true : (value === BooleanType.NO && false)
+						);
+					}}
 				/>
 			</Row>
 			{!!form?.values?.is_previous_employed &&
@@ -157,6 +175,9 @@ export function PastEmploymentHistory() {
 										/>
 									</Row>
 									<Row className={styles.bold}>
+										<span className="text-dark">
+											{t("EMPLOYMENT_HISTORY_DATE_NOTE")}
+										</span>
 										<BaseInput
 											className="col-md-6 my-3"
 											required
@@ -287,6 +308,16 @@ export function PastEmploymentHistory() {
 					</Row>
 				)}
 
+			{!!form?.values?.is_previous_employed &&
+				<Row>
+					<BaseTextArea
+						className="mt-3"
+						label="EMPLOYMENT_GAP_DETAILS_LABEL"
+						formik={form}
+						name="employment_gap_details"
+					/>
+				</Row>
+			}
 			<Row className="mt-5">
 				<Col>
 					<Button className="float-right" type="reset">

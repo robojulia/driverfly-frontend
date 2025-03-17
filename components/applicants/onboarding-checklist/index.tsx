@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { Button, Form, Table } from "react-bootstrap";
 import { ThreeCircles } from "react-loader-spinner";
 import { toast } from "react-toastify";
@@ -15,12 +15,15 @@ import ShowFormattedDate from "../../jobs/show-formatted-date";
 import ViewCard from "../../view-details/view-card";
 import ViewPdf from "../../view-details/view-pdf";
 
-import { ApplicantDac } from "../../../enums/applicants/applicant-dac.enum";
 import { ApplicantOnBoardingChecklist } from "../../../enums/applicants/applicant-onboarding-checklist.enum";
+import { CompanyPreferenceCategory } from "../../../enums/company/company-preference-category.enum";
+import { CompanyPreferenceOnboardingChecklistLabel } from "../../../enums/company/company-preferences-onboarding-checklist-label.enum";
 import { DocumentableType } from "../../../enums/documents/documentable-type.enum";
 import { BooleanType } from "../../../enums/jotform/boolean-type.enum";
 import { ApplicantDacEntity } from "../../../models/applicant";
+import { CompanyPreferenceEntity } from "../../../models/company/company-preferences.entity";
 import { DocumentEntity } from "../../../models/documents/document.entity";
+import CompanyApi from "../../../pages/api/company";
 import { ViewApplicantOnboardingChecklistProps } from "../../../types/applicant/view-application-onboarding-checklist-props.type";
 import {
   handleDownloadDocument,
@@ -33,11 +36,13 @@ import {
   ViewDocumentButton,
 } from "../../documents/buttons";
 import ViewDocumentHistory from "../../documents/view-history";
-import BaseRadio from "../../forms/base-radio";
-import SafetyPerformanceHistory from "../safety-performance-history";
-import { PlusCircle } from "react-bootstrap-icons";
-import BaseInput from "../../forms/base-input";
 import BaseCheck from "../../forms/base-check";
+import BaseInput from "../../forms/base-input";
+import BaseRadio from "../../forms/base-radio";
+import { CompanyPreferencesDacForm } from "../../forms/company/company-preferences-dac-form";
+import { CompanyPreferencesOnboardingChecklistForm } from "../../forms/company/company-preferences-onboarding-checklist-form";
+import { LoaderIcon } from "../../loading/loader-icon";
+import SafetyPerformanceHistory from "../safety-performance-history";
 
 export default function OnboardingChecklist(
   props: ViewApplicantOnboardingChecklistProps
@@ -45,18 +50,48 @@ export default function OnboardingChecklist(
   const { t } = useTranslation();
   const { user } = useAuth();
   const applicantApi = new ApplicantApi();
+  const companyApi = new CompanyApi();
 
+  const [editList, setEditList] = useState<boolean>(false);
+  const [companyOnboardingPreferences, setCompanyOnboardingPreferences] =
+    useState<CompanyPreferenceEntity[]>();
   const [pdf, setPdf] = useState({});
   const [applicant, setApplicant] = useState<ApplicantEntity>(null);
 
   useEffectAsync(async () => {
-    if (props.applicant?.id) {
-      const v = await applicantApi.getById(props.applicant?.id);
-      console.log("applicant", v);
-
-      setApplicant(v);
+    try {
+      if (props.applicant?.id) {
+        const v = await applicantApi.getById(props.applicant?.id);
+        setApplicant(v);
+      }
+      if (user?.company) {
+        const preferences = await companyApi.preferences.list(user.company.id, {
+          category: CompanyPreferenceCategory.ONBOARDING_CHECKLIST,
+        });
+        setCompanyOnboardingPreferences(preferences);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
   }, [user]);
+
+  const companyOnboardingChecklist = useMemo(
+    () =>
+      companyOnboardingPreferences?.find(
+        ({ label }) =>
+          label == CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DOCUMETS
+      ),
+    [companyOnboardingPreferences, user]
+  );
+
+  const companyDaclist = useMemo(
+    () =>
+      companyOnboardingPreferences?.find(
+        ({ label }) =>
+          label == CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DAC
+      ),
+    [companyOnboardingPreferences, user]
+  );
 
   const form = useFormik({
     initialValues: new ApplicantDocumentDto(),
@@ -107,12 +142,15 @@ export default function OnboardingChecklist(
     },
   });
 
-  const handleDacChangeClick = async (type: any, dac?: ApplicantDacEntity) => {
+  const handleDacChangeClick = async (
+    type: string,
+    applicatDacItem?: ApplicantDacEntity
+  ) => {
     const data: ApplicantDacEntity = { type };
-    if (dac) {
-      data.id = dac.id;
-      data.value = !!dac.value;
-      data.details = dac.details;
+    if (applicatDacItem) {
+      data.id = applicatDacItem.id;
+      data.value = !!applicatDacItem.value;
+      data.details = applicatDacItem.details;
     }
     dacForm.setValues(data);
   };
@@ -148,12 +186,6 @@ export default function OnboardingChecklist(
     form.setFieldValue("document", { type, id: documentId ?? null });
   };
 
-  /* This is a functional component in TypeScript React that renders a list of buttons for a
-    given document and type. It conditionally renders the buttons based on whether the document type
-    matches the given type and whether the type is SAFETY_PERFORMANCE_HISTORY. The buttons include
-    ViewDocumentButton, AddDocumentButton, DownloadDocumentButton, DeleteDocumentButton, and
-    ViewDocumentHistory. If the type is SAFETY_PERFORMANCE_HISTORY, it renders the
-    SafetyPerformanceHistory component instead of the buttons. */
   const ButtonList = ({ document, type }) => (
     <>
       {(!form.values.document?.type || form.values.document?.type != type) && (
@@ -206,286 +238,63 @@ export default function OnboardingChecklist(
     </>
   );
 
-  const UpdatedAt = ({ document, type }) => {
+  function ChecklistItems() {
     return (
       <>
-        {document ? (
-          <ShowFormattedDate date={document.last_updated_at} />
-        ) : (
-          <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>
-        )}
-      </>
-    );
-  };
-
-  useEffect(() => {
-    console.log("dacForm.values", dacForm.values);
-    console.log("dacForm.errors", dacForm.errors);
-  }, [dacForm.errors, dacForm.values]);
-  return (
-    <>
-      {!!applicant ? (
-        <ViewCard
-          title={props.title ?? "DOCUMENTS"}
-        //   actions={
-        //     <Button size="sm" onClick={() => {}}>
-        //       {t("EDIT_LIST")}
-        //     </Button>
-        //   }
-        >
-          <h4 className="mt-2">{t("COMPLETED")}</h4>
-          <Table striped>
-            <thead>
-              <tr>
-                <th colSpan={2}>{t("DOCUMENT_NAME")}</th>
-                <th colSpan={2}>{t("UPDATED_AT")}</th>
-                {/* <th colSpan={2}>{t("UPLOAD_METHOD")}</th> */}
-                <th colSpan={1}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.values(ApplicantOnBoardingChecklist).map(
-                (type: ApplicantOnBoardingChecklist, i) => {
-                  /* Finding the document in the applicant.documents array that has the same type. */
-                  const document: DocumentEntity = applicant?.documents?.find(
-                    (v) => v.type == type && !!v.path
-                  );
-                  if (document)
-                    return (
-                      <tr key={i}>
-                        <td colSpan={2}>
-                          {t(`ApplicantOnBoardingChecklist.${type}`)}
-                        </td>
-                        <td colSpan={2}>
-                          <UpdatedAt document={document} type={type} />
-                        </td>
-                        {/* <td colSpan={2}></td> */}
-                        <td colSpan={1} className="border border-2 w-50">
-                          <ButtonList document={document} type={type} />
-                          {form.values?.document?.type == type && (
-                            <Form onSubmit={form.handleSubmit}>
-                              <FileInput
-                                name={`document`}
-                                accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
-                                formik={form}
-                                allowedSizeInByte={3145728}
-                              />
-                              <div className="mt-2 d-flex w-100 ">
-                                <Button
-                                  disabled={
-                                    form.isSubmitting ||
-                                    !form.isValid ||
-                                    form.isValidating
-                                  }
-                                  className="mr-2 w-50 theme-primary-btn"
-                                  type="submit"
-                                >
-                                  {t(`SAVE`)}
-                                </Button>
-                                <Button
-                                  type="button"
-                                  className="mr-2 w-50 bg-danger"
-                                  onClick={() => {
-                                    form.resetForm();
-                                  }}
-                                >
-                                  {t(`CANCEL`)}
-                                </Button>
-                              </div>
-                            </Form>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                }
-              )}
-            </tbody>
-          </Table>
-          <h4 className="mt-5">{t("UPLOAD_FILES")}</h4>
-          <Table striped>
-            <thead>
-              <tr>
-                <th colSpan={2}>{t("DOCUMENT_NAME")}</th>
-                {/* <th colSpan={2}>{t("AUTO_UPLOAD?")}</th> */}
-                <th colSpan={1}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.values(ApplicantOnBoardingChecklist).map(
-                (type: ApplicantOnBoardingChecklist, i) => {
-                  /* Finding the document in the applicant.documents array that has the same type. */
-                  const document: DocumentEntity = applicant?.documents?.find(
-                    (v) => v.type == type && v.path
-                  );
-                  if (!document)
-                    return (
-                      <tr key={i}>
-                        <td colSpan={2}>
-                          {t(`ApplicantOnBoardingChecklist.${type}`)}
-                        </td>
-                        {/* <td colSpan={2}></td> */}
-                        <td colSpan={1} className="border border-2 w-50">
-                          <ButtonList document={document} type={type} />
-                          {form.values?.document?.type == type && (
-                            <Form onSubmit={form.handleSubmit}>
-                              <FileInput
-                                name={`document`}
-                                accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
-                                formik={form}
-                                allowedSizeInByte={3145728}
-                              />
-                              <div className="mt-2 d-flex w-100 ">
-                                <Button
-                                  disabled={
-                                    form.isSubmitting ||
-                                    !form.isValid ||
-                                    form.isValidating
-                                  }
-                                  className="mr-2 w-50 theme-primary-btn"
-                                  type="submit"
-                                >
-                                  {t(`SAVE`)}
-                                </Button>
-                                <Button
-                                  type="button"
-                                  className="mr-2 w-50 bg-danger"
-                                  onClick={() => {
-                                    form.resetForm();
-                                  }}
-                                >
-                                  {t(`CANCEL`)}
-                                </Button>
-                              </div>
-                            </Form>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                }
-              )}
-            </tbody>
-          </Table>
-          <h4 className="mt-5">{t("CHECKLIST_ITEMS")}</h4>
-          <Table striped>
-            <thead>
-              <tr>
-                <th colSpan={2}>{t("TYPE")}</th>
-                {Boolean(props.showCompleted) && (
-                  <th colSpan={1} className="text-center"></th>
-                )}
-                <th colSpan={1} className="text-center">{t("DATE")}</th>
-                <th colSpan={1} className="text-center">{t("DETAILS")}</th>
-                <th colSpan={1}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.values(ApplicantDac).map((value: ApplicantDac, i) => {
-                const dac: ApplicantDacEntity = applicant?.dac?.find(
-                  (v) => v.type == value
+        <h6 className="mt-2">{t("COMPLETED")}</h6>
+        <Table striped>
+          <thead>
+            <tr>
+              <th colSpan={2}>{t("DOCUMENT_NAME")}</th>
+              <th colSpan={2}>{t("UPDATED_AT")}</th>
+              {/* <th colSpan={2}>{t("UPLOAD_METHOD")}</th> */}
+              <th colSpan={1}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {companyOnboardingChecklist?.value?.map(
+              (type: ApplicantOnBoardingChecklist, i) => {
+                /* Finding the document in the applicant.documents array that has the same type. */
+                const document: DocumentEntity = applicant?.documents?.find(
+                  (v) => v.type == type && !!v.path
                 );
-                return (
-                  <tr key={i}>
-                    <td colSpan={2}> {t(`ApplicantDac.${value}`)}</td>
-                    {Boolean(props.showCompleted) && (
-                      <td colSpan={1} className="text-center">
-                        <BaseCheck
-                          className=""
-                          disabled
-                          checked={Boolean(
-                            dac?.type && dac.type == value && dac.value
-                          )}
-                        />
+                if (document)
+                  return (
+                    <tr key={i}>
+                      <td colSpan={2}>
+                        {t(`ApplicantOnBoardingChecklist.${type}`)}
                       </td>
-                    )}
-                    <td colSpan={1} className="text-center">
-                      {dac?.last_updated_at ? (
-                        <ShowFormattedDate date={dac?.last_updated_at} />
-                      ) : (
-                        <span className="text-danger font-italic">
-                          {t(`NOT_AVAILABLE`)}
-                        </span>
-                      )}
-                    </td>
-                    <td colSpan={1} className="text-center">
-                      {dac?.details ? (
-                        dac?.details
-                      ) : (
-                        <span className="text-danger font-italic">
-                          {t(`NOT_AVAILABLE`)}
-                        </span>
-                      )}
-                    </td>
-                    <td colSpan={1}>
-                      <div className="w-100">
-                        {dacForm.values.type != value ? (
-                          <div className="d-flex justify-content-between">
-                            <Button
-                              className="ml- w-100"
-                              disabled={
-                                form.isSubmitting ||
-                                !form.isValid ||
-                                form.isValidating
-                              }
-                              onClick={() => {
-                                handleDacChangeClick(value, dac);
-                              }}
-                            >
-                              {t("CHANGE")}
-                            </Button>
-                          </div>
-                        ) : (
-                          <Form onSubmit={dacForm.handleSubmit}>
-                            <div style={{ display: 'flex', flexDirection: "column", justifyContent: "center" }}>
-                              <BaseRadio
-                                name={`value`}
-                                className="float-left ml-2 my-2 w-40"
-                                label={`ApplicantDac.${value}`}
-                                labelPrefix="BooleanType"
-                                enumType={BooleanType}
-                                required
-                                value={
-                                  dacForm.values.value
-                                    ? BooleanType.YES
-                                    : BooleanType.NO
-                                }
-                                onChange={({ target: { value } }) => {
-                                  dacForm.setFieldValue(
-                                    "value",
-                                    value == BooleanType.YES ? true : false
-                                  );
-                                }}
-                              />
-                              <BaseInput
-                                name={"DETAILS"}
-                                className=" d-flex justify-content-center align-items-end float-left ml-2 my-1 w-40"
-                                label={"DETAILS"}
-                                placeholder=""
-                                value={dacForm.values.details}
-                                onChange={({ target: { value } }) => {
-                                  dacForm.setFieldValue(
-                                    "details",
-                                    value
-                                  );
-                                }}
-                              />
-                            </div>
-                            <div className="d-flex justify-content-end w-40">
+                      <td colSpan={2}>
+                        <UpdatedAt document={document} type={type} />
+                      </td>
+                      {/* <td colSpan={2}></td> */}
+                      <td colSpan={1} className="border border-2 w-50">
+                        <ButtonList document={document} type={type} />
+                        {form.values?.document?.type == type && (
+                          <Form onSubmit={form.handleSubmit}>
+                            <FileInput
+                              name={`document`}
+                              accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
+                              formik={form}
+                              allowedSizeInByte={3145728}
+                            />
+                            <div className="mt-2 d-flex w-100 ">
                               <Button
                                 disabled={
-                                  dacForm.isSubmitting ||
-                                  !dacForm.isValid ||
-                                  dacForm.isValidating
+                                  form.isSubmitting ||
+                                  !form.isValid ||
+                                  form.isValidating
                                 }
-                                className=" theme-primary-btn"
+                                className="mr-2 w-50 theme-primary-btn"
                                 type="submit"
                               >
                                 {t(`SAVE`)}
                               </Button>
                               <Button
                                 type="button"
-                                className="ml-2 bg-danger"
+                                className="mr-2 w-50 bg-danger"
                                 onClick={() => {
-                                  dacForm.resetForm();
+                                  form.resetForm();
                                 }}
                               >
                                 {t(`CANCEL`)}
@@ -493,26 +302,306 @@ export default function OnboardingChecklist(
                             </div>
                           </Form>
                         )}
-                      </div>
-                    </td>
-                  </tr>
+                      </td>
+                    </tr>
+                  );
+              }
+            )}
+          </tbody>
+        </Table>
+        <h6 className="mt-5">{t("UPLOAD_FILES")}</h6>
+        <Table striped>
+          <thead>
+            <tr>
+              <th colSpan={2}>{t("DOCUMENT_NAME")}</th>
+              {/* <th colSpan={2}>{t("AUTO_UPLOAD?")}</th> */}
+              <th colSpan={1}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {companyOnboardingChecklist?.value?.map(
+              (type: ApplicantOnBoardingChecklist, i) => {
+                /* Finding the document in the applicant.documents array that has the same type. */
+                const document: DocumentEntity = applicant?.documents?.find(
+                  (v) => v.type == type && v.path
                 );
-              })}
-            </tbody>
-          </Table>
-          <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
-        </ViewCard>
-      ) : (
-        <div className="d-flex justify-content-center align-items-center">
-          <ThreeCircles
-            height={50}
-            width={50}
-            color="#5bb0b9"
-            ariaLabel="ball-triangle-loading"
-            visible={true}
+                if (!document)
+                  return (
+                    <tr key={i}>
+                      <td colSpan={2}>
+                        {t(`ApplicantOnBoardingChecklist.${type}`)}
+                      </td>
+                      {/* <td colSpan={2}></td> */}
+                      <td colSpan={1} className="border border-2 w-50">
+                        <ButtonList document={document} type={type} />
+                        {form.values?.document?.type == type && (
+                          <Form onSubmit={form.handleSubmit}>
+                            <FileInput
+                              name={`document`}
+                              accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
+                              formik={form}
+                              allowedSizeInByte={3145728}
+                            />
+                            <div className="mt-2 d-flex w-100 ">
+                              <Button
+                                disabled={
+                                  form.isSubmitting ||
+                                  !form.isValid ||
+                                  form.isValidating
+                                }
+                                className="mr-2 w-50 theme-primary-btn"
+                                type="submit"
+                              >
+                                {t(`SAVE`)}
+                              </Button>
+                              <Button
+                                type="button"
+                                className="mr-2 w-50 bg-danger"
+                                onClick={() => {
+                                  form.resetForm();
+                                }}
+                              >
+                                {t(`CANCEL`)}
+                              </Button>
+                            </div>
+                          </Form>
+                        )}
+                      </td>
+                    </tr>
+                  );
+              }
+            )}
+          </tbody>
+        </Table>
+        <h6 className="mt-5">{t("CHECKLIST_ITEMS")}</h6>
+        <Table striped>
+          <thead>
+            <tr>
+              <th colSpan={2}>{t("TYPE")}</th>
+              {Boolean(props.showCompleted) && (
+                <th colSpan={1} className="text-center"></th>
+              )}
+              <th colSpan={1} className="text-center">
+                {t("DATE")}
+              </th>
+              <th colSpan={1} className="text-center">
+                {t("DETAILS")}
+              </th>
+              <th colSpan={1}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {companyDaclist?.value?.map((companyDacItemType: string, i) => {
+              const applicatDacItem: ApplicantDacEntity = applicant?.dac?.find(
+                (v) => v.type == companyDacItemType
+              );
+              return (
+                <tr key={i}>
+                  <td colSpan={2}> {companyDacItemType}</td>
+                  {Boolean(props.showCompleted) && (
+                    <td colSpan={1} className="text-center">
+                      <BaseCheck
+                        className=""
+                        disabled
+                        checked={
+                          applicatDacItem?.type &&
+                          applicatDacItem?.type == companyDacItemType &&
+                          applicatDacItem?.value
+                        }
+                      />
+                    </td>
+                  )}
+                  <td colSpan={1} className="text-center">
+                    {applicatDacItem?.last_updated_at ? (
+                      <ShowFormattedDate
+                        date={applicatDacItem?.last_updated_at}
+                      />
+                    ) : (
+                      <span className="text-danger font-italic">
+                        {t(`NOT_AVAILABLE`)}
+                      </span>
+                    )}
+                  </td>
+                  <td colSpan={1} className="text-center">
+                    {applicatDacItem?.details ? (
+                      applicatDacItem?.details
+                    ) : (
+                      <span className="text-danger font-italic">
+                        {t(`NOT_AVAILABLE`)}
+                      </span>
+                    )}
+                  </td>
+                  <td colSpan={1}>
+                    <div className="w-100">
+                      {dacForm?.values?.type != companyDacItemType ? (
+                        <div className="d-flex justify-content-between">
+                          <Button
+                            className="ml- w-100"
+                            disabled={
+                              form.isSubmitting ||
+                              !form.isValid ||
+                              form.isValidating
+                            }
+                            onClick={() => {
+                              handleDacChangeClick(
+                                companyDacItemType,
+                                applicatDacItem
+                              );
+                            }}
+                          >
+                            {t("CHANGE")}
+                          </Button>
+                        </div>
+                      ) : (
+                        <Form onSubmit={dacForm.handleSubmit}>
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <BaseRadio
+                              name={`value`}
+                              className="float-left ml-2 my-2 w-40"
+                              label={companyDacItemType}
+                              labelPrefix="BooleanType"
+                              enumType={BooleanType}
+                              required
+                              value={
+                                dacForm.values.value
+                                  ? BooleanType.YES
+                                  : BooleanType.NO
+                              }
+                              onChange={({ target: { value } }) => {
+                                dacForm.setFieldValue(
+                                  "value",
+                                  value == BooleanType.YES ? true : false
+                                );
+                              }}
+                            />
+                            <BaseInput
+                              name={"details"}
+                              className=" d-flex justify-content-center align-items-end float-left ml-2 my-1 w-40"
+                              label={"DETAILS"}
+                              placeholder=""
+                              formik={dacForm}
+                            />
+                          </div>
+                          <div className="d-flex justify-content-end w-100 mt-2">
+                            <Button
+                              disabled={
+                                dacForm.isSubmitting ||
+                                !dacForm.isValid ||
+                                dacForm.isValidating
+                              }
+                              className=" theme-primary-btn w-50"
+                              type="submit"
+                            >
+                              {t(`SAVE`)} <LoaderIcon isLoading={dacForm.isSubmitting} />
+                            </Button>
+                            <Button
+                              type="button"
+                              className="ml-2 bg-danger w-50"
+                              onClick={() => {
+                                dacForm.resetForm();
+                              }}
+                            >
+                              {t(`CANCEL`)}
+                            </Button>
+                          </div>
+                        </Form>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+        <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
+      </>
+    );
+  }
+
+  // useEffect(() => {
+  //   console.log("dacForm.values", dacForm.values);
+  //   console.log("dacForm.errors", dacForm.errors);
+  // }, [dacForm.errors, dacForm.values]);
+
+  if (!applicant?.id)
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+        <ThreeCircles
+          height={50}
+          width={50}
+          color="#5bb0b9"
+          ariaLabel="ball-triangle-loading"
+          visible={true}
+        />
+      </div>
+    );
+
+  return (
+    <ViewCard
+      title={props.title ?? "DOCUMENTS"}
+      actions={
+        <>
+          {
+            <Button size="sm" onClick={() => setEditList(!editList)}>
+              {editList ? t("CANCEL") : t("EDIT_LIST")}
+            </Button>
+          }
+        </>
+      }
+    >
+      {editList ? (
+        <>
+          <CompanyPreferencesOnboardingChecklistForm
+            className="m-5"
+            companyOnboardingChecklist={companyOnboardingChecklist}
+            onSaveComplete={(newChecklist: CompanyPreferenceEntity) => {
+              setCompanyOnboardingPreferences([
+                ...companyOnboardingPreferences?.filter(
+                  (v) =>
+                    v.label !==
+                    CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DOCUMETS
+                ),
+                newChecklist,
+              ]);
+            }}
           />
-        </div>
+          <hr/>
+          <CompanyPreferencesDacForm
+            className="m-5"
+            companyDaclist={companyDaclist}
+            onSaveComplete={(newDac: CompanyPreferenceEntity) => {
+              setCompanyOnboardingPreferences([
+                ...companyOnboardingPreferences?.filter(
+                  (v) =>
+                    v.label !==
+                    CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DAC
+                ),
+                newDac,
+              ]);
+            }}
+          />
+        </>
+      ) : (
+        <ChecklistItems />
+      )}
+    </ViewCard>
+  );
+}
+
+const UpdatedAt = ({ document }) => {
+  return (
+    <>
+      {document ? (
+        <ShowFormattedDate date={document.last_updated_at} />
+      ) : (
+        <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>
       )}
     </>
   );
-}
+};

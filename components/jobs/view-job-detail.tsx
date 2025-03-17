@@ -15,6 +15,8 @@ import ViewModal from '../view-details/view-modal';
 import CompanyPhoto from './company-photo';
 import JobVehicles from './job-vehicles';
 import ShowFormattedDate from './show-formatted-date';
+import { isExpired } from '../../utils/date';
+import { ShowUsFormattedDateTime } from '../../utils/show-us-formatted-date-time';
 
 export default function ViewJobDetail(props: ViewJobDetailProps) {
 
@@ -57,7 +59,12 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                                 </span>
                                 <div className="media-body">
                                     <h4 className="mt-0">
-                                        {job.title}
+                                        {job.title} {" "}
+
+                                        {isExpired(job.expiry_date) && (
+                                            <span className='text-danger'>({t("EXPIRED")})</span>
+                                        )}
+
                                     </h4>
                                     <div className="job-date-author">
                                         <ShowFormattedDate

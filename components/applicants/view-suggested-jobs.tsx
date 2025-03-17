@@ -29,12 +29,12 @@ export default function ViewSuggestedJobs({ applicant, company }: ViewSuggestedJ
     return (
         <>
             {applicantSuggestedJobs && (
-                <Col md="12">
+                < >
                     <ApplicantConsiderFor
                         applicant={applicant}
                         applicantSuggestedJobs={applicantSuggestedJobs}
                     />
-                </Col>
+                </>
             )}
         </>
     );

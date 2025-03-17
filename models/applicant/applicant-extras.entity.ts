@@ -81,10 +81,6 @@ export class ApplicantExtrasEntity {
 					then: yup.date().required().nullable(),
 				})
 				.when("type", {
-					is: ApplicantExtras.EMPLOYEE_SS_OR_ID,
-					then: yup.string().optional().nullable(),
-				})
-				.when("type", {
 					is: ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE,
 					then: yup.date().required().nullable(),
 				})

@@ -1,25 +1,55 @@
-import { useTranslation } from "../../../../hooks/use-translation";
-import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
-import ChildPageLayout from "../../../../components/layouts/page/child-page-layout";
-import { JobForm } from "../../../../components/forms/company/job-form";
-import { useState } from "react";
-import { JobEntity } from "../../../../models/job/job.entity";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import FacebookShare from "../../../../components/facebook-share";
+import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
+import { JobForm } from "../../../../components/forms/company/job-form";
+import ChildPageLayout from "../../../../components/layouts/page/child-page-layout";
+import { useTranslation } from "../../../../hooks/use-translation";
+import { JobEntity } from "../../../../models/job/job.entity";
+import JobApi from "../../../api/job";
 
 export default function CreateJob() {
+    const [job, setJob] = useState<JobEntity>(null);
+    const [cloneJob, setCloneJob] = useState<JobEntity>(null);
+
     const { t } = useTranslation();
+    const router = useRouter();
+    const jobApi = new JobApi();
 
-    const [job, setJob] = useState<JobEntity>(null)
+    const fetchJobToClone = async () => {
+        const { clone } = router.query;
+        if (clone) {
+            try {
+                const jobData = await jobApi.getById(+clone);
 
-    const jobUrl: string = `${process.env.FRONTEND_BASE_URL}jobs/${job?.id}/${job?.slug}`
+                const cleanedJob = {
+                    ...jobData,
+                    id: undefined,
+                    applicantsCount: undefined,
+                };
+
+                setCloneJob(cleanedJob);
+            } catch (error) {
+                console.error('Error fetching job to clone:', error);
+            }
+        }
+    };
+
+    useEffect(() => {
+        fetchJobToClone();
+    }, [router.query]);
+
+    const jobUrl = `${process.env.FRONTEND_BASE_URL}jobs/${job?.id}/${job?.slug}`;
 
     return (
         <ChildPageLayout
-            title={t("CREATE_{name}", { name: "JOB" }, { translateProps: true })}
+            title={job?.id ? t("JOBS") : t("CREATE_{name}", { name: "JOB" }, { translateProps: true })}
         >
             {!Boolean(job) ?
-                <JobForm onSaveComplete={(j) => setJob(j)} />
+                <JobForm
+                    onSaveComplete={(j) => setJob(j)}
+                    entity={cloneJob}
+                />
                 :
                 <Container>
                     <h3 className="text-center text-success">{t("CONGRATS")}</h3>
@@ -57,9 +87,8 @@ export default function CreateJob() {
                     </Row> */}
                 </Container>
             }
-        </ChildPageLayout >
+        </ChildPageLayout>
     );
-
 }
 
 CreateJob.getLayout = function getLayout(page) {

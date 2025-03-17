@@ -1,13 +1,15 @@
-import { CompanyPreferenceAutoRecrutingLabel } from './../../enums/company/company-preferences-auto-recruiting-label.enum';
-import { CompanyPreferenceCategory } from "../../enums/company/company-preference-category.enum";
 import * as yup from "yup";
-import "../../utils/yup";
-import { CompanyEntity } from "./company.entity";
-import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
+import { ApplicantOnBoardingChecklist } from '../../enums/applicants/applicant-onboarding-checklist.enum';
+import { CompanyPreferenceCategory } from "../../enums/company/company-preference-category.enum";
+import { CompanyPreferenceEnhancementLabel } from '../../enums/company/company-preference-enhancement-label.enum';
 import { CompanyPreferenceJotformLabel } from "../../enums/company/company-preferences-jotform-label.enum";
+import { CompanyPreferenceOnboardingChecklistLabel } from '../../enums/company/company-preferences-onboarding-checklist-label.enum';
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
 import { JobGeography } from "../../enums/jobs/job-geography.enum";
-import { CompanyPreferenceEnhancementLabel } from '../../enums/company/company-preference-enhancement-label.enum';
+import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
+import "../../utils/yup";
+import { CompanyPreferenceAutoRecrutingLabel } from './../../enums/company/company-preferences-auto-recruiting-label.enum';
+import { CompanyEntity } from "./company.entity";
 
 export class CompanyPreferenceEntity {
     constructor() { }
@@ -69,6 +71,25 @@ export class CompanyPreferenceEntity {
                         .when("label", {
                             is: CompanyPreferenceEnhancementLabel.ADD_SSN_ON_DHA,
                             then: yup.boolean().optional().nullable()
+                        })
+                })
+                .when("category", {
+                    is: CompanyPreferenceCategory.ONBOARDING_CHECKLIST,
+                    then: yup.mixed()
+                        .when("label", {
+                            is: CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DOCUMETS,
+                            then: yup.array((yup.string() as any).required().enum(ApplicantOnBoardingChecklist)).nullable()
+                        })
+                        .when("label", {
+                            is: CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DAC,
+                            then: yup.array()
+                                .of(yup.string().required())
+                                .test(
+                                    'unique',
+                                    'Items in the array must be unique',
+                                    (value) => Array.isArray(value) && new Set(value).size === value.length
+                                )
+                                .nullable(),
                         })
                 })
         });

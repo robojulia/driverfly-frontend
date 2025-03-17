@@ -27,6 +27,7 @@ import BaseInputPhone from "../base-input-phone";
 import StateSelect from "../state-select";
 import { BaseFormProps } from "./base-form-props";
 import { LoaderIcon } from "../../loading/loader-icon";
+import BaseTextArea from "../base-text-area";
 
 export interface ApplicantWorkHistoryFormProps extends BaseFormProps<ApplicantEntity> {
     isSubmitting: boolean;
@@ -353,6 +354,12 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                             </Accordion>
                                         );
                                     })}
+                                    <BaseTextArea
+                                        className="mt-3"
+                                        label="EMPLOYMENT_GAP_DETAILS_LABEL"
+                                        formik={form}
+                                        name="employment_gap_details"
+                                    />
                                 </>
                             )}
 

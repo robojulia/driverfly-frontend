@@ -3,13 +3,14 @@ import { useContext, useEffect } from "react";
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { PastSuspensionDto } from "../../../../models/jot-form/long-form/past-suspension.dto";
-import ViewCard from "../../../view-details/view-card";
-import BaseCheck from "../../base-check";
-import BaseInput from "../../base-input";
-import BaseTextArea from "../../base-text-area";
 import styles from "../../../../styles/digitalhiringapp.module.css";
+import ViewCard from "../../../view-details/view-card";
+import BaseInput from "../../base-input";
+import BaseRadio from "../../base-radio";
+import BaseTextArea from "../../base-text-area";
 
 export function PastSuspension() {
 
@@ -41,9 +42,9 @@ export function PastSuspension() {
 	useEffect(() => {
 		form.setValues({
 			...form.values,
-			has_past_dui: applicant?.has_past_dui,
+			has_past_dui: applicant?.has_past_dui || null,
 			dui_years: applicant?.dui_years,
-			license_revoked: applicant?.license_revoked,
+			license_revoked: applicant?.license_revoked || null,
 			license_revoked_details: applicant?.license_revoked_details,
 		});
 	}, [applicant]);
@@ -59,12 +60,23 @@ export function PastSuspension() {
 
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={styles.paragraph__left}>
-					<BaseCheck
-						className="float-left col"
-						required
-						name="license_revoked"
-						label="LICENSE_PREVILLAGES"
-						formik={form}
+					<BaseRadio
+						name={`license_revoked`}
+						className="float-left ml-2 my-2 w-40"
+						label={`LICENSE_PREVILLAGES`}
+						labelPrefix="BooleanType"
+						enumType={BooleanType}
+						value={
+							form.values.license_revoked === true
+								? BooleanType.YES
+								: (form.values.license_revoked === false && BooleanType.NO)
+						}
+						onChange={({ target: { value } }) => {
+							form.setFieldValue(
+								"license_revoked",
+								value === BooleanType.YES ? true : (value === BooleanType.NO && false)
+							);
+						}}
 					/>
 				</Row>
 				{form.values.license_revoked ? (
@@ -78,12 +90,25 @@ export function PastSuspension() {
 					</Row>
 				) : null}
 				<Row className={styles.paragraph__left}>
-					<BaseCheck
-						className="col-12 mt-2"
-						label="HAS_DUIS_DHA"
-						name="has_past_dui"
-						formik={form}
+					<BaseRadio
+						name={`has_past_dui`}
+						className="float-left ml-2 my-2 w-40"
+						label={`HAS_DUIS_DHA`}
+						labelPrefix="BooleanType"
+						enumType={BooleanType}
+						value={
+							form.values.has_past_dui === true
+								? BooleanType.YES
+								: (form.values.has_past_dui === false && BooleanType.NO)
+						}
+						onChange={({ target: { value } }) => {
+							form.setFieldValue(
+								"has_past_dui",
+								value === BooleanType.YES ? true : (value === BooleanType.NO && false)
+							);
+						}}
 					/>
+
 					{form.values?.has_past_dui && (
 						<Col xs="12" className="mt-2">
 							<ViewCard

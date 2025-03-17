@@ -3,4 +3,5 @@ export enum CompanyPreferenceCategory {
     AUTO_RECRUITING = "AUTO_RECRUITING",
     ENHANCEMENT = "ENHANCEMENT",
     VOE = "VOE",
+    ONBOARDING_CHECKLIST = "ONBOARDING_CHECKLIST",
 }

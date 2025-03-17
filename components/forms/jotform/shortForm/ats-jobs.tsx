@@ -1,28 +1,26 @@
-import React, { useContext, useState } from "react";
-import { Button, Col, Row, Form } from "react-bootstrap";
 import { useFormik } from "formik";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { useTranslation } from "../../../../hooks/use-translation";
+import { useContext, useState } from "react";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
-import { LoaderIcon } from "../../../loading/loader-icon";
-import JobApi from "../../../../pages/api/job";
-import { useEffectAsync } from "../../../../utils/react";
-import { JobEntity } from "../../../../models/job/job.entity";
-import BaseCheck from "../../base-check";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { AtsJobDto } from "../../../../models/jot-form/short-form/ats-job.dto";
+import styles from "../../../../styles/digitalhiringapp.module.css";
+import { useEffectAsync } from "../../../../utils/react";
+import { LoaderIcon } from "../../../loading/loader-icon";
+import BaseCheck from "../../base-check";
 import BaseSelect from "../../base-select";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
+import BaseRadio from "../../base-radio";
 
 export function AtsJobs() {
 
     const {
-        state: { applicant, jobs },
+        state: { applicant, jobs, companyJobs },
         method: { setJobs, stepNext, stepBack },
     }: JotFormContextType = useContext(JotformContext);
 
-    const jobApi = new JobApi()
     const { t } = useTranslation();
 
-    const [companyJobs, setCompanyJobs] = useState<JobEntity[]>(null)
     const [jobCount, setJobCount] = useState<number>(null)
 
     const form = useFormik({
@@ -41,21 +39,16 @@ export function AtsJobs() {
 
     useEffectAsync(async () => {
         if (form.values?.applying_for_job) {
-            const response = await jobApi.search({
-                companyId: applicant?.company?.id,
-                withoutPagination: true
-            }) as JobEntity[]
-            setCompanyJobs(response)
-            setJobCount(response?.length > 0 ? response?.length : -1)
+            setJobCount(companyJobs?.length > 0 ? companyJobs?.length : -1)
         } else {
             form.setFieldValue('jobId', null)
             setJobCount(0)
         }
-    }, [applicant, form.values?.applying_for_job]);
+    }, [companyJobs, form.values?.applying_for_job]);
 
 
     useEffectAsync(async () => {
-        const job = jobs?.find(v => v?.id)
+        const job = jobs?.find(v => companyJobs?.find(cjob => cjob.id == v.id))
         form.setValues({
             applying_for_job: Boolean(job?.id),
             jobId: job?.id,
@@ -69,28 +62,39 @@ export function AtsJobs() {
 
     return (
         <>
-        <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("COMPANY_JOBS")}</h1>
+            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("COMPANY_JOBS")}</h1>
             <Form
                 className={styles.align__text_left}
                 onSubmit={form.handleSubmit}
                 onReset={form.handleReset}
             >
-               
+
                 <Row className="w-100 d-flex justify-content-center">
-                    <BaseCheck
+                    <BaseRadio
+                        name={`applying_for_job`}
+                        className="float-left ml-2 my-2 w-40"
+                        label={`are_you_applying_to_particular_job`}
+                        labelPrefix="BooleanType"
+                        enumType={BooleanType}
+                        value={
+                            form.values.applying_for_job === true
+                                ? BooleanType.YES
+                                : (form.values.applying_for_job === false && BooleanType.NO)
+                        }
+                        onChange={({ target: { value } }) => {
+                            form.setFieldValue(
+                                "applying_for_job",
+                                value === BooleanType.YES ? true : (value === BooleanType.NO && false)
+                            );
+                        }}
                         disabled={jobCount == -1}
-                        label="are_you_applying_to_particular_job"
-                        className="col-md-6 my-3 "
-                        required
-                        name="applying_for_job"
-                        formik={form}
                     />
                 </Row>
-                <Row className="w-100 d-flex justify-content-center">
-                    <Col md="6">
+                <Row className="w-100 d-flex ">
+                    <Col md="12">
                         {jobCount > 0 && <>
                             <BaseSelect
-                                className="my-3 font-weight-bold"
+                                className="my-1 font-weight-bold"
                                 label="POSITION"
                                 formik={form}
                                 name="jobId"
@@ -115,7 +119,7 @@ export function AtsJobs() {
 
                     <Col>
                         <Button
-                            disabled={(form.isValidating || form.isSubmitting || !form.isValid || (Boolean(form.values.applying_for_job) && Boolean(jobCount > 0))? !(Boolean(form.values.applying_for_job) && Boolean(form.values.jobId)) : false)}
+                            disabled={(form.isValidating || form.isSubmitting || !form.isValid || (Boolean(form.values.applying_for_job) && Boolean(jobCount > 0)) ? !(Boolean(form.values.applying_for_job) && Boolean(form.values.jobId)) : false)}
                             className="float-left theme-secondary-btn"
                             type="submit"
                         >

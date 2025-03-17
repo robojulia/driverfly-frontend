@@ -88,6 +88,10 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 
 	}, [applicant]);
 
+	const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+	const now = new Date().toLocaleString('en-US', { timeZone: userTimeZone });
+	const currentDate = new Date(now).toISOString().split('T')[0];
+
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit}>
@@ -136,7 +140,7 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 						name="APPLY_DATE.value"
 						placeholder="DATE"
 						max={`9999-12-31`}
-						min={new Date().toISOString().split("T")[0]}
+						min={currentDate}
 						label="DATE"
 						formik={form}
 					/>

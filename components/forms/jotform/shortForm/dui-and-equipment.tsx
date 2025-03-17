@@ -66,7 +66,7 @@ export function DuiAndEquipment() {
         <>
             <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("EQUIPMENT_DRIVEN")}</h1>
             <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-                <Row>
+                {/* <Row> */}
                     <ViewCard
                         title="equipment_experience"
                         actions={
@@ -149,7 +149,7 @@ export function DuiAndEquipment() {
                             </>
                         )}
                     </ViewCard>
-                </Row>
+                {/* </Row> */}
                 <Row className="mt-4">
                     <Col>
                         <Button className="float-right" type="reset">

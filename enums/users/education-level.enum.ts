@@ -1,5 +1,6 @@
 export enum EducationLevel {
     HIGH_SCHOOL = 'HIGH_SCHOOL',
+    SOME_COLLEGE = 'SOME_COLLEGE',
     ASSOCIATE = 'ASSOCIATE',
     BACHELOR = 'BACHELOR',
     MASTER = 'MASTER',

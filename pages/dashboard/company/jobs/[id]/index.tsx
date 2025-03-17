@@ -1,19 +1,20 @@
-import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
-import ChildPageLayout from "../../../../../components/layouts/page/child-page-layout";
-import { toast } from "react-toastify";
-import { Button, ButtonGroup } from "react-bootstrap";
-import { Pencil } from "react-bootstrap-icons";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useEffectAsync } from "../../../../../utils/react";
+import { Button, ButtonGroup } from "react-bootstrap";
+import { Pencil } from "react-bootstrap-icons";
+import { toast } from "react-toastify";
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
+import ChildPageLayout from "../../../../../components/layouts/page/child-page-layout";
 import { useAuth } from "../../../../../hooks/use-auth";
 import { useTranslation } from "../../../../../hooks/use-translation";
+import { useEffectAsync } from "../../../../../utils/react";
 
-import JobApi from "../../../../api/job";
-import { JobEntity } from "../../../../../models/job/job.entity";
 import { DeleteButton } from "../../../../../components/buttons/delete-button";
-import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
+import { ReactivateJobButton } from "../../../../../components/jobs/reactivate-job";
 import ViewJobDetail from "../../../../../components/jobs/view-job-detail";
+import { JobEntity } from "../../../../../models/job/job.entity";
+import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
+import JobApi from "../../../../api/job";
 
 export default function ViewJob({ id }) {
     const router = useRouter();
@@ -79,6 +80,12 @@ export default function ViewJob({ id }) {
             title={title}
             actions={(
                 <ButtonGroup>
+                    <ReactivateJobButton
+                        variant="outline-success"
+                        job={job}
+                        className="border-0"
+                        onComplete={(j) => setJob(j)}
+                    />
                     {
                         can.delete &&
                         <DeleteButton

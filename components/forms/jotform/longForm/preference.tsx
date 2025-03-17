@@ -107,17 +107,20 @@ export function Preferences() {
 						formik={form}
 					/>
 				</Row>
-				<Row className={styles.align__text_left}>
-					<BaseSelect
-						className="col mb-3 font-weight-bold"
-						label="Do you require W2 employment?"
-						name="REQUIRE_W2_EMPLOYMENT.value"
-						placeholder="CHOOSE"
-						labelPrefix="BooleanPreferenceType"
-						enumType={BooleanPreferenceType}
-						formik={form}
-					/>
-				</Row>
+				{
+					!applicant.is_owner_operator &&
+					<Row className={styles.align__text_left}>
+						<BaseSelect
+							className="col mb-3 font-weight-bold"
+							label="DO_YOU_REQUIRE_W2_EMPLOYMET"
+							name="REQUIRE_W2_EMPLOYMENT.value"
+							placeholder="CHOOSE"
+							labelPrefix="BooleanPreferenceType"
+							enumType={BooleanPreferenceType}
+							formik={form}
+						/>
+					</Row>
+				}
 				<Row className={styles.align__text_left}>
 					<p className={`${styles.paragraph} ${styles.bold} ${styles.align__text_left}`}>
 						{t("NECESSARY_REQUIREMENTS")}
