@@ -112,7 +112,7 @@ export function ApplicantJobsAppliedForm(props: ApplicantJobsAppliedFormProps) {
 
 	useEffectAsync(async () => {
 		const api = new JobApi();
-		const jobs = await api.list();
+		const jobs: JobEntity[] = await api.list() as JobEntity[];
 
 		setJobs(jobs);
 	}, [user]);

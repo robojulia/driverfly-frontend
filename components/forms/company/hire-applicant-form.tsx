@@ -32,7 +32,8 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
 
     useEffectAsync(async () => {
         const api = new JobApi();
-        const jobs = await api.list();
+        const jobs: JobEntity[] = await api.list() as JobEntity[];
+
         setJobs(jobs);
     }, [user]);
 

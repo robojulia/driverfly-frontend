@@ -2,11 +2,12 @@ import { useRef, useState } from "react";
 import Select, { StylesConfig } from "react-select";
 import { useTranslation } from "../../hooks/use-translation";
 
-import { useEffectAsync } from "../../utils/react";
 import { ChattableType } from "../../enums/conversation/chattable-type.enum";
+import { ApplicantEntity } from "../../models/applicant";
+import { EmployeeEntity } from "../../models/employee/employee.entity";
 import ApplicantApi from "../../pages/api/applicant";
 import EmployeeApi from "../../pages/api/employee";
-import { ApplicantEntity } from "../../models/applicant";
+import { useEffectAsync } from "../../utils/react";
 
 export interface ComboboxProps {
     label?: string;
@@ -91,7 +92,7 @@ export default function Combobox(props: ComboboxProps) {
                 is_paginated: false,
             })) as ApplicantEntity[]
         )?.filter((v) => !!v?.phone);
-        const employees = (await employeeApi.list())?.filter(ap => !!ap?.phone);
+        const employees = (await employeeApi.list() as EmployeeEntity[])?.filter(ap => !!ap?.phone);
 
         return [
             ...applicants?.map(v => ({

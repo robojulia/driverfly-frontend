@@ -265,7 +265,7 @@ export default function OnboardingChecklist(
                         {t(`ApplicantOnBoardingChecklist.${type}`)}
                       </td>
                       <td colSpan={2}>
-                        <UpdatedAt document={document} type={type} />
+                        <UpdatedAt document={document} t={t} />
                       </td>
                       {/* <td colSpan={2}></td> */}
                       <td colSpan={1} className="border border-2 w-50">
@@ -594,7 +594,7 @@ export default function OnboardingChecklist(
   );
 }
 
-const UpdatedAt = ({ document }) => {
+const UpdatedAt = ({ document, t }) => {
   return (
     <>
       {document ? (

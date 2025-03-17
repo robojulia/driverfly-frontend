@@ -65,10 +65,10 @@ import UserApi from "../../../pages/api/user";
 import { buildReferral } from "../../../utils/common";
 import { focusOnErrorField } from "../../../utils/form-error";
 import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
+import ShowFormattedDate from "../../jobs/show-formatted-date";
 import ViewModal from "../../view-details/view-modal";
 import { ReferralSourceForm } from "../admin/referral-source-form";
 import { JobForm } from "./job-form";
-import ShowFormattedDate from "../../jobs/show-formatted-date";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
@@ -177,7 +177,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		// });
 
 		const api = new JobApi();
-		const jobs = await api.list();
+		const jobs: JobEntity[] = await api.list() as JobEntity[];
 
 		setJobs(jobs);
 

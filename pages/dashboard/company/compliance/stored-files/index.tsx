@@ -12,12 +12,14 @@ import ShowFormattedDate from "../../../../../components/jobs/show-formatted-dat
 import EntityForm from "../../../../../components/layouts/page/entity-form";
 import PageLayout from "../../../../../components/layouts/page/page-layout";
 import { TabbedLayout } from "../../../../../components/layouts/page/tabbed-layout";
+import { LoaderIcon } from "../../../../../components/loading/loader-icon";
 import OverlyPopover from "../../../../../components/popover/overly-popover";
 import ViewDataTable, {
   getDataTableColumnKey,
 } from "../../../../../components/view-details/view-data-table";
 import ViewModal from "../../../../../components/view-details/view-modal";
 import ViewPdf from "../../../../../components/view-details/view-pdf";
+import { EmployeeStatus } from "../../../../../enums/applicants/employee-status.enum";
 import { CompanyDocumentType } from "../../../../../enums/compliance/company-document-type.enum";
 import { useAuth } from "../../../../../hooks/use-auth";
 import { useTranslation } from "../../../../../hooks/use-translation";
@@ -31,8 +33,6 @@ import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
 import ComplianceApi from "../../../../api/compliance";
 import EmployeeApi from "../../../../api/employee";
-import { EmployeeStatus } from "../../../../../enums/applicants/employee-status.enum";
-import { LoaderIcon } from "../../../../../components/loading/loader-icon";
 
 export default function StoredFiles() {
   const { user } = useAuth();
@@ -88,7 +88,7 @@ export default function StoredFiles() {
       setIsFetchingApplicants(false);
 
       setIsFetchingEmployees(true);
-      const e = await employeeApi.list();
+      const e = await employeeApi.list() as EmployeeEntity[];
       setEmployees(e?.filter(({ email, status }) => !!email && status == EmployeeStatus.ACTIVE));
       setIsFetchingEmployees(false);
     },

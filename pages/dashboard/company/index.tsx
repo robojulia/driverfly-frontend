@@ -60,9 +60,9 @@ export default function Dashboard() {
         if (company?.id) {
             const a = await applicantApi.list({ withHired: true, is_paginated: false });
             setApplicants((a as ApplicantEntity[]));
-            const e = await employeeApi.list({ status: [EmployeeStatus.ACTIVE] });
+            const e = await employeeApi.list({ status: [EmployeeStatus.ACTIVE] }) as EmployeeEntity[];
             setEmployees(e);
-            const j = (await jobApi.list())?.filter(
+            const j = (await jobApi.list() as JobEntity[])?.filter(
                 (job) =>
                     job?.status == Status.ACTIVE &&
                     new Date(job?.expiry_date) >= todayDate

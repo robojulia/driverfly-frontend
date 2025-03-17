@@ -65,7 +65,7 @@ export default function Call() {
             );
         await employeeApi
             .list()
-            ?.then((data) => {
+            ?.then((data: EmployeeEntity[]) => {
                 setloading(false);
                 setEmployees(data?.filter((v) => Boolean(v.phone)));
             })
