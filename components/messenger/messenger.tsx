@@ -67,6 +67,10 @@ export function Messenger(props) {
     async function updateConversationsForInboundMessage(
         message: ConversationMessageEntity
     ): Promise<void> {
+        console.log("Inbound message", message)
+
+        // await fetchConversations();
+        const updatedConversation: ConversationEntity = await this.conversationApi.getById(message?.conversation?.id)
         if (message?.conversation?.id == conversation?.id) {
             // let messages: ConversationMessageEntity[] =
             //     conversation?.messages?.filter((m) => m?.id != message?.id) ?? [];
@@ -91,41 +95,52 @@ export function Messenger(props) {
             //     ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
             // setConversations(updatedConversations);
 
-
-            const updatedConversation: ConversationEntity = {
-                ...conversation,
-                messages: conversation?.messages?.map((m) =>
-                    m.id == message.id ? message : m
-                ),
-                lastMessage:
-                    conversation?.lastMessage?.id == message?.id
-                        ? message
-                        : conversation?.lastMessage,
-            };
+            // const updatedConversation: ConversationEntity = {
+            //     ...conversation,
+            //     messages: conversation?.messages?.map((m) =>
+            //         m.id == message.id ? message : m
+            //     ),
+            //     lastMessage:
+            //         conversation?.lastMessage?.id == message?.id
+            //             ? message
+            //             : conversation?.lastMessage,
+            // };
             setConversation(updatedConversation);
 
         } else {
+            // const updatedConversation = await this.conversationApi.getById(message?.conversation?.id);
+            // const updatedConversations = conversations
+            //     ?.map((c) =>
+            //         c.id == message?.conversation?.id
+            //             ? { ...c, ...message?.conversation, lastMessage: message, unread: c.unread++ }
+            //             : { ...c, unread: c.unread++ }
+            //     )
+            //     ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
+            // setConversations(updatedConversations);
+            // toast.info(
+            //     <>
+            //         {t("NEW_MESSAGE_FROM")}
+            //         <span className="text-theme">
+            //             {message?.conversation?.chattable_name}
+            //         </span>
+            //     </>,
+            //     {
+            //         onClick: () =>
+            //             onConversationClick(
+            //                 conversations.find((c) => c.id == message.conversation?.id)
+            //             ),
+            //     }
+            // );
+
             const updatedConversations = conversations
                 ?.map((c) =>
-                    c.id == message?.conversation?.id
-                        ? { ...c, ...message?.conversation, lastMessage: message }
-                        : c
+                    c.id == updatedConversation?.id
+                        ? { ...c, ...updatedConversation, unread: c.unread++ }
+                        : { ...c }
                 )
                 ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
             setConversations(updatedConversations);
-            toast(
-                t(
-                    "NEW_MESSAGE_{from}",
-                    { from: message?.conversation?.chattable_name ?? "APPLICANT" },
-                    { translateProps: true }
-                ),
-                {
-                    onClick: () =>
-                        onConversationClick(
-                            conversations.find((c) => c.id == message.conversation?.id)
-                        ),
-                }
-            );
+
         }
         resetSocketData();
     }

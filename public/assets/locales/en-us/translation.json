@@ -1364,6 +1364,7 @@
   "YESTERDAY": "Yesterday",
   "CREATE_NEW_MESSAGE": "Create New Message",
   "NEW_MESSAGE_{from}": "New Message from {{from}}",
+  "NEW_MESSAGE_FROM": "New Message from ",
   "START_TYPING_TO_SEE_OPTIONS": "Start typing to see options",
   "TYPE_AT_LEAST_{num}_CHARACTERS_TO_SEE_OPTIONS": "Type at least {{num}} characters to see options",
   "NO_MATCHING_RESULTS": "No matching results",
