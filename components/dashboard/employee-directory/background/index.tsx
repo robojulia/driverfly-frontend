@@ -70,6 +70,9 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 									HIRE_DATE: employee?.hire_date
 										? moment.utc(employee.hire_date).format('ddd MMM DD YYYY')
 										: t("N/A"),
+									TERMINATION_DATE: employee?.termination_date
+										? moment.utc(employee.termination_date).format('ddd MMM DD YYYY')
+										: t("N/A"),
 								}}
 							/>
 						</Col>
