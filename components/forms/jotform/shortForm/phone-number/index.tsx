@@ -143,6 +143,8 @@ export function PhoneNumber() {
             Boolean(otpApplicant?.applicant?.id) ||
             Boolean(otpApplicant?.applicantId)
         ) {
+            console.log("socketInitializer");
+
             socketInitializer(
                 otpApplicant?.applicantId || applicant?.id,
                 ({ error_message, status, expiry }) => {
