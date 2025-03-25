@@ -29,6 +29,7 @@ export const socketInitializer = async (
     applicantId: string | number,
     handleOutboundMessageStatus?: (e?: any) => void
 ): Promise<void> => {
+    return;
     const MAX_TRIES = 1;
     let tries = 0;
     if (tries > MAX_TRIES) {
