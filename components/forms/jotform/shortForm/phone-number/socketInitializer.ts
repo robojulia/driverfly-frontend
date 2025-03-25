@@ -27,6 +27,9 @@ export const socketInitializer = async (
     applicantId: string | number,
     handleOutboundMessageStatus?: (e?: any) => void
 ): Promise<void> => {
+    const MAX_TRIES = 5;
+    let tries = 0;
+
     // Add a connect listener
     /* This code is setting up a listener for the 'connection' event on the socket object. When a client
                 connects to the server, this event will be triggered and the function passed as the second argument
@@ -43,6 +46,7 @@ export const socketInitializer = async (
                 client has disconnected. */
     socket.on("disconnect", () => {
         console.log("Socket :: Client disconnected.");
+        socket.close();
     });
 
     // Error listener
@@ -52,9 +56,13 @@ export const socketInitializer = async (
                 there was a connection error and the reason for the error. */
     socket.on("connect_error", (err) => {
         console.log(`Socket :: connect_error due to ${err.message}`, err.stack);
-        setTimeout(() => {
-            socket.connect();
-        }, 1000);
+        socket.close();
+        if (tries <= MAX_TRIES) {
+            tries++;
+            setTimeout(() => {
+                socket.connect();
+            }, 1000);
+        }
     });
 
 
