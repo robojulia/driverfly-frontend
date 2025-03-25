@@ -1,9 +1,11 @@
 const io = require("socket.io-client");
 import { Socket } from "socket.io-client";
-import { ApplicantEntity } from "../../../../../models/applicant";
 
 export const socket: Socket = io(`${process.env.BASE_URL}`, {
     transports: ["websocket"],
+    reconnectionAttempts: 5, // Limit reconnections
+    reconnectionDelay: 2000, // Wait 2 seconds before retrying
+    timeout: 5000, // Connection timeout of 5 seconds    
     // rejectUnauthorized: false,
     // path: "/socket.io",
     // protocols: ["ws:// ", "wss://"],
@@ -27,8 +29,11 @@ export const socketInitializer = async (
     applicantId: string | number,
     handleOutboundMessageStatus?: (e?: any) => void
 ): Promise<void> => {
-    const MAX_TRIES = 5;
+    const MAX_TRIES = 1;
     let tries = 0;
+    if (tries > MAX_TRIES) {
+        return;
+    }
 
     // Add a connect listener
     /* This code is setting up a listener for the 'connection' event on the socket object. When a client
@@ -36,7 +41,7 @@ export const socketInitializer = async (
                 will be executed. In this case, it simply logs a message to the console indicating that a client has
                 connected. */
     socket.on("connect", () => {
-        console.log("Socket :: Client connect.", socket?.id);
+        console.log("✅ Socket :: Client connect.", socket?.id);
     });
 
     // Disconnect listener
@@ -45,7 +50,7 @@ export const socketInitializer = async (
                 argument will be executed. In this case, it simply logs a message to the console indicating that a
                 client has disconnected. */
     socket.on("disconnect", () => {
-        console.log("Socket :: Client disconnected.");
+        console.warn("Socket :: Client disconnected.");
         socket.close();
     });
 
@@ -55,14 +60,20 @@ export const socketInitializer = async (
                 argument will be executed. In this case, it simply logs a message to the console indicating that
                 there was a connection error and the reason for the error. */
     socket.on("connect_error", (err) => {
-        console.log(`Socket :: connect_error due to ${err.message}`, err.stack);
+        console.error(`❌ Socket :: connect_error due to ${err.message}`, err.stack);
         socket.close();
-        if (tries <= MAX_TRIES) {
-            tries++;
-            setTimeout(() => {
-                socket.connect();
-            }, 1000);
+
+        if (tries >= MAX_TRIES) {
+            console.warn("🛑 Max connection retries reached, stopping reconnection.");
+            return;
         }
+
+        tries++;
+        setTimeout(() => {
+            console.log(`🔄 Reconnecting attempt ${tries}/${MAX_TRIES}...`);
+            tries++;
+            socket.connect();
+        }, 2000);
     });
 
 
