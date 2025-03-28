@@ -354,16 +354,17 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                                             </Accordion>
                                         );
                                     })}
-                                    <BaseTextArea
-                                        className="mt-3"
-                                        label="EMPLOYMENT_GAP_DETAILS_LABEL"
-                                        formik={form}
-                                        name="employment_gap_details"
-                                    />
                                 </>
                             )}
 
                             {!form.values?.employers?.length && <>{t("NONE")}</>}
+
+                            <BaseTextArea
+                                className="mt-3"
+                                label="EMPLOYMENT_GAP_DETAILS_LABEL"
+                                formik={form}
+                                name="employment_gap_details"
+                            />
                             <div style={{ display: "flex", justifyContent: "right" }}>
                                 <Button disabled={form.isSubmitting || isSubmitting} style={{ marginTop: "3%" }} type="submit" className="theme-secondary-btn">
                                     {t("UPDATE")}

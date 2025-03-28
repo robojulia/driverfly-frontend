@@ -1258,14 +1258,14 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										</Accordion>
 									);
 								})}
-								<BaseTextArea
-									className="mt-3"
-									label="EMPLOYMENT_GAP_DETAILS_LABEL"
-									formik={form}
-									name="employment_gap_details"
-								/>
 							</>
 						)}
+						<BaseTextArea
+							className="mt-3"
+							label="EMPLOYMENT_GAP_DETAILS_LABEL"
+							formik={form}
+							name="employment_gap_details"
+						/>
 					</ViewCard>
 				</Col>
 				<Col md="6" className="p-0 px-lg-2">
