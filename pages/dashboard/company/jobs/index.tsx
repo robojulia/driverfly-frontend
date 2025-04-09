@@ -47,7 +47,7 @@ export default function JobListing() {
     const [expiryDate, setExpiryDate] = React.useState<string | Date>();
     const [pagingMeta, setPagingMeta] = React.useState<PagingMeta>(pagingsMetaInitialValues);
     const [loading, setLoading] = React.useState<boolean>(true);
-    const [viewMode, setViewMode] = React.useState<ViewModeType>(ViewModeType.ACTIVE)
+    const [viewMode, setViewMode] = React.useState<ViewModeType>()
     const [showCloneModal, setShowCloneModal] = React.useState<boolean>(false);
     const [jobOptions, setJobOptions] = React.useState<JobEntity[]>([]);
 
@@ -87,7 +87,9 @@ export default function JobListing() {
     }, [router])
 
     useEffectAsync(async () => {
-        viewMode == ViewModeType.ACTIVE ? fetchJobs(ExpiryStatus.ACTIVE) : fetchJobs(ExpiryStatus.EXPIRED);
+        if (viewMode) {
+            viewMode === ViewModeType.ACTIVE ? fetchJobs(ExpiryStatus.ACTIVE) : fetchJobs(ExpiryStatus.EXPIRED);
+        }
     }, [user, viewMode, pagingMeta?.currentPage, pagingMeta?.itemsPerPage]);
 
     const onViewModeChange = async ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,7 +134,7 @@ export default function JobListing() {
 
     function onReactivateClick(job: JobEntity) {
         setReactivateJob(job);
-        setExpiryDate(job?.expiry_date);
+        setExpiryDate(new Date(Date.now() + 86400000).toISOString().split("T")[0]);
     }
 
     const onCloseClick = () => {
@@ -376,7 +378,7 @@ export default function JobListing() {
                     label="expiration_date"
                     displayPlaceholder
                     type="date"
-                    // min={new Date().toISOString().split("T")[0]}
+                    min={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
                     onChange={({ target: { value } }) => setExpiryDate(value)}
                     value={expiryDate}
                     error={isExpired(expiryDate) && "EXPIRATION_DATE_MUST_BE_IN_FUTURE"}
