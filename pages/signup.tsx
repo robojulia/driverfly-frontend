@@ -76,6 +76,7 @@ export default function Signup() {
 			utm_source: `${utm_source || ""}`,
 			utm_campaign: `${utm_campaign || ""}`,
 			utm_content: `${utm_content || ""}`,
+			role: SignUpRole.COMPANY // by default all accoounts will be registered as company
 		});
 	}, []);
 
@@ -130,7 +131,7 @@ export default function Signup() {
 				<Col lg="8">
 					<form onSubmit={form.handleSubmit}>
 						<Row>
-							<BaseSelect
+							{/* <BaseSelect
 								className="col-12 mt-1"
 								label="ROLE"
 								name="role"
@@ -139,7 +140,7 @@ export default function Signup() {
 								formik={form}
 								labelPrefix="SignUpRole"
 								enumType={SignUpRole}
-							/>
+							/> */}
 							{form.values.role == SignUpRole.COMPANY && (
 								<BaseInput
 									className="col-12 mt-1"
