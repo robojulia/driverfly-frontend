@@ -41,7 +41,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
             error = metas.name?.error || metas.mime_type?.error || metas.file_base64?.error || meta.error;
         }
         onChange = onChange || formik.handleChange
-        handleBlur = handleBlur || formik.handleBlur;
+        // handleBlur = handleBlur || formik.handleBlur;
     }
 
     function onChangeProxy(e) {
