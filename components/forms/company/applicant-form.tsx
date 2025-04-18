@@ -69,12 +69,18 @@ import ShowFormattedDate from "../../jobs/show-formatted-date";
 import ViewModal from "../../view-details/view-modal";
 import { ReferralSourceForm } from "../admin/referral-source-form";
 import { JobForm } from "./job-form";
+import { ApplicantVehicleEntity } from "../../../models/applicant/applicant-vehicle-entity";
+import { BaseListRowControl } from "../lists/base-list-row-control";
+import { VehicleEntity } from "../../../models/company/vehicle.entity";
+import VehicleApi from "../../../pages/api/vehicle";
+import { VehicleType } from "../../../enums/vehicles/vehicle-type.enum";
+import { VehicleForm } from "./vehicle-form";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
 export function ApplicantForm(props: ApplicantFormProps) {
 	let { className, entity, onSaveComplete, onSaveError } = props;
-	let { user, isSuperAdmin, isCompanyAdmin, company } = useAuth();
+	let { user, isSuperAdmin, isCompanyAdmin, hasPermission } = useAuth();
 	const { t } = useTranslation();
 	const router = useRouter();
 	const current_date = new Date();
@@ -93,6 +99,11 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	const [canCreateReferral, setCanCreateReferral] = useState<boolean>();
 	const [createReferral, setCreateReferral] = useState<boolean>(false);
 	const [hasCriminalHistory, setHasCriminalHistory] = useState<boolean>();
+
+	const [companyVehicles, setCompanyVehicles] = useState<VehicleEntity[]>([]);
+	const [createVehicle, setCreateVehicle] = useState<boolean | number>(false);
+
+	const [can, setCan] = useState({ createVehicle: false });
 
 	const form = useFormik({
 		initialValues: new ApplicantEntity(),
@@ -168,6 +179,11 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		},
 	});
 
+	const onVehicleAdded = (vehicle: VehicleEntity) => {
+		setCompanyVehicles([...companyVehicles, vehicle]);
+		setCreateVehicle(false);
+	};
+
 	useEffectAsync(async () => {
 		// setProtectedFields({
 		// 	license_number: hasPermission("CanViewApplicant.license_number"),
@@ -183,6 +199,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 		const ref_list = await referralSourceApi.list();
 		setReferralSources(ref_list);
+
+		const vehicleApi = new VehicleApi();
+		const vehicles = await vehicleApi.list();
+
+		setCompanyVehicles(vehicles);
+		setCan({
+			createVehicle: hasPermission("CanCreateVehicle"),
+		});
+
 	}, [user]);
 
 
@@ -960,106 +985,90 @@ export function ApplicantForm(props: ApplicantFormProps) {
 					</ViewCard>
 				</Col>
 				<Col md="6" className="p-2 mt-2">
-					{form.values?.is_owner_operator && (
-						<ViewCard
-							title="EQUIPMENT_OWNED"
-							actions={
-								<Button
-									disabled={Boolean(entity?.is_hired)}
-									size="sm"
-									onClick={() =>
-										form.setValues({
-											...form.values,
-											equipment_owned: [
-												...form.values?.equipment_owned,
-												new ApplicantEquipmentEntity(),
-											],
-										})
+					<ViewCard
+						title="VEHICLE_ASSIGNED"
+						actions={
+							<Button
+								disabled={Boolean(entity?.is_hired)}
+								size="sm"
+								onClick={() =>
+									form.setValues({
+										...form.values,
+										vehicles: [
+											...(form.values?.vehicles || []),
+											new ApplicantVehicleEntity(),
+										],
+									})
+								}
+							>
+								<PlusCircle /> {t("ADD")}
+							</Button>
+						}
+					>
+						{form.values?.vehicles?.map((entity, i) => {
+							return (
+								<BaseListRowControl
+									key={i}
+									index={i}
+									onRemoveClick={() =>
+										form.setFieldValue(
+											"vehicles",
+											form.values.vehicles.filter((v, idx) => i != idx)
+										)
 									}
 								>
-									<PlusCircle /> {t("ADD")}
-								</Button>
-							}
-						>
-							{form.values?.equipment_owned?.length > 0 && (
-								<>
-									<Row className="d-sm-none d-md-flex">
-										<Col>
-											<strong>{t("TYPE")}</strong>
-											<span className="p-0 text-danger">*</span>
-										</Col>
-										<Col>
-											<strong>{t("QUANTITY")}</strong>
-											<span className="p-0 text-danger">*</span>
-										</Col>
-									</Row>
-									{form.values?.equipment_owned?.map((entity, i) => (
-										<Row key={i}>
-											<Col xs="12" className="d-sm-flex d-md-none">
-												<Col>
-													<strong>{t("TYPE")}</strong>
-												</Col>
-												<Col>
-													<strong>{t("QUANTITY")}</strong>
-												</Col>
-											</Col>
-											<Col xs="6">
-												<BaseSelect
-													readOnly={Boolean(props?.entity?.is_hired)}
-													name={`equipment_owned[${i}].type`}
-													placeholder="TYPE"
-													labelPrefix="JobEquipmentType"
-													enumType={JobEquipmentType}
-													formik={form}
-												/>
-											</Col>
-											<Col xs="5">
-												<BaseInput
-													readOnly={Boolean(props?.entity?.is_hired)}
-													name={`equipment_owned[${i}].quantity`}
-													placeholder="QUANTITY"
-													type="int"
-													min="1"
-													required
-													formik={form}
-												/>
-											</Col>
-											<Col xs="1">
-												<a
-													href="#"
-													onClick={() =>
-														form.setValues({
-															...form.values,
-															equipment_owned:
-																form.values?.equipment_owned?.filter(
-																	(v, idx) => i != idx
-																),
-														})
-													}
+									<BaseSelect
+										className="mx-1"
+										name={`vehicles.${i}.vehicle.id`}
+										placeholder={t(
+											"SELECT_{name}",
+											{ name: "VEHICLE" },
+											{ translateProps: true }
+										)}
+										options={companyVehicles}
+										valueKey="id"
+										createLabel={(veh) => {
+											const {
+												type,
+												type_other,
+												make,
+												model,
+												transmission_type,
+												year,
+											} = veh;
+											let label =
+												type == VehicleType.OTHER
+													? type_other
+													: t("VehicleType." + type);
+
+											if (make) label += ` / ${make}`;
+
+											if (model) label += ` / ${model}`;
+
+											if (transmission_type)
+												label += ` / ${t(transmission_type)}`;
+
+											if (year) label += ` / ${year}`;
+											return label; //`${()} / ${veh.make} / ${veh.model} / ${t(veh.transmission_type)} / ${veh.year}`
+										}}
+										formik={form}
+										append={
+											<>
+												<Button
+													variant="btn create_btn"
+													disabled={!can.createVehicle}
+													onClick={() => setCreateVehicle(i)}
 												>
-													<DashCircle color="red" />
-												</a>
-											</Col>
-											{entity.type == JobEquipmentType.OTHER && (
-												<Col xs="11" className="mt-3">
-													<BaseInput
-														readOnly={Boolean(props?.entity?.is_hired)}
-														name={`equipment_owned[${i}].type_other`}
-														placeholder="TYPE"
-														formik={form}
-														required
-													/>
-												</Col>
-											)}
-											<Col xs="12">
-												<hr />
-											</Col>
-										</Row>
-									))}
-								</>
-							)}
-						</ViewCard>
-					)}
+													<PlusCircle /> {t("CREATE")}
+												</Button>
+											</>
+										}
+									/>
+								</BaseListRowControl>
+							);
+						})}
+						{!form.values?.vehicles?.length && <>{t("NONE")}</>}
+					</ViewCard>
 				</Col>
 			</Row>
 			<Row>
@@ -2047,6 +2056,19 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			>
 				<JobForm onSaveComplete={onJobAdded} />
 			</ViewModal>
+
+			<ViewModal
+				title={t(
+					"CREATE_{name}",
+					{ name: "VEHICLE" },
+					{ translateProps: true }
+				)}
+				show={typeof createVehicle == "number"}
+				onCloseClick={() => setCreateVehicle(false)}
+			>
+				<VehicleForm onSaveComplete={onVehicleAdded} />
+			</ViewModal>
+
 		</EntityForm>
 	);
 }

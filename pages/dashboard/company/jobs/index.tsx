@@ -148,6 +148,10 @@ export default function JobListing() {
                 ...reactivateJob,
                 expiry_date: expiryDate,
             });
+            setReactivateJob(null);
+            setExpiryDate("");
+            toast.success("JOB_REACTIVATED_SUCCESSFULLY");
+            setJobs(jobs?.filter(j => j.id != updatedJob.id));
         } catch (e) {
             toast.error("UNABLE_TO_SAVE_INFORMATION");
         } finally {
@@ -184,7 +188,7 @@ export default function JobListing() {
             {
                 id: "job_title",
                 name: "job_title",
-                cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.title}</a></Link>),
+                cell: (j) => (<Link href={`/dashboard/company/jobs/${j.id}`}><a>{j.title}</a></Link>),
                 selector: job => job.title,
                 hidable: false
             },
