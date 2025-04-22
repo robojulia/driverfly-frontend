@@ -212,6 +212,7 @@ export default function EmployeeDirectory() {
                 id: "name",
                 width: "15%",
                 name: 'NAME',
+                selector: data => `${data?.first_name} ${data?.last_name}`,
                 cell: data => <span
                     role="button"
                     className="bg-priamry cursor-pointer"
