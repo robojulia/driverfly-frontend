@@ -43,8 +43,23 @@ function isExpired(dateString) {
     return givenDate < currentDate;
 }
 
+const isBirthdayThisWeek = (birthdateStr) => {
+    const today = new Date();
+    const birthday = new Date(birthdateStr);
+    birthday.setFullYear(today.getFullYear());
+
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay() + 1); // Monday
+
+    const endOfWeek = new Date(today);
+    endOfWeek.setDate(today.getDate() + (7 - today.getDay())); // Sunday
+
+    return birthday >= startOfWeek && birthday <= endOfWeek;
+};
+
 export {
     calculateAge,
     dateRange,
-    isExpired
+    isExpired,
+    isBirthdayThisWeek
 };

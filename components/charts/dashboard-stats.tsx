@@ -10,6 +10,7 @@ import { EmployeeEntity } from "../../models/employee/employee.entity";
 import newApplicantIcon from "../../public/img/new_appicants_this_week.svg";
 import totalEmployeesIcon from "../../public/img/total_employees.svg";
 import totalHiresIcon from "../../public/img/total_hires_this_month.svg";
+import { isBirthdayThisWeek } from "../../utils/date";
 
 type StatAttributes = {
     value?: number;
@@ -84,18 +85,8 @@ export const DashboardStats = () => {
 
         employees?.forEach((a) => {
             const birthdate: Date = new Date(a.birthdate);
-            let bday: Date = new Date(
-                today.getFullYear(),
-                birthdate.getMonth(),
-                birthdate.getDate()
-            );
-            if (today.getTime() > bday.getTime())
-                bday.setFullYear(bday.getFullYear() + 1);
 
-            const diff: number = bday.getTime() - today.getTime();
-            const days: number = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-            if (days <= 7) {
+            if (isBirthdayThisWeek(birthdate)) {
                 stats.EMPLOYEE_BIRTHDAYS.value++;
                 const isDuplicate = birthdayDetails?.some((itm) => {
                     return (
