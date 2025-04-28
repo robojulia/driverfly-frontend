@@ -986,7 +986,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				</Col>
 				<Col md="6" className="p-2 mt-2">
 					<ViewCard
-						title="VEHICLE_ASSIGNED"
+						title="EQUIPMENT_ASSIGNED"
 						actions={
 							<Button
 								disabled={Boolean(entity?.is_hired)}

@@ -412,6 +412,7 @@
   "has_had_positive_drug_test": "Have you ever refused to be tested or had a positive drug/alcohol test?",
   "is_owner_operator_question": "Are you an owner operator?",
   "EQUIPMENT_OWNED": "Equipment Owned",
+  "EQUIPMENT_ASSIGNED": "Equipment Assigned",
   "EQUIPMENT_TYPE_AND_YEAR": "Equipment Type | Years Of Experience",
   "quantity": "Quantity",
   "vehicle_tractor": "Vehicle - Tractor",

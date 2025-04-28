@@ -139,7 +139,7 @@ export function ApplicantVehicleAssiigedForm(
 			<Row>
 				<Col md="12" className="p-2 mt-2">
 					<ViewCard
-						title="VEHICLE_ASSIGNED"
+						title="EQUIPMENT_ASSIGNED"
 						actions={
 							<Button
 								disabled={Boolean(entity?.is_hired)}
