@@ -70,7 +70,7 @@ export default function Applicants() {
 
     const router = useRouter();
 
-    let { user, hasPermission } = useAuth();
+    let { user, company, hasPermission } = useAuth();
     let { viewMode, jobId } = router.query;
 
     if (!ViewMode[`${viewMode}`]) viewMode = ViewMode.applicant;
@@ -202,6 +202,9 @@ export default function Applicants() {
 
     const canCreate = hasPermission("CanCreateApplicant");
 
+    useEffect(() => {
+        console.log("debug", user.company.id, company?.id, applicants.length)
+    }, [applicants])
     return (
         <>
             <Accordion defaultActiveKey="0" flush>
