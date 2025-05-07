@@ -1,39 +1,101 @@
+# DriverFly Frontend
 
-> ### Driverfly NestJS frontend codebase
+> Next.js-based web application for DriverFly platform
 
----
+## Overview
 
-## Installation
+DriverFly is a modern web application built with Next.js, React, and TypeScript, providing a robust frontend solution for the DriverFly platform.
 
-Ensure you have node 20.11.0+ and npm 10.8.2+
-    
-Install dependencies with legacy peer deps
+## Prerequisites
 
-    npm install --force --legacy-peer-deps
+- Node.js v20.11.0 (recommended to use [NVM](https://github.com/nvm-sh/nvm))
+- npm (Node Package Manager)
 
-Copy environment file and update configuration
+## Quick Start
+
+1. Clone the repository:
+   ```bash
+   git clone https://gitlab.com/d5968/driverfly-frontend.git
+   cd driverfly-frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install --legacy-peer-deps
+   ```
+
+   > **IMPORTANT**: The `--legacy-peer-deps` flag is required due to dependency compatibility issues.
+
+3. Copy environment file and update configuration
 
     cp .env.example .env
 
-Update the following in your .env file:
-- `BASE_URL` - Frontend application URL (for open gateway)
-- `BASE_URL_API` - Backend application URL (for API calls)
-- `FRONTEND_BASE_URL` - Frontend application URL (for sharing links)
-- `MAPBOX_API_KEY` - Mapbox API key (for mapbox maps)
-- `RECAPTCHA_SITE_KEY` - Recaptcha site key (for recaptcha)
+   Configure the following environment variables:
+   - `BASE_URL` - Frontend application URL
+   - `BASE_URL_API` - Backend API URL
+   - `FRONTEND_BASE_URL` - Frontend URL for sharing
+   - `MAPBOX_API_KEY` - Mapbox API key
+   - `RECAPTCHA_SITE_KEY` - Google reCAPTCHA key
 
+4. Start development server:
+   ```bash
+   npm run dev
+   ```
 
-##  Development
-
-### Available Scripts
+## Available Scripts
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Start in watch mode (development) |
-| `npm run build` | Build production build |
-| `npm run start` | Start production build |
-| `npm run lint` | Run lint |
+| `npm run dev` | Start development server |
+| `npm run build` | Create production build |
+| `npm run start` | Run production build |
+| `npm run lint` | Run ESLint |
 
-##  Additional Resources
+## Tech Stack
 
-- [NextJS Documentation](https://nextjs.org/docs)
+- **Core**: Next.js 12, React, TypeScript
+- **UI/UX**: 
+  - React Bootstrap
+  - Material UI
+  - React Toastify
+- **Forms**: Formik, Yup
+- **Data Visualization**: Chart.js, ApexCharts
+- **API**: Axios
+- **Real-time**: Socket.IO Client
+- **PDF**: React PDF Renderer
+- **Communication**: Twilio Client
+- **Styling**: SASS
+
+## Project Structure
+
+```
+├── components/     # Reusable UI components
+├── context/       # React context providers
+├── hooks/         # Custom React hooks
+├── pages/         # Next.js pages
+├── public/        # Static assets
+├── styles/        # SASS stylesheets
+├── types/         # TypeScript types
+├── utils/         # Utility functions
+├── models/        # Data models
+├── enums/         # Enumeration types
+├── config/        # Configuration
+└── logics/        # Business logic
+```
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## Deployment
+
+The application can be deployed to any Next.js-compatible hosting service. A `netlify.toml` configuration is included for Netlify deployments.
+
+## Documentation
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [React Documentation](https://reactjs.org/docs)
+- [TypeScript Documentation](https://www.typescriptlang.org/docs)
