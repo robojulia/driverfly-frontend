@@ -13,6 +13,8 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMediaQuery } from "react-responsive";
+import CompanyProfileNav from "../header/company-profile-nav";
+import Impersonate from "../../../impersonate/impersonate";
 
 export interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -119,64 +121,72 @@ export default function DashboardLayout({
         onHasSubmenu={handleHasSubmenu}
       />
 
-      {/* Mobile toggle button - ONLY shown on mobile */}
-      {isMobile && (
-        <button
-          className="btn-mobile-toggle"
-          onClick={toggleSidebar}
-          aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
-        >
-          {sidebarOpen ? <X size={20} /> : <List size={20} />}
-        </button>
-      )}
-
       {/* Content */}
       <div className="content-wrapper">
         {/* Header */}
         <header className="main-header">
-          <div className="container-fluid">
-            <div className="profile">
-              <Dropdown align="end">
-                <Dropdown.Toggle variant="link" id="dropdown-profile">
-                  {user && "profile_photo" in user ? (
-                    <img
-                      src={user.profile_photo as string}
-                      alt={user?.first_name}
-                      className="profile-photo"
-                    />
-                  ) : (
-                    <Person size={24} />
-                  )}
-                  <span className="d-none d-md-inline ml-2">
-                    {user?.first_name} {user?.last_name}
-                  </span>
-                </Dropdown.Toggle>
+          {/* Mobile toggle button - ONLY shown on mobile */}
+          {isMobile && (
+            <button
+              className="btn-mobile-toggle"
+              onClick={toggleSidebar}
+              aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
+            >
+              {sidebarOpen ? <X size={20} /> : <List size={20} />}
+            </button>
+          )}
 
-                <Dropdown.Menu>
-                  <Dropdown.Item href="/dashboard/my-profile">
-                    <Person className="me-2" size={16} /> {t("MY_PROFILE")}
-                  </Dropdown.Item>
-                  <OverlayTrigger
-                    trigger="click"
-                    placement="left"
-                    overlay={supportPopover}
-                    rootClose
-                  >
-                    <Dropdown.Item>
-                      <QuestionCircle
-                        className="me-2"
-                        size={16}
-                        style={{ color: "#1b4454" }}
-                      />{" "}
-                      {t("CONTACT_SUPPORT")}
+          <div className="container-fluid">
+            <div className="d-flex align-items-center justify-content-between">
+              {/* Company Profile Component - only for company switching */}
+              <CompanyProfileNav />
+
+              {/* User Profile Dropdown */}
+              <div className="profile">
+                <Dropdown align="end">
+                  <Dropdown.Toggle variant="link" id="dropdown-profile">
+                    {user && "profile_photo" in user ? (
+                      <img
+                        src={user.profile_photo as string}
+                        alt={user?.first_name}
+                        className="profile-photo"
+                      />
+                    ) : (
+                      <Person size={24} />
+                    )}
+                    <span className="d-none d-md-inline ml-2">
+                      {user?.first_name} {user?.last_name}
+                    </span>
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item href="/dashboard/my-profile">
+                      <Person className="me-2" size={16} /> {t("MY_PROFILE")}
                     </Dropdown.Item>
-                  </OverlayTrigger>
-                  <Dropdown.Divider />
-                  <Dropdown.Item onClick={logout}>
-                    <BoxArrowRight className="me-2" size={16} /> {t("LOGOUT")}
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+                    <OverlayTrigger
+                      trigger="click"
+                      placement="left"
+                      overlay={supportPopover}
+                      rootClose
+                    >
+                      <Dropdown.Item>
+                        <QuestionCircle
+                          className="me-2"
+                          size={16}
+                          style={{ color: "#1b4454" }}
+                        />{" "}
+                        {t("CONTACT_SUPPORT")}
+                      </Dropdown.Item>
+                    </OverlayTrigger>
+                    <Dropdown.Divider />
+                    {/* Add Impersonate feature */}
+                    <Impersonate />
+                    <Dropdown.Item onClick={logout}>
+                      <BoxArrowRight className="me-2" size={16} /> {t("LOGOUT")}
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
             </div>
           </div>
         </header>
