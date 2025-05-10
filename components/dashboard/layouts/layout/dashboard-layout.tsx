@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import { useMediaQuery } from "react-responsive";
 import CompanyProfileNav from "../header/company-profile-nav";
 import Impersonate from "../../../impersonate/impersonate";
+import styles from "../../../../public/css/dashboard-layout.module.css";
 
 export interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -159,8 +160,11 @@ export default function DashboardLayout({
                     </span>
                   </Dropdown.Toggle>
 
-                  <Dropdown.Menu>
-                    <Dropdown.Item href="/dashboard/my-profile">
+                  <Dropdown.Menu className={styles["dropdown-menu"]}>
+                    <Dropdown.Item
+                      href="/dashboard/my-profile"
+                      className={styles["dropdown-item"]}
+                    >
                       <Person className="me-2" size={16} /> {t("MY_PROFILE")}
                     </Dropdown.Item>
                     <OverlayTrigger
@@ -169,7 +173,7 @@ export default function DashboardLayout({
                       overlay={supportPopover}
                       rootClose
                     >
-                      <Dropdown.Item>
+                      <Dropdown.Item className={styles["dropdown-item"]}>
                         <QuestionCircle
                           className="me-2"
                           size={16}
@@ -181,7 +185,10 @@ export default function DashboardLayout({
                     <Dropdown.Divider />
                     {/* Add Impersonate feature */}
                     <Impersonate />
-                    <Dropdown.Item onClick={logout}>
+                    <Dropdown.Item
+                      onClick={logout}
+                      className={styles["dropdown-item"]}
+                    >
                       <BoxArrowRight className="me-2" size={16} /> {t("LOGOUT")}
                     </Dropdown.Item>
                   </Dropdown.Menu>

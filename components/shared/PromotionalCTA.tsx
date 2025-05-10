@@ -9,11 +9,7 @@ interface PromotionalCTAProps {
 }
 
 const CTAContainer = styled.div`
-  background: linear-gradient(
-    135deg,
-    var(--primary) 0%,
-    var(--primary-dark) 100%
-  );
+  background: linear-gradient(135deg, #5fcbc4 0%, #1c4353 100%);
   border-radius: var(--border-radius);
   padding: var(--spacing-lg);
   color: var(--text-light);
@@ -58,8 +54,8 @@ const CTATitle = styled.h4`
 `;
 
 const CTAButton = styled.button`
-  background-color: var(--success);
-  color: var(--primary-dark);
+  background-color: #1c4353;
+  color: white;
   border: none;
   border-radius: calc(var(--border-radius) / 2);
   padding: var(--spacing-sm) var(--spacing-md);

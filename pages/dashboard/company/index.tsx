@@ -189,13 +189,7 @@ export default function Dashboard() {
             <div className="my_chart px-4">
               {isNewUser && <WelcomeBanner userName={user?.first_name} />}
 
-              <ChartWrapper
-                title={`${t("HELLO_{name}", { name: user?.first_name })}!`}
-                sm="12"
-                md="12"
-                lg="12"
-                className=""
-              >
+              <ChartWrapper title={null} sm="12" md="12" lg="12" className="">
                 <DashboardStats />
               </ChartWrapper>
 

@@ -1,0 +1,22 @@
+.dropdown-menu .dropdown-item {
+  color: var(--text-dark) !important;
+  transition: all var(--transition-speed) ease;
+}
+
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+  background-color: rgba(
+    95,
+    203,
+    196,
+    0.1
+  ); /* Using --primary with 10% opacity */
+  color: var(--text-dark) !important;
+  background-color: #5fcbc4 !important;
+}
+
+/* Ensure icons maintain their color on hover */
+.dropdown-menu .dropdown-item:hover svg,
+.dropdown-menu .dropdown-item:focus svg {
+  color: inherit;
+}
