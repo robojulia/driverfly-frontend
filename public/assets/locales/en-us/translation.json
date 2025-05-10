@@ -2438,5 +2438,8 @@
   "NO_LEAD_ASSIGNMENTS": "No Lead Assignments",
   "LEAD_ASSIGNMENT_EMPTY_STATE_MESSAGE": "There are no leads assigned to recruiters yet.",
   "NO_HISTORICAL_DATA": "No Historical Data",
-  "HISTORICAL_DATA_EMPTY_STATE_MESSAGE": "There is no applicant or employee data yet."
+  "HISTORICAL_DATA_EMPTY_STATE_MESSAGE": "There is no applicant or employee data yet.",
+  "MAIN": "Main",
+  "COMPANY": "Company",
+  "ADMIN": "Administration"
 }
