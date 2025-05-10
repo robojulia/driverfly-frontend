@@ -363,6 +363,10 @@
   .btn-mobile-toggle {
     display: flex;
   }
+
+  .sidebarArea.showSidebar .sidebar-close-btn {
+    display: flex; /* Show close button only when sidebar is visible on mobile */
+  }
 }
 
 /* logo area */
@@ -448,4 +452,33 @@
   .company-selector .dropdown-menu {
     max-width: 90vw;
   }
+}
+
+/* Mobile close button */
+.sidebar-close-btn {
+  display: none;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1031;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-close-btn:hover {
+  background: var(--primary-dark, #0c8a80);
+}
+
+.sidebar-close-btn:active {
+  transform: scale(0.98);
 }

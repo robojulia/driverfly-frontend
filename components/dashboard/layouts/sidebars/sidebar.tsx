@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Container, Navbar } from "react-bootstrap";
 import { Icon } from "react-bootstrap-icons";
-import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
+import { ChevronDown, ChevronRight, X } from "react-bootstrap-icons";
 import { useMediaQuery } from "react-responsive";
 import { useAuth } from "../../../../hooks/use-auth";
 import {
@@ -101,6 +101,17 @@ export default function Sidebar(props: SidebarProps) {
           isSubmenu ? "submenu-sidebar" : ""
         }`}
       >
+        {/* Close button for mobile */}
+        {isMobile && !isSubmenu && (
+          <button
+            className="sidebar-close-btn"
+            onClick={() => onToggle && onToggle(false)}
+            aria-label="Close sidebar"
+          >
+            <X size={24} />
+          </button>
+        )}
+
         {showLogo ? (
           <div className="logo-container">
             <img
