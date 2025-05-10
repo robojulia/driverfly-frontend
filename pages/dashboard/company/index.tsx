@@ -22,6 +22,7 @@ import { CompanyPreferenceEntity } from "../../../models/company/company-prefere
 import CompanyApi from "../../api/company";
 
 import { DashboardStats } from "../../../components/charts/dashboard-stats";
+import { WelcomeBanner } from "../../../components/dashboard/WelcomeBanner";
 import DashboardChartContext from "../../../context/dashboard-chart-context";
 import { EmployeeStatus } from "../../../enums/applicants/employee-status.enum";
 import { Status } from "../../../enums/status.enum";
@@ -55,6 +56,8 @@ export default function Dashboard() {
   const applicantApi = new ApplicantApi();
   const employeeApi = new EmployeeApi();
   const jobApi = new JobApi();
+
+  const isNewUser = !applicants.length && !employees.length && !jobs.length;
 
   useEffectAsync(async () => {
     let todayDate = new Date();
@@ -115,7 +118,6 @@ export default function Dashboard() {
     if (user.company) {
       const api = new CompanyApi();
       let data = await api.preferences.list(user.company.id);
-      console.log(" pre first time ", data);
       if (
         !data?.find(
           (d) =>
@@ -123,7 +125,6 @@ export default function Dashboard() {
             CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM
         )
       ) {
-        console.log("first time ");
         const referProgram: CompanyPreferenceEntity =
           await api.preferences.create(user?.company?.id, {
             category: CompanyPreferenceCategory.AUTO_RECRUITING,
@@ -131,7 +132,6 @@ export default function Dashboard() {
               CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM,
             value: true,
           });
-        console.log("second time ", referProgram);
         data = [...data, { ...referProgram }];
       }
       setPreferences(data);
@@ -148,7 +148,6 @@ export default function Dashboard() {
           closeText="CANCEL"
         >
           <>
-            {console.log("lskdlksldklsd", modalAction)}
             <h2 className="text-center">
               {t("AUTO_RECURUITING_REGISTRATION")}
             </h2>
@@ -188,6 +187,8 @@ export default function Dashboard() {
             }}
           >
             <div className="my_chart px-4">
+              {isNewUser && <WelcomeBanner userName={user?.first_name} />}
+
               <ChartWrapper
                 title={`${t("HELLO_{name}", { name: user?.first_name })}!`}
                 sm="12"
