@@ -26,7 +26,8 @@ DriverFly is a Next.js-based web application built with React and TypeScript. Th
 
    > **IMPORTANT**: The `--legacy-peer-deps` flag is required due to dependency compatibility issues.
 
-3. Create a `.env.local` file in the root directory with the following environment variables:
+3. Create a `.env` file in the root directory with the following environment variables:
+
    ```
    BASE_URL=<your-base-url>
    FRONTEND_BASE_URL=<your-frontend-base-url>
@@ -38,6 +39,8 @@ DriverFly is a Next.js-based web application built with React and TypeScript. Th
    RECAPTCHA_SITE_KEY=<your-recaptcha-site-key>
    NEXT_PUBLIC_MICROSOFT_CLARITY=<your-clarity-id>
    ```
+
+4. Create a reCAPTCHA account and get the secret and site keys. https://cloud.google.com/recaptcha/docs/create-key-website. Add the site key and secret key to the `.env` file.
 
 ## Development
 
