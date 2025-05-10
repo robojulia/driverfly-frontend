@@ -1,15 +1,17 @@
 # DriverFly Frontend
 
+> Next.js-based web application for DriverFly platform
+
 ## Overview
 
-DriverFly is a Next.js-based web application built with React and TypeScript. This repository contains the frontend codebase for the DriverFly application.
+DriverFly is a modern web application built with Next.js, React, and TypeScript, providing a robust frontend solution for the DriverFly platform.
 
 ## Prerequisites
 
-- Node.js v17.9.0 (recommended to use [NVM](https://github.com/nvm-sh/nvm) for Node.js version management)
+- Node.js v20.11.0 (recommended to use [NVM](https://github.com/nvm-sh/nvm))
 - npm (Node Package Manager)
 
-## Installation
+## Quick Start
 
 1. Clone the repository:
 
@@ -40,7 +42,7 @@ DriverFly is a Next.js-based web application built with React and TypeScript. Th
    NEXT_PUBLIC_MICROSOFT_CLARITY=<your-clarity-id>
    ```
 
-4. Create a reCAPTCHA account and get the secret and site keys. https://cloud.google.com/recaptcha/docs/create-key-website. Add the site key and secret key to the `.env` file.
+4. Create a reCAPTCHA account and get the secret and site keys. https://cloud.google.com/recaptcha/docs/create-key-website. Add the site key and secret key to the `.env` file. Ensure the site key is also in the backend .env file.
 
 ## Development
 
@@ -50,61 +52,46 @@ Start the development server:
 npm run dev
 ```
 
-The application will be available at [http://localhost:3000](http://localhost:3000).
+## Available Scripts
 
-## Building for Production
+| Command         | Description              |
+| --------------- | ------------------------ |
+| `npm run dev`   | Start development server |
+| `npm run build` | Create production build  |
+| `npm run start` | Run production build     |
+| `npm run lint`  | Run ESLint               |
 
-Build the application:
+## Tech Stack
 
-```bash
-npm run build
-```
-
-Start the production server:
-
-```bash
-npm run start
-```
-
-## Linting
-
-Check code quality:
-
-```bash
-npm run lint
-```
-
-## Technologies Used
-
-- **Framework**: Next.js 12
-- **UI Libraries**:
+- **Core**: Next.js 12, React, TypeScript
+- **UI/UX**:
   - React Bootstrap
   - Material UI
   - React Toastify
-- **Form Handling**: Formik, Yup
-- **Styling**: SASS
+- **Forms**: Formik, Yup
 - **Data Visualization**: Chart.js, ApexCharts
-- **HTTP Client**: Axios
-- **Other Notable Packages**:
-  - React Signature Canvas
-  - React PDF Renderer
-  - Socket.IO Client
-  - Twilio Client
+- **API**: Axios
+- **Real-time**: Socket.IO Client
+- **PDF**: React PDF Renderer
+- **Communication**: Twilio Client
+- **Styling**: SASS
 
 ## Project Structure
 
-- `components/` - Reusable UI components
-- `context/` - React context providers
-- `hooks/` - Custom React hooks
-- `pages/` - Next.js pages and routing
-- `public/` - Static assets
-- `styles/` - SASS stylesheets
-- `types/` - TypeScript type definitions
-- `utils/` - Utility functions
-- `models/` - Data models
-- `enums/` - Enumeration types
-- `config/` - Configuration files
-- `logics/` - Business logic
+```
+├── components/     # Reusable UI components
+├── context/       # React context providers
+├── hooks/         # Custom React hooks
+├── pages/         # Next.js pages
+├── public/        # Static assets
+├── styles/        # SASS stylesheets
+├── types/         # TypeScript types
+├── utils/         # Utility functions
+├── models/        # Data models
+├── enums/         # Enumeration types
+├── config/        # Configuration
+└── logics/        # Business logic
+```
 
 ## Browser Support
 
@@ -115,4 +102,10 @@ npm run lint
 
 ## Deployment
 
-This project can be deployed using Netlify or any other Next.js-compatible hosting service. A `netlify.toml` configuration file is included for Netlify deployments.
+The application can be deployed to any Next.js-compatible hosting service. A `netlify.toml` configuration is included for Netlify deployments.
+
+## Documentation
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [React Documentation](https://reactjs.org/docs)
+- [TypeScript Documentation](https://www.typescriptlang.org/docs)
