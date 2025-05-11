@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
-import { InputGroup } from 'react-bootstrap';
+import { ReactNode } from "react";
+import { InputGroup } from "react-bootstrap";
 
 import { useTranslation } from "../../hooks/use-translation";
-import { FormikInterface } from '../../utils/formik';
+import { FormikInterface } from "../../utils/formik";
 
 export interface BaseControlProps {
   formik?: FormikInterface<any>;
@@ -17,9 +17,23 @@ export interface BaseControlProps {
   append?: JSX.Element | JSX.Element[];
   prepend?: JSX.Element | JSX.Element[];
   after?: JSX.Element | JSX.Element[];
+  helpText?: string;
 }
 
-function BaseControl({ formik, required, className, label, children, touched, error, name, prepend, append, after }: BaseControlProps) {
+function BaseControl({
+  formik,
+  required,
+  className,
+  label,
+  children,
+  touched,
+  error,
+  name,
+  prepend,
+  append,
+  after,
+  helpText,
+}: BaseControlProps) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -36,20 +50,29 @@ function BaseControl({ formik, required, className, label, children, touched, er
 
   return (
     <div className={`${className || ""}`}>
-      {label && <>
-        <label>{t(label)}{required ? <span className='text-danger'>*</span> : ""}:</label>
-        <br />
-      </>}
+      {label && (
+        <>
+          <label>
+            {t(label)}
+            {required ? <span className="text-danger">*</span> : ""}:
+          </label>
+          <br />
+        </>
+      )}
       <InputGroup className="flex-nowrap">
         {prepend && <div className="input-group-prepend">{prepend}</div>}
         {children}
         {append && <div className="input-group-append">{append}</div>}
       </InputGroup>
-      {(touched || error) && typeof error == "string" && <span className="text-danger small">{t(error)}</span>}
+      {helpText && (
+        <div className="form-text text-muted small mt-1">{helpText}</div>
+      )}
+      {(touched || error) && typeof error == "string" && (
+        <span className="text-danger small">{t(error)}</span>
+      )}
       {after}
     </div>
-  )
+  );
 }
 
-export default BaseControl
-
+export default BaseControl;

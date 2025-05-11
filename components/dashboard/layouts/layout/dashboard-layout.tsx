@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "../sidebars/sidebar";
-import { Dropdown, OverlayTrigger, Popover } from "react-bootstrap";
+import { Dropdown, Modal } from "react-bootstrap";
 import { useAuth } from "../../../../hooks/use-auth";
 import { useTranslation } from "../../../../hooks/use-translation";
 import {
@@ -29,6 +29,7 @@ export default function DashboardLayout({
   // Initialize sidebar to closed
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [hasSubmenu, setHasSubmenu] = useState(false);
+  const [showSupportModal, setShowSupportModal] = useState(false);
   const { user, logout } = useAuth();
   const { t } = useTranslation();
   const router = useRouter();
@@ -88,30 +89,6 @@ export default function DashboardLayout({
     }
   }, [isMobile]);
 
-  const supportPopover = (
-    <Popover id="popover-support">
-      <Popover.Header as="h3">{t("CONTACT_SUPPORT")}</Popover.Header>
-      <Popover.Body>
-        {t("CONTACT_SUPPORT_MESSAGE_THROUGH")}&nbsp;
-        <Link
-          legacyBehavior
-          href={
-            user?.company
-              ? `/dashboard/company/settings/support`
-              : `/dashboard/driver/settings/support`
-          }
-        >
-          {t("CONTACT_SUPPORT_MESSAGE_LINK")}
-        </Link>
-        &nbsp;{t("CONTACT_SUPPORT_MESSAGE_EMAIL")}&nbsp;
-        <Link legacyBehavior href={`mailto:help@driverfly.co`}>
-          help@driverfly.co
-        </Link>
-        .
-      </Popover.Body>
-    </Popover>
-  );
-
   return (
     <div className={`dashboard-container ${hasSubmenu ? "has-submenu" : ""}`}>
       {/* Sidebar */}
@@ -167,21 +144,17 @@ export default function DashboardLayout({
                     >
                       <Person className="me-2" size={16} /> {t("MY_PROFILE")}
                     </Dropdown.Item>
-                    <OverlayTrigger
-                      trigger="click"
-                      placement="left"
-                      overlay={supportPopover}
-                      rootClose
+                    <Dropdown.Item
+                      onClick={() => setShowSupportModal(true)}
+                      className={styles["dropdown-item"]}
                     >
-                      <Dropdown.Item className={styles["dropdown-item"]}>
-                        <QuestionCircle
-                          className="me-2"
-                          size={16}
-                          style={{ color: "#1b4454" }}
-                        />{" "}
-                        {t("CONTACT_SUPPORT")}
-                      </Dropdown.Item>
-                    </OverlayTrigger>
+                      <QuestionCircle
+                        className="me-2"
+                        size={16}
+                        style={{ color: "#1b4454" }}
+                      />{" "}
+                      {t("CONTACT_SUPPORT")}
+                    </Dropdown.Item>
                     <Dropdown.Divider />
                     {/* Add Impersonate feature */}
                     <Impersonate />
@@ -201,6 +174,40 @@ export default function DashboardLayout({
         {/* Main Content */}
         <main className="main-content">{children}</main>
       </div>
+
+      {/* Support Modal */}
+      <Modal show={showSupportModal} onHide={() => setShowSupportModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>{t("CONTACT_SUPPORT")}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            {t("CONTACT_SUPPORT_MESSAGE_THROUGH")}&nbsp;
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setShowSupportModal(false);
+                router.push(
+                  user?.company
+                    ? `/dashboard/company/settings/support`
+                    : `/dashboard/driver/settings/support`
+                );
+              }}
+            >
+              {t("CONTACT_SUPPORT_MESSAGE_LINK")}
+            </a>
+            &nbsp;{t("CONTACT_SUPPORT_MESSAGE_EMAIL")}&nbsp;
+            <a
+              href="mailto:help@driverfly.co"
+              onClick={() => setShowSupportModal(false)}
+            >
+              help@driverfly.co
+            </a>
+            .
+          </p>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }
