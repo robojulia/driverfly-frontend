@@ -1436,7 +1436,8 @@
     "UPDATE": "update",
     "DELETE": "delete",
     "SUCCESS_{action}_{name}": "Successfully {{action}} {{name}}",
-    "FAIL_{action}_{name}": "Failed to {{action}} {{name}}"
+    "FAIL_{action}_{name}": "Failed to {{action}} {{name}}",
+    "ADD_JOB": "Add Job"
   },
   "VEHICLE": "Vehicle",
   "SELECT_UNIQUE_VEHICLE_MESSAGE": "Can not add duplicate Vehicle",
