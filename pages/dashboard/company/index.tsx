@@ -193,31 +193,37 @@ export default function Dashboard() {
                 <DashboardStats />
               </ChartWrapper>
 
-              <div className="px-3 my-3 innerChart-parent ">
-                <ChartInerWrapper
-                  title="APPLICANT_SOURCE"
-                  className=" py-1 ChartWrapper innerChart stat-items"
-                  subHeading="APPLICANT_SOURCE_HELP_TEXT"
-                >
-                  <SourceBreakdownChart />
-                </ChartInerWrapper>
+              <Row className="px-3 my-3 innerChart-parent">
+                <Col md="4">
+                  <ChartInerWrapper
+                    title="APPLICANT_SOURCE"
+                    className=" py-1 ChartWrapper innerChart stat-items"
+                    subHeading="APPLICANT_SOURCE_HELP_TEXT"
+                  >
+                    <SourceBreakdownChart />
+                  </ChartInerWrapper>
+                </Col>
 
-                <ChartInerWrapper
-                  title="APPLICATION_STATUS"
-                  className=" py-1 ChartWrapper innerChart stat-items"
-                  subHeading="APPLICATION_STATUS_HELP_TEXT"
-                >
-                  <ApplicantPieChart />
-                </ChartInerWrapper>
+                <Col md="4">
+                  <ChartInerWrapper
+                    title="APPLICATION_STATUS"
+                    className=" py-1 ChartWrapper innerChart stat-items"
+                    subHeading="APPLICATION_STATUS_HELP_TEXT"
+                  >
+                    <ApplicantPieChart />
+                  </ChartInerWrapper>
+                </Col>
 
-                <ChartInerWrapper
-                  title="LEAD_ASSIGNMENT"
-                  className=" py-1 ChartWrapper innerChart stat-items"
-                  subHeading="LEAD_ASSIGNMENT_HELP_TEXT"
-                >
-                  <ApplicantsPerRecruiterChart />
-                </ChartInerWrapper>
-              </div>
+                <Col md="4">
+                  <ChartInerWrapper
+                    title="LEAD_ASSIGNMENT"
+                    className=" py-1 ChartWrapper innerChart stat-items"
+                    subHeading="LEAD_ASSIGNMENT_HELP_TEXT"
+                  >
+                    <ApplicantsPerRecruiterChart />
+                  </ChartInerWrapper>
+                </Col>
+              </Row>
 
               <Row className="my-2 px-2 mr-2">
                 <Col lg={9} md={8} sm={12}>
