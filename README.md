@@ -92,10 +92,53 @@ DriverFly is a modern web application built with Next.js, React, and TypeScript,
 
 ## Deployment
 
-The application can be deployed to any Next.js-compatible hosting service. A `netlify.toml` configuration is included for Netlify deployments.
+The application can be deployed to any Next.js-compatible hosting service. 
+
+
+
+
+### Deploying Next.js App to Netlify from GitLab
+A `netlify.toml` configuration is included for Netlify deployments. You can easily deploy your Next.js app on Netlify using your GitLab repository by following these steps:
+
+
+#### 1. Connect GitLab with Netlify
+
+1. Go to [https://app.netlify.com/](https://app.netlify.com/) and sign in.
+2. Click on “Add new site” → “Import an existing project”.
+3. Choose GitLab as the Git provider.
+4. Authorize Netlify to access your GitLab account.
+5. Select the repository where your Next.js project resides.
+
+#### 2. Configure Build Settings
+
+When prompted, set the following:
+
+- **Branch to deploy**: main (or your desired branch)
+- **Build command**:  
+  ```bash
+  npm run build
+  ```
+- **Publish directory**:  
+  For a standard Next.js app, use:
+  ```
+  .next
+  ```
+
+You also need to set environment variables:
+
+- For example:
+  - `NODE_VERSION=20`
+  - `NPM_FLAGS=--legacy-peer-deps`
+  - All other environment variables from `.env.example`
+
+#### 3. Click “Deploy Site”
+
+Netlify will clone your GitLab repository, install dependencies, and build your site. Once complete, your Next.js app will be live on a Netlify domain (which you can customize).
+
 
 ## Documentation
 
 - [Next.js Documentation](https://nextjs.org/docs)
 - [React Documentation](https://reactjs.org/docs)
 - [TypeScript Documentation](https://www.typescriptlang.org/docs)
+- [Netlify Documentation](https://www.netlify.com/docs)
