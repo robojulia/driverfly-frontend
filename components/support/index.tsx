@@ -11,6 +11,7 @@ import { SupportDto } from "../../models/support/support.dto";
 import FileInput from "../forms/file-input";
 import { DocumentEntity } from "../../models/documents/document.entity";
 import BaseTextArea from "../forms/base-text-area";
+import { useRouter } from "next/router";
 
 const OS_OPTIONS = [
   { label: "Windows", value: "Windows" },
@@ -23,6 +24,7 @@ const OS_OPTIONS = [
 export default function Support() {
   const { t } = useTranslation();
   const api = new SupportApi();
+  const router = useRouter();
 
   const form = useFormik({
     initialValues: {
@@ -46,6 +48,13 @@ export default function Support() {
       }
     },
   });
+
+  // Set page URL from query parameter if available
+  useEffect(() => {
+    if (router.query.page_url) {
+      form.setFieldValue("page_path_url", router.query.page_url);
+    }
+  }, [router.query.page_url]);
 
   // Detect operating system
   function detectOS() {

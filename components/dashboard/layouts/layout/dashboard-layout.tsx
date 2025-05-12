@@ -89,6 +89,14 @@ export default function DashboardLayout({
     }
   }, [isMobile]);
 
+  const getCurrentPath = () => {
+    // Get the full URL including query parameters
+    if (typeof window !== "undefined") {
+      return window.location.pathname + window.location.search;
+    }
+    return "";
+  };
+
   return (
     <div className={`dashboard-container ${hasSubmenu ? "has-submenu" : ""}`}>
       {/* Sidebar */}
@@ -188,10 +196,13 @@ export default function DashboardLayout({
               onClick={(e) => {
                 e.preventDefault();
                 setShowSupportModal(false);
+                const currentPath = getCurrentPath();
                 router.push(
-                  user?.company
-                    ? `/dashboard/company/settings/support`
-                    : `/dashboard/driver/settings/support`
+                  `${
+                    user?.company
+                      ? `/dashboard/company/settings/support`
+                      : `/dashboard/driver/settings/support`
+                  }?page_url=${encodeURIComponent(currentPath)}`
                 );
               }}
             >
