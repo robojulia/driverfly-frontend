@@ -2472,5 +2472,14 @@
   "OPERATING_SYSTEM": "Operating System",
   "DOCS_LIST_SCREENSHOTS": "Screenshots showing the problem",
   "DOCS_LIST_ERRORS": "Error messages you received",
-  "DOCS_LIST_LOGS": "Any relevant logs or files"
+  "DOCS_LIST_LOGS": "Any relevant logs or files",
+  "USE_TYPED_SIGNATURE": "Sign my name electronically",
+  "I_CONSENT_TO_USE_TYPED_SIGNATURE": "I consent to use an electronic typed signature instead of drawing my signature",
+  "TYPED_SIGNATURE_LEGAL_NOTICE": "By checking this box, I acknowledge that my typed name will serve as my legal signature in accordance with the Electronic Signatures in Global and National Commerce Act (ESIGN).",
+  "PLEASE_CONSENT_TO_TYPED_SIGNATURE": "Please check the consent checkbox before using the typed signature option.",
+  "NAME_REQUIRED_FOR_TYPED_SIGNATURE": "First name and last name are required to generate a typed signature.",
+  "SIGNATURE_INSTRUCTIONS": "Please provide your signature in one of two ways:",
+  "SIGNATURE_OPTION_1": "1. Draw your signature using your mouse or touchscreen in the box below",
+  "SIGNATURE_OPTION_2": "2. Use an electronic typed signature by checking the consent box below",
+  "SIGNATURE_ACCESSIBILITY_NOTE": "If you have difficulty using a mouse or touchscreen, use the typed signature option."
 }
