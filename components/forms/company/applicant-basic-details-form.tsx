@@ -161,6 +161,17 @@ export function ApplicantBasicDetailsForm(
 
   useEffect(() => focusOnErrorField(form), [form.submitCount]);
 
+  // Add a handler function to convert license numbers to uppercase
+  const handleLicenseNumberChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    // Convert input value to uppercase
+    const uppercaseValue = e.target.value.toUpperCase();
+
+    // Set the uppercase value in the form
+    form.setFieldValue(e.target.name, uppercaseValue);
+  };
+
   return (
     <Form
       onSubmit={form.handleSubmit}
@@ -332,6 +343,7 @@ export function ApplicantBasicDetailsForm(
                   name="license_number"
                   placeholder="ENTER_DRIVER_LICENSE"
                   formik={form}
+                  onChange={handleLicenseNumberChange}
                 />
                 <Row className="px-3">
                   <BaseInput
@@ -384,6 +396,7 @@ export function ApplicantBasicDetailsForm(
                             required
                             formik={form}
                             readOnly={Boolean(entity?.is_hired)}
+                            onChange={handleLicenseNumberChange}
                           />
                           <div>
                             <a

@@ -156,3 +156,9 @@ body {
   background-color: var(--primary-dark);
   border-color: var(--primary-dark);
 }
+
+/* Table styles */
+.rdt_TableHeadRow {
+  background-color: var(--primary-dark) !important;
+  color: white !important;
+}

@@ -57,6 +57,17 @@ export function DrivingExperience() {
     form.setFieldValue("license_number", "");
   };
 
+  // Handle license number input to convert to uppercase
+  const handleLicenseNumberChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    // Convert input value to uppercase
+    const uppercaseValue = e.target.value.toUpperCase();
+
+    // Set the uppercase value in the form
+    form.setFieldValue("license_number", uppercaseValue);
+  };
+
   useEffect(() => {
     const { license_number, state, license_expiry, license_state } = applicant;
     setSelectedIssuedState(license_state || "");
@@ -95,7 +106,7 @@ export function DrivingExperience() {
               <InputMask
                 mask={cdlFormat.mask}
                 value={form.values.license_number || ""}
-                onChange={form.handleChange}
+                onChange={handleLicenseNumberChange}
                 onBlur={form.handleBlur}
                 name="license_number"
                 className={`form-control ${
