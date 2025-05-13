@@ -23,17 +23,27 @@ export function SignatureComponent({
   const padRef = useRef<SignatureCanvas>(null);
   const [typedSignatureConsent, setTypedSignatureConsent] = useState(false);
   const [hasSignature, setHasSignature] = useState(false);
+  const [initialSignatureApplied, setInitialSignatureApplied] = useState(false);
+  const lastSignatureRef = useRef<string | null>(null);
 
   const clearSignatureCanvas = (): void => {
     padRef?.current?.clear();
     setHasSignature(false);
+    lastSignatureRef.current = null;
     onSignatureChange(null);
   };
 
   const handleSignatureEnd = () => {
-    const signatureValue = padRef?.current?.toDataURL()?.toString();
-    setHasSignature(true);
-    onSignatureChange(signatureValue || null);
+    if (!padRef.current) return;
+
+    const signatureValue = padRef.current.toDataURL().toString();
+
+    // Only update if the signature has actually changed
+    if (signatureValue !== lastSignatureRef.current) {
+      lastSignatureRef.current = signatureValue;
+      setHasSignature(true);
+      onSignatureChange(signatureValue);
+    }
   };
 
   const generateTypedSignature = () => {
@@ -76,10 +86,15 @@ export function SignatureComponent({
       canvas.getCanvas().height - 10
     );
 
-    // Trigger signature change
-    setHasSignature(true);
+    // Get the signature value
     const signatureValue = canvas.toDataURL().toString();
-    onSignatureChange(signatureValue);
+
+    // Only update if the signature has actually changed
+    if (signatureValue !== lastSignatureRef.current) {
+      lastSignatureRef.current = signatureValue;
+      setHasSignature(true);
+      onSignatureChange(signatureValue);
+    }
   };
 
   const handleConsentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,26 +104,23 @@ export function SignatureComponent({
     }
   };
 
+  // Apply initial signature only once when component mounts or initialSignature changes
   useEffect(() => {
-    if (initialSignature && padRef.current) {
-      padRef.current.fromDataURL(initialSignature);
-      setHasSignature(true);
+    if (initialSignature && padRef.current && !initialSignatureApplied) {
+      // Check if this is a different signature than what we already have
+      if (initialSignature !== lastSignatureRef.current) {
+        padRef.current.fromDataURL(initialSignature);
+        lastSignatureRef.current = initialSignature;
+        setHasSignature(true);
+        setInitialSignatureApplied(true);
+      }
     }
-  }, [initialSignature]);
+  }, [initialSignature, initialSignatureApplied]);
 
-  // Monitor signature data changes
+  // Reset initialSignatureApplied when initialSignature becomes null/undefined
   useEffect(() => {
-    if (padRef.current) {
-      const data = padRef.current.toData();
-      const newHasSignature = data.length > 0;
-      setHasSignature(newHasSignature);
-    }
-  }, [padRef.current?.toData()]);
-
-  // Log initial signature
-  useEffect(() => {
-    if (initialSignature) {
-      setHasSignature(true);
+    if (!initialSignature) {
+      setInitialSignatureApplied(false);
     }
   }, [initialSignature]);
 
