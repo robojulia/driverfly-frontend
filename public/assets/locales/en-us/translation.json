@@ -2512,5 +2512,7 @@
   "COPIED_TO_CLIPBOARD": "Copied to clipboard!",
   "COPY_FAILED": "Failed to copy to clipboard",
   "ENTER_FULL_SSN": "Enter full SSN",
-  "SOCIAL_SECURITY_NUMBER": "Social Security Number"
+  "SOCIAL_SECURITY_NUMBER": "Social Security Number",
+  "CONTACT_US_CTA": "Contact Us",
+  "SIGNED_AGREEMENTS": "Signed Agreements"
 }

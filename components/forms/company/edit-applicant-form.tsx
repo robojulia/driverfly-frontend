@@ -101,6 +101,7 @@ export function EditApplicantForm(props: EditApplicantFormProps) {
           setEntity={props?.setEntity}
         />
       </Row>
+      {/*
       <Row className="px-2">
         <ApplicantDocumentsViewerForm
           entity={props?.entity}
@@ -110,6 +111,7 @@ export function EditApplicantForm(props: EditApplicantFormProps) {
           setEntity={props?.setEntity}
         />
       </Row>
+      */}
       <Row className="px-2">
         <ApplicantSignedAgreementsForm
           entity={props?.entity}
