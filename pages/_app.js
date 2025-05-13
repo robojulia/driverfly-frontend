@@ -5,37 +5,32 @@ import "../public/css/owl.carousel.css";
 import "../public/css/owl.theme.default.min.css";
 import "../public/css/responsive.css";
 import "../public/css/style.css";
-import "../public/dashboard/styles/css/global.css";
+import "../styles/main.css";
 
 // init bootstrap
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "../public/bootstrap/css/bootstrap.min.css";
 
 // init fontawsome
-import '@fortawesome/fontawesome-free/css/all.css';
+import "@fortawesome/fontawesome-free/css/all.css";
 
 // set up chart JS
 import { bootstrapInit } from "../config/bootstrap";
 import { chartJsInit } from "../config/chartjs";
 
-
 import ErrorBoundary from "../components/ErrorBoundry";
 import { AuthProvider } from "../components/auth/auth-provider";
 
 function MyApp({ Component, pageProps }) {
-
   chartJsInit();
   bootstrapInit();
 
   return (
     <>
       {/* <ErrorBoundary> */}
-        {/* <ManyChatScript /> */}
-        <AuthProvider
-          Component={Component}
-          pageProps={pageProps}
-        />
+      {/* <ManyChatScript /> */}
+      <AuthProvider Component={Component} pageProps={pageProps} />
       {/* </ErrorBoundary> */}
     </>
   );

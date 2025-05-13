@@ -1,212 +1,213 @@
 .theme-secondary-btn {
-    background: #1D4354 !important;
-    border-radius: 3px;
-    color: #fff !important;
-    padding: 12px 40px;
+  background: #1d4354 !important;
+  border-radius: 3px;
+  color: #fff !important;
+  padding: 12px 40px;
 }
 
 .theme-secondary-btn:hover {
-    color: #fff;
+  color: #fff;
+  background-color: #163544 !important;
 }
 
 .theme-primary-btn {
-    background: linear-gradient(to bottom right, #1b4454, #2ec8c4) !important;
-    border-radius: 3px;
-    color: #fff !important;
-    padding: 12px 40px;
+  background: #1c4353 !important;
+  border-radius: 3px;
+  color: #fff !important;
+  padding: 12px 40px;
 }
 
 .hero-search .theme-primary-btn:hover {
-    background-color: #1D4354;
-    color: rgb(255, 255, 255);
+  background-color: #1d4354;
+  color: rgb(255, 255, 255);
 }
 
 .theme-bg-btn {
-    font-size: 16px;
-    font-weight: bold;
-    fill: #fff;
-    color: #fff;
-    background-color: #2EC8C4;
-    border-radius: 0px 0px 0px 0px;
-    padding: 15px 40px 15px 40px;
-    position: relative;
-    transition: all ease-in-out 0.4s;
-    border-radius: 3px;
+  font-size: 16px;
+  font-weight: bold;
+  fill: #fff;
+  color: #fff;
+  background-color: #2ec8c4;
+  border-radius: 0px 0px 0px 0px;
+  padding: 15px 40px 15px 40px;
+  position: relative;
+  transition: all ease-in-out 0.4s;
+  border-radius: 3px;
 }
 
 .theme-bg-btn:hover {
-    background-color: #000000;
+  background-color: #000000;
 }
 
 .white-bg-btn:hover {
-    color: #2EC8C4;
+  color: #2ec8c4;
 }
 
 .theme-primary-btn-outline {
-    position: relative;
-    transition: all ease-in-out 0.4s;
-    background: #fff;
-    border: solid 1px;
-    display: inline-block;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #4aa2af;
-    text-align: center;
-    text-decoration: none;
-    vertical-align: middle;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    border-radius: .25rem;
+  position: relative;
+  transition: all ease-in-out 0.4s;
+  background: #fff;
+  border: solid 1px;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #4aa2af;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
 }
 
 .theme-primary-btn-outline:hover,
 .theme-primary-btn-outline:focus:not(:focus-visible) {
-    color: white;
-    background: linear-gradient(to bottom right, #1b4454, #2ec8c4) !important;
-    border-color: #2da2af;
+  color: white;
+  background: linear-gradient(to bottom right, #1b4454, #2ec8c4) !important;
+  border-color: #2da2af;
 }
 
 .contact-submit-btn {
-    background-color: #2da2af !important;
-    color: #fff !important;
+  background-color: #2da2af !important;
+  color: #fff !important;
 }
 
 .theme-general-btn {
-    background-color: #818a91 !important;
-    border: 1px solid transparent;
-    padding: .375rem .75rem;
-    border-radius: .25rem;
-    color: #fff !important;
+  background-color: #818a91 !important;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  color: #fff !important;
 }
 
-
 .theme-filter-btn {
-    width: "auto"; 
-    font-size: ".875rem";
-    line-height: "1.5";
-    padding: ".25rem 1.5rem"; 
-    border-radius: ".2rem";
-    background-color: #d3d3d3 !important;
-    border: 1px solid transparent;
-    padding: .375rem .75rem;
-    border-radius: .25rem;
-    color: #fff !important;
+  width: "auto";
+  font-size: ".875rem";
+  line-height: "1.5";
+  padding: ".25rem 1.5rem";
+  border-radius: ".2rem";
+  background-color: #d3d3d3 !important;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  color: #fff !important;
 }
 
 .theme-filter-btn:hover {
-    color: #fff;
+  color: #fff;
 }
 
-
 .theme-general-btn:hover {
-    color: #fff;
+  color: #fff;
 }
 
 .ort-btn .theme-primary-btn {
-    padding: 14px 5px;
-    width: 100%;
+  padding: 14px 5px;
+  width: 100%;
 }
 
 .ort-btn .theme-primary-btn:hover {
-    background-color: #b4b4b4 !important;
+  background-color: #b4b4b4 !important;
 }
 
 .ort-btn .theme-general-btn {
-    background: #b4b4b4;
-    border-color: #b4b4b4;
-    margin: 18px 0px;
-    width: 100%;
-    padding: 14px 70px;
-    color: #fff;
+  background: #b4b4b4;
+  border-color: #b4b4b4;
+  margin: 18px 0px;
+  width: 100%;
+  padding: 14px 70px;
+  color: #fff;
 }
 
 .ort-btn .theme-general-btn svg {
-    vertical-align: text-top;
+  vertical-align: text-top;
 }
 
 .ort-btn .theme-general-btn:hover {
-    background: #2EC8C4;
-    color: #fff;
+  background: #2ec8c4;
+  color: #fff;
 }
 
 .create_btn {
-    background-color: #1D4354 !important;
-    color: #fff !important;
+  background-color: #1d4354 !important;
+  color: #fff !important;
 }
 
 .close_btn {
-    background-color: #dc3545 !important;
-    color: #fff !important;
-    border-color: #dc3545 !important;
+  background-color: #dc3545 !important;
+  color: #fff !important;
+  border-color: #dc3545 !important;
 }
 
 .btn-primary {
-    background: linear-gradient(to bottom right, #2ec8c4, #1b4454) !important;
-    border-color: #2da2af !important;
-    color: #fff !important;
+  background: #1c4353 !important;
+  border-color: #2da2af !important;
+  color: #fff !important;
 }
 
 .badge-primary {
-    background: linear-gradient(to bottom right, #2ec8c4, #1b4454) !important;
-    border-color: #2da2af !important;
-    color: #fff !important;
+  background: linear-gradient(to bottom right, #2ec8c4, #1b4454) !important;
+  border-color: #2da2af !important;
+  color: #fff !important;
 }
 
 .btn-primary:hover {
-    background: linear-gradient(to bottom right, #1b4454, #2ec8c4) !important;
-    border-color: #2da2af;
-    color: #fff !important;
+  background: #163544 !important;
+  border-color: #2da2af;
+  color: #fff !important;
 }
 
 .btn.btn-primary_padded {
-    padding: 15px 30px !important;
-    border-radius: 3px;
+  padding: 15px 30px !important;
+  border-radius: 3px;
 }
 
 .theme-primary2-btn {
-    background: #1b4454 !important;
-    border-color: #1b4454 !important;
-    padding: 14px 5px !important;
-    color: #fff !important;
-    width: 100%;
+  background: #1b4454 !important;
+  border-color: #1b4454 !important;
+  padding: 14px 5px !important;
+  color: #fff !important;
+  width: 100%;
 }
 
 .theme-danger-btn {
-    background: #dc3545 !important;
-    border-color: #dc3545 !important;
-    padding: 14px 5px !important;
-    color: #fff !important;
-    width: 100%;
+  background: #dc3545 !important;
+  border-color: #dc3545 !important;
+  padding: 14px 5px !important;
+  color: #fff !important;
+  width: 100%;
 }
 
-
 .btn-outline-primary {
-    transition: all .4s ease-in !important;
-    color: #2da2af !important;
-    background-color: #fff !important;
-    border-color: #2da2af !important;
-    border-radius: 0.25rem !important;
+  transition: all 0.4s ease-in !important;
+  color: #2da2af !important;
+  background-color: #fff !important;
+  border-color: #2da2af !important;
+  border-radius: 0.25rem !important;
 }
 
 .btn-outline-primary:hover {
-    color: #fff !important;
-    background-color: #2da2af !important;
-    border-color: #2da2af !important;
-    border-radius: 0px !important;
+  color: #fff !important;
+  background-color: #2da2af !important;
+  border-color: #2da2af !important;
+  border-radius: 0px !important;
 }
 
-
 .btn-outline-secondary {
-    transition: all .4s ease-in !important;
-    color: #1D4354 !important;
-    background-color: #fff !important;
-    border-color: #1D4354 !important;
-    border-radius: 0.25rem !important;
+  transition: all 0.4s ease-in !important;
+  color: #1d4354 !important;
+  background-color: #fff !important;
+  border-color: #1d4354 !important;
+  border-radius: 0.25rem !important;
 }
 
 .btn-outline-secondary:hover {
-    color: #fff !important;
-    background-color: #1D4354 !important;
-    border-color: #1D4354 !important;
-    border-radius: 0px !important;
+  color: #fff !important;
+  background-color: #1d4354 !important;
+  border-color: #1d4354 !important;
+  border-radius: 0px !important;
+}
+
+.btn-group-end {
+  border-radius: 0px 5px 5px 0 !important;
 }

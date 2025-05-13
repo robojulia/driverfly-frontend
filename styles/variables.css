@@ -1,0 +1,38 @@
+:root {
+  /* Brand Colors */
+  --primary: #5fcbc4;
+  --primary-light: #cdf4ff;
+  --primary-dark: #1c4353;
+
+  /* UI Colors */
+  --content-bg: #f7f9fc;
+  --header-bg: #ffffff;
+  --sidebar-bg: #1c4353;
+  --sidebar-submenu-bg: #163544;
+  --sidebar-logo-bg: #f7f9fc;
+
+  /* Text Colors */
+  --text-light: #ffffff;
+  --text-dark: #333333;
+  --text-muted: #6c757d;
+
+  /* Functional Colors */
+  --success: #87f934;
+  --warning: #f5bf19;
+  --danger: #f44336;
+
+  /* Border & Shadow */
+  --border-color: #e0e0e0;
+  --border-radius: 8px;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* Transitions */
+  --transition-speed: 0.2s;
+}

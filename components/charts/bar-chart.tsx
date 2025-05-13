@@ -1,6 +1,7 @@
 import { Bar } from "react-chartjs-2";
 import { useTranslation } from "../../hooks/use-translation";
 import { useEffect, useState } from "react";
+import { EmptyState } from "./empty-state";
 
 export interface BarChartProps {
   title: string;
@@ -8,6 +9,8 @@ export interface BarChartProps {
   labels: string[];
   data: BarChartDataSets[];
   disableRerender?: boolean | (() => boolean);
+  emptyStateTitle?: string;
+  emptyStateMessage?: string;
 }
 interface BarChartDataSets {
   label: string;
@@ -17,16 +20,35 @@ interface BarChartDataSets {
   borderWidth: number;
 }
 export function BarChart(props: BarChartProps): JSX.Element {
-  const { title, yearToShow, labels, data } = props;
+  const {
+    title,
+    yearToShow,
+    labels,
+    data,
+    emptyStateTitle,
+    emptyStateMessage,
+  } = props;
 
   const { t } = useTranslation();
 
   const [chartKey, setChartKey] = useState(0);
 
   useEffect(() => {
-    if (!props.disableRerender)
-      setChartKey((prevKey) => prevKey + 1);
-  }, [data])
+    if (!props.disableRerender) setChartKey((prevKey) => prevKey + 1);
+  }, [data]);
+
+  const hasData =
+    data.length > 0 &&
+    data.some((dataset) => dataset.data.some((value) => value > 0));
+
+  if (!hasData) {
+    return (
+      <EmptyState
+        title={emptyStateTitle || "NO_DATA_AVAILABLE"}
+        message={emptyStateMessage || "NO_DATA_MESSAGE"}
+      />
+    );
+  }
 
   return (
     <Bar

@@ -1,0 +1,44 @@
+.welcome_banner {
+  background: linear-gradient(135deg, #5fcbc4 0%, #1c4353 100%);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  color: var(--text-light);
+}
+
+.welcome_banner h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.75rem;
+}
+
+.welcome_banner p {
+  margin: 0 0 1.5rem 0;
+  opacity: 0.9;
+  color: var(--text-light);
+}
+
+.welcome_actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.welcome_action_btn {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius);
+  color: var(--text-light);
+  font-weight: 500;
+  transition: background var(--transition-speed);
+}
+
+.welcome_action_btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-light);
+  text-decoration: none;
+}

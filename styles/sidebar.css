@@ -1,0 +1,484 @@
+/* Import variables */
+@import url("./variables.css");
+
+/* Dashboard container */
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Sidebar container */
+.sidebarArea {
+  background-color: var(--sidebar-bg);
+  color: var(--text-light);
+  height: 100vh;
+  width: 230px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Submenu positioning */
+.sidebarArea.submenu-sidebar {
+  left: 230px;
+  background-color: var(--sidebar-submenu-bg);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 9; /* Ensure submenu sits below main sidebar */
+}
+
+/* Content wrapper */
+.content-wrapper {
+  flex: 1;
+  margin-left: 230px;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  transition: margin-left 0.3s ease;
+  width: calc(100% - 230px); /* Ensure proper width calculation */
+}
+
+/* Add offset for submenu when present */
+.has-submenu .content-wrapper {
+  margin-left: 460px; /* Main sidebar + submenu width */
+  width: calc(100% - 460px); /* Adjust width when submenu is present */
+}
+
+/* Header styling */
+.main-header {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* Company profile navigation */
+.company-profile-nav {
+  display: flex;
+  align-items: center;
+}
+
+/* Company name display when only one company */
+.company-name {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  color: #333;
+  font-weight: 500;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.company-name .company-icon {
+  flex-shrink: 0;
+}
+
+/* Adjust profile section spacing */
+.profile {
+  margin-left: 15px;
+}
+
+.profile .dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.profile-photo {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* Mobile toggle button styling */
+.btn-mobile-toggle {
+  position: absolute;
+  top: 20px;
+  left: 15px;
+  z-index: 1050;
+  display: none;
+  background: var(--primary);
+  color: white !important;
+  border: none;
+  border-radius: 4px;
+  padding: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-mobile-toggle:hover {
+  background: var(--primary-dark, #0c8a80);
+}
+
+.btn-mobile-toggle:active {
+  transform: scale(0.98);
+}
+
+/* Sidebar wrapper with scroll */
+.side_bar {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Hide scrollbar but allow scrolling */
+.side_bar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.side_bar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.side_bar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Reset Bootstrap defaults */
+.side_bar .navbar {
+  padding: 0;
+}
+
+.side_bar .container {
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+}
+
+.side_bar ul {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+/* Navigation item styling */
+.sidebarArea li {
+  position: relative;
+  width: 100%;
+  transition: background-color var(--transition-speed) ease;
+}
+
+.sidebarArea li a {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  color: var(--text-light);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  transition: color var(--transition-speed) ease;
+}
+
+/* Icon styling */
+.sidebarArea .icon_left {
+  flex-shrink: 0;
+  margin-right: 16px;
+  width: 20px;
+  height: 20px;
+  transition: transform var(--transition-speed) ease;
+}
+
+/* Submenu indicator styling */
+.submenu-indicator {
+  margin-left: auto;
+  color: rgba(255, 255, 255, 0.5);
+  transition: transform 0.3s ease;
+}
+
+.sidebarArea li.has-subitems {
+  position: relative;
+}
+
+.sidebarArea li.has-subitems:after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-45deg);
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  transition: transform 0.3s ease;
+  display: none; /* Hide by default, show in mobile */
+}
+
+.sidebarArea li.has-subitems.expanded:after {
+  transform: translateY(-50%) rotate(45deg);
+}
+
+/* Mobile submenu styling - expand/collapse */
+.sidebarArea li.has-subitems ul.hide {
+  display: none;
+}
+
+.sidebarArea li.has-subitems ul.show {
+  display: block;
+}
+
+/* Hover state */
+.sidebarArea li:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.sidebarArea li:hover .submenu-indicator {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Active state */
+.sidebarArea li.active {
+  background-color: #5fcbc4;
+  color: var(--sidebar-bg);
+}
+
+.sidebarArea li.active a {
+  color: var(--sidebar-bg);
+}
+
+.sidebarArea li.active .icon_left {
+  color: var(--sidebar-bg);
+}
+
+.sidebarArea li.active .submenu-indicator {
+  color: var(--sidebar-bg);
+}
+
+/* Mobile sidebar */
+@media (max-width: 991.98px) {
+  .sidebarArea {
+    transform: translateX(-100%); /* Hide by default on mobile */
+    width: 100%;
+    max-width: 320px; /* Limit sidebar width on mobile */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1030;
+    transition: transform 0.3s ease;
+  }
+
+  .sidebarArea.showSidebar {
+    transform: translateX(0); /* Show when .showSidebar class is applied */
+  }
+
+  .sidebarArea.submenu-sidebar {
+    display: none; /* Hide submenu on mobile, we use nested menu instead */
+  }
+
+  /* No need for the toggle button on mobile */
+  .navbar-toggler {
+    display: none;
+  }
+
+  .sidebarArea li a {
+    padding: 16px;
+    font-size: 16px;
+  }
+
+  .sidebarArea .icon_left {
+    margin-right: 20px;
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Mobile specific submenu indicator */
+  .sidebarArea li.has-subitems:after {
+    display: block; /* Show arrow indicator on mobile */
+  }
+
+  .sidebarArea li.has-subitems > a {
+    position: relative;
+    padding-right: 40px; /* Make room for the indicator */
+  }
+
+  .sidebarArea li.has-subitems > ul {
+    margin-left: 10px;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    padding-left: 5px;
+  }
+
+  .sidebarArea li.has-subitems > ul > li > a {
+    padding-left: 25px; /* Indent submenu items */
+  }
+
+  /* Reset content wrapper positioning for mobile */
+  .content-wrapper,
+  .has-submenu .content-wrapper {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  /* Content area adjustments for mobile */
+  .main-header {
+    padding-top: 60px; /* Add space for the toggle button */
+  }
+
+  .main-header .container-fluid > div {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .company-profile-nav,
+  .profile {
+    margin: 0;
+  }
+
+  /* Truncate company name if too long */
+  .company-name {
+    max-width: 180px;
+    font-size: 0.9rem;
+    margin-left: 40px;
+  }
+
+  /* Hide user name on very small screens */
+  @media (max-width: 380px) {
+    .company-name {
+      max-width: 200px;
+    }
+  }
+
+  /* Show mobile toggle button */
+  .btn-mobile-toggle {
+    display: flex;
+  }
+
+  .sidebarArea.showSidebar .sidebar-close-btn {
+    display: flex; /* Show close button only when sidebar is visible on mobile */
+  }
+}
+
+/* logo area */
+.logo-container {
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  height: 80px;
+  overflow: hidden;
+  background-color: var(--sidebar-logo-bg);
+  flex-shrink: 0;
+}
+
+.logo-container img {
+  max-height: 160px;
+  width: auto;
+}
+
+/* Logo placeholder for submenu sidebar */
+.logo-placeholder {
+  height: 80px; /* Same height as logo-container */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: var(--sidebar-submenu-bg);
+  flex-shrink: 0;
+}
+
+/* Add a bit of separation between nav groups */
+.nav-group {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.nav-group-title {
+  padding: 8px 16px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Style the nav-group-title in submenu for better visual hierarchy */
+.submenu-sidebar .nav-group-title {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Main content area */
+.main-content {
+  padding: 20px;
+  width: 100%;
+}
+
+/* Company Selector */
+.company-selector {
+  display: flex;
+  align-items: center;
+}
+
+.company-toggle {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.company-icon {
+  color: var(--primary);
+}
+
+.current-indicator {
+  margin-left: 8px;
+  font-size: 0.875em;
+  color: var(--primary);
+  font-style: italic;
+}
+
+@media (max-width: 991.98px) {
+  .company-selector .dropdown-menu {
+    max-width: 90vw;
+  }
+}
+
+/* Mobile close button */
+.sidebar-close-btn {
+  display: none;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1031;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-close-btn:hover {
+  background: var(--primary-dark, #0c8a80);
+}
+
+.sidebar-close-btn:active {
+  transform: scale(0.98);
+}

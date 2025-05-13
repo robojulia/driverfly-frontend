@@ -1,64 +1,31 @@
-import { Dropdown } from "react-bootstrap";
-import React, { useEffect } from "react";
-import { useRouter } from "next/router";
-import LogoutButton from '../../../buttons/logout';
-import { useTranslation } from "../../../../hooks/use-translation";
+import React from "react";
 import { useAuth } from "../../../../hooks/use-auth";
-import Impersonate from "../../../impersonate/impersonate";
 import ChangeCompany from "../../../impersonate/change-company";
+import { Building } from "react-bootstrap-icons";
 
 export default function CompanyProfileNav() {
+  const { user } = useAuth();
 
-    const { getUser } = useAuth();
+  // Check if there are additional companies to switch to
+  const hasAdditionalCompanies =
+    user?.company?.children && user.company.children.length > 1;
 
-    const user = getUser();
-
-    const { t } = useTranslation();
-
-    const router = useRouter();
-
-    const [dropdownOpen, setDropdownOpen] = React.useState(false);
-
-    const toggle = (e) => {
-        setDropdownOpen(!dropdownOpen);
-    }
-
-    const menu_options = [
-        {
-            href: "/dashboard/company/settings/profile",
-            label: "MY_PROFILE"
-        },
-    ];
-
+  // If no company or only one company, show the company name as informational display
+  if (!hasAdditionalCompanies) {
     return (
-        <>
-            <div className="profile profile-logo btn-group">
-                <ChangeCompany />
-                <Dropdown show={dropdownOpen} onToggle={toggle} >
-                    <Dropdown.Toggle variant="light">
-                        <img src="/dashboard/assets/images/users/user1.jpg"
-                            alt="profile"
-                            className="rounded-circle"
-                            width="30"
-                            height="30"
-                        />
-                        <span> {user.first_name}    {user.last_name}</span>
-                    </Dropdown.Toggle >
-                    <Dropdown.Menu className="w-100">
-                        {menu_options.map((v, i) => {
-                            if (!v.label) return <Dropdown.Divider key={i} />
+      <div className="company-profile-nav">
+        <div className="company-name">
+          <Building className="company-icon me-2" />
+          <span>{user?.company?.name || ""}</span>
+        </div>
+      </div>
+    );
+  }
 
-                            return (
-                                <Dropdown.Item className="text-dark" key={i} onClick={e => router.push(v.href || "#")}>{t(v.label)}</Dropdown.Item>
-                            );
-                        })}
-                        <Dropdown.Divider />
-                        <Impersonate />
-                        <LogoutButton className="text-dark" />
-                    </Dropdown.Menu>
-                </Dropdown>
-            </div>
-        </>
-    )
+  // If there are multiple companies, show the company selector
+  return (
+    <div className="company-profile-nav">
+      <ChangeCompany />
+    </div>
+  );
 }
-

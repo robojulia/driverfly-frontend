@@ -3,7 +3,6 @@ import { useTranslation } from "../../hooks/use-translation";
 import { FormikInterface } from "../../utils/formik";
 import { useRef } from "react";
 
-
 export interface BaseRecaptchaProps {
   formik?: FormikInterface<any>;
   className?: string;
@@ -23,7 +22,8 @@ export default function BaseRecaptcha({
 }: BaseRecaptchaProps) {
   const { t } = useTranslation();
   const captchaRef = useRef(null);
-  const key = process.env.RECAPTCHA_SITE_KEY
+  console.log(process.env.RECAPTCHA_SITE_KEY);
+  const key = process.env.RECAPTCHA_SITE_KEY;
   if (formik) {
     /**
      * @type {import('formik').FieldMetaProps}
@@ -38,7 +38,7 @@ export default function BaseRecaptcha({
 
   return (
     <>
-      <div className={`${className || ""} `} >
+      <div className={`${className || ""} `}>
         {label && (
           <>
             <label>{t(label)}:</label>

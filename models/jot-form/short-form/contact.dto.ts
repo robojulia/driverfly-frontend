@@ -12,13 +12,9 @@ export class ContactDto {
       zip_code: yup
         .string()
         .required()
-        .matches(/^[0-9]+$/, "Must be only digits")
-        .min(5, "Must be exactly 5 digits")
-        .max(5, "Must be exactly 5 digits"),
-      authorize_to_communicate: yup
-        .string()
-        .required()
-        .nullable(),
+        .matches(/^\d{5}$/, "Must be exactly 5 digits")
+        .length(5, "Must be exactly 5 digits"),
+      authorize_to_communicate: yup.string().required().nullable(),
     });
   }
 }

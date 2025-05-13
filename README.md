@@ -14,47 +14,62 @@ DriverFly is a modern web application built with Next.js, React, and TypeScript,
 ## Quick Start
 
 1. Clone the repository:
+
    ```bash
    git clone https://gitlab.com/d5968/driverfly-frontend.git
    cd driverfly-frontend
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install --legacy-peer-deps
    ```
 
    > **IMPORTANT**: The `--legacy-peer-deps` flag is required due to dependency compatibility issues.
 
-3. Copy environment file and update configuration
+3. Create a `.env` file in the root directory with the following environment variables:
 
-    cp .env.example .env
-
-   Configure the following environment variables:
-   - `BASE_URL` - Frontend application URL
-   - `BASE_URL_API` - Backend API URL
-   - `FRONTEND_BASE_URL` - Frontend URL for sharing
-   - `MAPBOX_API_KEY` - Mapbox API key
-   - `RECAPTCHA_SITE_KEY` - Google reCAPTCHA key
-
-4. Start development server:
-   ```bash
-   npm run dev
    ```
+   BASE_URL=<your-base-url>
+   FRONTEND_BASE_URL=<your-frontend-base-url>
+   BASE_URL_API=<your-api-url>
+   MAPBOX_API_KEY=<your-mapbox-api-key>
+   TWILIO_APP_NAME=<your-twilio-app-name>
+   PHONE_INPUT_COUNTRY_ALLOWED=<allowed-countries>
+   RECAPTCHA_SECRET_KEY=<your-recaptcha-secret>
+   RECAPTCHA_SITE_KEY=<your-recaptcha-site-key>
+   NEXT_PUBLIC_MICROSOFT_CLARITY=<your-clarity-id>
+   ```
+
+4. Create a reCAPTCHA account and get the secret and site keys. https://cloud.google.com/recaptcha/docs/create-key-website. Add the site key and secret key to the `.env` file. Ensure the site key is also in the backend .env file.
+
+5. Create a MapBox account and get the API key. https://www.mapbox.com/. Add the API key to the `.env` file.
+
+## Development
+
+| Command         | Description              |
+| --------------- | ------------------------ |
+| `npm run dev`   | Start development server |
+| `npm run build` | Create production build  |
+| `npm run start` | Run production build     |
+| `npm run lint`  | Run ESLint               |
+
+## Tech Stack
 
 ## Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Create production build |
-| `npm run start` | Run production build |
-| `npm run lint` | Run ESLint |
+| Command         | Description              |
+| --------------- | ------------------------ |
+| `npm run dev`   | Start development server |
+| `npm run build` | Create production build  |
+| `npm run start` | Run production build     |
+| `npm run lint`  | Run ESLint               |
 
 ## Tech Stack
 
 - **Core**: Next.js 12, React, TypeScript
-- **UI/UX**: 
+- **UI/UX**:
   - React Bootstrap
   - Material UI
   - React Toastify
@@ -92,14 +107,11 @@ DriverFly is a modern web application built with Next.js, React, and TypeScript,
 
 ## Deployment
 
-The application can be deployed to any Next.js-compatible hosting service. 
-
-
-
+The application can be deployed to any Next.js-compatible hosting service.
 
 ### Deploying Next.js App to Netlify from GitLab
-A `netlify.toml` configuration is included for Netlify deployments. You can easily deploy your Next.js app on Netlify using your GitLab repository by following these steps:
 
+A `netlify.toml` configuration is included for Netlify deployments. You can easily deploy your Next.js app on Netlify using your GitLab repository by following these steps:
 
 #### 1. Connect GitLab with Netlify
 
@@ -114,7 +126,7 @@ A `netlify.toml` configuration is included for Netlify deployments. You can easi
 When prompted, set the following:
 
 - **Branch to deploy**: main (or your desired branch)
-- **Build command**:  
+- **Build command**:
   ```bash
   npm run build
   ```
@@ -134,7 +146,6 @@ You also need to set environment variables:
 #### 3. Click “Deploy Site”
 
 Netlify will clone your GitLab repository, install dependencies, and build your site. Once complete, your Next.js app will be live on a Netlify domain (which you can customize).
-
 
 ## Documentation
 

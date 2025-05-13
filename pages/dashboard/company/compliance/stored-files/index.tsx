@@ -70,8 +70,10 @@ export default function StoredFiles() {
   const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
   const [employees, setEmployees] = useState<EmployeeEntity[]>([]);
   const [isFetchingFiles, setIsFetchingFiles] = useState<boolean>(false);
-  const [isFetchingApplicants, setIsFetchingApplicants] = useState<boolean>(false);
-  const [isFetchingEmployees, setIsFetchingEmployees] = useState<boolean>(false);
+  const [isFetchingApplicants, setIsFetchingApplicants] =
+    useState<boolean>(false);
+  const [isFetchingEmployees, setIsFetchingEmployees] =
+    useState<boolean>(false);
 
   const [pdf, setPdf] = useState({});
 
@@ -88,8 +90,12 @@ export default function StoredFiles() {
       setIsFetchingApplicants(false);
 
       setIsFetchingEmployees(true);
-      const e = await employeeApi.list() as EmployeeEntity[];
-      setEmployees(e?.filter(({ email, status }) => !!email && status == EmployeeStatus.ACTIVE));
+      const e = (await employeeApi.list()) as EmployeeEntity[];
+      setEmployees(
+        e?.filter(
+          ({ email, status }) => !!email && status == EmployeeStatus.ACTIVE
+        )
+      );
       setIsFetchingEmployees(false);
     },
     [user],
@@ -156,7 +162,7 @@ export default function StoredFiles() {
       );
     };
 
-    if (isFetchingApplicants) return <LoaderIcon isLoading />
+    if (isFetchingApplicants) return <LoaderIcon isLoading />;
 
     return (
       <>
@@ -180,15 +186,6 @@ export default function StoredFiles() {
           enableSelectableRows={true}
           selectableRowChangeHandler={handleSelectedRowsChange}
           columnSettingKey={columnSettingKey}
-          customStyles={{
-            headRow: {
-              style: {
-                background:
-                  "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
-                color: "white",
-              },
-            },
-          }}
           columns={[
             {
               id: "id",
@@ -252,7 +249,7 @@ export default function StoredFiles() {
       );
     };
 
-    if (isFetchingEmployees) return <LoaderIcon isLoading />
+    if (isFetchingEmployees) return <LoaderIcon isLoading />;
 
     return (
       <>
@@ -276,15 +273,6 @@ export default function StoredFiles() {
           enableSelectableRows={true}
           selectableRowChangeHandler={handleSelectedRowsChange}
           columnSettingKey={columnSettingKey}
-          customStyles={{
-            headRow: {
-              style: {
-                background:
-                  "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
-                color: "white",
-              },
-            },
-          }}
           columns={[
             {
               id: "id",
@@ -346,19 +334,11 @@ export default function StoredFiles() {
         </Button>
       }
     >
-      {(isFetchingFiles)
-        ? <LoaderIcon isLoading />
-        : <ViewDataTable<DocumentEntity>
+      {isFetchingFiles ? (
+        <LoaderIcon isLoading />
+      ) : (
+        <ViewDataTable<DocumentEntity>
           columnSettingKey={columnSettingKey}
-          customStyles={{
-            headRow: {
-              style: {
-                background:
-                  "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
-                color: "white",
-              },
-            },
-          }}
           columns={[
             {
               id: "id",
@@ -429,7 +409,8 @@ export default function StoredFiles() {
                         handleViewDocument(
                           file.id,
                           setPdf,
-                          `${t("CompanyDocumentType." + file?.type)} (${file.name
+                          `${t("CompanyDocumentType." + file?.type)} (${
+                            file.name
                           })`
                         )
                       }
@@ -457,7 +438,7 @@ export default function StoredFiles() {
           ]}
           items={files}
         />
-      }
+      )}
       <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
 
       {/* Model for Upload file */}

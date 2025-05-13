@@ -5,159 +5,110 @@ import { useTranslation } from "../../../hooks/use-translation";
 import { BarChart } from "../bar-chart";
 
 export function TotalApplicantBarChart() {
-	const { state } = useContext(DashboardChartContext);
-	const { t } = useTranslation();
-	const yearToShow: number = new Date().getFullYear();
+  const { state } = useContext(DashboardChartContext);
+  const { t } = useTranslation();
+  const yearToShow: number = new Date().getFullYear();
 
+  const getMonthsInYear = () => {
+    const startOfYear = moment().startOf("year");
+    const endOfYear = moment().endOf("year");
+    const months = [];
+    let currentMonth = startOfYear.clone().startOf("month");
 
-	// const getWeeksWithInMonth = () => {
-	// 	const startOfMonth = moment().startOf("month");
-	// 	const endOfMonth = moment().endOf("month");
-	// 	const weeks = [];
-	// 	let currentWeek = startOfMonth.clone().startOf("week");
-	// 	const endWeek = endOfMonth.clone().endOf("week");
-	// 	while (currentWeek.isSameOrBefore(endWeek)) {
-	// 		weeks.push(currentWeek.clone());
-	// 		currentWeek.add(1, "week");
-	// 	}
-	// 	return weeks;
-	// };
+    while (currentMonth.isSameOrBefore(endOfYear)) {
+      months.push(currentMonth.clone());
+      currentMonth.add(1, "month");
+    }
+    return months;
+  };
 
-	// const labels: string[] = getWeeksWithInMonth().map((el) =>
-	// 	moment(el).format("DD-MM-YYYY")
-	// );
+  const labels: string[] = getMonthsInYear().map((month) =>
+    month.format("MMMM")
+  );
 
+  const isMonthData = ({
+    created_at,
+    monthStart,
+    monthEnd,
+  }: {
+    created_at: string | Date;
+    monthStart: string;
+    monthEnd: string;
+  }) => {
+    return (
+      moment(created_at).isSameOrAfter(monthStart, "month") &&
+      moment(created_at).isSameOrBefore(monthEnd, "month")
+    );
+  };
 
-	// const isWeekData = ({
-	// 	created_at,
-	// 	week,
-	// 	weekEnd,
-	// }: {
-	// 	created_at: string | Date;
-	// 	week: string;
-	// 	weekEnd: string;
-	// }) => {
-	// 	return (
-	// 		moment(created_at).isSameOrAfter(week, "day") &&
-	// 		moment(created_at).isSameOrBefore(weekEnd, "day")
-	// 	);
-	// };
+  const fetchData = () => {
+    const months = getMonthsInYear();
+    const applicantData = [];
+    const hiredData = [];
 
-	const getMonthsInYear = () => {
-		const startOfYear = moment().startOf("year");
-		const endOfYear = moment().endOf("year");
-		const months = [];
-		let currentMonth = startOfYear.clone().startOf("month");
+    months.forEach((month) => {
+      const monthStart = month.clone().startOf(`${month}`).format("YYYY-MM-DD");
+      const monthEnd = month.clone().endOf(`${month}`).format("YYYY-MM-DD");
 
-		while (currentMonth.isSameOrBefore(endOfYear)) {
-			months.push(currentMonth.clone());
-			currentMonth.add(1, "month");
-		}
-		return months;
-	};
+      let applicantCount = 0;
+      let hiredCount = 0;
 
-	const labels: string[] = getMonthsInYear().map((month) =>
-		month.format("MMMM")
-	);
+      state?.applicants?.forEach((applicant) => {
+        if (
+          isMonthData({
+            created_at: applicant.created_at,
+            monthStart,
+            monthEnd,
+          })
+        ) {
+          applicantCount++;
+        }
+      });
 
+      state?.employees?.forEach((employee) => {
+        if (
+          isMonthData({ created_at: employee.hire_date, monthStart, monthEnd })
+        ) {
+          hiredCount++;
+        }
+      });
 
+      applicantData.push(applicantCount);
+      hiredData.push(hiredCount);
+    });
 
-	const isMonthData = ({
-		created_at,
-		monthStart,
-		monthEnd,
-	}: {
-		created_at: string | Date;
-		monthStart: string;
-		monthEnd:string;
-	}) => {
-		return( moment(created_at).isSameOrAfter(monthStart, "month") && moment(created_at).isSameOrBefore(monthEnd, "month"));
-	};
+    return [
+      {
+        label: t("Applicants"),
+        backgroundColor: "rgb(56, 171, 172)",
+        borderColor: "transparent",
+        data: applicantData,
+        borderWidth: 1,
+        borderRadius: 10,
+      },
+      {
+        label: t("EMPLOYEE"),
+        backgroundColor: "rgb(245, 191, 25)",
+        borderColor: "transparent",
+        data: hiredData,
+        borderWidth: 1,
+        borderRadius: 10,
+      },
+    ];
+  };
 
+  const data = useMemo(() => {
+    return fetchData();
+  }, [state]);
 
-	const fetchData = () => {
-		const months = getMonthsInYear();
-		const applicantData = [];
-		const hiredData = [];
-
-		months.forEach((month) => {
-			const monthStart = month.clone().startOf(`${month}`).format("YYYY-MM-DD");
-			const monthEnd = month.clone().endOf(`${month}`).format("YYYY-MM-DD");
-		  
-			let applicantCount = 0;
-			let hiredCount = 0;
-
-			state?.applicants?.forEach((applicant) => {
-				if (isMonthData({ created_at: applicant.created_at, monthStart, monthEnd })) {
-					applicantCount++;
-				}
-			});
-
-			state?.employees?.forEach((employee) => {
-				if (isMonthData({ created_at: employee.hire_date, monthStart, monthEnd })) {
-					hiredCount++;
-				}
-			});
-
-			applicantData.push(applicantCount);
-			hiredData.push(hiredCount);
-		});
-		
-		// const weeks = getWeeksWithInMonth();
-		// const applicantData = [];
-		// const hiredData = [];
-
-		// weeks.forEach((week) => {
-		// 	const weekEnd = week.clone().endOf("week");
-		// 	let applicantCount = 0;
-		// 	let hiredCount = 0;
-
-		// 	state?.applicants?.forEach(applicant => {
-		// 		if (isWeekData({ created_at: applicant.created_at, week, weekEnd })) {
-		// 			applicantCount++;
-		// 		}
-		// 	})
-
-		// 	state?.employees?.forEach(employee => {
-		// 		if (isWeekData({ created_at: employee.hire_date, week, weekEnd })) {
-		// 			hiredCount++;
-		// 		}
-		// 	})
-
-		// 	applicantData.push(applicantCount);
-		// 	hiredData.push(hiredCount);
-		// });
-
-		return [
-			{
-				label: t("Applicants"),
-				backgroundColor: "rgb(56, 171, 172)",
-				borderColor: "transparent",
-				data: applicantData,
-				borderWidth: 1,
-				borderRadius:10,
-			},
-			{
-				label: t("EMPLOYEE"),
-				backgroundColor: "rgb(245, 191, 25)",
-				borderColor: "transparent",
-				data: hiredData,
-				borderWidth: 1,
-				borderRadius:10,
-			},
-		];
-	};
-
-	const data = useMemo(() => {
-		return fetchData();
-	}, [state]);
-
-	return (
-			<BarChart
-				yearToShow={yearToShow}
-				title="APPLICANTS"
-				labels={labels}
-				data={data}
-			/>
-	);
+  return (
+    <BarChart
+      yearToShow={yearToShow}
+      title="APPLICANTS"
+      labels={labels}
+      data={data}
+      emptyStateTitle="NO_HISTORICAL_DATA"
+      emptyStateMessage="HISTORICAL_DATA_EMPTY_STATE_MESSAGE"
+    />
+  );
 }
