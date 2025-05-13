@@ -70,7 +70,9 @@ export function JobForm(props: JobFormProps) {
   const { t } = useTranslation();
   const { user, hasPermission } = useAuth();
 
-  let { className, entity, onSaveComplete, onSaveError } = props;
+  let { className, entity, onSaveComplete, onSaveError, type } = props;
+
+  const formType = type || "create";
 
   const [showConfirmationModal, setShowConfirmationModal] =
     useState<boolean>(false);
@@ -530,7 +532,7 @@ export function JobForm(props: JobFormProps) {
         submitLabel={t("Forms.ADD_JOB")}
       >
         <Row className="mt-1">
-          <Col lg="6" xl="4" className="p-0 px-lg-2">
+          <Col md="6" lg="6" xl="6" className="p-0 px-lg-2">
             <ViewCard title="basic_details">
               <BaseInput
                 className="col-12 p-0 px-lg-2"
@@ -675,7 +677,7 @@ export function JobForm(props: JobFormProps) {
               />
             </ViewCard>
           </Col>
-          <Col lg="6" xl="4" className="p-0 px-lg-2">
+          <Col md="6" lg="6" xl="6" className="p-0 px-lg-2">
             <ViewCard title="BENEFITS">
               <BaseSelect
                 className="col-12 p-0 px-lg-2 mb-2"
@@ -847,7 +849,7 @@ export function JobForm(props: JobFormProps) {
               )}
             </ViewCard>
           </Col>
-          <Col lg="12" xl="4" className="p-0 px-lg-2">
+          <Col lg="12" xl="12" className="p-0 px-lg-2">
             <ViewCard
               title="vehicle_info"
               actions={

@@ -2507,10 +2507,10 @@
   "EMBED_CDL_SCHOOLS_DESC": "Display CDL school job listings on your website.",
   "COPY_CODE": "Copy code to clipboard",
   "COPY": "Copy",
-  "COMPANY_INFORMATION": "Company Information",
   "COMPANY_ID": "Company ID",
   "NEED_HELP": "Need Help?",
   "EMBED_HELP_TEXT": "Contact our support team for assistance with embedding job listings on your website.",
   "COPIED_TO_CLIPBOARD": "Copied to clipboard!",
-  "COPY_FAILED": "Failed to copy to clipboard"
+  "COPY_FAILED": "Failed to copy to clipboard",
+  "ENTER_FULL_SSN": "Enter full SSN"
 }

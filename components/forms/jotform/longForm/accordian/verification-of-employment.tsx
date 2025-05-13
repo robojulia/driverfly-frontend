@@ -1,5 +1,6 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { Col, Form, Row } from "react-bootstrap";
+import InputMask from "react-input-mask";
 import BaseInput from "../../../base-input";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import styles from "../../../../../styles/digitalhiringapp.module.css";
@@ -12,23 +13,16 @@ import { ApplicantExtrasEntity } from "../../../../../models/applicant";
 import { CompanyPreferenceEnhancementLabel } from "../../../../../enums/company/company-preference-enhancement-label.enum";
 import { SignatureComponent } from "../../../signature";
 
-function formatSSN(value: string) {
-  if (!value) return value;
-  const ssn = value.replace(/[^\d]/g, "");
-  const ssnLength = ssn.length;
-  if (ssnLength < 4) return ssn;
-  if (ssnLength < 6) {
-    return `${ssn.slice(0, 3)}-${ssn.slice(3)}`;
-  }
-  return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`;
-}
-
 export function VerificationOfEmployment({ form }: AccordianProps) {
   const {
     state: { applicant, applicantExtras, companyPreferences, company },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
+  const [isFocused, setIsFocused] = useState(false);
+  const [displayValue, setDisplayValue] = useState("");
+  const [maskedValue, setMaskedValue] = useState("");
+  const inputRef = useRef(null);
 
   const handleSignatureChange = (signature: string | null) => {
     const signatureEntity = new ApplicantExtrasEntity(
@@ -47,22 +41,109 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
       apx_sign_voe_authorization ||
       new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION);
 
+    // Format SSN if it exists in the applicant data
+    const formattedSSN = applicant.ssn ? formatSSN(applicant.ssn) : "";
+
+    // Set initial masked value for display
+    setMaskedValue(formattedSSN);
+
+    // Set values in the form including SSN
     form.setValues({
       ...form.values,
       SIGNATURE_VOE_AUTHORIZATION: signatureEntity,
-      ssn: applicant.ssn,
+      ssn: applicant.ssn || "",
     });
+
+    console.log("Initialized SSN in form:", applicant.ssn || "");
   }, [applicant]);
 
-  const handleInput = (value: string) => {
-    const formattedSSN = formatSSN(value);
-    form.setFieldValue("ssn", formattedSSN);
-    return formattedSSN;
+  // Initialize display value when SSN changes
+  useEffect(() => {
+    if (form.values.ssn) {
+      // Format SSN for display (XXX-XX-XXXX)
+      const formattedSSN = formatSSN(form.values.ssn);
+      setMaskedValue(formattedSSN);
+    } else {
+      setMaskedValue("");
+    }
+  }, [form.values.ssn]);
+
+  // Format SSN in XXX-XX-XXXX pattern
+  const formatSSN = (value) => {
+    if (!value) return "";
+
+    // Remove all non-digit characters
+    const ssn = value.replace(/\D/g, "");
+
+    // Make sure we don't exceed 9 digits
+    const cleaned = ssn.slice(0, 9);
+
+    // Format based on the length
+    if (cleaned.length < 4) {
+      return cleaned;
+    } else if (cleaned.length < 6) {
+      return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`;
+    } else {
+      return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 5)}-${cleaned.slice(
+        5,
+        9
+      )}`;
+    }
   };
+
+  // Handle input change
+  const handleInputChange = (e) => {
+    const inputValue = e.target.value;
+    // Remove all non-digit characters
+    const rawValue = inputValue.replace(/\D/g, "");
+
+    // Store raw digits in form
+    form.setFieldValue("ssn", rawValue);
+
+    // Format the display value
+    const formatted = formatSSN(rawValue);
+    setDisplayValue(formatted);
+  };
+
+  // Handle input focus
+  const handleFocus = () => {
+    setIsFocused(true);
+    // If there's a masked value, use it for the display value
+    // Otherwise start with an empty string
+    if (form.values.ssn) {
+      setDisplayValue(formatSSN(form.values.ssn));
+    } else {
+      setDisplayValue("");
+    }
+  };
+
+  // Handle input blur
+  const handleBlur = (e) => {
+    setIsFocused(false);
+
+    // Get the current SSN value from the form or input
+    const currentValue = form.values.ssn || displayValue.replace(/\D/g, "");
+
+    // Make sure the ssn field is set in the form
+    if (currentValue) {
+      // Remove any formatting characters, keep only digits
+      const rawValue = currentValue.replace(/\D/g, "");
+
+      // Ensure we're storing the cleaned value in the form
+      form.setFieldValue("ssn", rawValue);
+
+      // Update the masked value for display when not focused
+      setMaskedValue(formatSSN(rawValue));
+
+      console.log("SSN set in form on blur:", rawValue);
+    }
+
+    // Call formik's handleBlur to track field touched state
+    form.handleBlur(e);
+  };
+
   const current_company = applicant?.employers?.find((v) => !!v?.is_current);
-  // useEffect(() => {
-  //     console.log("applicantttttt", applicant);
-  // }, []);
+
   return (
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -100,15 +181,50 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
           )?.value
         ) && (
           <Row className={styles.align__text_left}>
-            <BaseInput
-              className="col my-3"
-              name="ssn"
-              label="EMPLOYEE_SSN"
-              type="password"
-              onChange={({ target: { value } }) => handleInput(value)}
-              formik={form}
-              required
-            />
+            <div className="col my-3">
+              <Form.Group>
+                <Form.Label>
+                  {t("EMPLOYEE_SSN")} <span className="text-danger">*</span>
+                </Form.Label>
+                {isFocused ? (
+                  // When focused, show regular input with masked format
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    name="ssn"
+                    value={displayValue}
+                    onChange={handleInputChange}
+                    onBlur={handleBlur}
+                    className={`form-control ${
+                      form.touched.ssn && form.errors.ssn ? "is-invalid" : ""
+                    }`}
+                    placeholder="XXX-XX-XXXX"
+                    maxLength={11} // 9 digits + 2 dashes
+                    required
+                  />
+                ) : (
+                  // When not focused, show password field with dots
+                  <input
+                    type="password"
+                    name="ssn"
+                    value={maskedValue}
+                    onFocus={handleFocus}
+                    className={`form-control ${
+                      form.touched.ssn && form.errors.ssn ? "is-invalid" : ""
+                    }`}
+                    placeholder="XXX-XX-XXXX"
+                    required
+                    readOnly
+                  />
+                )}
+                {form.touched.ssn && form.errors.ssn && (
+                  <Form.Control.Feedback type="invalid">
+                    {form.errors.ssn}
+                  </Form.Control.Feedback>
+                )}
+                <small className="text-muted">{t("ENTER_FULL_SSN")}</small>
+              </Form.Group>
+            </div>
           </Row>
         )}
 
