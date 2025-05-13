@@ -2480,7 +2480,6 @@
   "SIGNATURE_OPTION_1": "1. Draw your signature using your mouse or touchscreen in the box below",
   "SIGNATURE_OPTION_2": "2. Use an electronic typed signature by checking the consent box below",
   "SIGNATURE_ACCESSIBILITY_NOTE": "If you have difficulty using a mouse or touchscreen, use the typed signature option.",
-  "CDL_NUMBER": "CDL Number",
   "CDL_FORMAT_DEFAULT": "CDL Number",
   "CDL_FORMAT_CA": "1 letter followed by 8 numbers",
   "CDL_FORMAT_TX": "8 numbers",
@@ -2512,5 +2511,6 @@
   "EMBED_HELP_TEXT": "Contact our support team for assistance with embedding job listings on your website.",
   "COPIED_TO_CLIPBOARD": "Copied to clipboard!",
   "COPY_FAILED": "Failed to copy to clipboard",
-  "ENTER_FULL_SSN": "Enter full SSN"
+  "ENTER_FULL_SSN": "Enter full SSN",
+  "SOCIAL_SECURITY_NUMBER": "Social Security Number"
 }

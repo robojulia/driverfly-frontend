@@ -522,6 +522,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                   placeholder="ENTER_DRIVER_LICENSE"
                   formik={form}
                 />
+
                 <Row className="px-3">
                   <BaseInput
                     className="col-6"

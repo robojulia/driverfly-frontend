@@ -15,6 +15,7 @@ import { ApplicantVehicleAssiigedForm } from "./applicant-vehicle-assiged-form";
 import { ApplicantWorkHistoryForm } from "./applicant-work-history-form";
 import { BaseFormProps } from "./base-form-props";
 import { HireApplicantForm } from "./hire-applicant-form";
+import SSNDisplay from "../../shared/SSNDisplay";
 
 export interface EditApplicantFormProps extends BaseFormProps<ApplicantEntity> {
   isSubmitting: boolean;
