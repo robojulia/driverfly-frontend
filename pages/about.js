@@ -107,19 +107,17 @@ export default function About() {
                   alt=""
                   className=""
                 />
-
               </div>
               <div className="d-flex w-100  justify-content-center text-center">
-              <div className="who-we-serve-inner mb-3">
-                <h3>{t("NOT_SURE_WHRE_TO_START?")}</h3>
-                <p>{t("WITH_OVER_400+_CLIENTS_ACROSS_THE_US")}</p>
-                <Link href={"/contact"}>
-                  <button type="button" className="theme-general-btn">
-                    {t("CONTACT_US")}
-                  </button>
-                </Link>
-              </div>
-
+                <div className="who-we-serve-inner mb-3">
+                  <h3>{t("NOT_SURE_WHRE_TO_START?")}</h3>
+                  <p>{t("WITH_OVER_400+_CLIENTS_ACROSS_THE_US")}</p>
+                  <Link href={"/contact"}>
+                    <button type="button" className="theme-general-btn">
+                      {t("CONTACT_US_CTA")}
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

@@ -41,8 +41,17 @@ export const DashboardStats = () => {
     let birthdaysThisWeek = 0;
     let birthdayEmployees: EmployeeEntity[] = [];
 
-    // Calculate applicant stats
-    applicants.forEach((a) => {
+    // Filter out duplicate applicants by email
+    const uniqueApplicants = Array.from(
+      new Map(
+        applicants
+          .filter((applicant) => applicant?.email) // Ensure applicant has an email
+          .map((applicant) => [applicant.email, applicant])
+      ).values()
+    );
+
+    // Calculate applicant stats using unique applicants
+    uniqueApplicants.forEach((a) => {
       if (!a.is_hired && a?.current_application_status?.startsWith("NEW_")) {
         totalLeads++;
         if (moment(a?.created_at).isoWeek() === currentWeek) {
@@ -60,11 +69,11 @@ export const DashboardStats = () => {
       }
     });
 
-    // Calculate conversion rate
-    const conversionRate = applicants.length
+    // Calculate conversion rate using unique applicants
+    const conversionRate = uniqueApplicants.length
       ? (
-          (applicants.filter((a) => Boolean(a?.is_hired))?.length /
-            applicants.length) *
+          (uniqueApplicants.filter((a) => Boolean(a?.is_hired))?.length /
+            uniqueApplicants.length) *
           100
         ).toFixed(1)
       : 0;
