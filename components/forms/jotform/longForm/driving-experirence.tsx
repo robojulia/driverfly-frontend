@@ -25,9 +25,15 @@ export function DrivingExperience() {
     applicant?.license_state || ""
   );
 
+  // Simple state to track button disabled status
+  const [isNextDisabled, setIsNextDisabled] = useState(true);
+
   const form = useFormik({
     initialValues: new DrivingExperienceDto(),
     validationSchema: DrivingExperienceDto.yupSchema(),
+    validateOnMount: true,
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: (values) => {
       try {
         const { license_number, state, license_expiry, license_state } = values;
@@ -48,13 +54,42 @@ export function DrivingExperience() {
     },
   });
 
+  // Check for form validity on value changes
+  useEffect(() => {
+    checkFormValidity();
+  }, [form.values]);
+
+  // Check if the form is valid and update button state
+  const checkFormValidity = () => {
+    const { license_number, state, license_expiry, license_state } =
+      form.values;
+    const isValid =
+      !!license_number && !!state && !!license_expiry && !!license_state;
+
+    setIsNextDisabled(!isValid);
+  };
+
   // Handle state changes to update CDL mask
   const handleIssuedStateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newState = e.target.value;
-    setSelectedIssuedState(newState);
-    form.handleChange(e);
+
+    // Update form values
+    form.setFieldValue("license_state", newState, true);
+
     // Clear CDL when issuing state changes to prevent invalid format
-    form.setFieldValue("license_number", "");
+    form.setFieldValue("license_number", "", true);
+
+    // Manually set the field as touched to trigger validation
+    form.setFieldTouched("license_state", true, true);
+
+    // Run validation
+    form.validateForm();
+
+    // Check form validity after state change
+    setTimeout(checkFormValidity, 0);
+
+    // Update our local state
+    setSelectedIssuedState(newState);
   };
 
   // Handle license number input to convert to uppercase
@@ -65,19 +100,31 @@ export function DrivingExperience() {
     const uppercaseValue = e.target.value.toUpperCase();
 
     // Set the uppercase value in the form
-    form.setFieldValue("license_number", uppercaseValue);
+    form.setFieldValue("license_number", uppercaseValue, true);
+    form.setFieldTouched("license_number", true, true);
   };
 
   useEffect(() => {
     const { license_number, state, license_expiry, license_state } = applicant;
+
+    // Set form values and update our local state
     setSelectedIssuedState(license_state || "");
+
     form.setValues({
       license_number: license_number || null,
       state: state || null,
       license_expiry: license_expiry || null,
       license_state: license_state || null,
     });
-  }, []);
+
+    // Check if form has values from previous entry
+    if (license_state || license_number || state || license_expiry) {
+      // Run validation
+      form.validateForm().then(() => {
+        checkFormValidity();
+      });
+    }
+  }, [applicant]);
 
   const cdlFormat = getCDLFormat(selectedIssuedState);
 
@@ -97,6 +144,7 @@ export function DrivingExperience() {
             placeholder="ISSUANCE_STATE"
             formik={form}
             onChange={handleIssuedStateChange}
+            value={form.values.license_state || ""}
           />
           <div className="col-md-6 my-3">
             <Form.Group>
@@ -143,7 +191,7 @@ export function DrivingExperience() {
             min={
               new Date(
                 current_date.getFullYear(),
-                current_date.getMonth() + 6,
+                current_date.getMonth(),
                 current_date.getDate()
               )
                 .toISOString()
@@ -159,7 +207,11 @@ export function DrivingExperience() {
           </Col>
 
           <Col>
-            <Button className="float-left" type="submit">
+            <Button
+              className="float-left"
+              type="submit"
+              disabled={isNextDisabled}
+            >
               {t("NEXT")}
             </Button>
           </Col>

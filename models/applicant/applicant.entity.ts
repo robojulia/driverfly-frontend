@@ -159,13 +159,10 @@ export class ApplicantEntity {
             if (!Boolean(value)) return true;
             else {
               return (
-                yup
-                  .date()
-                  .min(moment().endOf("day").add(6, "months"))
-                  .isValidSync(value) ||
+                yup.date().min(moment().endOf("day")).isValidSync(value) ||
                 context.createError({
                   path: context.path,
-                  message: "LICENSE_MUST_BE_VALID_FOR_6_MONTHS",
+                  message: "LICENSE_MUST_BE_VALID_AFTER_TODAY",
                 })
               );
             }
@@ -324,10 +321,7 @@ export class ApplicantEntity {
         .test("is-expired", "LICENSE_HAS_EXPIRED", (value) =>
           moment(value).isAfter(moment().startOf("day"))
         )
-        .min(
-          moment().endOf("day").add(0.5, "years"),
-          "LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
-        )
+        .min(moment().endOf("day"), "LICENSE_MUST_BE_VALID_AFTER_TODAY")
         .nullable(),
       license_state: yup.string().nullable(),
       license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
@@ -519,13 +513,10 @@ export class ApplicantEntity {
             if (!Boolean(value)) return true;
             else {
               return (
-                yup
-                  .date()
-                  .min(moment().endOf("day").add(6, "months"))
-                  .isValidSync(value) ||
+                yup.date().min(moment().endOf("day")).isValidSync(value) ||
                 context.createError({
                   path: context.path,
-                  message: "LICENSE_MUST_BE_VALID_FOR_6_MONTHS",
+                  message: "LICENSE_MUST_BE_VALID_AFTER_TODAY",
                 })
               );
             }
@@ -653,13 +644,10 @@ export class ApplicantEntity {
             if (!Boolean(value)) return true;
             else {
               return (
-                yup
-                  .date()
-                  .min(moment().endOf("day").add(6, "months"))
-                  .isValidSync(value) ||
+                yup.date().min(moment().endOf("day")).isValidSync(value) ||
                 context.createError({
                   path: context.path,
-                  message: "LICENSE_MUST_BE_VALID_FOR_6_MONTHS",
+                  message: "LICENSE_MUST_BE_VALID_AFTER_TODAY",
                 })
               );
             }
@@ -788,13 +776,10 @@ export class ApplicantEntity {
             if (!Boolean(value)) return true;
             else {
               return (
-                yup
-                  .date()
-                  .min(moment().endOf("day").add(6, "months"))
-                  .isValidSync(value) ||
+                yup.date().min(moment().endOf("day")).isValidSync(value) ||
                 context.createError({
                   path: context.path,
-                  message: "LICENSE_MUST_BE_VALID_FOR_6_MONTHS",
+                  message: "LICENSE_MUST_BE_VALID_AFTER_TODAY",
                 })
               );
             }
@@ -885,13 +870,10 @@ export class ApplicantEntity {
             if (!Boolean(value)) return true;
             else {
               return (
-                yup
-                  .date()
-                  .min(moment().endOf("day").add(6, "months"))
-                  .isValidSync(value) ||
+                yup.date().min(moment().endOf("day")).isValidSync(value) ||
                 context.createError({
                   path: context.path,
-                  message: "LICENSE_MUST_BE_VALID_FOR_6_MONTHS",
+                  message: "LICENSE_MUST_BE_VALID_AFTER_TODAY",
                 })
               );
             }
@@ -1065,10 +1047,9 @@ export class ApplicantEntity {
 
   static yupSchemaForApplicantVehicleAssiigedForm() {
     return yup.object({
-      vehicles: (
-        yup.array(ApplicantVehicleEntity.yupSchema()) as any
-      )
-        .unique("vehicle.id"),
+      vehicles: (yup.array(ApplicantVehicleEntity.yupSchema()) as any).unique(
+        "vehicle.id"
+      ),
     });
   }
 }

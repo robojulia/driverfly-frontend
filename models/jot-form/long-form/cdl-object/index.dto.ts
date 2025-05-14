@@ -9,10 +9,12 @@ export class CdlExtras {
 
   static yupSchema() {
     return yup.object({
-      date: yup.date().typeError("INVALID_DATE").min(
-        moment().endOf("day").add(0.5, "years"),
-        "LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
-      ).required().nullable(),
+      date: yup
+        .date()
+        .typeError("INVALID_DATE")
+        .min(moment().endOf("day"), "LICENSE_MUST_BE_VALID_AFTER_TODAY")
+        .required()
+        .nullable(),
       state: yup.string().required().nullable(),
       license_number: yup.string().required().nullable(),
     });

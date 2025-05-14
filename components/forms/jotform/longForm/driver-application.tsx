@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import JotformContext, {
   JotFormContextType,
@@ -25,6 +25,7 @@ export function DriverApplication({
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
+  const [hasSignature, setHasSignature] = useState(false);
 
   const form = useFormik({
     initialValues: new DriverApplicationDto(),
@@ -80,6 +81,9 @@ export function DriverApplication({
           ? Boolean(is_automated_recruiting_lead)
           : Boolean(isAutoRecruitmentLead),
     });
+
+    // Check if there's an initial signature
+    setHasSignature(!!apx_sign?.value);
   }, [applicant]);
 
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -88,6 +92,7 @@ export function DriverApplication({
 
   const handleSignatureChange = (signature: string | null) => {
     form.setFieldValue("SIGNATURE.value", signature);
+    setHasSignature(!!signature);
   };
 
   return (
@@ -160,7 +165,9 @@ export function DriverApplication({
 
         <Row className="mt-3">
           <Col className="text-center">
-            <Button type="submit">{t("NEXT")}</Button>
+            <Button type="submit" disabled={!hasSignature}>
+              {t("NEXT")}
+            </Button>
           </Col>
         </Row>
       </Form>
