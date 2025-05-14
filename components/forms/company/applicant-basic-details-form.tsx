@@ -43,6 +43,7 @@ import BaseTextArea from "../base-text-area";
 import StateSelect from "../state-select";
 import { BaseFormProps } from "./base-form-props";
 import SSNDisplay from "../../shared/SSNDisplay";
+import { JobCapability } from "./job-capability";
 
 export interface ApplicantBasicDetailsFormProps
   extends BaseFormProps<ApplicantEntity> {
@@ -67,6 +68,8 @@ export function ApplicantBasicDetailsForm(
   >([]);
   const [canCreateReferral, setCanCreateReferral] = useState<boolean>();
   const [createReferral, setCreateReferral] = useState<boolean>(false);
+  const [canPerformJob, setCanPerformJob] = useState<boolean>(true);
+  const [jobLimitationIndex, setJobLimitationIndex] = useState<number>(-1);
 
   const form = useFormik({
     initialValues: new ApplicantEntity(),
@@ -128,6 +131,21 @@ export function ApplicantBasicDetailsForm(
         type: ApplicantExtras.CDL_NUMBER,
       });
 
+    // Ensure REASON_FOR_UNABLE_TO_PERFORM_JOB is properly handled
+    const jobCapabilityExtra = entity?.extras?.find(
+      (v) => v.type == ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
+    );
+
+    // Only include it if it exists and has a value
+    if (
+      jobCapabilityExtra &&
+      !extras.find(
+        (v) => v.type == ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
+      )
+    ) {
+      extras.push(jobCapabilityExtra);
+    }
+
     if (!!entity?.id) {
       form.setValues({
         ...entity,
@@ -171,6 +189,61 @@ export function ApplicantBasicDetailsForm(
     // Set the uppercase value in the form
     form.setFieldValue(e.target.name, uppercaseValue);
   };
+
+  // Function to update the job capability state in the form
+  const handleCanPerformJobChange = (canPerform: boolean) => {
+    setCanPerformJob(canPerform);
+
+    // Create a copy of the extras array to modify
+    const extrasArray = [...(form.values?.extras || [])];
+    const currentExtraIndex = form.values?.extras?.findIndex(
+      (v) => v.type === ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
+    );
+
+    if (canPerform) {
+      // User CAN perform the job
+      if (currentExtraIndex !== -1) {
+        // If the extra exists, remove it completely from the extras array
+        const filteredExtras = extrasArray.filter(
+          (_, index) => index !== currentExtraIndex
+        );
+        form.setFieldValue("extras", filteredExtras);
+        setJobLimitationIndex(-1); // Reset the index since the extra is gone
+      }
+    } else {
+      // User CANNOT perform the job
+      if (currentExtraIndex !== -1) {
+        // Extra exists, nothing to do here, just ensure the index is set
+        setJobLimitationIndex(currentExtraIndex);
+      } else {
+        // Extra doesn't exist, create it
+        const newExtra = new ApplicantExtrasEntity(
+          ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
+        );
+        extrasArray.push(newExtra);
+        form.setFieldValue("extras", extrasArray);
+
+        // Update our state with the new index
+        setJobLimitationIndex(extrasArray.length - 1);
+      }
+    }
+  };
+
+  // Update job capability states when form values change
+  useEffect(() => {
+    // Find the job capability extra
+    const extraIndex = form.values?.extras?.findIndex(
+      (v) => v.type === ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
+    );
+
+    // Update our state
+    setJobLimitationIndex(extraIndex);
+
+    // If we have a value, they cannot perform the job
+    const hasLimitation =
+      extraIndex !== -1 && form.values?.extras[extraIndex]?.value;
+    setCanPerformJob(!hasLimitation);
+  }, [form.values?.extras]);
 
   return (
     <Form
@@ -533,6 +606,16 @@ export function ApplicantBasicDetailsForm(
                     />
                   </>
                 )}
+
+                {/* Job Capability Component */}
+                <JobCapability
+                  canPerformJob={canPerformJob}
+                  onCanPerformJobChange={handleCanPerformJobChange}
+                  reasonIndex={jobLimitationIndex}
+                  formik={form}
+                  disabled={Boolean(entity?.is_hired)}
+                />
+
                 <BaseCheck
                   className="col-12 mt-2"
                   disabled={Boolean(entity?.is_hired)}

@@ -2571,5 +2571,8 @@
   "SECTION_BACKGROUND_CHECK_DESC": "History of convictions and drug testing",
   "WHY_WE_ASK": "Why We Ask For This Information",
   "WHY_WE_ASK_DESC": "These questions are standard in the transportation industry and help match you with suitable jobs. All information is kept secure and confidential.",
-  "HONESTY_IS_BEST": "Honesty is the best policy! Many carriers have different requirements, and being upfront helps us find the right match for your situation."
+  "HONESTY_IS_BEST": "Honesty is the best policy! Many carriers have different requirements, and being upfront helps us find the right match for your situation.",
+  "JOB_CAPABILITY": "Job Capability",
+  "CAN_PERFORM_JOB": "Can perform essential job functions",
+  "UNABLE_TO_PERFORM_REASON": "Reason for limitations"
 }
