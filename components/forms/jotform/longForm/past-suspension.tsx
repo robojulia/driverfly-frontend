@@ -1,8 +1,10 @@
 import { useFormik } from "formik";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
-import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
+import JotformContext, {
+  JotFormContextType,
+} from "../../../../context/jotform-context";
 import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { PastSuspensionDto } from "../../../../models/jot-form/long-form/past-suspension.dto";
@@ -13,179 +15,252 @@ import BaseRadio from "../../base-radio";
 import BaseTextArea from "../../base-text-area";
 
 export function PastSuspension() {
+  const {
+    state: { applicant },
+    method: { setApplicant, stepNext, stepBack },
+  }: JotFormContextType = useContext(JotformContext);
 
-	const {
-		state: { applicant },
-		method: { setApplicant, stepNext, stepBack },
-	}: JotFormContextType = useContext(JotformContext);
+  const { t } = useTranslation();
+  const [isFormValid, setIsFormValid] = useState(false);
 
-	const { t } = useTranslation();
-	const form = useFormik({
-		initialValues: new PastSuspensionDto(),
-		validationSchema: PastSuspensionDto.yupSchema(),
-		onSubmit: (values) => {
-			const { license_revoked, license_revoked_details, has_past_dui, dui_years } = values;
-			setApplicant({
-				...applicant,
-				has_past_dui: has_past_dui,
-				dui_years: dui_years,
-				license_revoked: license_revoked,
-				license_revoked_details: license_revoked_details,
-			});
-			stepNext();
-		},
-		onReset: (values) => {
-			stepBack();
-		},
-	});
+  const form = useFormik({
+    initialValues: new PastSuspensionDto(),
+    validationSchema: PastSuspensionDto.yupSchema(),
+    validateOnMount: true,
+    validateOnChange: true,
+    validateOnBlur: true,
+    onSubmit: (values) => {
+      const {
+        license_revoked,
+        license_revoked_details,
+        has_past_dui,
+        dui_years,
+      } = values;
+      setApplicant({
+        ...applicant,
+        has_past_dui: has_past_dui,
+        dui_years: dui_years,
+        license_revoked: license_revoked,
+        license_revoked_details: license_revoked_details,
+      });
+      stepNext();
+    },
+    onReset: (values) => {
+      stepBack();
+    },
+  });
 
-	useEffect(() => {
-		form.setValues({
-			...form.values,
-			has_past_dui: applicant?.has_past_dui || null,
-			dui_years: applicant?.dui_years,
-			license_revoked: applicant?.license_revoked || null,
-			license_revoked_details: applicant?.license_revoked_details,
-		});
-	}, [applicant]);
+  // Check form validity whenever values change
+  useEffect(() => {
+    validateForm();
+  }, [form.values, form.errors]);
 
-	useEffect(() => {
-		console.log("values", form?.values);
-		console.log("error", form.errors);
-	}, [form.values, form.errors]);
+  // Custom validation logic to check if all required fields are filled
+  const validateForm = () => {
+    const {
+      license_revoked,
+      license_revoked_details,
+      has_past_dui,
+      dui_years,
+    } = form.values;
 
-	return (
-		<>
-			<h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t("SUSSPENSIONS")}</h1>
+    // Both radio selections must be made
+    const mainFieldsSelected =
+      license_revoked !== null && has_past_dui !== null;
 
-			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<Row className={styles.paragraph__left}>
-					<BaseRadio
-						name={`license_revoked`}
-						className="float-left ml-2 my-2 w-40"
-						label={`LICENSE_PREVILLAGES`}
-						labelPrefix="BooleanType"
-						enumType={BooleanType}
-						value={
-							form.values.license_revoked === true
-								? BooleanType.YES
-								: (form.values.license_revoked === false && BooleanType.NO)
-						}
-						onChange={({ target: { value } }) => {
-							form.setFieldValue(
-								"license_revoked",
-								value === BooleanType.YES ? true : (value === BooleanType.NO && false)
-							);
-						}}
-					/>
-				</Row>
-				{form.values.license_revoked ? (
-					<Row className={`${styles.align__text_left} ${styles.bold}`}>
-						<BaseTextArea
-							className="mt-3"
-							name="license_revoked_details"
-							label="EXPLAIN_SUSPENSION"
-							formik={form}
-						/>
-					</Row>
-				) : null}
-				<Row className={styles.paragraph__left}>
-					<BaseRadio
-						name={`has_past_dui`}
-						className="float-left ml-2 my-2 w-40"
-						label={`HAS_DUIS_DHA`}
-						labelPrefix="BooleanType"
-						enumType={BooleanType}
-						value={
-							form.values.has_past_dui === true
-								? BooleanType.YES
-								: (form.values.has_past_dui === false && BooleanType.NO)
-						}
-						onChange={({ target: { value } }) => {
-							form.setFieldValue(
-								"has_past_dui",
-								value === BooleanType.YES ? true : (value === BooleanType.NO && false)
-							);
-						}}
-					/>
+    // If license was revoked, details must be provided
+    const licenseDetailsValid =
+      license_revoked === true
+        ? !!license_revoked_details && license_revoked_details.trim().length > 0
+        : true;
 
-					{form.values?.has_past_dui && (
-						<Col xs="12" className="mt-2">
-							<ViewCard
-								title="PAST_DUIS"
-								actions={
-									<Button
-										size="sm"
-										onClick={() =>
-											form.setValues({
-												...form.values,
-												dui_years: [...(form.values?.dui_years || []), ""],
-											})
-										}
-									>
-										<PlusCircle /> {t("ADD")}
-									</Button>
-								}
-							>
-								{form.values?.dui_years?.length > 0 && (
-									<Table striped>
-										<thead>
-											<tr>
-												<th colSpan={2}>{t("YEAR")}</th>
-											</tr>
-										</thead>
-										<tbody>
-											{form.values?.dui_years?.map((entity, i) => (
-												<tr key={i}>
-													<td className="w-100">
-														<BaseInput
-															name={`dui_years[${i}]`}
-															placeholder="YEAR"
-															type="int"
-															required
-															min={1900}
-															max="9999"
-															formik={form}
-														/>
-													</td>
-													<td>
-														<a
-															href="#"
-															onClick={() =>
-																form.setValues({
-																	...form.values,
-																	dui_years: form.values?.dui_years?.filter(
-																		(v, idx) => i != idx
-																	),
-																})
-															}
-														>
-															<DashCircle color="red" />
-														</a>
-													</td>
-												</tr>
-											))}
-										</tbody>
-									</Table>
-								)}
-							</ViewCard>
-						</Col>
-					)}
-				</Row>
-				<Row className="mt-5">
-					<Col>
-						<Button className="float-right" type="reset">
-							{t("BACK")}
-						</Button>
-					</Col>
-					<Col>
-						<Button className="float-left" type="submit">
-							{t("NEXT")}
-						</Button>
-					</Col>
-				</Row>
+    // If user has past DUIs, at least one year must be provided and valid
+    const duiYearsValid =
+      has_past_dui === true
+        ? dui_years && dui_years.length > 0 && dui_years.every((year) => !!year)
+        : true;
 
-			</Form>
-		</>
-	);
+    // Check if there are any validation errors from Formik
+    const hasFormikErrors = Object.keys(form.errors).length > 0;
+
+    // Form is valid when all conditions are met and there are no Formik errors
+    setIsFormValid(
+      mainFieldsSelected &&
+        licenseDetailsValid &&
+        duiYearsValid &&
+        !hasFormikErrors
+    );
+  };
+
+  useEffect(() => {
+    form.setValues({
+      ...form.values,
+      has_past_dui: applicant?.has_past_dui || null,
+      dui_years: applicant?.dui_years,
+      license_revoked: applicant?.license_revoked || null,
+      license_revoked_details: applicant?.license_revoked_details,
+    });
+  }, [applicant]);
+
+  return (
+    <>
+      <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
+        {t("SUSSPENSIONS")}
+      </h1>
+
+      <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+        <Row className={styles.paragraph__left}>
+          <BaseRadio
+            name={`license_revoked`}
+            className="float-left ml-2 my-2 w-40"
+            label={`LICENSE_PREVILLAGES`}
+            labelPrefix="BooleanType"
+            enumType={BooleanType}
+            required
+            value={
+              form.values.license_revoked === true
+                ? BooleanType.YES
+                : form.values.license_revoked === false && BooleanType.NO
+            }
+            onChange={({ target: { value } }) => {
+              form.setFieldValue(
+                "license_revoked",
+                value === BooleanType.YES
+                  ? true
+                  : value === BooleanType.NO && false
+              );
+              if (value === BooleanType.NO) {
+                form.setFieldValue("license_revoked_details", "");
+              }
+            }}
+          />
+        </Row>
+        {form.values.license_revoked ? (
+          <Row className={`${styles.align__text_left} ${styles.bold}`}>
+            <BaseTextArea
+              className="mt-3"
+              name="license_revoked_details"
+              label="EXPLAIN_SUSPENSION"
+              required
+              formik={form}
+            />
+          </Row>
+        ) : null}
+        <Row className={styles.paragraph__left}>
+          <BaseRadio
+            name={`has_past_dui`}
+            className="float-left ml-2 my-2 w-40"
+            label={`HAS_DUIS_DHA`}
+            labelPrefix="BooleanType"
+            enumType={BooleanType}
+            required
+            value={
+              form.values.has_past_dui === true
+                ? BooleanType.YES
+                : form.values.has_past_dui === false && BooleanType.NO
+            }
+            onChange={({ target: { value } }) => {
+              form.setFieldValue(
+                "has_past_dui",
+                value === BooleanType.YES
+                  ? true
+                  : value === BooleanType.NO && false
+              );
+              if (value === BooleanType.NO) {
+                form.setFieldValue("dui_years", []);
+              } else if (
+                value === BooleanType.YES &&
+                (!form.values.dui_years || form.values.dui_years.length === 0)
+              ) {
+                form.setFieldValue("dui_years", [""]);
+              }
+            }}
+          />
+
+          {form.values?.has_past_dui && (
+            <Col xs="12" className="mt-2">
+              <ViewCard
+                title="PAST_DUIS"
+                actions={
+                  <Button
+                    size="sm"
+                    onClick={() =>
+                      form.setValues({
+                        ...form.values,
+                        dui_years: [...(form.values?.dui_years || []), ""],
+                      })
+                    }
+                  >
+                    <PlusCircle /> {t("ADD")}
+                  </Button>
+                }
+              >
+                {form.values?.dui_years?.length > 0 && (
+                  <Table striped>
+                    <thead>
+                      <tr>
+                        <th colSpan={2}>{t("YEAR")}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {form.values?.dui_years?.map((entity, i) => (
+                        <tr key={i}>
+                          <td className="w-100">
+                            <BaseInput
+                              name={`dui_years[${i}]`}
+                              placeholder="YEAR"
+                              type="int"
+                              required
+                              min={1900}
+                              max="9999"
+                              formik={form}
+                            />
+                          </td>
+                          <td>
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                // Only remove if there's more than one year field
+                                if (form.values?.dui_years?.length > 1) {
+                                  form.setValues({
+                                    ...form.values,
+                                    dui_years: form.values?.dui_years?.filter(
+                                      (v, idx) => i != idx
+                                    ),
+                                  });
+                                }
+                              }}
+                            >
+                              <DashCircle color="red" />
+                            </a>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                )}
+              </ViewCard>
+            </Col>
+          )}
+        </Row>
+        <Row className="mt-5">
+          <Col>
+            <Button className="float-right" type="reset">
+              {t("BACK")}
+            </Button>
+          </Col>
+          <Col>
+            <Button
+              className="float-left"
+              type="submit"
+              disabled={!isFormValid}
+            >
+              {t("NEXT")}
+            </Button>
+          </Col>
+        </Row>
+      </Form>
+    </>
+  );
 }

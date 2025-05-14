@@ -1,7 +1,12 @@
 import { useFormik } from "formik";
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { ArrowDownCircleFill, ArrowUpCircleFill } from "react-bootstrap-icons";
+import {
+  ArrowDownCircleFill,
+  ArrowUpCircleFill,
+  CheckCircleFill,
+  ExclamationCircleFill,
+} from "react-bootstrap-icons";
 import { toast, ToastContainer } from "react-toastify";
 import JotformContext, {
   JotFormContextType,
@@ -17,10 +22,12 @@ import { GeneralConsentQueries } from "./general-consent-queries";
 import { ImportantDisclosureBackgroundPsp } from "./important-disclosure-background-psp";
 import { VerificationOfEmployment } from "./verification-of-employment";
 import styles from "../../../../../styles/digitalhiringapp.module.css";
+import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
+import { CompanyPreferenceEnhancementLabel } from "../../../../../enums/company/company-preference-enhancement-label.enum";
 
 export function AccordianPage() {
   const {
-    state: { applicantExtras, applicant, jobs, company },
+    state: { applicantExtras, applicant, jobs, company, companyPreferences },
     method: { stepBack, updateApplicantExtras, stepNext },
   }: JotFormContextType = useContext(JotformContext);
   const [showTab, setShowTab] = useState<boolean[]>([
@@ -30,6 +37,9 @@ export function AccordianPage() {
     false,
   ]);
   const { t } = useTranslation();
+
+  // Common icon style for consistent sizing
+  const iconStyle = { fontSize: "16px", minWidth: "16px" };
 
   const form = useFormik({
     initialValues: new AccordianDto(),
@@ -77,31 +87,80 @@ export function AccordianPage() {
     updateApplicantExtras(form.values.SIGNATURE_DISCLOSURE_AUTHORIZATION);
     updateApplicantExtras(form.values.SIGNATURE_IMPORTANT_BACKGROUND);
     updateApplicantExtras(form.values.SIGNATURE_GENERAL_CONSENT);
+
+    // For debugging
+    console.log("General Consent:", form.values.GENERAL_CONSENT?.value);
+    console.log(
+      "General Consent Signature:",
+      form.values.SIGNATURE_GENERAL_CONSENT?.value
+    );
+    console.log("isGeneralConsentComplete:", isGeneralConsentComplete());
   }, [form.values]);
 
-  // useEffect(() => {
-  // 	console.log("form values", form.values);
-  // 	console.log("form errors", form.errors);
-  // 	console.log("boolean errors", Object.keys(form.errors));
-  // }, [form.values, form.errors]);
+  // Functions to check completion status of each section
+  const isVerificationOfEmploymentComplete = () => {
+    const isSignatureComplete =
+      !!form.values.SIGNATURE_VOE_AUTHORIZATION?.value;
 
-  // useEffect(() => {
-  // 	console.log("in use error")
-  // 	if (Boolean(Object.keys(form.errors).includes(ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION))) {
-  // 		() => setShowTab([!!!showTab[0], false, false, false])
-  // 	}
-  // 	if (Boolean(Object.keys(form.errors).includes(ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION))) {
-  // 		() => setShowTab([false, !!!showTab[1], false, false])
-  // 	}
-  // 	if (Boolean(Object.keys(form.errors).includes(ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND))) {
-  // 		setShowTab([false, false, !!!showTab[2], false])
-  // 		console.log("in 3rd error")
-  // 	}
-  // 	if (Boolean(Object.keys(form.errors).includes(ApplicantExtras.SIGNATURE_GENERAL_CONSENT))) {
-  // 		() => setShowTab([false, false, false, !!!showTab[3]])
-  // 	}
+    // If SSN is required based on company preferences, check if it exists
+    const ssnRequired = !!companyPreferences?.find(
+      (v) => v.label === CompanyPreferenceEnhancementLabel.ADD_SSN_ON_DHA
+    )?.value;
 
-  // }, [form.errors])
+    if (ssnRequired) {
+      return (
+        isSignatureComplete && !!form.values.ssn && form.values.ssn.length === 9
+      );
+    }
+
+    return isSignatureComplete;
+  };
+
+  const isDisclosureAuthorizationComplete = () => {
+    return (
+      !!form.values.SIGNATURE_DISCLOSURE_AUTHORIZATION?.value &&
+      !!form.values.DISCLOSURE_AND_AUTHORIZATION_DATE?.value
+    );
+  };
+
+  const isImportantDisclosureComplete = () => {
+    return (
+      !!form.values.SIGNATURE_IMPORTANT_BACKGROUND?.value &&
+      !!form.values.IMPORTANT_DISCLOSURE_BACKGROUND_DATE?.value
+    );
+  };
+
+  const isGeneralConsentComplete = () => {
+    return (
+      !!form.values.SIGNATURE_GENERAL_CONSENT?.value &&
+      !!form.values.GENERAL_CONSENT?.value?.consentGiven
+    );
+  };
+
+  // Helper function to render status indicator
+  const renderCompletionStatus = (isComplete) => {
+    if (isComplete) {
+      return (
+        <div className="form-completion-icon d-flex align-items-center mt-1">
+          <CheckCircleFill
+            className="ms-2 me-2 text-success"
+            title={t("FORM_COMPLETED")}
+            style={iconStyle}
+          />
+        </div>
+      );
+    }
+    return (
+      <div className="form-completion-icon d-flex align-items-center mt-1">
+        <ExclamationCircleFill
+          className="ms-2 me-2 text-warning"
+          title={t("FORM_INCOMPLETE")}
+          style={iconStyle}
+        />
+      </div>
+    );
+  };
+
   return (
     <>
       <ToastContainer />
@@ -120,79 +179,114 @@ export function AccordianPage() {
         <h6 className={`${styles.paragraph} my-3`}>
           {t("PLEASE_CLICK_EACH_ARROW")}
         </h6>
+        <div className="mb-3 ">
+          <small className="d-flex align-items-center ">
+            <CheckCircleFill className="text-success me-2" style={iconStyle} />
+            <span className="text-success">{t("COMPLETED_FORM")}</span>
+            <ExclamationCircleFill
+              className="text-warning ms-3 me-2"
+              style={iconStyle}
+            />
+            <span className="text-warning">{t("INCOMPLETE_FORM")}</span>
+          </small>
+        </div>
         <button
           type="button"
-          className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline "
+          className={`w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline ${
+            isVerificationOfEmploymentComplete() ? "border-success" : ""
+          }`}
           onClick={() => setShowTab([!!!showTab[0], false, false, false])}
         >
-          {showTab[0] ? (
-            <>
-              {t("HIDE_VERIFICATION_OF_EMPLOYMENT")}
-              <ArrowUpCircleFill />
-            </>
-          ) : (
-            <>
-              {t("SHOW_VERIFICATION_OF_EMPLOYMENT")}
-              <ArrowDownCircleFill />
-            </>
-          )}
+          <div className="d-flex align-items-center flex-grow-1">
+            <div className="flex-grow-1">
+              {showTab[0]
+                ? t("HIDE_VERIFICATION_OF_EMPLOYMENT")
+                : t("SHOW_VERIFICATION_OF_EMPLOYMENT")}
+            </div>
+            {renderCompletionStatus(isVerificationOfEmploymentComplete())}
+          </div>
+          <div className="ms-2 mt-1">
+            {showTab[0] ? (
+              <ArrowUpCircleFill style={iconStyle} />
+            ) : (
+              <ArrowDownCircleFill style={iconStyle} />
+            )}
+          </div>
         </button>
         {showTab[0] && <VerificationOfEmployment form={form} />}
 
         <button
           type="button"
-          className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline"
+          className={`w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline ${
+            isDisclosureAuthorizationComplete() ? "border-success" : ""
+          }`}
           onClick={() => setShowTab([false, !!!showTab[1], false, false])}
         >
-          {showTab[1] ? (
-            <>
-              {t("HIDE_DISCLOSURE_AUTHORIZATION")}
-              <ArrowUpCircleFill />
-            </>
-          ) : (
-            <>
-              {t("SHOW_DISCLOSURE_AUTHORIZATION")}
-              <ArrowDownCircleFill />
-            </>
-          )}
+          <div className="d-flex align-items-center">
+            <div className="flex-grow-1">
+              {showTab[1]
+                ? t("HIDE_DISCLOSURE_AUTHORIZATION")
+                : t("SHOW_DISCLOSURE_AUTHORIZATION")}
+            </div>
+            {renderCompletionStatus(isDisclosureAuthorizationComplete())}
+          </div>
+          <div className="ms-2">
+            {showTab[1] ? (
+              <ArrowUpCircleFill style={iconStyle} />
+            ) : (
+              <ArrowDownCircleFill style={iconStyle} />
+            )}
+          </div>
         </button>
         {showTab[1] && <DisclosureAuthorization form={form} />}
 
         <button
           type="button"
-          className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline"
+          className={`w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline ${
+            isImportantDisclosureComplete() ? "border-success" : ""
+          }`}
           onClick={() => setShowTab([false, false, !!!showTab[2], false])}
         >
-          {showTab[2] ? (
-            <>
-              {t("HIDE_IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}
-              <ArrowUpCircleFill />
-            </>
-          ) : (
-            <>
-              {t("SHOW_IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}
-              <ArrowDownCircleFill />
-            </>
-          )}
+          <div className="d-flex align-items-center">
+            <div className="flex-grow-1">
+              {showTab[2]
+                ? t("HIDE_IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")
+                : t("SHOW_IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}
+            </div>
+            {renderCompletionStatus(isImportantDisclosureComplete())}
+          </div>
+          <div className="ms-2 mt-1">
+            {showTab[2] ? (
+              <ArrowUpCircleFill style={iconStyle} />
+            ) : (
+              <ArrowDownCircleFill style={iconStyle} />
+            )}
+          </div>
         </button>
         {showTab[2] && <ImportantDisclosureBackgroundPsp form={form} />}
 
         <button
           type="button"
-          className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline"
+          className={`w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline ${
+            isGeneralConsentComplete() ? "border-success" : ""
+          }`}
           onClick={() => setShowTab([false, false, false, !!!showTab[3]])}
         >
-          {showTab[3] ? (
-            <>
-              {t("HIDE_GENERAL_CONSENT_QUERIES")}
-              <ArrowUpCircleFill />
-            </>
-          ) : (
-            <>
-              {t("SHOW_GENERAL_CONSENT_QUERIES")}
-              <ArrowDownCircleFill />
-            </>
-          )}
+          <div className="d-flex align-items-center">
+            <div className="flex-grow-1">
+              {showTab[3]
+                ? t("HIDE_GENERAL_CONSENT_QUERIES")
+                : t("SHOW_GENERAL_CONSENT_QUERIES")}
+            </div>
+            {renderCompletionStatus(isGeneralConsentComplete())}
+          </div>
+          <div className="ms-2 mt-1">
+            {showTab[3] ? (
+              <ArrowUpCircleFill style={iconStyle} />
+            ) : (
+              <ArrowDownCircleFill style={iconStyle} />
+            )}
+          </div>
         </button>
         {showTab[3] && <GeneralConsentQueries form={form} />}
         <Row className="mt-4">

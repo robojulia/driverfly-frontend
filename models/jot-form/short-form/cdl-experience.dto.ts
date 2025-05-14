@@ -17,8 +17,8 @@ export class CdlDto {
         //   is: (value) => !!value,
         //   then: yup.string().oneOf(Object.values(DriverLicenseType)),
         // })
-        .required().nullable()
-      ,
+        .required()
+        .nullable(),
       years_cdl_experience: yup
         .number()
         .when("license_type", {
@@ -26,7 +26,13 @@ export class CdlDto {
           then: yup.number().moreThan(-1).required(),
         })
         .nullable(),
-      is_owner_operator: yup.boolean().nullable(),
+      is_owner_operator: yup
+        .boolean()
+        .when("license_type", {
+          is: (value) => !!value && value != DriverLicenseType.NO_CDL,
+          then: yup.boolean().required("Owner operator selection is required"),
+        })
+        .nullable(),
       BUSINESS_NAME: ApplicantExtrasEntity.yupSchema(),
       DOT_NUMBER: ApplicantExtrasEntity.yupSchema(),
     });

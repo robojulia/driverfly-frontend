@@ -12,15 +12,10 @@ export class DrivingExperienceDto {
       license_expiry: yup
         .date()
         .typeError("INVALID_DATE")
-        .test(
-          'is-expired',
-          'LICENSE_HAS_EXPIRED',
-          (value) => moment(value).isAfter(moment().startOf('day'))
+        .test("is-expired", "LICENSE_HAS_EXPIRED", (value) =>
+          moment(value).isAfter(moment().startOf("day"))
         )
-        .min(
-          moment().endOf("day").add(0.5, "years"),
-          "LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
-        ),
+        .min(moment().endOf("day"), "LICENSE_MUST_BE_VALID_AFTER_TODAY"),
       state: yup.string().required().nullable(),
       license_state: yup
         .string()

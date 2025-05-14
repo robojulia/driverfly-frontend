@@ -21,65 +21,108 @@ export function DrivingExperience() {
 
   const { t } = useTranslation();
   const current_date = new Date();
+
+  // Track the license issuing state to manage the CDL input mask
   const [selectedIssuedState, setSelectedIssuedState] = useState<string>(
     applicant?.license_state || ""
   );
 
+  // Get the CDL format based on the selected state
+  const cdlFormat = getCDLFormat(selectedIssuedState);
+
+  // Initialize the form
   const form = useFormik({
-    initialValues: new DrivingExperienceDto(),
+    initialValues: {
+      license_number: applicant?.license_number || "",
+      state: applicant?.state || "",
+      license_expiry: applicant?.license_expiry || "",
+      license_state: applicant?.license_state || "",
+    },
     validationSchema: DrivingExperienceDto.yupSchema(),
+    validateOnMount: false, // We'll validate manually after initial setup
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: (values) => {
       try {
-        const { license_number, state, license_expiry, license_state } = values;
+        // Save form values to applicant context
         setApplicant({
           ...applicant,
-          license_number,
-          state,
-          license_expiry,
-          license_state,
+          license_number: values.license_number,
+          state: values.state,
+          license_expiry: values.license_expiry,
+          license_state: values.license_state,
         });
+        stepNext();
       } catch (error) {
-        console.log(error);
+        console.error("Error submitting driving experience form:", error);
       }
-      stepNext();
     },
-    onReset: (values) => {
+    onReset: () => {
       stepBack();
     },
   });
 
-  // Handle state changes to update CDL mask
+  // Handle issuing state change
   const handleIssuedStateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newState = e.target.value;
-    setSelectedIssuedState(newState);
-    form.handleChange(e);
-    // Clear CDL when issuing state changes to prevent invalid format
-    form.setFieldValue("license_number", "");
+
+    // If the state has changed, update and clear CDL number
+    if (newState !== selectedIssuedState) {
+      // Update the state in our local state
+      setSelectedIssuedState(newState);
+
+      // Update form values
+      form.setFieldValue("license_state", newState);
+      form.setFieldValue("license_number", "");
+    } else {
+      // Just update the form value
+      form.setFieldValue("license_state", newState);
+    }
   };
 
-  // Handle license number input to convert to uppercase
+  // Handle license number input - convert to uppercase
   const handleLicenseNumberChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    // Convert input value to uppercase
     const uppercaseValue = e.target.value.toUpperCase();
-
-    // Set the uppercase value in the form
     form.setFieldValue("license_number", uppercaseValue);
   };
 
+  // Initialize form with applicant data when component mounts
   useEffect(() => {
-    const { license_number, state, license_expiry, license_state } = applicant;
-    setSelectedIssuedState(license_state || "");
-    form.setValues({
-      license_number: license_number || null,
-      state: state || null,
-      license_expiry: license_expiry || null,
-      license_state: license_state || null,
-    });
+    if (applicant) {
+      // Set issuing state first for proper CDL format
+      if (applicant.license_state) {
+        setSelectedIssuedState(applicant.license_state);
+      }
+
+      // Set form values
+      form.setValues({
+        license_number: applicant.license_number || "",
+        state: applicant.state || "",
+        license_expiry: applicant.license_expiry || "",
+        license_state: applicant.license_state || "",
+      });
+
+      // Validate the form after setting values
+      setTimeout(() => {
+        form.validateForm();
+      }, 0);
+    }
   }, []);
 
-  const cdlFormat = getCDLFormat(selectedIssuedState);
+  // Check if the form is valid and all required fields are filled
+  const isFormComplete = () => {
+    const { license_number, state, license_expiry, license_state } =
+      form.values;
+    return (
+      !!license_number &&
+      !!state &&
+      !!license_expiry &&
+      !!license_state &&
+      Object.keys(form.errors).length === 0
+    );
+  };
 
   return (
     <>
@@ -97,6 +140,7 @@ export function DrivingExperience() {
             placeholder="ISSUANCE_STATE"
             formik={form}
             onChange={handleIssuedStateChange}
+            value={form.values.license_state || ""}
           />
           <div className="col-md-6 my-3">
             <Form.Group>
@@ -115,6 +159,7 @@ export function DrivingExperience() {
                     : ""
                 }`}
                 placeholder={cdlFormat.placeholder}
+                disabled={!selectedIssuedState} // Disable until state is selected
               />
               <small className="text-muted">{t(cdlFormat.description)}</small>
               {form.touched.license_number && form.errors.license_number && (
@@ -143,7 +188,7 @@ export function DrivingExperience() {
             min={
               new Date(
                 current_date.getFullYear(),
-                current_date.getMonth() + 6,
+                current_date.getMonth(),
                 current_date.getDate()
               )
                 .toISOString()
@@ -159,7 +204,11 @@ export function DrivingExperience() {
           </Col>
 
           <Col>
-            <Button className="float-left" type="submit">
+            <Button
+              className="float-left"
+              type="submit"
+              disabled={!isFormComplete()}
+            >
               {t("NEXT")}
             </Button>
           </Col>

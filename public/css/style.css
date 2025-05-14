@@ -2705,3 +2705,8 @@ input::-webkit-inner-spin-button {
 .text-theme {
   color: #4ca7a8;
 }
+
+.form-completion-icon {
+  position: relative;
+  top: 2px;
+}

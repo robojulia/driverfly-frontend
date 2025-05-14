@@ -237,10 +237,7 @@ export class EmployeeEntity {
       license_expiry: yup
         .date()
         .typeError(t("IMPORT_DATE_ERROR"))
-        .min(
-          moment().endOf("day").add(0.5, "years"),
-          "LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
-        )
+        .min(moment().endOf("day"), "LICENSE_MUST_BE_VALID_AFTER_TODAY")
         .required()
         .nullable(),
       license_state: yup.string().nullable().required(),

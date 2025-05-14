@@ -1,3 +1,9 @@
 {
-    
+  "HAVE_ANY_ACTIVE_DRIVERS_LICENSE": "¿Tiene licencias de conducir activas en otros estados?",
+  "ANY_ACTIVE_DRIVERS_LICENSE": "Licencias de conducir activas en otros estados",
+  "FORM_COMPLETED": "Formulario completado",
+  "FORM_INCOMPLETE": "Formulario incompleto",
+  "COMPLETED_FORM": "Formulario completado",
+  "INCOMPLETE_FORM": "Formulario incompleto",
+  "applied_jobs": "Trabajos aplicados"
 }
