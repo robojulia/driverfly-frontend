@@ -23,6 +23,21 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
     );
     signatureEntity.value = signature;
     form.setFieldValue("SIGNATURE_GENERAL_CONSENT", signatureEntity);
+
+    if (signature) {
+      const generalConsentEntity = new ApplicantExtrasEntity(
+        ApplicantExtras.GENERAL_CONSENT
+      );
+      generalConsentEntity.value = {
+        consentGiven: true,
+        consentDate: new Date().toISOString(),
+        name: `${applicant?.first_name} ${applicant?.last_name}`,
+        employer_name: company?.name ?? applicant?.company?.name,
+        cdl_license_number: applicant?.license_number || "",
+        expiration_date: new Date().toISOString(),
+      };
+      form.setFieldValue("GENERAL_CONSENT", generalConsentEntity);
+    }
   };
 
   useEffect(() => {
@@ -45,6 +60,24 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
         : new ApplicantExtrasEntity(ApplicantExtras.GENERAL_CONSENT),
     });
   }, [applicant]);
+
+  useEffect(() => {
+    const signature = form.values.SIGNATURE_GENERAL_CONSENT?.value;
+    if (signature && !form.values.GENERAL_CONSENT?.value) {
+      const generalConsentEntity = new ApplicantExtrasEntity(
+        ApplicantExtras.GENERAL_CONSENT
+      );
+      generalConsentEntity.value = {
+        name: `${applicant?.first_name} ${applicant?.last_name}`,
+        employer_name: company?.name ?? applicant?.company?.name,
+        cdl_license_number: applicant?.license_number || "",
+        expiration_date: new Date().toISOString(),
+        consentGiven: false,
+        consentDate: null,
+      };
+      form.setFieldValue("GENERAL_CONSENT", generalConsentEntity);
+    }
+  }, [form.values.SIGNATURE_GENERAL_CONSENT?.value]);
 
   const apply_date = applicantExtras?.find(
     (v) => v.type == ApplicantExtras.APPLY_DATE

@@ -16,6 +16,7 @@ import { SignatureComponent } from "../../../signature";
 export function VerificationOfEmployment({ form }: AccordianProps) {
   const {
     state: { applicant, applicantExtras, companyPreferences, company },
+    method: { setApplicant },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
@@ -135,12 +136,39 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
       // Update the masked value for display when not focused
       setMaskedValue(formatSSN(rawValue));
 
+      // Save the SSN to the applicant object so it persists between form opens
+      setApplicant({
+        ...applicant,
+        ssn: rawValue,
+      });
+
       console.log("SSN set in form on blur:", rawValue);
     }
 
     // Call formik's handleBlur to track field touched state
     form.handleBlur(e);
   };
+
+  // Update applicant with SSN when it changes and passes validation
+  useEffect(() => {
+    // Only update if SSN exists, has changed from the current applicant value, and is valid (9 digits)
+    if (
+      form.values.ssn &&
+      form.values.ssn !== applicant.ssn &&
+      form.values.ssn.length === 9
+    ) {
+      // Debounce the update to avoid too many state changes
+      const timer = setTimeout(() => {
+        setApplicant({
+          ...applicant,
+          ssn: form.values.ssn,
+        });
+        console.log("Updated applicant SSN:", form.values.ssn);
+      }, 500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [form.values.ssn]);
 
   const current_company = applicant?.employers?.find((v) => !!v?.is_current);
 
