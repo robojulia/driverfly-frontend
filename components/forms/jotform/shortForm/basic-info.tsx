@@ -33,7 +33,10 @@ export function BasicInfo() {
   const { t } = useTranslation();
 
   const form = useFormik({
-    initialValues: new ContactDto(),
+    initialValues: {
+      ...new ContactDto(),
+      authorize_to_communicate: BooleanTypeExtra.YES,
+    },
     validationSchema: ContactDto.yupSchema(),
     onSubmit: async (values) => {
       console.log("values", values);
@@ -61,7 +64,8 @@ export function BasicInfo() {
     form.setValues({
       ...form.values,
       email: applicant.email,
-      authorize_to_communicate: applicant.authorize_to_communicate,
+      authorize_to_communicate:
+        applicant.authorize_to_communicate || BooleanTypeExtra.YES,
       zip_code: applicant.zip_code,
     });
   }, []);
