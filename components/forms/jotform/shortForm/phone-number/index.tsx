@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import { useContext, useEffect, useState } from "react";
-import { Button, Col, Form, Row, Alert } from "react-bootstrap";
+import { Button, Col, Form, Row, Alert, Spinner } from "react-bootstrap";
 import OtpInputField from "react-otp-input";
 import { ToastContainer, toast } from "react-toastify";
 import JotformContext, {
@@ -38,6 +38,9 @@ export function PhoneNumber() {
   const [otpApplicant, setOtpApplicant] = useState<ApplicantOTPEntity>(null);
   const [otpException, setOtpException] = useState<boolean>(false);
   const [isResending, setIsResending] = useState<boolean>(false);
+  const [isVerificationSuccessful, setIsVerificationSuccessful] =
+    useState<boolean>(false);
+  const [isLoadingProfile, setIsLoadingProfile] = useState<boolean>(false);
 
   const form = useFormik({
     initialValues: new PhoneNumberDto(),
@@ -80,16 +83,28 @@ export function PhoneNumber() {
     const applicantId = otpApplicant?.applicantId;
 
     try {
+      setIsLoadingProfile(true);
       const applicantExistingProfile = await applicantApi.verifyOTP({
         applicantId,
         otp,
       });
+
+      // Show verification success state
+      setIsVerificationSuccessful(true);
+
+      // Set applicant data
       setApplicant(applicantExistingProfile);
-      setOpenModal(false);
-      stepNext();
+
+      // Add a slight delay before proceeding to next step for better UX
+      setTimeout(() => {
+        setOpenModal(false);
+        setIsLoadingProfile(false);
+        stepNext();
+      }, 2000);
     } catch (error) {
       globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
       setOtpException(true);
+      setIsLoadingProfile(false);
     }
   };
 
@@ -177,7 +192,9 @@ export function PhoneNumber() {
 
       <div className="mb-4">
         <Alert variant="light" className="border">
-          <h5 className="mb-3">Why we need your phone number:</h5>
+          <h5 className="mb-3">
+            {t("PHONE_NUMBER_FORM.WHY_WE_NEED_PHONE_NUMBER")}
+          </h5>
 
           <div className="d-flex align-items-start mb-3">
             <div className="mr-3 mt-1">
@@ -188,10 +205,9 @@ export function PhoneNumber() {
               ></i>
             </div>
             <div>
-              <strong>Job Updates</strong>
+              <strong>{t("PHONE_NUMBER_FORM.JOB_UPDATES")}</strong>
               <p className="mb-0">
-                We'll send you important updates about this job opportunity and
-                interview requests.
+                {t("PHONE_NUMBER_FORM.JOB_UPDATES_DESCRIPTION")}
               </p>
             </div>
           </div>
@@ -205,10 +221,9 @@ export function PhoneNumber() {
               ></i>
             </div>
             <div>
-              <strong>Secure Account Access</strong>
+              <strong>{t("PHONE_NUMBER_FORM.SECURE_ACCOUNT_ACCESS")}</strong>
               <p className="mb-0">
-                Your phone helps us verify it's really you when accessing your
-                application.
+                {t("PHONE_NUMBER_FORM.SECURE_ACCOUNT_ACCESS_DESCRIPTION")}
               </p>
             </div>
           </div>
@@ -222,24 +237,22 @@ export function PhoneNumber() {
               ></i>
             </div>
             <div>
-              <strong>Job Alerts</strong>
+              <strong>{t("PHONE_NUMBER_FORM.JOB_ALERTS")}</strong>
               <p className="mb-0">
-                You'll have the option to receive notifications about new
-                driving opportunities that match your experience.
+                {t("PHONE_NUMBER_FORM.JOB_ALERTS_DESCRIPTION")}
               </p>
             </div>
           </div>
 
           <p className="mt-3 mb-0 text-muted font-italic">
-            Your information is kept private and secure. Standard message rates
-            may apply.
+            {t("PHONE_NUMBER_FORM.STANDARD_MESSAGE_RATES_APPLY")}
           </p>
         </Alert>
       </div>
 
       <ViewModal
         show={openModal}
-        title={t("Existing Account Found")}
+        title={t("EXISTING_ACCOUNT_FOUND")}
         size="lg"
         onCloseClick={onCloseClick}
         footer={
@@ -248,17 +261,36 @@ export function PhoneNumber() {
               <Button
                 className="btn-secondary mx-2"
                 onClick={handleLeavePreviousProfile}
+                disabled={isVerificationSuccessful || isLoadingProfile}
               >
-                {t("Start Fresh")}
+                {t("START_FRESH")}
               </Button>
 
               {showOtpField ? (
-                <Button onClick={verifyOTP} className="btn-primary">
-                  {t("Verify Code")}
+                <Button
+                  onClick={verifyOTP}
+                  className="btn-primary"
+                  disabled={isVerificationSuccessful || isLoadingProfile}
+                >
+                  {isLoadingProfile ? (
+                    <>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                        className="mr-2"
+                      />
+                      {t("LOADING")}
+                    </>
+                  ) : (
+                    t("VERIFY_CODE")
+                  )}
                 </Button>
               ) : (
                 <Button onClick={requestOTP} className="btn-primary">
-                  {t("Access Existing Profile")}
+                  {t("ACCESS_EXISTING_PROFILE")}
                 </Button>
               )}
             </Col>
@@ -266,45 +298,68 @@ export function PhoneNumber() {
         }
       >
         <div>
+          <ToastContainer />
+
           {showOtpField ? (
             <>
-              <Alert variant="info" className="mb-4">
-                <h5 className="mb-2">{t("Verification Code Sent")}</h5>
-                <p className="mb-0">
-                  {t(
-                    "We've sent a 6-digit verification code to your phone number. Please enter it below to access your existing profile."
-                  )}
-                </p>
-              </Alert>
+              {isVerificationSuccessful ? (
+                <Alert variant="success" className="mb-4">
+                  <div className="text-center">
+                    <i
+                      className="fa fa-check-circle mb-3"
+                      style={{ fontSize: "48px", color: "#28a745" }}
+                      aria-hidden="true"
+                    ></i>
+                    <h5 className="mb-2">{t("VERIFICATION_SUCCESSFUL")}</h5>
+                    <p className="mb-0">{t("LOADING_PROFILE_DATA")}</p>
+                    <div className="mt-3">
+                      <Spinner animation="border" variant="primary" />
+                    </div>
+                  </div>
+                </Alert>
+              ) : (
+                <Alert variant="info" className="mb-4">
+                  <h5 className="mb-2">{t("VERIFICATION_CODE_SENT")}</h5>
+                  <p className="mb-0">
+                    {t("VERIFICATION_CODE_SENT_DESCRIPTION")}
+                  </p>
+                </Alert>
+              )}
 
-              <div className="w-100 d-flex flex-column align-items-center mt-4 mb-4">
-                <label className="mb-2 font-weight-bold">
-                  {t("Enter your 6-digit code:")}
-                </label>
-                <OtpInputField
-                  inputStyle={{
-                    width: "40px",
-                    height: "40px",
-                    margin: "8px",
-                    borderRadius: "4px",
-                    border: "1px solid #ccc",
-                    fontSize: "24px",
-                    fontWeight: "bold",
-                    textAlign: "center",
-                    color: "#000",
-                  }}
-                  renderInput={(props) => <input {...props} />}
-                  value={otp}
-                  onChange={(e) => setOtp(e)}
-                  shouldAutoFocus
-                  numInputs={6}
-                  renderSeparator={<span>-</span>}
-                />
-              </div>
-              {otpException && (
+              {!isVerificationSuccessful && (
+                <div className="w-100 d-flex flex-column align-items-center mt-4 mb-4">
+                  <label className="mb-2 font-weight-bold">
+                    {t("ENTER_CODE")}
+                  </label>
+                  <OtpInputField
+                    inputStyle={{
+                      width: "40px",
+                      height: "40px",
+                      margin: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                      fontSize: "24px",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      color: "#000",
+                    }}
+                    renderInput={(props) => <input {...props} />}
+                    value={otp}
+                    onChange={(e) => setOtp(e)}
+                    shouldAutoFocus
+                    numInputs={6}
+                    renderSeparator={<span>-</span>}
+                  />
+                  <p className="text-muted mt-2 small text-center">
+                    {t("CANT_FIND_CODE_START_FROM_SCRATCH")}
+                  </p>
+                </div>
+              )}
+
+              {otpException && !isVerificationSuccessful && (
                 <Alert variant="warning" className="text-center">
                   <p className="mb-0">
-                    {t("The code you entered is incorrect or has expired.")}
+                    {t("INCORRECT_CODE_ERROR")}
                     <br />
                     <Button
                       variant="link"
@@ -312,7 +367,7 @@ export function PhoneNumber() {
                       onClick={requestOTP}
                       disabled={isResending}
                     >
-                      {isResending ? t("Sending...") : t("Send a new code")}
+                      {isResending ? t("SENDING") : t("SEND_A_NEW_CODE")}
                     </Button>
                   </p>
                 </Alert>
