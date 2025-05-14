@@ -10,17 +10,32 @@ export class WorkedBeforeDto {
     return yup.object({
       already_applied_to_company: yup
         .boolean()
+        .required("Please select whether you have applied before")
         .default(false)
-        .optional()
         .nullable(),
       already_worked_to_company: yup
         .boolean()
+        .when("already_applied_to_company", {
+          is: true,
+          then: yup
+            .boolean()
+            .required("Please select whether you have worked here before"),
+        })
         .default(false)
-        .optional()
         .nullable(),
-      already_worked_start_date: yup.date().max(new Date()).nullable(),
+      already_worked_start_date: yup
+        .date()
+        .when("already_worked_to_company", {
+          is: true,
+          then: yup.date().required("Start date is required").max(new Date()),
+        })
+        .nullable(),
       already_worked_end_date: yup
         .date()
+        .when("already_worked_to_company", {
+          is: true,
+          then: yup.date().required("End date is required"),
+        })
         .test({
           test: (value, context) => {
             const start_date = context.resolve(

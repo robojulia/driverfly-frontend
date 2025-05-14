@@ -141,19 +141,23 @@ export function AccordianPage() {
   const renderCompletionStatus = (isComplete) => {
     if (isComplete) {
       return (
-        <CheckCircleFill
-          className="ms-2 me-2 text-success"
-          title={t("FORM_COMPLETED")}
-          style={iconStyle}
-        />
+        <div className="form-completion-icon d-flex align-items-center mt-1">
+          <CheckCircleFill
+            className="ms-2 me-2 text-success"
+            title={t("FORM_COMPLETED")}
+            style={iconStyle}
+          />
+        </div>
       );
     }
     return (
-      <ExclamationCircleFill
-        className="ms-2 me-2 text-warning"
-        title={t("FORM_INCOMPLETE")}
-        style={iconStyle}
-      />
+      <div className="form-completion-icon d-flex align-items-center mt-1">
+        <ExclamationCircleFill
+          className="ms-2 me-2 text-warning"
+          title={t("FORM_INCOMPLETE")}
+          style={iconStyle}
+        />
+      </div>
     );
   };
 
@@ -175,8 +179,8 @@ export function AccordianPage() {
         <h6 className={`${styles.paragraph} my-3`}>
           {t("PLEASE_CLICK_EACH_ARROW")}
         </h6>
-        <div className="mb-3">
-          <small className="d-flex align-items-center">
+        <div className="mb-3 ">
+          <small className="d-flex align-items-center ">
             <CheckCircleFill className="text-success me-2" style={iconStyle} />
             <span className="text-success">{t("COMPLETED_FORM")}</span>
             <ExclamationCircleFill
@@ -193,7 +197,7 @@ export function AccordianPage() {
           }`}
           onClick={() => setShowTab([!!!showTab[0], false, false, false])}
         >
-          <div className="d-flex align-items-center">
+          <div className="d-flex align-items-center flex-grow-1">
             <div className="flex-grow-1">
               {showTab[0]
                 ? t("HIDE_VERIFICATION_OF_EMPLOYMENT")
@@ -226,7 +230,7 @@ export function AccordianPage() {
             </div>
             {renderCompletionStatus(isDisclosureAuthorizationComplete())}
           </div>
-          <div className="ms-2 mt-1">
+          <div className="ms-2">
             {showTab[1] ? (
               <ArrowUpCircleFill style={iconStyle} />
             ) : (

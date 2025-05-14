@@ -105,9 +105,6 @@ export function UnableForJob() {
               }
             }}
           />
-          <small className="text-muted d-block ml-3 mt-2">
-            {t("WITH_OR_WITHOUT_ACCOMMODATION")}
-          </small>
         </Row>
         {form.values.is_unable_to_perform && (
           <Row className={`${styles.align__text_left} ${styles.bold}`}>
