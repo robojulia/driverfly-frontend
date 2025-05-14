@@ -358,7 +358,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
               )}
               {current_company?.manager_name && (
                 <p
-                  className={`${styles.paragraph} ${styles.align__text_left} bg-danger text-light w-75`}
+                  className={`${styles.paragraph} ${styles.align__text_left} w-75`}
                 >
                   {t(
                     "DESIGNATED_EMPLOYER_REPRESENTATIVE_{current_manager_name}",
@@ -416,7 +416,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                       )}
                     </p>
                     <p
-                      className={`${styles.paragraph} ${styles.align__text_left} bg-danger text-light w-75`}
+                      className={`${styles.paragraph} ${styles.align__text_left} w-75`}
                     >
                       {t(
                         "DESIGNATED_EMPLOYER_REPRESENTATIVE_{current_manager_name}",

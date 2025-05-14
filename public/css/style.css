@@ -2648,7 +2648,6 @@ input[type="checkbox"] {
 
 .single-past-employer-items:hover {
   border-color: #2da2af;
-  transform: scale(1.01, 1.011);
 }
 
 .single-past-employer-items:hover::after {
