@@ -2551,5 +2551,6 @@
   "VERIFICATION_CODE_SENT_DESCRIPTION": "We've sent a 6-digit verification code to your phone number. Please enter it below to access your existing profile.",
   "APPLICATION_DATA_LOADING": "Your application data is being loaded...",
   "VERIFICATION_SUCCESSFUL": "Verification successful!",
-  "LOADING_PROFILE_DATA": "Loading your profile data..."
+  "LOADING_PROFILE_DATA": "Loading your profile data...",
+  "SIGNATURE_NOT_AVAILABLE": "No signature provided or one may not be available at this time."
 }
