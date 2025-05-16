@@ -1,169 +1,452 @@
 .container {
-    background-color: darkblue;
-    flex-direction: column;
-    background-image: url("/form_bg.png");
-    background-position: center;
-    background-size: cover;
-    min-height: 100vh;
+  background-color: darkblue;
+  flex-direction: column;
+  background-image: url('/form_bg.png');
+  background-position: center;
+  background-size: cover;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
 .nav {
-    background-color: white;
-    height: 60px;
-    padding: 10px 30px;
+  background-color: white;
+  height: 60px;
+  padding: 10px 30px;
 }
 
 .main {
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .main_form,
 .main__voe_form {
-    /* min-height: 500px; */
-    min-width: 800px;
-    max-width: 800px;
-    padding: 40px;
-    border-radius: 14px;
-    background-color: #fff;
-    margin: 3rem 1rem;
-    box-shadow: rgb(0 0 0 / 68%) 0px 13px 27px -5px, rgb(0 0 0 / 75%) 0px 8px 16px -8px;
-
-
+  /* min-height: 500px; */
+  min-width: 800px;
+  max-width: 800px;
+  padding: 40px;
+  border-radius: 14px;
+  background-color: #fff;
+  margin: 3rem 1rem;
+  box-shadow: rgb(0 0 0 / 68%) 0px 13px 27px -5px, rgb(0 0 0 / 75%) 0px 8px 16px -8px;
 }
 
 .customButton {
-    background-color: #1d667e;
-    padding: 10px 15px;
-    border-radius: 8px;
-    margin-right: 10px;
-    text-align: center;
-    margin-top: 2rem;
+  background-color: #1d667e;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-right: 10px;
+  text-align: center;
+  margin-top: 2rem;
 }
 
 .logo {
-    text-align: center;
-    margin-bottom: 5rem;
+  text-align: center;
+  margin-bottom: 5rem;
 }
 
 .carrierName {
-    text-align: center;
-    font-weight: 900;
-    color: rgb(90, 90, 90);
-    font-size: 24pt;
+  text-align: center;
+  font-weight: 900;
+  color: rgb(90, 90, 90);
+  font-size: 24pt;
 }
 
 .heading__sty {
-    font-size: 30px;
-    font-weight: 900;
-    text-align: center;
-    display: block;
-    margin: 0;
-    margin: 2rem 0rem;
-    color: #000;
+  font-size: 30px;
+  font-weight: 900;
+  text-align: center;
+  display: block;
+  margin: 0;
+  margin: 2rem 0rem;
+  color: #000;
 }
 
 .Application {
-    text-align: center;
-    margin-top: 2rem;
-    color: rgb(90, 90, 90);
-    font-size: 24pt;
+  text-align: center;
+  margin-top: 2rem;
+  color: rgb(90, 90, 90);
+  font-size: 24pt;
 }
 
 .paragraph {
-    color: rgb(90, 90, 90);
-    text-align: center;
+  color: rgb(90, 90, 90);
+  text-align: center;
 }
 
 .radio {
-    display: inline;
-    text-align: left;
-    left: 0;
+  display: inline;
+  text-align: left;
+  left: 0;
 }
 
 .topicName {
-    text-align: cen;
-    font-weight: 900;
+  text-align: cen;
+  font-weight: 900;
 }
 
 .main-radio {
-    margin-bottom: 5rem;
+  margin-bottom: 5rem;
 }
 
 .CDL-experience {
-    margin-top: 4rem;
+  margin-top: 4rem;
 }
 
 .align__text_left {
-    text-align: left;
+  text-align: left;
 }
 
 .align__text_right {
-    text-align: right;
+  text-align: right;
 }
 
-
 .align__text_center {
-    text-align: center;
+  text-align: center;
 }
 
 .sigCanvas {
-    width: 600px;
-    border: 1px solid red;
-
+  width: 600px;
+  border: 1px solid red;
 }
 
 .blur {
-    filter: blur(2px);
+  filter: blur(2px);
 }
 
 .highlight {
-    color: red;
+  color: red;
 }
 
 .highlight__black {
-    color: black;
+  color: black;
 }
 
 .bold {
-    font-weight: bold;
+  font-weight: bold;
 }
 
+.voe_intro {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.voe_header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.voe_title {
+  color: #2c3e50;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.company_name {
+  color: #3498db;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+}
+
+.info_section {
+  background: #f8f9fa;
+  border-left: 4px solid #3498db;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 0 4px 4px 0;
+}
+
+.applicant_info {
+  font-size: 1.1rem;
+  color: #34495e;
+  margin-bottom: 1.5rem;
+}
+
+.description_text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #596574;
+  margin-bottom: 1.5rem;
+}
+
+.action_button {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.action_button:hover {
+  background: #2980b9;
+}
+
+.action_container {
+  text-align: center;
+  margin-top: 2rem;
+}
 
 @media screen and (max-width: 800px) {
-
-    .main_form,
-    .main__voe_form {
-        min-height: 400px;
-        min-width: 400px;
-    }
+  .main_form,
+  .main__voe_form {
+    min-height: 400px;
+    min-width: 400px;
+  }
 }
 
 @media screen and (max-width: 600px) {
+  .main_form,
+  .main__voe_form {
+    min-width: 450px;
+    padding: 20px;
+  }
 
-    .main_form,
-    .main__voe_form {
-        min-width: 450px;
-        padding: 20px;
-    }
+  .carrierName {
+    font-size: 22pt;
+  }
 
-    .carrierName {
-        font-size: 22pt;
-    }
-
-    .heading__sty {
-        font-size: 22px;
-    }
+  .heading__sty {
+    font-size: 22px;
+  }
 }
 
 @media screen and (max-width: 460px) {
+  .main_form,
+  .main__voe_form {
+    min-width: 310px;
+    min-height: 300px;
+  }
+}
 
-    .main_form,
-    .main__voe_form {
-        min-width: 310px;
-        min-height: 300px;
-    }
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .voe_intro {
+    padding: 1.5rem;
+  }
+
+  .voe_title {
+    font-size: 1.75rem;
+  }
+
+  .company_name {
+    font-size: 1.25rem;
+  }
+}
+
+.employment_question {
+  background: #fff;
+  border-radius: 8px;
+  padding: 2.5rem;
+  margin-top: 1rem;
+}
+
+.question_header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.question_title {
+  color: #2c3e50;
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.question_description {
+  color: #596574;
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto 2rem;
+}
+
+.radio_group {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.radio_option {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1.5rem 3rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.radio_option:hover {
+  border-color: #3498db;
+}
+
+.radio_option.selected {
+  background: #ebf5fb;
+  border-color: #3498db;
+}
+
+.radio_label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.button_container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+  padding: 0 1rem;
+}
+
+.nav_button {
+  min-width: 120px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.back_button {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  color: #596574;
+}
+
+.back_button:hover {
+  background: #e9ecef;
+  color: #2c3e50;
+}
+
+.next_button {
+  background: #3498db;
+  border: none;
+  color: white;
+}
+
+.next_button:hover {
+  background: #2980b9;
+}
+
+@media screen and (max-width: 768px) {
+  .employment_question {
+    padding: 1.5rem;
+  }
+
+  .radio_group {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .radio_option {
+    padding: 1rem 2rem;
+  }
+
+  .button_container {
+    padding: 0;
+  }
+}
+
+.thank_you_container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: center;
+}
+
+.content_section {
+  margin-top: 2rem;
+}
+
+.marketing_section {
+  margin: 3rem 0;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.benefits_list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.benefit_item {
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.benefit_item h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.benefit_item p {
+  color: #666;
+  line-height: 1.5;
+}
+
+.cta_section {
+  margin: 3rem 0;
+}
+
+.cta_text {
+  font-size: 1.25rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.cta_button {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.contact_section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+.contact_section a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.contact_section a:hover {
+  text-decoration: underline;
+}
+
+.logo_container {
+  text-align: center;
+}
+
+.marketing_title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #2c3e50;
 }
