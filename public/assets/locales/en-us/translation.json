@@ -2597,5 +2597,14 @@
   "VOE_CONTACT_SUPPORT": "If you have any questions about this verification or need assistance, please contact our support team:",
   "PLEASE_ENTER_FULL_NAME_WITH_LAST_NAME": "Please enter your full name with last name",
   "AUTOMATE_HIRING": "Automate Your Hiring",
-  "AUTOMATE_HIRING_DESC": "Speed up your hiring process with our automated hiring tools and verified driver database."
+  "AUTOMATE_HIRING_DESC": "Speed up your hiring process with our automated hiring tools and verified driver database.",
+  "EMAIL_REQUIRED_FOR_BACKGROUND_CHECK": "Please provide an email address for this employer to send a background check request",
+  "CONTACT_PERMISSION_REQUIRED": "Permission to contact this employer is required before sending a background check request",
+  "FMCSR_CONFIRMATION_REQUIRED": "FMCSR confirmation is required before sending a background check request",
+  "COMPLETE_EMPLOYER_INFO_FIRST": "Please complete all required employer information before sending a background check request",
+  "BACKGROUND_CHECK_ALREADY_REQUESTED": "A background check request has already been sent to this employer",
+  "BACKGROUND_CHECK_IN_PROGRESS": "Background check request is currently being sent...",
+  "CLICK_TO_REQUEST_BACKGROUND_CHECK": "Click to send a background check request to this employer",
+  "PLEASE_WAIT": "Please wait while we process your request",
+  "SENDING_REQUEST": "Sending Request..."
 }
