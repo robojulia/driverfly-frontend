@@ -2818,7 +2818,7 @@ input::-webkit-inner-spin-button {
   margin-bottom: 12px;
 }
 
-.vehicle-form .form-text-area {
+.vehicle-form .form-text-area textarea {
   height: 100px;
 }
 

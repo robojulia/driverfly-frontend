@@ -60,7 +60,6 @@ export default function BaseVinInput({
       onChange={handleVinChange}
       onBlur={formik.handleBlur}
       error={formik.touched[name] && formik.errors[name] ? String(formik.errors[name]) : undefined}
-      helpText="VIN must be 17 characters. Letters I, O, Q will be converted to 1, 0, 0."
     />
   );
 }

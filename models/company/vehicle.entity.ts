@@ -31,6 +31,7 @@ export class VehicleEntity {
   odometer?: number;
   other_details?: string;
   created_at: string | Date;
+  current_employee_id?: number;
   last_updated_at?: string | Date;
 
   static yupSchema() {

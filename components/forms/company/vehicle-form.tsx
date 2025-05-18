@@ -1,10 +1,13 @@
 import { useFormik } from 'formik';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useTranslation } from '../../../hooks/use-translation';
 import { VehicleEntity } from '../../../models/company/vehicle.entity';
 import VehicleApi from '../../../pages/api/vehicle';
+import { EmployeeEntity } from '../../../models/employee/employee.entity';
+import { EmployeeStatus } from '../../../enums/applicants/employee-status.enum';
+import EmployeeApi from '../../../pages/api/employee';
 
 import { VehicleAccessory } from '../../../enums/vehicles/vehicle-accessory.enum';
 import { VehicleTrailerType } from '../../../enums/vehicles/vehicle-trailer-type.enum';
@@ -29,6 +32,9 @@ export interface VehicleFormProps extends BaseFormProps<VehicleEntity> {}
 export function VehicleForm(props: VehicleFormProps) {
   const { t } = useTranslation();
   let { className, entity, onSaveComplete, onSaveError } = props;
+  const [employees, setEmployees] = useState<EmployeeEntity[]>([]);
+  const [employeeSearch, setEmployeeSearch] = useState('');
+  const [showEmployeeDropdown, setShowEmployeeDropdown] = useState(false);
 
   const action = !!entity?.id ? 'Forms.UPDATED' : 'Forms.CREATE/ADD';
 
@@ -71,10 +77,39 @@ export function VehicleForm(props: VehicleFormProps) {
       }
     },
   });
+  const fetchEmployees = async (): Promise<void> => {
+    try {
+      const employeeApi = new EmployeeApi();
+      const data = await employeeApi.list({
+        status: [EmployeeStatus.ACTIVE],
+        is_paginated: true,
+        limit: 1000, // We'll load all for now as discussed
+        page: 1,
+      });
+      setEmployees((data as any)?.items || []);
+    } catch (error) {
+      console.error('Error fetching employees:', error);
+      toast.error(t('Error loading employees'));
+    }
+  };
 
   useEffect(() => {
-    if (entity && !form.dirty) form.setValues(entity);
-  }, [entity]);
+    fetchEmployees();
+  }, []);
+
+  useEffect(() => {
+    if (entity && !form.dirty) {
+      form.setValues(entity);
+
+      // If there's a current employee ID, find and display the employee name
+      if (entity.current_employee_id) {
+        const currentEmployee = employees.find((emp) => emp.id === entity.current_employee_id);
+        if (currentEmployee) {
+          setEmployeeSearch(`${currentEmployee.first_name} ${currentEmployee.last_name}`);
+        }
+      }
+    }
+  }, [entity, employees]);
 
   const handleAccessoryClick = (accessory: VehicleAccessory) => {
     const currentAccessories = [...form.values.accessories];
@@ -87,12 +122,23 @@ export function VehicleForm(props: VehicleFormProps) {
     form.setFieldValue('accessories', currentAccessories);
   };
 
+  const filteredEmployees = employees.filter((emp) =>
+    (emp.first_name + ' ' + emp.last_name).toLowerCase().includes(employeeSearch.toLowerCase())
+  );
+
+  const handleEmployeeSelect = (employee: EmployeeEntity) => {
+    form.setFieldValue('current_employee_id', employee.id);
+    setEmployeeSearch(`${employee.first_name} ${employee.last_name}`);
+    setShowEmployeeDropdown(false);
+  };
+
   return (
     <EntityForm
       className={`${className} vehicle-form`}
       onSubmit={form.handleSubmit}
       id={entity?.id}
       formik={form}
+      submitLabel={entity?.id ? 'Forms.UPDATE_VEHICLE' : 'Forms.CREATE_VEHICLE'}
     >
       <Container className="px-4 py-3">
         <Row>
@@ -157,7 +203,7 @@ export function VehicleForm(props: VehicleFormProps) {
               <h6 className="section-title mb-4">Vehicle Details</h6>
               <BaseInput
                 className="mb-3"
-                label="Make*"
+                label="Make"
                 name="make"
                 required
                 placeholder="e.g., Ford, Freightliner"
@@ -203,6 +249,67 @@ export function VehicleForm(props: VehicleFormProps) {
         <Row className="mt-4">
           <Col lg={6}>
             <div className="form-section h-100">
+              <h6 className="section-title mb-4">Employee Assignment</h6>
+              <div className="position-relative">
+                <BaseInput
+                  className="mb-3"
+                  label="Assigned Employee"
+                  value={employeeSearch}
+                  onChange={(e) => {
+                    setEmployeeSearch(e.target.value);
+                    setShowEmployeeDropdown(true);
+                  }}
+                  onFocus={() => setShowEmployeeDropdown(true)}
+                  placeholder="Search for an employee..."
+                />
+                {showEmployeeDropdown && (
+                  <div
+                    className="employee-dropdown"
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      left: 0,
+                      right: 0,
+                      maxHeight: '200px',
+                      overflowY: 'auto',
+                      backgroundColor: 'white',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      zIndex: 1000,
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                    }}
+                  >
+                    {filteredEmployees.map((emp) => (
+                      <div
+                        key={emp.id}
+                        className="employee-option"
+                        onClick={() => handleEmployeeSelect(emp)}
+                        style={{
+                          padding: '8px 12px',
+                          cursor: 'pointer',
+                          borderBottom: '1px solid #eee',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#f5f5f5';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'white';
+                        }}
+                      >
+                        {emp.first_name} {emp.last_name}
+                      </div>
+                    ))}
+                    {filteredEmployees.length === 0 && (
+                      <div style={{ padding: '8px 12px', color: '#666' }}>No employees found</div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </Col>
+
+          <Col lg={6}>
+            <div className="form-section h-100">
               <h6 className="section-title mb-4">Vehicle Specifications</h6>
               <BaseInput
                 className="mb-3"
@@ -230,7 +337,9 @@ export function VehicleForm(props: VehicleFormProps) {
               />
             </div>
           </Col>
+        </Row>
 
+        <Row className="mt-4">
           <Col lg={6}>
             <div className="form-section h-100">
               <h6 className="section-title mb-4">Accessories</h6>
