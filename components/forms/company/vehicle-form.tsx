@@ -139,6 +139,7 @@ export function VehicleForm(props: VehicleFormProps) {
       id={entity?.id}
       formik={form}
       submitLabel={entity?.id ? 'Forms.UPDATE_VEHICLE' : 'Forms.CREATE_VEHICLE'}
+      showActionsAtBoth={true}
     >
       <Container className="px-4 py-3">
         <Row>
