@@ -1,11 +1,11 @@
-import { Container } from "reactstrap";
-import Header from "../header/header";
-import Sidebar from "../sidebars/sidebar";
-import Head from "next/head";
-import { Scripts } from "../../../scripts/scripts";
-import React from "react";
+import { Container } from 'reactstrap';
+import Header from '../header/header';
+import Sidebar from '../sidebars/sidebar';
+import Head from 'next/head';
+import { Scripts } from '../../../scripts/scripts';
+import React from 'react';
 
-import { useTranslation } from "../../../../hooks/use-translation";
+import { useTranslation } from '../../../../hooks/use-translation';
 import {
   QuestionCircleFill,
   TelephoneFill,
@@ -28,11 +28,12 @@ import {
   PersonBadgeFill,
   PersonLinesFill,
   Link45deg,
-} from "react-bootstrap-icons";
-import CompanyProfileNav from "../header/company-profile-nav";
-import { useAuth } from "../../../../hooks/use-auth";
-import { useRouter } from "next/router";
-import DashboardLayout from "./dashboard-layout";
+  CarFront,
+} from 'react-bootstrap-icons';
+import CompanyProfileNav from '../header/company-profile-nav';
+import { useAuth } from '../../../../hooks/use-auth';
+import { useRouter } from 'next/router';
+import DashboardLayout from './dashboard-layout';
 
 // company layout
 const FullLayout = ({ children }) => {
@@ -41,7 +42,7 @@ const FullLayout = ({ children }) => {
 
   const { user, isSuperAdmin, company, isCompanyAdmin } = useAuth();
 
-  console.log("FullLayout", { user, isSuperAdmin, isCompanyAdmin });
+  console.log('FullLayout', { user, isSuperAdmin, isCompanyAdmin });
 
   if (!user?.company) {
     return <></>;
@@ -49,33 +50,33 @@ const FullLayout = ({ children }) => {
 
   const menuItems = [
     {
-      pathname: "/dashboard/company",
+      pathname: '/dashboard/company',
       icon: HouseFill,
-      text: "dashboard",
-      group: "MAIN",
+      text: 'dashboard',
+      group: 'MAIN',
     },
     {
-      pathname: "/dashboard/company/jobs",
+      pathname: '/dashboard/company/jobs',
       icon: BagFill,
-      text: "JOB_LISTINGS",
-      permissions: "CanViewJob",
+      text: 'JOB_LISTINGS',
+      permissions: 'CanViewJob',
       startsWith: true,
-      group: "MAIN",
+      group: 'MAIN',
     },
     {
-      pathname: "/dashboard/company/applicants",
+      pathname: '/dashboard/company/applicants',
       icon: FileEarmarkFill,
-      text: "APPLICANTS",
-      permissions: "CanViewApplicant",
+      text: 'APPLICANTS',
+      permissions: 'CanViewApplicant',
       startsWith: true,
-      group: "MAIN",
+      group: 'MAIN',
     },
     {
-      pathname: "/dashboard/company/messages",
+      pathname: '/dashboard/company/messages',
       icon: EnvelopeFill,
-      text: "MESSAGES",
+      text: 'MESSAGES',
       startsWith: true,
-      group: "MAIN",
+      group: 'MAIN',
     },
     // {
     // 	pathname: "/dashboard/company/call",
@@ -84,92 +85,92 @@ const FullLayout = ({ children }) => {
     // 	startsWith: true
     // },
     {
-      pathname: "/dashboard/company/compliance/employee-directory",
+      pathname: '/dashboard/company/compliance/employee-directory',
       icon: PeopleFill,
-      text: "EMPLOYEES",
+      text: 'EMPLOYEES',
       startsWith: true,
-      group: "COMPANY",
+      group: 'COMPANY',
     },
     {
       icon: FileEarmarkImage,
-      text: "STORED_FILES",
-      pathname: "/dashboard/company/compliance/stored-files",
+      text: 'STORED_FILES',
+      pathname: '/dashboard/company/compliance/stored-files',
       startsWith: true,
-      group: "COMPANY",
+      group: 'COMPANY',
     },
     {
-      pathname: "/dashboard/company/company-preferences",
+      pathname: '/dashboard/company/company-preferences',
       icon: Sliders,
-      text: "DIGITAL_HIRING_APPLICATION",
-      group: "COMPANY",
+      text: 'DIGITAL_HIRING_APPLICATION',
+      group: 'COMPANY',
     },
     {
-      pathname: "/dashboard/company/settings/vehicles",
-      icon: CardImage,
-      text: "VEHICLES",
-      permissions: "CanViewVehicle",
+      pathname: '/dashboard/company/settings/vehicles',
+      icon: CarFront,
+      text: 'VEHICLES',
+      permissions: 'CanViewVehicle',
       startsWith: true,
-      group: "COMPANY",
+      group: 'COMPANY',
     },
     {
-      pathname: "/dashboard/company/settings",
+      pathname: '/dashboard/company/settings',
       icon: GearFill,
-      text: "SETTINGS",
-      group: "ADMIN",
+      text: 'SETTINGS',
+      group: 'ADMIN',
       items: [
         {
-          pathname: "/dashboard/company/settings",
+          pathname: '/dashboard/company/settings',
           icon: Building,
-          text: "company",
-          permissions: "CanViewCompany",
+          text: 'company',
+          permissions: 'CanViewCompany',
         },
         {
-          pathname: "/dashboard/company/settings/locations",
+          pathname: '/dashboard/company/settings/locations',
           icon: GeoAltFill,
-          text: "TERMINALS",
-          permissions: "CanViewLocation",
+          text: 'TERMINALS',
+          permissions: 'CanViewLocation',
           startsWith: true,
         },
         {
-          pathname: "/dashboard/company/settings/companies",
+          pathname: '/dashboard/company/settings/companies',
           icon: Hospital,
-          text: "COMPANIES",
-          permissions: "CanViewCompany",
+          text: 'COMPANIES',
+          permissions: 'CanViewCompany',
           startsWith: true,
           visible: isCompanyAdmin && Boolean(!company?.parent),
         },
         {
-          pathname: "/dashboard/company/settings/users",
+          pathname: '/dashboard/company/settings/users',
           icon: PeopleFill,
-          text: "USERS",
-          permissions: "CanViewUser",
+          text: 'USERS',
+          permissions: 'CanViewUser',
           startsWith: true,
         },
         {
-          pathname: "/dashboard/company/settings/managers",
+          pathname: '/dashboard/company/settings/managers',
           icon: PersonLinesFill,
-          text: "MANAGERS",
+          text: 'MANAGERS',
           startsWith: true,
         },
         {
-          pathname: "/dashboard/company/settings/profile",
+          pathname: '/dashboard/company/settings/profile',
           icon: PersonFill,
-          text: "MY_PROFILE",
+          text: 'MY_PROFILE',
         },
         {
-          pathname: "/dashboard/company/settings/support",
+          pathname: '/dashboard/company/settings/support',
           icon: QuestionCircleFill,
-          text: "SUPPORT",
+          text: 'SUPPORT',
         },
         // superadmin panel
         {
           icon: Link45deg,
-          text: "REFERRALS",
+          text: 'REFERRALS',
           items: [
             {
-              pathname: "/dashboard/company/settings/admin/referral",
+              pathname: '/dashboard/company/settings/admin/referral',
               icon: PersonHearts,
-              text: "REFERRAL_SOURCES",
+              text: 'REFERRAL_SOURCES',
               startsWith: true,
             },
           ],
@@ -181,8 +182,8 @@ const FullLayout = ({ children }) => {
   return (
     <>
       <Head>
-        <title>{t("DRIVERFLY_COMPANY_DASHBOARD")}</title>
-        <meta name="description" content={t("DRIVERFLY_COMPANY_DASHBOARD")} />
+        <title>{t('DRIVERFLY_COMPANY_DASHBOARD')}</title>
+        <meta name="description" content={t('DRIVERFLY_COMPANY_DASHBOARD')} />
         <link rel="icon" href="/img/favicon.ico" />
       </Head>
       <Scripts />

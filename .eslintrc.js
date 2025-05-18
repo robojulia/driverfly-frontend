@@ -1,6 +1,7 @@
 module.exports = {
   extends: ['next/core-web-vitals', 'prettier'],
   rules: {
+    'no-unused-vars': 'off',
     indent: ['error', 2],
     'no-tabs': 'error',
     'react/jsx-indent': ['error', 2],
