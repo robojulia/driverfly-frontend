@@ -1,13 +1,17 @@
 import { toast } from 'react-toastify';
-
-import { Button, ButtonGroup, Col, Row } from 'react-bootstrap';
+import { Button, ButtonGroup } from 'react-bootstrap';
 import { Pencil } from 'react-bootstrap-icons';
-import Image from 'next/image';
-
 import FullLayout from '../../../../../../components/dashboard/layouts/layout/full-layout';
 import ChildPageLayout from '../../../../../../components/layouts/page/child-page-layout';
-import ViewDetails from '../../../../../../components/view-details/view-details';
 import { DeleteButton } from '../../../../../../components/buttons/delete-button';
+import {
+  BaseViewCard,
+  ViewHeader,
+  ViewSection,
+  InfoGrid,
+  InfoItem,
+  ChipList,
+} from '../../../../../../components/view/base-view-card';
 
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
@@ -47,7 +51,6 @@ export default function ViewVehicle({ id }) {
             limit: 1000,
             page: 1,
           });
-          // Find the specific employee in the response
           const employee = (response as any)?.items?.find(
             (emp: EmployeeEntity) => emp.id === vehicle.current_employee_id
           );
@@ -97,6 +100,18 @@ export default function ViewVehicle({ id }) {
   const canEdit = hasPermission('CanUpdateVehicle');
   const canDelete = hasPermission('CanDeleteVehicle');
 
+  const getVehicleType = () => {
+    return vehicle.type == VehicleType.OTHER
+      ? vehicle.type_other
+      : t(`VehicleType.${vehicle.type}`);
+  };
+
+  const getTrailerType = () => {
+    return vehicle.trailer_type == VehicleTrailerType.OTHER
+      ? vehicle.trailer_type_other
+      : (vehicle.trailer_type && t(`VehicleTrailerType.${vehicle.trailer_type}`)) || '';
+  };
+
   return (
     <ChildPageLayout
       backPath={backPath}
@@ -112,72 +127,74 @@ export default function ViewVehicle({ id }) {
         </ButtonGroup>
       }
     >
-      <Row>
-        <Col>
-          <ViewDetails
-            obj={{
-              PHOTO: {
-                label: 'PHOTO',
-                text: vehicle?.photo ? (
-                  <div
-                    style={{
-                      maxWidth: '200px',
-                      maxHeight: '200px',
-                      display: 'flex',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      className="img-thumbnail"
-                      style={{
-                        maxWidth: '100%',
-                        height: 'auto',
-                        objectFit: 'contain',
-                      }}
-                      src={vehicle.photo.path}
-                      alt="Vehicle Photo"
-                    />
-                  </div>
-                ) : null,
-              },
-              TYPE:
-                vehicle.type == VehicleType.OTHER
-                  ? vehicle.type_other
-                  : t(`VehicleType.${vehicle.type}`),
-              TRAILER:
-                vehicle.trailer_type == VehicleTrailerType.OTHER
-                  ? vehicle.trailer_type_other
-                  : (vehicle.trailer_type && t(`VehicleTrailerType.${vehicle.trailer_type}`)) || '',
-              TRANSMISSION: vehicle.transmission_type
-                ? t(`VehicleTransmissionType.` + vehicle.transmission_type)
-                : null,
-              MAKE: vehicle.make,
-              MODEL: vehicle.model,
-              YEAR: vehicle.year,
-              VIN: vehicle.vin,
-              UNIT_NUMBER: vehicle.unit_number,
-              TIRE_SIZE: vehicle.tire_size,
-              ODOMETER: vehicle.odometer ? `${vehicle.odometer} miles` : null,
-              ASSIGNED_EMPLOYEE: assignedEmployee
-                ? `${assignedEmployee.first_name} ${assignedEmployee.last_name}`
-                : 'Not Assigned',
-              GOVERNED_SPEED: vehicle.is_governed ? 'Yes' : 'No',
-              MAX_SPEED: {
-                show: vehicle.is_governed,
-                text: vehicle.max_speed ? `${vehicle.max_speed} mph` : null,
-              },
-              ACCESSORIES: vehicle.accessories?.map((a, i) =>
-                a == VehicleAccessory.OTHER && vehicle.accessory_other
-                  ? vehicle.accessory_other
-                  : t(`VehicleAccessory.${a}`)
-              ),
-              OTHER_DETAILS: vehicle.other_details,
-              IS_PUBLIC: vehicle.is_public ? 'Yes' : 'No',
-            }}
-          />
-        </Col>
-      </Row>
+      <div className="vehicle-view">
+        <BaseViewCard>
+          <ViewHeader
+            title={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+            image={vehicle?.photo ? { src: vehicle.photo.path, alt: 'Vehicle Photo' } : undefined}
+          >
+            <InfoGrid>
+              <InfoItem label={t('TYPE')} value={getVehicleType()} />
+              <InfoItem label={t('UNIT_NUMBER')} value={vehicle.unit_number} />
+              <InfoItem label={t('VIN')} value={vehicle.vin} />
+            </InfoGrid>
+          </ViewHeader>
+
+          <ViewSection title={t('Vehicle Details')}>
+            <InfoGrid>
+              <InfoItem label={t('TRAILER')} value={getTrailerType()} />
+              <InfoItem
+                label={t('TRANSMISSION')}
+                value={
+                  vehicle.transmission_type
+                    ? t(`VehicleTransmissionType.${vehicle.transmission_type}`)
+                    : undefined
+                }
+              />
+              <InfoItem label={t('TIRE_SIZE')} value={vehicle.tire_size} />
+              <InfoItem
+                label={t('ODOMETER')}
+                value={vehicle.odometer ? `${vehicle.odometer} miles` : undefined}
+              />
+              <InfoItem
+                label={t('GOVERNED_SPEED')}
+                value={vehicle.is_governed ? t('YES') : t('NO')}
+              />
+              {vehicle.is_governed && (
+                <InfoItem label={t('MAX_SPEED')} value={`${vehicle.max_speed} mph`} />
+              )}
+              <InfoItem
+                label={t('ASSIGNED_EMPLOYEE')}
+                value={
+                  assignedEmployee
+                    ? `${assignedEmployee.first_name} ${assignedEmployee.last_name}`
+                    : t('Not Assigned')
+                }
+              />
+            </InfoGrid>
+          </ViewSection>
+
+          {vehicle.accessories && vehicle.accessories.length > 0 && (
+            <ViewSection title={t('ACCESSORIES')}>
+              <ChipList
+                items={vehicle.accessories.map((accessory, index) => ({
+                  id: index,
+                  label:
+                    accessory == VehicleAccessory.OTHER && vehicle.accessory_other
+                      ? vehicle.accessory_other
+                      : t(`VehicleAccessory.${accessory}`),
+                }))}
+              />
+            </ViewSection>
+          )}
+
+          {vehicle.other_details && (
+            <ViewSection title={t('OTHER_DETAILS')}>
+              <p>{vehicle.other_details}</p>
+            </ViewSection>
+          )}
+        </BaseViewCard>
+      </div>
     </ChildPageLayout>
   );
 }
