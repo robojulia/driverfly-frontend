@@ -21,12 +21,14 @@ import EmployeeApi from '../../../pages/api/employee';
 import * as _style from '../../../public/components/styles/ImportApplicantsModule.module.css';
 import { matchEnum } from '../../../utils/enums.utils';
 import { FormikInterface } from '../../../utils/formik';
+import { useRouter } from 'next/router';
 
 function unique<T>(value: T, index: number, self: T[]) {
   return Boolean(value) && self.indexOf(value) == index;
 }
 
 const ImportEmployees = () => {
+  const router = useRouter();
   const style: any = _style;
 
   const { t } = useTranslation();
@@ -75,45 +77,6 @@ const ImportEmployees = () => {
           employee.emergency_contact_number = '+1 ' + employee.emergency_contact_number;
         }
 
-        // if (employee.email) {
-        //     const rowError: { email?: string; phone?: string } = {};
-        //     const matches = await api.list({ email: employee.email });
-
-        //     if (matches.some((v) => v.company?.id != null))
-        //         rowError.email = t(
-        //             "{name}_ALREADY_EXISTS",
-        //             { name: "EMAIL" },
-        //             { translateProps: true }
-        //         );
-        //     else if (matches.some((v) => v.company == null))
-        //         rowError.email = t(
-        //             "{name}_ALREADY_EXISTS",
-        //             { name: "EMAIL" },
-        //             { translateProps: true }
-        //         );
-        //     // else if (matches.some(v => v.company == null)) rowError.email = t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "EMAIL" }, { translateProps: true });
-
-        //     if (employee.phone) {
-
-        //         if (matches.some((v) => v.company?.id != null))
-        //             rowError.phone = t(
-        //                 "{name}_ALREADY_EXISTS",
-        //                 { name: "PHONE" },
-        //                 { translateProps: true }
-        //             );
-        //         else if (matches.some((v) => v.company == null))
-        //             rowError.phone = t(
-        //                 "{name}_ALREADY_EXISTS",
-        //                 { name: "PHONE" },
-        //                 { translateProps: true }
-        //             );
-        //         // else if (matches.some(v => v.company == null)) rowError.phone = t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "PHONE" }, { translateProps: true });
-        //     }
-        //     if (rowError) {
-        //         errors[i] = rowError;
-        //     }
-        // }
-
         let progress = Math.floor(((i + 1) * 100) / values.items.length);
 
         if (progress != lastProgress) {
@@ -136,24 +99,30 @@ const ImportEmployees = () => {
           dto.birthdate = new Date(
             utcBirthdate.getUTCFullYear(),
             utcBirthdate.getUTCMonth(),
-            utcBirthdate.getUTCDate() + 2
-          ).toISOString();
+            utcBirthdate.getUTCDate()
+          )
+            .toISOString()
+            .split('T')[0];
         }
         if (!!dto.hire_date) {
           const utcDateHired = new Date(dto.hire_date);
           dto.hire_date = new Date(
             utcDateHired.getUTCFullYear(),
             utcDateHired.getUTCMonth(),
-            utcDateHired.getUTCDate() + 2
-          ).toISOString();
+            utcDateHired.getUTCDate()
+          )
+            .toISOString()
+            .split('T')[0];
         }
         if (!!dto.license_expiry) {
           const utcLicenseExpiry = new Date(dto.license_expiry);
           dto.license_expiry = new Date(
             utcLicenseExpiry.getUTCFullYear(),
             utcLicenseExpiry.getUTCMonth(),
-            utcLicenseExpiry.getUTCDate() + 2
-          ).toISOString();
+            utcLicenseExpiry.getUTCDate()
+          )
+            .toISOString()
+            .split('T')[0];
         }
 
         try {
@@ -205,7 +174,10 @@ const ImportEmployees = () => {
 
       toast.success(t('successfully_saved_information'));
 
-      setTimeout(onClearClick, 2000);
+      setTimeout(() => {
+        onClearClick(null);
+        router.push('/dashboard/company/compliance/employee-directory');
+      }, 2000);
     },
   });
 
@@ -533,7 +505,7 @@ const ImportEmployees = () => {
                             <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
                             <Dropdown.Menu>
                               {Object.values(VehicleTransmissionType).map((v) => {
-                                return <Dropdown.ItemText>{v}</Dropdown.ItemText>;
+                                return <Dropdown.ItemText key={v}>{v}</Dropdown.ItemText>;
                               })}
                             </Dropdown.Menu>
                           </Dropdown>
@@ -546,7 +518,7 @@ const ImportEmployees = () => {
                             <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
                             <Dropdown.Menu>
                               {Object.values(DriverEndorsement).map((v) => {
-                                return <Dropdown.ItemText>{v}</Dropdown.ItemText>;
+                                return <Dropdown.ItemText key={v}>{v}</Dropdown.ItemText>;
                               })}
                             </Dropdown.Menu>
                           </Dropdown>
@@ -559,7 +531,7 @@ const ImportEmployees = () => {
                             <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
                             <Dropdown.Menu>
                               {Object.values(EducationLevel).map((v) => {
-                                return <Dropdown.ItemText>{v}</Dropdown.ItemText>;
+                                return <Dropdown.ItemText key={v}>{v}</Dropdown.ItemText>;
                               })}
                             </Dropdown.Menu>
                           </Dropdown>
@@ -572,7 +544,7 @@ const ImportEmployees = () => {
                             <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
                             <Dropdown.Menu>
                               {Object.values(DriverLicenseType).map((v) => {
-                                return <Dropdown.ItemText>{v}</Dropdown.ItemText>;
+                                return <Dropdown.ItemText key={v}>{v}</Dropdown.ItemText>;
                               })}
                             </Dropdown.Menu>
                           </Dropdown>
@@ -587,7 +559,7 @@ const ImportEmployees = () => {
                               {Object.values(JobEquipmentType)
                                 ?.filter((v) => v != JobEquipmentType.OTHER)
                                 ?.map((v) => {
-                                  return <Dropdown.ItemText>{v}</Dropdown.ItemText>;
+                                  return <Dropdown.ItemText key={v}>{v}</Dropdown.ItemText>;
                                 })}
                             </Dropdown.Menu>
                           </Dropdown>
@@ -621,11 +593,11 @@ const ImportEmployees = () => {
                 if (onlyErrors && !meta.error) return null;
 
                 return (
-                  <tr className={onlyErrors && !meta.error ? `d-none` : ''}>
+                  <tr key={i} className={onlyErrors && !meta.error ? `d-none` : ''}>
                     <td className={style.frozen_col}>{findIcon()}</td>
                     <td className={style.frozen_col}>{i + 1}</td>
                     {headers.map((h) => (
-                      <td>{guessControl(form, schema, warnings[i], h, i, t)}</td>
+                      <td key={h}>{guessControl(form, schema, warnings[i], h, i, t)}</td>
                     ))}
                   </tr>
                 );
@@ -649,112 +621,179 @@ function guessControl(
   const desc: SchemaObjectDescription = schema.fields[header];
   const name = `items.${index}.${header}`;
   const meta = form.getFieldMeta(name);
+  const helper = form.getFieldHelpers(name);
 
   let value = meta.value;
-  if (desc.type == 'boolean') {
-    value = value ? t('YES') : t('NO');
-  }
 
-  if (value) {
-    switch (header) {
-      // case "license_restrictions":
-      //     value = value
-      //         .map(v => {
-      //             const key = `LicenseRestrictions.${v}`;
-      //             const text = t(key);
-      //             if (key == text) return v;
-
-      //             return text;
-      //         });
-      //     break;
-      case 'transmission_type':
-        value = value.map((v) => {
-          const key = `VehicleTransmissionType.${v}`;
-          const text = t(key);
-          if (key == text) return v;
-
-          return text;
-        });
-        break;
-      case 'endorsements':
-        value = value.map((v) => {
-          const key = `DriverEndorsement.${v}`;
-          const text = t(key);
-          if (key == text) return v;
-
-          return text;
-        });
-        break;
-      case 'highest_degree':
-        {
-          const key = `EducationLevel.${value}`;
-          const text = t(key);
-          if (key != text) value = text;
-        }
-        break;
-      case 'license_type':
-        {
-          const key = `DriverLicenseType.${value}`;
-          const text = t(key);
-          if (key != text) value = text;
-        }
-        break;
-      case 'equipment_experience':
-        value = value.map((v) => {
-          const key = `JobEquipmentType.${v.type}`;
-          const text = t(key);
-          if (key == text) return v;
-
-          return text;
-        });
-        break;
-    }
+  // Handle different field types with appropriate input controls
+  if (desc.type === 'boolean') {
+    return (
+      <div>
+        <select
+          value={value ? 'true' : 'false'}
+          onChange={(e) => helper.setValue(e.target.value === 'true')}
+          className="form-control form-control-sm"
+        >
+          <option value="true">{t('YES')}</option>
+          <option value="false">{t('NO')}</option>
+        </select>
+        {meta.error && <span className="text-danger small">{meta.error}</span>}
+      </div>
+    );
   }
 
   if (Array.isArray(value)) {
-    return (
-      <>
-        <ul itemType="circle">
-          {value.map((v, i) => {
-            const error = meta.error ? meta.error[i] : null;
+    switch (header) {
+      case 'transmission_type':
+        return (
+          <select
+            multiple
+            value={value}
+            onChange={(e) => {
+              const selectedValues = Array.from(e.target.selectedOptions, (option) => option.value);
+              helper.setValue(selectedValues);
+            }}
+            className="form-control form-control-sm"
+          >
+            {Object.values(VehicleTransmissionType).map((type) => (
+              <option key={type} value={type}>
+                {t(`VehicleTransmissionType.${type}`)}
+              </option>
+            ))}
+          </select>
+        );
 
-            if (error) {
-              return (
-                <li>
-                  {v}
-                  <br />
-                  <span className="text-danger small">{error}</span>
-                </li>
-              );
-            }
+      case 'endorsements':
+        return (
+          <select
+            multiple
+            value={value}
+            onChange={(e) => {
+              const selectedValues = Array.from(e.target.selectedOptions, (option) => option.value);
+              helper.setValue(selectedValues);
+            }}
+            className="form-control form-control-sm"
+          >
+            {Object.values(DriverEndorsement).map((endorsement) => (
+              <option key={endorsement} value={endorsement}>
+                {t(`DriverEndorsement.${endorsement}`)}
+              </option>
+            ))}
+          </select>
+        );
 
-            return <li>{v}</li>;
-          })}
-        </ul>
-      </>
-    );
+      case 'equipment_experience':
+        return (
+          <select
+            multiple
+            value={value.map((v) => v.type)}
+            onChange={(e) => {
+              const selectedValues = Array.from(e.target.selectedOptions, (option) => option.value);
+              const newValue = selectedValues.map((type) => ({
+                type,
+                type_other:
+                  type === JobEquipmentType.OTHER
+                    ? value.find((v) => v.type === type)?.type_other || ''
+                    : '',
+              }));
+              helper.setValue(newValue);
+            }}
+            className="form-control form-control-sm"
+          >
+            {Object.values(JobEquipmentType).map((type) => (
+              <option key={type} value={type}>
+                {t(`JobEquipmentType.${type}`)}
+              </option>
+            ))}
+          </select>
+        );
+
+      default:
+        return (
+          <div>
+            <input
+              type="text"
+              value={value.join(', ')}
+              onChange={(e) => helper.setValue(e.target.value.split(',').map((v) => v.trim()))}
+              className="form-control form-control-sm"
+            />
+            {meta.error && <span className="text-danger small">{meta.error}</span>}
+          </div>
+        );
+    }
   }
 
-  if (meta.error) {
-    const errorString = JSON.stringify(meta.error);
-    return (
-      <>
-        <span>{value}</span>
-        <br />
-        <span className="text-danger small">{errorString}</span>
-      </>
-    );
-  }
+  // Handle special enum fields
+  switch (header) {
+    case 'highest_degree':
+      return (
+        <div>
+          <select
+            value={value}
+            onChange={(e) => helper.setValue(e.target.value)}
+            className="form-control form-control-sm"
+          >
+            <option value="">{t('SELECT')}</option>
+            {Object.values(EducationLevel).map((level) => (
+              <option key={level} value={level}>
+                {t(`EducationLevel.${level}`)}
+              </option>
+            ))}
+          </select>
+          {meta.error && <span className="text-danger small">{meta.error}</span>}
+        </div>
+      );
 
-  if (warnings && warnings[header]) {
-    return (
-      <>
-        <span>{value}</span>
-        <br />
-        <span className="text-warning small">{warnings[header]}</span>
-      </>
-    );
+    case 'license_type':
+      return (
+        <div>
+          <select
+            value={value}
+            onChange={(e) => helper.setValue(e.target.value)}
+            className="form-control form-control-sm"
+          >
+            <option value="">{t('SELECT')}</option>
+            {Object.values(DriverLicenseType).map((type) => (
+              <option key={type} value={type}>
+                {t(`DriverLicenseType.${type}`)}
+              </option>
+            ))}
+          </select>
+          {meta.error && <span className="text-danger small">{meta.error}</span>}
+        </div>
+      );
+
+    default:
+      // For date fields
+      if (desc.type === 'date') {
+        return (
+          <div>
+            <input
+              type="date"
+              value={value ? new Date(value).toISOString().split('T')[0] : ''}
+              onChange={(e) => helper.setValue(e.target.value)}
+              className="form-control form-control-sm"
+            />
+            {meta.error && <span className="text-danger small">{meta.error}</span>}
+          </div>
+        );
+      }
+
+      // For all other fields (text, number, etc)
+      return (
+        <div>
+          <input
+            type={desc.type === 'number' ? 'number' : 'text'}
+            value={value || ''}
+            onChange={(e) => helper.setValue(e.target.value)}
+            className="form-control form-control-sm"
+          />
+          {meta.error && <span className="text-danger small">{meta.error}</span>}
+          {warnings && warnings[header] && (
+            <span className="text-warning small">{warnings[header]}</span>
+          )}
+        </div>
+      );
   }
-  return value;
 }
 export default ImportEmployees;
