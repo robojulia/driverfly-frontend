@@ -17,8 +17,10 @@ import { globalAjaxExceptionHandler } from '../../../utils/ajax';
 import EntityForm from '../../layouts/page/entity-form';
 import BaseCheck from '../base-check';
 import BaseInput from '../base-input';
+import BaseMilesInput from '../base-miles-input';
 import BaseSelect from '../base-select';
 import BaseTextArea from '../base-text-area';
+import BaseVinInput from '../base-vin-input';
 import FileInput from '../file-input';
 import { BaseFormProps } from './base-form-props';
 
@@ -35,6 +37,7 @@ export function VehicleForm(props: VehicleFormProps) {
     validationSchema: VehicleEntity.yupSchema(),
     onSubmit: async (dto) => {
       if (dto.max_speed) dto.max_speed = +dto.max_speed;
+      if (dto.odometer) dto.odometer = +dto.odometer;
 
       const api = new VehicleApi();
       try {
@@ -99,7 +102,7 @@ export function VehicleForm(props: VehicleFormProps) {
               <BaseSelect
                 className="mb-3"
                 name="type"
-                label="Type*"
+                label="Type"
                 placeholder="Select vehicle type"
                 required
                 enumType={VehicleType}
@@ -177,11 +180,57 @@ export function VehicleForm(props: VehicleFormProps) {
                 placeholder="e.g., 2020"
                 formik={form}
               />
+
+              <BaseVinInput
+                className="mb-3"
+                label="VIN"
+                name="vin"
+                placeholder="Enter Vehicle Identification Number"
+                formik={form}
+              />
+
+              <BaseInput
+                className="mb-3"
+                label="Unit Number"
+                name="unit_number"
+                placeholder="Enter Unit Number"
+                formik={form}
+              />
             </div>
           </Col>
         </Row>
 
         <Row className="mt-4">
+          <Col lg={6}>
+            <div className="form-section h-100">
+              <h6 className="section-title mb-4">Vehicle Specifications</h6>
+              <BaseInput
+                className="mb-3"
+                label="Tire Size"
+                name="tire_size"
+                placeholder="e.g., 295/75R22.5"
+                formik={form}
+              />
+
+              <BaseMilesInput
+                className="mb-3"
+                label="Odometer Reading"
+                name="odometer"
+                placeholder="Enter current odometer reading"
+                formik={form}
+              />
+
+              <BaseTextArea
+                className="mb-3 form-text-area"
+                label="Additional Details"
+                name="other_details"
+                rows={3}
+                placeholder="Enter any additional vehicle details or notes"
+                formik={form}
+              />
+            </div>
+          </Col>
+
           <Col lg={6}>
             <div className="form-section h-100">
               <h6 className="section-title mb-4">Accessories</h6>

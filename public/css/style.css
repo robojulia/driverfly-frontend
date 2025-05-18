@@ -2818,6 +2818,10 @@ input::-webkit-inner-spin-button {
   margin-bottom: 12px;
 }
 
+.vehicle-form .form-text-area {
+  height: 100px;
+}
+
 .vehicle-form .form-check-label {
   font-size: 14px;
   color: #333;
