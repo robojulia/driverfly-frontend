@@ -1,11 +1,11 @@
 /* Import variables and sidebar styles */
-@import url("./variables.css");
-@import url("./sidebar.css");
+@import url('./variables.css');
+@import url('./sidebar.css');
 
 /* Base styles */
 body {
-  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   background-color: var(--content-bg);
   color: var(--text-dark);
   margin: 0;
@@ -161,4 +161,93 @@ body {
 .rdt_TableHeadRow {
   background-color: var(--primary-dark) !important;
   color: white !important;
+}
+
+/* Bootstrap Table Overrides */
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: transparent;
+  --bs-table-striped-color: inherit;
+  --bs-table-active-bg: transparent;
+  --bs-table-active-color: inherit;
+  --bs-table-hover-bg: transparent;
+  --bs-table-hover-color: inherit;
+}
+
+.table > :not(caption) > * > * {
+  background-color: var(--bs-table-bg);
+  box-shadow: none;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  --bs-table-accent-bg: var(--bs-table-striped-bg);
+  color: var(--bs-table-striped-color);
+}
+
+.table-hover > tbody > tr:hover > * {
+  --bs-table-accent-bg: var(--bs-table-hover-bg);
+  color: var(--bs-table-hover-color);
+}
+
+/* This ensures that our custom background colors take precedence */
+
+.table > tbody > tr > td {
+  background-color: inherit !important;
+}
+
+.table > thead > tr > th {
+  background-color: inherit !important;
+}
+
+/* Reset borders to make them more customizable */
+.table-bordered {
+  border: none;
+}
+
+.table-bordered > :not(caption) > * {
+  border-width: 0;
+}
+
+.table-bordered > :not(caption) > * > * {
+  border-width: 0;
+}
+
+.table.custom-table {
+  --bs-table-bg: #ffffff;
+  --bs-table-striped-bg: #f8f9fa;
+  --bs-table-hover-bg: #f0f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #dee2e6;
+}
+
+.table.custom-table thead th {
+  background-color: #f5f5f5 !important;
+  border-bottom: 2px solid #dee2e6;
+  font-weight: 600;
+  padding: 12px 16px;
+  color: #333;
+}
+
+.table.custom-table tbody td {
+  padding: 12px 16px;
+  vertical-align: middle;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.table.custom-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table.custom-table thead th {
+  font-weight: 200;
+  color: var(--text-muted);
+}
+
+.table.custom-table tr.warningRow {
+  background-color: var(--warning) !important;
+}
+
+.table.custom-table tr.dangerRow {
+  background-color: var(--danger) !important;
 }

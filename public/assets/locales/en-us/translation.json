@@ -1449,7 +1449,9 @@
     "ADD_JOB": "Add Job",
     "UPDATE_JOB": "Update Job",
     "UPDATE_VEHICLE": "Update Vehicle",
-    "CREATE_VEHICLE": "Create Vehicle"
+    "CREATE_VEHICLE": "Create Vehicle",
+    "CREATE_INSPECTION": "Create Inspection",
+    "UPDATE_INSPECTION": "Update Inspection"
   },
   "VEHICLE": "Vehicle",
   "SELECT_UNIQUE_VEHICLE_MESSAGE": "Can not add duplicate Vehicle",
@@ -2618,5 +2620,18 @@
   "IS_PUBLIC": "Is Public",
   "VEHICLE_REGISTRATION_EXPIRED": "Vehicle registration has expired!",
   "VEHICLE_REGISTRATION_EXPIRES_IN_DAYS": "Vehicle registration expires in {{days}} days!",
-  "VEHICLE_REGISTRATION_WILL_EXPIRE_IN_DAYS": "Vehicle registration will expire in {{days}} days"
+  "VEHICLE_REGISTRATION_WILL_EXPIRE_IN_DAYS": "Vehicle registration will expire in {{days}} days",
+  "InspectionType": {
+    "Safety": "Safety",
+    "Maintenance": "Maintenance",
+    "Roadside": "Roadside"
+  },
+  "INSPECTION": "Inspection",
+  "InspectionStatus": {
+    "Passed": "Passed",
+    "Failed": "Failed",
+    "Pending": "Pending",
+    "Cancelled": "Cancelled",
+    "Scheduled": "Scheduled"
+  }
 }

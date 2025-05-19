@@ -19,7 +19,9 @@
   /* Functional Colors */
   --success: #87f934;
   --warning: #f5bf19;
+  --warning-light: #fef2f2;
   --danger: #f44336;
+  --danger-light: #ffebee;
 
   /* Border & Shadow */
   --border-color: #e0e0e0;
