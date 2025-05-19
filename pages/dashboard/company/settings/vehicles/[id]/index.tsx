@@ -72,7 +72,7 @@ export default function ViewVehicle({ id }) {
 
     if (id) {
       const api = new VehicleApi();
-      const data = await api.findById(+id, { withPhoto: true });
+      const data = await api.findById(+id, { withDocuments: true });
 
       if (!data) {
         toast.error(t('UNABLE_TO_FIND_{name}', { name: 'VEHICLE' }, { translateProps: true }));

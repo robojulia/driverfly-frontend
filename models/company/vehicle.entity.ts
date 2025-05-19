@@ -20,6 +20,7 @@ export class VehicleEntity {
   model?: string;
   year?: number;
   photo?: DocumentEntity = null;
+  registration_document?: DocumentEntity = null;
   accessories?: string[] = [];
   accessory_other?: string;
   is_governed?: boolean = false;
@@ -33,6 +34,7 @@ export class VehicleEntity {
   created_at: string | Date;
   current_employee_id?: number;
   last_updated_at?: string | Date;
+  registration_expiration_date?: string | Date;
 
   static yupSchema() {
     return yup.object({
@@ -70,6 +72,20 @@ export class VehicleEntity {
             .nullable(),
         })
         .optional(),
+      registration_document: yup
+        .mixed()
+        .when({
+          is: (v) => !!v,
+          then: DocumentEntity.yupSchema()
+            .test('supportedDocTypes', 'INVALID_DOCUMENT_TYPE', (value: any) => {
+              return (
+                !value?.mime_type ||
+                ['application/pdf', 'image/jpeg', 'image/png'].includes(value?.mime_type)
+              );
+            })
+            .nullable(),
+        })
+        .optional(),
       accessories: yup
         .array((yup.string() as any).enum(VehicleAccessory))
         .nullable()
@@ -91,6 +107,7 @@ export class VehicleEntity {
       odometer: yup.number().min(0).nullable(),
       other_details: yup.string().nullable(),
       status: yup.string().nullable(),
+      registration_expiration_date: yup.date().nullable(),
     });
   }
 }

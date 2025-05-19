@@ -41,7 +41,7 @@ export default function VehicleList() {
 
     try {
       const [vehiclesResponse, employeesResponse] = await Promise.all([
-        vehicleApi.list({ withPhoto: true }),
+        vehicleApi.list({ withDocuments: true }),
         employeeApi.list({
           status: [EmployeeStatus.ACTIVE],
           is_paginated: true,
