@@ -23,6 +23,7 @@
     "bootstrap-icons": "^1.7.2",
     "chart.js": "^3.8.0",
     "chartjs-plugin-datalabels": "^2.2.0",
+    "date-fns": "^4.1.0",
     "formik": "^2.2.9",
     "moment": "^2.29.1",
     "next": "^12.1.6",

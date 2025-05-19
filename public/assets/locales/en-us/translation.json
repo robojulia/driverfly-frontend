@@ -2615,5 +2615,8 @@
   "ODOMETER": "Odometer",
   "ASSIGNED_EMPLOYEE": "Assigned Employee",
   "OTHER_DETAILS": "Other Details",
-  "IS_PUBLIC": "Is Public"
+  "IS_PUBLIC": "Is Public",
+  "VEHICLE_REGISTRATION_EXPIRED": "Vehicle registration has expired!",
+  "VEHICLE_REGISTRATION_EXPIRES_IN_DAYS": "Vehicle registration expires in {{days}} days!",
+  "VEHICLE_REGISTRATION_WILL_EXPIRE_IN_DAYS": "Vehicle registration will expire in {{days}} days"
 }

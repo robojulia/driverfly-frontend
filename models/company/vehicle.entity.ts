@@ -69,6 +69,9 @@ export class VehicleEntity {
                 ['image/jpeg', 'image/png', 'image/gif'].includes(value?.mime_type)
               );
             })
+            .test('fileSize', 'FILE_TOO_LARGE', (value: any) => {
+              return !value?.size || value.size <= 2097152; // 2MB in bytes
+            })
             .nullable(),
         })
         .optional(),
@@ -100,7 +103,14 @@ export class VehicleEntity {
         .nullable(),
       is_governed: yup.boolean().required().nullable(),
       is_public: yup.boolean().required().nullable(),
-      max_speed: yup.number().min(1).optional().nullable(),
+      max_speed: yup
+        .number()
+        .min(0)
+        .when('is_governed', {
+          is: true,
+          then: yup.number().min(0).required().nullable(),
+          otherwise: yup.number().min(0).optional().nullable(),
+        }),
       vin: yup.string().max(17).nullable(),
       unit_number: yup.string().nullable(),
       tire_size: yup.string().nullable(),

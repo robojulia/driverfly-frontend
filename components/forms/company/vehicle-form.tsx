@@ -39,7 +39,8 @@ export function VehicleForm(props: VehicleFormProps) {
   const action = !!entity?.id ? 'Forms.UPDATED' : 'Forms.CREATE/ADD';
 
   const form = useFormik({
-    initialValues: new VehicleEntity(),
+    initialValues: entity || new VehicleEntity(),
+    enableReinitialize: true,
     validationSchema: VehicleEntity.yupSchema(),
     onSubmit: async (dto) => {
       if (dto.max_speed) dto.max_speed = +dto.max_speed;
@@ -77,6 +78,50 @@ export function VehicleForm(props: VehicleFormProps) {
       }
     },
   });
+
+  // Add debugging logs
+  useEffect(() => {
+    if (entity) {
+      console.group('Vehicle Form Debug');
+      console.log('Initial Entity:', entity);
+      console.log('Form Values:', form.values);
+      console.log('Form Errors:', form.errors);
+      console.log('Form Touched:', form.touched);
+      console.log('Form isValid:', form.isValid);
+      console.log('Form isDirty:', form.dirty);
+      console.groupEnd();
+    }
+  }, [entity, form.values, form.errors, form.touched, form.isValid, form.dirty]);
+
+  useEffect(() => {
+    // Only handle employee name display
+    if (entity?.current_employee_id) {
+      const currentEmployee = employees.find((emp) => emp.id === entity.current_employee_id);
+      if (currentEmployee) {
+        setEmployeeSearch(`${currentEmployee.first_name} ${currentEmployee.last_name}`);
+      }
+    }
+  }, [entity, employees]);
+
+  // Add validation state logging
+  useEffect(() => {
+    console.group('Form Validation State');
+    console.log('Required Fields:');
+    console.log('- type:', form.values.type);
+    console.log('- make:', form.values.make);
+    if (form.values.type === VehicleType.OTHER) {
+      console.log('- type_other:', form.values.type_other);
+    }
+    if (form.values.trailer_type === VehicleTrailerType.OTHER) {
+      console.log('- trailer_type_other:', form.values.trailer_type_other);
+    }
+    if (form.values.accessories?.includes(VehicleAccessory.OTHER)) {
+      console.log('- accessory_other:', form.values.accessory_other);
+    }
+    console.log('Current Validation Errors:', form.errors);
+    console.groupEnd();
+  }, [form.values, form.errors]);
+
   const fetchEmployees = async (): Promise<void> => {
     try {
       const employeeApi = new EmployeeApi();
@@ -96,20 +141,6 @@ export function VehicleForm(props: VehicleFormProps) {
   useEffect(() => {
     fetchEmployees();
   }, []);
-
-  useEffect(() => {
-    if (entity && !form.dirty) {
-      form.setValues(entity);
-
-      // If there's a current employee ID, find and display the employee name
-      if (entity.current_employee_id) {
-        const currentEmployee = employees.find((emp) => emp.id === entity.current_employee_id);
-        if (currentEmployee) {
-          setEmployeeSearch(`${currentEmployee.first_name} ${currentEmployee.last_name}`);
-        }
-      }
-    }
-  }, [entity, employees]);
 
   const handleAccessoryClick = (accessory: VehicleAccessory) => {
     const currentAccessories = [...form.values.accessories];
@@ -396,10 +427,13 @@ export function VehicleForm(props: VehicleFormProps) {
                 className="mb-4"
                 label="Photo"
                 name="photo"
-                accept="image/*"
+                accept="image/jpeg,image/png"
                 documentType={DocumentType.PHOTO}
                 formik={form}
-                allowedSizeInByte={3145728}
+                error={form.errors?.photo?.toString()}
+                touched={Boolean(form.touched?.photo)}
+                allowedSizeInByte={2097152}
+                allowedTypesFriendlyName="JPG or PNG format, under 2MB"
               />
 
               <div className="governed-speed-section">

@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { Button, ButtonGroup } from 'react-bootstrap';
+import { Button, ButtonGroup, Row, Col } from 'react-bootstrap';
 import { Pencil } from 'react-bootstrap-icons';
 import FullLayout from '../../../../../../components/dashboard/layouts/layout/full-layout';
 import ChildPageLayout from '../../../../../../components/layouts/page/child-page-layout';
@@ -12,6 +12,7 @@ import {
   InfoItem,
   ChipList,
 } from '../../../../../../components/view/base-view-card';
+import VehicleRegistration from '../../../../../../components/vehicle/vehicle-registration';
 
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
@@ -128,72 +129,84 @@ export default function ViewVehicle({ id }) {
       }
     >
       <div className="vehicle-view">
-        <BaseViewCard>
-          <ViewHeader
-            title={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-            image={vehicle?.photo ? { src: vehicle.photo.path, alt: 'Vehicle Photo' } : undefined}
-          >
-            <InfoGrid>
-              <InfoItem label={t('TYPE')} value={getVehicleType()} />
-              <InfoItem label={t('UNIT_NUMBER')} value={vehicle.unit_number} />
-              <InfoItem label={t('VIN')} value={vehicle.vin} />
-            </InfoGrid>
-          </ViewHeader>
-
-          <ViewSection title={t('Vehicle Details')}>
-            <InfoGrid>
-              <InfoItem label={t('TRAILER')} value={getTrailerType()} />
-              <InfoItem
-                label={t('TRANSMISSION')}
-                value={
-                  vehicle.transmission_type
-                    ? t(`VehicleTransmissionType.${vehicle.transmission_type}`)
-                    : undefined
+        <Row>
+          <Col lg={8}>
+            <BaseViewCard>
+              <ViewHeader
+                title={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
+                image={
+                  vehicle?.photo ? { src: vehicle.photo.path, alt: 'Vehicle Photo' } : undefined
                 }
-              />
-              <InfoItem label={t('TIRE_SIZE')} value={vehicle.tire_size} />
-              <InfoItem
-                label={t('ODOMETER')}
-                value={vehicle.odometer ? `${vehicle.odometer} miles` : undefined}
-              />
-              <InfoItem
-                label={t('GOVERNED_SPEED')}
-                value={vehicle.is_governed ? t('YES') : t('NO')}
-              />
-              {vehicle.is_governed && (
-                <InfoItem label={t('MAX_SPEED')} value={`${vehicle.max_speed} mph`} />
+              >
+                <InfoGrid>
+                  <InfoItem label={t('TYPE')} value={getVehicleType()} />
+                  <InfoItem label={t('UNIT_NUMBER')} value={vehicle.unit_number} />
+                  <InfoItem label={t('VIN')} value={vehicle.vin} />
+                </InfoGrid>
+              </ViewHeader>
+
+              <ViewSection title={t('Vehicle Details')}>
+                <InfoGrid>
+                  <InfoItem label={t('TRAILER')} value={getTrailerType()} />
+                  <InfoItem
+                    label={t('TRANSMISSION')}
+                    value={
+                      vehicle.transmission_type
+                        ? t(`VehicleTransmissionType.${vehicle.transmission_type}`)
+                        : undefined
+                    }
+                  />
+                  <InfoItem label={t('TIRE_SIZE')} value={vehicle.tire_size} />
+                  <InfoItem
+                    label={t('ODOMETER')}
+                    value={vehicle.odometer ? `${vehicle.odometer} miles` : undefined}
+                  />
+                  <InfoItem
+                    label={t('GOVERNED_SPEED')}
+                    value={vehicle.is_governed ? t('YES') : t('NO')}
+                  />
+                  {vehicle.is_governed && (
+                    <InfoItem label={t('MAX_SPEED')} value={`${vehicle.max_speed} mph`} />
+                  )}
+                  <InfoItem
+                    label={t('ASSIGNED_EMPLOYEE')}
+                    value={
+                      assignedEmployee
+                        ? `${assignedEmployee.first_name} ${assignedEmployee.last_name}`
+                        : t('Not Assigned')
+                    }
+                  />
+                </InfoGrid>
+              </ViewSection>
+
+              {vehicle.accessories && vehicle.accessories.length > 0 && (
+                <ViewSection title={t('ACCESSORIES')}>
+                  <ChipList
+                    items={vehicle.accessories.map((accessory, index) => ({
+                      id: index,
+                      label:
+                        accessory == VehicleAccessory.OTHER && vehicle.accessory_other
+                          ? vehicle.accessory_other
+                          : t(`VehicleAccessory.${accessory}`),
+                    }))}
+                  />
+                </ViewSection>
               )}
-              <InfoItem
-                label={t('ASSIGNED_EMPLOYEE')}
-                value={
-                  assignedEmployee
-                    ? `${assignedEmployee.first_name} ${assignedEmployee.last_name}`
-                    : t('Not Assigned')
-                }
-              />
-            </InfoGrid>
-          </ViewSection>
 
-          {vehicle.accessories && vehicle.accessories.length > 0 && (
-            <ViewSection title={t('ACCESSORIES')}>
-              <ChipList
-                items={vehicle.accessories.map((accessory, index) => ({
-                  id: index,
-                  label:
-                    accessory == VehicleAccessory.OTHER && vehicle.accessory_other
-                      ? vehicle.accessory_other
-                      : t(`VehicleAccessory.${accessory}`),
-                }))}
-              />
-            </ViewSection>
-          )}
-
-          {vehicle.other_details && (
-            <ViewSection title={t('OTHER_DETAILS')}>
-              <p>{vehicle.other_details}</p>
-            </ViewSection>
-          )}
-        </BaseViewCard>
+              {vehicle.other_details && (
+                <ViewSection title={t('OTHER_DETAILS')}>
+                  <p>{vehicle.other_details}</p>
+                </ViewSection>
+              )}
+            </BaseViewCard>
+          </Col>
+          <Col lg={4}>
+            <VehicleRegistration
+              vehicle={vehicle}
+              onRegistrationUpdated={(updatedVehicle) => setVehicle(updatedVehicle)}
+            />
+          </Col>
+        </Row>
       </div>
     </ChildPageLayout>
   );
