@@ -1,22 +1,20 @@
-import { useFormik } from "formik";
-import { useContext, useEffect, useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import JotformContext, {
-  JotFormContextType,
-} from "../../../../context/jotform-context";
-import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
-import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
-import { useTranslation } from "../../../../hooks/use-translation";
-import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
-import { UnableForJobDto } from "../../../../models/jot-form/long-form/unable-for-job.dto";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import BaseRadio from "../../base-radio";
-import BaseTextArea from "../../base-text-area";
+import { useFormik } from 'formik';
+import { useContext, useEffect, useState } from 'react';
+import { Button, Col, Form, Row } from 'react-bootstrap';
+import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
+import { ApplicantExtras } from '../../../../enums/applicants/applicant-extras.enum';
+import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
+import { useTranslation } from '../../../../hooks/use-translation';
+import { ApplicantExtrasEntity } from '../../../../models/applicant/applicant-extras.entity';
+import { UnableForJobDto } from '../../../../models/jot-form/long-form/unable-for-job.dto';
+import styles from '../../../../styles/digitalhiringapp.module.css';
+import BaseRadio from '../../base-radio';
+import BaseTextArea from '../../base-text-area';
 
 export function UnableForJob() {
   const {
     state: { applicantExtras },
-    method: { updateApplicantExtras, stepNext, stepBack },
+    method: { updateApplicantExtras, setApplicantExtras, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
@@ -40,8 +38,7 @@ export function UnableForJob() {
 
   // Check form validity whenever values change
   useEffect(() => {
-    const { is_unable_to_perform, REASON_FOR_UNABLE_TO_PERFORM_JOB } =
-      form.values;
+    const { is_unable_to_perform, REASON_FOR_UNABLE_TO_PERFORM_JOB } = form.values;
 
     // If they are unable to perform job, explanation is required
     if (is_unable_to_perform === true) {
@@ -65,10 +62,8 @@ export function UnableForJob() {
       ...form.values,
       REASON_FOR_UNABLE_TO_PERFORM_JOB: !!apx?.type
         ? apx
-        : new ApplicantExtrasEntity(
-            ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
-          ),
-      is_unable_to_perform: !!apx?.value && apx.value.trim() !== "",
+        : new ApplicantExtrasEntity(ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB),
+      is_unable_to_perform: !!apx?.value && apx.value.trim() !== '',
     });
   }, [applicantExtras]);
 
@@ -78,7 +73,7 @@ export function UnableForJob() {
   return (
     <>
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
-        {t("DISABLE_FOR_JOB")}
+        {t('DISABLE_FOR_JOB')}
       </h1>
 
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -94,14 +89,18 @@ export function UnableForJob() {
             onChange={({ target: { value } }) => {
               // Convert the positive UI choice to the negative storage format
               const canPerform = value === BooleanType.YES;
-              form.setFieldValue("is_unable_to_perform", !canPerform);
+              form.setFieldValue('is_unable_to_perform', !canPerform);
 
-              // If they can perform the job, clear any explanation
+              // If they can perform the job, remove the extra completely
               if (canPerform) {
-                form.setFieldValue(
-                  "REASON_FOR_UNABLE_TO_PERFORM_JOB.value",
-                  ""
+                // Filter out the extra completely
+                setApplicantExtras(
+                  (oldExtras) =>
+                    oldExtras?.filter(
+                      (extra) => extra.type !== ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
+                    ) || []
                 );
+                form.setFieldValue('REASON_FOR_UNABLE_TO_PERFORM_JOB.value', '');
               }
             }}
           />
@@ -121,16 +120,12 @@ export function UnableForJob() {
         <Row className="mt-5">
           <Col>
             <Button className="float-right" type="reset">
-              {t("BACK")}
+              {t('BACK')}
             </Button>
           </Col>
           <Col>
-            <Button
-              className="float-left"
-              type="submit"
-              disabled={!isFormValid}
-            >
-              {t("NEXT")}
+            <Button className="float-left" type="submit" disabled={!isFormValid}>
+              {t('NEXT')}
             </Button>
           </Col>
         </Row>
