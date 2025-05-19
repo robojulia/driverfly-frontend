@@ -26,6 +26,7 @@ import BaseTextArea from '../base-text-area';
 import BaseVinInput from '../base-vin-input';
 import FileInput from '../file-input';
 import { BaseFormProps } from './base-form-props';
+import BaseDateInput from '../base-date-input';
 
 export interface VehicleFormProps extends BaseFormProps<VehicleEntity> {}
 
@@ -274,6 +275,26 @@ export function VehicleForm(props: VehicleFormProps) {
                 placeholder="Enter Unit Number"
                 formik={form}
               />
+
+              <div className="governed-speed-section mt-3">
+                <BaseCheck
+                  className="mb-2"
+                  label="Governed Speed"
+                  name="is_governed"
+                  formik={form}
+                />
+                {form.values.is_governed && (
+                  <BaseInput
+                    className="mt-2"
+                    label="Max Speed"
+                    name="max_speed"
+                    min={1}
+                    type="int"
+                    placeholder="Enter maximum speed"
+                    formik={form}
+                  />
+                )}
+              </div>
             </div>
           </Col>
         </Row>
@@ -422,7 +443,7 @@ export function VehicleForm(props: VehicleFormProps) {
           </Col>
           <Col lg={6}>
             <div className="form-section h-100">
-              <h6 className="section-title mb-4">Vehicle Photo & Speed</h6>
+              <h6 className="section-title mb-4">Vehicle Documentation</h6>
               <FileInput
                 className="mb-4"
                 label="Photo"
@@ -436,25 +457,23 @@ export function VehicleForm(props: VehicleFormProps) {
                 allowedTypesFriendlyName="JPG or PNG format, under 2MB"
               />
 
-              <div className="governed-speed-section">
-                <BaseCheck
-                  className="mb-2"
-                  label="Governed Speed"
-                  name="is_governed"
-                  formik={form}
-                />
-                {form.values.is_governed && (
-                  <BaseInput
-                    className="mt-2"
-                    label="Max Speed"
-                    name="max_speed"
-                    min={1}
-                    type="int"
-                    placeholder="Enter maximum speed"
-                    formik={form}
-                  />
-                )}
-              </div>
+              <FileInput
+                className="mb-4"
+                label="Registration Document"
+                name="registration_document"
+                accept=".pdf,image/*"
+                documentType={DocumentType.REGISTRATION}
+                formik={form}
+                allowedSizeInByte={3145728}
+                allowedTypesFriendlyName="PDF or image format, under 3MB"
+              />
+
+              <BaseDateInput
+                className="mb-3"
+                label="Registration Expiration Date"
+                name="registration_expiration_date"
+                formik={form}
+              />
             </div>
           </Col>
         </Row>
