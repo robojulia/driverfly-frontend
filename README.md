@@ -153,3 +153,4 @@ Netlify will clone your GitLab repository, install dependencies, and build your 
 - [React Documentation](https://reactjs.org/docs)
 - [TypeScript Documentation](https://www.typescriptlang.org/docs)
 - [Netlify Documentation](https://www.netlify.com/docs)
+- [Lovable Mockup](https://preview--fleet-savvy-track.lovable.app/)

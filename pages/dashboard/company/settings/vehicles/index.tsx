@@ -17,7 +17,7 @@ import { EmployeeStatus } from '../../../../../enums/applicants/employee-status.
 import { VehicleEntity } from '../../../../../models/company/vehicle.entity';
 import { EmployeeEntity } from '../../../../../models/employee/employee.entity';
 import PageLayout from '../../../../../components/layouts/page/page-layout';
-import { ButtonGroup, Button } from 'react-bootstrap';
+import { ButtonGroup, Button, Modal } from 'react-bootstrap';
 import ViewDataTable, {
   getDataTableColumnKey,
 } from '../../../../../components/view-details/view-data-table';
@@ -32,6 +32,8 @@ export default function VehicleList() {
   const { user, hasPermission } = useAuth();
   const [vehicles, setVehicles] = useState<VehicleEntity[]>([]);
   const [employees, setEmployees] = useState<Record<number, EmployeeEntity>>({});
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [vehicleToDelete, setVehicleToDelete] = useState<VehicleEntity | null>(null);
 
   const columnSettingKey = getDataTableColumnKey('company', user, 'vehicles');
 
@@ -80,18 +82,34 @@ export default function VehicleList() {
     router.push(`${router.asPath}/${id}`);
   };
 
-  const onDeleteClick = async (id: number) => {
+  const onDeleteClick = (vehicle: VehicleEntity) => {
+    setVehicleToDelete(vehicle);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!vehicleToDelete) return;
+
     try {
       const api = new VehicleApi();
-      await api.remove(id);
-      setVehicles(vehicles.filter((v) => v.id != id));
+      await api.remove(vehicleToDelete.id);
+      setVehicles(vehicles.filter((v) => v.id !== vehicleToDelete.id));
+      toast.success(t('Vehicle deleted successfully'));
     } catch (e) {
       globalAjaxExceptionHandler(e, {
         t: t,
         toast: toast,
         defaultMessage: 'UNABLE_TO_DELETE',
       });
+    } finally {
+      setShowDeleteModal(false);
+      setVehicleToDelete(null);
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setVehicleToDelete(null);
   };
 
   const canCreate = hasPermission('CanCreateVehicle');
@@ -151,11 +169,7 @@ export default function VehicleList() {
             id: 'type',
             name: 'TYPE',
             selector: getVehicleType,
-            cell: (v) => (
-              <Link href={`${router.asPath}/${v.id}`}>
-                <a>{getVehicleType(v)}</a>
-              </Link>
-            ),
+            cell: (v) => getVehicleType(v),
             hidable: false,
           },
           {
@@ -242,29 +256,70 @@ export default function VehicleList() {
             selector: (v) => (v.is_public ? t('YES') : t('NO')),
             hide: 1,
           },
-        ]}
-        actions={(v) => [
           {
-            onClick: (e) => onViewClick(v.id),
-            icon: EyeFill,
-            label: 'VIEW',
-            hide: !hasPermission('CanViewVehicle'),
-          },
-          {
-            onClick: (e) => onEditClick(v.id),
-            icon: PenFill,
-            label: 'EDIT',
-            hide: !hasPermission('CanUpdateVehicle'),
-          },
-          {
-            onClick: (e) => onDeleteClick(v.id),
-            icon: TrashFill,
-            label: 'DELETE',
-            hide: !hasPermission('CanDeleteVehicle'),
+            id: 'actions',
+            name: '',
+            cell: (v) => (
+              <div className="d-flex gap-2">
+                {hasPermission('CanViewVehicle') && (
+                  <Button variant="primary" size="sm" onClick={() => onViewClick(v.id)}>
+                    <div className="d-flex align-items-center gap-1">
+                      <EyeFill /> {t('VIEW')}
+                    </div>
+                  </Button>
+                )}
+                {hasPermission('CanUpdateVehicle') && (
+                  <Button variant="secondary" size="sm" onClick={() => onEditClick(v.id)}>
+                    <div className="d-flex align-items-center gap-1">
+                      <PenFill /> {t('EDIT')}
+                    </div>
+                  </Button>
+                )}
+                {hasPermission('CanDeleteVehicle') && (
+                  <Button variant="danger" size="sm" onClick={() => onDeleteClick(v)}>
+                    <div className="d-flex align-items-center gap-1">
+                      <TrashFill /> {t('DELETE')}
+                    </div>
+                  </Button>
+                )}
+              </div>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+            hidable: false,
+            width: '250px',
+            right: true,
           },
         ]}
         items={vehicles}
       />
+
+      <Modal show={showDeleteModal} onHide={handleDeleteCancel}>
+        <Modal.Header closeButton>
+          <Modal.Title>{t('Confirm Delete')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {vehicleToDelete && (
+            <p>
+              {t('Are you sure you want to delete this vehicle?')}
+              <br />
+              <strong>
+                {vehicleToDelete.year} {vehicleToDelete.make} {vehicleToDelete.model}
+                {vehicleToDelete.unit_number && ` (Unit #${vehicleToDelete.unit_number})`}
+              </strong>
+            </p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleDeleteCancel}>
+            {t('CANCEL')}
+          </Button>
+          <Button variant="danger" onClick={handleDeleteConfirm}>
+            {t('DELETE')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </PageLayout>
   );
 }
