@@ -1446,7 +1446,10 @@
     "DELETE": "delete",
     "SUCCESS_{action}_{name}": "Successfully {{action}} {{name}}",
     "FAIL_{action}_{name}": "Failed to {{action}} {{name}}",
-    "ADD_JOB": "Add Job"
+    "ADD_JOB": "Add Job",
+    "UPDATE_JOB": "Update Job",
+    "UPDATE_VEHICLE": "Update Vehicle",
+    "CREATE_VEHICLE": "Create Vehicle"
   },
   "VEHICLE": "Vehicle",
   "SELECT_UNIQUE_VEHICLE_MESSAGE": "Can not add duplicate Vehicle",
@@ -2606,5 +2609,14 @@
   "BACKGROUND_CHECK_IN_PROGRESS": "Background check request is currently being sent...",
   "CLICK_TO_REQUEST_BACKGROUND_CHECK": "Click to send a background check request to this employer",
   "PLEASE_WAIT": "Please wait while we process your request",
-  "SENDING_REQUEST": "Sending Request..."
+  "SENDING_REQUEST": "Sending Request...",
+  "UNIT_NUMBER": "Unit Number",
+  "TIRE_SIZE": "Tire Size",
+  "ODOMETER": "Odometer",
+  "ASSIGNED_EMPLOYEE": "Assigned Employee",
+  "OTHER_DETAILS": "Other Details",
+  "IS_PUBLIC": "Is Public",
+  "VEHICLE_REGISTRATION_EXPIRED": "Vehicle registration has expired!",
+  "VEHICLE_REGISTRATION_EXPIRES_IN_DAYS": "Vehicle registration expires in {{days}} days!",
+  "VEHICLE_REGISTRATION_WILL_EXPIRE_IN_DAYS": "Vehicle registration will expire in {{days}} days"
 }

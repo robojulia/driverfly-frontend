@@ -1,68 +1,62 @@
-import { PlusCircle } from "react-bootstrap-icons";
-import { toast } from "react-toastify";
+import { PlusCircle } from 'react-bootstrap-icons';
+import { toast } from 'react-toastify';
 
-import { Button, Col, InputGroup, Row } from "react-bootstrap";
+import { Button, Col, InputGroup, Row } from 'react-bootstrap';
 
-import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useFormik } from 'formik';
+import { useEffect, useState } from 'react';
 
-import { useAuth } from "../../../hooks/use-auth";
-import { useTranslation } from "../../../hooks/use-translation";
-import { useEffectAsync } from "../../../utils/react";
+import { useAuth } from '../../../hooks/use-auth';
+import { useTranslation } from '../../../hooks/use-translation';
+import { useEffectAsync } from '../../../utils/react';
 
-import { globalAjaxExceptionHandler } from "../../../utils/ajax";
-import {
-  counts,
-  year2Only,
-  year3Only,
-  year5Only,
-  years,
-} from "../../../utils/jobs";
-import { BaseFormProps } from "./base-form-props";
+import { globalAjaxExceptionHandler } from '../../../utils/ajax';
+import { counts, year2Only, year3Only, year5Only, years } from '../../../utils/jobs';
+import { BaseFormProps } from './base-form-props';
 
-import EntityForm from "../../layouts/page/entity-form";
-import ViewCard from "../../view-details/view-card";
-import ViewModal from "../../view-details/view-modal";
-import BaseCheck from "../base-check";
-import BaseCheckList from "../base-check-list";
-import BaseInput from "../base-input";
-import BaseRange from "../base-range";
-import BaseSelect from "../base-select";
-import BaseTextArea from "../base-text-area";
-import { LocationForm } from "./location-form";
-import { VehicleForm } from "./vehicle-form";
+import EntityForm from '../../layouts/page/entity-form';
+import ViewCard from '../../view-details/view-card';
+import ViewModal from '../../view-details/view-modal';
+import BaseCheck from '../base-check';
+import BaseCheckList from '../base-check-list';
+import BaseInput from '../base-input';
+import BaseRange from '../base-range';
+import BaseSelect from '../base-select';
+import BaseTextArea from '../base-text-area';
+import { LocationForm } from './location-form';
+import { VehicleForm } from './vehicle-form';
 
-import JobApi from "../../../pages/api/job";
-import LocationApi from "../../../pages/api/location";
-import VehicleApi from "../../../pages/api/vehicle";
+import JobApi from '../../../pages/api/job';
+import LocationApi from '../../../pages/api/location';
+import VehicleApi from '../../../pages/api/vehicle';
 
-import { JobBenefits } from "../../../enums/jobs/job-benefits.enum";
-import { JobDeliveryType } from "../../../enums/jobs/job-delivery-type.enum";
-import { JobDrugTestType } from "../../../enums/jobs/job-drug-test-type.enum";
-import { JobEmploymentType } from "../../../enums/jobs/job-employment-type.enum";
-import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
-import { JobGeography } from "../../../enums/jobs/job-geography.enum";
-import { JobPayFrequency } from "../../../enums/jobs/job-pay-frequency.enum";
-import { JobPayMethod } from "../../../enums/jobs/job-pay-method.enum";
-import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
-import { JobTeamDriver } from "../../../enums/jobs/job-team-driver.enum";
-import { CriminalHistoryType } from "../../../enums/users/criminal-history-type.enum";
-import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
-import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
-import { EducationLevel } from "../../../enums/users/education-level.enum";
-import { MvrType } from "../../../enums/users/mvr-type.enum";
-import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
-import { VehicleType } from "../../../enums/vehicles/vehicle-type.enum";
-import { LocationEntity } from "../../../models/company/location.entity";
-import { VehicleEntity } from "../../../models/company/vehicle.entity";
-import { JobEntity } from "../../../models/job/job.entity";
-import { buildAddress } from "../../../utils/common";
-import { focusOnErrorField } from "../../../utils/form-error";
-import BaseHoursInput from "../base-hours-input";
-import BaseMilesInput from "../base-miles-input";
-import BaseMoneyInput from "../base-money-input";
-import BasePercentInput from "../base-percent-input";
-import { BaseListRowControl } from "../lists/base-list-row-control";
+import { JobBenefits } from '../../../enums/jobs/job-benefits.enum';
+import { JobDeliveryType } from '../../../enums/jobs/job-delivery-type.enum';
+import { JobDrugTestType } from '../../../enums/jobs/job-drug-test-type.enum';
+import { JobEmploymentType } from '../../../enums/jobs/job-employment-type.enum';
+import { JobEquipmentType } from '../../../enums/jobs/job-equipment-type.enum';
+import { JobGeography } from '../../../enums/jobs/job-geography.enum';
+import { JobPayFrequency } from '../../../enums/jobs/job-pay-frequency.enum';
+import { JobPayMethod } from '../../../enums/jobs/job-pay-method.enum';
+import { JobSchedule } from '../../../enums/jobs/job-schedule.enum';
+import { JobTeamDriver } from '../../../enums/jobs/job-team-driver.enum';
+import { CriminalHistoryType } from '../../../enums/users/criminal-history-type.enum';
+import { DriverEndorsement } from '../../../enums/users/driver-endorsement.enum';
+import { DriverLicenseType } from '../../../enums/users/driver-license-type.enum';
+import { EducationLevel } from '../../../enums/users/education-level.enum';
+import { MvrType } from '../../../enums/users/mvr-type.enum';
+import { VehicleTransmissionType } from '../../../enums/vehicles/vehicle-transmission-type.enum';
+import { VehicleType } from '../../../enums/vehicles/vehicle-type.enum';
+import { LocationEntity } from '../../../models/company/location.entity';
+import { VehicleEntity } from '../../../models/company/vehicle.entity';
+import { JobEntity } from '../../../models/job/job.entity';
+import { buildAddress } from '../../../utils/common';
+import { focusOnErrorField } from '../../../utils/form-error';
+import BaseHoursInput from '../base-hours-input';
+import BaseMilesInput from '../base-miles-input';
+import BaseMoneyInput from '../base-money-input';
+import BasePercentInput from '../base-percent-input';
+import { BaseListRowControl } from '../lists/base-list-row-control';
 
 export interface JobFormProps extends BaseFormProps<JobEntity> {}
 
@@ -72,10 +66,9 @@ export function JobForm(props: JobFormProps) {
 
   let { className, entity, onSaveComplete, onSaveError, type } = props;
 
-  const formType = type || "create";
+  const formType = type || 'create';
 
-  const [showConfirmationModal, setShowConfirmationModal] =
-    useState<boolean>(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState<boolean>(false);
 
   const [can, setCan] = useState({
@@ -101,18 +94,14 @@ export function JobForm(props: JobFormProps) {
       ...(entity || {}),
       schedule: entity?.schedule,
       pay_method: entity?.pay_method,
-      min_weekly_pay: Boolean(entity?.min_weekly_pay)
-        ? entity.min_weekly_pay
-        : null,
-      max_weekly_pay: Boolean(entity?.max_weekly_pay)
-        ? entity.max_weekly_pay
-        : null,
+      min_weekly_pay: Boolean(entity?.min_weekly_pay) ? entity.min_weekly_pay : null,
+      max_weekly_pay: Boolean(entity?.max_weekly_pay) ? entity.max_weekly_pay : null,
     });
   }, [entity]);
 
   useEffect(() => {
-    console.log("form.values", form.values);
-    console.log("form.errors", form.errors);
+    console.log('form.values', form.values);
+    console.log('form.errors', form.errors);
   }, [form.values, form.errors]);
 
   const [locations, setLocations] = useState<LocationEntity[]>([]);
@@ -128,8 +117,8 @@ export function JobForm(props: JobFormProps) {
       setVehicles(await vehicleApi.list());
     }
     setCan({
-      createLocation: hasPermission("CanCreateLocation"),
-      createVehicle: hasPermission("CanCreateVehicle"),
+      createLocation: hasPermission('CanCreateLocation'),
+      createVehicle: hasPermission('CanCreateVehicle'),
     });
   }, [user]);
 
@@ -161,29 +150,21 @@ export function JobForm(props: JobFormProps) {
 
   function handlePayMethodUpdate(e) {
     const { name, value } = e.target;
-    let min_miles = getOrCurrent("min_miles");
-    let max_miles = getOrCurrent("max_miles");
-    let min_percent = getOrCurrent("min_percent");
-    let max_percent = getOrCurrent("max_percent");
-    let min_hours = getOrCurrent("min_hours");
-    let max_hours = getOrCurrent("max_hours");
-    let min_rate = getOrCurrent("min_rate");
-    let max_rate = getOrCurrent("max_rate");
-    let min_salary = getOrCurrent("min_salary");
-    let max_salary = getOrCurrent("max_salary");
-    let min_weekly_pay = getOrCurrent("min_weekly_pay");
-    let max_weekly_pay = getOrCurrent("max_weekly_pay");
+    let min_miles = getOrCurrent('min_miles');
+    let max_miles = getOrCurrent('max_miles');
+    let min_percent = getOrCurrent('min_percent');
+    let max_percent = getOrCurrent('max_percent');
+    let min_hours = getOrCurrent('min_hours');
+    let max_hours = getOrCurrent('max_hours');
+    let min_rate = getOrCurrent('min_rate');
+    let max_rate = getOrCurrent('max_rate');
+    let min_salary = getOrCurrent('min_salary');
+    let max_salary = getOrCurrent('max_salary');
+    let min_weekly_pay = getOrCurrent('min_weekly_pay');
+    let max_weekly_pay = getOrCurrent('max_weekly_pay');
 
     switch (form.values.pay_method) {
       case JobPayMethod.RATE_PER_MILE:
-        /**
-                                            -if rate per mile		
-                                                Min Rate Per Mi	
-                                                Max Rate Per Mi	
-                                                Avg mi per week	
-                                                Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                                                Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                                        */
         min_percent = null;
         max_percent = null;
         min_hours = null;
@@ -201,19 +182,6 @@ export function JobForm(props: JobFormProps) {
         break;
       case JobPayMethod.PERCENT_PER_MOVE:
       case JobPayMethod.PERCENT_PER_WEIGHT:
-        /*
-                                        -if % per move		
-                                            Min % per move	
-                                            Max % per move	
-                                            Estimated maximum weekly pay	(manual entry)
-                                            Estimated minimum weekly pay	(manual entry)
-                                        -if % weight		
-                                            Min % per weight	
-                                            Max % per weight	
-                                            Estimated maximum weekly pay	(manual entry)
-                                            Estimated minimum weekly pay	(manual entry)
-                                        */
-        // noop
         min_miles = null;
         max_miles = null;
         min_hours = null;
@@ -224,14 +192,6 @@ export function JobForm(props: JobFormProps) {
         max_salary = null;
         break;
       case JobPayMethod.HOURLY:
-        /*
-                                        -if hourly		
-                                            Min $ per hr	
-                                            Max $ per hr	
-                                            Avg hrs per week	
-                                            Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                                            Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                                        */
         min_miles = null;
         max_miles = null;
         min_percent = null;
@@ -281,13 +241,9 @@ export function JobForm(props: JobFormProps) {
         min_rate = null;
         max_rate = null;
         min_weekly_pay =
-          min_salary >= 0
-            ? parseFloat((min_salary / 52).toFixed(2))
-            : min_weekly_pay;
+          min_salary >= 0 ? parseFloat((min_salary / 52).toFixed(2)) : min_weekly_pay;
         max_weekly_pay =
-          max_salary >= 0
-            ? parseFloat((max_salary / 52).toFixed(2))
-            : min_weekly_pay;
+          max_salary >= 0 ? parseFloat((max_salary / 52).toFixed(2)) : min_weekly_pay;
         break;
       case JobPayMethod.OPEN_TO_NEGOTIATE:
         min_weekly_pay = null;
@@ -312,7 +268,7 @@ export function JobForm(props: JobFormProps) {
 
     function getOrCurrent(field) {
       const v = name == field ? value : form.values[field];
-      if (v != null && v != "") return parseFloat(v);
+      if (v != null && v != '') return parseFloat(v);
       // return v;
     }
   }
@@ -361,9 +317,7 @@ export function JobForm(props: JobFormProps) {
     const { name } = e.target;
     form.setValues({
       ...form.values,
-      required_equipment: form.values.required_equipment.filter(
-        (v, i) => i != name
-      ),
+      required_equipment: form.values.required_equipment.filter((v, i) => i != name),
     });
   }
 
@@ -456,8 +410,7 @@ export function JobForm(props: JobFormProps) {
       const dto = {
         ...form.values,
       };
-      if (dto.expiry_date)
-        dto.expiry_date = new Date(dto.expiry_date).toISOString();
+      if (dto.expiry_date) dto.expiry_date = new Date(dto.expiry_date).toISOString();
       // if (dto.orientation_start_at) dto.orientation_start_at = new Date(dto.orientation_start_at).toISOString();
       // if (dto.orientation_end_at) dto.orientation_end_at = new Date(dto.orientation_end_at).toISOString();
       if (dto.min_experience_in_months) {
@@ -483,26 +436,26 @@ export function JobForm(props: JobFormProps) {
 
       toast.success(
         t(
-          "Forms.SUCCESS_{action}_{name}",
+          'Forms.SUCCESS_{action}_{name}',
           {
-            action: !!entity?.id ? "Forms.UPDATED" : "Forms.CREATED",
-            name: "JOB",
+            action: !!entity?.id ? 'Forms.UPDATED' : 'Forms.CREATED',
+            name: 'JOB',
           },
           { translateProps: true }
         )
       );
       if (onSaveComplete) onSaveComplete(job);
     } catch (e) {
-      console.error("Unable to save job", e);
+      console.error('Unable to save job', e);
       globalAjaxExceptionHandler(e, {
         formik: form,
         t: t,
         toast: toast,
         defaultMessage: t(
-          "Forms.FAIL_{action}_{name}",
+          'Forms.FAIL_{action}_{name}',
           {
-            action: !!entity?.id ? "Forms.UPDATED" : "Forms.CREATED",
-            name: "JOB",
+            action: !!entity?.id ? 'Forms.UPDATED' : 'Forms.CREATED',
+            name: 'JOB',
           },
           { translateProps: true }
         ),
@@ -515,9 +468,7 @@ export function JobForm(props: JobFormProps) {
 
   // Only show errors if the field has been touched or form submission was attempted
   const shouldShowError = (fieldName: string) => {
-    return (
-      (hasAttemptedSubmit || form.touched[fieldName]) && form.errors[fieldName]
-    );
+    return (hasAttemptedSubmit || form.touched[fieldName]) && form.errors[fieldName];
   };
 
   return (
@@ -529,7 +480,7 @@ export function JobForm(props: JobFormProps) {
         formik={form}
         showActionsAtBoth={true}
         actionButtonDown={true}
-        submitLabel={t("Forms.ADD_JOB")}
+        submitLabel={formType == 'create' ? t('Forms.ADD_JOB') : t('Forms.UPDATE_JOB')}
       >
         <Row className="mt-1">
           <Col md="6" lg="6" xl="6" className="p-0 px-lg-2">
@@ -541,7 +492,7 @@ export function JobForm(props: JobFormProps) {
                 name="title"
                 displayPlaceholder
                 formik={form}
-                error={shouldShowError("title") ? form.errors.title : undefined}
+                error={shouldShowError('title') ? form.errors.title : undefined}
               />
               <BaseSelect
                 className="col-12 p-0 px-lg-2"
@@ -559,7 +510,7 @@ export function JobForm(props: JobFormProps) {
                     disabled={!can.createLocation}
                     onClick={() => setCreateLocation(true)}
                   >
-                    <PlusCircle /> {t("CREATE")}
+                    <PlusCircle /> {t('CREATE')}
                   </Button>
                 }
               />
@@ -569,7 +520,7 @@ export function JobForm(props: JobFormProps) {
                 name="expiry_date"
                 displayPlaceholder
                 type="date"
-                min={new Date().toISOString().split("T")[0]}
+                min={new Date().toISOString().split('T')[0]}
                 formik={form}
               />
               <BaseInput
@@ -605,7 +556,7 @@ export function JobForm(props: JobFormProps) {
                 />
               )}
 
-              <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+              <Row style={{ paddingLeft: '15px', paddingRight: '15px' }}>
                 <BaseSelect
                   className={`col-${
                     form.values.schedule == JobSchedule.OTHER ? 6 : 12
@@ -700,7 +651,7 @@ export function JobForm(props: JobFormProps) {
               />
               {(form.values.pay_method == JobPayMethod.PERCENT_PER_MOVE ||
                 form.values.pay_method == JobPayMethod.PERCENT_PER_WEIGHT) && (
-                <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+                <Row style={{ paddingLeft: '15px', paddingRight: '15px' }}>
                   <BasePercentInput
                     className="col-6"
                     label="min_percent"
@@ -722,7 +673,7 @@ export function JobForm(props: JobFormProps) {
                 </Row>
               )}
               {form.values.pay_method == JobPayMethod.RATE_PER_MILE && (
-                <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+                <Row style={{ paddingLeft: '15px', paddingRight: '15px' }}>
                   <BaseMilesInput
                     className="col-6"
                     label="min_miles"
@@ -744,7 +695,7 @@ export function JobForm(props: JobFormProps) {
                 </Row>
               )}
               {form.values.pay_method == JobPayMethod.HOURLY && (
-                <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+                <Row style={{ paddingLeft: '15px', paddingRight: '15px' }}>
                   <BaseHoursInput
                     className="col-6"
                     label="min_hours"
@@ -767,7 +718,7 @@ export function JobForm(props: JobFormProps) {
               )}
               {(form.values.pay_method == JobPayMethod.RATE_PER_MILE ||
                 form.values.pay_method == JobPayMethod.HOURLY) && (
-                <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+                <Row style={{ paddingLeft: '15px', paddingRight: '15px' }}>
                   <BaseMoneyInput
                     className="col-6"
                     label="min_rate"
@@ -789,7 +740,7 @@ export function JobForm(props: JobFormProps) {
                 </Row>
               )}
               {form.values.pay_method == JobPayMethod.SALARY && (
-                <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+                <Row style={{ paddingLeft: '15px', paddingRight: '15px' }}>
                   <BaseMoneyInput
                     className="col-6"
                     label="min_salary"
@@ -809,7 +760,7 @@ export function JobForm(props: JobFormProps) {
                   />
                 </Row>
               )}
-              <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+              <Row style={{ paddingLeft: '15px', paddingRight: '15px' }}>
                 <BaseMoneyInput
                   className="col-md-6 p-0 px-lg-2"
                   label="min_weekly"
@@ -857,13 +808,13 @@ export function JobForm(props: JobFormProps) {
                   variant="primary"
                   size="sm"
                   onClick={() =>
-                    form.setFieldValue("vehicles", [
+                    form.setFieldValue('vehicles', [
                       ...(form.values.vehicles || []),
                       new VehicleEntity(),
                     ])
                   }
                 >
-                  <PlusCircle /> {t("ADD")}
+                  <PlusCircle /> {t('ADD')}
                 </Button>
               }
             >
@@ -876,7 +827,7 @@ export function JobForm(props: JobFormProps) {
                       index={i}
                       onRemoveClick={() =>
                         form.setFieldValue(
-                          "vehicles",
+                          'vehicles',
                           form.values.vehicles.filter((v, idx) => i != idx)
                         )
                       }
@@ -885,32 +836,22 @@ export function JobForm(props: JobFormProps) {
                         className="mx-1"
                         name={`vehicles.${i}.id`}
                         placeholder={t(
-                          "SELECT_{name}",
-                          { name: "VEHICLE" },
+                          'SELECT_{name}',
+                          { name: 'VEHICLE' },
                           { translateProps: true }
                         )}
                         options={vehicles}
                         valueKey="id"
                         createLabel={(veh) => {
-                          const {
-                            type,
-                            type_other,
-                            make,
-                            model,
-                            transmission_type,
-                            year,
-                          } = veh;
+                          const { type, type_other, make, model, transmission_type, year } = veh;
                           let label =
-                            type == VehicleType.OTHER
-                              ? type_other
-                              : t("VehicleType." + type);
+                            type == VehicleType.OTHER ? type_other : t('VehicleType.' + type);
 
                           if (make) label += ` / ${make}`;
 
                           if (model) label += ` / ${model}`;
 
-                          if (transmission_type)
-                            label += ` / ${t(transmission_type)}`;
+                          if (transmission_type) label += ` / ${t(transmission_type)}`;
 
                           if (year) label += ` / ${year}`;
                           return label; //`${()} / ${veh.make} / ${veh.model} / ${t(veh.transmission_type)} / ${veh.year}`
@@ -923,7 +864,7 @@ export function JobForm(props: JobFormProps) {
                               disabled={!can.createVehicle}
                               onClick={() => setCreateVehicle(i)}
                             >
-                              <PlusCircle /> {t("CREATE")}
+                              <PlusCircle /> {t('CREATE')}
                             </Button>
                           </>
                         }
@@ -970,7 +911,7 @@ export function JobForm(props: JobFormProps) {
                   />
                   <Row className="mt-1 p-3 ">
                     <Col>
-                      <label>{t("MIN_YEARS_EXPERIENCE")}</label>
+                      <label>{t('MIN_YEARS_EXPERIENCE')}</label>
                       <InputGroup className="flex-nowrap rounded d-block">
                         <BaseInput
                           className="col-md-6 d-inline-block p-0 mb-2"
@@ -979,11 +920,7 @@ export function JobForm(props: JobFormProps) {
                           required
                           min="0"
                           type="int"
-                          append={
-                            <InputGroup.Text>
-                              {t("YEARS_SHORT")}
-                            </InputGroup.Text>
-                          }
+                          append={<InputGroup.Text>{t('YEARS_SHORT')}</InputGroup.Text>}
                           formik={form}
                         />
                         <BaseInput
@@ -994,11 +931,7 @@ export function JobForm(props: JobFormProps) {
                           min="0"
                           max="11"
                           type="int"
-                          append={
-                            <InputGroup.Text>
-                              {t("MONTHS_SHORT")}
-                            </InputGroup.Text>
-                          }
+                          append={<InputGroup.Text>{t('MONTHS_SHORT')}</InputGroup.Text>}
                           formik={form}
                         />
                       </InputGroup>
@@ -1019,12 +952,8 @@ export function JobForm(props: JobFormProps) {
                       titleAs="span"
                       variant="secondary"
                       actions={
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          onClick={addRequiredSkills}
-                        >
-                          <PlusCircle /> {t("ADD")}
+                        <Button variant="primary" size="sm" onClick={addRequiredSkills}>
+                          <PlusCircle /> {t('ADD')}
                         </Button>
                       }
                     >
@@ -1033,9 +962,7 @@ export function JobForm(props: JobFormProps) {
                           <BaseListRowControl
                             key={i}
                             index={i}
-                            onRemoveClick={(idx, e) =>
-                              removeRequiredSkill(idx, e)
-                            }
+                            onRemoveClick={(idx, e) => removeRequiredSkill(idx, e)}
                           >
                             <BaseSelect
                               className="mx-1"
@@ -1053,11 +980,7 @@ export function JobForm(props: JobFormProps) {
                               required
                               min="0"
                               type="int"
-                              append={
-                                <InputGroup.Text>
-                                  {t("YEARS_SHORT")}
-                                </InputGroup.Text>
-                              }
+                              append={<InputGroup.Text>{t('YEARS_SHORT')}</InputGroup.Text>}
                               formik={form}
                             />
                             <BaseInput
@@ -1068,11 +991,7 @@ export function JobForm(props: JobFormProps) {
                               min="0"
                               max="11"
                               type="int"
-                              append={
-                                <InputGroup.Text>
-                                  {t("MONTHS_SHORT")}
-                                </InputGroup.Text>
-                              }
+                              append={<InputGroup.Text>{t('MONTHS_SHORT')}</InputGroup.Text>}
                               formik={form}
                             />
                           </BaseListRowControl>
@@ -1087,20 +1006,15 @@ export function JobForm(props: JobFormProps) {
                     rows={1}
                     formik={form}
                   />
-                  {form.values.employment_type ===
-                    JobEmploymentType.OWNER_OPERATOR && (
+                  {form.values.employment_type === JobEmploymentType.OWNER_OPERATOR && (
                     <Col xs="12" className="mt-1">
                       <ViewCard
                         title="REQUIRED_EQUIPMENT"
                         variant="secondary"
                         titleAs="span"
                         actions={
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={addRequiredEquipment}
-                          >
-                            <PlusCircle /> {t("ADD")}
+                          <Button variant="primary" size="sm" onClick={addRequiredEquipment}>
+                            <PlusCircle /> {t('ADD')}
                           </Button>
                         }
                       >
@@ -1109,15 +1023,13 @@ export function JobForm(props: JobFormProps) {
                             <BaseListRowControl
                               key={i}
                               index={i}
-                              onRemoveClick={(idx, e) =>
-                                removeRequiredEquipment(e)
-                              }
+                              onRemoveClick={(idx, e) => removeRequiredEquipment(e)}
                             >
                               <BaseSelect
                                 className="mx-1"
                                 placeholder={t(
-                                  "SELECT_{name}",
-                                  { name: "TYPE" },
+                                  'SELECT_{name}',
+                                  { name: 'TYPE' },
                                   { translateProps: true }
                                 )}
                                 name={`required_equipment.${i}.type`}
@@ -1184,12 +1096,8 @@ export function JobForm(props: JobFormProps) {
                         variant="secondary"
                         titleAs="span"
                         actions={
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={addMvrRequirement}
-                          >
-                            <PlusCircle /> {t("ADD")}
+                          <Button variant="primary" size="sm" onClick={addMvrRequirement}>
+                            <PlusCircle /> {t('ADD')}
                           </Button>
                         }
                       >
@@ -1197,24 +1105,22 @@ export function JobForm(props: JobFormProps) {
                           <>
                             <Row>
                               <Col className="offset-1" xs="3">
-                                {t("MAX")}
+                                {t('MAX')}
                               </Col>
-                              <Col xs="4">{t("TYPE")}</Col>
-                              <Col xs="3">{t("within")}</Col>
+                              <Col xs="4">{t('TYPE')}</Col>
+                              <Col xs="3">{t('within')}</Col>
                             </Row>
                             {form.values.mvr_requirements.map((v, i) => (
                               <BaseListRowControl
                                 key={i}
                                 index={i}
-                                onRemoveClick={(idx, e) =>
-                                  removeMvrRequirement(idx, e)
-                                }
+                                onRemoveClick={(idx, e) => removeMvrRequirement(idx, e)}
                               >
                                 <BaseSelect
                                   className="mx-1 col-3"
                                   placeholder={t(
-                                    "SELECT_{name}",
-                                    { name: "MAX" },
+                                    'SELECT_{name}',
+                                    { name: 'MAX' },
                                     { translateProps: true }
                                   )}
                                   name={`mvr_requirements.${i}.max_count`}
@@ -1230,9 +1136,7 @@ export function JobForm(props: JobFormProps) {
                                   required
                                   labelPrefix="MvrType"
                                   enumType={MvrType}
-                                  onChange={(e) =>
-                                    handleMaxYearsForMvrRequirementType(e, i)
-                                  }
+                                  onChange={(e) => handleMaxYearsForMvrRequirementType(e, i)}
                                   formik={form}
                                 />
                                 <BaseSelect
@@ -1241,9 +1145,7 @@ export function JobForm(props: JobFormProps) {
                                   required
                                   value={v.max_years}
                                   options={(() => {
-                                    switch (
-                                      form.values.mvr_requirements[i].type
-                                    ) {
+                                    switch (form.values.mvr_requirements[i].type) {
                                       case MvrType.DUI:
                                         return year2Only;
                                       case MvrType.MOVING_VIOLATION_NOT_AT_FAULT:
@@ -1252,11 +1154,7 @@ export function JobForm(props: JobFormProps) {
                                         return year5Only;
                                     }
                                   })()}
-                                  append={
-                                    <InputGroup.Text>
-                                      {t("YEARS_SHORT")}
-                                    </InputGroup.Text>
-                                  }
+                                  append={<InputGroup.Text>{t('YEARS_SHORT')}</InputGroup.Text>}
                                   formik={form}
                                 />
                               </BaseListRowControl>
@@ -1290,7 +1188,7 @@ export function JobForm(props: JobFormProps) {
                             size="sm"
                             onClick={addCriminalHistoryRequirement}
                           >
-                            <PlusCircle /> {t("ADD")}
+                            <PlusCircle /> {t('ADD')}
                           </Button>
                         }
                       >
@@ -1298,18 +1196,16 @@ export function JobForm(props: JobFormProps) {
                           <>
                             <Row>
                               <Col className="offset-1" xs="3">
-                                {t("MAX")}
+                                {t('MAX')}
                               </Col>
-                              <Col xs="4">{t("TYPE")}</Col>
-                              <Col xs="3">{t("within")}</Col>
+                              <Col xs="4">{t('TYPE')}</Col>
+                              <Col xs="3">{t('within')}</Col>
                             </Row>
                             {form.values.criminal_history.map((v, i) => (
                               <BaseListRowControl
                                 key={i}
                                 index={i}
-                                onRemoveClick={(idx, e) =>
-                                  removeCriminalHistoryRequirement(idx, e)
-                                }
+                                onRemoveClick={(idx, e) => removeCriminalHistoryRequirement(idx, e)}
                               >
                                 <BaseSelect
                                   className="mx-1 col-3"
@@ -1334,13 +1230,8 @@ export function JobForm(props: JobFormProps) {
                                   required
                                   options={years}
                                   append={
-                                    form.getFieldMeta(
-                                      `criminal_history.${i}.max_years`
-                                    )?.value > 0 && (
-                                      <InputGroup.Text>
-                                        {t("YEARS_SHORT")}
-                                      </InputGroup.Text>
-                                    )
+                                    form.getFieldMeta(`criminal_history.${i}.max_years`)?.value >
+                                      0 && <InputGroup.Text>{t('YEARS_SHORT')}</InputGroup.Text>
                                   }
                                   formik={form}
                                 />
@@ -1368,11 +1259,7 @@ export function JobForm(props: JobFormProps) {
 
                   {form.values.is_orientation_needed && (
                     <Col className="mt-2" xs="12">
-                      <ViewCard
-                        title="ORIENTATION_DETAILS"
-                        titleAs="span"
-                        variant="secondary"
-                      >
+                      <ViewCard title="ORIENTATION_DETAILS" titleAs="span" variant="secondary">
                         <Row className="m-1">
                           <BaseSelect
                             className="col-12 p-0"
@@ -1390,7 +1277,7 @@ export function JobForm(props: JobFormProps) {
                                 disabled={!can.createLocation}
                                 onClick={() => setCreateLocation(true)}
                               >
-                                <PlusCircle /> {t("CREATE")}
+                                <PlusCircle /> {t('CREATE')}
                               </Button>
                             }
                           />
@@ -1402,7 +1289,7 @@ export function JobForm(props: JobFormProps) {
                             name="orientation.start_datetime"
                             displayPlaceholder
                             type="date"
-                            min={new Date().toISOString().split("T")[0]}
+                            min={new Date().toISOString().split('T')[0]}
                             formik={form}
                           />
                           <BaseInput
@@ -1411,7 +1298,7 @@ export function JobForm(props: JobFormProps) {
                             name="orientation.end_datetime"
                             placeholder="END_DATE"
                             type="date"
-                            min={new Date().toISOString().split("T")[0]}
+                            min={new Date().toISOString().split('T')[0]}
                             formik={form}
                           />
                         </Row>
@@ -1425,22 +1312,14 @@ export function JobForm(props: JobFormProps) {
         </Row>
       </EntityForm>
       <ViewModal
-        title={t(
-          "CREATE_{name}",
-          { name: "VEHICLE" },
-          { translateProps: true }
-        )}
-        show={typeof createVehicle == "number"}
+        title={t('CREATE_{name}', { name: 'VEHICLE' }, { translateProps: true })}
+        show={typeof createVehicle == 'number'}
         onCloseClick={() => setCreateVehicle(false)}
       >
         <VehicleForm onSaveComplete={onVehicleAdded} />
       </ViewModal>
       <ViewModal
-        title={t(
-          "CREATE_{name}",
-          { name: "TERMINAL" },
-          { translateProps: true }
-        )}
+        title={t('CREATE_{name}', { name: 'TERMINAL' }, { translateProps: true })}
         show={createLocation}
         onCloseClick={() => setCreateLocation(false)}
       >
@@ -1456,11 +1335,11 @@ export function JobForm(props: JobFormProps) {
             className="btn btn-primary w-100 p-lg-3 p-5 mx-2"
             onClick={handleConfirmClick}
           >
-            {t("CONFIRM")}
+            {t('CONFIRM')}
           </button>
         }
       >
-        <p className="m-3">{t("JOB_CREATION_CONFIRMATION")}</p>
+        <p className="m-3">{t('JOB_CREATION_CONFIRMATION')}</p>
       </ViewModal>
     </>
   );

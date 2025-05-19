@@ -1,43 +1,48 @@
 import { DocumentHistoryEntity } from './../../models/documents/document-history.entity';
-import { DocumentEntity } from "../../models/documents/document.entity";
-import BaseApi from "./_baseApi";
+import { DocumentEntity } from '../../models/documents/document.entity';
+import BaseApi from './_baseApi';
 
 export default class DocumentApi extends BaseApi {
-    baseUrl: string = "documents";
+  baseUrl: string = 'documents';
 
-    async getSignedUrl(id: number): Promise<DocumentEntity> {
-        const { data } = await this.get(`${this.baseUrl}/${id}`);
+  async getSignedUrl(id: number): Promise<DocumentEntity> {
+    const { data } = await this.get(`${this.baseUrl}/${id}`);
 
-        return data;
-    }
+    return data;
+  }
 
-    async getSignedUrlForHistory(id: number): Promise<DocumentHistoryEntity> {
-        const { data } = await this.get(`${this.baseUrl}/${id}/history`);
+  async getSignedUrlForHistory(id: number): Promise<DocumentHistoryEntity> {
+    const { data } = await this.get(`${this.baseUrl}/${id}/history`);
 
-        return data;
-    }
+    return data;
+  }
 
-    async deleteHistoryDoccument(id: number): Promise<void> {
-        const { data } = await this.delete(`${this.baseUrl}/${id}/history`);
+  async deleteHistoryDoccument(id: number): Promise<void> {
+    const { data } = await this.delete(`${this.baseUrl}/${id}/history`);
 
-        return data;
-    }
+    return data;
+  }
 
-    async getCompanyPhoto(id: number): Promise<DocumentEntity> {
-        const { data } = await this.get(`${this.baseUrl}/company/${id}/photo`);
+  async getCompanyPhoto(id: number): Promise<DocumentEntity> {
+    const { data } = await this.get(`${this.baseUrl}/company/${id}/photo`);
 
-        return data;
-    }
+    return data;
+  }
 
-    async getPhoto(documentableId?: number): Promise<DocumentEntity> {
-        const { data } = await this.get(`${this.baseUrl}/${documentableId}/photo`);
+  async getPhoto(documentableId?: number): Promise<DocumentEntity> {
+    const { data } = await this.get(`${this.baseUrl}/${documentableId}/photo`);
 
-        return data;
-    }
+    return data;
+  }
 
-    async getDocumentHistory(dto: DocumentHistoryEntity, attachEmployer?: Boolean): Promise<DocumentHistoryEntity[]> {
-        const { data } = await this.get(this.buildUrl(this.baseUrl + "/history", { ...dto, attachEmployer }));
+  async getDocumentHistory(
+    dto: DocumentHistoryEntity,
+    attachEmployer?: Boolean
+  ): Promise<DocumentHistoryEntity[]> {
+    const { data } = await this.get(
+      this.buildUrl(this.baseUrl + '/history', { ...dto, attachEmployer })
+    );
 
-        return data;
-    }
+    return data;
+  }
 }

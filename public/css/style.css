@@ -2725,3 +2725,387 @@ input::-webkit-inner-spin-button {
   background-color: #cce5ff;
   border: 1px solid #b8daff;
 }
+
+/* Vehicle Form Styles */
+.vehicle-form {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.vehicle-form .form-section {
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  height: 100%;
+}
+
+.vehicle-form .section-title {
+  color: #1d4354;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.vehicle-form .form-control {
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  height: 42px;
+  font-size: 14px;
+  background-color: #fff;
+}
+
+.vehicle-form .form-control::placeholder {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.vehicle-form .form-control:focus {
+  border-color: #2684ff;
+  box-shadow: 0 0 0 1px #2684ff;
+}
+
+.vehicle-form .form-label {
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 14px;
+}
+
+.vehicle-form .accessories-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.vehicle-form .accessories-grid .form-check {
+  margin: 0;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.vehicle-form .accessories-grid .form-check:hover {
+  background: #f0f0f0;
+  border-color: #ddd;
+}
+
+.vehicle-form .accessories-grid .form-check-input {
+  margin-right: 10px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.vehicle-form .accessories-grid .form-check-label {
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+  cursor: pointer;
+  flex: 1;
+}
+
+.vehicle-form .form-check {
+  margin-bottom: 12px;
+}
+
+.vehicle-form .form-text-area textarea {
+  height: 100px;
+}
+
+.vehicle-form .form-check-label {
+  font-size: 14px;
+  color: #333;
+}
+
+.vehicle-form .governed-speed-section {
+  padding-top: 8px;
+}
+
+@media (max-width: 991px) {
+  .vehicle-form {
+    padding: 10px;
+  }
+
+  .vehicle-form .form-section {
+    margin-bottom: 20px;
+  }
+
+  .vehicle-form .accessories-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Add this to ensure proper spacing between form sections */
+.vehicle-form .form-section + .form-section {
+  margin-top: 24px;
+}
+
+/* Vehicle View Page Styles */
+.vehicle-view {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.vehicle-view-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.vehicle-view-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #eee;
+}
+
+.vehicle-view-image {
+  width: 300px;
+  height: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vehicle-view-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.vehicle-view-title {
+  flex: 1;
+}
+
+.vehicle-view-title h1 {
+  color: #1d4354;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.vehicle-view-section {
+  margin-bottom: 24px;
+}
+
+.vehicle-view-section h2 {
+  color: #2da2af;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.vehicle-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 24px;
+}
+
+.vehicle-info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.vehicle-info-label {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.vehicle-info-value {
+  color: #333;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.vehicle-accessories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.accessory-chip {
+  background: #e8f5f5;
+  color: #2da2af;
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.accessory-chip svg {
+  width: 16px;
+  height: 16px;
+}
+
+.vehicle-view-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #eee;
+}
+
+.vehicle-view-actions button {
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .vehicle-view-header {
+    flex-direction: column;
+  }
+
+  .vehicle-view-image {
+    width: 100%;
+    height: 250px;
+  }
+
+  .vehicle-info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Reusable View Components */
+.view-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.view-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #eee;
+}
+
+.view-image {
+  width: 300px;
+  height: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.view-title {
+  flex: 1;
+}
+
+.view-title h1 {
+  color: #1d4354;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.view-section {
+  margin-bottom: 24px;
+}
+
+.view-section h2 {
+  color: #2da2af;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 24px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.info-value {
+  color: #333;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.info-chip {
+  background: #e8f5f5;
+  color: #2da2af;
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .view-header {
+    flex-direction: column;
+  }
+
+  .view-image {
+    width: 100%;
+    height: 250px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}

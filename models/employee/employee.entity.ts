@@ -1,25 +1,25 @@
-import moment from "moment";
-import * as yup from "yup";
-import { EmployeeStatus } from "../../enums/applicants/employee-status.enum";
+import moment from 'moment';
+import * as yup from 'yup';
+import { EmployeeStatus } from '../../enums/applicants/employee-status.enum';
 import {
   EmployeeReasonCodeFired,
   EmployeeReasonCodeQuit,
-} from "../../enums/employee/employee-reason-codes.enum";
-import { JobGeography } from "../../enums/jobs/job-geography.enum";
-import { Status } from "../../enums/status.enum";
-import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum";
-import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
-import { EducationLevel } from "../../enums/users/education-level.enum";
-import { VehicleTransmissionType } from "../../enums/vehicles/vehicle-transmission-type.enum";
-import { useTranslation } from "../../hooks/use-translation";
-import "../../utils/yup";
-import { ApplicantEntity } from "../applicant";
-import { CompanyManagerEntity } from "../company/company-manager.entity";
-import { CompanyEntity } from "../company/company.entity";
-import { DocumentEntity } from "../documents/document.entity";
-import { JobEntity } from "../job/job.entity";
-import { EmployeeEquipmentEntity } from "./employee-equipment.entity";
-import { EmployeeExperienceEntity } from "./employee-experience.entity";
+} from '../../enums/employee/employee-reason-codes.enum';
+import { JobGeography } from '../../enums/jobs/job-geography.enum';
+import { Status } from '../../enums/status.enum';
+import { DriverEndorsement } from '../../enums/users/driver-endorsement.enum';
+import { DriverLicenseType } from '../../enums/users/driver-license-type.enum';
+import { EducationLevel } from '../../enums/users/education-level.enum';
+import { VehicleTransmissionType } from '../../enums/vehicles/vehicle-transmission-type.enum';
+import { useTranslation } from '../../hooks/use-translation';
+import '../../utils/yup';
+import { ApplicantEntity } from '../applicant';
+import { CompanyManagerEntity } from '../company/company-manager.entity';
+import { CompanyEntity } from '../company/company.entity';
+import { DocumentEntity } from '../documents/document.entity';
+import { JobEntity } from '../job/job.entity';
+import { EmployeeEquipmentEntity } from './employee-equipment.entity';
+import { EmployeeExperienceEntity } from './employee-experience.entity';
 
 export class EmployeeEntity {
   id?: number;
@@ -70,8 +70,6 @@ export class EmployeeEntity {
   termination_date?: Date;
 
   static employeeFormYupSchema() {
-    const { t } = useTranslation();
-
     return yup.object({
       first_name: yup.string().trim().required().nullable(),
       last_name: yup.string().trim().required().nullable(),
@@ -80,7 +78,7 @@ export class EmployeeEntity {
       birthdate: yup
         .date()
         .nullable()
-        .test("age", t("IMPORT_AGE_ERROR"), function (value) {
+        .test('age', 'IMPORT_AGE_ERROR', function (value) {
           if (!value) return true;
 
           const currentDate = new Date();
@@ -102,62 +100,51 @@ export class EmployeeEntity {
       years_cdl_experience: yup.number().min(0).nullable(),
       can_pass_drug_test: yup.bool().nullable(),
       is_owner_operator: yup.bool().nullable(),
-      transmission_type: yup
-        .array((yup.string() as any).enum(VehicleTransmissionType))
-        .nullable(),
-      endorsements: yup
-        .array((yup.string() as any).enum(DriverEndorsement))
-        .nullable(),
+      transmission_type: yup.array((yup.string() as any).enum(VehicleTransmissionType)).nullable(),
+      endorsements: yup.array((yup.string() as any).enum(DriverEndorsement)).nullable(),
       highest_degree: (yup.string() as any).enum(EducationLevel).nullable(),
       authorized_to_work_in_us: yup.bool().nullable(),
       emergency_contact_name: yup.string().nullable(),
       emergency_contact_number: yup.string().nullable(),
       emergency_contact_relationship: yup.string().nullable(),
-      preferred_location: yup
-        .array((yup.string() as any).enum(JobGeography))
-        .nullable(),
+      preferred_location: yup.array((yup.string() as any).enum(JobGeography)).nullable(),
       job: yup
         .object({
           id: yup.number().required().nullable(),
         })
         .required()
         .nullable(),
-      // status_other: yup.string().when("status", {
-      // 	is: EmployeeStatus.OTHER,
-      // 	then: yup.string().required().nullable(),
-      // }).nullable(),
-      equipment_experience: (
-        yup.array(EmployeeExperienceEntity.yupSchema()) as any
-      ).unique("type", { mapper: EmployeeExperienceEntity.key }),
-      equipment_owned: (
-        yup.array(EmployeeEquipmentEntity.yupSchema()) as any
-      ).unique("type", { mapper: EmployeeEquipmentEntity.key }),
+      equipment_experience: (yup.array(EmployeeExperienceEntity.yupSchema()) as any).unique(
+        'type',
+        { mapper: EmployeeExperienceEntity.key }
+      ),
+      equipment_owned: (yup.array(EmployeeEquipmentEntity.yupSchema()) as any).unique('type', {
+        mapper: EmployeeEquipmentEntity.key,
+      }),
       managerId: yup.number().required().nullable(),
       hire_date: yup.date().nullable(),
     });
   }
 
   static yupSchemaForMarking() {
-    const { t } = useTranslation();
-
     return yup.object({
       id: yup.number().required().nullable(),
       status: (yup.string() as any).enum(EmployeeStatus).required().nullable(),
       reason_codes: (
         yup
           .array(yup.string())
-          .when("status", {
+          .when('status', {
             is: EmployeeStatus.QUIT,
             then: yup
               .array((yup.string() as any).enum(EmployeeReasonCodeQuit))
-              .min(1, t("SELECT_THE_REASON"))
+              .min(1, 'SELECT_THE_REASON')
               .nullable(),
           })
-          .when("status", {
+          .when('status', {
             is: EmployeeStatus.FIRED,
             then: yup
               .array((yup.string() as any).enum(EmployeeReasonCodeFired))
-              .min(1, t("SELECT_THE_REASON"))
+              .min(1, 'SELECT_THE_REASON')
               .nullable(),
           }) as any
       )
@@ -165,40 +152,30 @@ export class EmployeeEntity {
         .nullable(),
       reason_codes_other: yup
         .string()
-        .when("reason_codes", {
-          is: (v) => v && v.includes("OTHER"),
+        .when('reason_codes', {
+          is: (v) => v && v.includes('OTHER'),
           then: yup.string().trim().required().nullable(),
         })
         .nullable(),
       termination_date: yup
         .date()
         .required()
-        .test(
-          "is-after-hire-date",
-          "TERMINATION_DATE_MUST_BE_AFTER_HIRE_DATE",
-          function (value) {
-            const hire_date = this.resolve(yup.ref("hire_date")); // Get the hire_date from the context
+        .test('is-after-hire-date', 'TERMINATION_DATE_MUST_BE_AFTER_HIRE_DATE', function (value) {
+          const hire_date = this.resolve(yup.ref('hire_date')); // Get the hire_date from the context
 
-            if (!value) return true;
+          if (!value) return true;
 
-            // Convert both dates to Date objects (if they aren't already)
-            const hireDate =
-              hire_date instanceof Date
-                ? hire_date
-                : new Date(hire_date as string);
-            const terminationDate =
-              value instanceof Date ? value : new Date(value as string);
+          // Convert both dates to Date objects (if they aren't already)
+          const hireDate = hire_date instanceof Date ? hire_date : new Date(hire_date as string);
+          const terminationDate = value instanceof Date ? value : new Date(value as string);
 
-            return terminationDate > hireDate;
-          }
-        )
+          return terminationDate > hireDate;
+        })
         .nullable(),
     });
   }
 
   static yupSchemaForImportEmployees() {
-    const { t } = useTranslation();
-
     return yup.object({
       first_name: yup.string().optional().nullable().trim(),
       last_name: yup.string().optional().nullable().trim(),
@@ -206,12 +183,10 @@ export class EmployeeEntity {
         .string()
         .nullable()
         .test({
-          name: "phone",
-          message: t("IMPORT_PHONE_ERROR"),
+          name: 'phone',
+          message: 'IMPORT_PHONE_ERROR',
           test: (value) => {
-            var patt = new RegExp(
-              /^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{4}$/
-            );
+            var patt = new RegExp(/^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{4}$/);
             return patt.test(value);
           },
         }),
@@ -219,7 +194,7 @@ export class EmployeeEntity {
       birthdate: yup
         .date()
         .nullable()
-        .test("age", t("IMPORT_AGE_ERROR"), function (value) {
+        .test('age', 'IMPORT_AGE_ERROR', function (value) {
           if (!value) return true;
 
           const currentDate = new Date();
@@ -236,8 +211,8 @@ export class EmployeeEntity {
       license_number: yup.string().required().nullable(),
       license_expiry: yup
         .date()
-        .typeError(t("IMPORT_DATE_ERROR"))
-        .min(moment().endOf("day"), "LICENSE_MUST_BE_VALID_AFTER_TODAY")
+        .typeError('IMPORT_DATE_ERROR')
+        .min(moment().endOf('day'), 'LICENSE_MUST_BE_VALID_AFTER_TODAY')
         .required()
         .nullable(),
       license_state: yup.string().nullable().required(),
@@ -245,12 +220,8 @@ export class EmployeeEntity {
       years_cdl_experience: yup.number().min(0).nullable(),
       can_pass_drug_test: yup.bool().nullable(),
       is_owner_operator: yup.bool().nullable(),
-      transmission_type: yup
-        .array((yup.string() as any).enum(VehicleTransmissionType))
-        .nullable(),
-      endorsements: yup
-        .array((yup.string() as any).enum(DriverEndorsement))
-        .nullable(),
+      transmission_type: yup.array((yup.string() as any).enum(VehicleTransmissionType)).nullable(),
+      endorsements: yup.array((yup.string() as any).enum(DriverEndorsement)).nullable(),
       highest_degree: (yup.string() as any).enum(EducationLevel).nullable(),
       authorized_to_work_in_us: yup.bool().nullable(),
       emergency_contact_name: yup.string().nullable(),
@@ -258,23 +229,16 @@ export class EmployeeEntity {
         .string()
         .nullable()
         .test({
-          name: "emergency_contact_number",
-          message: t("IMPORT_PHONE_ERROR"),
+          name: 'emergency_contact_number',
+          message: 'IMPORT_PHONE_ERROR',
           test: (value) => {
-            var patt = new RegExp(
-              /^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{4}$/
-            );
+            var patt = new RegExp(/^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{4}$/);
             return patt.test(value);
           },
         }),
       emergency_contact_relationship: yup.string().nullable(),
-      preferred_location: yup
-        .array((yup.string() as any).enum(JobGeography))
-        .nullable(),
+      preferred_location: yup.array((yup.string() as any).enum(JobGeography)).nullable(),
       jobId: yup.number().required(),
-      // equipment_experience: (
-      // 	yup.array(ApplicantExperienceEntity.yupSchema()) as any
-      // ).unique("type", { mapper: ApplicantExperienceEntity.key }),
       managerId: yup.number().optional().nullable(),
       hire_date: yup.date().nullable(),
     });
