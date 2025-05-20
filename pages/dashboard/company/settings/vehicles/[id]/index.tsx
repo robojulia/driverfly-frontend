@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { Button, ButtonGroup, Row, Col } from 'react-bootstrap';
+import { Button, ButtonGroup, Row, Col, ToggleButton } from 'react-bootstrap';
 import { Pencil, TrashFill } from 'react-bootstrap-icons';
 import FullLayout from '../../../../../../components/dashboard/layouts/layout/full-layout';
 import ChildPageLayout from '../../../../../../components/layouts/page/child-page-layout';
@@ -16,6 +16,9 @@ import {
 import VehicleRegistration from '../../../../../../components/vehicle/vehicle-registration';
 import { InspectionsTable } from '../../../../../../components/vehicle/inspections/InspectionsTable';
 import { InspectionCompletionModal } from '../../../../../../components/vehicle/inspections/InspectionCompletionModal';
+import { RepairRecordsTable } from '../../../../../../components/vehicle/repairs/RepairRecordsTable';
+import { VehicleRepairRecordEntity } from '../../../../../../models/company/vehicle-repair-record.entity';
+import VehicleRepairRecordApi from '../../../../../api/vehicle-repair-record';
 
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
@@ -48,6 +51,9 @@ export default function ViewVehicle({ id }) {
   const [completionInspection, setCompletionInspection] = useState<VehicleInspectionEntity | null>(
     null
   );
+  const [repairs, setRepairs] = useState<VehicleRepairRecordEntity[]>([]);
+  const [repairToDelete, setRepairToDelete] = useState<VehicleRepairRecordEntity | null>(null);
+  const [activeTab, setActiveTab] = useState('inspections');
 
   const backPath = '/dashboard/company/settings/vehicles';
 
@@ -199,6 +205,50 @@ export default function ViewVehicle({ id }) {
     }
   };
 
+  // Fetch repairs
+  useEffectAsync(async () => {
+    if (id) {
+      try {
+        const api = new VehicleRepairRecordApi();
+        const data = await api.list(+id);
+        setRepairs(data);
+      } catch (error) {
+        console.error('Error fetching repairs:', error);
+        toast.error(t('Error loading repairs'));
+      }
+    }
+  }, [id]);
+
+  const onCreateRepairClick = async () => {
+    await router.push(`${router.asPath}/repairs/create`);
+  };
+
+  const onEditRepairClick = async (repairId: number) => {
+    await router.push(`${router.asPath}/repairs/${repairId}/edit`);
+  };
+
+  const onDeleteRepairClick = (repair: VehicleRepairRecordEntity) => {
+    setRepairToDelete(repair);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteRepairConfirm = async () => {
+    if (!repairToDelete) return;
+
+    try {
+      const api = new VehicleRepairRecordApi();
+      await api.remove(+id, repairToDelete.id);
+      setRepairs(repairs.filter((r) => r.id !== repairToDelete.id));
+      toast.success(t('Repair record deleted successfully'));
+    } catch (error) {
+      console.error('Error deleting repair record:', error);
+      toast.error(t('Error deleting repair record'));
+    } finally {
+      setShowDeleteModal(false);
+      setRepairToDelete(null);
+    }
+  };
+
   return (
     <ChildPageLayout
       backPath={backPath}
@@ -296,15 +346,69 @@ export default function ViewVehicle({ id }) {
         <Row>
           <Col>
             <BaseViewCard>
-              <ViewSection title={t('Inspections')}>
-                <InspectionsTable
-                  inspections={inspections}
-                  onCreateInspection={onCreateInspectionClick}
-                  onEditInspection={onEditInspectionClick}
-                  onDeleteInspection={onDeleteInspectionClick}
-                  onCompleteInspection={setCompletionInspection}
-                />
-              </ViewSection>
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <ButtonGroup>
+                  <ToggleButton
+                    id="inspections-tab"
+                    type="radio"
+                    variant="outline-primary"
+                    name="tab"
+                    value="inspections"
+                    checked={activeTab === 'inspections'}
+                    onChange={(e) => setActiveTab(e.currentTarget.value)}
+                    className={activeTab === 'inspections' ? 'tab-button active' : 'tab-button'}
+                  >
+                    {t('Inspections')}
+                  </ToggleButton>
+                  <ToggleButton
+                    id="repairs-tab"
+                    type="radio"
+                    variant="outline-primary"
+                    name="tab"
+                    value="repairs"
+                    checked={activeTab === 'repairs'}
+                    onChange={(e) => setActiveTab(e.currentTarget.value)}
+                    className={activeTab === 'repairs' ? 'tab-button active' : 'tab-button'}
+                  >
+                    {t('Repair Receipts')}
+                  </ToggleButton>
+                </ButtonGroup>
+              </div>
+
+              {activeTab === 'inspections' ? (
+                <>
+                  <ViewSection title={t('Vehicle Inspections')}>
+                    <p className="text-muted mb-4">
+                      {t(
+                        'Track and manage all vehicle inspections, including safety checks, maintenance inspections, and roadside inspections.'
+                      )}
+                    </p>
+                    <InspectionsTable
+                      inspections={inspections}
+                      onCreateInspection={onCreateInspectionClick}
+                      onEditInspection={onEditInspectionClick}
+                      onDeleteInspection={onDeleteInspectionClick}
+                      onCompleteInspection={setCompletionInspection}
+                    />
+                  </ViewSection>
+                </>
+              ) : (
+                <>
+                  <ViewSection title={t('Repair History')}>
+                    <p className="text-muted mb-4">
+                      {t(
+                        'View and manage vehicle repair records, including scheduled maintenance, emergency repairs, and warranty work.'
+                      )}
+                    </p>
+                    <RepairRecordsTable
+                      repairs={repairs}
+                      onCreateRepair={onCreateRepairClick}
+                      onEditRepair={onEditRepairClick}
+                      onDeleteRepair={onDeleteRepairClick}
+                    />
+                  </ViewSection>
+                </>
+              )}
             </BaseViewCard>
           </Col>
         </Row>
@@ -320,7 +424,15 @@ export default function ViewVehicle({ id }) {
         show={showDeleteModal}
         title="Confirm Delete"
         message={
-          inspectionToDelete && (
+          repairToDelete ? (
+            <p>
+              {t('Are you sure you want to delete this repair record?')}
+              <br />
+              <strong>
+                {t(`RepairType.${repairToDelete.repair_type}`)} - {repairToDelete.description}
+              </strong>
+            </p>
+          ) : inspectionToDelete ? (
             <p>
               {t('Are you sure you want to delete this inspection?')}
               <br />
@@ -329,10 +441,14 @@ export default function ViewVehicle({ id }) {
                 {t(`InspectionStatus.${inspectionToDelete.status}`)}
               </strong>
             </p>
-          )
+          ) : null
         }
-        onConfirm={handleDeleteInspectionConfirm}
-        onCancel={handleDeleteInspectionCancel}
+        onConfirm={repairToDelete ? handleDeleteRepairConfirm : handleDeleteInspectionConfirm}
+        onCancel={() => {
+          setShowDeleteModal(false);
+          setRepairToDelete(null);
+          setInspectionToDelete(null);
+        }}
       />
     </ChildPageLayout>
   );

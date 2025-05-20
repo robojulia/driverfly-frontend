@@ -1,0 +1,42 @@
+.repairsTable {
+  margin-bottom: 2rem;
+}
+
+.sortableHeader {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortableHeader:hover {
+  background-color: #f8f9fa;
+}
+
+.repairChip {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.scheduled {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.emergency {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.warranty {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+.recall {
+  background-color: #fff3e0;
+  color: #f57c00;
+}

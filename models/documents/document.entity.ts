@@ -9,6 +9,7 @@ export enum DocumentType {
   MEDICAL_CARD = 'MEDICAL_CARD',
   REGISTRATION = 'REGISTRATION',
   INSPECTION = 'INSPECTION',
+  REPAIR = 'REPAIR',
 }
 
 export class DocumentEntity {
