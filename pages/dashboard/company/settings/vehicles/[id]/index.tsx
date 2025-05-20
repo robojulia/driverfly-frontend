@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { Button, ButtonGroup, Row, Col, Table } from 'react-bootstrap';
+import { Button, ButtonGroup, Row, Col, Table, Modal, Form } from 'react-bootstrap';
 import {
   Pencil,
   Plus,
@@ -8,6 +8,9 @@ import {
   ExclamationTriangleFill,
   ArrowUp,
   ArrowDown,
+  CheckCircleFill,
+  XCircleFill,
+  FileEarmarkArrowUp,
 } from 'react-bootstrap-icons';
 import FullLayout from '../../../../../../components/dashboard/layouts/layout/full-layout';
 import ChildPageLayout from '../../../../../../components/layouts/page/child-page-layout';
@@ -33,7 +36,10 @@ import VehicleApi from '../../../../../api/vehicle';
 import VehicleInspectionApi from '../../../../../api/vehicle-inspection';
 import EmployeeApi from '../../../../../api/employee';
 import { VehicleEntity } from '../../../../../../models/company/vehicle.entity';
-import { VehicleInspectionEntity } from '../../../../../../models/company/vehicle-inspection.entity';
+import {
+  VehicleInspectionEntity,
+  InspectionStatus,
+} from '../../../../../../models/company/vehicle-inspection.entity';
 import { EmployeeEntity } from '../../../../../../models/employee/employee.entity';
 import { VehicleTrailerType } from '../../../../../../enums/vehicles/vehicle-trailer-type.enum';
 import { VehicleType } from '../../../../../../enums/vehicles/vehicle-type.enum';
@@ -41,6 +47,9 @@ import { VehicleAccessory } from '../../../../../../enums/vehicles/vehicle-acces
 import { EmployeeStatus } from '../../../../../../enums/applicants/employee-status.enum';
 import styles from '../../../../../../styles/inspections.module.css';
 import classNames from 'classnames';
+import FileInput from '../../../../../../components/forms/file-input';
+import { DocumentType } from '../../../../../../models/documents/document.entity';
+import { useFormik } from 'formik';
 
 export default function ViewVehicle({ id }) {
   const router = useRouter();
@@ -55,6 +64,41 @@ export default function ViewVehicle({ id }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [completionInspection, setCompletionInspection] = useState<VehicleInspectionEntity | null>(
+    null
+  );
+
+  const formik = useFormik({
+    initialValues: {
+      status: '',
+      notes: '',
+      inspection_document: null as any,
+    },
+    onSubmit: async (values) => {
+      if (!completionInspection) return;
+
+      try {
+        const api = new VehicleInspectionApi();
+        const updatedInspection = await api.update(id, completionInspection.id, {
+          ...completionInspection,
+          status: values.status as InspectionStatus,
+          notes: values.notes,
+          inspection_date: new Date(),
+          inspection_document: values.inspection_document,
+        });
+
+        setInspections(
+          inspections.map((i) => (i.id === updatedInspection.id ? updatedInspection : i))
+        );
+        toast.success(t('Inspection completed successfully'));
+        setCompletionInspection(null);
+      } catch (error) {
+        console.error('Error completing inspection:', error);
+        toast.error(t('Error completing inspection'));
+      }
+    },
+    enableReinitialize: true,
+  });
 
   const backPath = '/dashboard/company/settings/vehicles';
 
@@ -266,6 +310,25 @@ export default function ViewVehicle({ id }) {
     });
   };
 
+  const handleQuickComplete = (inspection: VehicleInspectionEntity) => {
+    setCompletionInspection(inspection);
+    formik.resetForm({
+      values: {
+        status: '',
+        notes: inspection.notes || '',
+        inspection_document: inspection.inspection_document || null,
+      },
+    });
+  };
+
+  const handleStatusChange = (status: string) => {
+    formik.setFieldValue('status', status);
+  };
+
+  const canCompleteInspection = (status: string) => {
+    return status === InspectionStatus.PENDING || status === InspectionStatus.SCHEDULED;
+  };
+
   return (
     <ChildPageLayout
       backPath={backPath}
@@ -457,6 +520,17 @@ export default function ViewVehicle({ id }) {
                                 <PenFill /> {t('EDIT')}
                               </div>
                             </Button>
+                            {canCompleteInspection(inspection.status) && (
+                              <Button
+                                variant="success"
+                                size="sm"
+                                onClick={() => handleQuickComplete(inspection)}
+                              >
+                                <div className="d-flex align-items-center gap-1">
+                                  <CheckCircleFill /> {t('Complete')}
+                                </div>
+                              </Button>
+                            )}
                             <Button
                               variant="danger"
                               size="sm"
@@ -477,6 +551,140 @@ export default function ViewVehicle({ id }) {
           </Col>
         </Row>
       </div>
+
+      <Modal
+        show={!!completionInspection}
+        onHide={() => {
+          setCompletionInspection(null);
+          formik.resetForm();
+        }}
+        centered
+        className="completion-modal"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>{t('Complete Inspection')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="inspection-summary mb-4">
+            <div className="d-flex align-items-center gap-2 mb-3">
+              <span
+                className={getInspectionTypeChipClass(completionInspection?.inspection_type || '')}
+              >
+                {completionInspection &&
+                  t(`InspectionType.${completionInspection.inspection_type}`)}
+              </span>
+              {completionInspection?.due_date && (
+                <span className="text-muted">
+                  {t('Due')}: {formatDate(completionInspection.due_date)}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="completion-actions mb-4">
+            <div className="d-flex gap-3 mb-4">
+              <Button
+                variant={formik.values.status === 'Passed' ? 'success' : 'outline-success'}
+                className="flex-grow-1 py-3 position-relative"
+                onClick={() => handleStatusChange('Passed')}
+              >
+                <div className="d-flex flex-column align-items-center">
+                  <CheckCircleFill size={24} className="mb-2" />
+                  <span>{t('Pass')}</span>
+                </div>
+                {formik.values.status === 'Passed' && (
+                  <div className="position-absolute top-0 end-0 p-2">
+                    <CheckCircleFill size={16} />
+                  </div>
+                )}
+              </Button>
+              <Button
+                variant={formik.values.status === 'Failed' ? 'danger' : 'outline-danger'}
+                className="flex-grow-1 py-3 position-relative"
+                onClick={() => handleStatusChange('Failed')}
+              >
+                <div className="d-flex flex-column align-items-center">
+                  <XCircleFill size={24} className="mb-2" />
+                  <span>{t('Fail')}</span>
+                </div>
+                {formik.values.status === 'Failed' && (
+                  <div className="position-absolute top-0 end-0 p-2">
+                    <CheckCircleFill size={16} />
+                  </div>
+                )}
+              </Button>
+            </div>
+
+            <Form.Group className="mb-3">
+              <Form.Label>{t('Notes')}</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                {...formik.getFieldProps('notes')}
+                placeholder={t('Add inspection notes...')}
+              />
+            </Form.Group>
+
+            <FileInput
+              className="mb-3"
+              label="Inspection Document"
+              name="inspection_document"
+              accept=".pdf,image/*"
+              documentType={DocumentType.INSPECTION}
+              formik={formik}
+              allowedSizeInByte={3145728}
+              allowedTypesFriendlyName="PDF or image format, under 3MB"
+            />
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setCompletionInspection(null);
+              formik.resetForm();
+            }}
+          >
+            {t('Cancel')}
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => formik.handleSubmit()}
+            disabled={!formik.values.status}
+          >
+            {t('Complete Inspection')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <style>{`
+        .completion-modal .modal-content {
+          border-radius: 12px;
+        }
+
+        .completion-actions .btn {
+          border-width: 2px;
+          transition: all 0.2s ease;
+        }
+
+        .completion-actions .btn:hover {
+          transform: translateY(-2px);
+        }
+
+        .inspection-summary {
+          padding: 16px;
+          background-color: #f8f9fa;
+          border-radius: 8px;
+        }
+
+        .completion-status-button {
+          min-height: 80px;
+        }
+
+        .completion-status-button.selected {
+          box-shadow: 0 0 0 2px var(--bs-primary);
+        }
+      `}</style>
 
       <ConfirmationModal
         show={showDeleteModal}

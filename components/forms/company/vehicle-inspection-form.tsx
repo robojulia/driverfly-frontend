@@ -31,12 +31,23 @@ export function VehicleInspectionForm(props: VehicleInspectionFormProps) {
   const action = !!entity?.id ? 'Forms.UPDATED' : 'Forms.CREATE/ADD';
 
   const form = useFormik({
-    initialValues: entity || new VehicleInspectionEntity(),
+    initialValues: {
+      ...(entity || new VehicleInspectionEntity()),
+      // Ensure inspection_document is explicitly set in initial values
+      inspection_document: entity?.inspection_document || null,
+    },
     enableReinitialize: true,
     validationSchema: VehicleInspectionEntity.yupSchema(),
-    onSubmit: async (dto) => {
+    onSubmit: async (values) => {
       const api = new VehicleInspectionApi();
       try {
+        // Create a clean DTO that explicitly handles the document field
+        const dto = {
+          ...values,
+          // Ensure undefined becomes null
+          inspection_document: values.inspection_document || null,
+        };
+
         let inspection = null;
         if (entity?.id) {
           inspection = await api.update(vehicleId, entity.id, dto);
@@ -142,7 +153,14 @@ export function VehicleInspectionForm(props: VehicleInspectionFormProps) {
                 name="inspection_document"
                 accept=".pdf,image/*"
                 documentType={DocumentType.INSPECTION}
-                formik={form}
+                formik={{
+                  ...form,
+                  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => {
+                    // Explicitly handle document removal by setting to null
+                    const finalValue = value === undefined ? null : value;
+                    return form.setFieldValue(field, finalValue, shouldValidate);
+                  },
+                }}
                 allowedSizeInByte={3145728}
                 allowedTypesFriendlyName="PDF or image format, under 3MB"
               />
