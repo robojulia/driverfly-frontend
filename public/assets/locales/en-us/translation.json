@@ -673,6 +673,7 @@
   "misdemeanor": "Misdemeanor",
   "infraction": "Infraction",
   "LOGIN": "Login",
+  "LOGGING_IN": "Logging in...",
   "LOGOUT": "Logout",
   "DON'T_HAVE_AN_ACCOUNT_MAKE_ONE": "Don't have an account? Make one",
   "HERE": "here",
@@ -1451,7 +1452,9 @@
     "UPDATE_VEHICLE": "Update Vehicle",
     "CREATE_VEHICLE": "Create Vehicle",
     "CREATE_INSPECTION": "Create Inspection",
-    "UPDATE_INSPECTION": "Update Inspection"
+    "UPDATE_INSPECTION": "Update Inspection",
+    "CREATE_REPAIR_RECORD": "Create Repair Record",
+    "UPDATE_REPAIR_RECORD": "Update Repair Record"
   },
   "VEHICLE": "Vehicle",
   "SELECT_UNIQUE_VEHICLE_MESSAGE": "Can not add duplicate Vehicle",
@@ -2618,6 +2621,7 @@
   "ASSIGNED_EMPLOYEE": "Assigned Employee",
   "OTHER_DETAILS": "Other Details",
   "IS_PUBLIC": "Is Public",
+  "REPAIR_RECORD": "Repair Receipt",
   "VEHICLE_REGISTRATION_EXPIRED": "Vehicle registration has expired!",
   "VEHICLE_REGISTRATION_EXPIRES_IN_DAYS": "Vehicle registration expires in {{days}} days!",
   "VEHICLE_REGISTRATION_WILL_EXPIRE_IN_DAYS": "Vehicle registration will expire in {{days}} days",
@@ -2633,5 +2637,11 @@
     "Pending": "Pending",
     "Cancelled": "Cancelled",
     "Scheduled": "Scheduled"
+  },
+  "RepairType": {
+    "Scheduled": "Scheduled",
+    "Warranty": "Warranty",
+    "Recall": "Recall",
+    "Emergency": "Emergency"
   }
 }

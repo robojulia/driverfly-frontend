@@ -8,6 +8,7 @@ import {
   ArrowUp,
   ArrowDown,
   ExclamationTriangleFill,
+  ClipboardX,
 } from 'react-bootstrap-icons';
 import { useTranslation } from '../../../hooks/use-translation';
 import {
@@ -131,110 +132,125 @@ export const InspectionsTable: React.FC<InspectionsTableProps> = ({
           <Plus /> {t('Add Inspection')}
         </Button>
       </div>
-      <Table striped bordered hover className={`custom-table ${styles.inspectionsTable}`}>
-        <thead>
-          <tr>
-            <th onClick={() => handleSort('inspection_type')} className={styles.sortableHeader}>
-              <div className="d-flex align-items-center gap-2">
-                {t('Type')}
-                {getSortIcon('inspection_type')}
-              </div>
-            </th>
-            <th onClick={() => handleSort('due_date')} className={styles.sortableHeader}>
-              <div className="d-flex align-items-center gap-2">
-                {t('Due Date')}
-                {getSortIcon('due_date')}
-              </div>
-            </th>
-            <th onClick={() => handleSort('status')} className={styles.sortableHeader}>
-              <div className="d-flex align-items-center gap-2">
-                {t('Status')}
-                {getSortIcon('status')}
-              </div>
-            </th>
-            <th onClick={() => handleSort('inspection_date')} className={styles.sortableHeader}>
-              <div className="d-flex align-items-center gap-2">
-                {t('Inspection Date')}
-                {getSortIcon('inspection_date')}
-              </div>
-            </th>
-            <th>{t('Document')}</th>
-            <th>{t('Notes')}</th>
-            <th>{t('Actions')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {getSortedInspections().map((inspection) => (
-            <tr key={inspection.id} className={getRowClass(inspection)}>
-              <td>
-                <span className={getInspectionTypeChipClass(inspection.inspection_type)}>
-                  {t(`InspectionType.${inspection.inspection_type}`)}
-                </span>
-              </td>
-              <td>
-                {isDueDatePassed(inspection.due_date) ? (
-                  <div className={styles.dueDateDanger}>
-                    {formatDate(inspection.due_date)}
-                    <ExclamationTriangleFill />
-                  </div>
-                ) : (
-                  formatDate(inspection.due_date)
-                )}
-              </td>
-              <td>
-                <span className={getInspectionStatusChipClass(inspection.status)}>
-                  {t(`InspectionStatus.${inspection.status}`)}
-                </span>
-              </td>
-              <td>{formatDate(inspection.inspection_date)}</td>
-              <td>
-                {inspection.inspection_document ? (
-                  <a
-                    href={inspection.inspection_document.path}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary text-decoration-none"
-                  >
-                    {inspection.inspection_document.name || 'inspection_document.pdf'}
-                  </a>
-                ) : (
-                  <span className="text-muted">{t('No document')}</span>
-                )}
-              </td>
-              <td>{inspection.notes}</td>
-              <td>
-                <div className="d-flex gap-2">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => onEditInspection(inspection.id)}
-                  >
-                    <div className="d-flex align-items-center gap-1">
-                      <PenFill /> {t('EDIT')}
+      {inspections.length === 0 ? (
+        <div className="text-center py-5 bg-light rounded">
+          <ClipboardX size={48} className="text-muted mb-3" />
+          <h5 className="text-muted mb-2">{t('No Inspections Found')}</h5>
+          <p className="text-muted mb-3">{t('No inspection records have been added yet.')}</p>
+          <Button variant="primary" onClick={onCreateInspection}>
+            <Plus /> {t('Add Inspection')}
+          </Button>
+        </div>
+      ) : (
+        <Table striped bordered hover className={`custom-table ${styles.inspectionsTable}`}>
+          <thead>
+            <tr>
+              <th onClick={() => handleSort('inspection_type')} className={styles.sortableHeader}>
+                <div className="d-flex align-items-center gap-2">
+                  {t('Type')}
+                  {getSortIcon('inspection_type')}
+                </div>
+              </th>
+              <th onClick={() => handleSort('due_date')} className={styles.sortableHeader}>
+                <div className="d-flex align-items-center gap-2">
+                  {t('Due Date')}
+                  {getSortIcon('due_date')}
+                </div>
+              </th>
+              <th onClick={() => handleSort('status')} className={styles.sortableHeader}>
+                <div className="d-flex align-items-center gap-2">
+                  {t('Status')}
+                  {getSortIcon('status')}
+                </div>
+              </th>
+              <th onClick={() => handleSort('inspection_date')} className={styles.sortableHeader}>
+                <div className="d-flex align-items-center gap-2">
+                  {t('Inspection Date')}
+                  {getSortIcon('inspection_date')}
+                </div>
+              </th>
+              <th>{t('Document')}</th>
+              <th>{t('Notes')}</th>
+              <th>{t('Actions')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {getSortedInspections().map((inspection) => (
+              <tr key={inspection.id} className={getRowClass(inspection)}>
+                <td>
+                  <span className={getInspectionTypeChipClass(inspection.inspection_type)}>
+                    {t(`InspectionType.${inspection.inspection_type}`)}
+                  </span>
+                </td>
+                <td>
+                  {isDueDatePassed(inspection.due_date) ? (
+                    <div className={styles.dueDateDanger}>
+                      {formatDate(inspection.due_date)}
+                      <ExclamationTriangleFill />
                     </div>
-                  </Button>
-                  {canCompleteInspection(inspection.status) && (
+                  ) : (
+                    formatDate(inspection.due_date)
+                  )}
+                </td>
+                <td>
+                  <span className={getInspectionStatusChipClass(inspection.status)}>
+                    {t(`InspectionStatus.${inspection.status}`)}
+                  </span>
+                </td>
+                <td>{formatDate(inspection.inspection_date)}</td>
+                <td>
+                  {inspection.inspection_document ? (
+                    <a
+                      href={inspection.inspection_document.path}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary text-decoration-none"
+                    >
+                      {inspection.inspection_document.name || 'inspection_document.pdf'}
+                    </a>
+                  ) : (
+                    <span className="text-muted">{t('No document')}</span>
+                  )}
+                </td>
+                <td>{inspection.notes}</td>
+                <td>
+                  <div className="d-flex gap-2">
                     <Button
-                      variant="success"
+                      variant="secondary"
                       size="sm"
-                      onClick={() => onCompleteInspection(inspection)}
+                      onClick={() => onEditInspection(inspection.id)}
                     >
                       <div className="d-flex align-items-center gap-1">
-                        <CheckCircleFill /> {t('Complete')}
+                        <PenFill /> {t('EDIT')}
                       </div>
                     </Button>
-                  )}
-                  <Button variant="danger" size="sm" onClick={() => onDeleteInspection(inspection)}>
-                    <div className="d-flex align-items-center gap-1">
-                      <TrashFill /> {t('DELETE')}
-                    </div>
-                  </Button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+                    {canCompleteInspection(inspection.status) && (
+                      <Button
+                        variant="success"
+                        size="sm"
+                        onClick={() => onCompleteInspection(inspection)}
+                      >
+                        <div className="d-flex align-items-center gap-1">
+                          <CheckCircleFill /> {t('Complete')}
+                        </div>
+                      </Button>
+                    )}
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => onDeleteInspection(inspection)}
+                    >
+                      <div className="d-flex align-items-center gap-1">
+                        <TrashFill /> {t('DELETE')}
+                      </div>
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
     </>
   );
 };
