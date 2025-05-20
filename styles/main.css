@@ -166,8 +166,8 @@ body {
 /* Bootstrap Table Overrides */
 .table {
   --bs-table-bg: transparent;
-  --bs-table-striped-bg: transparent;
-  --bs-table-striped-color: inherit;
+  --bs-table-striped-bg: transparent !important;
+  --bs-table-striped-color: inherit !important;
   --bs-table-active-bg: transparent;
   --bs-table-active-color: inherit;
   --bs-table-hover-bg: transparent;
@@ -222,7 +222,6 @@ body {
 }
 
 .table.custom-table thead th {
-  background-color: #f5f5f5 !important;
   border-bottom: 2px solid #dee2e6;
   font-weight: 600;
   padding: 12px 16px;

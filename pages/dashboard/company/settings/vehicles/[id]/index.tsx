@@ -1,17 +1,6 @@
 import { toast } from 'react-toastify';
-import { Button, ButtonGroup, Row, Col, Table, Modal, Form } from 'react-bootstrap';
-import {
-  Pencil,
-  Plus,
-  PenFill,
-  TrashFill,
-  ExclamationTriangleFill,
-  ArrowUp,
-  ArrowDown,
-  CheckCircleFill,
-  XCircleFill,
-  FileEarmarkArrowUp,
-} from 'react-bootstrap-icons';
+import { Button, ButtonGroup, Row, Col } from 'react-bootstrap';
+import { Pencil, TrashFill } from 'react-bootstrap-icons';
 import FullLayout from '../../../../../../components/dashboard/layouts/layout/full-layout';
 import ChildPageLayout from '../../../../../../components/layouts/page/child-page-layout';
 import { DeleteButton } from '../../../../../../components/buttons/delete-button';
@@ -25,6 +14,8 @@ import {
   ChipList,
 } from '../../../../../../components/view/base-view-card';
 import VehicleRegistration from '../../../../../../components/vehicle/vehicle-registration';
+import { InspectionsTable } from '../../../../../../components/vehicle/inspections/InspectionsTable';
+import { InspectionCompletionModal } from '../../../../../../components/vehicle/inspections/InspectionCompletionModal';
 
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
@@ -36,20 +27,12 @@ import VehicleApi from '../../../../../api/vehicle';
 import VehicleInspectionApi from '../../../../../api/vehicle-inspection';
 import EmployeeApi from '../../../../../api/employee';
 import { VehicleEntity } from '../../../../../../models/company/vehicle.entity';
-import {
-  VehicleInspectionEntity,
-  InspectionStatus,
-} from '../../../../../../models/company/vehicle-inspection.entity';
+import { VehicleInspectionEntity } from '../../../../../../models/company/vehicle-inspection.entity';
 import { EmployeeEntity } from '../../../../../../models/employee/employee.entity';
 import { VehicleTrailerType } from '../../../../../../enums/vehicles/vehicle-trailer-type.enum';
 import { VehicleType } from '../../../../../../enums/vehicles/vehicle-type.enum';
 import { VehicleAccessory } from '../../../../../../enums/vehicles/vehicle-accessory.enum';
 import { EmployeeStatus } from '../../../../../../enums/applicants/employee-status.enum';
-import styles from '../../../../../../styles/inspections.module.css';
-import classNames from 'classnames';
-import FileInput from '../../../../../../components/forms/file-input';
-import { DocumentType } from '../../../../../../models/documents/document.entity';
-import { useFormik } from 'formik';
 
 export default function ViewVehicle({ id }) {
   const router = useRouter();
@@ -62,43 +45,9 @@ export default function ViewVehicle({ id }) {
     null
   );
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [sortField, setSortField] = useState<string | null>(null);
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [completionInspection, setCompletionInspection] = useState<VehicleInspectionEntity | null>(
     null
   );
-
-  const formik = useFormik({
-    initialValues: {
-      status: '',
-      notes: '',
-      inspection_document: null as any,
-    },
-    onSubmit: async (values) => {
-      if (!completionInspection) return;
-
-      try {
-        const api = new VehicleInspectionApi();
-        const updatedInspection = await api.update(id, completionInspection.id, {
-          ...completionInspection,
-          status: values.status as InspectionStatus,
-          notes: values.notes,
-          inspection_date: new Date(),
-          inspection_document: values.inspection_document,
-        });
-
-        setInspections(
-          inspections.map((i) => (i.id === updatedInspection.id ? updatedInspection : i))
-        );
-        toast.success(t('Inspection completed successfully'));
-        setCompletionInspection(null);
-      } catch (error) {
-        console.error('Error completing inspection:', error);
-        toast.error(t('Error completing inspection'));
-      }
-    },
-    enableReinitialize: true,
-  });
 
   const backPath = '/dashboard/company/settings/vehicles';
 
@@ -226,107 +175,28 @@ export default function ViewVehicle({ id }) {
     setInspectionToDelete(null);
   };
 
-  const getInspectionTypeChipClass = (type: string) => {
-    return classNames(styles.inspectionChip, styles.typeChip, {
-      [styles.safety]: type === 'Safety',
-      [styles.maintenance]: type === 'Maintenance',
-      [styles.roadside]: type === 'Roadside',
-    });
-  };
+  const handleCompleteInspection = async (values) => {
+    if (!completionInspection) return;
 
-  const getInspectionStatusChipClass = (status: string) => {
-    return classNames(styles.inspectionChip, styles.statusChip, {
-      [styles.passed]: status === 'Passed',
-      [styles.failed]: status === 'Failed',
-      [styles.pending]: status === 'Pending',
-      [styles.scheduled]: status === 'Scheduled',
-    });
-  };
+    try {
+      const api = new VehicleInspectionApi();
+      const updatedInspection = await api.update(id, completionInspection.id, {
+        ...completionInspection,
+        status: values.status,
+        notes: values.notes,
+        inspection_date: new Date(),
+        inspection_document: values.inspection_document,
+      });
 
-  const getRowClass = (inspection: VehicleInspectionEntity) => {
-    if (!inspection.due_date) return '';
-
-    if (inspection.status === 'Passed') return '';
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const due = new Date(inspection.due_date);
-    due.setHours(0, 0, 0, 0);
-    const diffDays = Math.ceil((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diffDays < 0) {
-      return styles.dangerRow;
-    } else if (diffDays <= 30) {
-      return styles.warningRow;
+      setInspections(
+        inspections.map((i) => (i.id === updatedInspection.id ? updatedInspection : i))
+      );
+      toast.success(t('Inspection completed successfully'));
+    } catch (error) {
+      console.error('Error completing inspection:', error);
+      toast.error(t('Error completing inspection'));
+      throw error; // Re-throw to trigger error handling in modal
     }
-    return '';
-  };
-
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return '';
-    return new Date(date).toLocaleDateString();
-  };
-
-  const isDueDatePassed = (dueDate: Date | undefined) => {
-    if (!dueDate) return false;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const due = new Date(dueDate);
-    due.setHours(0, 0, 0, 0);
-    return due.getTime() < today.getTime();
-  };
-
-  const handleSort = (field: string) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  };
-
-  const getSortIcon = (field: string) => {
-    if (sortField !== field) return null;
-    return sortDirection === 'asc' ? <ArrowUp size={12} /> : <ArrowDown size={12} />;
-  };
-
-  const getSortedInspections = () => {
-    if (!sortField) return inspections;
-
-    return [...inspections].sort((a, b) => {
-      if (sortField === 'due_date' || sortField === 'inspection_date') {
-        const dateA = a[sortField] ? new Date(a[sortField]).getTime() : 0;
-        const dateB = b[sortField] ? new Date(b[sortField]).getTime() : 0;
-        return sortDirection === 'asc' ? dateA - dateB : dateB - dateA;
-      }
-      if (sortField === 'status' || sortField === 'inspection_type') {
-        const valueA = sortField === 'inspection_type' ? a.inspection_type : a.status;
-        const valueB = sortField === 'inspection_type' ? b.inspection_type : b.status;
-        return sortDirection === 'asc'
-          ? valueA.localeCompare(valueB)
-          : valueB.localeCompare(valueA);
-      }
-      return 0;
-    });
-  };
-
-  const handleQuickComplete = (inspection: VehicleInspectionEntity) => {
-    setCompletionInspection(inspection);
-    formik.resetForm({
-      values: {
-        status: '',
-        notes: inspection.notes || '',
-        inspection_document: inspection.inspection_document || null,
-      },
-    });
-  };
-
-  const handleStatusChange = (status: string) => {
-    formik.setFieldValue('status', status);
-  };
-
-  const canCompleteInspection = (status: string) => {
-    return status === InspectionStatus.PENDING || status === InspectionStatus.SCHEDULED;
   };
 
   return (
@@ -427,264 +297,24 @@ export default function ViewVehicle({ id }) {
           <Col>
             <BaseViewCard>
               <ViewSection title={t('Inspections')}>
-                <div className="d-flex justify-content-end mb-3">
-                  <Button onClick={onCreateInspectionClick}>
-                    <Plus /> {t('Add Inspection')}
-                  </Button>
-                </div>
-                <Table striped bordered hover className={`custom-table ${styles.inspectionsTable}`}>
-                  <thead>
-                    <tr>
-                      <th
-                        onClick={() => handleSort('inspection_type')}
-                        className={styles.sortableHeader}
-                      >
-                        <div className="d-flex align-items-center gap-2">
-                          {t('Type')}
-                          {getSortIcon('inspection_type')}
-                        </div>
-                      </th>
-                      <th onClick={() => handleSort('due_date')} className={styles.sortableHeader}>
-                        <div className="d-flex align-items-center gap-2">
-                          {t('Due Date')}
-                          {getSortIcon('due_date')}
-                        </div>
-                      </th>
-                      <th onClick={() => handleSort('status')} className={styles.sortableHeader}>
-                        <div className="d-flex align-items-center gap-2">
-                          {t('Status')}
-                          {getSortIcon('status')}
-                        </div>
-                      </th>
-                      <th
-                        onClick={() => handleSort('inspection_date')}
-                        className={styles.sortableHeader}
-                      >
-                        <div className="d-flex align-items-center gap-2">
-                          {t('Inspection Date')}
-                          {getSortIcon('inspection_date')}
-                        </div>
-                      </th>
-                      <th>{t('Document')}</th>
-                      <th>{t('Notes')}</th>
-                      <th>{t('Actions')}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {getSortedInspections().map((inspection) => (
-                      <tr key={inspection.id} className={getRowClass(inspection)}>
-                        <td>
-                          <span className={getInspectionTypeChipClass(inspection.inspection_type)}>
-                            {t(`InspectionType.${inspection.inspection_type}`)}
-                          </span>
-                        </td>
-                        <td>
-                          {isDueDatePassed(inspection.due_date) ? (
-                            <div className={styles.dueDateDanger}>
-                              {formatDate(inspection.due_date)}
-                              <ExclamationTriangleFill />
-                            </div>
-                          ) : (
-                            formatDate(inspection.due_date)
-                          )}
-                        </td>
-                        <td>
-                          <span className={getInspectionStatusChipClass(inspection.status)}>
-                            {t(`InspectionStatus.${inspection.status}`)}
-                          </span>
-                        </td>
-                        <td>{formatDate(inspection.inspection_date)}</td>
-                        <td>
-                          {inspection.inspection_document ? (
-                            <a
-                              href={inspection.inspection_document.path}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-primary text-decoration-none"
-                            >
-                              {inspection.inspection_document.name || 'inspection_document.pdf'}
-                            </a>
-                          ) : (
-                            <span className="text-muted">{t('No document')}</span>
-                          )}
-                        </td>
-                        <td>{inspection.notes}</td>
-                        <td>
-                          <div className="d-flex gap-2">
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              onClick={() => onEditInspectionClick(inspection.id)}
-                            >
-                              <div className="d-flex align-items-center gap-1">
-                                <PenFill /> {t('EDIT')}
-                              </div>
-                            </Button>
-                            {canCompleteInspection(inspection.status) && (
-                              <Button
-                                variant="success"
-                                size="sm"
-                                onClick={() => handleQuickComplete(inspection)}
-                              >
-                                <div className="d-flex align-items-center gap-1">
-                                  <CheckCircleFill /> {t('Complete')}
-                                </div>
-                              </Button>
-                            )}
-                            <Button
-                              variant="danger"
-                              size="sm"
-                              onClick={() => onDeleteInspectionClick(inspection)}
-                            >
-                              <div className="d-flex align-items-center gap-1">
-                                <TrashFill /> {t('DELETE')}
-                              </div>
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
+                <InspectionsTable
+                  inspections={inspections}
+                  onCreateInspection={onCreateInspectionClick}
+                  onEditInspection={onEditInspectionClick}
+                  onDeleteInspection={onDeleteInspectionClick}
+                  onCompleteInspection={setCompletionInspection}
+                />
               </ViewSection>
             </BaseViewCard>
           </Col>
         </Row>
       </div>
 
-      <Modal
-        show={!!completionInspection}
-        onHide={() => {
-          setCompletionInspection(null);
-          formik.resetForm();
-        }}
-        centered
-        className="completion-modal"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>{t('Complete Inspection')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="inspection-summary mb-4">
-            <div className="d-flex align-items-center gap-2 mb-3">
-              <span
-                className={getInspectionTypeChipClass(completionInspection?.inspection_type || '')}
-              >
-                {completionInspection &&
-                  t(`InspectionType.${completionInspection.inspection_type}`)}
-              </span>
-              {completionInspection?.due_date && (
-                <span className="text-muted">
-                  {t('Due')}: {formatDate(completionInspection.due_date)}
-                </span>
-              )}
-            </div>
-          </div>
-
-          <div className="completion-actions mb-4">
-            <div className="d-flex gap-3 mb-4">
-              <Button
-                variant={formik.values.status === 'Passed' ? 'success' : 'outline-success'}
-                className="flex-grow-1 py-3 position-relative"
-                onClick={() => handleStatusChange('Passed')}
-              >
-                <div className="d-flex flex-column align-items-center">
-                  <CheckCircleFill size={24} className="mb-2" />
-                  <span>{t('Pass')}</span>
-                </div>
-                {formik.values.status === 'Passed' && (
-                  <div className="position-absolute top-0 end-0 p-2">
-                    <CheckCircleFill size={16} />
-                  </div>
-                )}
-              </Button>
-              <Button
-                variant={formik.values.status === 'Failed' ? 'danger' : 'outline-danger'}
-                className="flex-grow-1 py-3 position-relative"
-                onClick={() => handleStatusChange('Failed')}
-              >
-                <div className="d-flex flex-column align-items-center">
-                  <XCircleFill size={24} className="mb-2" />
-                  <span>{t('Fail')}</span>
-                </div>
-                {formik.values.status === 'Failed' && (
-                  <div className="position-absolute top-0 end-0 p-2">
-                    <CheckCircleFill size={16} />
-                  </div>
-                )}
-              </Button>
-            </div>
-
-            <Form.Group className="mb-3">
-              <Form.Label>{t('Notes')}</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                {...formik.getFieldProps('notes')}
-                placeholder={t('Add inspection notes...')}
-              />
-            </Form.Group>
-
-            <FileInput
-              className="mb-3"
-              label="Inspection Document"
-              name="inspection_document"
-              accept=".pdf,image/*"
-              documentType={DocumentType.INSPECTION}
-              formik={formik}
-              allowedSizeInByte={3145728}
-              allowedTypesFriendlyName="PDF or image format, under 3MB"
-            />
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setCompletionInspection(null);
-              formik.resetForm();
-            }}
-          >
-            {t('Cancel')}
-          </Button>
-          <Button
-            variant="primary"
-            onClick={() => formik.handleSubmit()}
-            disabled={!formik.values.status}
-          >
-            {t('Complete Inspection')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      <style>{`
-        .completion-modal .modal-content {
-          border-radius: 12px;
-        }
-
-        .completion-actions .btn {
-          border-width: 2px;
-          transition: all 0.2s ease;
-        }
-
-        .completion-actions .btn:hover {
-          transform: translateY(-2px);
-        }
-
-        .inspection-summary {
-          padding: 16px;
-          background-color: #f8f9fa;
-          border-radius: 8px;
-        }
-
-        .completion-status-button {
-          min-height: 80px;
-        }
-
-        .completion-status-button.selected {
-          box-shadow: 0 0 0 2px var(--bs-primary);
-        }
-      `}</style>
+      <InspectionCompletionModal
+        inspection={completionInspection}
+        onClose={() => setCompletionInspection(null)}
+        onComplete={handleCompleteInspection}
+      />
 
       <ConfirmationModal
         show={showDeleteModal}
