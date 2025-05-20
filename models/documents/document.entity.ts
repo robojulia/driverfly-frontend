@@ -8,6 +8,7 @@ export enum DocumentType {
   DRIVER_LICENSE = 'DRIVER_LICENSE',
   MEDICAL_CARD = 'MEDICAL_CARD',
   REGISTRATION = 'REGISTRATION',
+  INSPECTION = 'INSPECTION',
 }
 
 export class DocumentEntity {

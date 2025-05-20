@@ -1,9 +1,10 @@
 import { toast } from 'react-toastify';
 import { Button, ButtonGroup, Row, Col } from 'react-bootstrap';
-import { Pencil } from 'react-bootstrap-icons';
+import { Pencil, TrashFill } from 'react-bootstrap-icons';
 import FullLayout from '../../../../../../components/dashboard/layouts/layout/full-layout';
 import ChildPageLayout from '../../../../../../components/layouts/page/child-page-layout';
 import { DeleteButton } from '../../../../../../components/buttons/delete-button';
+import ConfirmationModal from '../../../../../../components/modals/confirmation-modal';
 import {
   BaseViewCard,
   ViewHeader,
@@ -13,6 +14,8 @@ import {
   ChipList,
 } from '../../../../../../components/view/base-view-card';
 import VehicleRegistration from '../../../../../../components/vehicle/vehicle-registration';
+import { InspectionsTable } from '../../../../../../components/vehicle/inspections/InspectionsTable';
+import { InspectionCompletionModal } from '../../../../../../components/vehicle/inspections/InspectionCompletionModal';
 
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
@@ -21,8 +24,10 @@ import { useTranslation } from '../../../../../../hooks/use-translation';
 import { useAuth } from '../../../../../../hooks/use-auth';
 
 import VehicleApi from '../../../../../api/vehicle';
+import VehicleInspectionApi from '../../../../../api/vehicle-inspection';
 import EmployeeApi from '../../../../../api/employee';
 import { VehicleEntity } from '../../../../../../models/company/vehicle.entity';
+import { VehicleInspectionEntity } from '../../../../../../models/company/vehicle-inspection.entity';
 import { EmployeeEntity } from '../../../../../../models/employee/employee.entity';
 import { VehicleTrailerType } from '../../../../../../enums/vehicles/vehicle-trailer-type.enum';
 import { VehicleType } from '../../../../../../enums/vehicles/vehicle-type.enum';
@@ -34,11 +39,33 @@ export default function ViewVehicle({ id }) {
   const { t } = useTranslation();
   const { user, hasPermission } = useAuth();
   const [vehicle, setVehicle] = useState(new VehicleEntity());
+  const [inspections, setInspections] = useState<VehicleInspectionEntity[]>([]);
   const [assignedEmployee, setAssignedEmployee] = useState<EmployeeEntity | null>(null);
+  const [inspectionToDelete, setInspectionToDelete] = useState<VehicleInspectionEntity | null>(
+    null
+  );
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [completionInspection, setCompletionInspection] = useState<VehicleInspectionEntity | null>(
+    null
+  );
 
   const backPath = '/dashboard/company/settings/vehicles';
 
   const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
+
+  // Fetch inspections
+  useEffectAsync(async () => {
+    if (id) {
+      try {
+        const api = new VehicleInspectionApi();
+        const data = await api.list(+id);
+        setInspections(data);
+      } catch (error) {
+        console.error('Error fetching inspections:', error);
+        toast.error(t('Error loading inspections'));
+      }
+    }
+  }, [id]);
 
   // Fetch employee details if vehicle has current_employee_id
   useEffect(() => {
@@ -111,6 +138,65 @@ export default function ViewVehicle({ id }) {
     return vehicle.trailer_type == VehicleTrailerType.OTHER
       ? vehicle.trailer_type_other
       : (vehicle.trailer_type && t(`VehicleTrailerType.${vehicle.trailer_type}`)) || '';
+  };
+
+  const onCreateInspectionClick = async () => {
+    await router.push(`${router.asPath}/inspections/create`);
+  };
+
+  const onEditInspectionClick = async (inspectionId: number) => {
+    await router.push(`${router.asPath}/inspections/${inspectionId}/edit`);
+  };
+
+  const onDeleteInspectionClick = (inspection: VehicleInspectionEntity) => {
+    setInspectionToDelete(inspection);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteInspectionConfirm = async () => {
+    if (!inspectionToDelete) return;
+
+    try {
+      const api = new VehicleInspectionApi();
+      await api.remove(+id, inspectionToDelete.id);
+      setInspections(inspections.filter((i) => i.id !== inspectionToDelete.id));
+      toast.success(t('Inspection deleted successfully'));
+    } catch (error) {
+      console.error('Error deleting inspection:', error);
+      toast.error(t('Error deleting inspection'));
+    } finally {
+      setShowDeleteModal(false);
+      setInspectionToDelete(null);
+    }
+  };
+
+  const handleDeleteInspectionCancel = () => {
+    setShowDeleteModal(false);
+    setInspectionToDelete(null);
+  };
+
+  const handleCompleteInspection = async (values) => {
+    if (!completionInspection) return;
+
+    try {
+      const api = new VehicleInspectionApi();
+      const updatedInspection = await api.update(id, completionInspection.id, {
+        ...completionInspection,
+        status: values.status,
+        notes: values.notes,
+        inspection_date: new Date(),
+        inspection_document: values.inspection_document,
+      });
+
+      setInspections(
+        inspections.map((i) => (i.id === updatedInspection.id ? updatedInspection : i))
+      );
+      toast.success(t('Inspection completed successfully'));
+    } catch (error) {
+      console.error('Error completing inspection:', error);
+      toast.error(t('Error completing inspection'));
+      throw error; // Re-throw to trigger error handling in modal
+    }
   };
 
   return (
@@ -207,7 +293,47 @@ export default function ViewVehicle({ id }) {
             />
           </Col>
         </Row>
+        <Row>
+          <Col>
+            <BaseViewCard>
+              <ViewSection title={t('Inspections')}>
+                <InspectionsTable
+                  inspections={inspections}
+                  onCreateInspection={onCreateInspectionClick}
+                  onEditInspection={onEditInspectionClick}
+                  onDeleteInspection={onDeleteInspectionClick}
+                  onCompleteInspection={setCompletionInspection}
+                />
+              </ViewSection>
+            </BaseViewCard>
+          </Col>
+        </Row>
       </div>
+
+      <InspectionCompletionModal
+        inspection={completionInspection}
+        onClose={() => setCompletionInspection(null)}
+        onComplete={handleCompleteInspection}
+      />
+
+      <ConfirmationModal
+        show={showDeleteModal}
+        title="Confirm Delete"
+        message={
+          inspectionToDelete && (
+            <p>
+              {t('Are you sure you want to delete this inspection?')}
+              <br />
+              <strong>
+                {t(`InspectionType.${inspectionToDelete.inspection_type}`)} -{' '}
+                {t(`InspectionStatus.${inspectionToDelete.status}`)}
+              </strong>
+            </p>
+          )
+        }
+        onConfirm={handleDeleteInspectionConfirm}
+        onCancel={handleDeleteInspectionCancel}
+      />
     </ChildPageLayout>
   );
 }

@@ -9,6 +9,7 @@ interface BaseDateInputProps {
   formik: FormikProps<any>;
   className?: string;
   placeholder?: string;
+  helpText?: string;
 }
 
 export default function BaseDateInput({
@@ -18,6 +19,7 @@ export default function BaseDateInput({
   formik,
   className = '',
   placeholder,
+  helpText,
 }: BaseDateInputProps) {
   const { t } = useTranslation();
   const error = formik.touched[name] && formik.errors[name];
@@ -40,6 +42,7 @@ export default function BaseDateInput({
         isInvalid={!!error}
         placeholder={placeholder || t('Select date')}
       />
+      {helpText && <Form.Text className="text-muted">{helpText}</Form.Text>}
       {error && <Form.Control.Feedback type="invalid">{t(error as string)}</Form.Control.Feedback>}
     </Form.Group>
   );

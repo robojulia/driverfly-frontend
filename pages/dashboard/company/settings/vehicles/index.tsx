@@ -327,8 +327,3 @@ export default function VehicleList() {
 VehicleList.getLayout = function getLayout(page) {
   return <FullLayout>{page}</FullLayout>;
 };
-
-// export async function getServerSideProps(context) {
-//   const { user } = useUserContext();
-
-// }
