@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 import { VehicleEntity } from './vehicle.entity';
+import { DocumentEntity } from '../documents/document.entity';
 
 export enum InspectionType {
   SAFETY = 'Safety',
@@ -24,6 +25,7 @@ export class VehicleInspectionEntity {
   notes?: string;
   created_at?: Date;
   last_updated_at?: Date;
+  inspection_document?: DocumentEntity;
 
   static yupSchema() {
     return yup.object().shape({
@@ -32,6 +34,20 @@ export class VehicleInspectionEntity {
       inspection_date: yup.date().nullable(),
       due_date: yup.date().nullable(),
       notes: yup.string().nullable(),
+      inspection_document: yup
+        .mixed()
+        .when({
+          is: (v) => !!v,
+          then: DocumentEntity.yupSchema()
+            .test('supportedDocTypes', 'INVALID_DOCUMENT_TYPE', (value: any) => {
+              return (
+                !value?.mime_type ||
+                ['application/pdf', 'image/jpeg', 'image/png'].includes(value?.mime_type)
+              );
+            })
+            .nullable(),
+        })
+        .optional(),
     });
   }
 }

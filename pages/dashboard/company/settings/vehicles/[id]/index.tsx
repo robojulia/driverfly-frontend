@@ -402,6 +402,7 @@ export default function ViewVehicle({ id }) {
                           {getSortIcon('inspection_date')}
                         </div>
                       </th>
+                      <th>{t('Document')}</th>
                       <th>{t('Notes')}</th>
                       <th>{t('Actions')}</th>
                     </tr>
@@ -430,6 +431,20 @@ export default function ViewVehicle({ id }) {
                           </span>
                         </td>
                         <td>{formatDate(inspection.inspection_date)}</td>
+                        <td>
+                          {inspection.inspection_document ? (
+                            <a
+                              href={inspection.inspection_document.path}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary text-decoration-none"
+                            >
+                              {inspection.inspection_document.name || 'inspection_document.pdf'}
+                            </a>
+                          ) : (
+                            <span className="text-muted">{t('No document')}</span>
+                          )}
+                        </td>
                         <td>{inspection.notes}</td>
                         <td>
                           <div className="d-flex gap-2">

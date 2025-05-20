@@ -13,6 +13,8 @@ import EntityForm from '../../layouts/page/entity-form';
 import BaseSelect from '../base-select';
 import BaseDateInput from '../base-date-input';
 import BaseTextArea from '../base-text-area';
+import FileInput from '../file-input';
+import { DocumentType } from '../../../models/documents/document.entity';
 
 export interface VehicleInspectionFormProps {
   className?: string;
@@ -110,9 +112,16 @@ export function VehicleInspectionForm(props: VehicleInspectionFormProps) {
                 label="Inspection Date"
                 name="inspection_date"
                 formik={form}
+                helpText="The date when the actual inspection was performed"
               />
 
-              <BaseDateInput className="mb-3" label="Due Date" name="due_date" formik={form} />
+              <BaseDateInput
+                className="mb-3"
+                label="Due Date"
+                name="due_date"
+                formik={form}
+                helpText="The date when the inspection is/was due to be completed"
+              />
 
               <BaseTextArea
                 className="mb-3"
@@ -121,6 +130,21 @@ export function VehicleInspectionForm(props: VehicleInspectionFormProps) {
                 rows={4}
                 placeholder="Enter inspection notes"
                 formik={form}
+              />
+            </div>
+          </Col>
+          <Col lg={6}>
+            <div className="form-section">
+              <h6 className="section-title mb-4">{t('Inspection Documentation')}</h6>
+              <FileInput
+                className="mb-4"
+                label="Inspection Document"
+                name="inspection_document"
+                accept=".pdf,image/*"
+                documentType={DocumentType.INSPECTION}
+                formik={form}
+                allowedSizeInByte={3145728}
+                allowedTypesFriendlyName="PDF or image format, under 3MB"
               />
             </div>
           </Col>
