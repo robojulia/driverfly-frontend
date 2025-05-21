@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Table } from 'react-bootstrap';
+import { Button, Table, Pagination } from 'react-bootstrap';
 import {
   Plus,
   PenFill,
@@ -36,6 +36,8 @@ export const InspectionsTable: React.FC<InspectionsTableProps> = ({
   const { t } = useTranslation();
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
 
   const getInspectionTypeChipClass = (type: string) => {
     return classNames(styles.inspectionChip, styles.typeChip, {
@@ -125,6 +127,18 @@ export const InspectionsTable: React.FC<InspectionsTableProps> = ({
     return status === InspectionStatus.PENDING || status === InspectionStatus.SCHEDULED;
   };
 
+  const getPaginatedInspections = () => {
+    const sortedInspections = getSortedInspections();
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return sortedInspections.slice(startIndex, startIndex + itemsPerPage);
+  };
+
+  const totalPages = Math.ceil(inspections.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <>
       <div className="d-flex justify-content-end mb-3">
@@ -142,114 +156,147 @@ export const InspectionsTable: React.FC<InspectionsTableProps> = ({
           </Button>
         </div>
       ) : (
-        <Table striped bordered hover className={`custom-table ${styles.inspectionsTable}`}>
-          <thead>
-            <tr>
-              <th onClick={() => handleSort('inspection_type')} className={styles.sortableHeader}>
-                <div className="d-flex align-items-center gap-2">
-                  {t('Type')}
-                  {getSortIcon('inspection_type')}
-                </div>
-              </th>
-              <th onClick={() => handleSort('due_date')} className={styles.sortableHeader}>
-                <div className="d-flex align-items-center gap-2">
-                  {t('Due Date')}
-                  {getSortIcon('due_date')}
-                </div>
-              </th>
-              <th onClick={() => handleSort('status')} className={styles.sortableHeader}>
-                <div className="d-flex align-items-center gap-2">
-                  {t('Status')}
-                  {getSortIcon('status')}
-                </div>
-              </th>
-              <th onClick={() => handleSort('inspection_date')} className={styles.sortableHeader}>
-                <div className="d-flex align-items-center gap-2">
-                  {t('Inspection Date')}
-                  {getSortIcon('inspection_date')}
-                </div>
-              </th>
-              <th>{t('Document')}</th>
-              <th>{t('Notes')}</th>
-              <th>{t('Actions')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {getSortedInspections().map((inspection) => (
-              <tr key={inspection.id} className={getRowClass(inspection)}>
-                <td>
-                  <span className={getInspectionTypeChipClass(inspection.inspection_type)}>
-                    {t(`InspectionType.${inspection.inspection_type}`)}
-                  </span>
-                </td>
-                <td>
-                  {isDueDatePassed(inspection.due_date) ? (
-                    <div className={styles.dueDateDanger}>
-                      {formatDate(inspection.due_date)}
-                      <ExclamationTriangleFill />
-                    </div>
-                  ) : (
-                    formatDate(inspection.due_date)
-                  )}
-                </td>
-                <td>
-                  <span className={getInspectionStatusChipClass(inspection.status)}>
-                    {t(`InspectionStatus.${inspection.status}`)}
-                  </span>
-                </td>
-                <td>{formatDate(inspection.inspection_date)}</td>
-                <td>
-                  {inspection.inspection_document ? (
-                    <a
-                      href={inspection.inspection_document.path}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary text-decoration-none"
-                    >
-                      {inspection.inspection_document.name || 'inspection_document.pdf'}
-                    </a>
-                  ) : (
-                    <span className="text-muted">{t('No document')}</span>
-                  )}
-                </td>
-                <td>{inspection.notes}</td>
-                <td>
-                  <div className="d-flex gap-2">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => onEditInspection(inspection.id)}
-                    >
-                      <div className="d-flex align-items-center gap-1">
-                        <PenFill /> {t('EDIT')}
+        <>
+          <Table striped bordered hover className={`custom-table ${styles.inspectionsTable}`}>
+            <thead>
+              <tr>
+                <th onClick={() => handleSort('inspection_type')} className={styles.sortableHeader}>
+                  <div className="d-flex align-items-center gap-2">
+                    {t('Type')}
+                    {getSortIcon('inspection_type')}
+                  </div>
+                </th>
+                <th onClick={() => handleSort('due_date')} className={styles.sortableHeader}>
+                  <div className="d-flex align-items-center gap-2">
+                    {t('Due Date')}
+                    {getSortIcon('due_date')}
+                  </div>
+                </th>
+                <th onClick={() => handleSort('status')} className={styles.sortableHeader}>
+                  <div className="d-flex align-items-center gap-2">
+                    {t('Status')}
+                    {getSortIcon('status')}
+                  </div>
+                </th>
+                <th onClick={() => handleSort('inspection_date')} className={styles.sortableHeader}>
+                  <div className="d-flex align-items-center gap-2">
+                    {t('Inspection Date')}
+                    {getSortIcon('inspection_date')}
+                  </div>
+                </th>
+                <th>{t('Document')}</th>
+                <th>{t('Notes')}</th>
+                <th>{t('Actions')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {getPaginatedInspections().map((inspection) => (
+                <tr key={inspection.id} className={getRowClass(inspection)}>
+                  <td>
+                    <span className={getInspectionTypeChipClass(inspection.inspection_type)}>
+                      {t(`InspectionType.${inspection.inspection_type}`)}
+                    </span>
+                  </td>
+                  <td>
+                    {isDueDatePassed(inspection.due_date) ? (
+                      <div className={styles.dueDateDanger}>
+                        {formatDate(inspection.due_date)}
+                        <ExclamationTriangleFill />
                       </div>
-                    </Button>
-                    {canCompleteInspection(inspection.status) && (
+                    ) : (
+                      formatDate(inspection.due_date)
+                    )}
+                  </td>
+                  <td>
+                    <span className={getInspectionStatusChipClass(inspection.status)}>
+                      {t(`InspectionStatus.${inspection.status}`)}
+                    </span>
+                  </td>
+                  <td>{formatDate(inspection.inspection_date)}</td>
+                  <td>
+                    {inspection.inspection_document ? (
+                      <a
+                        href={inspection.inspection_document.path}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary text-decoration-none"
+                      >
+                        {inspection.inspection_document.name || 'inspection_document.pdf'}
+                      </a>
+                    ) : (
+                      <span className="text-muted">{t('No document')}</span>
+                    )}
+                  </td>
+                  <td>{inspection.notes}</td>
+                  <td>
+                    <div className="d-flex gap-2">
                       <Button
-                        variant="success"
+                        variant="secondary"
                         size="sm"
-                        onClick={() => onCompleteInspection(inspection)}
+                        onClick={() => onEditInspection(inspection.id)}
                       >
                         <div className="d-flex align-items-center gap-1">
-                          <CheckCircleFill /> {t('Complete')}
+                          <PenFill /> {t('EDIT')}
                         </div>
                       </Button>
-                    )}
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => onDeleteInspection(inspection)}
-                    >
-                      <div className="d-flex align-items-center gap-1">
-                        <TrashFill /> {t('DELETE')}
-                      </div>
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+                      {canCompleteInspection(inspection.status) && (
+                        <Button
+                          variant="success"
+                          size="sm"
+                          onClick={() => onCompleteInspection(inspection)}
+                        >
+                          <div className="d-flex align-items-center gap-1">
+                            <CheckCircleFill /> {t('Complete')}
+                          </div>
+                        </Button>
+                      )}
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => onDeleteInspection(inspection)}
+                      >
+                        <div className="d-flex align-items-center gap-1">
+                          <TrashFill /> {t('DELETE')}
+                        </div>
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+          {totalPages > 1 && (
+            <div className="d-flex justify-content-center mt-3">
+              <Pagination>
+                <Pagination.First
+                  onClick={() => handlePageChange(1)}
+                  disabled={currentPage === 1}
+                />
+                <Pagination.Prev
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                />
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+                  <Pagination.Item
+                    key={pageNumber}
+                    active={pageNumber === currentPage}
+                    onClick={() => handlePageChange(pageNumber)}
+                  >
+                    {pageNumber}
+                  </Pagination.Item>
+                ))}
+                <Pagination.Next
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                />
+                <Pagination.Last
+                  onClick={() => handlePageChange(totalPages)}
+                  disabled={currentPage === totalPages}
+                />
+              </Pagination>
+            </div>
+          )}
+        </>
       )}
     </>
   );

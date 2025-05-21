@@ -299,6 +299,7 @@ body {
 
 .view-section {
   margin-bottom: 24px;
+  overflow-x: auto;
 }
 
 .view-section h2 {

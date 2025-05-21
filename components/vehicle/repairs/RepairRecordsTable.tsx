@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Table } from 'react-bootstrap';
+import { Button, Table, Pagination } from 'react-bootstrap';
 import { Plus, PenFill, TrashFill, ArrowUp, ArrowDown, Receipt } from 'react-bootstrap-icons';
 import { useTranslation } from '../../../hooks/use-translation';
 import {
@@ -25,6 +25,8 @@ export const RepairRecordsTable: React.FC<RepairRecordsTableProps> = ({
   const { t } = useTranslation();
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
 
   const getRepairTypeChipClass = (type: RepairType) => {
     return classNames(styles.repairChip, {
@@ -82,6 +84,18 @@ export const RepairRecordsTable: React.FC<RepairRecordsTableProps> = ({
     });
   };
 
+  const getPaginatedRepairs = () => {
+    const sortedRepairs = getSortedRepairs();
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return sortedRepairs.slice(startIndex, startIndex + itemsPerPage);
+  };
+
+  const totalPages = Math.ceil(repairs.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <>
       <div className="d-flex justify-content-end mb-3">
@@ -99,75 +113,108 @@ export const RepairRecordsTable: React.FC<RepairRecordsTableProps> = ({
           </Button>
         </div>
       ) : (
-        <Table striped bordered hover className={`custom-table ${styles.repairsTable}`}>
-          <thead>
-            <tr>
-              <th onClick={() => handleSort('repair_date')} className={styles.sortableHeader}>
-                <div className="d-flex align-items-center gap-2">
-                  {t('Date')}
-                  {getSortIcon('repair_date')}
-                </div>
-              </th>
-              <th onClick={() => handleSort('repair_type')} className={styles.sortableHeader}>
-                <div className="d-flex align-items-center gap-2">
-                  {t('Type')}
-                  {getSortIcon('repair_type')}
-                </div>
-              </th>
-              <th onClick={() => handleSort('amount')} className={styles.sortableHeader}>
-                <div className="d-flex align-items-center gap-2">
-                  {t('Amount')}
-                  {getSortIcon('amount')}
-                </div>
-              </th>
-              <th>{t('Description')}</th>
-              <th>{t('Document')}</th>
-              <th>{t('Actions')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {getSortedRepairs().map((repair) => (
-              <tr key={repair.id}>
-                <td>{formatDate(repair.repair_date)}</td>
-                <td>
-                  <span className={getRepairTypeChipClass(repair.repair_type)}>
-                    {t(`RepairType.${repair.repair_type}`)}
-                  </span>
-                </td>
-                <td>{formatAmount(repair.amount)}</td>
-                <td>{repair.description}</td>
-                <td>
-                  {repair.repair_receipt_document ? (
-                    <a
-                      href={repair.repair_receipt_document.path}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary text-decoration-none"
-                    >
-                      {repair.repair_receipt_document.name || 'repair_receipt.pdf'}
-                    </a>
-                  ) : (
-                    <span className="text-muted">{t('No document')}</span>
-                  )}
-                </td>
-                <td>
-                  <div className="d-flex gap-2">
-                    <Button variant="secondary" size="sm" onClick={() => onEditRepair(repair.id)}>
-                      <div className="d-flex align-items-center gap-1">
-                        <PenFill /> {t('EDIT')}
-                      </div>
-                    </Button>
-                    <Button variant="danger" size="sm" onClick={() => onDeleteRepair(repair)}>
-                      <div className="d-flex align-items-center gap-1">
-                        <TrashFill /> {t('DELETE')}
-                      </div>
-                    </Button>
+        <>
+          <Table striped bordered hover className={`custom-table ${styles.repairsTable}`}>
+            <thead>
+              <tr>
+                <th onClick={() => handleSort('repair_date')} className={styles.sortableHeader}>
+                  <div className="d-flex align-items-center gap-2">
+                    {t('Date')}
+                    {getSortIcon('repair_date')}
                   </div>
-                </td>
+                </th>
+                <th onClick={() => handleSort('repair_type')} className={styles.sortableHeader}>
+                  <div className="d-flex align-items-center gap-2">
+                    {t('Type')}
+                    {getSortIcon('repair_type')}
+                  </div>
+                </th>
+                <th onClick={() => handleSort('amount')} className={styles.sortableHeader}>
+                  <div className="d-flex align-items-center gap-2">
+                    {t('Amount')}
+                    {getSortIcon('amount')}
+                  </div>
+                </th>
+                <th>{t('Description')}</th>
+                <th>{t('Document')}</th>
+                <th>{t('Actions')}</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {getPaginatedRepairs().map((repair) => (
+                <tr key={repair.id}>
+                  <td>{formatDate(repair.repair_date)}</td>
+                  <td>
+                    <span className={getRepairTypeChipClass(repair.repair_type)}>
+                      {t(`RepairType.${repair.repair_type}`)}
+                    </span>
+                  </td>
+                  <td>{formatAmount(repair.amount)}</td>
+                  <td>{repair.description}</td>
+                  <td>
+                    {repair.repair_receipt_document ? (
+                      <a
+                        href={repair.repair_receipt_document.path}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary text-decoration-none"
+                      >
+                        {repair.repair_receipt_document.name || 'repair_receipt.pdf'}
+                      </a>
+                    ) : (
+                      <span className="text-muted">{t('No document')}</span>
+                    )}
+                  </td>
+                  <td>
+                    <div className="d-flex gap-2">
+                      <Button variant="secondary" size="sm" onClick={() => onEditRepair(repair.id)}>
+                        <div className="d-flex align-items-center gap-1">
+                          <PenFill /> {t('EDIT')}
+                        </div>
+                      </Button>
+                      <Button variant="danger" size="sm" onClick={() => onDeleteRepair(repair)}>
+                        <div className="d-flex align-items-center gap-1">
+                          <TrashFill /> {t('DELETE')}
+                        </div>
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+          {totalPages > 1 && (
+            <div className="d-flex justify-content-center mt-3">
+              <Pagination>
+                <Pagination.First
+                  onClick={() => handlePageChange(1)}
+                  disabled={currentPage === 1}
+                />
+                <Pagination.Prev
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                />
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+                  <Pagination.Item
+                    key={pageNumber}
+                    active={pageNumber === currentPage}
+                    onClick={() => handlePageChange(pageNumber)}
+                  >
+                    {pageNumber}
+                  </Pagination.Item>
+                ))}
+                <Pagination.Next
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                />
+                <Pagination.Last
+                  onClick={() => handlePageChange(totalPages)}
+                  disabled={currentPage === totalPages}
+                />
+              </Pagination>
+            </div>
+          )}
+        </>
       )}
     </>
   );
