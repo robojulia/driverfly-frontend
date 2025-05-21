@@ -13,10 +13,22 @@ export class VehiclePreferencesEntity {
 
   static yupSchema() {
     return Yup.object().shape({
-      inspection_frequency: Yup.string().oneOf(Object.values(InspectionFrequency)),
-      safety_inspection_reminder_days: Yup.number().min(0),
-      maintenance_inspection_reminder_days: Yup.number().min(0),
-      additional_email_recipients: Yup.string(),
+      inspection_frequency: Yup.string()
+        .required('Inspection frequency is required')
+        .oneOf(['MONTH', 'QUARTER', 'ANNUAL'], 'Invalid inspection frequency'),
+      /*
+      safety_inspection_reminder_days: Yup.number()
+        .transform((value) => (isNaN(value) || value === null ? undefined : value))
+        .nullable()
+        .min(0),
+      maintenance_inspection_reminder_days: Yup.number()
+        .transform((value) => (isNaN(value) || value === null ? undefined : value))
+        .nullable()
+        .min(0),
+      additional_email_recipients: Yup.string()
+        .nullable()
+        .transform((value) => (value === null ? undefined : value)),
+      */
     });
   }
 }

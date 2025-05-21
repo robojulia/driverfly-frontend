@@ -71,21 +71,21 @@ export default function VehiclePreferences({ id }) {
 
   const inspectionFrequencyOptions = [
     {
-      value: InspectionFrequency.MONTH,
+      value: String(InspectionFrequency.MONTH),
       label: 'MONTH',
       icon: <Calendar2Month size={32} />,
       description: 'Schedule inspections every month',
       variant: 'primary' as const,
     },
     {
-      value: InspectionFrequency.QUARTER,
+      value: String(InspectionFrequency.QUARTER),
       label: 'QUARTER',
       icon: <Calendar2 size={32} />,
       description: 'Schedule inspections every three months',
       variant: 'info' as const,
     },
     {
-      value: InspectionFrequency.ANNUAL,
+      value: String(InspectionFrequency.ANNUAL),
       label: 'ANNUAL',
       icon: <Calendar3 size={32} />,
       description: 'Schedule inspections once a year',
