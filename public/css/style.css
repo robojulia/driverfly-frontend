@@ -125,35 +125,6 @@ a:hover {
   background-color: unset;
 }
 
-.btn-outline-danger:not(:disabled):not(.disabled).active,
-.btn-outline-danger:not(:disabled):not(.disabled):active,
-.show > .btn-outline-danger.dropdown-toggle {
-  color: #fff;
-  background-color: #2da2af !important;
-  border-color: #2da2af !important;
-}
-
-.btn-danger:not(:disabled):not(.disabled).active,
-.btn-danger:not(:disabled):not(.disabled):active,
-.show > .btn-danger.dropdown-toggle {
-  color: #fff;
-  background-color: #2da2af !important;
-  border-color: #2da2af !important;
-}
-
-.call-buttons > .btn-danger:not(:disabled):not(.disabled).active,
-.call-buttons > .btn-danger:not(:disabled):not(.disabled):active {
-  color: #fff;
-  background-color: #ab0505 !important;
-  border-color: #ab0505 !important;
-}
-
-.call-buttons > .btn-danger.focus,
-.call-buttons > .btn-danger:focus {
-  background-color: #990404 !important;
-  border-color: #990404 !important;
-}
-
 strong {
   font-family: sans-serif;
   font-size: 15px;

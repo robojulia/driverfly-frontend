@@ -2643,5 +2643,10 @@
     "Warranty": "Warranty",
     "Recall": "Recall",
     "Emergency": "Emergency"
+  },
+  "InspectionFrequency": {
+    "MONTH": "Monthly",
+    "QUARTER": "Quarterly",
+    "ANNUAL": "Annual"
   }
 }
