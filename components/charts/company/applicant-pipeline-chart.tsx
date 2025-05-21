@@ -1,26 +1,21 @@
-import { useContext, useMemo } from "react";
-import DashboardChartContext from "../../../context/dashboard-chart-context";
-import { PieChart } from "../pie-chart";
+import { useContext, useMemo } from 'react';
+import DashboardChartContext from '../../../context/dashboard-chart-context';
+import { PieChart } from '../pie-chart';
 
 export function ApplicantPieChart() {
   const { state } = useContext(DashboardChartContext);
-  const newLocal = " State and data for the chart ..................";
-  console.log(state, newLocal);
   const fetchData = () => {
     let leads = 0;
     let inProcess = 0;
     let hired = 0;
     state?.applicants?.forEach((v) => {
       if (v) {
-        if (v.current_application_status?.startsWith("NEW_")) {
+        if (v.current_application_status?.startsWith('NEW_')) {
           leads++;
         }
-        if (v.current_application_status?.startsWith("IN_PROCESS_")) {
+        if (v.current_application_status?.startsWith('IN_PROCESS_')) {
           inProcess++;
         }
-        // if (v.current_application_status?.startsWith("COMPLETED_") || v.current_application_status?.startsWith("ACTIVE_")) {
-        // 	hired++
-        // }
       }
     });
     hired = state?.employees?.length;
@@ -31,7 +26,7 @@ export function ApplicantPieChart() {
     return fetchData();
   }, [state]);
 
-  const labels: string[] = ["LEADS", "IN_PROCESS", "HIRED"].map(
+  const labels: string[] = ['LEADS', 'IN_PROCESS', 'HIRED'].map(
     (v) => `ApplicantPipelineChartLabel.${v}`
   );
 
