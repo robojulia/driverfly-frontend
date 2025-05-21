@@ -37,4 +37,6 @@
 
   /* Transitions */
   --transition-speed: 0.2s;
+
+  --bs-danger: #c82333;
 }

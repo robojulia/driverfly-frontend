@@ -26,6 +26,7 @@ export class VehicleInspectionEntity {
   created_at?: Date;
   last_updated_at?: Date;
   inspection_document?: DocumentEntity;
+  follow_up_inspection?: VehicleInspectionEntity;
 
   static yupSchema() {
     return yup.object().shape({

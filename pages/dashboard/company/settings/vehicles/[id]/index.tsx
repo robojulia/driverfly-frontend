@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import { Button, ButtonGroup, Row, Col, ToggleButton } from 'react-bootstrap';
-import { Pencil, TrashFill } from 'react-bootstrap-icons';
+import { Pencil, TrashFill, Gear } from 'react-bootstrap-icons';
 import FullLayout from '../../../../../../components/dashboard/layouts/layout/full-layout';
 import ChildPageLayout from '../../../../../../components/layouts/page/child-page-layout';
 import { DeleteButton } from '../../../../../../components/buttons/delete-button';
@@ -59,17 +59,22 @@ export default function ViewVehicle({ id }) {
 
   const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
 
-  // Fetch inspections
+  // Add fetchInspections function
+  const fetchInspections = async () => {
+    try {
+      const api = new VehicleInspectionApi();
+      const data = await api.list(+id);
+      setInspections(data);
+    } catch (error) {
+      console.error('Error fetching inspections:', error);
+      toast.error(t('Error loading inspections'));
+    }
+  };
+
+  // Fetch inspections on mount
   useEffectAsync(async () => {
     if (id) {
-      try {
-        const api = new VehicleInspectionApi();
-        const data = await api.list(+id);
-        setInspections(data);
-      } catch (error) {
-        console.error('Error fetching inspections:', error);
-        toast.error(t('Error loading inspections'));
-      }
+      await fetchInspections();
     }
   }, [id]);
 
@@ -190,13 +195,13 @@ export default function ViewVehicle({ id }) {
         ...completionInspection,
         status: values.status,
         notes: values.notes,
-        inspection_date: new Date(),
+        inspection_date: values.inspection_date,
         inspection_document: values.inspection_document,
+        follow_up_inspection: values.follow_up_inspection,
       });
 
-      setInspections(
-        inspections.map((i) => (i.id === updatedInspection.id ? updatedInspection : i))
-      );
+      // Refresh the inspections list to include any new follow-up inspections
+      await fetchInspections();
       toast.success(t('Inspection completed successfully'));
     } catch (error) {
       console.error('Error completing inspection:', error);
@@ -249,12 +254,26 @@ export default function ViewVehicle({ id }) {
     }
   };
 
+  const onPreferencesClick = async () => {
+    await router.push(`${router.asPath}/preferences`);
+  };
+
+  // If vehicle is not loaded, don't render the page
+  if (!vehicle || !vehicle.make) return null;
+
   return (
     <ChildPageLayout
       backPath={backPath}
       title={t('VIEW_{name}', { name: 'VEHICLE' }, { translateProps: true })}
       actions={
         <ButtonGroup>
+          <Button
+            variant="outline-primary"
+            onClick={onPreferencesClick}
+            title={t('Manage vehicle preferences')}
+          >
+            <Gear /> {t('Preferences')}
+          </Button>
           {canDelete && <DeleteButton onDelete={onDeleteClick} />}
           {canEdit && (
             <Button type="button" onClick={onEditClick}>
