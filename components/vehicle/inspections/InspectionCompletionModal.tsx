@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import { CheckCircleFill, XCircleFill } from 'react-bootstrap-icons';
 import { useTranslation } from '../../../hooks/use-translation';
 import {
   VehicleInspectionEntity,
   InspectionStatus,
+  InspectionType,
 } from '../../../models/company/vehicle-inspection.entity';
 import { DocumentType } from '../../../models/documents/document.entity';
 import FileInput from '../../forms/file-input';
@@ -19,6 +20,12 @@ interface InspectionCompletionModalProps {
     status: string;
     notes: string;
     inspection_document: any;
+    inspection_date: Date;
+    follow_up_inspection?: {
+      inspection_type: string;
+      due_date: Date;
+      notes: string;
+    };
   }) => Promise<void>;
 }
 
@@ -29,17 +36,55 @@ export const InspectionCompletionModal: React.FC<InspectionCompletionModalProps>
 }) => {
   const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [scheduleFollowup, setScheduleFollowup] = useState(false);
+
+  const getDefaultInspectionDate = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today;
+  };
+
+  const getFollowupNote = (inspectionDate: Date) => {
+    return `Followup inspection from ${
+      inspection?.inspection_type
+    } performed on ${inspectionDate.toLocaleDateString()}`;
+  };
 
   const formik = useFormik({
     initialValues: {
       status: '',
       notes: inspection?.notes || '',
       inspection_document: inspection?.inspection_document || null,
+      inspection_date: getDefaultInspectionDate(),
+      schedule_followup: false,
+      followup_due_date: new Date(getDefaultInspectionDate().getTime() + 7 * 24 * 60 * 60 * 1000), // 1 week from now
+      followup_notes: getFollowupNote(getDefaultInspectionDate()),
     },
     onSubmit: async (values) => {
       setIsSubmitting(true);
+
+      const followupInspection = {
+        inspection_type: inspection?.inspection_type || InspectionType.SAFETY,
+        due_date: values.followup_due_date,
+        notes: values.followup_notes,
+      };
+
       try {
-        await onComplete(values);
+        const submitData = {
+          status: values.status,
+          notes: values.notes,
+          inspection_document: values.inspection_document,
+          inspection_date: values.inspection_date,
+        };
+        if (values.status === 'Failed' && values.schedule_followup) {
+          const updatedSubmitData = {
+            ...submitData,
+            follow_up_inspection: followupInspection,
+          };
+          await onComplete(updatedSubmitData);
+        } else {
+          await onComplete(submitData);
+        }
         onClose();
       } catch (error) {
         console.error('Error completing inspection:', error);
@@ -52,6 +97,24 @@ export const InspectionCompletionModal: React.FC<InspectionCompletionModalProps>
 
   const handleStatusChange = (status: string) => {
     formik.setFieldValue('status', status);
+    if (status !== 'Failed') {
+      setScheduleFollowup(false);
+      formik.setFieldValue('schedule_followup', false);
+    }
+  };
+
+  const handleInspectionDateChange = (date: Date) => {
+    formik.setFieldValue('inspection_date', date);
+    if (formik.values.followup_notes === getFollowupNote(formik.values.inspection_date)) {
+      formik.setFieldValue('followup_notes', getFollowupNote(date));
+    }
+  };
+
+  const setFollowupDueDate = (weeks: number = 1, months: number = 0) => {
+    const inspectionDate = formik.values.inspection_date;
+    const dueDate = new Date(inspectionDate);
+    dueDate.setDate(dueDate.getDate() + weeks * 7 + months * 30);
+    formik.setFieldValue('followup_due_date', dueDate);
   };
 
   const getInspectionTypeChipClass = (type: string) => {
@@ -93,6 +156,16 @@ export const InspectionCompletionModal: React.FC<InspectionCompletionModalProps>
             )}
           </div>
         </div>
+
+        <Form.Group className="mb-3">
+          <Form.Label>{t('Inspection Date')}</Form.Label>
+          <Form.Control
+            type="date"
+            value={formik.values.inspection_date.toISOString().split('T')[0]}
+            onChange={(e) => handleInspectionDateChange(new Date(e.target.value))}
+            disabled={isSubmitting}
+          />
+        </Form.Group>
 
         <div className="completion-actions mb-4">
           <div className="d-flex gap-3 mb-4">
@@ -151,6 +224,66 @@ export const InspectionCompletionModal: React.FC<InspectionCompletionModalProps>
             allowedSizeInByte={3145728}
             allowedTypesFriendlyName="PDF or image format, under 3MB"
           />
+
+          {formik.values.status === 'Failed' && (
+            <div className="followup-section border-top pt-4 mt-4">
+              <Form.Check
+                type="checkbox"
+                id="schedule-followup"
+                label={t('Schedule followup inspection')}
+                checked={scheduleFollowup}
+                onChange={(e) => {
+                  setScheduleFollowup(e.target.checked);
+                  formik.setFieldValue('schedule_followup', e.target.checked);
+                }}
+                className="mb-3"
+              />
+
+              {scheduleFollowup && (
+                <>
+                  <Form.Group className="mb-2">
+                    <Form.Label>{t('Next Due Date')}</Form.Label>
+                    <Form.Control
+                      type="date"
+                      value={formik.values.followup_due_date.toISOString().split('T')[0]}
+                      onChange={(e) =>
+                        formik.setFieldValue('followup_due_date', new Date(e.target.value))
+                      }
+                      disabled={isSubmitting}
+                    />
+                  </Form.Group>
+
+                  <div className="d-flex gap-2 mb-3">
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      onClick={() => setFollowupDueDate(1, 0)}
+                    >
+                      {t('in 1 week')}
+                    </Button>
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      onClick={() => setFollowupDueDate(0, 1)}
+                    >
+                      {t('in 1 month')}
+                    </Button>
+                  </div>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label>{t('Followup Notes')}</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={2}
+                      {...formik.getFieldProps('followup_notes')}
+                      placeholder={t('Add followup inspection notes...')}
+                      disabled={isSubmitting}
+                    />
+                  </Form.Group>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </Modal.Body>
       <Modal.Footer>
@@ -210,6 +343,13 @@ export const InspectionCompletionModal: React.FC<InspectionCompletionModalProps>
 
         .completion-status-button.selected {
           box-shadow: 0 0 0 2px var(--bs-primary);
+        }
+
+        .followup-section {
+          background-color: #f8f9fa;
+          padding: 16px;
+          border-radius: 8px;
+          margin-top: 16px;
         }
       `}</style>
     </Modal>

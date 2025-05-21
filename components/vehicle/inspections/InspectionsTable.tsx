@@ -57,7 +57,7 @@ export const InspectionsTable: React.FC<InspectionsTableProps> = ({
   const getRowClass = (inspection: VehicleInspectionEntity) => {
     if (!inspection.due_date) return '';
 
-    if (inspection.status === 'Passed') return '';
+    if (['Passed', 'Failed'].includes(inspection.status)) return '';
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);

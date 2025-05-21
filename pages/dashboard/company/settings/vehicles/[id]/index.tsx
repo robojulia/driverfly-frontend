@@ -59,17 +59,22 @@ export default function ViewVehicle({ id }) {
 
   const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
 
-  // Fetch inspections
+  // Add fetchInspections function
+  const fetchInspections = async () => {
+    try {
+      const api = new VehicleInspectionApi();
+      const data = await api.list(+id);
+      setInspections(data);
+    } catch (error) {
+      console.error('Error fetching inspections:', error);
+      toast.error(t('Error loading inspections'));
+    }
+  };
+
+  // Fetch inspections on mount
   useEffectAsync(async () => {
     if (id) {
-      try {
-        const api = new VehicleInspectionApi();
-        const data = await api.list(+id);
-        setInspections(data);
-      } catch (error) {
-        console.error('Error fetching inspections:', error);
-        toast.error(t('Error loading inspections'));
-      }
+      await fetchInspections();
     }
   }, [id]);
 
@@ -190,13 +195,13 @@ export default function ViewVehicle({ id }) {
         ...completionInspection,
         status: values.status,
         notes: values.notes,
-        inspection_date: new Date(),
+        inspection_date: values.inspection_date,
         inspection_document: values.inspection_document,
+        follow_up_inspection: values.follow_up_inspection,
       });
 
-      setInspections(
-        inspections.map((i) => (i.id === updatedInspection.id ? updatedInspection : i))
-      );
+      // Refresh the inspections list to include any new follow-up inspections
+      await fetchInspections();
       toast.success(t('Inspection completed successfully'));
     } catch (error) {
       console.error('Error completing inspection:', error);
