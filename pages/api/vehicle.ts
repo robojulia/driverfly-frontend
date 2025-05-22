@@ -1,5 +1,6 @@
 import { VehicleEntity } from '../../models/company/vehicle.entity';
 import BaseApi from './_baseApi';
+import { VehicleWithDueInspectionsDto } from '../../models/company/vehicle-with-due-inspections.dto';
 
 export default class VehicleApi extends BaseApi {
   baseUrl: string = 'vehicles';
@@ -35,5 +36,26 @@ export default class VehicleApi extends BaseApi {
   }
   async remove(id: number): Promise<void> {
     await this.delete(`${this.baseUrl}/${id}`);
+  }
+  async getDueInspections(
+    startDate?: Date,
+    endDate?: Date
+  ): Promise<VehicleWithDueInspectionsDto[]> {
+    // If no dates provided, default to next 30 days
+    if (!startDate) {
+      startDate = new Date();
+    }
+    if (!endDate) {
+      endDate = new Date();
+      endDate.setDate(endDate.getDate() + 30);
+    }
+
+    const { data } = await this.get(
+      `${
+        this.baseUrl
+      }/due-inspections?start_date=${startDate.toISOString()}&end_date=${endDate.toISOString()}`
+    );
+
+    return data;
   }
 }

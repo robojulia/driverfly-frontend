@@ -16,6 +16,7 @@ import { VehicleAccessory } from '../../../../../enums/vehicles/vehicle-accessor
 import { EmployeeStatus } from '../../../../../enums/applicants/employee-status.enum';
 import { VehicleEntity } from '../../../../../models/company/vehicle.entity';
 import { EmployeeEntity } from '../../../../../models/employee/employee.entity';
+import { VehicleWithDueInspectionsDto } from '../../../../../models/company/vehicle-with-due-inspections.dto';
 import PageLayout from '../../../../../components/layouts/page/page-layout';
 import { ButtonGroup, Button, Modal } from 'react-bootstrap';
 import ViewDataTable, {
@@ -25,12 +26,15 @@ import { useEffectAsync } from '../../../../../utils/react';
 import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
 import OverlyPopover from '../../../../../components/popover/overly-popover';
 import Link from 'next/link';
+import DueInspectionsAlert from '../../../../../components/vehicles/DueInspectionsAlert';
 
 export default function VehicleList() {
   const router = useRouter();
   const { t } = useTranslation();
   const { user, hasPermission } = useAuth();
   const [vehicles, setVehicles] = useState<VehicleEntity[]>([]);
+  const [dueInspections, setDueInspections] = useState<VehicleWithDueInspectionsDto[]>([]);
+  const [isDueInspectionsLoading, setIsDueInspectionsLoading] = useState(true);
   const [employees, setEmployees] = useState<Record<number, EmployeeEntity>>({});
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [vehicleToDelete, setVehicleToDelete] = useState<VehicleEntity | null>(null);
@@ -42,7 +46,7 @@ export default function VehicleList() {
     const employeeApi = new EmployeeApi();
 
     try {
-      const [vehiclesResponse, employeesResponse] = await Promise.all([
+      const [vehiclesResponse, employeesResponse, dueInspectionsResponse] = await Promise.all([
         vehicleApi.list({ withDocuments: true }),
         employeeApi.list({
           status: [EmployeeStatus.ACTIVE],
@@ -50,9 +54,11 @@ export default function VehicleList() {
           limit: 1000,
           page: 1,
         }),
+        vehicleApi.getDueInspections(),
       ]);
 
       setVehicles(vehiclesResponse);
+      setDueInspections(dueInspectionsResponse);
 
       // Create a map of employee IDs to employee entities
       const employeeMap = {};
@@ -66,6 +72,8 @@ export default function VehicleList() {
         toast: toast,
         defaultMessage: t('UNABLE_TO_LOAD_{name}', { name: 'VEHICLES' }, { translateProps: true }),
       });
+    } finally {
+      setIsDueInspectionsLoading(false);
     }
   }, [user]);
 
@@ -143,6 +151,8 @@ export default function VehicleList() {
         </ButtonGroup>
       }
     >
+      <DueInspectionsAlert dueInspections={dueInspections} isLoading={isDueInspectionsLoading} />
+
       <ViewDataTable<VehicleEntity>
         columnSettingKey={columnSettingKey}
         columns={[
