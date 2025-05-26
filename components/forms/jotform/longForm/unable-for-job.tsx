@@ -93,13 +93,17 @@ export function UnableForJob() {
 
               // If they can perform the job, remove the extra completely
               if (canPerform) {
-                // Filter out the extra completely
-                setApplicantExtras(
-                  (oldExtras) =>
-                    oldExtras?.filter(
-                      (extra) => extra.type !== ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
-                    ) || []
+                console.log('Removing the extra');
+                console.log(applicantExtras);
+
+                const filtered_extras = applicantExtras?.filter(
+                  (v) => v?.type != ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
                 );
+                console.log('Filtered extras');
+                console.log(filtered_extras);
+                // Filter out the extra completely
+                setApplicantExtras(filtered_extras);
+              } else {
                 form.setFieldValue('REASON_FOR_UNABLE_TO_PERFORM_JOB.value', '');
               }
             }}
