@@ -1,104 +1,247 @@
+/* 
+ * DriverFly Application Form Stylesheet
+ * A modern, mobile-first approach to the driver application experience
+ */
+
+/* Base container for the entire application */
 .container {
-  background-color: #053343;
-  flex-direction: column;
-  background-image: url("/form_bg.png");
+  background: linear-gradient(135deg, var(--primary-light), var(--secondary));
   background-position: center;
   background-size: cover;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
-.nav {
-  background-color: white;
-  height: 60px;
-  padding: 10px 30px;
-}
-
+/* Main content area */
 .main {
-  color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  padding: 24px;
+  box-sizing: border-box;
 }
 
+/* Form container */
 .main_form,
 .main__voe_form {
-  min-width: 800px;
+  width: 100%;
   max-width: 800px;
-  padding: 50px;
-  border-radius: 14px;
-  background-color: #fff;
-  margin: 3rem 1rem;
-  box-shadow: rgb(0 0 0 / 68%) 0px 13px 27px -5px,
-    rgb(0 0 0 / 75%) 0px 8px 16px -8px;
+  padding: 40px;
+  border-radius: var(--border-radius);
+  background-color: var(--light);
+  margin: 24px auto;
+  box-shadow: var(--box-shadow);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
 }
 
-.customButton {
-  background-color: #1d667e;
-  padding: 10px 15px;
-  border-radius: 8px;
-  margin-right: 10px;
-  text-align: center;
-  margin-top: 2rem;
+/* Navigation */
+.nav {
+  background-color: var(--light);
+  height: 70px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 10;
 }
 
+/* Logo */
 .logo {
   text-align: center;
-  margin-bottom: 5rem;
+  margin-bottom: 32px;
+  max-width: 200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
+.logo img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Carrier name */
 .carrierName {
   text-align: center;
-  font-weight: 900;
-  color: rgb(85, 85, 85);
-  font-size: 24pt;
-}
-.jot_form_headers_font {
-  font-size: 28pt !important;
-}
-.heading__sty {
-  font-size: 30px;
-  font-weight: 900;
-  text-align: center;
-  display: block;
-  margin: 0;
-  margin: 2rem 0rem;
-  color: #000;
+  font-weight: 700;
+  color: var(--dark);
+  font-size: 1.75rem;
+  margin-bottom: 8px;
 }
 
+/* Application title */
 .Application {
   text-align: center;
-  margin-top: 2rem;
-  color: rgb(85, 85, 85);
-  font-size: 24pt;
+  margin-top: 1rem;
+  color: var(--primary-dark);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
 }
 
-.paragraph {
-  color: rgb(85, 85, 85);
+/* Headings */
+.heading__sty {
+  font-size: 1.5rem;
+  font-weight: 700;
   text-align: center;
-}
-.titlechildren {
-  color: rgb(85, 85, 85);
-}
-.radio {
-  display: inline;
-  text-align: left;
-  left: 0;
+  display: block;
+  margin: 1.5rem 0;
+  color: var(--dark);
 }
 
-.topicName {
-  text-align: cen;
-  font-weight: 900;
+.jot_form_headers_font {
+  font-size: 1.75rem !important;
+  margin-bottom: 1.5rem;
+}
+
+/* Paragraph text */
+.paragraph {
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+/* Form elements */
+.titlechildren {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Form inputs */
+.formInput {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--medium-gray);
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--text-primary);
+  transition: var(--transition);
+}
+
+.formInput:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 115, 177, 0.1);
+}
+
+/* Radio buttons and checkboxes */
+.radio {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.radioInput {
+  margin-right: 10px;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
 }
 
 .main-radio {
-  margin-bottom: 5rem;
+  margin-bottom: 2rem;
 }
 
-.CDL-experience {
-  margin-top: 4rem;
+/* Button styles */
+.customButton {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 1.5rem;
+  min-width: 150px;
+  min-height: 48px;
+  box-shadow: 0 4px 12px rgba(0, 115, 177, 0.2);
+  position: relative;
+  overflow: hidden;
 }
 
+.customButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.customButton:hover::before {
+  left: 100%;
+}
+
+.customButton:hover {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, #004466 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 115, 177, 0.3);
+}
+
+.customButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 115, 177, 0.3);
+}
+
+.customButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  background: var(--medium-gray) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Secondary button */
+.secondaryButton {
+  background: var(--light);
+  color: var(--text-primary);
+  border: 2px solid var(--medium-gray);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 1.5rem;
+  min-width: 150px;
+  min-height: 48px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.secondaryButton:hover {
+  background: var(--light-gray);
+  border-color: var(--text-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.secondaryButton:active {
+  transform: translateY(0);
+}
+
+/* Text alignment utilities */
 .align__text_left {
   text-align: left;
 }
@@ -111,44 +254,80 @@
   text-align: center;
 }
 
-.sigCanvas {
-  width: 600px;
-  border: 1px solid red;
-}
-
-.blur {
-  filter: blur(2px);
-}
-
+/* Text styling utilities */
 .highlight {
-  color: red;
+  color: var(--error);
 }
 
 .highlight__black {
-  color: black;
+  color: var(--dark);
 }
 
 .bold {
-  font-weight: bold;
-}
-.txtcolor {
-  color: black;
+  font-weight: 700;
 }
 
+.txtcolor {
+  color: var(--text-primary);
+}
+
+/* Progress indicator */
+.progressContainer {
+  margin: 2rem 0;
+  position: relative;
+  padding: 0 1rem;
+}
+
+.progressBar {
+  width: 100%;
+  height: 10px;
+  background-color: var(--medium-gray);
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.progressFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 115, 177, 0.3);
+}
+
+.progressStep {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.progressStep span {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* Camera component */
 .camera_container_main {
   position: relative;
   width: 100%;
   height: 60vh;
   margin-bottom: 80px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
 }
 
 .camera_container {
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: #000;
+  background-color: var(--dark);
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
 }
 
 .camera_container video {
@@ -159,54 +338,438 @@
 
 .capture_btn {
   border-radius: 50%;
-  height: 80px;
-  width: 80px;
+  height: 70px;
+  width: 70px;
   position: absolute;
   z-index: 2;
   left: 50%;
   transform: translateX(-50%);
-  bottom: -40px;
-  background-color: #1d667e;
+  bottom: -35px;
+  background-color: var(--primary);
   color: white;
   border: 4px solid white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
 }
 
 .capture_btn:hover {
-  background-color: #154d5f;
+  background-color: var(--primary-dark);
+  transform: translateX(-50%) scale(1.05);
 }
 
-@media screen and (max-width: 800px) {
+.capture_btn:active {
+  transform: translateX(-50%) scale(0.95);
+}
+
+/* Signature canvas */
+.sigCanvas {
+  width: 100%;
+  height: 200px;
+  border: 1px solid var(--medium-gray);
+  border-radius: var(--border-radius);
+  background-color: var(--light-gray);
+  margin-bottom: 16px;
+}
+
+/* Multi-step form layout */
+.formStep {
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+  padding: 1rem 0;
+}
+
+.formStepContent {
+  flex: 1;
+  margin-bottom: 2rem;
+}
+
+.formStepNavigation {
+  margin-top: auto;
+  padding-top: 2rem;
+  border-top: 1px solid var(--medium-gray);
+}
+
+/* Navigation button container */
+.navigationButtons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.navigationButtons .btn {
+  min-width: 140px;
+  font-weight: 700;
+}
+
+.backButton {
+  background: var(--light) !important;
+  color: var(--text-primary) !important;
+  border: 2px solid var(--medium-gray) !important;
+}
+
+.backButton:hover,
+.backButton:focus {
+  background: var(--light-gray) !important;
+  border-color: var(--text-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+.nextButton {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+  color: white !important;
+  border-color: var(--primary) !important;
+}
+
+.nextButton:hover,
+.nextButton:focus {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, #004466 100%) !important;
+  border-color: var(--primary-dark) !important;
+}
+
+/* Error message */
+.errorMessage {
+  color: var(--error);
+  font-size: 0.875rem;
+  margin-top: -8px;
+  margin-bottom: 16px;
+}
+
+/* Success message */
+.successMessage {
+  color: var(--success);
+  font-size: 0.875rem;
+  margin-bottom: 16px;
+}
+
+/* Visual indicator for required fields */
+.required::after {
+  content: '*';
+  color: var(--error);
+  margin-left: 4px;
+}
+
+/* CDL experience section */
+.CDL-experience {
+  margin-top: 2rem;
+  padding: 20px;
+  background-color: var(--light-gray);
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--primary);
+}
+
+/* Special visual effects */
+.blur {
+  filter: blur(2px);
+}
+
+/* Form grid layout */
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 900px) {
   .main_form,
   .main__voe_form {
-    min-height: 400px;
-    min-width: 400px;
+    padding: 32px;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
   }
 }
 
-@media screen and (max-width: 600px) {
-  .main_form,
-  .main__voe_form {
-    min-width: 450px;
-    padding: 20px;
-  }
-
+@media screen and (max-width: 768px) {
   .carrierName {
-    font-size: 22pt;
+    font-size: 1.5rem;
+  }
+
+  .Application {
+    font-size: 1.75rem;
   }
 
   .heading__sty {
-    font-size: 22px;
+    font-size: 1.25rem;
+  }
+
+  .jot_form_headers_font {
+    font-size: 1.5rem !important;
+  }
+
+  .formActions {
+    flex-direction: column-reverse;
+    gap: 1rem;
+    padding-top: 1.5rem;
+  }
+
+  .formActions .btn {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+
+  .navigationButtons {
+    flex-direction: column-reverse;
+    gap: 1rem;
+  }
+
+  .navigationButtons .btn {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .customButton,
+  .secondaryButton {
+    width: 100%;
+    min-width: auto;
+    padding: 1.125rem 1rem;
+    margin-top: 1rem;
+  }
+
+  .formStep {
+    min-height: 400px;
+  }
+
+  .progressContainer {
+    margin: 1.5rem 0;
+    padding: 0 0.5rem;
   }
 }
 
-@media screen and (max-width: 460px) {
+@media screen and (max-width: 576px) {
   .main_form,
   .main__voe_form {
-    min-width: 310px;
-    min-height: 300px;
+    padding: 24px;
+    margin: 12px;
   }
-  .capture_btn {
-    left: 35%;
+
+  .logo {
+    margin-bottom: 24px;
+  }
+
+  .carrierName {
+    font-size: 1.25rem;
+  }
+
+  .Application {
+    font-size: 1.5rem;
+  }
+
+  .customButton,
+  .secondaryButton {
+    padding: 1.25rem 1rem;
+    font-size: 1.0625rem;
+    min-height: 56px;
+    border-radius: 14px;
+  }
+
+  .formActions {
+    padding-top: 1rem;
+  }
+
+  .formStepNavigation {
+    padding-top: 1.5rem;
+  }
+
+  .navigationButtons {
+    margin-top: 1.5rem;
+  }
+}
+
+/* Animations */
+.fadeIn {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tooltips */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltipText {
+  visibility: hidden;
+  background-color: var(--dark);
+  color: var(--light);
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 12px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 0.875rem;
+  width: 200px;
+}
+
+.tooltip:hover .tooltipText {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Button loading state */
+.buttonLoading {
+  position: relative;
+  pointer-events: none;
+}
+
+.buttonLoading::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  margin: auto;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Enhanced button focus states for accessibility */
+.customButton:focus,
+.secondaryButton:focus,
+.btn:focus {
+  outline: 3px solid rgba(0, 115, 177, 0.3);
+  outline-offset: 2px;
+}
+
+/* Button group spacing */
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.buttonGroup .btn {
+  flex: 1;
+  min-width: 120px;
+}
+
+@media screen and (max-width: 576px) {
+  .buttonGroup {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .buttonGroup .btn {
+    width: 100%;
+  }
+}
+
+/* Enhanced form button - can be used as className={styles.formButton} */
+.formButton {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+  color: white !important;
+  padding: 1rem 1.5rem !important;
+  border-radius: 12px !important;
+  border: none !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  min-width: 150px !important;
+  min-height: 48px !important;
+  box-shadow: 0 4px 12px rgba(0, 115, 177, 0.2) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  text-decoration: none !important;
+}
+
+.formButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.formButton:hover::before {
+  left: 100%;
+}
+
+.formButton:hover {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, #004466 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(0, 115, 177, 0.3) !important;
+  color: white !important;
+}
+
+.formButton:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 8px rgba(0, 115, 177, 0.3) !important;
+}
+
+.formButton:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  background: var(--medium-gray) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  color: var(--text-secondary) !important;
+}
+
+.formButton:focus {
+  outline: 3px solid rgba(0, 115, 177, 0.3) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 3px rgba(0, 115, 177, 0.25), 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Mobile responsive for form button */
+@media screen and (max-width: 768px) {
+  .formButton {
+    width: 100% !important;
+    min-width: auto !important;
+    padding: 1.125rem 1rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .formButton {
+    padding: 1.25rem 1rem !important;
+    font-size: 1.0625rem !important;
+    min-height: 56px !important;
+    border-radius: 14px !important;
   }
 }

@@ -1,8 +1,8 @@
-import { ReactNode } from "react";
-import { InputGroup } from "react-bootstrap";
-
-import { useTranslation } from "../../hooks/use-translation";
-import { FormikInterface } from "../../utils/formik";
+import { ReactNode } from 'react';
+import { InputGroup } from 'react-bootstrap';
+import styles from '../../styles/digitalhiringapp.module.css';
+import { useTranslation } from '../../hooks/use-translation';
+import { FormikInterface } from '../../utils/formik';
 
 export interface BaseControlProps {
   formik?: FormikInterface<any>;
@@ -49,12 +49,12 @@ function BaseControl({
   }
 
   return (
-    <div className={`${className || ""}`}>
+    <div className={`${className || ''}`}>
       {label && (
         <>
-          <label>
+          <label className={styles.titlechildren}>
             {t(label)}
-            {required ? <span className="text-danger">*</span> : ""}:
+            {required ? <span className={styles.required}>*</span> : ''}:
           </label>
           <br />
         </>
@@ -65,10 +65,10 @@ function BaseControl({
         {append && <div className="input-group-append">{append}</div>}
       </InputGroup>
       {helpText && (
-        <div className="form-text text-muted small mt-1">{helpText}</div>
+        <div className={`${styles.successMessage} form-text text-muted small mt-1`}>{helpText}</div>
       )}
-      {(touched || error) && typeof error == "string" && (
-        <span className="text-danger small">{t(error)}</span>
+      {(touched || error) && typeof error == 'string' && (
+        <span className={`${styles.errorMessage} text-danger small`}>{t(error)}</span>
       )}
       {after}
     </div>

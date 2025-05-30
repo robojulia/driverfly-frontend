@@ -6,6 +6,7 @@ import {
   getFullFormPages,
   getFullFormStyle,
 } from '../../../components/forms/jotform/jotform-pages';
+import FormProgress from '../../../components/forms/jotform/form-progress';
 import JotformContext from '../../../context/jotform-context';
 import { Status } from '../../../enums/status.enum';
 import { ApplicantEntity, ApplicantExtrasEntity } from '../../../models/applicant';
@@ -13,6 +14,7 @@ import { UtmReferral } from '../../../models/auth/utm-referral.interface';
 import { CompanyPreferenceEntity } from '../../../models/company/company-preferences.entity';
 import { CompanyEntity } from '../../../models/company/company.entity';
 import { JobEntity } from '../../../models/job/job.entity';
+
 import styles from '../../../styles/digitalhiringapp.module.css';
 import CompanyApi from '../../api/company';
 import JobApi from '../../api/job';
@@ -24,8 +26,6 @@ export interface FullFormProps {
   employerJobs?: JobEntity[];
 }
 export default function FullForm({ employer, preferences, utm, employerJobs }: FullFormProps) {
-  // console.log({ employer });
-
   const [jobs, setJobs] = useState<JobEntity[]>([]);
   const [companyJobs, setCompanyJobs] = useState<JobEntity[]>(employerJobs);
   const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
@@ -39,6 +39,9 @@ export default function FullForm({ employer, preferences, utm, employerJobs }: F
   const [steps, setSteps] = useState<number>(0);
   const stepNext = (): void => setSteps(steps + 1);
   const stepBack = (): void => setSteps(steps - 1);
+
+  // Total number of steps in the form
+  const totalSteps = 32; // Based on getFullFormPages in jotform-pages.tsx
 
   useEffect(() => {
     setApplicant((oldValues) => ({ ...oldValues, company: employer }));
@@ -72,6 +75,9 @@ export default function FullForm({ employer, preferences, utm, employerJobs }: F
       <div className={styles.container}>
         <div className={styles.main}>
           <div className={styles.main_form} style={getFullFormStyle(steps)}>
+            {steps > 0 && steps < totalSteps - 1 && (
+              <FormProgress currentStep={steps} totalSteps={totalSteps} />
+            )}
             {getFullFormPages(steps)}
           </div>
         </div>

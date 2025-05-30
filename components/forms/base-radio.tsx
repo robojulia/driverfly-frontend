@@ -1,7 +1,7 @@
-import React from "react";
-
-import { useTranslation } from "../../hooks/use-translation";
-import { BaseControlProps } from "./base-control";
+import React from 'react';
+import styles from '../../styles/digitalhiringapp.module.css';
+import { useTranslation } from '../../hooks/use-translation';
+import { BaseControlProps } from './base-control';
 
 function InlineLayout(
   t,
@@ -20,13 +20,13 @@ function InlineLayout(
   return (
     <>
       {options?.map((v, i) => (
-        <div key={i} className={`form-check form-check-inline flex-row`}>
+        <div key={i} className={`${styles.radio} form-check form-check-inline flex-row`}>
           <label className="form-check-label mr-2">
-            {t((labelPrefix ? labelPrefix + "." : "") + v[labelKey])}
+            {t((labelPrefix ? labelPrefix + '.' : '') + v[labelKey])}
           </label>
           <input
             disabled={disabled}
-            className={`radio-btns ${error ? "is-invalid" : ""}`}
+            className={`${styles.radioInput} radio-btns ${error ? 'is-invalid' : ''}`}
             type="radio"
             readOnly={readOnly}
             value={v[valueKey]}
@@ -60,13 +60,13 @@ function ColLayout(
     <div className="row mt-1">
       {options?.map((v, i) => (
         <div key={i} className={`col-md-${12 / cols}`}>
-          <div className={`form-check form-check-inline flex-row-reverse`}>
+          <div className={`${styles.radio} form-check form-check-inline flex-row-reverse`}>
             <label className="form-check-label">
-              {t((labelPrefix ? labelPrefix + "." : "") + v[labelKey])}
+              {t((labelPrefix ? labelPrefix + '.' : '') + v[labelKey])}
             </label>
             <input
               disabled={disabled}
-              className={`form-check-input ${error ? "is-invalid" : ""}`}
+              className={`${styles.radioInput} form-check-input ${error ? 'is-invalid' : ''}`}
               readOnly={readOnly}
               type="radio"
               value={v[valueKey]}
@@ -102,8 +102,8 @@ function BaseRadio({
   className,
   label,
   options,
-  labelKey = "label",
-  valueKey = "value",
+  labelKey = 'label',
+  valueKey = 'value',
   labelPrefix,
   value,
   cols,
@@ -132,7 +132,7 @@ function BaseRadio({
     onChange = onChange || formik.handleChange;
     handleBlur = handleBlur || formik.handleBlur;
   }
-  if (typeof enumType == "object") {
+  if (typeof enumType == 'object') {
     options = Object.entries(enumType)?.map(([key, value]) => ({
       [valueKey]: value,
       [labelKey]: value,
@@ -143,9 +143,9 @@ function BaseRadio({
   return (
     <div className={className}>
       {label && (
-        <span style={{ marginRight: "20px", color: "black" }}>
+        <span className={`${styles.titlechildren}`} style={{ marginRight: '20px' }}>
           {t(label)}
-          {required ? <span style={{ color: "red" }}>*</span> : ""}:
+          {required ? <span className={styles.highlight}>*</span> : ''}:
         </span>
       )}
       {cols
@@ -178,8 +178,8 @@ function BaseRadio({
             labelPrefix,
             disabled
           )}
-      {touched && error && typeof error == "string" ? (
-        <span className="text-danger small">{error}</span>
+      {touched && error && typeof error == 'string' ? (
+        <span className={`${styles.errorMessage} text-danger small`}>{error}</span>
       ) : null}
     </div>
   );

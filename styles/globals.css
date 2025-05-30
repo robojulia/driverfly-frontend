@@ -14,3 +14,503 @@ a {
 * {
   box-sizing: border-box;
 }
+
+/* DriverFly Application Form Variables */
+:root {
+  --primary: #0073b1;
+  --primary-dark: #005582;
+  --primary-light: #e1f0f7;
+  --secondary: #27ae60;
+  --secondary-dark: #219653;
+  --accent: #f39c12;
+  --dark: #1a2b3c;
+  --dark-alt: #2c3e50;
+  --light: #ffffff;
+  --light-gray: #f5f7fa;
+  --medium-gray: #e0e5eb;
+  --text-primary: #333333;
+  --text-secondary: #667788;
+  --success: #27ae60;
+  --error: #e74c3c;
+  --warning: #f39c12;
+  --info: #3498db;
+  --border-radius: 10px;
+  --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --transition: all 0.3s ease;
+}
+
+/* Bootstrap Button Overrides for Consumer-Facing Pages */
+.btn {
+  border-radius: 12px;
+  font-weight: 600;
+  padding: 0.875rem 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: none;
+  letter-spacing: 0.025em;
+  border-width: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  font-size: 1rem;
+  line-height: 1.5;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn:focus,
+.btn:active {
+  box-shadow: 0 0 0 3px rgba(0, 115, 177, 0.25), 0 4px 12px rgba(0, 0, 0, 0.15);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-color: var(--primary);
+  color: white;
+  font-weight: 700;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, #004466 100%);
+  border-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 115, 177, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 115, 177, 0.3);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+  border-color: var(--secondary);
+  color: white;
+  font-weight: 700;
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background: linear-gradient(135deg, var(--secondary-dark) 0%, #1e8449 100%);
+  border-color: var(--secondary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(39, 174, 96, 0.3);
+}
+
+.btn-outline-primary {
+  color: var(--primary);
+  border-color: var(--primary);
+  background-color: transparent;
+  font-weight: 600;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  background: linear-gradient(135deg, var(--primary-light) 0%, rgba(225, 240, 247, 0.8) 100%);
+  color: var(--primary-dark);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.btn-outline-secondary {
+  color: var(--text-secondary);
+  border-color: var(--medium-gray);
+  background-color: var(--light);
+  font-weight: 600;
+}
+
+.btn-outline-secondary:hover,
+.btn-outline-secondary:focus {
+  background-color: var(--light-gray);
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+  transform: translateY(-2px);
+}
+
+.btn-link {
+  color: var(--primary);
+  text-decoration: none;
+  padding-left: 0;
+  padding-right: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+  font-weight: 600;
+}
+
+.btn-link:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-lg {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  min-height: 56px;
+  border-radius: 14px;
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  min-height: 40px;
+  border-radius: 10px;
+}
+
+.btn-block {
+  width: 100%;
+  display: flex;
+}
+
+/* Disabled state for all buttons */
+.btn:disabled,
+.btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  pointer-events: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  background: var(--medium-gray) !important;
+  border-color: var(--medium-gray) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* Form Navigation Buttons - Special styling for Next/Back buttons */
+.btn.float-left,
+.btn.float-right {
+  min-width: 120px;
+  font-weight: 700;
+}
+
+.btn.float-right {
+  background: var(--light);
+  color: var(--text-primary);
+  border: 2px solid var(--medium-gray);
+}
+
+.btn.float-right:hover,
+.btn.float-right:focus {
+  background: var(--light-gray);
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
+}
+
+/* Mobile-specific button improvements */
+@media (max-width: 768px) {
+  .btn {
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+    min-height: 52px;
+    width: 100%;
+    margin-bottom: 0.75rem;
+  }
+
+  .btn-lg {
+    padding: 1.125rem 1.5rem;
+    min-height: 60px;
+  }
+
+  .btn-sm {
+    padding: 0.75rem 1rem;
+    min-height: 44px;
+  }
+
+  /* Mobile form navigation - stack buttons vertically */
+  .row .col .btn.float-left,
+  .row .col .btn.float-right {
+    float: none !important;
+    width: 100%;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Reverse order on mobile so Next appears first */
+  .row .col:last-child {
+    order: -1;
+  }
+
+  .row .col:first-child {
+    order: 1;
+  }
+}
+
+/* Extra small screens - even more touch-friendly */
+@media (max-width: 576px) {
+  .btn {
+    padding: 1.125rem 1rem;
+    font-size: 1.0625rem;
+    min-height: 56px;
+    border-radius: 14px;
+  }
+
+  .btn-lg {
+    padding: 1.25rem 1.25rem;
+    min-height: 64px;
+    font-size: 1.125rem;
+  }
+
+  .btn-sm {
+    padding: 0.875rem 1rem;
+    min-height: 48px;
+  }
+}
+
+/* Button groups and spacing */
+.btn-group .btn {
+  margin-bottom: 0;
+}
+
+.btn + .btn {
+  margin-left: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .btn + .btn {
+    margin-left: 0;
+    margin-top: 0.75rem;
+  }
+}
+
+/* Form Control Overrides */
+.form-control {
+  border-radius: 8px;
+  padding: 0.625rem 1rem;
+  border: 1px solid var(--medium-gray);
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: all 0.3s ease;
+  height: auto;
+  color: var(--text-primary);
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 115, 177, 0.1);
+  outline: none;
+}
+
+.form-control::placeholder {
+  color: #a0aec0;
+  opacity: 1;
+}
+
+.form-control:disabled,
+.form-control[readonly] {
+  background-color: var(--light-gray);
+  opacity: 0.7;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+  display: block;
+}
+
+.form-text {
+  margin-top: 0.375rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Invalid state */
+.form-control.is-invalid {
+  border-color: var(--error);
+  padding-right: calc(1.5em + 0.75rem);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23e74c3c' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23e74c3c' stroke='none'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.form-control.is-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.25);
+}
+
+.invalid-feedback {
+  color: var(--error);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Form check (radio and checkbox) */
+.form-check {
+  padding-left: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.form-check-input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.125rem;
+  margin-left: -1.75rem;
+}
+
+.form-check-input:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.form-check-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 115, 177, 0.1);
+}
+
+.form-check-label {
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+/* Input Group */
+.input-group {
+  position: relative;
+}
+
+.input-group .form-control {
+  position: relative;
+}
+
+.input-group-text {
+  background-color: var(--light-gray);
+  border: 1px solid var(--medium-gray);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  padding: 0.625rem 1rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.input-group > .form-control:not(:last-child),
+.input-group > .input-group-prepend > .input-group-text {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.input-group > .form-control:not(:first-child),
+.input-group > .input-group-append > .input-group-text {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* Card Overrides */
+.card {
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  border: none;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  background-color: var(--light);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--box-shadow);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.card-title {
+  color: var(--dark);
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-subtitle {
+  color: var(--text-secondary);
+  margin-top: -0.375rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.card-text {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.card-header {
+  padding: 1rem 1.5rem;
+  background-color: var(--light);
+  border-bottom: 1px solid var(--medium-gray);
+  font-weight: 600;
+}
+
+.card-footer {
+  padding: 1rem 1.5rem;
+  background-color: var(--light-gray);
+  border-top: 1px solid var(--medium-gray);
+}
+
+/* Container Overrides */
+.container {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.row {
+  margin-left: -0.75rem;
+  margin-right: -0.75rem;
+}
+
+.col,
+[class*='col-'] {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  h1,
+  .h1 {
+    font-size: 1.875rem;
+  }
+
+  h2,
+  .h2 {
+    font-size: 1.5rem;
+  }
+
+  h3,
+  .h3 {
+    font-size: 1.25rem;
+  }
+
+  .card-title {
+    font-size: 1.125rem;
+  }
+}

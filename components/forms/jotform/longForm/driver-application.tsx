@@ -1,11 +1,12 @@
 import { useFormik } from 'formik';
 import { useContext, useEffect, useState } from 'react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { ApplicantExtras } from '../../../../enums/applicants/applicant-extras.enum';
 import { useTranslation } from '../../../../hooks/use-translation';
 import { ApplicantExtrasEntity } from '../../../../models/applicant/applicant-extras.entity';
 import { DriverApplicationDto } from '../../../../models/jot-form/long-form/driver-application.dto';
+import { PrimaryButton } from '../form-buttons';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import BaseInput from '../../base-input';
 import { SignatureComponent } from '../../signature';
@@ -50,14 +51,14 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
     const apx = applicantExtras?.find((v) => v.type == ApplicantExtras.APPLY_DATE);
     const apx_sign = applicantExtras?.find((v) => v.type == ApplicantExtras.SIGNATURE);
 
+    const applicantEntryObject = {
+      ...new ApplicantExtrasEntity(ApplicantExtras.APPLY_DATE),
+      value: new Date().toISOString(),
+    };
+
     form.setValues({
       ...form.values,
-      APPLY_DATE: !!apx?.type
-        ? apx
-        : {
-            ...new ApplicantExtrasEntity(ApplicantExtras.APPLY_DATE),
-            value: new Date().toISOString(),
-          },
+      APPLY_DATE: !!apx?.type ? apx : applicantEntryObject,
       SIGNATURE: !!apx_sign?.type ? apx_sign : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
       first_name: first_name || null,
       last_name: last_name || null,
@@ -148,9 +149,16 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 
         <Row className="mt-3">
           <Col className="text-center">
-            <Button type="submit" disabled={!hasSignature}>
+            <PrimaryButton
+              type="submit"
+              disabled={!hasSignature}
+              style={{
+                width: '100%',
+                maxWidth: '200px',
+              }}
+            >
               {t('NEXT')}
-            </Button>
+            </PrimaryButton>
           </Col>
         </Row>
       </Form>

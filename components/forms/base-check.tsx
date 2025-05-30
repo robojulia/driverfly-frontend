@@ -1,6 +1,7 @@
-import React from 'react'
+import React from 'react';
 import { useTranslation } from '../../hooks/use-translation';
 import { BaseControlProps } from './base-control';
+import styles from '../../styles/digitalhiringapp.module.css';
 
 export interface BaseCheckProps extends BaseControlProps {
   checked?: boolean;
@@ -8,10 +9,22 @@ export interface BaseCheckProps extends BaseControlProps {
   handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   readOnly?: boolean;
   disabled?: boolean;
-
 }
 
-export default function BaseCheck({ formik, required, className, label, checked, onChange, handleBlur, readOnly, name, touched, error, disabled }: BaseCheckProps) {
+export default function BaseCheck({
+  formik,
+  required,
+  className,
+  label,
+  checked,
+  onChange,
+  handleBlur,
+  readOnly,
+  name,
+  touched,
+  error,
+  disabled,
+}: BaseCheckProps) {
   const { t } = useTranslation();
   checked = !!checked;
 
@@ -23,13 +36,13 @@ export default function BaseCheck({ formik, required, className, label, checked,
       touched = meta.touched;
       error = meta.error;
     }
-    onChange = onChange || formik.handleChange
+    onChange = onChange || formik.handleChange;
     handleBlur = handleBlur || formik.handleBlur;
   }
 
   /**
-   * 
-   * @param {React.ChangeEvent<HTMLInputElement>} e 
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} e
    */
   const onChangeProxy = (e) => {
     const { checked } = e.target;
@@ -40,16 +53,15 @@ export default function BaseCheck({ formik, required, className, label, checked,
         target: {
           ...e.target,
           name: name,
-          value: checked
-        }
+          value: checked,
+        },
       });
     }
-
   };
 
   return (
     <div className={className}>
-      <div className='form-switch'>
+      <div className={`${styles.radio} form-switch`}>
         <input
           disabled={disabled}
           id={name}
@@ -59,13 +71,22 @@ export default function BaseCheck({ formik, required, className, label, checked,
           readOnly={readOnly}
           name={name}
           role="switch"
-          className={`form-check-input ${error ? "is-invalid" : ""}`}
+          className={`${styles.radioInput} form-check-input ${error ? 'is-invalid' : ''}`}
         />
-        {label && <label htmlFor={name} style={{ marginLeft: ".5em" }} className="form-check-label">{t(label)}{required ? <span className='text-danger'>*</span> : ""}</label>}
-
+        {label && (
+          <label
+            htmlFor={name}
+            style={{ marginLeft: '.5em' }}
+            className={`${styles.titlechildren} form-check-label`}
+          >
+            {t(label)}
+            {required ? <span className={`${styles.highlight}`}>*</span> : ''}
+          </label>
+        )}
       </div>
-      {touched && error && (typeof error == "string") ? <span className="text-danger small">{t(error)}</span> : null}
+      {touched && error && typeof error == 'string' ? (
+        <span className={`${styles.errorMessage} text-danger small`}>{t(error)}</span>
+      ) : null}
     </div>
-  )
+  );
 }
-
