@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { useTranslation } from '../../../../hooks/use-translation';
@@ -8,10 +8,9 @@ import { FormActions } from '../form-buttons';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { useEffectAsync } from '../../../../utils/react';
 import { LoaderIcon } from '../../../loading/loader-icon';
-import BaseCheck from '../../base-check';
-import BaseSelect from '../../base-select';
 import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
 import BaseRadio from '../../base-radio';
+import { JobSelect, JobDetails, InfoCard, FormLabel } from '../../../shared/dha';
 
 export function AtsJobs() {
   const {
@@ -54,11 +53,6 @@ export function AtsJobs() {
     });
   }, [jobs]);
 
-  // useEffectAsync(async () => {
-  //     console.log("form.values", form.values);
-  //     console.log("form.errors", form.errors);
-  // }, [form.values, form.errors]);
-
   const handleNext = async () => {
     const { jobId } = form.values;
     if (Boolean(jobId)) {
@@ -78,6 +72,8 @@ export function AtsJobs() {
     (Boolean(form.values.applying_for_job) && Boolean(jobCount > 0)
       ? Boolean(form.values.applying_for_job) && Boolean(form.values.jobId)
       : true);
+
+  const selectedJob = companyJobs?.find((job) => job.id == form.values.jobId);
 
   return (
     <>
@@ -110,27 +106,37 @@ export function AtsJobs() {
             disabled={jobCount == -1}
           />
         </Row>
-        <Row className="w-100 d-flex ">
+
+        <Row className="w-100 d-flex">
           <Col md="12">
             {jobCount > 0 && (
-              <>
-                <BaseSelect
-                  className="my-1 font-weight-bold"
-                  label="POSITION"
-                  formik={form}
-                  name="jobId"
-                  placeholder="SELECT_ONE_PLACEHOLDER"
-                  options={companyJobs}
-                  labelKey="title"
-                  valueKey="id"
+              <div style={{ marginTop: '1rem' }}>
+                <FormLabel>{t('POSITION')}:</FormLabel>
+                <JobSelect
+                  jobs={companyJobs}
+                  selectedJobId={form.values.jobId}
+                  onJobSelect={(jobId) => form.setFieldValue('jobId', jobId)}
+                  placeholder={t('SELECT_POSITION')}
                 />
-              </>
+              </div>
             )}
             {jobCount == -1 && (
               <label className={'heading-label my-4'}>{t('JOB_NOT_FOUND')} </label>
             )}
+
+            {/* General Application Pool Message */}
+            {form.values.applying_for_job === false && (
+              <InfoCard
+                title="General Application"
+                message="You'll be added to this company's general application pool. The company's hiring team will review your profile."
+                variant="info"
+              />
+            )}
           </Col>
         </Row>
+
+        {/* Job Details Section */}
+        {selectedJob && <JobDetails job={selectedJob} />}
 
         <FormActions
           onNext={handleNext}
