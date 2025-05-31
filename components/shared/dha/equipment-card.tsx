@@ -77,7 +77,7 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
           children
         ) : (
           <div style={emptyStateStyles}>
-            {t('NO_EQUIPMENT_EXPERIENCE_ADDED')}
+            {t('NO_EQUIPMENT_EXPERIENCE_PROVIDED')}
             <br />
             <small>{t('CLICK_ADD_TO_GET_STARTED')}</small>
           </div>
