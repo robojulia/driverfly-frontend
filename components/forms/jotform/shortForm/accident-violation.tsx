@@ -8,10 +8,9 @@ import { AccidentViolationDto } from '../../../../models/jot-form/short-form/acc
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import ViewModal from '../../../view-details/view-modal';
 import BaseCheck from '../../base-check';
-import BaseRadio from '../../base-radio';
 import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
 import { FormActions } from '../form-buttons';
-import { Input } from '../../../shared/dha';
+import { Input, RadioGroup } from '../../../shared/dha';
 
 export function AccidentViolation() {
   const {
@@ -116,6 +115,29 @@ export function AccidentViolation() {
     return Boolean(applicant.license_type == DriverLicenseType.NO_CDL);
   };
 
+  // Define radio group value clearly
+  const getDrugTestRadioValue = () => {
+    if (form.values.can_pass_drug_test === true) {
+      return BooleanType.YES;
+    }
+    if (form.values.can_pass_drug_test === false) {
+      return BooleanType.NO;
+    }
+    return undefined;
+  };
+
+  const drugTestRadioValue = getDrugTestRadioValue();
+
+  const handleDrugTestChange = (value: string) => {
+    let newValue: boolean | null = null;
+    if (value === BooleanType.YES) {
+      newValue = true;
+    } else if (value === BooleanType.NO) {
+      newValue = false;
+    }
+    form.setFieldValue('can_pass_drug_test', newValue);
+  };
+
   return (
     <>
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
@@ -129,28 +151,22 @@ export function AccidentViolation() {
       >
         <div style={{ maxWidth: '600px', margin: '0 auto' }}>
           <div className="my-4">
-            <BaseRadio
-              name={`can_pass_drug_test`}
-              className="my-2"
-              label={`can_pass_drug_test`}
-              labelPrefix="BooleanType"
+            <RadioGroup
+              name="can_pass_drug_test"
+              label={t('can_pass_drug_test')}
               enumType={BooleanType}
+              value={drugTestRadioValue}
+              onChange={handleDrugTestChange}
               required
-              value={
-                form.values.can_pass_drug_test === true
-                  ? BooleanType.YES
-                  : form.values.can_pass_drug_test === false && BooleanType.NO
+              error={
+                form.touched.can_pass_drug_test && form.errors.can_pass_drug_test
+                  ? String(form.errors.can_pass_drug_test)
+                  : undefined
               }
-              onChange={({ target: { value } }) => {
-                form.setFieldValue(
-                  'can_pass_drug_test',
-                  value === BooleanType.YES ? true : value === BooleanType.NO && false
-                );
-              }}
+              labelPrefix="BooleanType"
+              columns={2}
+              variant="card"
             />
-            {form.touched.can_pass_drug_test && form.errors.can_pass_drug_test && (
-              <div className="invalid-feedback d-block">{form.errors.can_pass_drug_test}</div>
-            )}
           </div>
 
           <div className="my-3">

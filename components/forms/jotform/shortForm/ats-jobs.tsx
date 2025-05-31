@@ -9,8 +9,7 @@ import styles from '../../../../styles/digitalhiringapp.module.css';
 import { useEffectAsync } from '../../../../utils/react';
 import { LoaderIcon } from '../../../loading/loader-icon';
 import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
-import BaseRadio from '../../base-radio';
-import { JobSelect, JobDetails, InfoCard, FormLabel } from '../../../shared/dha';
+import { JobSelect, JobDetails, InfoCard, FormLabel, RadioGroup } from '../../../shared/dha';
 
 export function AtsJobs() {
   const {
@@ -75,6 +74,29 @@ export function AtsJobs() {
 
   const selectedJob = companyJobs?.find((job) => job.id == form.values.jobId);
 
+  // Define radio group value clearly
+  const getRadioGroupValue = () => {
+    if (form.values.applying_for_job === true) {
+      return BooleanType.YES;
+    }
+    if (form.values.applying_for_job === false) {
+      return BooleanType.NO;
+    }
+    return undefined;
+  };
+
+  const radioGroupValue = getRadioGroupValue();
+
+  const handleApplyingForJobChange = (value: string) => {
+    let newValue: boolean | null = null;
+    if (value === BooleanType.YES) {
+      newValue = true;
+    } else if (value === BooleanType.NO) {
+      newValue = false;
+    }
+    form.setFieldValue('applying_for_job', newValue);
+  };
+
   return (
     <>
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
@@ -85,27 +107,21 @@ export function AtsJobs() {
         onSubmit={form.handleSubmit}
         onReset={form.handleReset}
       >
-        <Row className="w-100 d-flex justify-content-center">
-          <BaseRadio
-            name={`applying_for_job`}
-            className="float-left ml-2 my-2 w-40"
-            label={`are_you_applying_to_particular_job`}
-            labelPrefix="BooleanType"
-            enumType={BooleanType}
-            value={
-              form.values.applying_for_job === true
-                ? BooleanType.YES
-                : form.values.applying_for_job === false && BooleanType.NO
-            }
-            onChange={({ target: { value } }) => {
-              form.setFieldValue(
-                'applying_for_job',
-                value === BooleanType.YES ? true : value === BooleanType.NO && false
-              );
-            }}
-            disabled={jobCount == -1}
-          />
-        </Row>
+        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+          <div className="my-4">
+            <RadioGroup
+              name="applying_for_job"
+              label={t('are_you_applying_to_particular_job')}
+              enumType={BooleanType}
+              value={radioGroupValue}
+              onChange={handleApplyingForJobChange}
+              disabled={jobCount === -1}
+              labelPrefix="BooleanType"
+              columns={2}
+              variant="card"
+            />
+          </div>
+        </div>
 
         <Row className="w-100 d-flex">
           <Col md="12">

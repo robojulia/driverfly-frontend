@@ -9,10 +9,9 @@ import { useContext, useEffect } from 'react';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { ApplicantExtras } from '../../../../enums/applicants/applicant-extras.enum';
 import { ApplicantExtrasEntity } from '../../../../models/applicant';
-import BaseRadio from '../../base-radio';
 import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
 import { FormActions } from '../form-buttons';
-import { Input } from '../../../shared/dha';
+import { Input, RadioGroup } from '../../../shared/dha';
 
 export function CdlExperience() {
   const {
@@ -143,6 +142,29 @@ export function CdlExperience() {
     return Boolean(form.values.is_owner_operator);
   };
 
+  // Define radio group value clearly
+  const getOwnerOperatorRadioValue = () => {
+    if (form.values.is_owner_operator === true) {
+      return BooleanType.YES;
+    }
+    if (form.values.is_owner_operator === false) {
+      return BooleanType.NO;
+    }
+    return undefined;
+  };
+
+  const ownerOperatorRadioValue = getOwnerOperatorRadioValue();
+
+  const handleOwnerOperatorChange = (value: string) => {
+    let newValue: boolean | null = null;
+    if (value === BooleanType.YES) {
+      newValue = true;
+    } else if (value === BooleanType.NO) {
+      newValue = false;
+    }
+    form.setFieldValue('is_owner_operator', newValue);
+  };
+
   return (
     <>
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
@@ -196,28 +218,22 @@ export function CdlExperience() {
 
           {shouldShowOwnerOperatorQuestion() && (
             <div className="my-4">
-              <BaseRadio
-                name={`is_owner_operator`}
-                className="my-2"
-                label={`is_owner_operator_question`}
-                labelPrefix="BooleanType"
+              <RadioGroup
+                name="is_owner_operator"
+                label={t('is_owner_operator_question')}
                 enumType={BooleanType}
+                value={ownerOperatorRadioValue}
+                onChange={handleOwnerOperatorChange}
                 required
-                value={
-                  form.values.is_owner_operator === true
-                    ? BooleanType.YES
-                    : form.values.is_owner_operator === false && BooleanType.NO
+                error={
+                  form.touched.is_owner_operator && form.errors.is_owner_operator
+                    ? String(form.errors.is_owner_operator)
+                    : undefined
                 }
-                onChange={({ target: { value } }) => {
-                  form.setFieldValue(
-                    'is_owner_operator',
-                    value === BooleanType.YES ? true : value === BooleanType.NO && false
-                  );
-                }}
+                labelPrefix="BooleanType"
+                columns={2}
+                variant="card"
               />
-              {form.touched.is_owner_operator && form.errors.is_owner_operator && (
-                <div className="invalid-feedback d-block">{form.errors.is_owner_operator}</div>
-              )}
             </div>
           )}
 
