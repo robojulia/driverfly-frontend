@@ -50,7 +50,7 @@ export function CdlExperience() {
     const apx_business_name = applicantExtras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME);
     const apx_dot_number = applicantExtras?.find((v) => v.type == ApplicantExtras.DOT_NUMBER);
 
-    form.setValues({
+    const initialValues = {
       license_type: license_type || null,
       years_cdl_experience: years_cdl_experience || 0,
       is_owner_operator: is_owner_operator || null,
@@ -60,11 +60,18 @@ export function CdlExperience() {
       DOT_NUMBER: !!apx_dot_number?.type
         ? apx_dot_number
         : new ApplicantExtrasEntity(ApplicantExtras.DOT_NUMBER),
-    });
+    };
 
-    // Validate form after initial value set
-    form.validateForm();
-  }, []);
+    // Set values and reset form state to clear any validation errors
+    form.setValues(initialValues, false);
+    form.setTouched({}, false);
+    form.setErrors({});
+
+    // Validate form after initial value set with a small delay to ensure state is updated
+    setTimeout(() => {
+      form.validateForm();
+    }, 0);
+  }, [applicant, applicantExtras]);
 
   function onLicenseTypeChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const licenseType = e.target.value;
