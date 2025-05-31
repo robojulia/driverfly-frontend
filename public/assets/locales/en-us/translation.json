@@ -299,13 +299,13 @@
     "C": "Class C CDL"
   },
   "LicenseRestrictions": {
-    "L": "(no full air brake)",
-    "Z": "(no full air brake)",
-    "E": "(no manual transmission)",
-    "O": "(no fifth-wheel connection)",
-    "M": "(only Class B and C passenger vehicle or school bus)",
-    "N": "(only passenger vehicle or school bus)",
-    "V": "(medical variance)",
+    "L": "No full air brake",
+    "Z": "No full air brake",
+    "E": "No manual transmission",
+    "O": "No fifth-wheel connection",
+    "M": "Only Class B and C passenger vehicle or school bus",
+    "N": "Only passenger vehicle or school bus",
+    "V": "Medical variance",
     "OTHER": "Other",
     "NONE": "None"
   },

@@ -8,10 +8,9 @@ import { LicenseRestrictions } from '../../../../enums/applicants/applicant-lice
 import { DriverEndorsement } from '../../../../enums/users/driver-endorsement.enum';
 import { VehicleTransmissionType } from '../../../../enums/vehicles/vehicle-transmission-type.enum';
 import { useTranslation } from '../../../../hooks/use-translation';
-import BaseCheckList from '../../base-check-list';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { FormActions } from '../form-buttons';
-import { Input } from '../../../shared/dha';
+import { Input, CheckboxGroup } from '../../../shared/dha';
 
 export function TransmissionAndEndorsement() {
   const {
@@ -119,6 +118,18 @@ export function TransmissionAndEndorsement() {
     form.handleReset(syntheticEvent);
   };
 
+  const handleTransmissionChange = (values: string[]) => {
+    form.setFieldValue('transmission_type', values);
+  };
+
+  const handleEndorsementsChange = (values: string[]) => {
+    form.setFieldValue('endorsements', values);
+  };
+
+  const handleLicenseRestrictionsChange = (values: string[]) => {
+    form.setFieldValue('license_restrictions', values);
+  };
+
   return (
     <>
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
@@ -139,27 +150,39 @@ export function TransmissionAndEndorsement() {
 
           {/* Transmission Experience Section */}
           <div className="my-4">
-            <BaseCheckList
-              className="col-12"
-              label="TRANSMISSION_EXPERIENCE"
+            <CheckboxGroup
               name="transmission_type"
-              labelPrefix="VehicleTransmissionType"
+              label={t('TRANSMISSION_EXPERIENCE')}
               enumType={VehicleTransmissionType}
-              formik={form}
-              cols="2"
+              value={form.values.transmission_type || []}
+              onChange={handleTransmissionChange}
+              labelPrefix="VehicleTransmissionType"
+              columns={2}
+              variant="card"
+              error={
+                form.touched.transmission_type && form.errors.transmission_type
+                  ? String(form.errors.transmission_type)
+                  : undefined
+              }
             />
           </div>
 
           {/* Endorsements Section */}
           <div className="my-4">
-            <BaseCheckList
-              className="col-12 text-black"
-              label="ENDORSEMENTS"
+            <CheckboxGroup
               name="endorsements"
-              labelPrefix="DriverEndorsement"
+              label={t('ENDORSEMENTS')}
               enumType={DriverEndorsement}
-              formik={form}
-              cols="2"
+              value={form.values.endorsements || []}
+              onChange={handleEndorsementsChange}
+              labelPrefix="DriverEndorsement"
+              columns={2}
+              variant="card"
+              error={
+                form.touched.endorsements && form.errors.endorsements
+                  ? String(form.errors.endorsements)
+                  : undefined
+              }
             />
 
             {form.values?.endorsements?.includes(DriverEndorsement.OTHER) && (
@@ -177,7 +200,6 @@ export function TransmissionAndEndorsement() {
                       ? String(form.errors.endorsements_other)
                       : undefined
                   }
-                  icon={<span>➕</span>}
                   helperText="Please specify your other endorsements"
                 />
               </div>
@@ -186,14 +208,20 @@ export function TransmissionAndEndorsement() {
 
           {/* License Restrictions Section */}
           <div className="my-4">
-            <BaseCheckList
-              className="col-12 text-black"
-              label="DHA_CDL_RESTRICTIONS"
+            <CheckboxGroup
               name="license_restrictions"
-              labelPrefix="LicenseRestrictions"
+              label={t('DHA_CDL_RESTRICTIONS')}
               enumType={LicenseRestrictions}
-              formik={form}
-              cols="2"
+              value={form.values.license_restrictions || []}
+              onChange={handleLicenseRestrictionsChange}
+              labelPrefix="LicenseRestrictions"
+              columns={2}
+              variant="card"
+              error={
+                form.touched.license_restrictions && form.errors.license_restrictions
+                  ? String(form.errors.license_restrictions)
+                  : undefined
+              }
             />
 
             {form.values?.license_restrictions?.includes(LicenseRestrictions.OTHER) && (
@@ -212,7 +240,6 @@ export function TransmissionAndEndorsement() {
                       ? String(form.errors.license_restrictions_other)
                       : undefined
                   }
-                  icon={<span>🚫</span>}
                   helperText="Please specify your other license restrictions"
                 />
               </div>

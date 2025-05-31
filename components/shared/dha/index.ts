@@ -6,3 +6,4 @@ export { OTPInput } from './otp-input';
 export { Input } from './input';
 export { MaskedInput } from './masked-input';
 export { RadioGroup } from './radio-group';
+export { CheckboxGroup } from './checkbox-group';
