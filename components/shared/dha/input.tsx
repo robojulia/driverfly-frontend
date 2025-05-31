@@ -115,17 +115,17 @@ export const Input: React.FC<InputProps> = ({
     alignItems: 'center',
   };
 
+  const focusStyles = isFocused
+    ? '0 0 0 3px rgba(0, 115, 177, 0.1)'
+    : '0 2px 4px rgba(0, 0, 0, 0.05)';
+
   const inputStyles: React.CSSProperties = {
     ...getVariantStyles(variant),
     paddingLeft:
       icon && iconPosition === 'left' ? '2.75rem' : getSizeStyles(size).padding.split(' ')[1],
     paddingRight:
       icon && iconPosition === 'right' ? '2.75rem' : getSizeStyles(size).padding.split(' ')[1],
-    boxShadow: error
-      ? '0 0 0 3px rgba(231, 76, 60, 0.1)'
-      : isFocused
-      ? '0 0 0 3px rgba(0, 115, 177, 0.1)'
-      : '0 2px 4px rgba(0, 0, 0, 0.05)',
+    boxShadow: error ? '0 0 0 3px rgba(231, 76, 60, 0.1)' : focusStyles,
   };
 
   const iconStyles: React.CSSProperties = {
