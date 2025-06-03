@@ -379,7 +379,7 @@
 .formStep {
   display: flex;
   flex-direction: column;
-  min-height: 500px;
+  min-height: 300px;
   padding: 1rem 0;
 }
 
