@@ -8,7 +8,7 @@ interface InputProps {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  type?: 'text' | 'email' | 'password' | 'tel' | 'number' | 'url';
+  type?: 'text' | 'email' | 'password' | 'tel' | 'number' | 'url' | 'date';
   required?: boolean;
   disabled?: boolean;
   error?: string;
