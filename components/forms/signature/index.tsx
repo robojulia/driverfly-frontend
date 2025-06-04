@@ -25,77 +25,25 @@ export function SignatureComponent({
   const [typedSignatureConsent, setTypedSignatureConsent] = useState(false);
   const [hasSignature, setHasSignature] = useState(false);
   const [initialSignatureApplied, setInitialSignatureApplied] = useState(false);
-  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 200 });
   const lastSignatureRef = useRef<string | null>(null);
+  const [isDrawing, setIsDrawing] = useState(false);
 
-  // Calculate canvas size based on container
-  const updateCanvasSize = () => {
-    if (containerRef.current) {
-      const containerWidth = containerRef.current.offsetWidth;
-      setCanvasSize({
-        width: Math.max(300, containerWidth - 2), // Subtract 2px for border
-        height: 200,
-      });
+  const clearSignatureCanvas = (): void => {
+    if (padRef.current && !isDrawing) {
+      padRef.current.clear();
+      setHasSignature(false);
+      lastSignatureRef.current = null;
+      onSignatureChange(null);
     }
   };
 
-  // Handle window resize
-  useEffect(() => {
-    const handleResize = () => {
-      updateCanvasSize();
-    };
-
-    // Initial size calculation
-    updateCanvasSize();
-
-    // Add resize listener
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  // Update canvas size when component mounts or container changes
-  useEffect(() => {
-    const resizeObserver = new ResizeObserver(() => {
-      updateCanvasSize();
-    });
-
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
-
-  // Resize canvas when dimensions change
-  useEffect(() => {
-    if (padRef.current && canvasSize.width > 0) {
-      const canvas = padRef.current.getCanvas();
-      const currentSignature = hasSignature ? canvas.toDataURL() : null;
-
-      // Clear and resize
-      padRef.current.clear();
-
-      // Restore signature if it existed
-      if (currentSignature && hasSignature) {
-        padRef.current.fromDataURL(currentSignature);
-      }
-    }
-  }, [canvasSize]);
-
-  const clearSignatureCanvas = (): void => {
-    padRef?.current?.clear();
-    setHasSignature(false);
-    lastSignatureRef.current = null;
-    onSignatureChange(null);
+  const handleSignatureBegin = () => {
+    setIsDrawing(true);
   };
 
   const handleSignatureEnd = () => {
+    setIsDrawing(false);
+
     if (!padRef.current) return;
 
     const signatureValue = padRef.current.toDataURL().toString();
@@ -120,14 +68,15 @@ export function SignatureComponent({
     }
 
     const canvas = padRef?.current;
-    if (!canvas) return;
+    if (!canvas || isDrawing) return;
 
     canvas.clear();
     const ctx = canvas.getCanvas().getContext('2d');
     if (!ctx) return;
 
-    const canvasWidth = canvas.getCanvas().width;
-    const canvasHeight = canvas.getCanvas().height;
+    const canvasElement = canvas.getCanvas();
+    const canvasWidth = canvasElement.width;
+    const canvasHeight = canvasElement.height;
 
     // Set up the canvas for signature
     ctx.font = "30px 'Dancing Script', cursive";
@@ -175,16 +124,20 @@ export function SignatureComponent({
 
   // Apply initial signature only once when component mounts or initialSignature changes
   useEffect(() => {
-    if (initialSignature && padRef.current && !initialSignatureApplied && canvasSize.width > 0) {
+    if (initialSignature && padRef.current && !initialSignatureApplied && !isDrawing) {
       // Check if this is a different signature than what we already have
       if (initialSignature !== lastSignatureRef.current) {
-        padRef.current.fromDataURL(initialSignature);
-        lastSignatureRef.current = initialSignature;
-        setHasSignature(true);
-        setInitialSignatureApplied(true);
+        try {
+          padRef.current.fromDataURL(initialSignature);
+          lastSignatureRef.current = initialSignature;
+          setHasSignature(true);
+          setInitialSignatureApplied(true);
+        } catch (error) {
+          console.warn('Failed to load initial signature:', error);
+        }
       }
     }
-  }, [initialSignature, initialSignatureApplied, canvasSize]);
+  }, [initialSignature, initialSignatureApplied, isDrawing]);
 
   // Reset initialSignatureApplied when initialSignature becomes null/undefined
   useEffect(() => {
@@ -216,24 +169,24 @@ export function SignatureComponent({
           marginBottom: '1rem',
         }}
       >
-        {canvasSize.width > 0 && (
-          <SignatureCanvas
-            ref={padRef}
-            onEnd={handleSignatureEnd}
-            canvasProps={{
-              width: canvasSize.width,
-              height: canvasSize.height,
-              style: {
-                border: '2px solid #AAAAAA',
-                borderRadius: '8px',
-                display: 'block',
-                width: '100%',
-                maxWidth: '100%',
-              },
-              className: 'sigCanvas',
-            }}
-          />
-        )}
+        <SignatureCanvas
+          ref={padRef}
+          onBegin={handleSignatureBegin}
+          onEnd={handleSignatureEnd}
+          canvasProps={{
+            width: 600,
+            height: 200,
+            style: {
+              border: '2px solid #AAAAAA',
+              borderRadius: '8px',
+              display: 'block',
+              width: '100%',
+              maxWidth: '100%',
+              height: 'auto',
+            },
+            className: 'sigCanvas',
+          }}
+        />
       </div>
 
       {/* Canvas Controls */}

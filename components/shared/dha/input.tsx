@@ -18,6 +18,8 @@ interface InputProps {
   maxLength?: number;
   minLength?: number;
   pattern?: string;
+  max?: string;
+  min?: string;
   variant?: 'default' | 'outlined' | 'filled';
   size?: 'small' | 'medium' | 'large';
   icon?: React.ReactNode;
@@ -41,6 +43,8 @@ export const Input: React.FC<InputProps> = ({
   maxLength,
   minLength,
   pattern,
+  max,
+  min,
   variant = 'outlined',
   size = 'medium',
   icon,
@@ -200,6 +204,8 @@ export const Input: React.FC<InputProps> = ({
           maxLength={maxLength}
           minLength={minLength}
           pattern={pattern}
+          max={max}
+          min={min}
           style={{
             ...inputStyles,
             cursor: disabled ? 'not-allowed' : 'text',

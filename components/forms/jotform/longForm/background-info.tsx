@@ -42,6 +42,13 @@ export function BackgroundInfo() {
     ? stateList.map((state) => ({ ...state, label: state.value }))
     : stateList;
 
+  // Calculate max date (18 years ago from today)
+  const getMaxBirthdate = () => {
+    const today = new Date();
+    const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+    return eighteenYearsAgo.toISOString().split('T')[0];
+  };
+
   const form = useFormik({
     initialValues: new BackgroundInfoDto(),
     validationSchema: BackgroundInfoDto.yupSchema(),
@@ -141,6 +148,7 @@ export function BackgroundInfo() {
               onChange={form.handleChange}
               onBlur={form.handleBlur}
               required
+              max={getMaxBirthdate()}
               error={
                 form.touched.birthdate && form.errors.birthdate
                   ? String(form.errors.birthdate)
