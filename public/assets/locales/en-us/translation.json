@@ -1677,6 +1677,7 @@
   "latest_upload": "Latest Upload",
   "UPDATE_RECORD": "Update Record",
   "BACKGROUND": "Background",
+  "BACKGROUND_INFO_HELP_TEXT": "Please provide the following information about your background.",
   "CURRENT_COMPANY_MANAGER_NAME": "Manager or Representative ",
   "CURRENT_COMPANY_PHONE_NUMBER": "Phone Number ",
   "CURRENT_COMPANY_EMAIL": "Company Email",
