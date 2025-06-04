@@ -9,6 +9,24 @@ import { FormActions } from '../form-buttons';
 import { Input, Select } from '../../../shared/dha';
 import stateList from '../../../../utils/stateList';
 
+// Custom hook to detect screen size
+const useScreenSize = () => {
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth < 768);
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
+  return isSmallScreen;
+};
+
 export function BackgroundInfo() {
   const {
     state: { applicant },
@@ -17,6 +35,12 @@ export function BackgroundInfo() {
 
   const { t } = useTranslation();
   const [isFormValid, setIsFormValid] = useState(false);
+  const isSmallScreen = useScreenSize();
+
+  // Create responsive state list
+  const responsiveStateList = isSmallScreen
+    ? stateList.map((state) => ({ ...state, label: state.value }))
+    : stateList;
 
   const form = useFormik({
     initialValues: new BackgroundInfoDto(),
@@ -207,7 +231,7 @@ export function BackgroundInfo() {
               name="state"
               label={t('state')}
               placeholder="CHOOSE_STATE"
-              options={stateList}
+              options={responsiveStateList}
               value={form.values.state || ''}
               onChange={form.handleChange}
               onBlur={form.handleBlur}

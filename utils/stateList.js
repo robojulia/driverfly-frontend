@@ -1,4 +1,4 @@
-export default [
+const stateList = [
   {
     value: 'AL',
     label: 'Alabama',
@@ -200,3 +200,5 @@ export default [
     label: 'Wyoming',
   },
 ];
+
+export default stateList;
