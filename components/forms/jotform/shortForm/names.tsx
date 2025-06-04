@@ -62,7 +62,7 @@ export function Names() {
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t('name')}</h1>
 
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset} className={styles.formStep}>
-        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '600px', margin: '0' }}>
           <Input
             name="first_name"
             label={t('FIRST_NAME')}

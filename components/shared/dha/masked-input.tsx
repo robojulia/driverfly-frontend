@@ -23,16 +23,25 @@ interface MaskedInputProps {
   iconPosition?: 'left' | 'right';
 }
 
-export const MaskedInput: React.FC<MaskedInputProps> = ({ mask, maskChar = null, ...props }) => {
+export const MaskedInput: React.FC<MaskedInputProps> = ({
+  mask,
+  maskChar = null,
+  disabled,
+  value,
+  onChange,
+  onBlur,
+  ...inputProps
+}) => {
   return (
     <InputMask
       mask={mask}
       maskChar={maskChar}
-      value={props.value || ''}
-      onChange={props.onChange}
-      onBlur={props.onBlur}
+      value={value || ''}
+      onChange={onChange}
+      onBlur={onBlur}
+      disabled={disabled}
     >
-      {(inputProps: any) => <Input {...props} {...inputProps} />}
+      {(maskProps: any) => <Input {...inputProps} {...maskProps} />}
     </InputMask>
   );
 };
