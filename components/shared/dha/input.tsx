@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FormLabel } from './form-label';
 
 interface InputProps {
@@ -48,6 +48,11 @@ export const Input: React.FC<InputProps> = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [hasValue, setHasValue] = useState(Boolean(value));
+
+  // Sync internal state with value prop changes
+  useEffect(() => {
+    setHasValue(Boolean(value));
+  }, [value]);
 
   const getSizeStyles = (size: string) => {
     switch (size) {

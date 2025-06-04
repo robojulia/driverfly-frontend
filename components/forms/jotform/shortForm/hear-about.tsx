@@ -127,7 +127,7 @@ export function HearAbout() {
       </div>
 
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset} className={styles.formStep}>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '800px', margin: '0' }}>
           <Select
             name="HEAR_ABOUT_US.value"
             label="Select an option"

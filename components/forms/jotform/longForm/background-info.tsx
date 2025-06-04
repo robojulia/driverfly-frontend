@@ -80,21 +80,16 @@ export function BackgroundInfo() {
 
   useEffect(() => {
     const { birthdate, city, state, zip_code, address_1, address_2 } = applicant;
+
     form.setValues({
-      ...form.values,
-      address_1: address_1 || null,
-      address_2: address_2 || null,
-      birthdate: birthdate || null,
-      city: city || null,
-      state: state || null,
-      zip_code: zip_code || null,
+      address_1: address_1 || '',
+      address_2: address_2 || '',
+      birthdate: birthdate || '',
+      city: city || '',
+      state: state || '',
+      zip_code: zip_code || '',
     });
   }, [applicant]);
-
-  const today = new Date();
-  const OldThan18Year = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
-    .toISOString()
-    .split('T')[0];
 
   const handleNext = () => {
     const syntheticEvent = {
@@ -135,7 +130,7 @@ export function BackgroundInfo() {
       </div>
 
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset} className={styles.formStep}>
-        <div style={{ maxWidth: '100%', margin: '0 auto', padding: '0 1rem' }}>
+        <div style={{ maxWidth: '100%', margin: '0', padding: '0 1rem' }}>
           <div style={{ marginBottom: '2rem' }}>
             <Input
               name="birthdate"

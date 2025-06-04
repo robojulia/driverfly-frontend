@@ -176,7 +176,7 @@ export function CdlExperience() {
         onReset={form.handleReset}
         className={`${styles.align__text_left} ${styles.formStep}`}
       >
-        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '600px', margin: '0' }}>
           <Row className={`${styles.bold} my-3`}>
             <BaseSelect
               className="col-12"
