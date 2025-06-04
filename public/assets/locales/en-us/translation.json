@@ -2005,6 +2005,8 @@
   "MEDICAL_CARD_UPLOAD_TITLE": "Medical Card Photo",
   "PAST_EMPLOYMENT_HISTORY": "Past Employment History",
   "ADD_PAST_EMPLOYMENT_HISTORY": "Add Past Employment History",
+  "PAST_EMPLOYMENT_REQUIREMENTS": "Past Employment Requirements",
+  "PAST_EMPLOYMENT_EMPTY_CASE": "You have not provided any past employment history.",
   "HONEST_ABOUT_PAST_EMPLOYMENT": "Please be honest about your past employment as this helps speed up the hiring process.",
   "TITLE_ADD_ACCIDENT_DETAILS": " Add accident details",
   "TITLE_ADD_VIOLATION_DETAILS": "Add violation details",

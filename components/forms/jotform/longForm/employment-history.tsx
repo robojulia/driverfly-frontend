@@ -53,7 +53,6 @@ export function EmploymentHistory() {
     const hasNoErrors = Object.keys(form.errors).length === 0;
 
     if (form.values.is_current_employed) {
-      console.log(form.values);
       // If currently employed, all required fields must be filled
       const requiredFieldsFilled = !!(
         form.values.employer?.can_contact &&
