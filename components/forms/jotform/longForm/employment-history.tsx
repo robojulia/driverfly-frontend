@@ -53,8 +53,10 @@ export function EmploymentHistory() {
     const hasNoErrors = Object.keys(form.errors).length === 0;
 
     if (form.values.is_current_employed) {
+      console.log(form.values);
       // If currently employed, all required fields must be filled
       const requiredFieldsFilled = !!(
+        form.values.employer?.can_contact &&
         form.values.employer?.name &&
         form.values.employer?.title &&
         form.values.employer?.start_at &&
@@ -233,8 +235,10 @@ export function EmploymentHistory() {
                 <Checkbox
                   name="employer.can_contact"
                   label={t('CONATACT_AUTHORITY')}
-                  checked={form.values.employer?.can_contact || false}
-                  onChange={form.handleChange}
+                  checked={Boolean(form.values.employer?.can_contact)}
+                  onChange={(e) => {
+                    form.setFieldValue('employer.can_contact', e.target.checked);
+                  }}
                   onBlur={form.handleBlur}
                   required
                   error={
@@ -247,6 +251,7 @@ export function EmploymentHistory() {
 
               {/* Company Name and Position - Side by side on larger screens */}
               <div
+                className="employment-form-grid"
                 style={{
                   display: 'grid',
                   gridTemplateColumns: '1fr 1fr',
@@ -289,6 +294,7 @@ export function EmploymentHistory() {
 
               {/* Start Date and Phone */}
               <div
+                className="employment-form-grid"
                 style={{
                   display: 'grid',
                   gridTemplateColumns: '1fr 1fr',
@@ -327,6 +333,7 @@ export function EmploymentHistory() {
 
               {/* Manager Name and Email */}
               <div
+                className="employment-form-grid"
                 style={{
                   display: 'grid',
                   gridTemplateColumns: '1fr 1fr',
@@ -370,6 +377,7 @@ export function EmploymentHistory() {
 
               {/* Address Fields */}
               <div
+                className="employment-form-grid"
                 style={{
                   display: 'grid',
                   gridTemplateColumns: '1fr 1fr',
@@ -406,6 +414,7 @@ export function EmploymentHistory() {
 
               {/* Zip, City, and State */}
               <div
+                className="employment-form-grid"
                 style={{
                   display: 'grid',
                   gridTemplateColumns: '1fr 1fr 1fr',
@@ -466,6 +475,7 @@ export function EmploymentHistory() {
 
               {/* Compliance Checkboxes */}
               <div
+                className="employment-form-grid"
                 style={{
                   display: 'grid',
                   gridTemplateColumns: '1fr 1fr',
@@ -476,16 +486,20 @@ export function EmploymentHistory() {
                 <Checkbox
                   name="employer.is_subject_to_fmcsrs"
                   label={t('FMCR_QUESTION')}
-                  checked={form.values.employer?.is_subject_to_fmcsrs || false}
-                  onChange={form.handleChange}
+                  checked={Boolean(form.values.employer?.is_subject_to_fmcsrs)}
+                  onChange={(e) => {
+                    form.setFieldValue('employer.is_subject_to_fmcsrs', e.target.checked);
+                  }}
                   onBlur={form.handleBlur}
                 />
 
                 <Checkbox
                   name="employer.is_subject_to_drug_tests"
                   label={t('JOB_DESIGNATED_CURRENT_COMPANY')}
-                  checked={form.values.employer?.is_subject_to_drug_tests || false}
-                  onChange={form.handleChange}
+                  checked={Boolean(form.values.employer?.is_subject_to_drug_tests)}
+                  onChange={(e) => {
+                    form.setFieldValue('employer.is_subject_to_drug_tests', e.target.checked);
+                  }}
                   onBlur={form.handleBlur}
                 />
               </div>
@@ -503,6 +517,15 @@ export function EmploymentHistory() {
           backButtonText={t('BACK')}
         />
       </Form>
+
+      {/* Mobile responsive styles */}
+      <style>{`
+        @media (max-width: 768px) {
+          .employment-form-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </>
   );
 }
