@@ -74,7 +74,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     position: 'relative',
     flexShrink: 0,
-    marginTop: '2px',
+    marginTop: '0',
   };
 
   const labelContainerStyles: React.CSSProperties = {
@@ -114,6 +114,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     fontSize: size === 'small' ? '10px' : size === 'large' ? '16px' : '12px',
     fontWeight: 'bold',
     pointerEvents: 'none',
+    marginTop: '-3px',
   };
 
   const handleContainerClick = () => {
