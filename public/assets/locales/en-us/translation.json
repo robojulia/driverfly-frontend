@@ -2115,6 +2115,8 @@
   "DISCLOSURE_AND_AUTHROIZE_DATE": "Date of Disclosure and Authorization",
   "IMPOERANT_BACKGROUND_DATE": "Important Background Date ",
   "cdl_license_number": "CDL license Number",
+  "ADDITIONAL_CDL_LICENSES": "Additional CDL licenses",
+  "ADDITIONAL_CDL_LICENSES_HELP_TITLE": "Provide any additional CDL licenses you may have",
   "OTHER_ABSOLUTE_REQUIREMENTS": "Other Absolute Requirements",
   "W2_requirements": "W2 Employment Requirements",
   "DO_YOU_REQUIRE_W2_EMPLOYMET": "Do you require W2 employment?",

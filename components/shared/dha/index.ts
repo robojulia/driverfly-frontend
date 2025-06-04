@@ -7,6 +7,8 @@ export { Input } from './input';
 export { MaskedInput } from './masked-input';
 export { RadioGroup } from './radio-group';
 export { CheckboxGroup } from './checkbox-group';
+export { Checkbox } from './checkbox';
 export { Select } from './select';
 export { EquipmentCard } from './equipment-card';
+export { DocumentCard } from './document-card';
 export { Button } from './button';

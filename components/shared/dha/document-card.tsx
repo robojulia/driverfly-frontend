@@ -1,22 +1,22 @@
 import React from 'react';
 import { useTranslation } from '../../../hooks/use-translation';
 
-interface EquipmentCardProps {
+interface DocumentCardProps {
   title: string;
+  subtitle?: string;
+  icon?: string;
   children: React.ReactNode;
   actions?: React.ReactNode;
   className?: string;
-  emptyStateText?: string;
-  emptyStateSubtext?: string;
 }
 
-export const EquipmentCard: React.FC<EquipmentCardProps> = ({
+export const DocumentCard: React.FC<DocumentCardProps> = ({
   title,
+  subtitle,
+  icon = '📄',
   children,
   actions,
   className = '',
-  emptyStateText,
-  emptyStateSubtext,
 }) => {
   const { t } = useTranslation();
 
@@ -39,6 +39,12 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
     borderBottom: '1px solid #e0e5eb',
   };
 
+  const titleContainerStyles: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.25rem',
+  };
+
   const titleStyles: React.CSSProperties = {
     fontSize: '1.25rem',
     fontWeight: '600',
@@ -49,6 +55,12 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
     gap: '0.5rem',
   };
 
+  const subtitleStyles: React.CSSProperties = {
+    fontSize: '0.875rem',
+    color: '#667788',
+    margin: 0,
+  };
+
   const iconStyles: React.CSSProperties = {
     fontSize: '1.5rem',
   };
@@ -57,40 +69,20 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
     minHeight: '2rem',
   };
 
-  const emptyStateStyles: React.CSSProperties = {
-    textAlign: 'center',
-    padding: '2rem',
-    color: '#667788',
-    fontSize: '0.875rem',
-  };
-
-  const hasContent = React.Children.count(children) > 0;
-
-  // Default empty state messages
-  const defaultEmptyText = emptyStateText || t('NO_EQUIPMENT_EXPERIENCE_PROVIDED');
-  const defaultEmptySubtext = emptyStateSubtext || t('CLICK_ADD_TO_GET_STARTED');
-
   return (
     <div style={cardStyles} className={className}>
       <div style={headerStyles}>
-        <h3 style={titleStyles}>
-          <span style={iconStyles}>🚛</span>
-          {t(title)}
-        </h3>
+        <div style={titleContainerStyles}>
+          <h3 style={titleStyles}>
+            <span style={iconStyles}>{icon}</span>
+            {t(title)}
+          </h3>
+          {subtitle && <p style={subtitleStyles}>{subtitle}</p>}
+        </div>
         {actions && <div>{actions}</div>}
       </div>
 
-      <div style={contentStyles}>
-        {hasContent ? (
-          children
-        ) : (
-          <div style={emptyStateStyles}>
-            {defaultEmptyText}
-            <br />
-            <small>{defaultEmptySubtext}</small>
-          </div>
-        )}
-      </div>
+      <div style={contentStyles}>{children}</div>
     </div>
   );
 };

@@ -135,6 +135,8 @@ export function DuiAndEquipment() {
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <EquipmentCard
             title="equipment_experience"
+            emptyStateText={t('NO_EQUIPMENT_EXPERIENCE_PROVIDED')}
+            emptyStateSubtext={t('CLICK_ADD_TO_GET_STARTED')}
             actions={
               <Button
                 size="sm"
