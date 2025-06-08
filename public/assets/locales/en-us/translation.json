@@ -428,6 +428,7 @@
   "MAX_MOVING_VIOLATIONS": "Maximum moving violations",
   "MIN_MOVING_VIOLATIONS": "Minimum moving violations",
   "accidents_last_5_years": "Accidents within the last 5 years",
+  "HAVE_YOU_HAD_ACCIDENTS_LAST_5_YEARS": "Have you had any accidents in the last 5 years?",
   "accident_details": "Accident Details",
   "has_had_license_revoked": "Have any of applicant's license, permit, or privilege to operate a CMV ever been suspended or revoked?",
   "details": "Details",
