@@ -48,6 +48,7 @@
   "i_accept_{terms_and_condition}": "By clicking the submit button below, I hereby agree to and accept the {{terms_and_condition}}",
   "shortlist": "Shortlist",
   "company": "Company",
+  "personal_information": "Personal Information",
   "current_job": "Current Job",
   "date_offered": "Date Offered",
   "equipment": "Equipment",

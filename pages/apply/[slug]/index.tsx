@@ -41,7 +41,7 @@ export default function FullForm({ employer, preferences, utm, employerJobs }: F
   const stepBack = (): void => setSteps(steps - 1);
 
   // Total number of steps in the form
-  const totalSteps = 32; // Based on getFullFormPages in jotform-pages.tsx
+  const totalSteps = 31; // Based on getFullFormPages in jotform-pages.tsx (reduced by 1 after combining Names and BasicInfo)
 
   useEffect(() => {
     setApplicant((oldValues) => ({ ...oldValues, company: employer }));

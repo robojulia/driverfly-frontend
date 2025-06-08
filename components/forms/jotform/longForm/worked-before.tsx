@@ -1,14 +1,13 @@
-import { useFormik } from "formik";
-import { useContext, useEffect, useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import jotformContext from "../../../../context/jotform-context";
-import { useTranslation } from "../../../../hooks/use-translation";
-import { WorkedBeforeDto } from "../../../../models/jot-form/long-form/worked-before.dto";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import BaseCheck from "../../base-check";
-import BaseInput from "../../base-input";
-import BaseRadio from "../../base-radio";
-import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
+import { useFormik } from 'formik';
+import { useContext, useEffect } from 'react';
+import { Form, Row } from 'react-bootstrap';
+import jotformContext from '../../../../context/jotform-context';
+import { useTranslation } from '../../../../hooks/use-translation';
+import { WorkedBeforeDto } from '../../../../models/jot-form/long-form/worked-before.dto';
+import styles from '../../../../styles/digitalhiringapp.module.css';
+import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
+import { FormActions } from '../form-buttons';
+import { Input, RadioGroup } from '../../../shared/dha';
 
 export function WorkedBefore() {
   const {
@@ -21,7 +20,6 @@ export function WorkedBefore() {
   const form = useFormik({
     initialValues: {
       ...new WorkedBeforeDto(),
-      // Set default values to false (NO)
       already_applied_to_company: applicant.already_applied_to_company ?? null,
       already_worked_to_company: applicant.already_worked_to_company ?? null,
       already_worked_start_date: applicant.already_worked_start_date ?? null,
@@ -63,195 +61,233 @@ export function WorkedBefore() {
     }
   }, []);
 
-  // Check if the form is valid for enabling the Next button
-  const isFormValid = () => {
-    // Basic validation - required first question always
-    if (form.values.already_applied_to_company === null) return false;
+  // Helper functions for radio group values
+  const getAppliedBeforeValue = () => {
+    if (form.values.already_applied_to_company === true) return BooleanType.YES;
+    if (form.values.already_applied_to_company === false) return BooleanType.NO;
+    return undefined;
+  };
 
-    // If "No" was selected for first question, form is valid (no other fields required)
-    if (form.values.already_applied_to_company === false) return true;
+  const getWorkedBeforeValue = () => {
+    if (form.values.already_worked_to_company === true) return BooleanType.YES;
+    if (form.values.already_worked_to_company === false) return BooleanType.NO;
+    return undefined;
+  };
 
-    // If applied before is true, then worked before is required
-    if (
-      form.values.already_applied_to_company === true &&
-      form.values.already_worked_to_company === null
-    )
-      return false;
+  // Handle radio group changes
+  const handleAppliedBeforeChange = (value: string) => {
+    let newValue: boolean | null = null;
+    if (value === BooleanType.YES) {
+      newValue = true;
+    } else if (value === BooleanType.NO) {
+      newValue = false;
+      // Reset dependent fields when "No" is selected
+      form.setFieldValue('already_worked_to_company', false);
+      form.setFieldValue('already_worked_start_date', null);
+      form.setFieldValue('already_worked_end_date', null);
+    }
+    form.setFieldValue('already_applied_to_company', newValue);
+  };
 
-    // If worked before is true, dates are required
-    if (
-      form.values.already_worked_to_company === true &&
-      (!form.values.already_worked_start_date ||
-        !form.values.already_worked_end_date)
-    )
-      return false;
+  const handleWorkedBeforeChange = (value: string) => {
+    let newValue: boolean | null = null;
+    if (value === BooleanType.YES) {
+      newValue = true;
+    } else if (value === BooleanType.NO) {
+      newValue = false;
+      // Clear date fields when "No" is selected
+      form.setFieldValue('already_worked_start_date', null);
+      form.setFieldValue('already_worked_end_date', null);
+    }
+    form.setFieldValue('already_worked_to_company', newValue);
+  };
 
-    // Check for validation errors
-    return Object.keys(form.errors).length === 0;
+  // Format date for input
+  const formatDateForInput = (date: Date | string | null) => {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toISOString().split('T')[0];
+  };
+
+  // Get max date (today)
+  const getMaxDate = () => {
+    return new Date().toISOString().split('T')[0];
+  };
+
+  const handleNext = () => {
+    const syntheticEvent = {
+      preventDefault: () => {},
+      target: {},
+    } as any;
+    form.handleSubmit(syntheticEvent);
+  };
+
+  const handleBack = () => {
+    const syntheticEvent = {
+      preventDefault: () => {},
+      target: {},
+    } as any;
+    form.handleReset(syntheticEvent);
   };
 
   return (
     <>
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
-        {t("WORKED_BEFORE")}
+        {t('WORKED_BEFORE')}
       </h1>
 
-      <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-        <Row>
-          <BaseRadio
-            name={`already_applied_to_company`}
-            className="float-left ml-2 my-2 w-40"
-            label={`APPLIED_HERE_BEFORE`}
-            labelPrefix="BooleanType"
-            enumType={BooleanType}
-            required
-            value={
-              form.values.already_applied_to_company === true
-                ? BooleanType.YES
-                : form.values.already_applied_to_company === false
-                ? BooleanType.NO
-                : ""
-            }
-            onChange={({ target: { value } }) => {
-              // Set the value for the first question
-              form.setFieldValue(
-                "already_applied_to_company",
-                value === BooleanType.YES
-                  ? true
-                  : value === BooleanType.NO
-                  ? false
-                  : null
-              );
+      <div
+        style={{
+          maxWidth: '800px',
+          margin: '0 auto 2rem auto',
+          padding: '1rem',
+          backgroundColor: '#f8f9fa',
+          border: '1px solid #e0e5eb',
+          borderRadius: '8px',
+          color: '#667788',
+          fontSize: '0.95rem',
+          lineHeight: '1.5',
+        }}
+      >
+        <p style={{ margin: 0 }}>
+          Please let us know if you have previously applied to or worked with{' '}
+          <strong>{applicant?.company?.name}</strong>. This helps us better understand your
+          background and experience with our company.
+        </p>
+      </div>
 
-              // If NO is selected, reset all dependent fields
-              if (value === BooleanType.NO) {
-                form.setFieldValue("already_worked_to_company", false);
-                form.setFieldValue("already_worked_start_date", null);
-                form.setFieldValue("already_worked_end_date", null);
-
-                // Force validation after changing values
-                setTimeout(() => {
-                  form.validateForm();
-                }, 0);
+      <Form
+        onSubmit={form.handleSubmit}
+        onReset={form.handleReset}
+        className={`${styles.align__text_left} ${styles.formStep}`}
+      >
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          {/* First Question: Applied Before */}
+          <div className="my-4">
+            <RadioGroup
+              name="already_applied_to_company"
+              label={t('APPLIED_HERE_BEFORE')}
+              enumType={BooleanType}
+              value={getAppliedBeforeValue()}
+              onChange={handleAppliedBeforeChange}
+              required
+              error={
+                form.touched.already_applied_to_company && form.errors.already_applied_to_company
+                  ? String(form.errors.already_applied_to_company)
+                  : undefined
               }
-            }}
-          />
-          {form.touched.already_applied_to_company &&
-            form.errors.already_applied_to_company && (
-              <div className="invalid-feedback d-block ml-3">
-                {form.errors.already_applied_to_company}
-              </div>
-            )}
-        </Row>
-        {form.values?.already_applied_to_company ? (
-          <>
-            <Row>
-              <Col>
-                <BaseRadio
-                  name={`already_worked_to_company`}
-                  className="float-left ml-2 my-2 w-40"
-                  label={`WORKED_HERE_BEFORE`}
-                  labelPrefix="BooleanType"
-                  enumType={BooleanType}
-                  required
-                  value={
-                    form.values.already_worked_to_company === true
-                      ? BooleanType.YES
-                      : form.values.already_worked_to_company === false
-                      ? BooleanType.NO
-                      : ""
-                  }
-                  onChange={({ target: { value } }) => {
-                    // Set the value for worked before
-                    form.setFieldValue(
-                      "already_worked_to_company",
-                      value === BooleanType.YES
-                        ? true
-                        : value === BooleanType.NO
-                        ? false
-                        : null
-                    );
+              labelPrefix="BooleanType"
+              columns={2}
+              variant="card"
+              helperText="Select 'Yes' if you have previously submitted an application to this company"
+            />
+          </div>
 
-                    // If NO is selected, clear the date fields
-                    if (value === BooleanType.NO) {
-                      form.setFieldValue("already_worked_start_date", null);
-                      form.setFieldValue("already_worked_end_date", null);
-                    }
+          {/* Second Question: Worked Before (conditional) */}
+          {form.values.already_applied_to_company === true && (
+            <div className="my-4">
+              <RadioGroup
+                name="already_worked_to_company"
+                label={t('WORKED_HERE_BEFORE')}
+                enumType={BooleanType}
+                value={getWorkedBeforeValue()}
+                onChange={handleWorkedBeforeChange}
+                required
+                error={
+                  form.touched.already_worked_to_company && form.errors.already_worked_to_company
+                    ? String(form.errors.already_worked_to_company)
+                    : undefined
+                }
+                labelPrefix="BooleanType"
+                columns={2}
+                variant="card"
+                helperText="Select 'Yes' if you were previously employed by this company"
+              />
+            </div>
+          )}
 
-                    // Force validation after changing values
-                    setTimeout(() => {
-                      form.validateForm();
-                    }, 0);
-                  }}
-                />
-                {form.touched.already_worked_to_company &&
-                  form.errors.already_worked_to_company && (
-                    <div className="invalid-feedback d-block ml-3">
-                      {form.errors.already_worked_to_company}
-                    </div>
-                  )}
-              </Col>
-            </Row>
-            {form.values.already_worked_to_company ? (
-              <>
-                <Row>
-                  <BaseInput
-                    className="col-md-6 my-3 font-weight-bold"
-                    type="date"
-                    name="already_worked_start_date"
-                    placeholder="DATE"
-                    label="FROM"
-                    required
-                    max={
-                      new Date(
-                        new Date().getFullYear(),
-                        new Date().getMonth(),
-                        new Date().getDate()
-                      )
-                        .toISOString()
-                        .split("T")[0]
-                    }
-                    formik={form}
-                  />
-                  <BaseInput
-                    className="col-md-6 my-3 font-weight-bold"
-                    type="date"
-                    name="already_worked_end_date"
-                    placeholder="DATE"
-                    required
-                    label="TO"
-                    max={
-                      new Date(
-                        new Date().getFullYear(),
-                        new Date().getMonth(),
-                        new Date().getDate()
-                      )
-                        .toISOString()
-                        .split("T")[0]
-                    }
-                    formik={form}
-                  />
+          {/* Date Range (conditional) */}
+          {form.values.already_worked_to_company === true && (
+            <div className="my-4">
+              <div
+                style={{
+                  padding: '1rem',
+                  backgroundColor: '#f8f9fa',
+                  border: '1px solid #dee2e6',
+                  borderRadius: '8px',
+                  marginBottom: '1rem',
+                }}
+              >
+                <h6 style={{ marginBottom: '1rem', color: '#495057' }}>
+                  Employment Period Details
+                </h6>
+                <p style={{ fontSize: '0.9rem', color: '#6c757d', marginBottom: '1rem' }}>
+                  Please provide the dates when you worked for {applicant?.company?.name}
+                </p>
+
+                <Row className="g-3">
+                  <div className="col-md-6">
+                    <Input
+                      name="already_worked_start_date"
+                      type="date"
+                      label={t('FROM')}
+                      placeholder="Select start date"
+                      value={formatDateForInput(form.values.already_worked_start_date)}
+                      onChange={(e) => {
+                        const value = e.target.value ? new Date(e.target.value) : null;
+                        form.setFieldValue('already_worked_start_date', value);
+                      }}
+                      onBlur={form.handleBlur}
+                      required
+                      max={getMaxDate()}
+                      error={
+                        form.touched.already_worked_start_date &&
+                        form.errors.already_worked_start_date
+                          ? String(form.errors.already_worked_start_date)
+                          : undefined
+                      }
+                      icon={<span>📅</span>}
+                      helperText="When did you start working here?"
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <Input
+                      name="already_worked_end_date"
+                      type="date"
+                      label={t('TO')}
+                      placeholder="Select end date"
+                      value={formatDateForInput(form.values.already_worked_end_date)}
+                      onChange={(e) => {
+                        const value = e.target.value ? new Date(e.target.value) : null;
+                        form.setFieldValue('already_worked_end_date', value);
+                      }}
+                      onBlur={form.handleBlur}
+                      required
+                      max={getMaxDate()}
+                      min={formatDateForInput(form.values.already_worked_start_date)}
+                      error={
+                        form.touched.already_worked_end_date && form.errors.already_worked_end_date
+                          ? String(form.errors.already_worked_end_date)
+                          : undefined
+                      }
+                      icon={<span>📅</span>}
+                      helperText="When did you stop working here?"
+                    />
+                  </div>
                 </Row>
-              </>
-            ) : null}
-          </>
-        ) : null}
-        <Row className="mt-3">
-          <Col>
-            <Button className="float-right" type="reset">
-              {t("BACK")}
-            </Button>
-          </Col>
-          <Col>
-            <Button
-              className="float-left"
-              type="submit"
-              disabled={!isFormValid()}
-            >
-              {t("NEXT")}
-            </Button>
-          </Col>
-        </Row>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <FormActions
+          onNext={handleNext}
+          onBack={handleBack}
+          isSubmitting={form.isSubmitting}
+          isValid={form.isValid && !form.isValidating}
+          nextButtonText={t('NEXT')}
+          backButtonText={t('BACK')}
+        />
       </Form>
     </>
   );

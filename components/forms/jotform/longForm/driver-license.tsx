@@ -160,29 +160,6 @@ export function DriverLicense() {
         </p>
       </div>
 
-      {/* Warning message when no document is provided */}
-      {!hasDocument && (
-        <div
-          style={{
-            maxWidth: '100%',
-            margin: '0 auto 1rem auto',
-            padding: '1rem',
-            backgroundColor: '#fff3cd',
-            border: '1px solid #ffeaa7',
-            borderRadius: '8px',
-            color: '#856404',
-            fontSize: '0.95rem',
-            lineHeight: '1.5',
-          }}
-        >
-          <p style={{ margin: '0 0 0.5rem 0', fontWeight: '600', color: '#856404' }}>⚠️ Notice</p>
-          <p style={{ margin: 0 }}>
-            No license image will be available to the hiring company. Consider uploading your
-            driver&apos;s license to help expedite the application review process.
-          </p>
-        </div>
-      )}
-
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset} className={styles.formStep}>
         <div style={{ maxWidth: '100%', margin: '0', padding: '0 1rem' }}>
           {/* Media Preference Section */}

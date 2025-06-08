@@ -199,7 +199,7 @@ export function EmergencyContact() {
           >
             <DhaPhoneInput
               name="emergency_contact_number"
-              label={t('PHONE_NUMBER')}
+              label={t('phone')}
               placeholder="Phone Number"
               value={form.values.emergency_contact_number || ''}
               onChange={form.handleChange}
