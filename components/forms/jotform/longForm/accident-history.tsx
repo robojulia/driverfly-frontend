@@ -21,15 +21,19 @@ export function AccidentHistory() {
 
   const { t } = useTranslation();
 
-  // Custom validation schema that includes the has_accidents field
+  // Simple validation - just require the user to select yes/no, everything else is optional
   const validationSchema = yup.object({
-    has_accidents: yup.boolean().required('Please select whether you have had any accidents'),
-    accident_count: yup.number().required().nullable(),
-    accident_details: yup.string().when('has_accidents', {
-      is: true,
-      then: yup.string().required('Please provide a general description of the accidents'),
-      otherwise: yup.string().nullable(),
-    }),
+    has_accidents: yup
+      .boolean()
+      .nullable()
+      .test(
+        'is-selected',
+        'Please select whether you have had any accidents',
+        (value) => value !== null
+      ),
+    // All other fields are optional - the original DTO doesn't require them
+    accident_count: yup.number().min(0).nullable(),
+    accident_details: yup.string().nullable(),
     accident_history: yup.array().of(ApplicantAccidentEntity.yupSchema()),
   });
 
@@ -45,6 +49,7 @@ export function AccidentHistory() {
     onSubmit: (values) => {
       try {
         console.log('valuesDTO', values);
+        // Only submit the actual DTO fields, not the UI-only has_accidents field
         const { accident_count, accident_history, accident_details } = values;
         setApplicant({
           ...applicant,
@@ -91,11 +96,23 @@ export function AccidentHistory() {
   const showAccidentDetails = hasAccidents;
 
   const handleHasAccidentsChange = (value: string) => {
+    console.log('value', value);
     const hasAccidentsValue = value === BooleanType.YES;
     form.setFieldValue('has_accidents', hasAccidentsValue);
+    form.setFieldTouched('has_accidents', true);
 
-    if (!hasAccidentsValue) {
-      // Clear all accident data if user says no
+    // Force validation to run immediately
+    setTimeout(() => {
+      form.validateForm();
+    }, 0);
+
+    console.log('hasAccidentsValue', hasAccidentsValue);
+
+    if (hasAccidentsValue) {
+      // When user says yes, ensure count starts at 0 and will be updated by useEffect
+      form.setFieldValue('accident_count', 0);
+    } else {
+      // Clear all accident data if user says no and set count to 0
       form.setFieldValue('accident_history', []);
       form.setFieldValue('accident_details', '');
       form.setFieldValue('accident_count', 0);
@@ -158,6 +175,10 @@ export function AccidentHistory() {
     return touched && error ? String(error) : undefined;
   };
 
+  console.log('Accident History - Form values:', form.values);
+  console.log('Accident History - Form errors:', form.errors);
+  console.log('Accident History - Form isValid:', form.isValid);
+
   const handleNext = () => {
     const syntheticEvent = {
       preventDefault: () => {},
@@ -216,9 +237,7 @@ export function AccidentHistory() {
               onChange={handleHasAccidentsChange}
               required
               error={
-                form.touched.has_accidents &&
-                !form.values.has_accidents &&
-                form.values.has_accidents !== false
+                form.touched.has_accidents && form.values.has_accidents === null
                   ? 'Please select whether you have had any accidents'
                   : undefined
               }
@@ -332,12 +351,7 @@ export function AccidentHistory() {
                                 onChange={form.handleChange}
                                 onBlur={form.handleBlur}
                                 required
-                                error={
-                                  form.touched.accident_history?.[i]?.location_of_accident &&
-                                  form.errors.accident_history?.[i]?.location_of_accident
-                                    ? String(form.errors.accident_history[i].location_of_accident)
-                                    : undefined
-                                }
+                                error={getNestedError(`accident_history.${i}.location_of_accident`)}
                               />
                             </div>
                             <div className="col-12">
@@ -349,12 +363,7 @@ export function AccidentHistory() {
                                 onChange={form.handleChange}
                                 onBlur={form.handleBlur}
                                 required
-                                error={
-                                  form.touched.accident_history?.[i]?.nature_of_accident &&
-                                  form.errors.accident_history?.[i]?.nature_of_accident
-                                    ? String(form.errors.accident_history[i].nature_of_accident)
-                                    : undefined
-                                }
+                                error={getNestedError(`accident_history.${i}.nature_of_accident`)}
                                 icon={<span>📝</span>}
                               />
                             </div>
@@ -375,12 +384,7 @@ export function AccidentHistory() {
                                 onBlur={form.handleBlur}
                                 required
                                 min="0"
-                                error={
-                                  form.touched.accident_history?.[i]?.number_of_injured &&
-                                  form.errors.accident_history?.[i]?.number_of_injured
-                                    ? String(form.errors.accident_history[i].number_of_injured)
-                                    : undefined
-                                }
+                                error={getNestedError(`accident_history.${i}.number_of_injured`)}
                                 icon={<span>🏥</span>}
                               />
                             </div>

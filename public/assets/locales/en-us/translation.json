@@ -1614,6 +1614,8 @@
   "ALREADY_EMPLOYED": "Already Employed",
   "HAS_HAD_INFRACTIONS_LAST_5_YEARS": "Have you had any infractions in the previous 5 years?",
   "HAS_HAD_MOVING_VIOLATIONS_LAST_3_YEARS": "Have you had any moving violations (not at fault) in the previous 3 years?",
+  "HAVE_YOU_HAD_VIOLATIONS_LAST_3_YEARS": "Have you had any moving violations in the last 3 years?",
+  "VIOLATION_HISTORY": "Violation History",
   "ADMIN": "Admin",
   "REFERRAL_SOURCES": "Referral Sources",
   "REFERRAL_CODE": "Referral Code",
