@@ -1,8 +1,11 @@
 import React from 'react';
 import { useTranslation } from '../../hooks/use-translation';
 import BaseControl, { BaseControlProps } from './base-control';
+import styles from '../../styles/digitalhiringapp.module.css';
 
-export interface BaseInputProps extends BaseControlProps, React.InputHTMLAttributes<HTMLInputElement> {
+export interface BaseInputProps
+  extends BaseControlProps,
+    React.InputHTMLAttributes<HTMLInputElement> {
   accept?: string;
   handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   type?: string;
@@ -18,30 +21,33 @@ export interface BaseInputProps extends BaseControlProps, React.InputHTMLAttribu
 }
 
 const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
-  ({
-    formik,
-    accept,
-    required,
-    className,
-    label,
-    handleBlur,
-    type,
-    min,
-    max,
-    step,
-    placeholder,
-    displayPlaceholder,
-    value,
-    onChange,
-    onKeyDown,
-    readOnly,
-    name,
-    touched,
-    error,
-    append,
-    prepend,
-    ...rest
-  }, _ref) => {
+  (
+    {
+      formik,
+      accept,
+      required,
+      className,
+      label,
+      handleBlur,
+      type,
+      min,
+      max,
+      step,
+      placeholder,
+      displayPlaceholder,
+      value,
+      onChange,
+      onKeyDown,
+      readOnly,
+      name,
+      touched,
+      error,
+      append,
+      prepend,
+      ...rest
+    },
+    _ref
+  ) => {
     const { t } = useTranslation();
 
     if (formik) {
@@ -64,11 +70,11 @@ const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
     "T" character and assigns only the part before "T" to the `value` variable. This is likely done to
     handle cases where the input value includes a time component along with the date, and the code is
     extracting only the date part for display or processing purposes. */
-    if (type == "date" && typeof value == "string" && value?.includes("T")) {
-      value = value.split("T")[0];
+    if (type == 'date' && typeof value == 'string' && value?.includes('T')) {
+      value = value.split('T')[0];
     }
 
-    if (type === "date") {
+    if (type === 'date') {
       const currentOnChange = onChange;
 
       onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,8 +93,8 @@ const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
     }
 
     /* This code snippet is handling keyboard events for input fields based on the `type` property. */
-    if (type == "int" || type == "integer") {
-      type = "number";
+    if (type == 'int' || type == 'integer') {
+      type = 'number';
       step = 1;
       onKeyDown =
         onKeyDown ||
@@ -97,13 +103,13 @@ const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
          */
         function (e) {
           // prevent negative if the min value is set to 0
-          if (min != null && +min >= 0 && e.key == "-") e.preventDefault();
+          if (min != null && +min >= 0 && e.key == '-') e.preventDefault();
 
-          if (e.key == ".") {
+          if (e.key == '.') {
             e.preventDefault();
           }
         };
-    } else if (type == "number") {
+    } else if (type == 'number') {
       onKeyDown =
         onKeyDown ||
         /**
@@ -111,15 +117,15 @@ const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
          */
         function (e) {
           // prevent negative if the min value is set to 0
-          if (min != null && +min >= 0 && e.key == "-") e.preventDefault();
+          if (min != null && +min >= 0 && e.key == '-') e.preventDefault();
           // if (e.key != "-" && e.key != "." && isNaN(+e.key)) e.preventDefault();
-          if (["e", "E", "+"].includes(e.key)) e.preventDefault();
+          if (['e', 'E', '+'].includes(e.key)) e.preventDefault();
         };
     }
 
     /* This code snippet is a conditional check that modifies the `onChange` event handler function for the
     input field if the `type` of the input is "number". */
-    if (type == "number") {
+    if (type == 'number') {
       let currentOnChange = onChange;
 
       /**
@@ -128,7 +134,7 @@ const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
       onChange = (e) => {
         const { value } = e.target;
 
-        if (value && value.startsWith(".")) {
+        if (value && value.startsWith('.')) {
           e.target.value = `0${value}`;
         }
 
@@ -142,8 +148,8 @@ const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
     in the `rest` object to "numeric". This is a way to dynamically set the `inputMode` property based
     on the `type` of the input field being rendered. */
     if (!rest.inputMode) {
-      if (type == "number" || type == "int" || type == "integer") {
-        rest.inputMode = "numeric";
+      if (type == 'number' || type == 'int' || type == 'integer') {
+        rest.inputMode = 'numeric';
       }
     }
 
@@ -161,29 +167,28 @@ const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
       >
         <input
           ref={_ref}
-          accept={type == "file" ? accept : null}
+          accept={type == 'file' ? accept : null}
           onBlur={handleBlur}
-          type={type || "text"}
+          type={type || 'text'}
           min={min}
           max={max}
           step={step}
           placeholder={
             (displayPlaceholder || placeholder) &&
             t(
-              (typeof displayPlaceholder == "string" && displayPlaceholder) ||
-              placeholder ||
-              label ||
-              name
+              (typeof displayPlaceholder == 'string' && displayPlaceholder) ||
+                placeholder ||
+                label ||
+                name
             )
           }
-          // placeholder={t(placeholder == true ? label || name : (placeholder || "").toString())}
-          value={value == null ? "" : value}
+          value={value == null ? '' : value}
           onChange={onChange}
           onKeyDown={onKeyDown}
           readOnly={readOnly}
           name={name}
           id={name}
-          className={`form-control ${error ? "is-invalid" : ""}`}
+          className={`${styles.formInput} form-control ${error ? 'is-invalid' : ''}`}
           {...rest}
         />
       </BaseControl>
@@ -191,4 +196,6 @@ const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
   }
 );
 
-export default BaseInput
+BaseInput.displayName = 'BaseInput';
+
+export default BaseInput;

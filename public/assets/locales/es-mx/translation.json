@@ -5,5 +5,7 @@
   "FORM_INCOMPLETE": "Formulario incompleto",
   "COMPLETED_FORM": "Formulario completado",
   "INCOMPLETE_FORM": "Formulario incompleto",
-  "applied_jobs": "Trabajos aplicados"
+  "applied_jobs": "Trabajos aplicados",
+  "HAVE_YOU_HAD_VIOLATIONS_LAST_3_YEARS": "¿Ha tenido alguna violación de tránsito en los últimos 3 años?",
+  "VIOLATION_HISTORY": "Historial de Violaciones"
 }

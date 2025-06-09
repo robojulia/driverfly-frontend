@@ -1,18 +1,16 @@
-import { useFormik } from "formik";
-import { useContext, useEffect, useMemo, useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import JotformContext, {
-  JotFormContextType,
-} from "../../../../context/jotform-context";
-import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
-import { useTranslation } from "../../../../hooks/use-translation";
-import { AccidentViolationDto } from "../../../../models/jot-form/short-form/accident-violation.dto";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import ViewModal from "../../../view-details/view-modal";
-import BaseCheck from "../../base-check";
-import BaseInput from "../../base-input";
-import BaseRadio from "../../base-radio";
-import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
+import { useFormik } from 'formik';
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { Button, Col, Form, Row } from 'react-bootstrap';
+import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
+import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
+import { useTranslation } from '../../../../hooks/use-translation';
+import { AccidentViolationDto } from '../../../../models/jot-form/short-form/accident-violation.dto';
+import styles from '../../../../styles/digitalhiringapp.module.css';
+import ViewModal from '../../../view-details/view-modal';
+import BaseCheck from '../../base-check';
+import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
+import { FormActions } from '../form-buttons';
+import { Input, RadioGroup } from '../../../shared/dha';
 
 export function AccidentViolation() {
   const {
@@ -82,148 +80,197 @@ export function AccidentViolation() {
           ? applicantValues.moving_violations_count
           : 0,
       all_violations_count:
-        applicantValues.all_violations_count !== null
-          ? applicantValues.all_violations_count
-          : 0,
-      accident_count:
-        applicantValues.accident_count !== null
-          ? applicantValues.accident_count
-          : 0,
+        applicantValues.all_violations_count !== null ? applicantValues.all_violations_count : 0,
+      accident_count: applicantValues.accident_count !== null ? applicantValues.accident_count : 0,
     };
 
-    form.setValues(initialValues);
+    // Set values and reset form state to clear any validation errors
+    form.setValues(initialValues, false);
+    form.setTouched({}, false);
+    form.setErrors({});
 
-    // Force validation after setting values
+    // Validate form after initial value set with a small delay to ensure state is updated
     setTimeout(() => {
       form.validateForm();
-      form.setTouched({
-        moving_violations_count: true,
-        all_violations_count: true,
-        accident_count: true,
-      });
     }, 0);
   }, [applicantValues]);
 
-  // Detect any form validation changes
-  useEffect(() => {
-    console.log("form.errors", form.errors);
-  }, [form.errors]);
+  const handleNext = () => {
+    const syntheticEvent = {
+      preventDefault: () => {},
+      target: {},
+    } as any;
+    form.handleSubmit(syntheticEvent);
+  };
+
+  const handleBack = () => {
+    const syntheticEvent = {
+      preventDefault: () => {},
+      target: {},
+    } as any;
+    form.handleReset(syntheticEvent);
+  };
+
+  const shouldShowWorkAuthorizationCheck = () => {
+    return Boolean(applicant.license_type == DriverLicenseType.NO_CDL);
+  };
+
+  // Define radio group value clearly
+  const getDrugTestRadioValue = () => {
+    if (form.values.can_pass_drug_test === true) {
+      return BooleanType.YES;
+    }
+    if (form.values.can_pass_drug_test === false) {
+      return BooleanType.NO;
+    }
+    return undefined;
+  };
+
+  const drugTestRadioValue = getDrugTestRadioValue();
+
+  const handleDrugTestChange = (value: string) => {
+    let newValue: boolean | null = null;
+    if (value === BooleanType.YES) {
+      newValue = true;
+    } else if (value === BooleanType.NO) {
+      newValue = false;
+    }
+    form.setFieldValue('can_pass_drug_test', newValue);
+  };
 
   return (
     <>
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
-        {t("ACCIDENTS_AND_VIOLATIONS")}
+        {t('ACCIDENTS_AND_VIOLATIONS')}
       </h1>
-      <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-        <Row>
-          <BaseRadio
-            name={`can_pass_drug_test`}
-            className="float-left ml-2 my-2 w-40"
-            label={`can_pass_drug_test`}
-            labelPrefix="BooleanType"
-            enumType={BooleanType}
-            required
-            value={
-              form.values.can_pass_drug_test === true
-                ? BooleanType.YES
-                : form.values.can_pass_drug_test === false && BooleanType.NO
-            }
-            onChange={({ target: { value } }) => {
-              form.setFieldValue(
-                "can_pass_drug_test",
-                value === BooleanType.YES
-                  ? true
-                  : value === BooleanType.NO && false
-              );
-            }}
-          />
-          {form.touched.can_pass_drug_test &&
-            form.errors.can_pass_drug_test && (
-              <div className="invalid-feedback d-block">
-                {form.errors.can_pass_drug_test}
-              </div>
-            )}
-        </Row>
-        <Row>
-          <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-            {t(
-              "{company_name}_DRUG_TEST_DOT",
-              { company_name: applicant?.company?.name },
-              { translateProps: true }
-            )}
-          </p>
-        </Row>
-        <Row className={styles.bold}>
-          <BaseInput
-            className="col my-3"
-            required
-            name="moving_violations_count"
-            type="number"
-            step={1}
-            min={0}
-            label="voilations_in_last_3_years"
-            placeholder="PLACEHOLDER_FOR_DIGITS"
-            formik={form}
-          />
-        </Row>
-        <Row className={styles.bold}>
-          <BaseInput
-            className="col my-3"
-            required
-            name="all_violations_count"
-            type="number"
-            step={1}
-            min={0}
-            label="ALL_VIOLATION_IN_LAST_3_YEARS"
-            placeholder="PLACEHOLDER_FOR_DIGITS"
-            formik={form}
-          />
-        </Row>
-        <Row className={styles.bold}>
-          <BaseInput
-            min={0}
-            className="col my-3"
-            type="number"
-            required
-            name="accident_count"
-            label="accidents_last_5_years"
-            placeholder="PLACEHOLDER_FOR_DIGITS"
-            formik={form}
-          />
-        </Row>
-        <Row>
-          {Boolean(applicant.license_type == DriverLicenseType.NO_CDL) && (
-            <BaseCheck
-              className="col my-3"
-              name="authorized_to_work_in_us"
-              label="ELIGIBLE_TO_WORK_IN_US"
+
+      <Form
+        onSubmit={form.handleSubmit}
+        onReset={form.handleReset}
+        className={`${styles.align__text_left} ${styles.formStep}`}
+      >
+        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+          <div className="my-4">
+            <RadioGroup
+              name="can_pass_drug_test"
+              label={t('can_pass_drug_test')}
+              enumType={BooleanType}
+              value={drugTestRadioValue}
+              onChange={handleDrugTestChange}
               required
-              formik={form}
+              error={
+                form.touched.can_pass_drug_test && form.errors.can_pass_drug_test
+                  ? String(form.errors.can_pass_drug_test)
+                  : undefined
+              }
+              labelPrefix="BooleanType"
+              columns={2}
+              variant="card"
             />
+          </div>
+
+          <div className="my-3">
+            <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+              {t(
+                '{company_name}_DRUG_TEST_DOT',
+                { company_name: applicant?.company?.name },
+                { translateProps: true }
+              )}
+            </p>
+          </div>
+
+          <div className="my-3">
+            <Input
+              name="moving_violations_count"
+              type="number"
+              label={t('voilations_in_last_3_years')}
+              placeholder={t('PLACEHOLDER_FOR_DIGITS')}
+              value={form.values.moving_violations_count?.toString() || ''}
+              onChange={(e) => {
+                const value = parseInt(e.target.value) || 0;
+                form.setFieldValue('moving_violations_count', value);
+              }}
+              onBlur={form.handleBlur}
+              required
+              error={
+                form.touched.moving_violations_count && form.errors.moving_violations_count
+                  ? String(form.errors.moving_violations_count)
+                  : undefined
+              }
+              helperText="Enter the number of moving violations in the last 3 years"
+            />
+          </div>
+
+          <div className="my-3">
+            <Input
+              name="all_violations_count"
+              type="number"
+              label={t('ALL_VIOLATION_IN_LAST_3_YEARS')}
+              placeholder={t('PLACEHOLDER_FOR_DIGITS')}
+              value={form.values.all_violations_count?.toString() || ''}
+              onChange={(e) => {
+                const value = parseInt(e.target.value) || 0;
+                form.setFieldValue('all_violations_count', value);
+              }}
+              onBlur={form.handleBlur}
+              required
+              error={
+                form.touched.all_violations_count && form.errors.all_violations_count
+                  ? String(form.errors.all_violations_count)
+                  : undefined
+              }
+              helperText="Enter the total number of all violations in the last 3 years"
+            />
+          </div>
+
+          <div className="my-3">
+            <Input
+              name="accident_count"
+              type="number"
+              label={t('accidents_last_5_years')}
+              placeholder={t('PLACEHOLDER_FOR_DIGITS')}
+              value={form.values.accident_count?.toString() || ''}
+              onChange={(e) => {
+                const value = parseInt(e.target.value) || 0;
+                form.setFieldValue('accident_count', value);
+              }}
+              onBlur={form.handleBlur}
+              required
+              error={
+                form.touched.accident_count && form.errors.accident_count
+                  ? String(form.errors.accident_count)
+                  : undefined
+              }
+              helperText="Enter the number of accidents in the last 5 years"
+            />
+          </div>
+
+          {shouldShowWorkAuthorizationCheck() && (
+            <div className="my-4">
+              <BaseCheck
+                className="my-3"
+                name="authorized_to_work_in_us"
+                label="ELIGIBLE_TO_WORK_IN_US"
+                required
+                formik={form}
+              />
+              {form.touched.authorized_to_work_in_us && form.errors.authorized_to_work_in_us && (
+                <div className="invalid-feedback d-block">
+                  {form.errors.authorized_to_work_in_us}
+                </div>
+              )}
+            </div>
           )}
-          {form.touched.authorized_to_work_in_us &&
-            form.errors.authorized_to_work_in_us && (
-              <div className="invalid-feedback d-block">
-                {form.errors.authorized_to_work_in_us}
-              </div>
-            )}
-        </Row>
-        <Row className={"mt-3"}>
-          <Col>
-            <Button className="float-right" type="reset">
-              {t("BACK")}
-            </Button>
-          </Col>
-          <Col>
-            <Button
-              className="float-left"
-              type="submit"
-              disabled={form.isSubmitting || !form.isValid}
-            >
-              {t("NEXT")}
-            </Button>
-          </Col>
-        </Row>
+        </div>
+
+        <FormActions
+          onNext={handleNext}
+          onBack={handleBack}
+          isSubmitting={form.isSubmitting}
+          isValid={form.isValid && !form.isValidating}
+          nextButtonText={t('NEXT')}
+          backButtonText={t('BACK')}
+        />
       </Form>
 
       <ViewModal
@@ -234,11 +281,8 @@ export function AccidentViolation() {
         footer={
           <Row className="mt-5 w-100">
             <Col>
-              <Button
-                className="float-right"
-                onClick={() => setShowModal(false)}
-              >
-                {t("NO")}
+              <Button className="float-right" onClick={() => setShowModal(false)}>
+                {t('NO')}
               </Button>
             </Col>
             <Col>
@@ -249,7 +293,7 @@ export function AccidentViolation() {
                 }}
                 className="float-left theme-secondary-btn"
               >
-                {t("PROCEED")}
+                {t('PROCEED')}
               </Button>
             </Col>
           </Row>
@@ -257,12 +301,12 @@ export function AccidentViolation() {
       >
         <>
           <h3 className="text-center">
-            <b>{t("DHA_WARNING_MESSAGE_NOT_ELIGIBLE_TO_WORK_IN_US")}</b>
+            <b>{t('DHA_WARNING_MESSAGE_NOT_ELIGIBLE_TO_WORK_IN_US')}</b>
           </h3>
           <h4 className="text-center text-warning">
-            {t("NOT_ELIGIBLE_MESSAGE", { company: applicant?.company?.name })}
+            {t('NOT_ELIGIBLE_MESSAGE', { company: applicant?.company?.name })}
           </h4>
-          <h5 className="text-center">{t("PROCEED_WITH_APPLICATION")}</h5>
+          <h5 className="text-center">{t('PROCEED_WITH_APPLICATION')}</h5>
         </>
       </ViewModal>
     </>

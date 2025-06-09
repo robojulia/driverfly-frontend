@@ -1,8 +1,8 @@
-import React, { useRef, useState, useEffect } from "react";
-import { Form } from "react-bootstrap";
-import SignatureCanvas from "react-signature-canvas";
-import { useTranslation } from "../../../hooks/use-translation";
-import styles from "../../../styles/digitalhiringapp.module.css";
+import React, { useRef, useState, useEffect } from 'react';
+import { Form } from 'react-bootstrap';
+import SignatureCanvas from 'react-signature-canvas';
+import { useTranslation } from '../../../hooks/use-translation';
+import styles from '../../../styles/digitalhiringapp.module.css';
 
 interface SignatureComponentProps {
   firstName?: string;
@@ -21,19 +21,29 @@ export function SignatureComponent({
 }: SignatureComponentProps) {
   const { t } = useTranslation();
   const padRef = useRef<SignatureCanvas>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [typedSignatureConsent, setTypedSignatureConsent] = useState(false);
   const [hasSignature, setHasSignature] = useState(false);
   const [initialSignatureApplied, setInitialSignatureApplied] = useState(false);
   const lastSignatureRef = useRef<string | null>(null);
+  const [isDrawing, setIsDrawing] = useState(false);
 
   const clearSignatureCanvas = (): void => {
-    padRef?.current?.clear();
-    setHasSignature(false);
-    lastSignatureRef.current = null;
-    onSignatureChange(null);
+    if (padRef.current && !isDrawing) {
+      padRef.current.clear();
+      setHasSignature(false);
+      lastSignatureRef.current = null;
+      onSignatureChange(null);
+    }
+  };
+
+  const handleSignatureBegin = () => {
+    setIsDrawing(true);
   };
 
   const handleSignatureEnd = () => {
+    setIsDrawing(false);
+
     if (!padRef.current) return;
 
     const signatureValue = padRef.current.toDataURL().toString();
@@ -48,43 +58,51 @@ export function SignatureComponent({
 
   const generateTypedSignature = () => {
     if (!typedSignatureConsent) {
-      alert(t("PLEASE_CONSENT_TO_TYPED_SIGNATURE"));
+      alert(t('PLEASE_CONSENT_TO_TYPED_SIGNATURE'));
       return;
     }
 
     if (!firstName || !lastName) {
-      alert(t("NAME_REQUIRED_FOR_TYPED_SIGNATURE"));
+      alert(t('NAME_REQUIRED_FOR_TYPED_SIGNATURE'));
       return;
     }
 
     const canvas = padRef?.current;
-    if (!canvas) return;
+    if (!canvas || isDrawing) return;
 
     canvas.clear();
-    const ctx = canvas.getCanvas().getContext("2d");
+    const ctx = canvas.getCanvas().getContext('2d');
     if (!ctx) return;
+
+    const canvasElement = canvas.getCanvas();
+    const canvasWidth = canvasElement.width;
+    const canvasHeight = canvasElement.height;
 
     // Set up the canvas for signature
     ctx.font = "30px 'Dancing Script', cursive";
-    ctx.fillStyle = "black";
+    ctx.fillStyle = 'black';
 
     // Calculate position to center the signature
     const signatureText = `${firstName} ${lastName}`;
     const textMetrics = ctx.measureText(signatureText);
-    const x = (canvas.getCanvas().width - textMetrics.width) / 2;
-    const y = (canvas.getCanvas().height + 30) / 2;
+    const signatureX = (canvasWidth - textMetrics.width) / 2;
+    const signatureY = (canvasHeight + 30) / 2;
 
     // Add signature text
-    ctx.fillText(signatureText, x, y);
+    ctx.fillText(signatureText, signatureX, signatureY);
 
-    // Add timestamp for legal compliance
-    ctx.font = "12px Arial";
-    const timestamp = new Date().toISOString();
-    ctx.fillText(
-      `Electronically signed on ${timestamp}`,
-      10,
-      canvas.getCanvas().height - 10
-    );
+    // Add timestamp for legal compliance - positioned under the signature
+    ctx.font = '12px Arial';
+    ctx.fillStyle = '#666666'; // Slightly lighter color for timestamp
+    const timestamp = new Date().toLocaleString();
+    const timestampText = `Electronically signed on ${timestamp}`;
+
+    // Measure timestamp text and center it under the signature
+    const timestampMetrics = ctx.measureText(timestampText);
+    const timestampX = (canvasWidth - timestampMetrics.width) / 2;
+    const timestampY = signatureY + 25; // Position 25px below the signature
+
+    ctx.fillText(timestampText, timestampX, timestampY);
 
     // Get the signature value
     const signatureValue = canvas.toDataURL().toString();
@@ -106,16 +124,20 @@ export function SignatureComponent({
 
   // Apply initial signature only once when component mounts or initialSignature changes
   useEffect(() => {
-    if (initialSignature && padRef.current && !initialSignatureApplied) {
+    if (initialSignature && padRef.current && !initialSignatureApplied && !isDrawing) {
       // Check if this is a different signature than what we already have
       if (initialSignature !== lastSignatureRef.current) {
-        padRef.current.fromDataURL(initialSignature);
-        lastSignatureRef.current = initialSignature;
-        setHasSignature(true);
-        setInitialSignatureApplied(true);
+        try {
+          padRef.current.fromDataURL(initialSignature);
+          lastSignatureRef.current = initialSignature;
+          setHasSignature(true);
+          setInitialSignatureApplied(true);
+        } catch (error) {
+          console.warn('Failed to load initial signature:', error);
+        }
       }
     }
-  }, [initialSignature, initialSignatureApplied]);
+  }, [initialSignature, initialSignatureApplied, isDrawing]);
 
   // Reset initialSignatureApplied when initialSignature becomes null/undefined
   useEffect(() => {
@@ -125,37 +147,52 @@ export function SignatureComponent({
   }, [initialSignature]);
 
   return (
-    <div className={styles.txtcolor}>
+    <div className={styles.txtcolor} ref={containerRef}>
       {/* Signature Instructions */}
       <div className="mb-4">
-        <p className={styles.bold}>{t("SIGNATURE_INSTRUCTIONS")}</p>
+        <p className={styles.bold}>{t('SIGNATURE_INSTRUCTIONS')}</p>
         <ul>
-          <li>{t("SIGNATURE_OPTION_1")}</li>
-          <li>{t("SIGNATURE_OPTION_2")}</li>
+          <li>{t('SIGNATURE_OPTION_1')}</li>
+          <li>{t('SIGNATURE_OPTION_2')}</li>
         </ul>
         <p className="text-muted">
-          <em>{t("SIGNATURE_ACCESSIBILITY_NOTE")}</em>
+          <em>{t('SIGNATURE_ACCESSIBILITY_NOTE')}</em>
         </p>
       </div>
 
-      {/* Signature Canvas */}
-      <SignatureCanvas
-        ref={padRef}
-        onEnd={handleSignatureEnd}
-        canvasProps={{
-          style: { border: "1px solid black" },
-          className: "sigCanvas",
+      {/* Signature Canvas Container */}
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '100%',
+          overflow: 'hidden',
+          marginBottom: '1rem',
         }}
-      />
+      >
+        <SignatureCanvas
+          ref={padRef}
+          onBegin={handleSignatureBegin}
+          onEnd={handleSignatureEnd}
+          canvasProps={{
+            width: 600,
+            height: 200,
+            style: {
+              border: '2px solid #AAAAAA',
+              borderRadius: '8px',
+              display: 'block',
+              width: '100%',
+              maxWidth: '100%',
+              height: 'auto',
+            },
+            className: 'sigCanvas',
+          }}
+        />
+      </div>
 
       {/* Canvas Controls */}
       <div className="mb-4">
-        <button
-          type="button"
-          className="theme-secondary-btn me-2"
-          onClick={clearSignatureCanvas}
-        >
-          {t("CLEAR")}
+        <button type="button" className="theme-secondary-btn me-2" onClick={clearSignatureCanvas}>
+          {t('CLEAR')}
         </button>
       </div>
 
@@ -164,24 +201,22 @@ export function SignatureComponent({
         <Form.Check
           type="checkbox"
           id="typed-signature-consent"
-          label={t("I_CONSENT_TO_USE_TYPED_SIGNATURE")}
+          label={t('I_CONSENT_TO_USE_TYPED_SIGNATURE')}
           checked={typedSignatureConsent}
           onChange={handleConsentChange}
           className={`${styles.bold} mb-2`}
         />
         {typedSignatureConsent && (
           <div className="mb-3">
-            <small className="text-muted d-block mb-2">
-              {t("TYPED_SIGNATURE_LEGAL_NOTICE")}
-            </small>
+            <small className="text-muted d-block mb-2">{t('TYPED_SIGNATURE_LEGAL_NOTICE')}</small>
             <button
               type="button"
               className="theme-secondary-btn"
               onClick={generateTypedSignature}
               disabled={!typedSignatureConsent || !firstName || !lastName}
-              aria-label={t("USE_TYPED_SIGNATURE")}
+              aria-label={t('USE_TYPED_SIGNATURE')}
             >
-              {t("USE_TYPED_SIGNATURE")}
+              {t('USE_TYPED_SIGNATURE')}
             </button>
           </div>
         )}
@@ -189,7 +224,7 @@ export function SignatureComponent({
 
       {required && !hasSignature && (
         <p className={`h6 text-danger ${styles.align__text_left}`}>
-          <em>{t("ERROR_SIGNS_REQUIRED")}</em>
+          <em>{t('ERROR_SIGNS_REQUIRED')}</em>
         </p>
       )}
     </div>
