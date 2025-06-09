@@ -48,7 +48,6 @@ export function AccidentHistory() {
     validationSchema,
     onSubmit: (values) => {
       try {
-        console.log('valuesDTO', values);
         // Only submit the actual DTO fields, not the UI-only has_accidents field
         const { accident_count, accident_history, accident_details } = values;
         setApplicant({
@@ -105,8 +104,6 @@ export function AccidentHistory() {
     setTimeout(() => {
       form.validateForm();
     }, 0);
-
-    console.log('hasAccidentsValue', hasAccidentsValue);
 
     if (hasAccidentsValue) {
       // When user says yes, ensure count starts at 0 and will be updated by useEffect
@@ -174,10 +171,6 @@ export function AccidentHistory() {
 
     return touched && error ? String(error) : undefined;
   };
-
-  console.log('Accident History - Form values:', form.values);
-  console.log('Accident History - Form errors:', form.errors);
-  console.log('Accident History - Form isValid:', form.isValid);
 
   const handleNext = () => {
     const syntheticEvent = {
@@ -270,7 +263,6 @@ export function AccidentHistory() {
                     placeholder="Please provide a brief overview of the accidents you have been involved in..."
                     formik={form}
                     rows={3}
-                    required
                   />
                   <small className="text-muted">
                     Provide a general summary before adding specific details below
@@ -293,7 +285,11 @@ export function AccidentHistory() {
                 {hasAccidentHistory && (
                   <div className="mb-4">
                     {form.values.accident_history.map((accident, i) => (
-                      <Card key={i} className="mb-3" style={{ border: '1px solid #dee2e6' }}>
+                      <Card
+                        key={i}
+                        className="mb-3"
+                        style={{ border: '1px solidrgb(134, 142, 150)' }}
+                      >
                         <Card.Header
                           style={{
                             backgroundColor: '#ffffff',

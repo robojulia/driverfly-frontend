@@ -172,9 +172,6 @@ export function ViolationHistory() {
   };
 
   const handleNext = () => {
-    console.log('Violation History - Form values:', form.values);
-    console.log('Violation History - Form errors:', form.errors);
-    console.log('Violation History - Form isValid:', form.isValid);
     const syntheticEvent = {
       preventDefault: () => {},
       target: {},
