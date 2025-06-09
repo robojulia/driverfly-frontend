@@ -248,7 +248,6 @@ export function UnableForJob() {
                   placeholder="Please describe your limitations and any reasonable accommodations you may need..."
                   formik={form}
                   rows={4}
-                  required
                 />
                 <small className="text-muted">
                   Include details about specific limitations and what accommodations would help you

@@ -1,15 +1,15 @@
-import { useFormik } from "formik";
-import { useContext, useEffect, useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import JotformContext, {
-  JotFormContextType,
-} from "../../../../context/jotform-context";
-import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
-import { useTranslation } from "../../../../hooks/use-translation";
-import { FelonyConvictionDto } from "../../../../models/jot-form/long-form/felony-conviction.dto";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import BaseRadio from "../../base-radio";
-import BaseTextArea from "../../base-text-area";
+import { useFormik } from 'formik';
+import { useContext, useEffect, useState } from 'react';
+import { Form } from 'react-bootstrap';
+import * as yup from 'yup';
+import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
+import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
+import { useTranslation } from '../../../../hooks/use-translation';
+import { FelonyConvictionDto } from '../../../../models/jot-form/long-form/felony-conviction.dto';
+import styles from '../../../../styles/digitalhiringapp.module.css';
+import { FormActions } from '../form-buttons';
+import { RadioGroup } from '../../../shared/dha';
+import BaseTextArea from '../../base-text-area';
 
 export function FelonyConviction() {
   const {
@@ -18,16 +18,34 @@ export function FelonyConviction() {
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
+  const [isValid, setIsValid] = useState(false);
+
+  // Enhanced validation schema
+  const validationSchema = yup.object({
+    is_convicted_felony: yup
+      .boolean()
+      .nullable()
+      .test(
+        'is-selected',
+        'Please select whether you have been convicted of a felony',
+        (value) => value !== null
+      ),
+    criminal_history: yup.string().when('is_convicted_felony', {
+      is: true,
+      then: (schema) => schema.required('Please provide details about your criminal history'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+  });
 
   const form = useFormik({
     initialValues: {
-      ...new FelonyConvictionDto(),
-      is_convicted_felony: null,
-      criminal_history: applicant.criminal_history || "",
+      is_convicted_felony: null as boolean | null,
+      criminal_history: '',
     },
-    validationSchema: FelonyConvictionDto.yupSchema(),
-    validateOnMount: true,
+    validationSchema,
+    validateOnMount: false,
     validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: (values) => {
       const { is_convicted_felony, criminal_history } = values;
       setApplicant({
@@ -48,7 +66,7 @@ export function FelonyConviction() {
       form.setValues({
         ...form.values,
         is_convicted_felony: null,
-        criminal_history: applicant.criminal_history || "",
+        criminal_history: applicant.criminal_history || '',
       });
 
       // Validate form after setting values
@@ -56,101 +74,179 @@ export function FelonyConviction() {
         form.validateForm();
       }, 0);
     }
-  }, []);
+  }, [applicant]);
 
-  // Check if form is valid for Next button
-  const isFormValid = () => {
-    // First field is always required
-    if (form.values.is_convicted_felony === null) return false;
+  // Custom form validity check
+  const checkFormValidity = () => {
+    // The question must be answered
+    const questionAnswered = form.values.is_convicted_felony !== null;
 
-    // If Yes is selected, criminal_history is required
-    if (
-      form.values.is_convicted_felony === true &&
-      !form.values.criminal_history
-    )
-      return false;
+    // If they have been convicted, explanation is required
+    let explanationValid = true;
+    if (form.values.is_convicted_felony === true) {
+      const criminalHistory = form.values.criminal_history;
+      explanationValid = !!(criminalHistory && criminalHistory.trim().length > 0);
+    }
 
-    // Check for validation errors
-    return Object.keys(form.errors).length === 0;
+    // Check if there are any validation errors
+    const hasNoErrors = Object.keys(form.errors).length === 0;
+
+    return questionAnswered && explanationValid && hasNoErrors;
+  };
+
+  // Update validity state whenever form values or errors change
+  useEffect(() => {
+    const newIsValid = checkFormValidity();
+    if (newIsValid !== isValid) {
+      setIsValid(newIsValid);
+    }
+  }, [form.values, form.errors, form.touched]);
+
+  // Helper functions for radio group values
+  const getFelonyConvictionValue = () => {
+    if (form.values.is_convicted_felony === true) return BooleanType.YES;
+    if (form.values.is_convicted_felony === false) return BooleanType.NO;
+    return undefined;
+  };
+
+  // Handle radio group changes
+  const handleFelonyConvictionChange = (value: string) => {
+    const hasConviction = value === BooleanType.YES;
+
+    form.setFieldValue('is_convicted_felony', hasConviction);
+    form.setFieldTouched('is_convicted_felony', true);
+
+    // If they don't have a conviction, clear the criminal history
+    if (!hasConviction) {
+      form.setFieldValue('criminal_history', '');
+    }
+
+    // Force validation to run immediately
+    setTimeout(() => {
+      form.validateForm();
+    }, 0);
+  };
+
+  const handleNext = () => {
+    // Mark all fields as touched to show validation errors
+    form.setFieldTouched('is_convicted_felony', true);
+    if (form.values.is_convicted_felony === true) {
+      form.setFieldTouched('criminal_history', true);
+    }
+
+    // Validate the form
+    form.validateForm().then((errors) => {
+      if (Object.keys(errors).length === 0 && isValid) {
+        const syntheticEvent = {
+          preventDefault: () => {},
+          target: {},
+        } as any;
+        form.handleSubmit(syntheticEvent);
+      }
+    });
+  };
+
+  const handleBack = () => {
+    const syntheticEvent = {
+      preventDefault: () => {},
+      target: {},
+    } as any;
+    form.handleReset(syntheticEvent);
   };
 
   return (
     <>
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
-        {t("FELONY_CONVICTION")}
+        {t('FELONY_CONVICTION')}
       </h1>
 
-      <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-        <Row className={styles.paragraph__left}>
-          <BaseRadio
-            name="is_convicted_felony"
-            className="float-left ml-2 my-2 w-40"
-            label="EVER_FELONY_QUESTION"
-            labelPrefix="BooleanType"
-            enumType={BooleanType}
-            required
-            value={
-              form.values.is_convicted_felony === true
-                ? BooleanType.YES
-                : form.values.is_convicted_felony === false
-                ? BooleanType.NO
-                : ""
-            }
-            onChange={({ target: { value } }) => {
-              form.setFieldValue(
-                "is_convicted_felony",
-                value === BooleanType.YES
-                  ? true
-                  : value === BooleanType.NO
-                  ? false
-                  : null
-              );
-              if (value !== BooleanType.YES) {
-                form.setFieldValue("criminal_history", "");
-              }
+      <div
+        style={{
+          maxWidth: '800px',
+          margin: '0 auto 2rem auto',
+          padding: '1rem',
+          backgroundColor: '#f8f9fa',
+          border: '1px solid #e0e5eb',
+          borderRadius: '8px',
+          color: '#667788',
+          fontSize: '0.95rem',
+          lineHeight: '1.5',
+        }}
+      >
+        <p style={{ margin: '0 0 0.5rem 0', fontWeight: '600', color: '#1a2b3c' }}>
+          ⚖️ Criminal History & Background
+        </p>
+        <p style={{ margin: 0 }}>
+          We are required to ask about criminal history as part of our background verification
+          process. Having a criminal record does not automatically disqualify you from employment,
+          and we consider each case individually in compliance with applicable laws.
+        </p>
+      </div>
 
-              // Force validation after value change
-              setTimeout(() => {
-                form.validateForm();
-              }, 0);
-            }}
-          />
-          {form.touched.is_convicted_felony &&
-            form.errors.is_convicted_felony && (
-              <div className="invalid-feedback d-block ml-3">
-                {form.errors.is_convicted_felony}
-              </div>
-            )}
-        </Row>
-
-        {form.values.is_convicted_felony === true && (
-          <>
-            <BaseTextArea
-              className="col-12 mt-2"
-              label="PAST_CONVICTION"
-              name="criminal_history"
+      <Form
+        onSubmit={form.handleSubmit}
+        onReset={form.handleReset}
+        className={`${styles.align__text_left} ${styles.formStep}`}
+      >
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          {/* Felony Conviction Question */}
+          <div className="my-4">
+            <RadioGroup
+              name="is_convicted_felony"
+              label={t('EVER_FELONY_QUESTION')}
+              enumType={BooleanType}
+              value={getFelonyConvictionValue()}
+              onChange={handleFelonyConvictionChange}
               required
-              formik={form}
+              error={
+                form.touched.is_convicted_felony && form.errors.is_convicted_felony
+                  ? String(form.errors.is_convicted_felony)
+                  : undefined
+              }
+              labelPrefix="BooleanType"
+              columns={2}
+              variant="card"
+              helperText="Include all felony convictions, regardless of when they occurred"
             />
-          </>
-        )}
+          </div>
 
-        <Row className="mt-5">
-          <Col>
-            <Button className="float-right" type="reset">
-              {t("BACK")}
-            </Button>
-          </Col>
-          <Col>
-            <Button
-              className="float-left"
-              type="submit"
-              disabled={!isFormValid()}
-            >
-              {t("NEXT")}
-            </Button>
-          </Col>
-        </Row>
+          {/* Criminal History Details */}
+          {form.values.is_convicted_felony === true && (
+            <div className="my-4">
+              <div
+                style={{
+                  padding: '1rem',
+                  backgroundColor: '#f8f9fa',
+                  border: '1px solid #dee2e6',
+                  borderRadius: '8px',
+                  marginBottom: '1rem',
+                }}
+              >
+                <BaseTextArea
+                  name="criminal_history"
+                  label={t('PAST_CONVICTION')}
+                  placeholder="Please provide details about your conviction(s), including dates, charges, and current status..."
+                  formik={form}
+                  rows={4}
+                />
+                <small className="text-muted">
+                  Include dates of conviction, nature of the charges, and any relevant
+                  circumstances. This information helps us make fair hiring decisions in compliance
+                  with applicable laws.
+                </small>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <FormActions
+          onNext={handleNext}
+          onBack={handleBack}
+          isSubmitting={form.isSubmitting}
+          isValid={isValid}
+          nextButtonText={t('NEXT')}
+          backButtonText={t('BACK')}
+        />
       </Form>
     </>
   );
