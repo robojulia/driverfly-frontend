@@ -20,6 +20,7 @@ import {
   ViolationHistory,
   WorkedBefore,
 } from './longForm';
+import { LegalDocumentsPage } from './longForm/legal-documents';
 import { SubmitMissingDocuments } from './longForm/submit-missing-document';
 import {
   AccidentViolation,
@@ -66,7 +67,7 @@ const getFullFormPages = (step: number): JSX.Element =>
     25: <UnableForJob />,
     26: <FelonyConviction />,
     27: <DrugTest />,
-    28: <AccordianPage />,
+    28: <LegalDocumentsPage />,
     29: <ThankyouPage />,
   }[step]);
 
@@ -94,7 +95,7 @@ const getLongFormPages = (step: number): JSX.Element =>
     14: <UnableForJob />,
     15: <FelonyConviction />,
     16: <DrugTest />,
-    17: <AccordianPage />,
+    17: <LegalDocumentsPage />,
     19: <ThankyouPage />,
   }[step]);
 
@@ -109,7 +110,7 @@ const getSuggestedJobPages = (step: number, jobId?: number): JSX.Element =>
   ({
     0: <DriverApplication isAutoRecruitmentLead={Boolean(jobId)} />,
     1: <WorkedBefore />,
-    2: <AccordianPage />,
+    2: <LegalDocumentsPage />,
     3: <ThankyouPage />,
     4: <AlreadyAppliedPage />,
   }[step]);

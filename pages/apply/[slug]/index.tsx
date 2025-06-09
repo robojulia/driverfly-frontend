@@ -7,6 +7,7 @@ import {
   getFullFormStyle,
 } from '../../../components/forms/jotform/jotform-pages';
 import FormProgress from '../../../components/forms/jotform/form-progress';
+import { DevPageNavigator } from '../../../components/developer/dev-page-navigator';
 import JotformContext from '../../../context/jotform-context';
 import { Status } from '../../../enums/status.enum';
 import { ApplicantEntity, ApplicantExtrasEntity } from '../../../models/applicant';
@@ -41,7 +42,7 @@ export default function FullForm({ employer, preferences, utm, employerJobs }: F
   const stepBack = (): void => setSteps(steps - 1);
 
   // Total number of steps in the form
-  const totalSteps = 31; // Based on getFullFormPages in jotform-pages.tsx (reduced by 1 after combining Names and BasicInfo)
+  const totalSteps = 30; // Based on getFullFormPages in jotform-pages.tsx
 
   useEffect(() => {
     setApplicant((oldValues) => ({ ...oldValues, company: employer }));
@@ -82,6 +83,9 @@ export default function FullForm({ employer, preferences, utm, employerJobs }: F
           </div>
         </div>
       </div>
+
+      {/* Developer Page Navigator */}
+      <DevPageNavigator formType="full" currentStep={steps} totalSteps={totalSteps} />
     </JotformContext.Provider>
   );
 }

@@ -1,115 +1,124 @@
-import { useEffect, useState } from "react";
-import {
-	getLongFormPages,
-	getLongFormStyle,
-} from "../../../../components/forms/jotform/jotform-pages";
-import JotformContext from "../../../../context/jotform-context";
-import {
-	ApplicantEntity,
-	ApplicantExtrasEntity,
-} from "../../../../models/applicant";
-import { CompanyEntity } from "../../../../models/company/company.entity";
-import ApplicantApi from "../../../api/applicant";
-import CompanyApi from "../../../api/company";
-import styles from "../../../../styles/digitalhiringapp.module.css";
+import { NextPageContext } from 'next';
+import { useEffect, useState } from 'react';
+import 'react-toastify/dist/ReactToastify.css';
+
+import { getLongFormPages } from '../../../../components/forms/jotform/jotform-pages';
+import { DevPageNavigator } from '../../../../components/developer/dev-page-navigator';
+import JotformContext from '../../../../context/jotform-context';
+import { ApplicantEntity, ApplicantExtrasEntity } from '../../../../models/applicant';
+import { CompanyPreferenceEntity } from '../../../../models/company/company-preferences.entity';
+import { JobEntity } from '../../../../models/job/job.entity';
+import styles from '../../../../styles/digitalhiringapp.module.css';
+import ApplicantApi from '../../../api/applicant';
+import FormProgress from '../../../../components/forms/jotform/form-progress';
 
 export interface LongFormProps {
-	entity: ApplicantEntity;
-	company: CompanyEntity;
+  applicant: ApplicantEntity;
+  applicantExtras: ApplicantExtrasEntity[];
+  jobs?: JobEntity[];
+  companyPreferences?: CompanyPreferenceEntity[];
 }
 
-export default function LongForm({ entity, company }: LongFormProps) {
-	const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
-	const [applicantExtras, setApplicantExtras] = useState<
-		ApplicantExtrasEntity[]
-	>(entity.extras);
+export default function LongForm({
+  applicant: initialApplicant,
+  applicantExtras: initialApplicantExtras,
+  jobs: initialJobs,
+  companyPreferences,
+}: LongFormProps) {
+  const [jobs, setJobs] = useState<JobEntity[]>(initialJobs);
+  const [applicant, setApplicant] = useState<ApplicantEntity>(initialApplicant);
+  const [applicantExtras, setApplicantExtras] =
+    useState<ApplicantExtrasEntity[]>(initialApplicantExtras);
+  const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
+    setApplicantExtras((oldApx) => {
+      oldApx = oldApx?.filter((v) => v.type != applicantExtrasEntity?.type);
+      return !!oldApx ? [...oldApx, { ...applicantExtrasEntity }] : [{ ...applicantExtrasEntity }];
+    });
 
-	const updateApplicantExtras = (
-		applicantExtrasEntity: ApplicantExtrasEntity
-	) =>
-		setApplicantExtras((oldApx) => {
-			oldApx = oldApx?.filter((v) => v.type != applicantExtrasEntity?.type);
-			return !!oldApx
-				? [...oldApx, { ...applicantExtrasEntity }]
-				: [{ ...applicantExtrasEntity }];
-		});
+  const [steps, setSteps] = useState<number>(0);
+  const stepNext = (): void => setSteps(steps + 1);
+  const stepBack = (): void => setSteps(steps - 1);
 
-	const [steps, setSteps] = useState<number>(0);
-	const stepNext = (): void => setSteps(steps + 1);
-	const stepBack = (): void => setSteps(steps - 1);
+  // Total number of steps in the long form
+  const totalSteps = 20; // Based on getLongFormPages in jotform-pages.tsx
 
-	useEffect(() => {
-		console.log("from index applicant", applicant);
-		console.log("from index applicantExtras", applicantExtras);
-	}, []);
+  return (
+    <JotformContext.Provider
+      value={{
+        state: {
+          applicant,
+          jobs,
+          applicantExtras,
+          companyPreferences,
+          steps,
+          company: applicant?.company,
+        },
+        method: {
+          setApplicant,
+          setJobs,
+          updateApplicantExtras,
+          setApplicantExtras,
+          setSteps,
+          stepNext,
+          stepBack,
+        },
+      }}
+    >
+      <div className={styles.container}>
+        <div className={styles.main}>
+          <div className={styles.main_form}>
+            <FormProgress currentStep={steps} totalSteps={totalSteps} />
+            {getLongFormPages(steps)}
+          </div>
+        </div>
+      </div>
 
-	return (
-		<JotformContext.Provider
-			value={{
-				state: {
-					applicant,
-					applicantExtras,
-					steps,
-					company,
-				},
-				method: {
-					setApplicant,
-					updateApplicantExtras,
-					stepNext,
-					stepBack,
-				},
-			}}
-		>
-			<div className={styles.container}>
-				<div className={styles.main}>
-					<div className={styles.main_form} style={getLongFormStyle(steps)}>
-						{/* uncomment this during development */}
-						{/* <BaseInput
-							value={steps}
-							min={0}
-							max={26}
-							type="number"
-							onChange={({ target: { value } }) => setSteps(parseInt(value))} /> */}
-						{getLongFormPages(steps)}
-					</div>
-				</div>
-			</div>
-		</JotformContext.Provider>
-	);
+      {/* Developer Page Navigator */}
+      <DevPageNavigator formType="long" currentStep={steps} totalSteps={totalSteps} />
+    </JotformContext.Provider>
+  );
 }
 
-export async function getServerSideProps({ query }) {
-	// try {
-	const { applicant_uuid } = query || {};
+export async function getServerSideProps({ query }: NextPageContext) {
+  try {
+    const { applicant_uuid } = query || {};
 
-	if (!!!applicant_uuid) return { notFound: true };
+    if (!!!applicant_uuid) return { notFound: true };
 
-	const applicantApi = new ApplicantApi();
-	const params = {
-		withRelations: [
-			"extras",
-			"documents",
-			"employers",
-			"accident_history",
-			"moving_violation_history",
-		],
-	};
-	const entity: ApplicantEntity = await applicantApi.fetchByUuidToken(
-		applicant_uuid,
-		params
-	);
-	console.log("applicant", entity);
+    const applicantApi = new ApplicantApi();
+    const params = {
+      withRelations: [
+        'extras',
+        'documents',
+        'employers',
+        'accident_history',
+        'moving_violation_history',
+        'company',
+      ],
+    };
+    const applicant: ApplicantEntity = await applicantApi.fetchByUuidToken(
+      String(applicant_uuid),
+      params
+    );
+    console.log('applicant', applicant);
 
-	if (!!!entity) return { notFound: true };
-	const companyApi = new CompanyApi();
-	const company: CompanyEntity = await companyApi.employer.getById(
-		entity?.company?.id
-	);
+    if (!!!applicant) return { notFound: true };
 
-	return { props: { entity, company } };
-	// } catch (error) {
-	// 	console.error("error", error.message);
+    // Extract applicant extras and other related data
+    const applicantExtras = applicant.extras || [];
+    const jobs: JobEntity[] = []; // Initialize empty jobs array for longform
+    const companyPreferences: CompanyPreferenceEntity[] = []; // You may want to fetch these based on company
 
-	// 	return { notFound: true };
-	// }
+    return {
+      props: {
+        applicant,
+        applicantExtras,
+        jobs,
+        companyPreferences,
+      },
+    };
+  } catch (error) {
+    console.error('error', error.message);
+    return { notFound: true };
+  }
 }

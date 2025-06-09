@@ -17,3 +17,4 @@ export { UnableForJob } from './unable-for-job';
 export { PastSuspension } from './past-suspension';
 export { ViolationHistory } from './violaton-history';
 export { AccordianPage } from './accordian';
+export { LegalDocumentsPage } from './legal-documents';
