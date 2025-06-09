@@ -28,6 +28,8 @@ export function ImportantDisclosureBackgroundPsp({
   };
 
   useEffect(() => {
+    if (hideSignature) return;
+
     const apx_background_date = applicantExtras?.find(
       (v) => v.type == ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
     );
@@ -40,15 +42,17 @@ export function ImportantDisclosureBackgroundPsp({
       apx_sign_important_background ||
       new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND);
 
+    const emptyBackgroundDate = {
+      ...new ApplicantExtrasEntity(ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE),
+      value: new Date().toISOString(),
+    };
+
     form.setValues({
       ...form.values,
       SIGNATURE_IMPORTANT_BACKGROUND: signatureEntity,
       IMPORTANT_DISCLOSURE_BACKGROUND_DATE: !!apx_background_date?.type
         ? apx_background_date
-        : {
-            ...new ApplicantExtrasEntity(ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE),
-            value: new Date().toISOString(),
-          },
+        : emptyBackgroundDate,
     });
   }, [applicant]);
 

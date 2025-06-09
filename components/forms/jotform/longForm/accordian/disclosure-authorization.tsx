@@ -28,6 +28,8 @@ export function DisclosureAuthorization({
   };
 
   useEffect(() => {
+    if (hideSignature) return;
+
     const apx_disclosure_date = applicantExtras?.find(
       (v) => v.type == ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE
     );
@@ -40,15 +42,17 @@ export function DisclosureAuthorization({
       apx_sign_disclosure ||
       new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION);
 
+    const emptyDisclosureDate = {
+      ...new ApplicantExtrasEntity(ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE),
+      value: new Date().toISOString(),
+    };
+
     form.setValues({
       ...form.values,
       SIGNATURE_DISCLOSURE_AUTHORIZATION: signatureEntity,
       DISCLOSURE_AND_AUTHORIZATION_DATE: !!apx_disclosure_date?.type
         ? apx_disclosure_date
-        : {
-            ...new ApplicantExtrasEntity(ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE),
-            value: new Date().toISOString(),
-          },
+        : emptyDisclosureDate,
     });
   }, [applicant]);
 

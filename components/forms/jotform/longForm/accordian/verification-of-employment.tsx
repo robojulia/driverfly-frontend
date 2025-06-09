@@ -34,6 +34,8 @@ export function VerificationOfEmployment({
   };
 
   useEffect(() => {
+    if (hideSignature) return;
+
     const apx_sign_voe_authorization = applicantExtras?.find(
       (v) => v.type == ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION
     );
@@ -165,6 +167,55 @@ export function VerificationOfEmployment({
 
   const current_company = applicant?.employers?.find((v) => !!v?.is_current);
 
+  const SSNComponent = () => {
+    return (
+      <Row className={styles.align__text_left}>
+        <div className="col my-3">
+          <Form.Group>
+            <Form.Label>
+              {t('EMPLOYEE_SSN')} <span className="text-danger">*</span>
+            </Form.Label>
+            {isFocused ? (
+              // When focused, show regular input with masked format
+              <input
+                ref={inputRef}
+                type="text"
+                name="ssn"
+                value={displayValue}
+                onChange={handleInputChange}
+                onBlur={handleBlur}
+                className={`form-control ${
+                  form.touched.ssn && form.errors.ssn ? 'is-invalid' : ''
+                }`}
+                placeholder="XXX-XX-XXXX"
+                maxLength={11} // 9 digits + 2 dashes
+                required
+              />
+            ) : (
+              // When not focused, show password field with dots
+              <input
+                type="password"
+                name="ssn"
+                value={maskedValue}
+                onFocus={handleFocus}
+                className={`form-control ${
+                  form.touched.ssn && form.errors.ssn ? 'is-invalid' : ''
+                }`}
+                placeholder="XXX-XX-XXXX"
+                required
+                readOnly
+              />
+            )}
+            {form.touched.ssn && form.errors.ssn && (
+              <Form.Control.Feedback type="invalid">{form.errors.ssn}</Form.Control.Feedback>
+            )}
+            <small className="text-muted">{t('ENTER_FULL_SSN')}</small>
+          </Form.Group>
+        </div>
+      </Row>
+    );
+  };
+
   return (
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -199,52 +250,7 @@ export function VerificationOfEmployment({
             companyPreferences?.find(
               (v) => v.label == CompanyPreferenceEnhancementLabel.ADD_SSN_ON_DHA
             )?.value
-          ) && (
-            <Row className={styles.align__text_left}>
-              <div className="col my-3">
-                <Form.Group>
-                  <Form.Label>
-                    {t('EMPLOYEE_SSN')} <span className="text-danger">*</span>
-                  </Form.Label>
-                  {isFocused ? (
-                    // When focused, show regular input with masked format
-                    <input
-                      ref={inputRef}
-                      type="text"
-                      name="ssn"
-                      value={displayValue}
-                      onChange={handleInputChange}
-                      onBlur={handleBlur}
-                      className={`form-control ${
-                        form.touched.ssn && form.errors.ssn ? 'is-invalid' : ''
-                      }`}
-                      placeholder="XXX-XX-XXXX"
-                      maxLength={11} // 9 digits + 2 dashes
-                      required
-                    />
-                  ) : (
-                    // When not focused, show password field with dots
-                    <input
-                      type="password"
-                      name="ssn"
-                      value={maskedValue}
-                      onFocus={handleFocus}
-                      className={`form-control ${
-                        form.touched.ssn && form.errors.ssn ? 'is-invalid' : ''
-                      }`}
-                      placeholder="XXX-XX-XXXX"
-                      required
-                      readOnly
-                    />
-                  )}
-                  {form.touched.ssn && form.errors.ssn && (
-                    <Form.Control.Feedback type="invalid">{form.errors.ssn}</Form.Control.Feedback>
-                  )}
-                  <small className="text-muted">{t('ENTER_FULL_SSN')}</small>
-                </Form.Group>
-              </div>
-            </Row>
-          )}
+          ) && <SSNComponent />}
 
         <Row className={styles.align__text_left}>
           <p className={`${styles.paragraph} ${styles.align__text_left}`}>

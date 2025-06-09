@@ -2,6 +2,7 @@ import { useFormik } from 'formik';
 import { useContext, useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import { FileText, ChevronDown, ChevronUp } from 'react-bootstrap-icons';
+import { Form } from 'react-bootstrap';
 import JotformContext, { JotFormContextType } from '../../../../../context/jotform-context';
 import { useTranslation } from '../../../../../hooks/use-translation';
 import { ApplicantEntity } from '../../../../../models/applicant';
@@ -138,6 +139,9 @@ function LegalDocumentsContent() {
         globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
       }
     },
+    onReset: (values) => {
+      stepBack();
+    },
   });
 
   // Initialize form values from existing applicant data - only run when data actually changes
@@ -154,27 +158,45 @@ function LegalDocumentsContent() {
       }
 
       // Initialize signatures and dates from applicantExtras
-      if (applicantExtras) {
-        const extraMap = {
-          SIGNATURE_VOE_AUTHORIZATION: ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION,
-          SIGNATURE_DISCLOSURE_AUTHORIZATION: ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION,
-          SIGNATURE_IMPORTANT_BACKGROUND: ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND,
-          SIGNATURE_GENERAL_CONSENT: ApplicantExtras.SIGNATURE_GENERAL_CONSENT,
-          DISCLOSURE_AND_AUTHORIZATION_DATE: ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE,
-          IMPORTANT_DISCLOSURE_BACKGROUND_DATE:
-            ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE,
-          GENERAL_CONSENT: ApplicantExtras.GENERAL_CONSENT,
-        };
+      const extraMap = {
+        SIGNATURE_VOE_AUTHORIZATION: ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION,
+        SIGNATURE_DISCLOSURE_AUTHORIZATION: ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION,
+        SIGNATURE_IMPORTANT_BACKGROUND: ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND,
+        SIGNATURE_GENERAL_CONSENT: ApplicantExtras.SIGNATURE_GENERAL_CONSENT,
+        DISCLOSURE_AND_AUTHORIZATION_DATE: ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE,
+        IMPORTANT_DISCLOSURE_BACKGROUND_DATE: ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE,
+        GENERAL_CONSENT: ApplicantExtras.GENERAL_CONSENT,
+      };
 
-        Object.entries(extraMap).forEach(([formField, extraType]) => {
-          const existingExtra = applicantExtras.find((v) => v.type === extraType);
-          if (existingExtra) {
-            newValues[formField] = existingExtra;
-          } else {
-            // Create empty entity for missing fields
-            newValues[formField] = new ApplicantExtrasEntity(extraType);
-          }
-        });
+      Object.entries(extraMap).forEach(([formField, extraType]) => {
+        const existingExtra = applicantExtras?.find((v) => v.type === extraType);
+        if (existingExtra) {
+          newValues[formField] = existingExtra;
+        } else {
+          // Create empty entity for missing fields
+          newValues[formField] = new ApplicantExtrasEntity(extraType);
+        }
+      });
+
+      // Set default dates for date fields if they don't exist
+      if (!newValues.DISCLOSURE_AND_AUTHORIZATION_DATE?.value) {
+        const dateEntity = new ApplicantExtrasEntity(
+          ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE
+        );
+        dateEntity.value = new Date().toISOString();
+        newValues.DISCLOSURE_AND_AUTHORIZATION_DATE = dateEntity;
+      }
+
+      if (!newValues.IMPORTANT_DISCLOSURE_BACKGROUND_DATE?.value) {
+        const dateEntity = new ApplicantExtrasEntity(
+          ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
+        );
+        dateEntity.value = new Date().toISOString();
+        newValues.IMPORTANT_DISCLOSURE_BACKGROUND_DATE = dateEntity;
+      }
+
+      if (!newValues.GENERAL_CONSENT?.value) {
+        newValues.GENERAL_CONSENT = new ApplicantExtrasEntity(ApplicantExtras.GENERAL_CONSENT);
       }
 
       form.setValues(newValues);
@@ -186,41 +208,31 @@ function LegalDocumentsContent() {
     }
   }, [applicant?.id, applicant?.ssn, applicantExtras?.length]);
 
-  // Debounced update of applicant extras to prevent excessive calls
-  const updateApplicantExtrasDebounced = useCallback(
-    (extraValue) => {
-      if (extraValue?.type && extraValue?.value !== undefined && extraValue?.value !== null) {
-        updateApplicantExtras(extraValue);
-      }
-    },
-    [updateApplicantExtras]
-  );
-
-  // Update applicant extras when form values change - only update specific values that changed
+  // Update applicant extras when form values change - replicate accordion behavior
   useEffect(() => {
     if (!isInitialized.current) return;
 
-    const timer = setTimeout(() => {
-      updateApplicantExtrasDebounced(form.values.DISCLOSURE_AND_AUTHORIZATION_DATE);
-      updateApplicantExtrasDebounced(form.values.IMPORTANT_DISCLOSURE_BACKGROUND_DATE);
-      updateApplicantExtrasDebounced(form.values.GENERAL_CONSENT);
-      updateApplicantExtrasDebounced(form.values.SIGNATURE_VOE_AUTHORIZATION);
-      updateApplicantExtrasDebounced(form.values.SIGNATURE_DISCLOSURE_AUTHORIZATION);
-      updateApplicantExtrasDebounced(form.values.SIGNATURE_IMPORTANT_BACKGROUND);
-      updateApplicantExtrasDebounced(form.values.SIGNATURE_GENERAL_CONSENT);
-    }, 100); // Small debounce to prevent excessive updates
+    updateApplicantExtras(form.values.DISCLOSURE_AND_AUTHORIZATION_DATE);
+    updateApplicantExtras(form.values.IMPORTANT_DISCLOSURE_BACKGROUND_DATE);
+    updateApplicantExtras(form.values.GENERAL_CONSENT);
+    updateApplicantExtras(form.values.SIGNATURE_VOE_AUTHORIZATION);
+    updateApplicantExtras(form.values.SIGNATURE_DISCLOSURE_AUTHORIZATION);
+    updateApplicantExtras(form.values.SIGNATURE_IMPORTANT_BACKGROUND);
+    updateApplicantExtras(form.values.SIGNATURE_GENERAL_CONSENT);
 
-    return () => clearTimeout(timer);
-  }, [
-    form.values.DISCLOSURE_AND_AUTHORIZATION_DATE?.value,
-    form.values.IMPORTANT_DISCLOSURE_BACKGROUND_DATE?.value,
-    form.values.GENERAL_CONSENT?.value,
-    form.values.SIGNATURE_VOE_AUTHORIZATION?.value,
-    form.values.SIGNATURE_DISCLOSURE_AUTHORIZATION?.value,
-    form.values.SIGNATURE_IMPORTANT_BACKGROUND?.value,
-    form.values.SIGNATURE_GENERAL_CONSENT?.value,
-    updateApplicantExtrasDebounced,
-  ]);
+    // Trigger form validation after applicant extras are updated
+    form.validateForm().then(() => {
+      form.setTouched(
+        {
+          SIGNATURE_VOE_AUTHORIZATION: { value: true },
+          SIGNATURE_DISCLOSURE_AUTHORIZATION: { value: true },
+          SIGNATURE_IMPORTANT_BACKGROUND: { value: true },
+          SIGNATURE_GENERAL_CONSENT: { value: true },
+        },
+        true
+      );
+    });
+  }, [form.values]);
 
   // Calculate completed documents - memoized to prevent unnecessary recalculations
   const completedDocumentIds = useMemo(() => {
@@ -253,37 +265,21 @@ function LegalDocumentsContent() {
   const isCurrentDocumentComplete = completedDocuments.includes(currentDocument.id);
 
   const handleNext = useCallback(() => {
-    if (allDocumentsComplete) {
-      // All documents complete - submit the form
-      const syntheticEvent = {
-        preventDefault: () => {},
-        target: {},
-      } as any;
-      form.handleSubmit(syntheticEvent);
-    } else {
-      // Find next incomplete document
-      const currentDocumentComplete = completedDocuments.includes(currentDocument.id);
+    // Find next incomplete document
+    const currentDocumentComplete = completedDocuments.includes(currentDocument.id);
 
-      if (currentDocumentComplete) {
-        // Current document is complete, find next incomplete document
-        const nextIncompleteIndex = LEGAL_DOCUMENTS.findIndex(
-          (doc, index) => index > currentStep && !completedDocuments.includes(doc.id)
-        );
+    if (currentDocumentComplete) {
+      // Current document is complete, find next incomplete document
+      const nextIncompleteIndex = LEGAL_DOCUMENTS.findIndex(
+        (doc, index) => index > currentStep && !completedDocuments.includes(doc.id)
+      );
 
-        if (nextIncompleteIndex !== -1) {
-          setCurrentStep(nextIncompleteIndex);
-        }
+      if (nextIncompleteIndex !== -1) {
+        setCurrentStep(nextIncompleteIndex);
       }
-      // If current document is not complete, stay on current document (button should be disabled)
     }
-  }, [
-    allDocumentsComplete,
-    currentStep,
-    completedDocuments,
-    currentDocument.id,
-    form,
-    setCurrentStep,
-  ]);
+    // If current document is not complete, stay on current document (button should be disabled)
+  }, [currentStep, completedDocuments, currentDocument.id, setCurrentStep]);
 
   const handleBack = useCallback(() => {
     if (currentStep > 0) {
@@ -300,139 +296,150 @@ function LegalDocumentsContent() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentStep]);
 
+  console.log(form.isValid);
+  console.log(form.errors);
+  console.log(form.values);
+
   return (
     <>
       <ToastContainer />
-
-      <div
-        style={{
-          maxWidth: '1000px',
-          margin: '0 auto',
-          padding: '1rem',
-        }}
-      >
-        {/* Header */}
-        <div className="text-center mb-4">
-          <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
-            {t('FORMS_TO_SIGNUP')}
-          </h1>
-          <p className="text-muted mb-4">
-            Please review and sign the required legal documents to complete your application.
-          </p>
-        </div>
-
-        {/* Progress Stepper */}
-        <DocumentStepper
-          documents={LEGAL_DOCUMENTS}
-          currentStep={currentStep}
-          completedDocuments={completedDocuments}
-          onStepClick={setCurrentStep}
-          form={form}
-          companyPreferences={companyPreferences}
-        />
-
-        {/* Document Content - Single Page Layout */}
-        <div className="mt-4">
-          {/* Document Title */}
-          <div className="mb-4">
-            <h2 className="mb-2">{currentDocument.title}</h2>
-            <p className="text-muted mb-0">{currentDocument.description}</p>
+      <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+        <div
+          style={{
+            maxWidth: '1000px',
+            margin: '0 auto',
+            padding: '1rem',
+          }}
+        >
+          {/* Header */}
+          <div className="text-center mb-4">
+            <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
+              {t('FORMS_TO_SIGNUP')}
+            </h1>
+            <p className="text-muted mb-4">
+              Please review and sign the required legal documents to complete your application.
+            </p>
           </div>
 
-          {/* Document Summary */}
-          <div className="mb-4 p-4 bg-light rounded">
-            <h5 className="mb-3">What is this document for?</h5>
-            <p className="mb-0">{currentDocument.summary}</p>
+          {/* Progress Stepper */}
+          <DocumentStepper
+            documents={LEGAL_DOCUMENTS}
+            currentStep={currentStep}
+            completedDocuments={completedDocuments}
+            onStepClick={setCurrentStep}
+            form={form}
+            companyPreferences={companyPreferences}
+          />
+
+          {/* Document Content - Single Page Layout */}
+          <div className="mt-4">
+            {/* Document Title */}
+            <div className="mb-4">
+              <h2 className="mb-2">{currentDocument.title}</h2>
+              <p className="text-muted mb-0">{currentDocument.description}</p>
+            </div>
+
+            {/* Document Summary */}
+            <div className="mb-4 p-4 bg-light rounded">
+              <h5 className="mb-3">What is this document for?</h5>
+              <p className="mb-0">{currentDocument.summary}</p>
+            </div>
+
+            {/* Signature Fields Section */}
+            <div className="mb-4">
+              <DocumentSignature
+                document={currentDocument}
+                form={form}
+                applicant={applicant}
+                companyPreferences={companyPreferences}
+                isComplete={isCurrentDocumentComplete}
+                fullWidth={false}
+              />
+            </div>
+
+            {/* Collapsible Document Content */}
+            <div className="mb-4">
+              <button
+                type="button"
+                className="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center"
+                onClick={() => setIsDocumentExpanded(!isDocumentExpanded)}
+                style={{ padding: '1rem' }}
+              >
+                <span>
+                  <FileText size={16} className="me-2" />
+                  {isDocumentExpanded ? 'Hide' : 'View'} Full Document Content
+                </span>
+                {isDocumentExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+              </button>
+
+              {isDocumentExpanded && (
+                <div
+                  className="mt-3 p-3 border rounded"
+                  style={{
+                    backgroundColor: '#fff',
+                    maxHeight: '60vh',
+                    overflowY: 'auto',
+                  }}
+                >
+                  <DocumentPreview
+                    document={currentDocument}
+                    form={form}
+                    applicant={applicant}
+                    company={company}
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Signature Fields Section */}
-          <div className="mb-4">
-            <DocumentSignature
-              document={currentDocument}
-              form={form}
-              applicant={applicant}
-              companyPreferences={companyPreferences}
-              isComplete={isCurrentDocumentComplete}
-              fullWidth={false}
-            />
-          </div>
-
-          {/* Collapsible Document Content */}
-          <div className="mb-4">
+          {/* Navigation */}
+          <div className="d-flex justify-content-between align-items-center mt-4 pt-4 border-top">
             <button
-              type="button"
-              className="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center"
-              onClick={() => setIsDocumentExpanded(!isDocumentExpanded)}
-              style={{ padding: '1rem' }}
+              type="reset"
+              className="btn btn-outline-secondary px-4"
+              style={{ minWidth: '120px' }}
             >
-              <span>
-                <FileText size={16} className="me-2" />
-                {isDocumentExpanded ? 'Hide' : 'View'} Full Document Content
-              </span>
-              {isDocumentExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+              {t('BACK')}
             </button>
 
-            {isDocumentExpanded && (
-              <div
-                className="mt-3 p-3 border rounded"
-                style={{
-                  backgroundColor: '#fff',
-                  maxHeight: '60vh',
-                  overflowY: 'auto',
-                }}
+            <div className="text-center">
+              <small className="text-muted">
+                {completedDocuments.length} of {LEGAL_DOCUMENTS.length} documents completed
+              </small>
+            </div>
+
+            {allDocumentsComplete ? (
+              <button
+                type="submit"
+                disabled={form.isSubmitting}
+                className="btn btn-success px-4"
+                style={{ minWidth: '120px' }}
               >
-                <DocumentPreview
-                  document={currentDocument}
-                  form={form}
-                  applicant={applicant}
-                  company={company}
-                  viewMode="document"
-                  onViewModeChange={() => {}}
-                />
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <div className="d-flex justify-content-between align-items-center mt-4 pt-4 border-top">
-          <button
-            type="button"
-            onClick={handleBack}
-            className="btn btn-outline-secondary px-4"
-            style={{ minWidth: '120px' }}
-          >
-            {t('BACK')}
-          </button>
-
-          <div className="text-center">
-            <small className="text-muted">
-              {completedDocuments.length} of {LEGAL_DOCUMENTS.length} documents completed
-            </small>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleNext}
-            disabled={!isCurrentDocumentComplete || form.isSubmitting}
-            className={`btn ${allDocumentsComplete ? 'btn-success' : 'btn-primary'} px-4`}
-            style={{ minWidth: '120px' }}
-          >
-            {form.isSubmitting ? (
-              <>
-                <span className="spinner-border spinner-border-sm me-2" />
-                Submitting...
-              </>
-            ) : allDocumentsComplete ? (
-              'Complete Application'
-            ) : isCurrentDocumentComplete ? (
-              'Next Document'
+                {form.isSubmitting ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" />
+                    Submitting...
+                  </>
+                ) : (
+                  'Complete Application'
+                )}
+              </button>
             ) : (
-              `${LEGAL_DOCUMENTS.length - completedDocuments.length} Remaining`
+              <button
+                type="button"
+                onClick={handleNext}
+                disabled={!isCurrentDocumentComplete || form.isSubmitting}
+                className="btn btn-primary px-4"
+                style={{ minWidth: '120px' }}
+              >
+                {isCurrentDocumentComplete
+                  ? 'Next Document'
+                  : `${LEGAL_DOCUMENTS.length - completedDocuments.length} Remaining`}
+              </button>
             )}
-          </button>
+          </div>
         </div>
-      </div>
+      </Form>
     </>
   );
 }

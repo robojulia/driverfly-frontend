@@ -40,6 +40,8 @@ export function GeneralConsentQueries({
   };
 
   useEffect(() => {
+    if (hideSignature) return;
+
     const apx_sign = applicantExtras?.find(
       (v) => v.type == ApplicantExtras.SIGNATURE_GENERAL_CONSENT
     );

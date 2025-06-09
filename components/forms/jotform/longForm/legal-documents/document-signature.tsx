@@ -106,33 +106,43 @@ export const DocumentSignature = memo(function DocumentSignature({
   // Handle signature change - memoized
   const handleSignatureChange = useCallback(
     (signature: string | null) => {
-      const signatureEntity = new ApplicantExtrasEntity(
-        ApplicantExtras[
-          document.signatureField.replace('SIGNATURE_', '') as keyof typeof ApplicantExtras
-        ]
-      );
+      // Map signature field to correct ApplicantExtras enum
+      const fieldToEnumMap = {
+        SIGNATURE_VOE_AUTHORIZATION: ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION,
+        SIGNATURE_DISCLOSURE_AUTHORIZATION: ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION,
+        SIGNATURE_IMPORTANT_BACKGROUND: ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND,
+        SIGNATURE_GENERAL_CONSENT: ApplicantExtras.SIGNATURE_GENERAL_CONSENT,
+      };
+
+      const signatureEntity = new ApplicantExtrasEntity(fieldToEnumMap[document.signatureField]);
       signatureEntity.value = signature;
       form.setFieldValue(document.signatureField, signatureEntity);
 
-      // Special handling for general consent
-      if (document.id === 'general-consent-queries' && signature) {
-        const generalConsentEntity = new ApplicantExtrasEntity(ApplicantExtras.GENERAL_CONSENT);
-        generalConsentEntity.value = {
-          consentGiven: true,
-          consentDate: new Date().toISOString(),
-          name: `${applicant?.first_name} ${applicant?.last_name}`,
-          employer_name: applicant?.company?.name || '',
-          cdl_license_number: applicant?.license_number || '',
-          expiration_date: new Date().toISOString(),
-        };
-        form.setFieldValue('GENERAL_CONSENT', generalConsentEntity);
+      // Special handling for general consent - exactly like accordion
+      if (document.id === 'general-consent-queries') {
+        if (signature) {
+          const generalConsentEntity = new ApplicantExtrasEntity(ApplicantExtras.GENERAL_CONSENT);
+          generalConsentEntity.value = {
+            consentGiven: true,
+            consentDate: new Date().toISOString(),
+            name: `${applicant?.first_name} ${applicant?.last_name}`,
+            employer_name: applicant?.company?.name || '',
+            cdl_license_number: applicant?.license_number || '',
+            expiration_date: new Date().toISOString(),
+          };
+          form.setFieldValue('GENERAL_CONSENT', generalConsentEntity);
+        }
       }
 
       // Auto-set date if required
       if (document.dateField && signature) {
-        const dateEntity = new ApplicantExtrasEntity(
-          ApplicantExtras[document.dateField.replace('_DATE', '') as keyof typeof ApplicantExtras]
-        );
+        const dateFieldToEnumMap = {
+          DISCLOSURE_AND_AUTHORIZATION_DATE: ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE,
+          IMPORTANT_DISCLOSURE_BACKGROUND_DATE:
+            ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE,
+        };
+
+        const dateEntity = new ApplicantExtrasEntity(dateFieldToEnumMap[document.dateField]);
         dateEntity.value = new Date().toISOString();
         form.setFieldValue(document.dateField, dateEntity);
       }

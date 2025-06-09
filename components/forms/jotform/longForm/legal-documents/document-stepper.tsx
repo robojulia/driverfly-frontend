@@ -104,7 +104,7 @@ const DocumentStepperComponent = memo(function DocumentStepper({
         <div className="row align-items-center">
           <div className="col-auto">
             <div className="d-flex align-items-center">
-              {getStepIcon(getStepStatus(currentStep, currentDocument.id), currentStep)}
+              {getStepIcon(getStepStatus(currentStep, currentDocument.id))}
               <div className="ms-3">
                 <h6 className="mb-0">
                   Step {currentStep + 1} of {documents.length}
@@ -158,7 +158,7 @@ const DocumentStepperComponent = memo(function DocumentStepper({
                   <div className="d-flex align-items-center mb-2">
                     {/* Icon */}
                     <div className="step-icon-container position-relative">
-                      {getStepIcon(status, index)}
+                      {getStepIcon(status)}
 
                       {/* SSN Indicator */}
                       {isSsnRequired(document) && (
