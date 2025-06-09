@@ -165,7 +165,7 @@ export function OtherQueues() {
       </div>
 
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset} className={styles.formStep}>
-        <div style={{ maxWidth: '100%', margin: '0', padding: '0 1rem' }}>
+        <div style={{ maxWidth: '100%', margin: '0', padding: '0 0rem' }}>
           <EquipmentCard
             title="ADDITIONAL_CDL_LICENSES"
             emptyStateText="No additional CDL licenses provided"

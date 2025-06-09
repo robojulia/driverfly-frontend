@@ -141,7 +141,7 @@ export function TransmissionAndEndorsement() {
         onReset={form.handleReset}
         className={`${styles.align__text_left} ${styles.formStep}`}
       >
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 0.5rem' }}>
           <div className="my-4">
             <p className="text-black mt-2 mb-3">
               <strong>{t('PLEASE_SELECT_ENDORSEMENT')}</strong>
@@ -158,7 +158,7 @@ export function TransmissionAndEndorsement() {
               onChange={handleTransmissionChange}
               labelPrefix="VehicleTransmissionType"
               columns={2}
-              variant="card"
+              variant="compact"
               error={
                 form.touched.transmission_type && form.errors.transmission_type
                   ? String(form.errors.transmission_type)
@@ -177,7 +177,7 @@ export function TransmissionAndEndorsement() {
               onChange={handleEndorsementsChange}
               labelPrefix="DriverEndorsement"
               columns={2}
-              variant="card"
+              variant="compact"
               error={
                 form.touched.endorsements && form.errors.endorsements
                   ? String(form.errors.endorsements)
@@ -216,7 +216,7 @@ export function TransmissionAndEndorsement() {
               onChange={handleLicenseRestrictionsChange}
               labelPrefix="LicenseRestrictions"
               columns={2}
-              variant="card"
+              variant="compact"
               error={
                 form.touched.license_restrictions && form.errors.license_restrictions
                   ? String(form.errors.license_restrictions)

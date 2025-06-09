@@ -484,6 +484,10 @@
 }
 
 @media screen and (max-width: 768px) {
+  .main {
+    padding: 6px;
+  }
+
   .carrierName {
     font-size: 1.5rem;
   }
@@ -544,7 +548,7 @@
   .main_form,
   .main__voe_form {
     padding: 24px;
-    margin: 12px;
+    margin: 6px;
   }
 
   .logo {

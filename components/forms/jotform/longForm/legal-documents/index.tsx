@@ -17,6 +17,7 @@ import { DocumentStepper } from './document-stepper';
 import { DocumentPreview } from './document-preview';
 import { DocumentSignature } from './document-signature';
 import { LegalDocumentProvider, useLegalDocuments } from './legal-documents-context';
+import { FormActions, SecondaryButton, PrimaryButton } from '../../form-buttons';
 
 // Document definitions with metadata and summaries
 export const LEGAL_DOCUMENTS = [
@@ -308,8 +309,9 @@ function LegalDocumentsContent() {
           style={{
             maxWidth: '1000px',
             margin: '0 auto',
-            padding: '1rem',
+            padding: '0.75rem',
           }}
+          className="px-lg-4"
         >
           {/* Header */}
           <div className="text-center mb-4">
@@ -335,14 +337,14 @@ function LegalDocumentsContent() {
           <div className="mt-4">
             {/* Document Title */}
             <div className="mb-4">
-              <h2 className="mb-2">{currentDocument.title}</h2>
-              <p className="text-muted mb-0">{currentDocument.description}</p>
+              <h2 className="mb-2 fs-3 fs-lg-2">{currentDocument.title}</h2>
+              <p className="text-muted mb-0 fs-6">{currentDocument.description}</p>
             </div>
 
             {/* Document Summary */}
-            <div className="mb-4 p-4 bg-light rounded">
-              <h5 className="mb-3">What is this document for?</h5>
-              <p className="mb-0">{currentDocument.summary}</p>
+            <div className="mb-4 p-3 p-lg-4 bg-light rounded">
+              <h5 className="mb-3 fs-5">What is this document for?</h5>
+              <p className="mb-0 lh-base">{currentDocument.summary}</p>
             </div>
 
             {/* Signature Fields Section */}
@@ -359,18 +361,30 @@ function LegalDocumentsContent() {
 
             {/* Collapsible Document Content */}
             <div className="mb-4">
-              <button
+              <SecondaryButton
                 type="button"
-                className="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center"
                 onClick={() => setIsDocumentExpanded(!isDocumentExpanded)}
-                style={{ padding: '1rem' }}
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '0.875rem 1rem',
+                  fontSize: '0.95rem',
+                }}
+                className="text-start"
               >
-                <span>
-                  <FileText size={16} className="me-2" />
-                  {isDocumentExpanded ? 'Hide' : 'View'} Full Document Content
+                <span className="d-flex align-items-center">
+                  <FileText size={16} className="me-2 flex-shrink-0" />
+                  <span className="d-none d-sm-inline">
+                    {isDocumentExpanded ? 'Hide' : 'View'} Full Document Content
+                  </span>
+                  <span className="d-inline d-sm-none">
+                    {isDocumentExpanded ? 'Hide' : 'View'} Document
+                  </span>
                 </span>
-                {isDocumentExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-              </button>
+                {isDocumentExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+              </SecondaryButton>
 
               {isDocumentExpanded && (
                 <div
@@ -393,50 +407,115 @@ function LegalDocumentsContent() {
           </div>
 
           {/* Navigation */}
-          <div className="d-flex justify-content-between align-items-center mt-4 pt-4 border-top">
-            <button
-              type="reset"
-              className="btn btn-outline-secondary px-4"
-              style={{ minWidth: '120px' }}
-            >
-              {t('BACK')}
-            </button>
-
-            <div className="text-center">
+          <div className="mt-4 pt-4 border-top">
+            {/* Progress Text - Mobile First */}
+            <div className="text-center mb-3 d-block d-lg-none">
               <small className="text-muted">
                 {completedDocuments.length} of {LEGAL_DOCUMENTS.length} documents completed
               </small>
             </div>
 
-            {allDocumentsComplete ? (
-              <button
-                type="submit"
-                disabled={form.isSubmitting}
-                className="btn btn-success px-4"
-                style={{ minWidth: '120px' }}
-              >
-                {form.isSubmitting ? (
-                  <>
-                    <span className="spinner-border spinner-border-sm me-2" />
-                    Submitting...
-                  </>
-                ) : (
-                  'Complete Application'
-                )}
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleNext}
-                disabled={!isCurrentDocumentComplete || form.isSubmitting}
-                className="btn btn-primary px-4"
-                style={{ minWidth: '120px' }}
-              >
-                {isCurrentDocumentComplete
-                  ? 'Next Document'
-                  : `${LEGAL_DOCUMENTS.length - completedDocuments.length} Remaining`}
-              </button>
-            )}
+            {/* Desktop Navigation */}
+            <div className="d-none d-lg-flex justify-content-between align-items-center">
+              <SecondaryButton type="reset" style={{ minWidth: '120px' }}>
+                {t('BACK')}
+              </SecondaryButton>
+
+              <div className="text-center">
+                <small className="text-muted">
+                  {completedDocuments.length} of {LEGAL_DOCUMENTS.length} documents completed
+                </small>
+              </div>
+
+              {allDocumentsComplete ? (
+                <PrimaryButton
+                  type="submit"
+                  disabled={form.isSubmitting}
+                  style={{
+                    minWidth: '200px',
+                    background: form.isSubmitting
+                      ? undefined
+                      : 'linear-gradient(135deg, #28a745 0%, #20c997 100%)',
+                  }}
+                >
+                  {form.isSubmitting ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" />
+                      Submitting...
+                    </>
+                  ) : (
+                    'Complete Application'
+                  )}
+                </PrimaryButton>
+              ) : (
+                <PrimaryButton
+                  type="button"
+                  onClick={handleNext}
+                  disabled={!isCurrentDocumentComplete || form.isSubmitting}
+                  style={{ minWidth: '180px' }}
+                >
+                  {isCurrentDocumentComplete
+                    ? 'Next Document'
+                    : `${LEGAL_DOCUMENTS.length - completedDocuments.length} Remaining`}
+                </PrimaryButton>
+              )}
+            </div>
+
+            {/* Mobile Navigation */}
+            <div className="d-block d-lg-none">
+              <div className="row g-2">
+                <div className="col-6">
+                  <SecondaryButton
+                    type="reset"
+                    style={{
+                      width: '100%',
+                      padding: '0.75rem 1rem',
+                      fontSize: '0.95rem',
+                    }}
+                  >
+                    {t('BACK')}
+                  </SecondaryButton>
+                </div>
+                <div className="col-6">
+                  {allDocumentsComplete ? (
+                    <PrimaryButton
+                      type="submit"
+                      disabled={form.isSubmitting}
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem 1rem',
+                        fontSize: '0.95rem',
+                        background: form.isSubmitting
+                          ? undefined
+                          : 'linear-gradient(135deg, #28a745 0%, #20c997 100%)',
+                      }}
+                    >
+                      {form.isSubmitting ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm me-1" />
+                          Submitting...
+                        </>
+                      ) : (
+                        'Complete'
+                      )}
+                    </PrimaryButton>
+                  ) : (
+                    <PrimaryButton
+                      type="button"
+                      onClick={handleNext}
+                      disabled={!isCurrentDocumentComplete || form.isSubmitting}
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem 1rem',
+                        fontSize: '0.95rem',
+                      }}
+                    >
+                      {isCurrentDocumentComplete ? 'Next' : 'Sign First'}
+                    </PrimaryButton>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </Form>
