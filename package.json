@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "node scripts/build-info.js && next build",
+    "build:no-lint": "ESLINT_NO_DEV_ERRORS=true next build",
     "start": "next start",
     "lint": "eslint ./ --ext js,jsx,ts,tsx",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
