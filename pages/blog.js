@@ -93,7 +93,7 @@ export default function Blogs() {
                       <i className="flaticon-chat"></i>0 Comments
                     </span>
                     <p className={Blog.description}>
-                      It's easy to find a trucking job quickly, but what about
+                      It&apos;s easy to find a trucking job quickly, but what about
                       finding your dream trucking job? How do you find the ...
                     </p>
                     <Link
