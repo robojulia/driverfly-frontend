@@ -34,7 +34,7 @@ const DocumentStepperComponent = memo(function DocumentStepper({
   }, [completedDocuments, currentStep]);
 
   const getStepIcon = useMemo(() => {
-    return (status: string) => {
+    const StepIcon = (status: string) => {
       switch (status) {
         case 'completed':
           return <CheckCircleFill className="text-success" size={24} />;
@@ -46,6 +46,8 @@ const DocumentStepperComponent = memo(function DocumentStepper({
           return <Circle className="text-muted" size={24} />;
       }
     };
+    StepIcon.displayName = 'StepIcon';
+    return StepIcon;
   }, []);
 
   const getStepColor = useMemo(() => {
