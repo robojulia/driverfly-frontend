@@ -2,10 +2,10 @@ import { useFormik } from "formik";
 import Head from "next/head";
 import Link from "next/link";
 import {
-ArrowRight,
-Newspaper,
-PersonBadgeFill,
-QuestionCircle,
+  ArrowRight,
+  Newspaper,
+  PersonBadgeFill,
+  QuestionCircle,
 } from "react-bootstrap-icons";
 import { ToastContainer, toast } from "react-toastify";
 import { Col, Row } from "reactstrap";
@@ -34,12 +34,12 @@ export default function Contact() {
       } catch (e) {
         if (e.response?.data?.recaptchaValue == "INVALID_RECAPTCHA_TOKEN")
 
-        globalAjaxExceptionHandler(e, {
-          formik: form,
-          toast: toast,
-          t: t,
-          defaultMessage: "UNABLE_TO_SEND_ME",
-        });
+          globalAjaxExceptionHandler(e, {
+            formik: form,
+            toast: toast,
+            t: t,
+            defaultMessage: "UNABLE_TO_SEND_ME",
+          });
       }
     },
   });
