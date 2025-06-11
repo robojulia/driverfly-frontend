@@ -80,22 +80,22 @@ export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 								<h6>{t('SOCIAL_PROFILE')}:</h6>
 								<div>
 									<div className="hvr-float-shadow mx-3 ">
-										<a target="_blank" href={company?.facebook}>
+										<a target="_blank" rel="noreferrer" href={company?.facebook}>
 											< Facebook color='#316FF6' size={25} />
 										</a>
 									</div>
 									<div className="hvr-float-shadow mx-3">
-										<a target="_blank" href={company?.instagram}>
+										<a target="_blank" rel="noreferrer" href={company?.instagram}>
 											< Instagram color=' #962fbf' size={25} />
 										</a>
 									</div>
 									<div className="hvr-float-shadow mx-3">
-										<a target="_blank" href={company?.linkedin}>
+										<a target="_blank" rel="noreferrer" href={company?.linkedin}>
 											< Linkedin color=' #0077B5' size={25} />
 										</a>
 									</div>
 									<div className="hvr-float-shadow mx-3">
-										<a target="_blank" href={company?.twitter}>
+										<a target="_blank" rel="noreferrer" href={company?.twitter}>
 											< Twitter color=' #1DA1F2' size={25} />
 										</a>
 									</div>

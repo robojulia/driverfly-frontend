@@ -2,6 +2,8 @@ import React from 'react';
 import { Accordion } from "react-bootstrap";
 
 export default class extends React.Component {
+    static displayName = 'CDLInfo';
+    
     render() {
         return (
             <div>
@@ -9,7 +11,7 @@ export default class extends React.Component {
                     <Accordion.Item eventKey="0">
                         <Accordion.Header> <span className="btn-link"> Things to Consider </span></Accordion.Header>
                         <Accordion.Body>
-                            <p>Before getting your CDL, make sure to read the FMCSA's instructions and download your state's manual about
+                            <p>Before getting your CDL, make sure to read the FMCSA&apos;s instructions and download your state&apos;s manual about
                             the process. Also, decide which type of vehicle and which class you would like your license for, as well as whether
                             or not you want any endorsements.</p>
                         </Accordion.Body>
@@ -19,10 +21,10 @@ export default class extends React.Component {
                         <Accordion.Body>
                             <p>To get your CDL, you must first get a Commerical Learners Permit (CLP). This requires passing knowledge tests
                             and providing the necessary documentation, which may include your driving record, medicals, or proof of residency.
-                            The documents you'll need will depend on the type of license you're trying to get and the state you're in.</p>
-                            <p>Afterwards, you must do Entry-Level Driver Training with a training provider registered on the FMCSA's Training Provider
+                            The documents you&apos;ll need will depend on the type of license you&apos;re trying to get and the state you&apos;re in.</p>
+                            <p>Afterwards, you must do Entry-Level Driver Training with a training provider registered on the FMCSA&apos;s Training Provider
                             Registry. You can search for a provider with the tool below.</p>
-                            <p>Once you've completed your training, you must take the Skills Test. After passing the skills test, bring your documentation
+                            <p>Once you&apos;ve completed your training, you must take the Skills Test. After passing the skills test, bring your documentation
                             to the counter to be processed. You will then be given or mail your license, depending on your state.</p>
                         </Accordion.Body>
                     </Accordion.Item>

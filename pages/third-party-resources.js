@@ -144,7 +144,7 @@ export default function ThirdPartyResources() {
             type: "Factoring",
             link: "https://www.loves.com/en/financial-services/freight-factoring?utm_source=driverfly",
             description:
-                `Freight Factoring with Love’s Financial is a smart solution to manage your
+                `Freight Factoring with Love's Financial is a smart solution to manage your
                 cash flow, and cover expenses like fuel, insurance, maintenance and payroll
                 without creating debt for your business.`,
             for_drivers: true,
@@ -451,7 +451,7 @@ export default function ThirdPartyResources() {
                                     (audience == "companies" && obj.for_companies)
                                 ) {
                                     return (
-                                        <div className={resource.resource_type_button}>
+                                        <div key={id} className={resource.resource_type_button}>
                                             <button
                                                 name={obj.type}
                                                 onClick={handleChangeResourceType}
@@ -470,7 +470,7 @@ export default function ThirdPartyResources() {
                     {
                         filteredResources.map(function (obj, id) {
                             return (
-                                <div>
+                                <div key={id}>
                                     <h5> {obj.company} </h5>
                                     <p>
                                         {obj.description}

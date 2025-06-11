@@ -58,35 +58,27 @@ export default function FAQ() {
                     <ul className="list_details">
                       <li>
                         <Link href="/contact">
-                          <a>Is the career in trucking right for me?</a>
+                          Is the career in trucking right for me?
                         </Link>
                       </li>
                       <li>
                         <Link href="/contact">
-                          <a href="/contact">
-                            {" "}
-                            Can I work part time/ or weekends only?
-                          </a>
+                          Can I work part time/ or weekends only?
                         </Link>
                       </li>
                       <li>
                         <Link href="/contact">
-                          <a href="/contact">
-                            Should I get hired on as a 1099 or W2?
-                          </a>
+                          Should I get hired on as a 1099 or W2?
                         </Link>
                       </li>
                       <li>
                         <Link href="/contact">
-                          <a href="/contact">
-                            {" "}
-                            How do I get a job in trucking?
-                          </a>
+                          How do I get a job in trucking?
                         </Link>
                       </li>
                       <li>
                         <Link href="/contact">
-                          <a href="/contact">Should I get endorsements?</a>
+                          Should I get endorsements?
                         </Link>
                       </li>
                     </ul>
@@ -105,15 +97,15 @@ export default function FAQ() {
                       {" "}
                       <span className="btn-link">
                         {" "}
-                        I can’t remember my user id and/or password, can you
+                        I can't remember my user id and/or password, can you
                         reset it?
                       </span>
                     </Accordion.Header>
                     <Accordion.Body>
                       <p>
-                        If you’ve lost both your password and username, reach
+                        If you've lost both your password and username, reach
                         out to customer care at support@driverfly.co and enter
-                        subject line “Lost Username”.
+                        subject line "Lost Username".
                       </p>
                     </Accordion.Body>
                   </Accordion.Item>
@@ -163,7 +155,7 @@ export default function FAQ() {
                     </Accordion.Header>
                     <Accordion.Body>
                       <p>
-                        For CDL Drivers, it’s a tool that allows you to get
+                        For CDL Drivers, it's a tool that allows you to get
                         placed fast and with a quality company who invests in
                         their drivers. You can also sign up to receive job
                         alerts and stay informed on the latest news and
