@@ -8,60 +8,60 @@ import { UserEntity } from "../../models/user/user.entity";
 import BaseApi from "./_baseApi";
 
 export default class AuthApi extends BaseApi {
-    private baseUrl: string = "auth"
+  private baseUrl: string = "auth"
 
-    async login(dto: LoginDto): Promise<UserEntity> {
-        const { data } = await this.post(`${this.baseUrl}/login`, dto);
-        return data;
-    }
-    async signUp(dto: SignUpDto) {
-        await this.post(`${this.baseUrl}/sign-up`, dto);
-    }
-    async forgotPassword(dto: ForgotPasswordDto) {
-        await this.post(`${this.baseUrl}/forgot-password`, dto);
-    }
+  async login(dto: LoginDto): Promise<UserEntity> {
+    const { data } = await this.post(`${this.baseUrl}/login`, dto);
+    return data;
+  }
+  async signUp(dto: SignUpDto) {
+    await this.post(`${this.baseUrl}/sign-up`, dto);
+  }
+  async forgotPassword(dto: ForgotPasswordDto) {
+    await this.post(`${this.baseUrl}/forgot-password`, dto);
+  }
 
-    async verifyEmail(dto: VerifyEmailDto) {
-        await this.post(`${this.baseUrl}/verify-email`, dto);
-    }
+  async verifyEmail(dto: VerifyEmailDto) {
+    await this.post(`${this.baseUrl}/verify-email`, dto);
+  }
 
-    async sendVerifyEmail(email: string) {
-        await this.post(`${this.baseUrl}/verify-email/resend`, { email: email });
-    }
+  async sendVerifyEmail(email: string) {
+    await this.post(`${this.baseUrl}/verify-email/resend`, { email: email });
+  }
 
-    async verifyPhone(dto: VerifyPhoneDto) {
-        await this.post(`${this.baseUrl}/verify-phone`, dto);
-    }
+  async verifyPhone(dto: VerifyPhoneDto) {
+    await this.post(`${this.baseUrl}/verify-phone`, dto);
+  }
 
-    async sendVerifyPhone(dto: VerifyPhoneDto) {
-        await this.post(`${this.baseUrl}/verify-phone/resend`, dto);
-    }
+  async sendVerifyPhone(dto: VerifyPhoneDto) {
+    await this.post(`${this.baseUrl}/verify-phone/resend`, dto);
+  }
 
-    async findCompanies(): Promise<CompanyEntity[]> {
-        const { data } = await this.get(`${this.baseUrl}/companies`);
+  async findCompanies(): Promise<CompanyEntity[]> {
+    const { data } = await this.get(`${this.baseUrl}/companies`);
 
-        return data;
-    }
+    return data;
+  }
 
-    async refreshToken(token: string): Promise<UserEntity> {
-        const { data } = await this.get(`${this.baseUrl}/refresh-token`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+  async refreshToken(token: string): Promise<UserEntity> {
+    const { data } = await this.get(`${this.baseUrl}/refresh-token`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
 
-        return data;
-    }
+    return data;
+  }
 
-    async impersonate(dto: { companyId: number, userId: number }): Promise<UserEntity> {
-        const { data } = await this.post(`${this.baseUrl}/impersonate`, dto);
+  async impersonate(dto: { companyId: number, userId: number }): Promise<UserEntity> {
+    const { data } = await this.post(`${this.baseUrl}/impersonate`, dto);
 
-        return data;
-    }
+    return data;
+  }
 
-    async changeOrganization(dto: { companyId: number }): Promise<UserEntity> {
-        const { data } = await this.get(this.buildUrl(`${this.baseUrl}/change-organization`, dto));
+  async changeOrganization(dto: { companyId: number }): Promise<UserEntity> {
+    const { data } = await this.get(this.buildUrl(`${this.baseUrl}/change-organization`, dto));
 
-        return data;
-    }
+    return data;
+  }
 }
