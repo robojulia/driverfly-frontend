@@ -28,8 +28,8 @@ export default function Documents({ entity }: DocumentsProps) {
                 ApplicantDocumentType.MEDICAL_EXAMINER_CERTIFICATE_MEDICAL_CARD,
               ]?.includes(document.type as ApplicantDocumentType)
             )
-            ?.map((document) => (
-              <Row className="mb-5">
+            ?.map((document, index) => (
+              <Row key={document.id || index} className="mb-5">
                 <Col>
                   <h3>{t(`ApplicantDocumentType.${document.type}`)}</h3>
                 </Col>

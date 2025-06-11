@@ -64,11 +64,11 @@ export default function SuggestedJobs({ entity, job, company }: SuggestedJobsPro
           <div className={styles.main_form} style={getLongFormStyle(steps)}>
             {/* uncomment this during development */}
             {/* <BaseInput
-							value={steps}
-							min={0}
-							max={26}
-							type="number"
-							onChange={({ target: { value } }) => setSteps(parseInt(value))} /> */}
+  					  value={steps}
+  					  min={0}
+  					  max={26}
+              type="number"
+						  onChange={({ target: { value } }) => setSteps(parseInt(value))} /> */}
             {getSuggestedJobPages(steps, job.id)}
           </div>
         </div>

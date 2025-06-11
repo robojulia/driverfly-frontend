@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 import { ArrowRight, Chat, Clock } from "react-bootstrap-icons";
 import { PublicLayout } from "../components/layouts/public-layout";
 import Blog from "../public/css/blog.module.css";
@@ -55,12 +56,12 @@ export default function Blogs() {
                       (ELDT) regulations will be changed, now requiring all
                       aspiring CDL drivers to receive ...
                     </p>
-                    <a
+                    <Link
                       href="/blog-eldt"
                       className={`${Blog.readmore} hvr-underline-reveal`}
                     >
                       Read More <ArrowRight />
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -92,15 +93,15 @@ export default function Blogs() {
                       <i className="flaticon-chat"></i>0 Comments
                     </span>
                     <p className={Blog.description}>
-                      It’s easy to find a trucking job quickly, but what about
+                      It's easy to find a trucking job quickly, but what about
                       finding your dream trucking job? How do you find the ...
                     </p>
-                    <a
+                    <Link
                       href="/blog-tips"
                       className={`${Blog.readmore} hvr-underline-reveal`}
                     >
                       Read More <ArrowRight />
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
