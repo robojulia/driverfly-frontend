@@ -52,12 +52,10 @@ export default function ViewDataTable<TElement>(
 
   // const storageApi = useStorage();
   const description = props?.description;
-  const storage = props.columnSettingKey
-    ? useStatefulStorage<(string | number)[]>({
-        type: "local",
-        key: props.columnSettingKey,
-      })
-    : null;
+  const storage = useStatefulStorage<(string | number)[]>({
+    type: "local",
+    key: props.columnSettingKey || "default",
+  });
 
   const hideable = new Set(
     props.columns
@@ -73,7 +71,7 @@ export default function ViewDataTable<TElement>(
     if (!search) setItems(props.items);
 
     const visible = new Set(
-      storage?.item ||
+      (props.columnSettingKey ? storage?.item : null) ||
         props.columns.filter((v) => v.id && !v.hide).map((v) => v.id)
     );
     const columns: TableColumn<TElement>[] = props.columns.map((v) => ({
@@ -87,7 +85,7 @@ export default function ViewDataTable<TElement>(
       });
     }
     setColumns(columns);
-  }, [props, storage?.item]);
+  }, [props, storage?.item, search]);
 
   // useEffect(() => {
   // }, [

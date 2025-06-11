@@ -16,14 +16,9 @@ export interface SaveJobProps extends JobDetailProps {
 export default function SaveJob({ job, wrapperClassName, spanClassName }: SaveJobProps) {
 
     const { getUser } = useAuth();
-    const user = getUser()
-    if (!user) {
-        return <></>
-    }
-
     const { t } = useTranslation();
-    const savedJobApi = new SavedJobApi();
-
+    const user = getUser();
+    
     const [isSaved, setIsSaved] = useState<boolean>(false)
     const setSaved = () => setIsSaved(true)
     const setUnsaved = () => setIsSaved(false)
@@ -32,13 +27,21 @@ export default function SaveJob({ job, wrapperClassName, spanClassName }: SaveJo
     const startLoading = () => setIsLoading(true)
     const stopLoading = () => setIsLoading(false)
 
+    const savedJobApi = new SavedJobApi();
+
     useEffectAsync(async (): Promise<void> => {
+        if (!user) return;
+        
         await savedJobApi.getByJobId(job.id)
             .then(data => !!data)
             .catch(error => (!!!(error?.response?.status == 404)))
             .then(saved => saved ? setSaved() : setUnsaved())
             .then(() => stopLoading())
-    }, [])
+    }, [user, job.id])
+
+    if (!user) {
+        return <></>
+    }
 
     const showMessage = (status: boolean, action: string): boolean => {
         toast(t(

@@ -49,7 +49,7 @@ export default function SuggestedJobs() {
                 </thead>
                 <tbody>
                   {jobs.length > 0 && jobs.map((job, index) => (
-                    <tr>
+                    <tr key={job.job?.id || index}>
                       <td scope="row">{index + 1}</td>
                       <td>
                         <Link href={`/dashboard/driver/jobs/${job.job?.id}`}><a>{job.job?.title}</a></Link>

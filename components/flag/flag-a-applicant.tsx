@@ -16,8 +16,6 @@ import { InappropriateApplicantFlag } from "../../enums/support/inappropriate-ap
 export default function FlagApplicant({ applicantId }) {
 
     const { user } = useAuth();
-    if (!!!user || user.company == null) return <></>;
-
     const { t } = useTranslation();
     const supportApi = new SupportApi();
 
@@ -39,6 +37,8 @@ export default function FlagApplicant({ applicantId }) {
             }
         }
     });
+
+    if (!!!user || user.company == null) return <></>;
 
     return (
         <>

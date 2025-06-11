@@ -17,20 +17,11 @@ export interface ReactivateJobProps extends ButtonProps {
 export function ReactivateJobButton(props: ReactivateJobProps) {
     const { job, onComplete, ...rest } = props;
 
-    if (!isExpired(job.expiry_date)) return <></>;
-
     const jobApi = new JobApi();
     const { t } = useTranslation();
 
     const [showDialog, setShowDialog] = React.useState(false);
     const [expiryDate, setExpiryDate] = React.useState<string | Date>(job?.expiry_date);
-
-    function onClick(e: React.MouseEvent) {
-        setShowDialog(true);
-        setExpiryDate(job?.expiry_date);
-    }
-
-    const onCloseClick = () => setShowDialog(false);
 
     const onConfirmClick = React.useCallback(async (e: React.MouseEvent) => {
         try {
@@ -38,13 +29,22 @@ export function ReactivateJobButton(props: ReactivateJobProps) {
                 ...job,
                 expiry_date: expiryDate,
             });
-            onComplete(data);
+            onComplete?.(data);
         } catch (e) {
             toast.error("UNABLE_TO_SAVE_INFORMATION");
         } finally {
             setShowDialog(false);
         }
-    }, [expiryDate, job])
+    }, [expiryDate, job, jobApi, onComplete])
+
+    if (!isExpired(job.expiry_date)) return <></>;
+
+    function onClick(e: React.MouseEvent) {
+        setShowDialog(true);
+        setExpiryDate(job?.expiry_date);
+    }
+
+    const onCloseClick = () => setShowDialog(false);
 
     return (
         <>

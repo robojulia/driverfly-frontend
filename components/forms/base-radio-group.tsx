@@ -60,7 +60,7 @@ export default function BaseRadioGroup({
       {formik.touched[name] && formik.errors[name] && (
         <div className="invalid-feedback d-block">{formik.errors[name]}</div>
       )}
-      <style jsx global>{`
+      <style>{`
         .radio-group-container {
           margin-top: 0.5rem;
         }

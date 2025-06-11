@@ -4,8 +4,6 @@ import ViewModal from "../view-details/view-modal";
 
 export default function VehiclePhoto({ vehicle, style, className }) {
 
-    if (!!!vehicle || !!!vehicle.photo?.id) return <></>
-
     const documentApi = new DocumentApi();
     const [photo, setPhoto] = useState("/driverfly-logo-square.png")
     const [showVehiclePhoto, setShowVehiclePhoto] = useState(false)
@@ -17,9 +15,12 @@ export default function VehiclePhoto({ vehicle, style, className }) {
             .catch(error => console.error("error", error))
     }
 
-    useEffect(async () => {
-        await fetchVehiclephoto()
-    }, [])
+    useEffect(() => {
+        if (!!!vehicle || !!!vehicle.photo?.id) return;
+        fetchVehiclephoto();
+    }, [vehicle, vehicle?.photo?.id])
+
+    if (!!!vehicle || !!!vehicle.photo?.id) return <></>
 
     return <>
         <img

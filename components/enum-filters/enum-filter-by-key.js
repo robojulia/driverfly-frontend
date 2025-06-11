@@ -2,7 +2,7 @@ export default function EnumFilterByKey(props) {
     return (
         <>
             {props.withAll &&
-                <div class="topping ">
+                <div className="topping ">
                     <input
                         onChange={props.handleChange}
                         type="radio"
@@ -13,7 +13,7 @@ export default function EnumFilterByKey(props) {
             {Object.keys(props.enumArray).map((key) => {
                 return (
                     <>
-                        <div class="topping pt-2">
+                        <div className="topping pt-2">
                             <input
                                 onChange={props.handleChange}
                                 type="radio"

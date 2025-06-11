@@ -28,8 +28,6 @@ export default function ApplicantResume({
 	disabled,
 	className,
 }: ApplicantResumeProps) {
-	if (!!!applicant) return <></>;
-
 	const { t } = useTranslation();
 
 	const [resume, setResume] = useState<any>(null);
@@ -37,8 +35,11 @@ export default function ApplicantResume({
 		setResume(applicant ? generateResume(applicant) : null);
 
 	useEffectAsync(async () => {
+		if (!!!applicant) return;
 		recreateResume();
 	}, [applicant]);
+
+	if (!!!applicant) return <></>;
 
 	const styles = StyleSheet.create({
 		page: {

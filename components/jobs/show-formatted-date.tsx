@@ -12,9 +12,10 @@ interface FormattedDateProps {
 
 export default function ShowFormattedDate({ date, labelPrefix, labelPostfix, hideTime, showTimeSince, className }: FormattedDateProps) {
 
+    const { t } = useTranslation();
+
     if (!Boolean(date)) return <></>
 
-    const { t } = useTranslation();
     let displayDate: Date | string;
 
     if (showTimeSince) {
