@@ -1,7 +1,4 @@
-import { useTranslation } from "../hooks/use-translation";
-
-export default function joinArrayElements(arr, specialValue, labelPrefix) {
-    const { t } = useTranslation();
+export default function joinArrayElements(arr, specialValue, labelPrefix, t) {
     if (!Array.isArray(arr)) return '';
 
     let restrictions = arr.filter(item => item !== specialValue);

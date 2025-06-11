@@ -392,7 +392,7 @@ export default function SafetyPerformanceHistory({
                   <ol className="list-group">
                     {data.voe_attempts?.length ? (
                       data.voe_attempts.map((v, i) => (
-                        <li className="list-group-item">
+                        <li key={i} className="list-group-item">
                           <strong>{i + 1}</strong>:{" "}
                           <ShowFormattedDate date={v} />
                         </li>

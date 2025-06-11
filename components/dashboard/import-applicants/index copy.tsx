@@ -462,7 +462,7 @@ const ImportApplicants = () => {
                                                         <Dropdown.Menu>
                                                             {Object.values(LicenseRestrictions).map((v) => {
                                                                 return (
-                                                                    <Dropdown.ItemText>{v}</Dropdown.ItemText>
+                                                                    <Dropdown.ItemText key={v}>{v}</Dropdown.ItemText>
                                                                 );
                                                             })}
                                                         </Dropdown.Menu>
@@ -480,7 +480,7 @@ const ImportApplicants = () => {
                                                             {Object.values(VehicleTransmissionType).map(
                                                                 (v) => {
                                                                     return (
-                                                                        <Dropdown.ItemText>{v}</Dropdown.ItemText>
+                                                                        <Dropdown.ItemText key={v}>{v}</Dropdown.ItemText>
                                                                     );
                                                                 }
                                                             )}
@@ -498,7 +498,7 @@ const ImportApplicants = () => {
                                                         <Dropdown.Menu>
                                                             {Object.values(DriverEndorsement).map((v) => {
                                                                 return (
-                                                                    <Dropdown.ItemText>{v}</Dropdown.ItemText>
+                                                                    <Dropdown.ItemText key={v}>{v}</Dropdown.ItemText>
                                                                 );
                                                             })}
                                                         </Dropdown.Menu>
@@ -515,7 +515,7 @@ const ImportApplicants = () => {
                                                         <Dropdown.Menu>
                                                             {Object.values(EducationLevel).map((v) => {
                                                                 return (
-                                                                    <Dropdown.ItemText>{v}</Dropdown.ItemText>
+                                                                    <Dropdown.ItemText key={v}>{v}</Dropdown.ItemText>
                                                                 );
                                                             })}
                                                         </Dropdown.Menu>
@@ -532,7 +532,7 @@ const ImportApplicants = () => {
                                                         <Dropdown.Menu>
                                                             {Object.values(DriverLicenseType).map((v) => {
                                                                 return (
-                                                                    <Dropdown.ItemText>{v}</Dropdown.ItemText>
+                                                                    <Dropdown.ItemText key={v}>{v}</Dropdown.ItemText>
                                                                 );
                                                             })}
                                                         </Dropdown.Menu>
@@ -549,7 +549,7 @@ const ImportApplicants = () => {
                                                         <Dropdown.Menu>
                                                             {Object.values(JobEquipmentType).map((v) => {
                                                                 return (
-                                                                    <Dropdown.ItemText>{v}</Dropdown.ItemText>
+                                                                    <Dropdown.ItemText key={v}>{v}</Dropdown.ItemText>
                                                                 );
                                                             })}
                                                         </Dropdown.Menu>
@@ -588,11 +588,11 @@ const ImportApplicants = () => {
                                 if (onlyErrors && !meta.error) return null;
 
                                 return (
-                                    <tr className={onlyErrors && !meta.error ? `d-none` : ""}>
+                                    <tr key={i} className={onlyErrors && !meta.error ? `d-none` : ""}>
                                         <td className={style.frozen_col}>{findIcon()}</td>
                                         <td className={style.frozen_col}>{i + 1}</td>
                                         {headers.map((h) => (
-                                            <td>
+                                            <td key={h}>
                                                 {guessControl(form, schema, warnings[i], h, i, t)}
                                             </td>
                                         ))}
@@ -688,7 +688,7 @@ function guessControl(
 
                         if (error) {
                             return (
-                                <li>
+                                <li key={i}>
                                     {v}
                                     <br />
                                     <span className="text-danger small">{error}</span>
@@ -696,7 +696,7 @@ function guessControl(
                             );
                         }
 
-                        return <li>{v}</li>;
+                        return <li key={i}>{v}</li>;
                     })}
                 </ul>
             </>

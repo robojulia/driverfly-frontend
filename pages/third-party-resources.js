@@ -475,7 +475,7 @@ export default function ThirdPartyResources() {
                                     <p>
                                         {obj.description}
                                         <br />
-                                        <a href={obj.link} target="_blank"> Learn more. </a>
+                                        <a href={obj.link} target="_blank" rel="noreferrer"> Learn more. </a>
                                     </p>
                                 </div>
                             )

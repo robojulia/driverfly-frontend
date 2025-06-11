@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ({ applicant }) => (
+const Header = ({ applicant }) => (
 
     <View style={styles.container}>
         <View style={styles.detailColumn}>
@@ -55,3 +55,7 @@ export default ({ applicant }) => (
         </View>
     </View>
 );
+
+Header.displayName = 'Header';
+
+export default Header;

@@ -55,6 +55,7 @@ export default function BaseSchedule({
             const bit = Math.pow(2, i);
             return (
               <button
+                key={i}
                 type="button"
                 value={bit}
                 className={`btn ${

@@ -238,4 +238,4 @@ const DocumentStepperComponent = memo(function DocumentStepper({
 
 DocumentStepperComponent.displayName = 'DocumentStepper';
 
-export { DocumentStepperComponent as DocumentStepper };
+export default DocumentStepperComponent;

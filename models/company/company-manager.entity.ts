@@ -1,6 +1,5 @@
 import { DocumentEntity } from "../documents/document.entity";
 import * as yup from "yup";
-import { useTranslation } from "../../hooks/use-translation";
 import { Status } from "../../enums/status.enum";
 import { UserEntity } from "../user/user.entity";
 
@@ -11,8 +10,7 @@ export class CompanyManagerEntity {
 	email?: string;
 	phone?: string;
 
-	static yupSchema() {
-		const { t } = useTranslation()
+	static yupSchema(t: (key: string) => string) {
 		return yup.object({
 			name: yup.string().required().nullable().max(255),
 			email: yup.string().email().required().nullable().max(255),

@@ -97,15 +97,15 @@ export default function FAQ() {
                       {" "}
                       <span className="btn-link">
                         {" "}
-                        I can't remember my user id and/or password, can you
+                        I can&apos;t remember my user id and/or password, can you
                         reset it?
                       </span>
                     </Accordion.Header>
                     <Accordion.Body>
                       <p>
-                        If you've lost both your password and username, reach
+                        If you&apos;ve lost both your password and username, reach
                         out to customer care at support@driverfly.co and enter
-                        subject line "Lost Username".
+                        subject line &quot;Lost Username&quot;.
                       </p>
                     </Accordion.Body>
                   </Accordion.Item>
@@ -155,7 +155,7 @@ export default function FAQ() {
                     </Accordion.Header>
                     <Accordion.Body>
                       <p>
-                        For CDL Drivers, it's a tool that allows you to get
+                        For CDL Drivers, it&apos;s a tool that allows you to get
                         placed fast and with a quality company who invests in
                         their drivers. You can also sign up to receive job
                         alerts and stay informed on the latest news and

@@ -1,7 +1,8 @@
-import { useEffectAsync } from '../utils/react';
-
-export function bootstrapInit() {
-  useEffectAsync(async () => {
-    import('bootstrap/dist/js/bootstrap');
-  }, []);
+export async function bootstrapInit() {
+  // Import bootstrap directly instead of using useEffectAsync
+  try {
+    await import('bootstrap');
+  } catch (error) {
+    console.warn('Bootstrap could not be loaded:', error);
+  }
 }

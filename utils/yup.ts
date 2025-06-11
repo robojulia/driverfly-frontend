@@ -1,6 +1,5 @@
 import * as yup from "yup";
 import { TestContext } from "yup/lib/util/createValidation";
-import { useTranslation } from "../hooks/use-translation";
 
 yup.addMethod(yup.string, "enum", function (enumType, message) {
   const keys = Object.values(enumType);
@@ -66,9 +65,7 @@ function unique(thisObj, list, field, options, message) {
  * @param {string} message
  * @this import("yup/lib/array").OptionalArraySchema
  */
-unique.addTest = function (field, options, message) {
-  const { t } = useTranslation();
-
+unique.addTest = function (field, options, message, t) {
   if (typeof options == "string") {
     message = options;
     options = null;
@@ -139,18 +136,14 @@ export function numberRangeEnd(
     .nullable();
 }
 
-export function cityRegexValidation() {
-  const { t } = useTranslation();
-
+export function cityRegexValidation(t) {
   return yup
     .string()
     .matches(/^[^0-9]+$/, t("CITY_REGEX_VALIDATION_MESSAGE"))
     .nullable();
 }
 
-export function zipCodeRegexValidation() {
-  const { t } = useTranslation();
-
+export function zipCodeRegexValidation(t) {
   return yup
     .string()
     .matches(/^[0-9]+$/, t("ZIP_CODE_REGEX_VALIDATION_MESSAGE"))

@@ -1,11 +1,8 @@
 import * as yup from "yup";
 import "../utils/yup";
 
-import { useTranslation } from "../hooks/use-translation";
-
-export function yupInit() {
-    const { t } = useTranslation();
-
+// Remove the useTranslation hook and use a different approach
+export function yupInit(t: (key: string, params?: any, options?: any) => string) {
     yup.setLocale({
         mixed: {
           required: (ctx) => t("yup.required"),

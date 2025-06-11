@@ -1,6 +1,5 @@
 import * as yup from "yup";
 import { Status } from "../../enums/status.enum";
-import { useTranslation } from "../../hooks/use-translation";
 import { DocumentEntity } from "../documents/document.entity";
 import { UserEntity } from "../user/user.entity";
 
@@ -25,8 +24,7 @@ export class CompanyEntity {
 	parent?: CompanyEntity;
 	children?: CompanyEntity[];
 
-	static yupSchema() {
-		const { t } = useTranslation()
+	static yupSchema(t: (key: string) => string) {
 		return yup.object({
 			name: yup.string().required().nullable().max(100).trim(),
 			about: yup.string().nullable().max(750)

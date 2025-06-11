@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ({ applicant, t }) => (
+const BasicDetails = ({ applicant, t }) => (
     <View style={styles.container}>
         <Title>{t("basic_details")}</Title>
         <Text style={styles.degree}><PlusCircle />{applicant?.phone}</Text>
@@ -46,3 +46,7 @@ export default ({ applicant, t }) => (
         <Text style={styles.degree}><Label>{t("AUTHORIZED_TO_WORK_IN_THE_US")} : </Label>{applicant?.authorized_to_work_in_us ? t('YES') : t("No")}</Text>
     </View>
 );
+
+BasicDetails.displayName = 'BasicDetails';
+
+export default BasicDetails;
