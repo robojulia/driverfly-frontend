@@ -54,7 +54,7 @@ function BaseControl({
         <>
           <label className={styles.titlechildren}>
             {t(label)}
-            {required ? <span className={styles.required}>*</span> : ''}:
+            {required ? <span className={styles.required}></span> : ''}:
           </label>
           <br />
         </>

@@ -188,7 +188,7 @@ const BaseInput = React.forwardRef<HTMLInputElement, BaseInputProps>(
           readOnly={readOnly}
           name={name}
           id={name}
-          className={`${styles.formInput} form-control ${error ? 'is-invalid' : ''}`}
+          className={`form-control ${error ? 'is-invalid' : ''}`}
           {...rest}
         />
       </BaseControl>
