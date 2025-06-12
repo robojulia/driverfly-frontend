@@ -401,12 +401,7 @@ export function AccidentHistory() {
                                 onBlur={form.handleBlur}
                                 required
                                 min="0"
-                                error={
-                                  form.touched.accident_history?.[i]?.number_of_fatalaties &&
-                                  form.errors.accident_history?.[i]?.number_of_fatalaties
-                                    ? String(form.errors.accident_history[i].number_of_fatalaties)
-                                    : undefined
-                                }
+                                error={getNestedError(`accident_history.${i}.number_of_fatalaties`)}
                                 icon={<span>⚠️</span>}
                               />
                             </div>

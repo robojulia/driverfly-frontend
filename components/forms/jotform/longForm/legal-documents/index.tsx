@@ -13,7 +13,7 @@ import styles from '../../../../../styles/digitalhiringapp.module.css';
 import { ApplicantExtras } from '../../../../../enums/applicants/applicant-extras.enum';
 import { CompanyPreferenceEnhancementLabel } from '../../../../../enums/company/company-preference-enhancement-label.enum';
 import { ApplicantExtrasEntity } from '../../../../../models/applicant';
-import { DocumentStepper } from './document-stepper';
+import DocumentStepper from './document-stepper';
 import { DocumentPreview } from './document-preview';
 import { DocumentSignature } from './document-signature';
 import { LegalDocumentProvider, useLegalDocuments } from './legal-documents-context';

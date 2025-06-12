@@ -1,56 +1,53 @@
-import { FormControlLabel, FormGroup, Switch } from "@mui/material";
-import { useFormik } from "formik";
-import Link from "next/link";
-import { NextRouter, useRouter } from "next/router";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Accordion, Button, ButtonGroup, Col, Row } from "react-bootstrap";
-import { EyeFill, PencilFill } from "react-bootstrap-icons";
-import { toast } from "react-toastify";
-import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
-import ShowEnumFromString from "../../../../components/enum-filters/show-enum-from-string";
-import BaseCheckList from "../../../../components/forms/base-check-list";
-import BaseSelect from "../../../../components/forms/base-select";
-import BaseTextArea from "../../../../components/forms/base-text-area";
-import ApplicantFilterForm from "../../../../components/forms/company/filter-form";
-import ShowFormattedDate from "../../../../components/jobs/show-formatted-date";
-import PageLayout from "../../../../components/layouts/page/page-layout";
-import OverlyPopover from "../../../../components/popover/overly-popover";
-import ViewDataTable from "../../../../components/view-details/view-data-table";
-import ViewModal from "../../../../components/view-details/view-modal";
+import { FormControlLabel, FormGroup, Switch } from '@mui/material';
+import { useFormik } from 'formik';
+import Link from 'next/link';
+import { NextRouter, useRouter } from 'next/router';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Accordion, Button, ButtonGroup, Col, Row } from 'react-bootstrap';
+import { EyeFill, PencilFill } from 'react-bootstrap-icons';
+import { toast } from 'react-toastify';
+import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
+import ShowEnumFromString from '../../../../components/enum-filters/show-enum-from-string';
+import BaseCheckList from '../../../../components/forms/base-check-list';
+import BaseSelect from '../../../../components/forms/base-select';
+import BaseTextArea from '../../../../components/forms/base-text-area';
+import ApplicantFilterForm from '../../../../components/forms/company/filter-form';
+import ShowFormattedDate from '../../../../components/jobs/show-formatted-date';
+import PageLayout from '../../../../components/layouts/page/page-layout';
+import OverlyPopover from '../../../../components/popover/overly-popover';
+import ViewDataTable from '../../../../components/view-details/view-data-table';
+import ViewModal from '../../../../components/view-details/view-modal';
 import {
   ApplicantReasonCodeFired,
   ApplicantReasonCodeNotInterested,
   ApplicantReasonCodeNotQualified,
   ApplicantReasonCodeQuit,
-} from "../../../../enums/applicants/applicant-reason-codes.enum";
-import { ApplicantStatus } from "../../../../enums/applicants/applicant-status.enum";
-import { JobEquipmentType } from "../../../../enums/jobs/job-equipment-type.enum";
-import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
-import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
-import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
-import { useAuth } from "../../../../hooks/use-auth";
-import {
-  TranslateInterface,
-  useTranslation,
-} from "../../../../hooks/use-translation";
-import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";
-import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
-import { SearchApplicantDto } from "../../../../models/applicant/search-applicant.dto";
-import { JobEntity } from "../../../../models/job/job.entity";
-import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
-import { buildAddress } from "../../../../utils/common";
-import * as numbers from "../../../../utils/number";
-import { useEffectAsync } from "../../../../utils/react";
-import ApplicantApi from "../../../api/applicant";
-import joinArrayElements from "../../../../utils/join-in-order.utils";
-import CustomPagination from "../../../../components/pagination/custom-pagination";
-import { Pagination, PagingMeta } from "../../../../types/pagination.type";
-import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
-import JobApi from "../../../api/job";
+} from '../../../../enums/applicants/applicant-reason-codes.enum';
+import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
+import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
+import { JobGeography } from '../../../../enums/jobs/job-geography.enum';
+import { DriverEndorsement } from '../../../../enums/users/driver-endorsement.enum';
+import { VehicleTransmissionType } from '../../../../enums/vehicles/vehicle-transmission-type.enum';
+import { useAuth } from '../../../../hooks/use-auth';
+import { TranslateInterface, useTranslation } from '../../../../hooks/use-translation';
+import { ApplicantJobEntity } from '../../../../models/applicant/applicant-job.entity';
+import { ApplicantEntity } from '../../../../models/applicant/applicant.entity';
+import { SearchApplicantDto } from '../../../../models/applicant/search-applicant.dto';
+import { JobEntity } from '../../../../models/job/job.entity';
+import { globalAjaxExceptionHandler } from '../../../../utils/ajax';
+import { buildAddress } from '../../../../utils/common';
+import * as numbers from '../../../../utils/number';
+import { useEffectAsync } from '../../../../utils/react';
+import ApplicantApi from '../../../api/applicant';
+import joinArrayElements from '../../../../utils/join-in-order.utils';
+import CustomPagination from '../../../../components/pagination/custom-pagination';
+import { Pagination, PagingMeta } from '../../../../types/pagination.type';
+import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
+import JobApi from '../../../api/job';
 
 const ViewMode = {
-  job: "job",
-  applicant: "applicant",
+  job: 'job',
+  applicant: 'applicant',
 };
 interface ConsolodatedApplicant extends ApplicantEntity {
   jobs?: ConsolodatedApplicantJob[];
@@ -85,9 +82,7 @@ export default function Applicants() {
   const [loading, setLoading] = useState<boolean>(true);
   const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
   const [filters, setFilters] = useState<SearchApplicantDto>();
-  const [pagingMeta, setPagingMeta] = useState<PagingMeta>(
-    pagingsMetaInitialValues
-  );
+  const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingsMetaInitialValues);
   const [filtersChanged, setFiltersChanged] = useState<boolean>(false);
 
   const fetchApplicant = async () => {
@@ -96,7 +91,7 @@ export default function Applicants() {
       const api = new ApplicantApi();
       const data = await api.list({
         jobId: jobId as any as number,
-        without: ["applicant_dac", "applicant_extras"],
+        without: ['applicant_dac', 'applicant_extras'],
         ...filters,
         is_paginated: true,
         page: filtersChanged ? 1 : pagingMeta?.currentPage,
@@ -145,7 +140,7 @@ export default function Applicants() {
 
     await router.push(router);
     if (value === ViewMode.job) {
-      toast.info(t("TOGGLE_ON_APPLICANTS"));
+      toast.info(t('TOGGLE_ON_APPLICANTS'));
     }
   };
 
@@ -216,10 +211,10 @@ export default function Applicants() {
     });
   };
 
-  const canCreate = hasPermission("CanCreateApplicant");
+  const canCreate = hasPermission('CanCreateApplicant');
 
   useEffect(() => {
-    console.log("debug", user.company.id, company?.id, applicants.length);
+    console.log('debug', user.company.id, company?.id, applicants.length);
   }, [applicants]);
   return (
     <>
@@ -229,43 +224,39 @@ export default function Applicants() {
           actions={
             <div
               style={{
-                display: "flex",
-                justifyContent: "end",
-                alignItems: "center",
+                display: 'flex',
+                justifyContent: 'end',
+                alignItems: 'center',
               }}
             >
               {viewMode === ViewMode.applicant && (
                 <Accordion.Button
                   className="mr-3 text-black theme-filter-btn"
                   style={{
-                    width: "auto",
-                    fontSize: ".95rem",
-                    lineHeight: "1.5",
-                    padding: ".25rem 1.5rem",
-                    borderRadius: ".2rem",
+                    width: 'auto',
+                    fontSize: '.95rem',
+                    lineHeight: '1.5',
+                    padding: '.25rem 1.5rem',
+                    borderRadius: '.2rem',
                   }}
                 >
-                  <div className="mr-2">{t("FILTERS")}</div>
+                  <div className="mr-2">{t('FILTERS')}</div>
                 </Accordion.Button>
               )}
               {canCreate && (
-                <ButtonGroup size="sm" style={{ float: "right" }}>
+                <ButtonGroup size="sm" style={{ float: 'right' }}>
                   <Button
                     variant="primary"
-                    onClick={() =>
-                      router.push("/dashboard/company/applicants/create")
-                    }
+                    onClick={() => router.push('/dashboard/company/applicants/create')}
                   >
-                    + {t("ADD_AN_APPLICANT")}
+                    + {t('ADD_AN_APPLICANT')}
                   </Button>
                   <Button
                     variant=""
                     className="theme-general-btn"
-                    onClick={() =>
-                      router.push("/dashboard/company/applicants/import")
-                    }
+                    onClick={() => router.push('/dashboard/company/applicants/import')}
                   >
-                    + {t("IMPORT_APPLICANTS")}
+                    + {t('IMPORT_APPLICANTS')}
                   </Button>
                 </ButtonGroup>
               )}
@@ -274,26 +265,22 @@ export default function Applicants() {
         >
           <div
             style={{
-              display: "flex",
-              alignItems: "end",
-              justifyContent: "end",
+              display: 'flex',
+              alignItems: 'end',
+              justifyContent: 'end',
             }}
           >
-            <FormGroup style={{ float: "right" }}>
+            <FormGroup style={{ float: 'right' }}>
               <FormControlLabel
                 control={
                   <Switch
-                    value={
-                      viewMode == ViewMode.applicant
-                        ? ViewMode.job
-                        : ViewMode.applicant
-                    }
+                    value={viewMode == ViewMode.applicant ? ViewMode.job : ViewMode.applicant}
                     checked={viewMode == ViewMode.job}
                     onChange={onViewModeChange}
                   />
                 }
-                label={t("VIEW_BY_{name}", {
-                  name: t(viewMode == ViewMode.applicant ? "JOB" : "JOB"),
+                label={t('VIEW_BY_{name}', {
+                  name: t(viewMode == ViewMode.applicant ? 'JOB' : 'JOB'),
                 })}
               />
             </FormGroup>
@@ -344,7 +331,7 @@ export default function Applicants() {
             show={!!applicantJobForm.values.status}
             onCloseClick={applicantJobForm.resetForm}
             closeText="CANCEL"
-            title={"CHANGE_STATUS"}
+            title={'CHANGE_STATUS'}
             className="bg-secondary "
           >
             <form onSubmit={applicantJobForm.handleSubmit}>
@@ -395,8 +382,7 @@ export default function Applicants() {
                     enumType={ApplicantReasonCodeNotInterested}
                   />
                 )}
-                {applicantJobForm.values.status ==
-                  ApplicantStatus.INACTIVE_QUIT && (
+                {applicantJobForm.values.status == ApplicantStatus.INACTIVE_QUIT && (
                   <BaseCheckList
                     className="col-12"
                     label="REASON_CODES"
@@ -408,8 +394,7 @@ export default function Applicants() {
                     enumType={ApplicantReasonCodeQuit}
                   />
                 )}
-                {applicantJobForm.values.status ==
-                  ApplicantStatus.INACTIVE_FIRED && (
+                {applicantJobForm.values.status == ApplicantStatus.INACTIVE_FIRED && (
                   <BaseCheckList
                     className="col-12"
                     label="REASON_CODES"
@@ -421,7 +406,7 @@ export default function Applicants() {
                     enumType={ApplicantReasonCodeFired}
                   />
                 )}
-                {applicantJobForm.values.reason_codes?.includes("OTHER") && (
+                {applicantJobForm.values.reason_codes?.includes('OTHER') && (
                   <BaseTextArea
                     className="col-12"
                     placeholder="REASONS"
@@ -434,7 +419,7 @@ export default function Applicants() {
               </Row>
               <Row className="py-3 px-5">
                 <Button type="submit" variant="primary">
-                  {t("SUBMIT")}
+                  {t('SUBMIT')}
                 </Button>
               </Row>
             </form>
@@ -453,61 +438,47 @@ function getApplicantName(applicant: ApplicantEntity) {
   return `${applicant?.first_name} ${applicant?.last_name}`;
 }
 
-function getApplicantStatus(
-  applicantJob: ApplicantJobEntity,
-  t: TranslateInterface
-) {
+function getApplicantStatus(applicantJob: ApplicantJobEntity, t: TranslateInterface) {
   switch (applicantJob?.status) {
     case ApplicantStatus.OTHER:
       return applicantJob?.status_other;
     case ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED:
-      return `${t(
-        `ApplicantStatus.${applicantJob?.status}`
-      )} (${applicantJob?.reason_codes
+      return `${t(`ApplicantStatus.${applicantJob?.status}`)} (${applicantJob?.reason_codes
         ?.map((v) =>
           v == ApplicantReasonCodeNotQualified.OTHER
             ? applicantJob?.reason_codes_other
             : t(`ApplicantReasonCodeNotQualified.${v}`)
         )
-        ?.join(", ")})`;
+        ?.join(', ')})`;
     case ApplicantStatus.INACTIVE_CONTACTED_UNINTERESTED:
-      return `${t(
-        `ApplicantStatus.${applicantJob?.status}`
-      )} (${applicantJob?.reason_codes
+      return `${t(`ApplicantStatus.${applicantJob?.status}`)} (${applicantJob?.reason_codes
         ?.map((v) =>
           v == ApplicantReasonCodeNotInterested.OTHER
             ? applicantJob?.reason_codes_other
             : t(`ApplicantReasonCodeNotInterested.${v}`)
         )
-        ?.join(", ")})`;
+        ?.join(', ')})`;
     case ApplicantStatus.INACTIVE_QUIT:
-      return `${t(
-        `ApplicantStatus.${applicantJob?.status}`
-      )} (${applicantJob?.reason_codes
+      return `${t(`ApplicantStatus.${applicantJob?.status}`)} (${applicantJob?.reason_codes
         ?.map((v) =>
           v == ApplicantReasonCodeQuit.OTHER
             ? applicantJob?.reason_codes_other
             : t(`ApplicantReasonCodeQuit.${v}`)
         )
-        ?.join(", ")})`;
+        ?.join(', ')})`;
     case ApplicantStatus.INACTIVE_FIRED:
-      return `${t(
-        `ApplicantStatus.${applicantJob?.status}`
-      )} (${applicantJob?.reason_codes
+      return `${t(`ApplicantStatus.${applicantJob?.status}`)} (${applicantJob?.reason_codes
         ?.map((v) =>
           v == ApplicantReasonCodeFired.OTHER
             ? applicantJob?.reason_codes_other
             : t(`ApplicantReasonCodeFired.${v}`)
         )
-        ?.join(", ")})`;
+        ?.join(', ')})`;
     default:
       return t(`ApplicantStatus.${applicantJob?.status}`);
   }
 
-  if (
-    applicantJob.reason_codes?.length > 0 ||
-    applicantJob.reason_codes_other
-  ) {
+  if (applicantJob.reason_codes?.length > 0 || applicantJob.reason_codes_other) {
     return t(`ApplicantStatus.${applicantJob.status}`);
   }
 }
@@ -521,13 +492,13 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
 
   if (applicant?.years_cdl_experience < job?.min_years_experience) {
     results.meets_basic_qualifications = false;
-    results?.qualification_fail_reason?.push("YEARS_OF_CDL_EXPERIENCE_TOO_LOW");
+    results?.qualification_fail_reason?.push('YEARS_OF_CDL_EXPERIENCE_TOO_LOW');
   }
 
   if (applicant?.accident_count > 0) {
     if (job?.must_have_clean_mvr) {
       results.meets_basic_qualifications = false;
-      results?.qualification_fail_reason?.push("DOES_NOT_HAVE_CLEAN_MVR");
+      results?.qualification_fail_reason?.push('DOES_NOT_HAVE_CLEAN_MVR');
     } else if (job?.mvr_requirements?.length) {
       // complicated check around max violations
       // since violation count isn't specific
@@ -541,35 +512,31 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
 
       if (mvr && mvr?.max_count > applicant?.accident_count) {
         results.meets_basic_qualifications = false;
-        results?.qualification_fail_reason?.push(
-          "VIOLATION_COUNT_GREATER_THAN_MAX"
-        );
+        results?.qualification_fail_reason?.push('VIOLATION_COUNT_GREATER_THAN_MAX');
       }
     }
   }
 
   if (!applicant?.can_pass_drug_test && job?.must_pass_drug_test) {
     results.meets_basic_qualifications = false;
-    results?.qualification_fail_reason?.push("CANNOT_PASS_DRUG_TEST");
+    results?.qualification_fail_reason?.push('CANNOT_PASS_DRUG_TEST');
   }
 
   job?.required_skills?.forEach((skill) => {
     // cannot process OTHER type
     if (skill?.type != JobEquipmentType.OTHER) {
-      const experience = applicant?.equipment_experience?.find(
-        (v) => v?.type == skill?.type
-      );
+      const experience = applicant?.equipment_experience?.find((v) => v?.type == skill?.type);
 
       if (!experience) {
         results.meets_basic_qualifications = false;
         results?.qualification_fail_reason?.push({
-          key: "DOES_NOT_HAVE_{name}_EXPERIENCE",
+          key: 'DOES_NOT_HAVE_{name}_EXPERIENCE',
           name: `JobEquipmentType.${skill?.type}`,
         });
       } else if (experience?.years < skill?.years) {
         results.meets_basic_qualifications = false;
         results?.qualification_fail_reason?.push({
-          key: "YEARS_OF_{name}_EXPERIENCE_TOO_LOW",
+          key: 'YEARS_OF_{name}_EXPERIENCE_TOO_LOW',
           name: `JobEquipmentType.${skill?.type}`,
         });
       }
@@ -621,12 +588,11 @@ function ApplicantView(props: ViewProps) {
       ...applicant,
       jobs: applicant.jobs?.map((aJob) => {
         const requirements = evaluateJobRequirements(applicant, aJob.job);
-        requirements.qualification_fail_reason =
-          requirements.qualification_fail_reason.map((v) => {
-            if (typeof v == "string") return t(v);
+        requirements.qualification_fail_reason = requirements.qualification_fail_reason.map((v) => {
+          if (typeof v == 'string') return t(v);
 
-            return t(v.key, { name: v.name }, { translateProps: true });
-          });
+          return t(v.key, { name: v.name }, { translateProps: true });
+        });
 
         return {
           ...aJob,
@@ -641,22 +607,22 @@ function ApplicantView(props: ViewProps) {
         customStyles={{
           headRow: {
             style: {
-              opacity: "1",
-              whiteSpace: "unset",
-              textOverflow: "unset",
-              overflow: "hidden",
+              opacity: '1',
+              whiteSpace: 'unset',
+              textOverflow: 'unset',
+              overflow: 'hidden',
             },
           },
         }}
         columns={[
           {
-            id: "id",
-            name: "ID",
+            id: 'id',
+            name: 'ID',
             selector: (applicant) => applicant.id,
           },
           {
-            id: "name",
-            name: "NAME",
+            id: 'name',
+            name: 'NAME',
             wrap: true,
             selector: (applicant) => getApplicantName(applicant),
             cell: (applicant) => (
@@ -667,84 +633,77 @@ function ApplicantView(props: ViewProps) {
             hidable: false,
           },
           {
-            id: "city",
-            name: "CITY",
+            id: 'city',
+            name: 'CITY',
             wrap: true,
             selector: (applicant) => applicant?.city,
           },
           {
-            id: "state",
-            name: "STATE",
+            id: 'state',
+            name: 'STATE',
             wrap: true,
             selector: (applicant) => applicant?.state,
           },
 
           {
-            id: "phone",
-            name: "PHONE",
+            id: 'phone',
+            name: 'PHONE',
             wrap: true,
             selector: (applicant) => applicant?.phone,
             cell: (applicant) => (
-              <OverlyPopover str={applicant?.phone}>
-                {applicant?.phone}
-              </OverlyPopover>
+              <OverlyPopover str={applicant?.phone}>{applicant?.phone}</OverlyPopover>
             ),
           },
           {
-            id: "email",
-            name: "EMAIL",
+            id: 'email',
+            name: 'EMAIL',
             wrap: true,
             selector: (applicant) => applicant.email,
             cell: (applicant) => (
-              <OverlyPopover str={applicant.email}>
-                {applicant.email}
-              </OverlyPopover>
+              <OverlyPopover str={applicant.email}>{applicant.email}</OverlyPopover>
             ),
           },
           {
-            id: "license_type",
+            id: 'license_type',
             name: `CDL_TYPE`,
             wrap: true,
             selector: (applicant) =>
               applicant?.license_type === DriverLicenseType.NO_CDL ||
               applicant?.license_type === null
-                ? t("DriverLicenseType.NONE")
-                : t(`DriverLicenseType.${applicant.license_type}`) ||
-                  t("DriverLicenseType.NONE"),
+                ? t('DriverLicenseType.NONE')
+                : t(`DriverLicenseType.${applicant.license_type}`) || t('DriverLicenseType.NONE'),
           },
           {
-            id: "years_cdl_experience",
-            name: "years_cdl_experience",
+            id: 'years_cdl_experience',
+            name: 'years_cdl_experience',
             wrap: true,
-            selector: (applicant) =>
-              applicant?.years_cdl_experience || t("ZERO"),
+            selector: (applicant) => applicant?.years_cdl_experience || t('ZERO'),
           },
           {
-            id: "transmission_type",
-            name: "TRANSMISSION_EXPERIENCE",
+            id: 'transmission_type',
+            name: 'TRANSMISSION_EXPERIENCE',
             wrap: true,
             selector: (applicant) =>
               applicant.transmission_type
                 ? joinArrayElements(
                     applicant?.transmission_type,
-                    "OTHER",
-                    "VehicleTransmissionType"
+                    'OTHER',
+                    'VehicleTransmissionType',
+                    t
                   )
-                : t("NONE"),
+                : t('NONE'),
           },
           {
-            id: "date_added",
-            name: "DATE_ADDED",
+            id: 'date_added',
+            name: 'DATE_ADDED',
             wrap: true,
             selector: (applicant) => applicant.created_at,
-            cell: (applicant) => (
-              <ShowFormattedDate date={applicant.created_at} />
-            ),
+            cell: (applicant) => <ShowFormattedDate date={applicant.created_at} />,
             hidable: false,
           },
           {
-            id: "source",
-            name: "LEAD_TYPE",
+            id: 'source',
+            name: 'LEAD_TYPE',
             wrap: true,
             hide: 1,
             cell: (applicant) =>
@@ -753,22 +712,22 @@ function ApplicantView(props: ViewProps) {
                   {t(`ApplicantType.${applicant.type}`)}
                 </OverlyPopover>
               ) : (
-                ""
+                ''
               ),
           },
           {
-            id: "AUTOMATED_RECRUITING_LEAD",
-            name: "AUTOMATED_RECRUITING_LEAD",
+            id: 'AUTOMATED_RECRUITING_LEAD',
+            name: 'AUTOMATED_RECRUITING_LEAD',
             wrap: true,
             hide: 1,
             selector: (applicant) =>
               Boolean(applicant?.is_automated_recruiting_lead)
-                ? t("BooleanType.YES")
-                : t("BooleanType.NO"),
+                ? t('BooleanType.YES')
+                : t('BooleanType.NO'),
           },
           {
-            id: "status",
-            name: "STATUS",
+            id: 'status',
+            name: 'STATUS',
             wrap: true,
             hide: 1,
             selector: (applicant) =>
@@ -777,11 +736,9 @@ function ApplicantView(props: ViewProps) {
                 : null,
             cell: (applicant) => (
               <ShowEnumFromString
-                popover_header={t("ApplicantStatus")}
+                popover_header={t('ApplicantStatus')}
                 labelPrefix={
-                  applicant.current_application_status?.length > 0
-                    ? "ApplicantStatus"
-                    : ""
+                  applicant.current_application_status?.length > 0 ? 'ApplicantStatus' : ''
                 }
                 popover={true}
                 value={applicant.current_application_status}
@@ -790,64 +747,50 @@ function ApplicantView(props: ViewProps) {
             ),
           },
           {
-            id: "assigned_to",
-            name: "ASSIGNED_TO",
+            id: 'assigned_to',
+            name: 'ASSIGNED_TO',
             wrap: true,
             hide: 1,
-            selector: (applicant) => applicant.assignedUser?.name || t("NONE"),
+            selector: (applicant) => applicant.assignedUser?.name || t('NONE'),
           },
 
           {
-            id: "endorsement",
-            name: "ENDORSEMENTS",
+            id: 'endorsement',
+            name: 'ENDORSEMENTS',
             wrap: true,
             hide: 1,
             selector: (applicant) =>
               applicant.endorsements
-                ? joinArrayElements(
-                    applicant?.endorsements,
-                    "OTHER",
-                    "DriverEndorsement"
-                  )
-                : t("NONE"),
+                ? joinArrayElements(applicant?.endorsements, 'OTHER', 'DriverEndorsement', t)
+                : t('NONE'),
           },
           {
-            id: "license_restrictions",
-            name: "License_Restrictions",
+            id: 'license_restrictions',
+            name: 'License_Restrictions',
             wrap: true,
             hide: 1,
             selector: (applicant) =>
               applicant.license_restrictions
-                ? joinArrayElements(
-                    applicant?.license_restrictions,
-                    "OTHER",
-                    undefined
-                  )
-                : t("NONE"),
+                ? joinArrayElements(applicant?.license_restrictions, 'OTHER', undefined, t)
+                : t('NONE'),
           },
           {
-            id: "is_owner_operator",
-            name: `${t("OWNER_OPERATOR")} / ${t("COMPANY_DRIVER")}`,
+            id: 'is_owner_operator',
+            name: `${t('OWNER_OPERATOR')} / ${t('COMPANY_DRIVER')}`,
             wrap: true,
             hide: 1,
             selector: (applicant) =>
-              applicant.is_owner_operator
-                ? t("OWNER_OPERATOR")
-                : t("COMPANY_DRIVER") || t("NONE"),
+              applicant.is_owner_operator ? t('OWNER_OPERATOR') : t('COMPANY_DRIVER') || t('NONE'),
           },
           {
-            id: "preferred_location",
+            id: 'preferred_location',
             name: `PREFERRED_LOCATION`,
             wrap: true,
             hide: 1,
             selector: (applicant) =>
               applicant.preferred_location
-                ? joinArrayElements(
-                    applicant?.preferred_location,
-                    "OTHER",
-                    undefined
-                  )
-                : t("NONE"),
+                ? joinArrayElements(applicant?.preferred_location, 'OTHER', undefined, t)
+                : t('NONE'),
           },
         ]}
         hideSetting
@@ -855,56 +798,51 @@ function ApplicantView(props: ViewProps) {
         actions={(row) => [
           {
             icon: PencilFill,
-            label: "EDIT",
+            label: 'EDIT',
             onClick: (e) => onEditClick(row.id),
-            hide: !hasPermission("CanUpdateApplicant"),
+            hide: !hasPermission('CanUpdateApplicant'),
           },
         ]}
         expandableRowsComponent={({ data }) => (
           <ViewDataTable<ConsolodatedApplicantJob>
-            noDataComponent={<>{t("NO_APPLIED_JOBS_FOUND")}</>}
+            noDataComponent={<>{t('NO_APPLIED_JOBS_FOUND')}</>}
             columns={[
               {
-                name: "ID",
+                name: 'ID',
                 selector: (aJob) => aJob.job.id,
                 hidable: false,
               },
 
               {
-                name: "JOB",
+                name: 'JOB',
                 selector: (aJob) => aJob.job.title,
                 hidable: false,
               },
               {
-                id: "location",
-                name: "LOCATION",
+                id: 'location',
+                name: 'LOCATION',
                 selector: (aJob) => buildAddress(aJob.job.location),
               },
               {
-                name: "DATE_APPLIED",
+                name: 'DATE_APPLIED',
                 selector: (aJob) => new Date(aJob.created_at).toDateString(),
                 hidable: false,
               },
               {
-                name: "STATUS",
+                name: 'STATUS',
                 cell: (aJob) => (
-                  <OverlyPopover
-                    skipTranslate
-                    slice_at={40}
-                    str={getApplicantStatus(aJob, t)}
-                  />
+                  <OverlyPopover skipTranslate slice_at={40} str={getApplicantStatus(aJob, t)} />
                 ),
                 selector: (aJob) => getApplicantStatus(aJob, t), //t(`ApplicantStatus.${aJob.status}`),
                 hidable: false,
               },
               {
-                name: "MEETS_BASIC_QUALIFICATIONS",
-                selector: (aJob) =>
-                  t(aJob.meets_basic_qualifications ? "YES" : "NO"),
+                name: 'MEETS_BASIC_QUALIFICATIONS',
+                selector: (aJob) => t(aJob.meets_basic_qualifications ? 'YES' : 'NO'),
                 hidable: false,
               },
               {
-                name: "REASONS_IF_NO",
+                name: 'REASONS_IF_NO',
                 selector: (aJob) => aJob.qualification_fail_reason?.join(),
                 hidable: false,
               },
@@ -912,8 +850,7 @@ function ApplicantView(props: ViewProps) {
                 cell: (aJob) => {
                   const hideStatus = Boolean(
                     data?.jobs?.find(
-                      (j) =>
-                        j?.id != aJob?.id && j?.status?.startsWith("COMPLETED_")
+                      (j) => j?.id != aJob?.id && j?.status?.startsWith('COMPLETED_')
                     )
                   )
                     ? [
@@ -928,7 +865,7 @@ function ApplicantView(props: ViewProps) {
                       name={data.id.toString()}
                       value=""
                       onChange={(e) => onChangeStatus(e, data, aJob.job)}
-                      placeholder={"CHANGE_STATUS"}
+                      placeholder={'CHANGE_STATUS'}
                       labelPrefix="ApplicantStatus"
                       enumType={ApplicantStatus}
                     />
@@ -941,7 +878,7 @@ function ApplicantView(props: ViewProps) {
           />
         )}
       />
-      <div style={{ marginRight: "7%" }}>
+      <div style={{ marginRight: '7%' }}>
         <CustomPagination
           recordsPerPageOptions={[20, 50, 100]}
           onPageChange={handlePageChange}
@@ -954,8 +891,7 @@ function ApplicantView(props: ViewProps) {
 }
 
 function JobView(props: ViewProps) {
-  const { router, applicants, onChangeStatus, onViewClick, onEditClick, t } =
-    props;
+  const { router, applicants, onChangeStatus, onViewClick, onEditClick, t } = props;
 
   const { company, hasPermission } = useAuth();
 
@@ -974,17 +910,14 @@ function JobView(props: ViewProps) {
   for (const [, job] of jobs?.entries()) {
     job?.applicants?.map((applicant) => {
       const requirements = evaluateJobRequirements(applicant?.applicant, job);
-      requirements.qualification_fail_reason =
-        requirements?.qualification_fail_reason?.map((v) => {
-          if (typeof v == "string") return t(v);
+      requirements.qualification_fail_reason = requirements?.qualification_fail_reason?.map((v) => {
+        if (typeof v == 'string') return t(v);
 
-          return t(v?.key, { name: v?.name }, { translateProps: true });
-        });
+        return t(v?.key, { name: v?.name }, { translateProps: true });
+      });
 
-      applicant["qualification_fail_reason"] =
-        requirements?.qualification_fail_reason;
-      applicant["meets_basic_qualifications"] =
-        requirements?.meets_basic_qualifications;
+      applicant['qualification_fail_reason'] = requirements?.qualification_fail_reason;
+      applicant['meets_basic_qualifications'] = requirements?.meets_basic_qualifications;
     });
   }
 
@@ -992,14 +925,14 @@ function JobView(props: ViewProps) {
     <ViewDataTable<ConsolodatedJob>
       columns={[
         {
-          id: "Id",
-          name: "ID",
+          id: 'Id',
+          name: 'ID',
           selector: (job) => job?.id,
           hidable: true,
         },
         {
-          id: "job",
-          name: "JOB",
+          id: 'job',
+          name: 'JOB',
           selector: (job) => job?.title,
           hidable: false,
           cell: (j) => (
@@ -1009,31 +942,28 @@ function JobView(props: ViewProps) {
           ),
         },
         {
-          id: "location",
-          name: "LOCATION",
+          id: 'location',
+          name: 'LOCATION',
           selector: (job) => buildAddress(job?.location),
         },
         {
-          id: "geography",
-          name: "GEOGRAPHY",
-          selector: (job) =>
-            job?.geography ? t(`JobGeography.${job?.geography}`) : "",
+          id: 'geography',
+          name: 'GEOGRAPHY',
+          selector: (job) => (job?.geography ? t(`JobGeography.${job?.geography}`) : ''),
         },
         {
-          id: "type",
-          name: "TYPE",
+          id: 'type',
+          name: 'TYPE',
           selector: (job) =>
-            job?.employment_type
-              ? t(`JobEmploymentType.${job?.employment_type}`)
-              : "",
+            job?.employment_type ? t(`JobEmploymentType.${job?.employment_type}`) : '',
         },
         {
-          id: "weekly_range",
-          name: "WEEKLY_RANGE",
+          id: 'weekly_range',
+          name: 'WEEKLY_RANGE',
           selector: (job) =>
-            `${numbers?.toCurrency(
-              job?.min_weekly_pay
-            )} - ${numbers?.toCurrency(job?.max_weekly_pay)}`,
+            `${numbers?.toCurrency(job?.min_weekly_pay)} - ${numbers?.toCurrency(
+              job?.max_weekly_pay
+            )}`,
         },
       ]}
       items={jobs}
@@ -1041,11 +971,11 @@ function JobView(props: ViewProps) {
         <ViewDataTable<ConsolodatedApplicantJob>
           columns={[
             {
-              name: "ID",
+              name: 'ID',
               selector: (aJob) => aJob?.applicant?.id,
             },
             {
-              name: "NAME",
+              name: 'NAME',
               selector: (aJob) => getApplicantName(aJob?.applicant),
               cell: (aJob) => (
                 <Link href={`${router?.pathname}/${aJob?.applicant?.id}/edit`}>
@@ -1055,54 +985,46 @@ function JobView(props: ViewProps) {
               hidable: false,
             },
             {
-              name: "CITY",
+              name: 'CITY',
               selector: (aJob) => aJob?.applicant?.city,
             },
             {
-              name: "STATE",
+              name: 'STATE',
               selector: (aJob) => aJob?.applicant?.state,
             },
             {
-              name: "DATE_APPLIED",
+              name: 'DATE_APPLIED',
               selector: (aJob) => new Date(aJob?.created_at)?.toDateString(),
               hidable: false,
             },
             {
-              name: "STATUS",
+              name: 'STATUS',
               cell: (aJob) => (
-                <OverlyPopover
-                  skipTranslate
-                  slice_at={40}
-                  str={getApplicantStatus(aJob, t)}
-                />
+                <OverlyPopover skipTranslate slice_at={40} str={getApplicantStatus(aJob, t)} />
               ),
               selector: (aJob) => getApplicantStatus(aJob, t),
               hidable: false,
             },
             {
-              name: "MEETS_BASIC_QUALIFICATIONS",
-              selector: (aJob) =>
-                t(aJob?.meets_basic_qualifications ? "YES" : "NO"),
+              name: 'MEETS_BASIC_QUALIFICATIONS',
+              selector: (aJob) => t(aJob?.meets_basic_qualifications ? 'YES' : 'NO'),
               hidable: false,
             },
             {
-              name: "REASONS_IF_NO",
+              name: 'REASONS_IF_NO',
               selector: (aJob) => aJob?.qualification_fail_reason?.join(),
               hidable: false,
             },
             {
-              id: "date_added",
-              name: "DATE_ADDED",
+              id: 'date_added',
+              name: 'DATE_ADDED',
               selector: (aJob) => aJob?.applicant?.created_at,
-              cell: (aJob) => (
-                <ShowFormattedDate date={aJob?.applicant?.created_at} />
-              ),
+              cell: (aJob) => <ShowFormattedDate date={aJob?.applicant?.created_at} />,
               hidable: false,
             },
             {
-              name: "ASSIGNED_TO",
-              selector: (aJob) =>
-                aJob?.applicant?.assignedUser?.name || t("NONE"),
+              name: 'ASSIGNED_TO',
+              selector: (aJob) => aJob?.applicant?.assignedUser?.name || t('NONE'),
               hidable: false,
             },
             {
@@ -1110,10 +1032,7 @@ function JobView(props: ViewProps) {
                 const hideStatus = Boolean(
                   applicants
                     ?.find((a) => a?.id == aJob?.applicant?.id)
-                    ?.jobs?.find(
-                      (j) =>
-                        j?.id != aJob?.id && j?.status?.startsWith("COMPLETED_")
-                    )
+                    ?.jobs?.find((j) => j?.id != aJob?.id && j?.status?.startsWith('COMPLETED_'))
                 )
                   ? [
                       ApplicantStatus.COMPLETED_EMPLOYED,
@@ -1127,7 +1046,7 @@ function JobView(props: ViewProps) {
                     name={aJob?.applicant?.id?.toString()}
                     value=""
                     onChange={(e) => onChangeStatus(e, aJob?.applicant, data)}
-                    placeholder={"CHANGE_STATUS"}
+                    placeholder={'CHANGE_STATUS'}
                     labelPrefix="ApplicantStatus"
                     enumType={ApplicantStatus}
                   />
@@ -1139,14 +1058,14 @@ function JobView(props: ViewProps) {
           actions={(row) => [
             {
               icon: EyeFill,
-              label: "VIEW",
+              label: 'VIEW',
               onClick: (e) => onViewClick(row?.applicant?.id),
             },
             {
               icon: PencilFill,
-              label: "EDIT",
+              label: 'EDIT',
               onClick: (e) => onEditClick(row?.applicant?.id),
-              hide: !hasPermission("CanUpdateApplicant"),
+              hide: !hasPermission('CanUpdateApplicant'),
             },
           ]}
           items={data.applicants}

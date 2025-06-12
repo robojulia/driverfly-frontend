@@ -21,6 +21,23 @@ export const formatDate = (date: Date | string): string => {
   }
 };
 
+export function dateRange(
+  start_at: Date | string,
+  end_at: Date | string,
+  default_end_at: Date | string
+) {
+  if (start_at && typeof start_at == 'string') start_at = new Date(start_at);
+  if (end_at && typeof end_at == 'string') end_at = new Date(end_at);
+
+  if (start_at && end_at) return `${start_at.toString()} - ${end_at.toString()}`;
+
+  if (start_at && default_end_at) return `${start_at.toString()} - ${default_end_at.toString()}`;
+
+  if (start_at) return `${start_at.toString()}`;
+
+  return null;
+}
+
 export function calculateAge(birthday: Date | string): number | undefined {
   // birthday is a date
   if (!birthday) return;

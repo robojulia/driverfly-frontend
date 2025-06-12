@@ -1,26 +1,26 @@
-import { useFormik } from "formik";
-import { useEffect, useState } from "react";
-import { Row } from "react-bootstrap";
-import { toast } from "react-toastify";
-import BaseClickToCopyInput from "../../../components/forms/base-click-to-copy-input";
-import { useAuth } from "../../../hooks/use-auth";
-import { useTranslation } from "../../../hooks/use-translation";
-import { CompanyEntity } from "../../../models/company/company.entity";
-import CompanyApi from "../../../pages/api/company";
-import { globalAjaxExceptionHandler } from "../../../utils/ajax";
-import { formSuccess } from "../../../utils/toast";
+import { useFormik } from 'formik';
+import { useEffect, useState } from 'react';
+import { Row } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import BaseClickToCopyInput from '../../../components/forms/base-click-to-copy-input';
+import { useAuth } from '../../../hooks/use-auth';
+import { useTranslation } from '../../../hooks/use-translation';
+import { CompanyEntity } from '../../../models/company/company.entity';
+import CompanyApi from '../../../pages/api/company';
+import { globalAjaxExceptionHandler } from '../../../utils/ajax';
+import { formSuccess } from '../../../utils/toast';
 
-import { UncontrolledTooltip } from "reactstrap";
-import EntityForm from "../../layouts/page/entity-form";
-import BaseInput from "../base-input";
-import BaseInputPhone from "../base-input-phone";
-import BaseTextArea from "../base-text-area";
-import FileInput from "../file-input";
-import { BaseFormProps } from "./base-form-props";
-import Image from "next/image";
-import DocumentApi from "../../../pages/api/document";
-import { useEffectAsync } from "../../../utils/react";
-import { EmbeddedCodeExamples } from "./embedded-code-examples";
+import { UncontrolledTooltip } from 'reactstrap';
+import EntityForm from '../../layouts/page/entity-form';
+import BaseInput from '../base-input';
+import BaseInputPhone from '../base-input-phone';
+import BaseTextArea from '../base-text-area';
+import FileInput from '../file-input';
+import { BaseFormProps } from './base-form-props';
+import Image from 'next/image';
+import DocumentApi from '../../../pages/api/document';
+import { useEffectAsync } from '../../../utils/react';
+import { EmbeddedCodeExamples } from './embedded-code-examples';
 
 export interface CompanyFormProps extends BaseFormProps<CompanyEntity> {
   showClickToCopy?: boolean | (() => boolean);
@@ -29,14 +29,13 @@ export interface CompanyFormProps extends BaseFormProps<CompanyEntity> {
 export function CompanyForm(props: CompanyFormProps) {
   const { user } = useAuth();
   const { t } = useTranslation();
-  let { className, entity, onSaveComplete, onSaveError, showClickToCopy } =
-    props;
+  let { className, entity, onSaveComplete, onSaveError, showClickToCopy } = props;
 
-  const [viewLogo, setViewLogo] = useState("");
+  const [viewLogo, setViewLogo] = useState('');
 
   const form = useFormik({
     initialValues: new CompanyEntity(),
-    validationSchema: CompanyEntity.yupSchema(),
+    validationSchema: CompanyEntity.yupSchema(t),
     onSubmit: async (dto) => {
       const api = new CompanyApi();
       try {
@@ -46,10 +45,10 @@ export function CompanyForm(props: CompanyFormProps) {
         } else {
           company = await api.create(dto);
         }
-        formSuccess(t, !!entity?.id ? "update" : "create", "COMPANY");
+        formSuccess(t, !!entity?.id ? 'update' : 'create', 'COMPANY');
         if (onSaveComplete) onSaveComplete(company);
       } catch (e) {
-        console.error("Unable to save entity", e.response);
+        console.error('Unable to save entity', e.response);
         globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t });
 
         if (onSaveError) onSaveError(e);
@@ -63,7 +62,7 @@ export function CompanyForm(props: CompanyFormProps) {
 
   useEffectAsync(async () => {
     if (!form.values?.photo) {
-      setViewLogo("");
+      setViewLogo('');
     } else if (form.values?.photo?.id) {
       const api = new DocumentApi();
       const document = await api.getSignedUrl(form?.values?.photo?.id);
@@ -75,31 +74,26 @@ export function CompanyForm(props: CompanyFormProps) {
 
   return (
     <>
-      <EntityForm
-        className={className}
-        onSubmit={form.handleSubmit}
-        formik={form}
-        id={entity?.id}
-      >
+      <EntityForm className={className} onSubmit={form.handleSubmit} formik={form} id={entity?.id}>
         <Row>
           <BaseInput
             className="col-12 mt-2"
-            label={t("NAME")}
+            label={t('NAME')}
             name={`name`}
             required
-            placeholder={t("NAME")}
+            placeholder={t('NAME')}
             formik={form}
           />
           <BaseInput
             className="col-12 mt-2"
-            label={t("HEADQUATERS")}
+            label={t('HEADQUATERS')}
             name={`location`}
-            placeholder={t("ADD_HEADQUATERS_LOCATION")}
+            placeholder={t('ADD_HEADQUATERS_LOCATION')}
             formik={form}
           />
           <BaseInput
             className="col-12 mt-2"
-            label={t("WEBSITE")}
+            label={t('WEBSITE')}
             name={`website`}
             placeholder="http://www.example.com"
             formik={form}
@@ -109,27 +103,25 @@ export function CompanyForm(props: CompanyFormProps) {
               <BaseClickToCopyInput
                 label="COMPANY_JOBS_PAGE"
                 className="rounded"
-                value={`${process.env.FRONTEND_BASE_URL ?? ""}employer/${
-                  user?.company?.slug
-                }`}
-                tooltipText={t("CLICK_TO_COPY")}
+                value={`${process.env.FRONTEND_BASE_URL ?? ''}employer/${user?.company?.slug}`}
+                tooltipText={t('CLICK_TO_COPY')}
               />
               <BaseClickToCopyInput
                 label="COMPANY_EMEDDED_JOBS_PAGE"
                 className="rounded mt-2"
-                value={`${
-                  process.env.FRONTEND_BASE_URL ?? ""
-                }embedded?companyId=${user?.company?.id}`}
-                tooltipText={t("CLICK_TO_COPY")}
+                value={`${process.env.FRONTEND_BASE_URL ?? ''}embedded?companyId=${
+                  user?.company?.id
+                }`}
+                tooltipText={t('CLICK_TO_COPY')}
               />
             </>
           )}
           <BaseTextArea
             className="col-12 mt-2"
-            label={t("ABOUT")}
+            label={t('ABOUT')}
             name={`about`}
             rows={3}
-            placeholder={t("ABOUT")}
+            placeholder={t('ABOUT')}
             formik={form}
           />
           <FileInput
@@ -139,7 +131,7 @@ export function CompanyForm(props: CompanyFormProps) {
             name={`photo`}
             accept="image/*"
             allowedSizeInByte={3145728}
-            documentType={"PHOTO"}
+            documentType={'PHOTO'}
             formik={form}
           />
           {viewLogo && (
@@ -148,7 +140,7 @@ export function CompanyForm(props: CompanyFormProps) {
             </div>
           )}
           <UncontrolledTooltip delay={0} placement="top" target="imgpurpose">
-            {t("IMAGE_PURPOSE")}
+            {t('IMAGE_PURPOSE')}
           </UncontrolledTooltip>
 
           <BaseInputPhone
@@ -159,12 +151,12 @@ export function CompanyForm(props: CompanyFormProps) {
             formik={form}
           />
 
-          <p className="mt-3">{t("SOCIAL_MEDIA_LINKS")}</p>
+          <p className="mt-3">{t('SOCIAL_MEDIA_LINKS')}</p>
           <div className="p-0 d-flex justify-content-start ">
             <div className="col-3">
               <BaseInput
                 className=""
-                label={t("FACEBOOK")}
+                label={t('FACEBOOK')}
                 name={`facebook`}
                 placeholder="http://www.facebook.com"
                 formik={form}
@@ -173,7 +165,7 @@ export function CompanyForm(props: CompanyFormProps) {
             <div className="col-3">
               <BaseInput
                 className=""
-                label={t("INSTAGRAM")}
+                label={t('INSTAGRAM')}
                 name={`instagram`}
                 placeholder="http://www.instagram.com"
                 formik={form}
@@ -182,7 +174,7 @@ export function CompanyForm(props: CompanyFormProps) {
             <div className="col-3">
               <BaseInput
                 className=""
-                label={t("LINKEDIN")}
+                label={t('LINKEDIN')}
                 name={`linkedin`}
                 placeholder="http://www.linkedin.com"
                 formik={form}
@@ -191,7 +183,7 @@ export function CompanyForm(props: CompanyFormProps) {
             <div className="col-3">
               <BaseInput
                 className=""
-                label={t("TWITTER")}
+                label={t('TWITTER')}
                 name={`twitter`}
                 placeholder="http://www.twitter.com"
                 formik={form}
