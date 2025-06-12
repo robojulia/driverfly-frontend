@@ -1,13 +1,13 @@
-import * as yup from "yup";
-import { TestContext } from "yup/lib/util/createValidation";
+import * as yup from 'yup';
+import { TestContext } from 'yup/lib/util/createValidation';
 
-yup.addMethod(yup.string, "enum", function (enumType, message) {
+yup.addMethod(yup.string, 'enum', function (enumType, message) {
   const keys = Object.values(enumType);
   const set = new Set(keys);
-  return this.test("enum", message, function (str) {
+  return this.test('enum', message, function (str) {
     if (str && !set.has(str)) {
       if (!message) {
-        message = `${this.path} must be one of ${keys.join(", ")}`;
+        message = `${this.path} must be one of ${keys.join(', ')}`;
       }
       return this.createError({
         path: this.path,
@@ -47,7 +47,7 @@ function unique(thisObj, list, field, options, message) {
           params: {
             field: field,
           },
-          type: "unique",
+          type: 'unique',
         });
         return false;
       }
@@ -66,20 +66,24 @@ function unique(thisObj, list, field, options, message) {
  * @this import("yup/lib/array").OptionalArraySchema
  */
 unique.addTest = function (field, options, message, t) {
-  if (typeof options == "string") {
+  if (typeof options == 'string') {
     message = options;
     options = null;
   }
-  message = message ? t(message) : t("yup.array.unique");
+  let txt = 'yup.array.unique';
+  if (typeof t === 'function') {
+    txt = t(txt);
+  }
+  message = message ? t(message) : txt;
   if (!options) options = {};
 
   if (message) {
-    return this.test("unique", message, function (list) {
+    return this.test('unique', message, function (list) {
       return unique(this, list, field, options, message);
     });
   }
   return this.test(
-    "unique",
+    'unique',
     function () {
       return this.createError();
     },
@@ -89,7 +93,7 @@ unique.addTest = function (field, options, message, t) {
   );
 };
 
-yup.addMethod(yup.array, "unique", unique.addTest);
+yup.addMethod(yup.array, 'unique', unique.addTest);
 
 export function stringEnum<Enum>(enumType: Enum) {
   const keys = Object.values(enumType);
@@ -111,11 +115,7 @@ export function numberRangeStart(maxField: string, minValue: number) {
   );
 }
 
-export function numberRangeEnd(
-  minField: string,
-  minValue: number,
-  inclusive?: boolean
-) {
+export function numberRangeEnd(minField: string, minValue: number, inclusive?: boolean) {
   if (inclusive) {
     return yup
       .number()
@@ -137,18 +137,26 @@ export function numberRangeEnd(
 }
 
 export function cityRegexValidation(t) {
+  let txt = 'CITY_REGEX_VALIDATION_MESSAGE';
+  if (typeof t === 'function') {
+    txt = t(txt);
+  }
   return yup
     .string()
-    .matches(/^[^0-9]+$/, t("CITY_REGEX_VALIDATION_MESSAGE"))
+    .matches(/^[^0-9]+$/, txt)
     .nullable();
 }
 
 export function zipCodeRegexValidation(t) {
+  let txt = 'ZIP_CODE_REGEX_VALIDATION_MESSAGE';
+  if (typeof t === 'function') {
+    txt = t(txt);
+  }
   return yup
     .string()
-    .matches(/^[0-9]+$/, t("ZIP_CODE_REGEX_VALIDATION_MESSAGE"))
-    .min(5, t("ZIP_CODE_MIN_VALIDATION_MESSAGE"))
-    .max(5, t("ZIP_CODE_MAX_VALIDATION_MESSAGE"))
+    .matches(/^[0-9]+$/, txt)
+    .min(5, txt)
+    .max(5, txt)
     .nullable();
 }
 
