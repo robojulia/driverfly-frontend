@@ -35,7 +35,7 @@ export function SplashPage() {
                 maxWidth: '200px',
               }}
             >
-              {t('NEXT')}
+              Start Application
             </PrimaryButton>
           </Col>
         </Row>
