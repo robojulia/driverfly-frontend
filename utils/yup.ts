@@ -73,8 +73,14 @@ unique.addTest = function (field, options, message, t) {
   let txt = 'yup.array.unique';
   if (typeof t === 'function') {
     txt = t(txt);
+    if (message) {
+      message = t(message);
+    } else {
+      message = txt;
+    }
+  } else {
+    message = txt;
   }
-  message = message ? t(message) : txt;
   if (!options) options = {};
 
   if (message) {

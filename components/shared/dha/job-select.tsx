@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from '../../../hooks/use-translation';
 
 // Helper function to format location object into readable string
@@ -30,13 +31,32 @@ export const JobSelect: React.FC<JobSelectProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
   const { t } = useTranslation();
   const dropdownRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLDivElement>(null);
+
+  // Update dropdown position when opening
+  const updateDropdownPosition = () => {
+    if (inputRef.current) {
+      const rect = inputRef.current.getBoundingClientRect();
+      setDropdownPosition({
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX,
+        width: rect.width,
+      });
+    }
+  };
 
   // Close dropdown when clicking outside
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        inputRef.current &&
+        !inputRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
         setSearchTerm('');
       }
@@ -88,15 +108,15 @@ export const JobSelect: React.FC<JobSelectProps> = ({
       transition: 'all 0.3s ease',
     },
     dropdownMenu: {
-      position: 'absolute' as const,
-      top: '100%',
-      left: 0,
-      right: 0,
+      position: 'fixed' as const,
+      top: dropdownPosition.top,
+      left: dropdownPosition.left,
+      width: dropdownPosition.width,
       backgroundColor: '#ffffff',
       border: '1px solid #e0e5eb',
       borderRadius: '8px',
       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-      zIndex: 1000,
+      zIndex: 9999,
       maxHeight: '300px',
       overflowY: 'auto' as const,
       marginTop: '4px',
@@ -147,61 +167,74 @@ export const JobSelect: React.FC<JobSelectProps> = ({
     },
   };
 
-  return (
-    <div style={styles.dropdownContainer} ref={dropdownRef}>
-      <div style={styles.input} onClick={() => setIsOpen(!isOpen)}>
-        {selectedJob ? (
-          <div>
-            <span style={styles.selectedJobTitle}>{selectedJob.title}</span>
-            {selectedJob.location && (
-              <span style={styles.selectedJobLocation}>
-                • {formatLocation(selectedJob.location)}
-              </span>
-            )}
+  const handleToggleDropdown = () => {
+    if (!isOpen) {
+      updateDropdownPosition();
+    }
+    setIsOpen(!isOpen);
+  };
+
+  const dropdownContent = isOpen && (
+    <div style={styles.dropdownMenu} ref={dropdownRef}>
+      <input
+        type="text"
+        placeholder="Search jobs..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={styles.searchInput}
+        autoFocus
+      />
+
+      {filteredJobs.length === 0 ? (
+        <div style={styles.noResults}>No jobs found</div>
+      ) : (
+        filteredJobs.map((job) => (
+          <div
+            key={job.id}
+            style={styles.jobItem}
+            onClick={() => handleJobSelect(job)}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#f5f7fa';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+            }}
+          >
+            <div style={styles.jobTitle}>{job.title}</div>
+            <div style={styles.jobMeta}>
+              {job.location && <span>{formatLocation(job.location)}</span>}
+              {job.department && <span> • {job.department}</span>}
+              {job.employment_type && <span> • {job.employment_type}</span>}
+            </div>
           </div>
-        ) : (
-          <span style={styles.placeholder}>{placeholder || 'Select a position'}</span>
-        )}
-        <span style={styles.dropdownArrow}>▼</span>
-      </div>
-
-      {isOpen && (
-        <div style={styles.dropdownMenu}>
-          <input
-            type="text"
-            placeholder="Search jobs..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={styles.searchInput}
-            autoFocus
-          />
-
-          {filteredJobs.length === 0 ? (
-            <div style={styles.noResults}>No jobs found</div>
-          ) : (
-            filteredJobs.map((job) => (
-              <div
-                key={job.id}
-                style={styles.jobItem}
-                onClick={() => handleJobSelect(job)}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#f5f7fa';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }}
-              >
-                <div style={styles.jobTitle}>{job.title}</div>
-                <div style={styles.jobMeta}>
-                  {job.location && <span>{formatLocation(job.location)}</span>}
-                  {job.department && <span> • {job.department}</span>}
-                  {job.employment_type && <span> • {job.employment_type}</span>}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+        ))
       )}
     </div>
+  );
+
+  return (
+    <>
+      <div style={styles.dropdownContainer}>
+        <div style={styles.input} onClick={handleToggleDropdown} ref={inputRef}>
+          {selectedJob ? (
+            <div>
+              <span style={styles.selectedJobTitle}>{selectedJob.title}</span>
+              {selectedJob.location && (
+                <span style={styles.selectedJobLocation}>
+                  • {formatLocation(selectedJob.location)}
+                </span>
+              )}
+            </div>
+          ) : (
+            <span style={styles.placeholder}>{placeholder || 'Select a position'}</span>
+          )}
+          <span style={styles.dropdownArrow}>▼</span>
+        </div>
+      </div>
+
+      {typeof document !== 'undefined' &&
+        dropdownContent &&
+        createPortal(dropdownContent, document.body)}
+    </>
   );
 };

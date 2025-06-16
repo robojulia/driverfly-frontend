@@ -1821,7 +1821,9 @@
   "DRIVERFLY_IS_A_PROUD_OF_WILDS": "DriverFly is a proud member of WILDS, helping women find opportunities in the male-oriented trucking industry. Learn more about what WILDS does here.",
   "CONTINUE_APPLICATION": "Continue Application",
   "NAUTILIUS_TRUCKING": "Nautilius Trucking",
-  "JOTFORM_WELCOME": "Welcome! We are excited to get to know you!",
+  "JOTFORM_WELCOME": "Please complete the form all the way through to be considered for a role with us.",
+  "JOB_DESCRIPTION": "Job Description",
+  "JOB_DETAILS": "Job Details",
   "DIGITAL_HIRING_APP_URL": "Digital Hiring App URL",
   "CHOOSE": "Click to choose",
   "{company_name}_SMS_EMAIL_AUTHORIZATION_NAUTILIUS": "I authorize {{company_name}} and any applicable third parties associated with {{company_name}} the ability to send me SMS and email communications regarding job availabilities and other relevant resources.",
@@ -2584,7 +2586,7 @@
     "SECURE_ACCOUNT_ACCESS_DESCRIPTION": "Your phone helps us verify it's really you when accessing your application.",
     "JOB_ALERTS": "Job Alerts",
     "JOB_ALERTS_DESCRIPTION": "We'll send you alerts when new jobs are posted that match your profile.",
-    "STANDARD_MESSAGE_RATES_APPLY": "Your information is kept private and secure. Standard message rates may apply. Standard message rates apply."
+    "STANDARD_MESSAGE_RATES_APPLY": "Your information is kept private and secure. Standard message rates may apply."
   },
   "ACCESS_EXISTING_PROFILE": "Access Existing Profile",
   "EXISTING_ACCOUNT_FOUND": "Existing Account Found",
