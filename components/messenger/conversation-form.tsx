@@ -209,7 +209,12 @@ export function ConversationForm(props: ConversationFormProps) {
 
             const documents: string = documentTypes
                 .map((type) => t(`ApplicantDocumentType.${type}`))
-                .join(",");
+                .reduce((acc, curr, index, array) => {
+                    if (index === 0) return curr;
+                    if (index === array.length - 1) return `${acc} and ${curr}`;
+                    return `${acc}, ${curr}`;
+                }, '');
+                
             const message = `${t(
                 "REQUEST_{name}_FOR_MISSING_{documents}_MESSAGE_WITH_{link}_{hv}",
                 {
