@@ -2517,6 +2517,7 @@
   "DOCS_FORMAT_INFO": "Formats: Images, PDF, Word. Max size: 3MB",
   "ATTACH_DOCS": "Attach Documents",
   "REMOVE_DOC": "Remove",
+  "REMOVE_DOCUMENT": "Remove Document",
   "SUBMITTING": "Submitting...",
   "SUBMIT_SUPPORT": "Submit Request",
   "OS_DETECTED": "We detected your OS as {{os}}. Please verify or select the correct one.",
