@@ -52,7 +52,6 @@ export function ThankyouPage() {
       <ToastContainer />
       <div
         style={{
-          minHeight: '100vh',
           background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
           padding: '2rem 1rem',
         }}
@@ -124,67 +123,6 @@ export function ThankyouPage() {
                   ? t('DHA_THANK_YOU_MESSAGE', { company: company.name })
                   : t('DHA_THANK_YOU_MESSAGE_CLOSE')}
               </p>
-
-              {company && (
-                <p
-                  style={{
-                    fontSize: '1.1rem',
-                    color: '#64748b',
-                    lineHeight: '1.6',
-                    marginBottom: '2rem',
-                  }}
-                >
-                  {t('DHA_THANK_YOU_MESSAGE_CLOSE')}
-                </p>
-              )}
-            </div>
-
-            <div
-              style={{
-                marginTop: '2rem',
-                padding: '1.5rem 2rem',
-                background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
-                borderRadius: '16px',
-                border: '1px solid #bfdbfe',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '1rem',
-              }}
-            >
-              <div
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <TruckFrontFill size={20} color="white" />
-              </div>
-              <div style={{ textAlign: 'left' }}>
-                <p
-                  style={{
-                    margin: 0,
-                    color: '#1e40af',
-                    fontWeight: '700',
-                    fontSize: '1.1rem',
-                  }}
-                >
-                  Application Submitted Successfully!
-                </p>
-                <p
-                  style={{
-                    margin: 0,
-                    color: '#3730a3',
-                    fontSize: '0.95rem',
-                  }}
-                >
-                  Your profile is now live and visible to employers
-                </p>
-              </div>
             </div>
           </div>
 

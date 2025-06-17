@@ -27,6 +27,8 @@ export const LEGAL_DOCUMENTS = [
     description: 'Safety Performance History Records Request',
     summary:
       'This form authorizes us to request your employment history and safety records from previous employers. This is required by DOT regulations to verify your driving experience and safety performance.',
+    consentStatement:
+      'I consent to the release of my safety performance history records, including drug and alcohol test results, violations, and employment information from my previous employers for verification purposes.',
     component: 'VerificationOfEmployment',
     signatureField: 'SIGNATURE_VOE_AUTHORIZATION',
     dateField: null,
@@ -49,6 +51,8 @@ export const LEGAL_DOCUMENTS = [
     description: 'Background check authorization and disclosure',
     summary:
       'This document provides notice that we may obtain background check information about you and authorizes us to conduct such checks as part of the employment process.',
+    consentStatement:
+      'I consent to and authorize the company to obtain background reports about me from third parties, including but not limited to criminal history, employment verification, and other relevant background information.',
     component: 'DisclosureAuthorization',
     signatureField: 'SIGNATURE_DISCLOSURE_AUTHORIZATION',
     dateField: 'DISCLOSURE_AND_AUTHORIZATION_DATE',
@@ -63,6 +67,8 @@ export const LEGAL_DOCUMENTS = [
     description: 'Pre-employment Screening Program disclosure',
     summary:
       'This disclosure provides important information about the Pre-employment Screening Program (PSP) and your rights regarding background investigations.',
+    consentStatement:
+      'I consent to the company accessing my Pre-employment Screening Program (PSP) record from the FMCSA, including crash data, inspection results, and any safety violations associated with my commercial driving record.',
     component: 'ImportantDisclosureBackgroundPsp',
     signatureField: 'SIGNATURE_IMPORTANT_BACKGROUND',
     dateField: 'IMPORTANT_DISCLOSURE_BACKGROUND_DATE',
@@ -77,6 +83,8 @@ export const LEGAL_DOCUMENTS = [
     description: 'Drug & Alcohol Clearinghouse consent',
     summary:
       'This consent allows us to query the FMCSA Drug and Alcohol Clearinghouse to check for any drug or alcohol violations on your record.',
+    consentStatement:
+      'I consent to the company querying the FMCSA Drug and Alcohol Clearinghouse to obtain information about any drug or alcohol program violations associated with my commercial driver license.',
     component: 'GeneralConsentQueries',
     signatureField: 'SIGNATURE_GENERAL_CONSENT',
     dateField: null,
@@ -347,18 +355,6 @@ function LegalDocumentsContent() {
               <p className="mb-0 lh-base">{currentDocument.summary}</p>
             </div>
 
-            {/* Signature Fields Section */}
-            <div className="mb-4">
-              <DocumentSignature
-                document={currentDocument}
-                form={form}
-                applicant={applicant}
-                companyPreferences={companyPreferences}
-                isComplete={isCurrentDocumentComplete}
-                fullWidth={false}
-              />
-            </div>
-
             {/* Collapsible Document Content */}
             <div className="mb-4">
               <SecondaryButton
@@ -403,6 +399,18 @@ function LegalDocumentsContent() {
                   />
                 </div>
               )}
+            </div>
+
+            {/* Signature Fields Section */}
+            <div className="mb-4">
+              <DocumentSignature
+                document={currentDocument}
+                form={form}
+                applicant={applicant}
+                companyPreferences={companyPreferences}
+                isComplete={isCurrentDocumentComplete}
+                fullWidth={false}
+              />
             </div>
           </div>
 

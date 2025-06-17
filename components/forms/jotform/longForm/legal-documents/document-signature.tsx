@@ -316,6 +316,26 @@ export const DocumentSignature = memo(function DocumentSignature({
                 </small>
               </div>
             )}
+
+            {/* Consent Statement */}
+            <div className="mb-4">
+              <div
+                className="alert alert-info"
+                style={{
+                  border: '2px solid #0dcaf0',
+                  backgroundColor: '#e7f6fd',
+                  borderRadius: '8px',
+                }}
+              >
+                <h6 className="alert-heading mb-2">
+                  <InfoCircle className="me-2" size={16} />
+                  By signing this document, you confirm:
+                </h6>
+                <p className="mb-0" style={{ fontStyle: 'italic', lineHeight: '1.5' }}>
+                  &ldquo;{document.consentStatement}&rdquo;
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Right Column - Signature Area */}
@@ -457,6 +477,26 @@ export const DocumentSignature = memo(function DocumentSignature({
         </div>
       )}
 
+      {/* Consent Statement */}
+      <div className="mb-4">
+        <div
+          className="alert alert-info"
+          style={{
+            border: '2px solid #0dcaf0',
+            backgroundColor: '#e7f6fd',
+            borderRadius: '8px',
+          }}
+        >
+          <h6 className="alert-heading mb-2">
+            <InfoCircle className="me-2" size={16} />
+            By signing this document, you confirm:
+          </h6>
+          <p className="mb-0" style={{ fontStyle: 'italic', lineHeight: '1.5' }}>
+            &ldquo;{document.consentStatement}&rdquo;
+          </p>
+        </div>
+      </div>
+
       {/* Signature Section - Compact */}
       <div className="mb-4">
         <label className="form-label fw-bold">
@@ -502,24 +542,6 @@ export const DocumentSignature = memo(function DocumentSignature({
           </small>
         </div>
       )}
-
-      {/* Completion Summary */}
-      <div className="mt-4 pt-3 border-top">
-        <div className="row text-center">
-          <div className="col">
-            <div className="fw-bold text-muted small">Progress</div>
-            <div className="h5 mb-0">
-              {requirements.filter((r) => r.met).length} / {requirements.length}
-            </div>
-          </div>
-          <div className="col">
-            <div className="fw-bold text-muted small">Status</div>
-            <div className={`h6 mb-0 ${isComplete ? 'text-success' : 'text-warning'}`}>
-              {isComplete ? 'Complete' : 'Pending'}
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Legal Notice */}
       <div className="mt-4 p-3 bg-light rounded">

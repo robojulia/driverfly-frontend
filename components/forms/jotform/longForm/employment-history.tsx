@@ -113,6 +113,10 @@ export function EmploymentHistory() {
     return new Date().toISOString().split('T')[0];
   };
 
+  const getMinDate = () => {
+    return '1970-01-01';
+  };
+
   const employmentStatusOptions = [
     { value: BooleanType.YES, label: 'YES' },
     { value: BooleanType.NO, label: 'NO' },
@@ -332,6 +336,7 @@ export function EmploymentHistory() {
                   onChange={form.handleChange}
                   onBlur={form.handleBlur}
                   required
+                  min={getMinDate()}
                   max={getMaxDate()}
                   error={
                     form.touched.employer?.start_at && form.errors.employer?.start_at
