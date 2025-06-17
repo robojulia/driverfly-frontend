@@ -21,7 +21,7 @@ export function AccidentHistory() {
 
   const { t } = useTranslation();
 
-  // Simple validation - just require the user to select yes/no, everything else is optional
+  // Updated validation - only validate accident details if they've been started
   const validationSchema = yup.object({
     has_accidents: yup
       .boolean()
@@ -31,10 +31,117 @@ export function AccidentHistory() {
         'Please select whether you have had any accidents',
         (value) => value !== null
       ),
-    // All other fields are optional - the original DTO doesn't require them
     accident_count: yup.number().min(0).nullable(),
     accident_details: yup.string().nullable(),
-    accident_history: yup.array().of(ApplicantAccidentEntity.yupSchema()),
+    accident_history: yup.array().of(
+      yup.object({
+        date_of_accident: yup.date().when([], {
+          is: () => true,
+          then: (schema) =>
+            schema.test(
+              'conditional-required',
+              'Date is required when accident details are provided',
+              function (value) {
+                const accident = this.parent;
+                const hasAnyField =
+                  accident.nature_of_accident ||
+                  accident.location_of_accident ||
+                  value ||
+                  (accident.number_of_injured !== undefined &&
+                    accident.number_of_injured !== null) ||
+                  (accident.number_of_fatalaties !== undefined &&
+                    accident.number_of_fatalaties !== null);
+                return hasAnyField ? !!value : true;
+              }
+            ),
+          otherwise: (schema) => schema.nullable(),
+        }),
+        nature_of_accident: yup.string().when([], {
+          is: () => true,
+          then: (schema) =>
+            schema.test(
+              'conditional-required',
+              'Nature of accident is required when accident details are provided',
+              function (value) {
+                const accident = this.parent;
+                const hasAnyField =
+                  accident.date_of_accident ||
+                  accident.location_of_accident ||
+                  value ||
+                  (accident.number_of_injured !== undefined &&
+                    accident.number_of_injured !== null) ||
+                  (accident.number_of_fatalaties !== undefined &&
+                    accident.number_of_fatalaties !== null);
+                return hasAnyField ? !!value : true;
+              }
+            ),
+          otherwise: (schema) => schema.nullable(),
+        }),
+        location_of_accident: yup.string().when([], {
+          is: () => true,
+          then: (schema) =>
+            schema.test(
+              'conditional-required',
+              'Location is required when accident details are provided',
+              function (value) {
+                const accident = this.parent;
+                const hasAnyField =
+                  accident.date_of_accident ||
+                  accident.nature_of_accident ||
+                  value ||
+                  (accident.number_of_injured !== undefined &&
+                    accident.number_of_injured !== null) ||
+                  (accident.number_of_fatalaties !== undefined &&
+                    accident.number_of_fatalaties !== null);
+                return hasAnyField ? !!value : true;
+              }
+            ),
+          otherwise: (schema) => schema.nullable(),
+        }),
+        number_of_injured: yup.number().when([], {
+          is: () => true,
+          then: (schema) =>
+            schema.test(
+              'conditional-required',
+              'Number of injured is required when accident details are provided',
+              function (value) {
+                const accident = this.parent;
+                const hasAnyField =
+                  accident.date_of_accident ||
+                  accident.nature_of_accident ||
+                  accident.location_of_accident ||
+                  (value !== undefined && value !== null) ||
+                  (accident.number_of_fatalaties !== undefined &&
+                    accident.number_of_fatalaties !== null);
+                return hasAnyField ? value !== undefined && value !== null : true;
+              }
+            ),
+          otherwise: (schema) => schema.nullable(),
+        }),
+        number_of_fatalaties: yup.number().when([], {
+          is: () => true,
+          then: (schema) =>
+            schema.test(
+              'conditional-required',
+              'Number of fatalities is required when accident details are provided',
+              function (value) {
+                const accident = this.parent;
+                const hasAnyField =
+                  accident.date_of_accident ||
+                  accident.nature_of_accident ||
+                  accident.location_of_accident ||
+                  (accident.number_of_injured !== undefined &&
+                    accident.number_of_injured !== null) ||
+                  (value !== undefined && value !== null);
+                return hasAnyField ? value !== undefined && value !== null : true;
+              }
+            ),
+          otherwise: (schema) => schema.nullable(),
+        }),
+        dot_recordable: yup.boolean().default(false).optional(),
+        at_fault: yup.boolean().default(false).optional(),
+      })
+    ),
   });
 
   const form = useFormik({
@@ -48,14 +155,40 @@ export function AccidentHistory() {
     validationSchema,
     onSubmit: (values) => {
       try {
-        // Only submit the actual DTO fields, not the UI-only has_accidents field
-        const { accident_count, accident_history, accident_details } = values;
-        setApplicant({
-          ...applicant,
-          accident_count,
-          accident_details,
-          accident_history,
-        });
+        // Save the user's choice along with the accident data
+        const { accident_count, accident_history, accident_details, has_accidents } = values;
+
+        // Always save the data based on the user's choice
+        if (has_accidents === false) {
+          // User said NO - clear all data but make sure we save empty array to indicate they've been here
+          setApplicant({
+            ...applicant,
+            accident_count: 0,
+            accident_details: '',
+            accident_history: [], // Empty array indicates they said NO
+          });
+        } else if (has_accidents === true) {
+          // User said YES - save current state (even if they haven't added accidents yet)
+          const finalDetails =
+            accident_details && accident_details.trim() !== ''
+              ? accident_details
+              : '__YES_NO_DETAILS__'; // Special marker to indicate they said YES but no details yet
+
+          setApplicant({
+            ...applicant,
+            accident_count: accident_count || 0, // Ensure it's a number
+            accident_details: finalDetails,
+            accident_history: accident_history || [], // Empty array here means YES but no details yet
+          });
+        } else {
+          // Shouldn't happen due to validation, but handle gracefully
+          setApplicant({
+            ...applicant,
+            accident_count: accident_count || 0,
+            accident_details: accident_details || '',
+            accident_history: accident_history || [],
+          });
+        }
 
         stepNext();
       } catch (error) {
@@ -68,17 +201,61 @@ export function AccidentHistory() {
   });
 
   useEffect(() => {
-    const existingAccidentCount = applicant.accident_count || 0;
-    const existingAccidentHistory = applicant.accident_history || [];
-    const hasExistingAccidents = existingAccidentCount > 0 || existingAccidentHistory.length > 0;
+    const existingAccidentCount = applicant.accident_count;
+    const existingAccidentHistory = applicant.accident_history;
+    const existingAccidentDetails = applicant.accident_details;
 
-    form.setValues({
-      ...form.values,
-      accident_count: existingAccidentCount,
-      accident_history: existingAccidentHistory,
-      accident_details: applicant?.accident_details || '',
-      has_accidents: hasExistingAccidents ? true : null,
-    });
+    // Determine the has_accidents state based on what's stored
+    let hasAccidentsState: boolean | null = null;
+
+    // Check if they've visited this form before by looking for explicit data
+    const hasVisitedForm =
+      existingAccidentCount !== undefined ||
+      existingAccidentHistory !== undefined ||
+      existingAccidentDetails !== undefined;
+
+    if (hasVisitedForm) {
+      const actualCount = existingAccidentCount || 0;
+      const actualHistory = existingAccidentHistory || [];
+      const actualDetails = existingAccidentDetails || '';
+
+      if (actualCount > 0 || actualHistory.length > 0) {
+        // They have actual accidents, so they said yes
+        hasAccidentsState = true;
+      } else if (actualDetails === '__YES_NO_DETAILS__') {
+        // They said yes but haven't added details yet
+        hasAccidentsState = true;
+      } else if (actualDetails.trim() !== '' && actualDetails !== '__YES_NO_DETAILS__') {
+        // They have actual accident details - they said yes
+        hasAccidentsState = true;
+      } else if (actualCount === 0 && Array.isArray(actualHistory) && actualDetails === '') {
+        // They have count=0, empty array, and empty details - they said NO
+        hasAccidentsState = false;
+      } else {
+        // Edge case: they've visited but unclear what they chose, default to null
+        hasAccidentsState = null;
+      }
+
+      // Clean up the special marker for display
+      const displayDetails = actualDetails === '__YES_NO_DETAILS__' ? '' : actualDetails;
+
+      form.setValues({
+        ...form.values,
+        accident_count: actualCount,
+        accident_history: actualHistory,
+        accident_details: displayDetails,
+        has_accidents: hasAccidentsState,
+      });
+    } else {
+      // First time visiting, initialize with empty state
+      form.setValues({
+        ...form.values,
+        accident_count: 0,
+        accident_history: [],
+        accident_details: '',
+        has_accidents: null,
+      });
+    }
   }, [applicant]);
 
   // Auto-update accident count based on accident history length
@@ -332,7 +509,16 @@ export function AccidentHistory() {
                                   );
                                 }}
                                 onBlur={form.handleBlur}
-                                required
+                                required={
+                                  !!(
+                                    accident.nature_of_accident ||
+                                    accident.location_of_accident ||
+                                    (accident.number_of_injured !== undefined &&
+                                      accident.number_of_injured !== null) ||
+                                    (accident.number_of_fatalaties !== undefined &&
+                                      accident.number_of_fatalaties !== null)
+                                  )
+                                }
                                 max={getMaxDate()}
                                 error={getNestedError(`accident_history.${i}.date_of_accident`)}
                                 icon={<span>📅</span>}
@@ -346,7 +532,16 @@ export function AccidentHistory() {
                                 value={accident.location_of_accident || ''}
                                 onChange={form.handleChange}
                                 onBlur={form.handleBlur}
-                                required
+                                required={
+                                  !!(
+                                    accident.date_of_accident ||
+                                    accident.nature_of_accident ||
+                                    (accident.number_of_injured !== undefined &&
+                                      accident.number_of_injured !== null) ||
+                                    (accident.number_of_fatalaties !== undefined &&
+                                      accident.number_of_fatalaties !== null)
+                                  )
+                                }
                                 error={getNestedError(`accident_history.${i}.location_of_accident`)}
                               />
                             </div>
@@ -358,7 +553,16 @@ export function AccidentHistory() {
                                 value={accident.nature_of_accident || ''}
                                 onChange={form.handleChange}
                                 onBlur={form.handleBlur}
-                                required
+                                required={
+                                  !!(
+                                    accident.date_of_accident ||
+                                    accident.location_of_accident ||
+                                    (accident.number_of_injured !== undefined &&
+                                      accident.number_of_injured !== null) ||
+                                    (accident.number_of_fatalaties !== undefined &&
+                                      accident.number_of_fatalaties !== null)
+                                  )
+                                }
                                 error={getNestedError(`accident_history.${i}.nature_of_accident`)}
                                 icon={<span>📝</span>}
                               />
@@ -378,7 +582,15 @@ export function AccidentHistory() {
                                   );
                                 }}
                                 onBlur={form.handleBlur}
-                                required
+                                required={
+                                  !!(
+                                    accident.date_of_accident ||
+                                    accident.location_of_accident ||
+                                    accident.nature_of_accident ||
+                                    (accident.number_of_fatalaties !== undefined &&
+                                      accident.number_of_fatalaties !== null)
+                                  )
+                                }
                                 min="0"
                                 error={getNestedError(`accident_history.${i}.number_of_injured`)}
                                 icon={<span>🏥</span>}
@@ -399,7 +611,15 @@ export function AccidentHistory() {
                                   );
                                 }}
                                 onBlur={form.handleBlur}
-                                required
+                                required={
+                                  !!(
+                                    accident.date_of_accident ||
+                                    accident.location_of_accident ||
+                                    accident.nature_of_accident ||
+                                    (accident.number_of_injured !== undefined &&
+                                      accident.number_of_injured !== null)
+                                  )
+                                }
                                 min="0"
                                 error={getNestedError(`accident_history.${i}.number_of_fatalaties`)}
                                 icon={<span>⚠️</span>}

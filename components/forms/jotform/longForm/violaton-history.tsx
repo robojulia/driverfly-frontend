@@ -21,7 +21,7 @@ export function ViolationHistory() {
 
   const { t } = useTranslation();
 
-  // Simple validation - just require the user to select yes/no, everything else is optional
+  // Updated validation - only validate violation details if they've been started
   const validationSchema = yup.object({
     has_violations: yup
       .boolean()
@@ -31,10 +31,72 @@ export function ViolationHistory() {
         'Please select whether you have had any violations',
         (value) => value !== null
       ),
-    // All other fields are optional - the original DTO doesn't require them
     moving_violations_count: yup.number().min(0).nullable(),
     moving_violations_details: yup.string().nullable(),
-    moving_violation_history: yup.array().of(ApplicantMovingViolationEntity.yupSchema()),
+    moving_violation_history: yup.array().of(
+      yup.object({
+        date_of_violation: yup.string().when([], {
+          is: () => true,
+          then: (schema) =>
+            schema.test(
+              'conditional-required',
+              'Date is required when violation details are provided',
+              function (value) {
+                const violation = this.parent;
+                const hasAnyField =
+                  violation.location || violation.charge || violation.penalty || value;
+                return hasAnyField ? !!value : true;
+              }
+            ),
+          otherwise: (schema) => schema.nullable(),
+        }),
+        location: yup.string().when([], {
+          is: () => true,
+          then: (schema) =>
+            schema.test(
+              'conditional-required',
+              'Location is required when violation details are provided',
+              function (value) {
+                const violation = this.parent;
+                const hasAnyField =
+                  violation.date_of_violation || violation.charge || violation.penalty || value;
+                return hasAnyField ? !!value : true;
+              }
+            ),
+          otherwise: (schema) => schema.nullable(),
+        }),
+        charge: yup.string().when([], {
+          is: () => true,
+          then: (schema) =>
+            schema.test(
+              'conditional-required',
+              'Charge is required when violation details are provided',
+              function (value) {
+                const violation = this.parent;
+                const hasAnyField =
+                  violation.date_of_violation || violation.location || violation.penalty || value;
+                return hasAnyField ? !!value : true;
+              }
+            ),
+          otherwise: (schema) => schema.nullable(),
+        }),
+        penalty: yup.string().when([], {
+          is: () => true,
+          then: (schema) =>
+            schema.test(
+              'conditional-required',
+              'Penalty is required when violation details are provided',
+              function (value) {
+                const violation = this.parent;
+                const hasAnyField =
+                  violation.date_of_violation || violation.location || violation.charge || value;
+                return hasAnyField ? !!value : true;
+              }
+            ),
+          otherwise: (schema) => schema.nullable(),
+        }),
+      })
+    ),
   });
 
   const form = useFormik({
@@ -48,8 +110,25 @@ export function ViolationHistory() {
     validationSchema,
     onSubmit: (values) => {
       // Only submit the actual DTO fields, not the UI-only has_violations field
-      const { moving_violation_history, moving_violations_count, moving_violations_details } =
-        values;
+      let { moving_violation_history, moving_violations_count, moving_violations_details } = values;
+
+      // Handle state persistence for radio button restoration
+      if (values.has_violations === false) {
+        // User said NO - clear all data and save state
+        moving_violations_details = '';
+        moving_violations_count = 0;
+        moving_violation_history = [];
+      } else if (
+        values.has_violations === true &&
+        !moving_violations_details &&
+        (!moving_violation_history || moving_violation_history.length === 0)
+      ) {
+        // User said YES but provided no details - save marker for state restoration
+        moving_violations_details = '__YES_NO_DETAILS__';
+        moving_violations_count = 0;
+        moving_violation_history = [];
+      }
+
       try {
         setApplicant({
           ...applicant,
@@ -70,14 +149,38 @@ export function ViolationHistory() {
   useEffect(() => {
     const existingViolationCount = applicant.moving_violations_count || 0;
     const existingViolationHistory = applicant.moving_violation_history || [];
-    const hasExistingViolations = existingViolationCount > 0 || existingViolationHistory.length > 0;
+    const existingDetails = applicant?.moving_violations_details || '';
+
+    // Enhanced state detection for form restoration
+    let hasViolationsState: boolean | null = null;
+
+    // Check if user has visited this form before
+    const hasActualViolations = existingViolationCount > 0 || existingViolationHistory.length > 0;
+    const hasActualDetails = existingDetails && existingDetails !== '__YES_NO_DETAILS__';
+
+    if (hasActualViolations || hasActualDetails) {
+      // User said YES and provided actual data
+      hasViolationsState = true;
+    } else if (existingDetails === '__YES_NO_DETAILS__') {
+      // User said YES but provided no details (special marker)
+      hasViolationsState = true;
+    } else if (
+      existingViolationCount === 0 &&
+      existingViolationHistory.length === 0 &&
+      existingDetails === '' &&
+      applicant.moving_violations_details !== undefined
+    ) {
+      // User said NO (explicitly saved as empty values)
+      hasViolationsState = false;
+    }
+    // Otherwise null (never visited)
 
     form.setValues({
       ...form.values,
       moving_violations_count: existingViolationCount,
       moving_violation_history: existingViolationHistory,
-      moving_violations_details: applicant?.moving_violations_details || '',
-      has_violations: hasExistingViolations ? true : null,
+      moving_violations_details: existingDetails === '__YES_NO_DETAILS__' ? '' : existingDetails, // Clean up marker for display
+      has_violations: hasViolationsState,
     });
   }, [applicant]);
 
@@ -169,6 +272,19 @@ export function ViolationHistory() {
     }
 
     return touched && error ? String(error) : undefined;
+  };
+
+  // Helper function to determine if a violation field should be required
+  const isViolationFieldRequired = (violationIndex: number) => {
+    const violation = form.values.moving_violation_history?.[violationIndex];
+    if (!violation) return false;
+
+    return !!(
+      violation.date_of_violation ||
+      violation.location ||
+      violation.charge ||
+      violation.penalty
+    );
   };
 
   const handleNext = () => {
@@ -327,7 +443,7 @@ export function ViolationHistory() {
                                   );
                                 }}
                                 onBlur={form.handleBlur}
-                                required
+                                required={isViolationFieldRequired(i)}
                                 max={getMaxDate()}
                                 error={getNestedError(
                                   `moving_violation_history.${i}.date_of_violation`
@@ -343,7 +459,7 @@ export function ViolationHistory() {
                                 value={violation.location || ''}
                                 onChange={form.handleChange}
                                 onBlur={form.handleBlur}
-                                required
+                                required={isViolationFieldRequired(i)}
                                 error={getNestedError(`moving_violation_history.${i}.location`)}
                               />
                             </div>
@@ -355,7 +471,7 @@ export function ViolationHistory() {
                                 value={violation.charge || ''}
                                 onChange={form.handleChange}
                                 onBlur={form.handleBlur}
-                                required
+                                required={isViolationFieldRequired(i)}
                                 error={getNestedError(`moving_violation_history.${i}.charge`)}
                                 icon={<span>⚖️</span>}
                               />
@@ -368,7 +484,7 @@ export function ViolationHistory() {
                                 value={violation.penalty || ''}
                                 onChange={form.handleChange}
                                 onBlur={form.handleBlur}
-                                required
+                                required={isViolationFieldRequired(i)}
                                 error={getNestedError(`moving_violation_history.${i}.penalty`)}
                                 icon={<span>💰</span>}
                               />

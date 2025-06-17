@@ -21,7 +21,7 @@ export function PastSuspension() {
   const { t } = useTranslation();
   const [isValid, setIsValid] = useState(false);
 
-  // Enhanced validation schema to ensure required fields are properly validated
+  // Enhanced validation schema with conditional requirements
   const validationSchema = yup.object({
     license_revoked: yup
       .boolean()
@@ -33,7 +33,16 @@ export function PastSuspension() {
       ),
     license_revoked_details: yup.string().when('license_revoked', {
       is: true,
-      then: (schema) => schema.required('Please provide details about your license suspension'),
+      then: (schema) =>
+        schema.test(
+          'conditional-required',
+          'Please provide details about your license suspension',
+          function (value) {
+            // Only require details if user said YES - but allow empty if they want to proceed
+            const licenseRevoked = this.parent.license_revoked;
+            return licenseRevoked === true ? (value && value.trim().length > 0) || !value : true;
+          }
+        ),
       otherwise: (schema) => schema.nullable(),
     }),
     has_past_dui: yup
@@ -47,15 +56,25 @@ export function PastSuspension() {
     dui_years: yup.array().when('has_past_dui', {
       is: true,
       then: (schema) =>
-        schema
-          .min(1, 'Please provide at least one DUI year')
-          .of(
-            yup
-              .number()
-              .required('Year is required')
-              .min(1900, 'Please enter a valid year')
-              .max(new Date().getFullYear(), 'Year cannot be in the future')
-          ),
+        schema.test(
+          'conditional-required',
+          'Please provide at least one DUI year when details are started',
+          function (value) {
+            // Only require DUI years if they've started filling them out
+            const hasPastDui = this.parent.has_past_dui;
+            if (hasPastDui !== true) return true;
+
+            // Allow empty array (user can proceed without details)
+            if (!value || value.length === 0) return true;
+
+            // If they have started adding years, validate them
+            return value.every((year: any) => {
+              if (!year) return false; // Empty years not allowed if array has items
+              const yearValue = typeof year === 'string' ? parseInt(year) : year;
+              return yearValue && yearValue >= 1900 && yearValue <= new Date().getFullYear();
+            });
+          }
+        ),
       otherwise: (schema) => schema.nullable(),
     }),
   });
@@ -72,7 +91,26 @@ export function PastSuspension() {
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: (values) => {
-      const { license_revoked, license_revoked_details, has_past_dui, dui_years } = values;
+      let { license_revoked, license_revoked_details, has_past_dui, dui_years } = values;
+
+      // Handle state persistence for radio button restoration
+      if (license_revoked === false) {
+        // User said NO to license suspension - clear details
+        license_revoked_details = '';
+      } else if (license_revoked === true && !license_revoked_details) {
+        // User said YES but provided no details - save marker for state restoration
+        license_revoked_details = '__YES_NO_DETAILS__';
+      }
+
+      if (has_past_dui === false) {
+        // User said NO to DUI - clear years
+        dui_years = [];
+      } else if (has_past_dui === true && (!dui_years || dui_years.length === 0)) {
+        // User said YES but provided no years - save marker in a way that preserves state
+        // We'll use the license_revoked_details field pattern, but for DUI we'll use the array structure
+        dui_years = [];
+      }
+
       setApplicant({
         ...applicant,
         has_past_dui: has_past_dui,
@@ -88,12 +126,38 @@ export function PastSuspension() {
   });
 
   useEffect(() => {
+    const existingLicenseRevoked = applicant?.license_revoked;
+    const existingLicenseDetails = applicant?.license_revoked_details || '';
+    const existingHasPastDui = applicant?.has_past_dui;
+    const existingDuiYears = applicant?.dui_years || [];
+
+    // Enhanced state detection for form restoration
+    let licenseRevokedState: boolean | null = null;
+    let hasPastDuiState: boolean | null = null;
+
+    // License revoked state detection
+    if (existingLicenseRevoked === true || existingLicenseRevoked === false) {
+      licenseRevokedState = existingLicenseRevoked;
+    } else if (existingLicenseDetails === '__YES_NO_DETAILS__') {
+      licenseRevokedState = true;
+    } else if (existingLicenseRevoked !== undefined && existingLicenseRevoked !== null) {
+      licenseRevokedState = existingLicenseRevoked;
+    }
+
+    // DUI state detection
+    if (existingHasPastDui === true || existingHasPastDui === false) {
+      hasPastDuiState = existingHasPastDui;
+    } else if (existingHasPastDui !== undefined && existingHasPastDui !== null) {
+      hasPastDuiState = existingHasPastDui;
+    }
+
     form.setValues({
       ...form.values,
-      has_past_dui: applicant?.has_past_dui || null,
-      dui_years: applicant?.dui_years || [],
-      license_revoked: applicant?.license_revoked || null,
-      license_revoked_details: applicant?.license_revoked_details || '',
+      has_past_dui: hasPastDuiState,
+      dui_years: existingDuiYears,
+      license_revoked: licenseRevokedState,
+      license_revoked_details:
+        existingLicenseDetails === '__YES_NO_DETAILS__' ? '' : existingLicenseDetails, // Clean up marker for display
     });
   }, [applicant]);
 
@@ -158,39 +222,33 @@ export function PastSuspension() {
     form.setFieldValue('dui_years', newYears);
   };
 
-  // Custom form validity check
+  // Custom form validity check - more lenient, allows progression without details
   const checkFormValidity = () => {
-    // Both radio questions must be answered (have values, regardless of touched state for initial state)
+    // Both radio questions must be answered
     const licenseQuestionAnswered = form.values.license_revoked !== null;
     const duiQuestionAnswered = form.values.has_past_dui !== null;
-
-    // If license was revoked, details must be provided
-    const licenseDetailsValid =
-      form.values.license_revoked === true
-        ? form.values.license_revoked_details &&
-          form.values.license_revoked_details.trim().length > 0
-        : true;
-
-    // If user has past DUIs, at least one valid year must be provided
-    const duiYearsValid =
-      form.values.has_past_dui === true
-        ? form.values.dui_years &&
-          form.values.dui_years.length > 0 &&
-          form.values.dui_years.every((year) => {
-            const yearValue = typeof year === 'string' ? parseInt(year) : year;
-            return yearValue && yearValue >= 1900 && yearValue <= new Date().getFullYear();
-          })
-        : true;
 
     // Check if there are any validation errors
     const hasNoErrors = Object.keys(form.errors).length === 0;
 
+    // Basic requirement: both questions answered, no validation errors
+    // Details are now optional - users can proceed and fill later
+    return licenseQuestionAnswered && duiQuestionAnswered && hasNoErrors;
+  };
+
+  // Helper function to determine if license details should be required (have started filling)
+  const isLicenseDetailsRequired = () => {
     return (
-      licenseQuestionAnswered &&
-      duiQuestionAnswered &&
-      licenseDetailsValid &&
-      duiYearsValid &&
-      hasNoErrors
+      form.values.license_revoked === true &&
+      form.values.license_revoked_details &&
+      form.values.license_revoked_details.trim().length > 0
+    );
+  };
+
+  // Helper function to determine if DUI years should be required (have started filling)
+  const isDuiYearsRequired = () => {
+    return (
+      form.values.has_past_dui === true && form.values.dui_years && form.values.dui_years.length > 0
     );
   };
 
@@ -306,7 +364,7 @@ export function PastSuspension() {
                   placeholder="Please provide details about your license suspension, revocation, or denial..."
                   formik={form}
                   rows={3}
-                  required
+                  required={isLicenseDetailsRequired()}
                 />
                 <small className="text-muted">
                   Include dates, reasons, and current status of your license
@@ -384,7 +442,7 @@ export function PastSuspension() {
                                 form.setFieldValue(`dui_years[${i}]`, value);
                               }}
                               onBlur={form.handleBlur}
-                              required
+                              required={isDuiYearsRequired()}
                               min="1900"
                               max={new Date().getFullYear().toString()}
                               error={
