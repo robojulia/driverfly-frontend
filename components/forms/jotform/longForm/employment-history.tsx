@@ -55,7 +55,8 @@ export function EmploymentHistory() {
     if (form.values.is_current_employed) {
       // If currently employed, all required fields must be filled
       const requiredFieldsFilled = !!(
-        form.values.employer?.can_contact &&
+        form.values.employer?.can_contact !== null &&
+        form.values.employer?.can_contact !== undefined &&
         form.values.employer?.name &&
         form.values.employer?.title &&
         form.values.employer?.start_at &&
@@ -85,6 +86,8 @@ export function EmploymentHistory() {
         is_subject_to_fmcsrs: Boolean(employer) ? employer?.is_subject_to_fmcsrs : true,
         is_subject_to_drug_tests: Boolean(employer) ? employer?.is_subject_to_drug_tests : true,
         is_current: true,
+        can_contact:
+          Boolean(employer) && employer?.can_contact !== undefined ? employer?.can_contact : null,
       },
       is_current_employed: Boolean(employer),
     });
@@ -117,6 +120,24 @@ export function EmploymentHistory() {
 
   const notCurrentEmployedValue =
     form.values.is_current_employed === false ? BooleanType.NO : undefined;
+
+  // Helper functions for contact authorization radio group
+  const getCanContactValue = () => {
+    if (form.values.employer?.can_contact === true) return BooleanType.YES;
+    if (form.values.employer?.can_contact === false) return BooleanType.NO;
+    return undefined;
+  };
+
+  const handleCanContactChange = (value: string) => {
+    const canContact = value === BooleanType.YES;
+    form.setFieldValue('employer.can_contact', canContact);
+    form.setFieldTouched('employer.can_contact', true);
+
+    // Force validation to run immediately (like in unable-for-job component)
+    setTimeout(() => {
+      form.validateForm();
+    }, 0);
+  };
 
   return (
     <>
@@ -231,20 +252,22 @@ export function EmploymentHistory() {
 
               {/* Contact Authorization */}
               <div style={{ marginBottom: '1.5rem' }}>
-                <Checkbox
+                <RadioGroup
                   name="employer.can_contact"
                   label={t('CONATACT_AUTHORITY')}
-                  checked={Boolean(form.values.employer?.can_contact)}
-                  onChange={(e) => {
-                    form.setFieldValue('employer.can_contact', e.target.checked);
-                  }}
-                  onBlur={form.handleBlur}
+                  enumType={BooleanType}
+                  value={getCanContactValue()}
+                  onChange={handleCanContactChange}
                   required
                   error={
                     form.touched.employer?.can_contact && form.errors.employer?.can_contact
                       ? String(form.errors.employer?.can_contact)
                       : undefined
                   }
+                  variant="card"
+                  columns={2}
+                  labelPrefix="BooleanType"
+                  helperText="We need permission to contact your current employer for verification"
                 />
               </div>
 

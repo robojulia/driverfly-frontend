@@ -64,7 +64,8 @@ export function PastEmploymentHistory() {
         form.values.employers?.length > 0 &&
         form.values.employers.every(
           (employer) =>
-            employer.can_contact &&
+            employer.can_contact !== null &&
+            employer.can_contact !== undefined &&
             employer.name &&
             employer.title &&
             employer.manager_name &&
@@ -88,9 +89,16 @@ export function PastEmploymentHistory() {
       (v) => !!!v.is_current
     ) as PastEmploymentHistoryDto[];
 
+    // Ensure can_contact is properly initialized for existing employers
+    const normalizedEmployers =
+      employers?.map((emp) => ({
+        ...emp,
+        can_contact: emp.can_contact !== undefined ? emp.can_contact : null,
+      })) || [];
+
     form.setValues({
       ...form.values,
-      employers: employers?.length > 0 ? employers : [],
+      employers: normalizedEmployers,
       is_previous_employed: !!employers?.length,
     });
   }, [applicant]);
@@ -128,6 +136,7 @@ export function PastEmploymentHistory() {
         is_subject_to_fmcsrs: true,
         is_subject_to_drug_tests: true,
         is_current: false,
+        can_contact: null,
       },
     ]);
   };
@@ -163,6 +172,24 @@ export function PastEmploymentHistory() {
   const notPreviouslyEmployedValue =
     form.values.is_previous_employed === false ? BooleanType.NO : undefined;
 
+  // Helper functions for contact authorization radio groups
+  const getCanContactValue = (index: number) => {
+    if (form.values.employers?.[index]?.can_contact === true) return BooleanType.YES;
+    if (form.values.employers?.[index]?.can_contact === false) return BooleanType.NO;
+    return undefined;
+  };
+
+  const handleCanContactChange = (index: number, value: string) => {
+    const canContact = value === BooleanType.YES;
+    form.setFieldValue(`employers[${index}].can_contact`, canContact);
+    form.setFieldTouched(`employers[${index}].can_contact`, true);
+
+    // Force validation to run immediately
+    setTimeout(() => {
+      form.validateForm();
+    }, 0);
+  };
+
   return (
     <>
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
@@ -186,7 +213,6 @@ export function PastEmploymentHistory() {
           📋 {t('PAST_EMPLOYMENT_REQUIREMENTS')}
         </p>
         <p style={{ margin: '0 0 1rem 0' }}>{t('HONEST_ABOUT_PAST_EMPLOYMENT')}</p>
-        <p style={{ margin: 0 }}>{t('ADD_EMPLOYMENT_HISTORY_SUB_HEADING')}</p>
       </div>
 
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset} className={styles.formStep}>
@@ -223,27 +249,6 @@ export function PastEmploymentHistory() {
           {/* Past Employment Details */}
           {form.values.is_previous_employed && (
             <>
-              {/* Error message when no employers added */}
-              {(!form.values.employers || form.values.employers.length === 0) && (
-                <div
-                  style={{
-                    backgroundColor: '#fff5f5',
-                    border: '1px solid #fed7d7',
-                    borderRadius: '8px',
-                    padding: '1rem',
-                    marginBottom: '2rem',
-                    color: '#c53030',
-                    fontSize: '0.95rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                  }}
-                >
-                  <span style={{ fontSize: '1.2rem' }}>⚠️</span>
-                  <span>{t('ADD_PAST_EMPLOYMENT_HISTORY')}</span>
-                </div>
-              )}
-
               {form.values.employers?.map((entity, i) => (
                 <div
                   key={i}
@@ -297,16 +302,18 @@ export function PastEmploymentHistory() {
 
                   {/* Contact Authorization */}
                   <div style={{ marginBottom: '1.5rem' }}>
-                    <Checkbox
+                    <RadioGroup
                       name={`employers[${i}].can_contact`}
                       label={t('CONTACT_AUTHORIZATION')}
-                      checked={Boolean(form.values.employers?.[i]?.can_contact)}
-                      onChange={(e) => {
-                        form.setFieldValue(`employers[${i}].can_contact`, e.target.checked);
-                      }}
-                      onBlur={form.handleBlur}
+                      enumType={BooleanType}
+                      value={getCanContactValue(i)}
+                      onChange={(value) => handleCanContactChange(i, value)}
                       required
                       error={getFieldError(`employers[${i}].can_contact`)}
+                      variant="card"
+                      columns={2}
+                      labelPrefix="BooleanType"
+                      helperText="We need permission to contact this employer for verification"
                     />
                   </div>
 
