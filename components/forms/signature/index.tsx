@@ -27,6 +27,7 @@ export function SignatureComponent({
   const [initialSignatureApplied, setInitialSignatureApplied] = useState(false);
   const lastSignatureRef = useRef<string | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [canvasDimensions, setCanvasDimensions] = useState({ width: 600, height: 200 });
 
   const clearSignatureCanvas = (): void => {
     if (padRef.current && !isDrawing) {
@@ -78,21 +79,26 @@ export function SignatureComponent({
     const canvasWidth = canvasElement.width;
     const canvasHeight = canvasElement.height;
 
+    // Scale font sizes based on canvas dimensions
+    const scaleFactor = canvasWidth / 600; // Scale relative to original 600px width
+    const signatureFontSize = Math.max(20, 30 * scaleFactor);
+    const timestampFontSize = Math.max(10, 12 * scaleFactor);
+
     // Set up the canvas for signature
-    ctx.font = "30px 'Dancing Script', cursive";
+    ctx.font = `${signatureFontSize}px 'Dancing Script', cursive`;
     ctx.fillStyle = 'black';
 
     // Calculate position to center the signature
     const signatureText = `${firstName} ${lastName}`;
     const textMetrics = ctx.measureText(signatureText);
     const signatureX = (canvasWidth - textMetrics.width) / 2;
-    const signatureY = (canvasHeight + 30) / 2;
+    const signatureY = (canvasHeight + signatureFontSize) / 2;
 
     // Add signature text
     ctx.fillText(signatureText, signatureX, signatureY);
 
     // Add timestamp for legal compliance - positioned under the signature
-    ctx.font = '12px Arial';
+    ctx.font = `${timestampFontSize}px Arial`;
     ctx.fillStyle = '#666666'; // Slightly lighter color for timestamp
     const timestamp = new Date().toLocaleString();
     const timestampText = `Electronically signed on ${timestamp}`;
@@ -100,7 +106,7 @@ export function SignatureComponent({
     // Measure timestamp text and center it under the signature
     const timestampMetrics = ctx.measureText(timestampText);
     const timestampX = (canvasWidth - timestampMetrics.width) / 2;
-    const timestampY = signatureY + 25; // Position 25px below the signature
+    const timestampY = signatureY + timestampFontSize * 1.5; // Position below the signature
 
     ctx.fillText(timestampText, timestampX, timestampY);
 
@@ -146,6 +152,29 @@ export function SignatureComponent({
     }
   }, [initialSignature]);
 
+  // Update canvas dimensions based on container size for proper scaling
+  useEffect(() => {
+    const updateCanvasDimensions = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.clientWidth;
+        const aspectRatio = 200 / 600; // height / width from original dimensions
+        const newWidth = Math.min(containerWidth - 32, 600); // Account for padding, max 600
+        const newHeight = newWidth * aspectRatio;
+
+        setCanvasDimensions({
+          width: newWidth,
+          height: newHeight,
+        });
+      }
+    };
+
+    updateCanvasDimensions();
+
+    // Update on window resize
+    window.addEventListener('resize', updateCanvasDimensions);
+    return () => window.removeEventListener('resize', updateCanvasDimensions);
+  }, []);
+
   return (
     <div className={styles.txtcolor} ref={containerRef}>
       {/* Signature Instructions */}
@@ -174,15 +203,15 @@ export function SignatureComponent({
           onBegin={handleSignatureBegin}
           onEnd={handleSignatureEnd}
           canvasProps={{
-            width: 600,
-            height: 200,
+            width: canvasDimensions.width,
+            height: canvasDimensions.height,
             style: {
               border: '2px solid #AAAAAA',
               borderRadius: '8px',
               display: 'block',
-              width: '100%',
+              width: `${canvasDimensions.width}px`,
+              height: `${canvasDimensions.height}px`,
               maxWidth: '100%',
-              height: 'auto',
             },
             className: 'sigCanvas',
           }}
