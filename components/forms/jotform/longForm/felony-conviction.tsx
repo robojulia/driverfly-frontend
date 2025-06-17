@@ -20,7 +20,7 @@ export function FelonyConviction() {
   const { t } = useTranslation();
   const [isValid, setIsValid] = useState(false);
 
-  // Enhanced validation schema
+  // Enhanced validation schema with conditional requirements
   const validationSchema = yup.object({
     is_convicted_felony: yup
       .boolean()
@@ -32,7 +32,16 @@ export function FelonyConviction() {
       ),
     criminal_history: yup.string().when('is_convicted_felony', {
       is: true,
-      then: (schema) => schema.required('Please provide details about your criminal history'),
+      then: (schema) =>
+        schema.test(
+          'conditional-required',
+          'Please provide details about your criminal history',
+          function (value) {
+            // Only require details if user said YES - but allow empty if they want to proceed
+            const isConvictedFelony = this.parent.is_convicted_felony;
+            return isConvictedFelony === true ? (value && value.trim().length > 0) || !value : true;
+          }
+        ),
       otherwise: (schema) => schema.nullable(),
     }),
   });
@@ -47,7 +56,17 @@ export function FelonyConviction() {
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: (values) => {
-      const { is_convicted_felony, criminal_history } = values;
+      let { is_convicted_felony, criminal_history } = values;
+
+      // Handle state persistence for radio button restoration
+      if (is_convicted_felony === false) {
+        // User said NO - clear details
+        criminal_history = '';
+      } else if (is_convicted_felony === true && !criminal_history) {
+        // User said YES but provided no details - save marker for state restoration
+        criminal_history = '__YES_NO_DETAILS__';
+      }
+
       setApplicant({
         ...applicant,
         criminal_history,
@@ -63,10 +82,26 @@ export function FelonyConviction() {
   // Initialize form with applicant data once on mount
   useEffect(() => {
     if (applicant) {
+      const existingIsConvictedFelony = (applicant as any)?.is_convicted_felony;
+      const existingCriminalHistory = applicant?.criminal_history || '';
+
+      // Enhanced state detection for form restoration
+      let isConvictedFelonyState: boolean | null = null;
+
+      // Felony conviction state detection
+      if (existingIsConvictedFelony === true || existingIsConvictedFelony === false) {
+        isConvictedFelonyState = existingIsConvictedFelony;
+      } else if (existingCriminalHistory === '__YES_NO_DETAILS__') {
+        isConvictedFelonyState = true;
+      } else if (existingIsConvictedFelony !== undefined && existingIsConvictedFelony !== null) {
+        isConvictedFelonyState = existingIsConvictedFelony;
+      }
+
       form.setValues({
         ...form.values,
-        is_convicted_felony: null,
-        criminal_history: applicant.criminal_history || '',
+        is_convicted_felony: isConvictedFelonyState,
+        criminal_history:
+          existingCriminalHistory === '__YES_NO_DETAILS__' ? '' : existingCriminalHistory, // Clean up marker for display
       });
 
       // Validate form after setting values
@@ -76,22 +111,26 @@ export function FelonyConviction() {
     }
   }, [applicant]);
 
-  // Custom form validity check
+  // Custom form validity check - more lenient, allows progression without details
   const checkFormValidity = () => {
     // The question must be answered
     const questionAnswered = form.values.is_convicted_felony !== null;
 
-    // If they have been convicted, explanation is required
-    let explanationValid = true;
-    if (form.values.is_convicted_felony === true) {
-      const criminalHistory = form.values.criminal_history;
-      explanationValid = !!(criminalHistory && criminalHistory.trim().length > 0);
-    }
-
     // Check if there are any validation errors
     const hasNoErrors = Object.keys(form.errors).length === 0;
 
-    return questionAnswered && explanationValid && hasNoErrors;
+    // Basic requirement: question answered, no validation errors
+    // Details are now optional - users can proceed and fill later
+    return questionAnswered && hasNoErrors;
+  };
+
+  // Helper function to determine if criminal history should be required (have started filling)
+  const isCriminalHistoryRequired = () => {
+    return (
+      form.values.is_convicted_felony === true &&
+      form.values.criminal_history &&
+      form.values.criminal_history.trim().length > 0
+    );
   };
 
   // Update validity state whenever form values or errors change
@@ -228,6 +267,7 @@ export function FelonyConviction() {
                   placeholder="Please provide details about your conviction(s), including dates, charges, and current status..."
                   formik={form}
                   rows={4}
+                  required={isCriminalHistoryRequired()}
                 />
                 <small className="text-muted">
                   Include dates of conviction, nature of the charges, and any relevant

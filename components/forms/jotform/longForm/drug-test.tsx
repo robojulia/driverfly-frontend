@@ -20,7 +20,7 @@ export function DrugTest() {
   const { t } = useTranslation();
   const [isValid, setIsValid] = useState(false);
 
-  // Enhanced validation schema
+  // Enhanced validation schema with conditional requirements
   const validationSchema = yup.object({
     positive_drug_test: yup
       .boolean()
@@ -32,7 +32,16 @@ export function DrugTest() {
       ),
     positive_drug_test_details: yup.string().when('positive_drug_test', {
       is: true,
-      then: (schema) => schema.required('Please provide details about your positive drug test'),
+      then: (schema) =>
+        schema.test(
+          'conditional-required',
+          'Please provide details about your positive drug test',
+          function (value) {
+            // Only require details if user said YES - but allow empty if they want to proceed
+            const positiveDrugTest = this.parent.positive_drug_test;
+            return positiveDrugTest === true ? (value && value.trim().length > 0) || !value : true;
+          }
+        ),
       otherwise: (schema) => schema.nullable(),
     }),
   });
@@ -47,7 +56,17 @@ export function DrugTest() {
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: (values) => {
-      const { positive_drug_test_details, positive_drug_test } = values;
+      let { positive_drug_test_details, positive_drug_test } = values;
+
+      // Handle state persistence for radio button restoration
+      if (positive_drug_test === false) {
+        // User said NO - clear details
+        positive_drug_test_details = '';
+      } else if (positive_drug_test === true && !positive_drug_test_details) {
+        // User said YES but provided no details - save marker for state restoration
+        positive_drug_test_details = '__YES_NO_DETAILS__';
+      }
+
       setApplicant({
         ...applicant,
         positive_drug_test: positive_drug_test,
@@ -61,29 +80,49 @@ export function DrugTest() {
   });
 
   useEffect(() => {
+    const existingPositiveDrugTest = applicant?.positive_drug_test;
+    const existingDrugTestDetails = applicant?.positive_drug_test_details || '';
+
+    // Enhanced state detection for form restoration
+    let positiveDrugTestState: boolean | null = null;
+
+    // Drug test state detection
+    if (existingPositiveDrugTest === true || existingPositiveDrugTest === false) {
+      positiveDrugTestState = existingPositiveDrugTest;
+    } else if (existingDrugTestDetails === '__YES_NO_DETAILS__') {
+      positiveDrugTestState = true;
+    } else if (existingPositiveDrugTest !== undefined && existingPositiveDrugTest !== null) {
+      positiveDrugTestState = existingPositiveDrugTest;
+    }
+
     form.setValues({
       ...form.values,
-      positive_drug_test: applicant?.positive_drug_test || null,
-      positive_drug_test_details: applicant?.positive_drug_test_details || '',
+      positive_drug_test: positiveDrugTestState,
+      positive_drug_test_details:
+        existingDrugTestDetails === '__YES_NO_DETAILS__' ? '' : existingDrugTestDetails, // Clean up marker for display
     });
   }, [applicant]);
 
-  // Custom form validity check
+  // Custom form validity check - more lenient, allows progression without details
   const checkFormValidity = () => {
     // The question must be answered
     const questionAnswered = form.values.positive_drug_test !== null;
 
-    // If they had a positive test, explanation is required
-    let explanationValid = true;
-    if (form.values.positive_drug_test === true) {
-      const details = form.values.positive_drug_test_details;
-      explanationValid = !!(details && details.trim().length > 0);
-    }
-
     // Check if there are any validation errors
     const hasNoErrors = Object.keys(form.errors).length === 0;
 
-    return questionAnswered && explanationValid && hasNoErrors;
+    // Basic requirement: question answered, no validation errors
+    // Details are now optional - users can proceed and fill later
+    return questionAnswered && hasNoErrors;
+  };
+
+  // Helper function to determine if drug test details should be required (have started filling)
+  const isDrugTestDetailsRequired = () => {
+    return (
+      form.values.positive_drug_test === true &&
+      form.values.positive_drug_test_details &&
+      form.values.positive_drug_test_details.trim().length > 0
+    );
   };
 
   // Update validity state whenever form values or errors change
@@ -218,6 +257,7 @@ export function DrugTest() {
                   placeholder="Please provide details about the positive drug test, including dates, circumstances, and any follow-up actions taken..."
                   formik={form}
                   rows={4}
+                  required={isDrugTestDetailsRequired()}
                 />
                 <small className="text-muted">
                   Include when the test occurred, the substance involved, and any rehabilitation or
