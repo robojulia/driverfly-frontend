@@ -69,7 +69,7 @@ export const Input: React.FC<InputProps> = ({
       case 'large':
         return {
           padding: '1rem 1.25rem',
-          fontSize: '1.125rem',
+          fontSize: '1rem',
           minHeight: '56px',
         };
       default: // medium
