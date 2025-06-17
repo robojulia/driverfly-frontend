@@ -341,8 +341,8 @@ export function PastEmploymentHistory() {
 
                     <Input
                       name={`employers[${i}].title`}
-                      label={t('PREVIOUS_COMPANY_TITLE')}
-                      placeholder={t('PREVIOUS_COMPANY_TITLE')}
+                      label={t('PREVIOUS_COMPANY_ROLE')}
+                      placeholder={t('PREVIOUS_COMPANY_ROLE')}
                       value={form.values.employers?.[i]?.title || ''}
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
@@ -388,7 +388,7 @@ export function PastEmploymentHistory() {
                     />
                   </div>
 
-                  {/* Phone and Employment Dates */}
+                  {/* Phone Number */}
                   <div
                     className="employment-form-grid"
                     style={{
@@ -408,25 +408,33 @@ export function PastEmploymentHistory() {
                       autoComplete="tel"
                       helperText="Company contact number"
                     />
-
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                      <Input
-                        name={`employers[${i}].start_at`}
-                        label={t('START_DATE')}
-                        type="date"
-                        value={form.values.employers?.[i]?.start_at || ''}
-                        onChange={form.handleChange}
-                        onBlur={form.handleBlur}
-                        required
-                        max={getMaxDate()}
-                        error={getFieldError(`employers[${i}].start_at`)}
-                        helperText={t('EMPLOYMENT_HISTORY_DATE_NOTE')}
-                      />
-                    </div>
+                    {/* Empty space next to phone number */}
+                    <div></div>
                   </div>
 
-                  {/* End Date - Full width */}
-                  <div style={{ marginBottom: '1.5rem' }}>
+                  {/* Employment Dates */}
+                  <div
+                    className="employment-form-grid"
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: '1rem',
+                      marginBottom: '1.5rem',
+                    }}
+                  >
+                    <Input
+                      name={`employers[${i}].start_at`}
+                      label={t('START_DATE')}
+                      type="date"
+                      value={form.values.employers?.[i]?.start_at || ''}
+                      onChange={form.handleChange}
+                      onBlur={form.handleBlur}
+                      required
+                      max={getMaxDate()}
+                      error={getFieldError(`employers[${i}].start_at`)}
+                      helperText={t('EMPLOYMENT_HISTORY_DATE_NOTE')}
+                    />
+
                     <Input
                       name={`employers[${i}].end_at`}
                       label={t('END_DATE')}
