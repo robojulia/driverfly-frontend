@@ -9,7 +9,7 @@ import { DriverApplicationDto } from '../../../../models/jot-form/long-form/driv
 import { PrimaryButton } from '../form-buttons';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { SignatureComponent } from '../../signature';
-import { Input } from '../../../shared/dha';
+import { Input, DateInput } from '../../../shared/dha';
 
 export interface DriverApplicationProps {
   isAutoRecruitmentLead?: boolean | (() => boolean);
@@ -164,11 +164,10 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
           </div>
 
           <div style={{ marginBottom: '2rem' }}>
-            <Input
+            <DateInput
               name="APPLY_DATE.value"
               label={t('DATE')}
               placeholder={t('DATE')}
-              type="date"
               value={form.values.APPLY_DATE?.value || currentDate}
               onChange={form.handleChange}
               onBlur={form.handleBlur}

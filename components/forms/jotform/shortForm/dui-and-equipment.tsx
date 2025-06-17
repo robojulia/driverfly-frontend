@@ -24,10 +24,25 @@ export function DuiAndEquipment() {
       equipment_experience: [],
     },
     validationSchema: yup.object({
-      equipment_experience: (yup.array(ApplicantExperienceEntity.yupSchema()) as any).unique(
-        'type',
-        { mapper: ApplicantExperienceEntity.key }
-      ),
+      equipment_experience: (yup.array(ApplicantExperienceEntity.yupSchema()) as any)
+        .unique('type', { mapper: ApplicantExperienceEntity.key })
+        .test('no-negative-years', 'Years of experience cannot be negative', function (value) {
+          if (!value || !Array.isArray(value)) return true;
+
+          for (const experience of value) {
+            if (
+              experience.years !== null &&
+              experience.years !== undefined &&
+              experience.years < 1
+            ) {
+              return this.createError({
+                path: `${this.path}[${value.indexOf(experience)}].years`,
+                message: 'Years of experience must be at least 1',
+              });
+            }
+          }
+          return true;
+        }),
       has_past_dui: yup.bool().nullable(),
       dui_years: yup
         .array(
@@ -102,30 +117,29 @@ export function DuiAndEquipment() {
     return touched[fieldName] && errors[fieldName] ? String(errors[fieldName]) : undefined;
   };
 
+  const handleYearsChange = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
+
+    // Prevent negative values and values greater than 100
+    if (value < 0) {
+      form.setFieldValue(`equipment_experience[${index}].years`, 1);
+      return;
+    }
+
+    if (value > 100) {
+      form.setFieldValue(`equipment_experience[${index}].years`, 100);
+      return;
+    }
+
+    // Use formik's handleChange for normal values
+    form.handleChange(e);
+  };
+
   return (
     <>
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
         {t('EQUIPMENT_DRIVEN')}
       </h1>
-
-      <div
-        style={{
-          maxWidth: '800px',
-          margin: '0 auto 2rem auto',
-          padding: '1rem',
-          backgroundColor: '#f8f9fa',
-          border: '1px solid #e0e5eb',
-          borderRadius: '8px',
-          color: '#667788',
-          fontSize: '0.95rem',
-          lineHeight: '1.5',
-        }}
-      >
-        <p style={{ margin: '0 0 0.5rem 0', fontWeight: '600', color: '#1a2b3c' }}>
-          📋 {t('EQUIPMENT_EXPERIENCE_HELP_TITLE')}
-        </p>
-        <p style={{ margin: 0 }}>{t('EQUIPMENT_EXPERIENCE_HELP_TEXT')}</p>
-      </div>
 
       <Form
         onSubmit={form.handleSubmit}
@@ -188,11 +202,13 @@ export function DuiAndEquipment() {
                         label={t('YEARS')}
                         placeholder={t('PLACEHOLDER_FOR_DIGITS')}
                         type="number"
+                        min="1"
+                        max="100"
                         value={entity.years?.toString() || ''}
-                        onChange={form.handleChange}
+                        onChange={handleYearsChange(i)}
                         onBlur={form.handleBlur}
                         error={getFieldError(`equipment_experience[${i}].years`)}
-                        helperText="Enter years of experience with this equipment"
+                        helperText="Enter years of experience with this equipment (1-100 years)"
                         required
                       />
                     </div>

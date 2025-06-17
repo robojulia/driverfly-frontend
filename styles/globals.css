@@ -595,3 +595,55 @@ a {
     padding: 0 16px !important;
   }
 }
+
+/* Date Input Styling */
+input[type='date'] {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  appearance: none;
+  position: relative;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 12px;
+  color: #667788;
+  cursor: pointer;
+  font-size: 1.2rem;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+input[type='date']:focus::-webkit-calendar-picker-indicator {
+  color: #0073b1;
+}
+
+input[type='date']::-webkit-inner-spin-button,
+input[type='date']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Ensure date value is visible */
+input[type='date']:not(:placeholder-shown) {
+  color: #1a2b3c !important;
+}
+
+input[type='date']:invalid {
+  color: #667788;
+}
+
+@media (max-width: 768px) {
+  input[type='date'] {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+
+  input[type='date']::-webkit-calendar-picker-indicator {
+    font-size: 1.4rem;
+    right: 16px;
+  }
+}

@@ -1,48 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { FormLabel } from './form-label';
 
-interface InputProps {
+interface DateInputProps {
   name: string;
   label?: string;
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  type?: 'text' | 'email' | 'password' | 'tel' | 'number' | 'url' | 'date';
   required?: boolean;
   disabled?: boolean;
   error?: string;
   helperText?: string;
   className?: string;
   autoComplete?: string;
-  maxLength?: number;
-  minLength?: number;
-  pattern?: string;
   max?: string;
-  min?: string | number;
+  min?: string;
   variant?: 'default' | 'outlined' | 'filled';
   size?: 'small' | 'medium' | 'large';
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
 }
 
-export const Input: React.FC<InputProps> = ({
+export const DateInput: React.FC<DateInputProps> = ({
   name,
   label,
   placeholder,
   value = '',
   onChange,
   onBlur,
-  type = 'text',
   required = false,
   disabled = false,
   error,
   helperText,
   className = '',
   autoComplete,
-  maxLength,
-  minLength,
-  pattern,
   max,
   min,
   variant = 'outlined',
@@ -58,6 +50,41 @@ export const Input: React.FC<InputProps> = ({
     setHasValue(Boolean(value));
   }, [value]);
 
+  // Format date value to ensure it's in YYYY-MM-DD format
+  const formatDateValue = (dateValue: string): string => {
+    if (!dateValue) return '';
+
+    // If it's already in YYYY-MM-DD format, return as is
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
+      return dateValue;
+    }
+
+    // Handle ISO string format (like 2024-01-15T10:30:00.000Z)
+    if (dateValue.includes('T')) {
+      try {
+        return dateValue.split('T')[0];
+      } catch (e) {
+        console.warn('Error splitting ISO date:', dateValue);
+      }
+    }
+
+    // Try to parse and format other date formats
+    try {
+      const date = new Date(dateValue);
+      if (!isNaN(date.getTime())) {
+        // Format to YYYY-MM-DD
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
+    } catch (e) {
+      console.warn('Invalid date format:', dateValue);
+    }
+
+    return dateValue;
+  };
+
   const getSizeStyles = (size: string) => {
     switch (size) {
       case 'small':
@@ -69,7 +96,7 @@ export const Input: React.FC<InputProps> = ({
       case 'large':
         return {
           padding: '1rem 1.25rem',
-          fontSize: '1rem',
+          fontSize: '1.125rem',
           minHeight: '56px',
         };
       default: // medium
@@ -178,6 +205,9 @@ export const Input: React.FC<InputProps> = ({
     if (onChange) onChange(e);
   };
 
+  // Format the value for display
+  const displayValue = formatDateValue(value);
+
   return (
     <div style={containerStyles} className={className}>
       {label && (
@@ -192,8 +222,8 @@ export const Input: React.FC<InputProps> = ({
         <input
           id={name}
           name={name}
-          type={type}
-          value={value}
+          type="date"
+          value={displayValue}
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -201,15 +231,17 @@ export const Input: React.FC<InputProps> = ({
           required={required}
           disabled={disabled}
           autoComplete={autoComplete}
-          maxLength={maxLength}
-          minLength={minLength}
-          pattern={pattern}
           max={max}
           min={min}
           style={{
             ...inputStyles,
             cursor: disabled ? 'not-allowed' : 'text',
             opacity: disabled ? 0.6 : 1,
+            // Date input specific styles
+            colorScheme: 'light',
+            // Ensure proper display of date value
+            WebkitAppearance: 'none',
+            MozAppearance: 'textfield',
           }}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${name}-error` : helperText ? `${name}-helper` : undefined}
