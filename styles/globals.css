@@ -493,6 +493,53 @@ a {
   padding-right: 0.75rem;
 }
 
+/* Phone Input Component Mobile Responsiveness */
+.react-tel-input {
+  width: 100% !important;
+}
+
+.react-tel-input .form-control {
+  width: 100% !important;
+  height: 48px !important;
+  border-radius: 8px !important;
+  border: 2px solid #e0e5eb !important;
+  padding: 0.75rem 1rem 0.75rem 60px !important;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  background-color: #ffffff !important;
+}
+
+.react-tel-input .form-control:focus {
+  border-color: #0073b1 !important;
+  box-shadow: 0 0 0 3px rgba(0, 115, 177, 0.1) !important;
+  outline: none !important;
+}
+
+.react-tel-input .flag-dropdown {
+  border: 2px solid #e0e5eb !important;
+  border-radius: 8px 0 0 8px !important;
+  background-color: #ffffff !important;
+  height: 48px !important;
+}
+
+.react-tel-input .flag-dropdown:hover {
+  background-color: #f8f9fa !important;
+}
+
+.react-tel-input .selected-flag {
+  height: 48px !important;
+  padding: 0 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  border-radius: 8px 0 0 8px !important;
+}
+
+.react-tel-input .selected-flag:focus {
+  outline: none !important;
+  background-color: rgba(0, 115, 177, 0.05) !important;
+}
+
 /* Responsive Typography */
 @media (max-width: 768px) {
   h1,
@@ -512,5 +559,39 @@ a {
 
   .card-title {
     font-size: 1.125rem;
+  }
+
+  /* Mobile-specific phone input styles */
+  .react-tel-input .form-control {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    padding: 1rem 1rem 1rem 60px !important;
+    min-height: 56px !important;
+    height: 56px !important;
+  }
+
+  .react-tel-input .flag-dropdown,
+  .react-tel-input .selected-flag {
+    height: 56px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Extra small screens - phone input adjustments */
+  .react-tel-input .form-control {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    padding: 1.25rem 1rem 1.25rem 70px !important;
+    min-height: 60px !important;
+    height: 60px !important;
+    border-radius: 12px !important;
+  }
+
+  .react-tel-input .flag-dropdown,
+  .react-tel-input .selected-flag {
+    height: 60px !important;
+    border-radius: 12px 0 0 12px !important;
+  }
+
+  .react-tel-input .selected-flag {
+    padding: 0 16px !important;
   }
 }

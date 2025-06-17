@@ -240,47 +240,30 @@ export function PhoneNumber() {
         size="lg"
         onCloseClick={onCloseClick}
         footer={
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              gap: '1rem',
-              marginTop: '2rem',
-              width: '100%',
-            }}
-          >
-            <SecondaryButton
-              onClick={handleLeavePreviousProfile}
+          showOtpField ? (
+            <PrimaryButton
+              onClick={verifyOTP}
               disabled={isVerificationSuccessful || isLoadingProfile}
             >
-              {t('START_FRESH')}
-            </SecondaryButton>
-
-            {showOtpField ? (
-              <PrimaryButton
-                onClick={verifyOTP}
-                disabled={isVerificationSuccessful || isLoadingProfile}
-              >
-                {isLoadingProfile ? (
-                  <>
-                    <Spinner
-                      as="span"
-                      animation="border"
-                      size="sm"
-                      role="status"
-                      aria-hidden="true"
-                      style={{ marginRight: '0.5rem' }}
-                    />
-                    {t('LOADING')}
-                  </>
-                ) : (
-                  t('VERIFY_CODE')
-                )}
-              </PrimaryButton>
-            ) : (
-              <PrimaryButton onClick={requestOTP}>{t('ACCESS_EXISTING_PROFILE')}</PrimaryButton>
-            )}
-          </div>
+              {isLoadingProfile ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    style={{ marginRight: '0.5rem' }}
+                  />
+                  {t('LOADING')}
+                </>
+              ) : (
+                t('VERIFY_CODE')
+              )}
+            </PrimaryButton>
+          ) : (
+            <PrimaryButton onClick={requestOTP}>{t('ACCESS_EXISTING_PROFILE')}</PrimaryButton>
+          )
         }
       >
         <div>
@@ -437,19 +420,23 @@ export function PhoneNumber() {
         </div>
       </ViewModal>
       <Form
-        className={styles.align__text_left}
+        className={`${styles.align__text_left} ${styles.formStep}`}
         onSubmit={form.handleSubmit}
         onReset={form.handleReset}
       >
-        <Row className="w-100 d-flex justify-content-center">
-          <BaseInputPhone
-            className="col-md-6 my-3 font-weight-bold"
-            required
-            name="phone"
-            label="Phone Number"
-            formik={form}
-          />
-        </Row>
+        <div style={{ maxWidth: '600px', margin: '0' }}>
+          <Row className={styles.bold}>
+            <div className="col-12 my-3">
+              <BaseInputPhone
+                className="w-100"
+                required
+                name="phone"
+                label="Phone Number"
+                formik={form}
+              />
+            </div>
+          </Row>
+        </div>
 
         <FormActions
           onNext={() => {

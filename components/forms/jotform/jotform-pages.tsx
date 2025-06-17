@@ -73,7 +73,10 @@ const getFullFormPages = (step: number): JSX.Element =>
 
 const getFullFormStyle = (step: number): CSSProperties | undefined =>
   ({
-    2: { width: '50%' },
+    2: {
+      width: '100%',
+      maxWidth: '50%',
+    },
   }[step]);
 
 const getLongFormPages = (step: number): JSX.Element =>

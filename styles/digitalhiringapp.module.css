@@ -542,6 +542,12 @@
     margin: 1.5rem 0;
     padding: 0 0.5rem;
   }
+
+  /* Override inline styles for phone number step on mobile */
+  .main_form[style*='max-width: 50%'] {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
 }
 
 @media screen and (max-width: 576px) {
