@@ -647,3 +647,19 @@ input[type='date']:invalid {
     right: 16px;
   }
 }
+
+/* Signature Canvas Styling */
+.sigCanvas {
+  touch-action: none; /* Prevent scrolling while drawing */
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Improve signature canvas on mobile */
+@media (max-width: 768px) {
+  .sigCanvas {
+    border-width: 3px !important; /* Thicker border on mobile for better visibility */
+  }
+}

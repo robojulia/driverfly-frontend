@@ -257,7 +257,7 @@ export function DrivingExperience() {
               required
               error={
                 form.touched.license_expiry && form.errors.license_expiry
-                  ? String(form.errors.license_expiry)
+                  ? t('LICENSE_HAS_EXPIRED')
                   : undefined
               }
               helperText="Enter the expiration date of your CDL"

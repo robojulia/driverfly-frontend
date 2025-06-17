@@ -6,7 +6,7 @@ import { useTranslation } from '../../../../hooks/use-translation';
 import { BackgroundInfoDto } from '../../../../models/jot-form/long-form/background-info.dto';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { FormActions } from '../form-buttons';
-import { Input, Select } from '../../../shared/dha';
+import { Input, DateInput, Select } from '../../../shared/dha';
 import stateList from '../../../../utils/stateList';
 
 // Custom hook to detect screen size
@@ -139,11 +139,10 @@ export function BackgroundInfo() {
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset} className={styles.formStep}>
         <div style={{ maxWidth: '100%', margin: '0', padding: '0 1rem' }}>
           <div style={{ marginBottom: '2rem' }}>
-            <Input
+            <DateInput
               name="birthdate"
               label={t('birthdate')}
               placeholder={t('birthdate')}
-              type="date"
               value={form.values.birthdate || ''}
               onChange={form.handleChange}
               onBlur={form.handleBlur}
@@ -154,7 +153,6 @@ export function BackgroundInfo() {
                   ? String(form.errors.birthdate)
                   : undefined
               }
-              helperText="You must be at least 18 years old"
             />
           </div>
 

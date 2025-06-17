@@ -154,6 +154,8 @@ export function SignatureComponent({
 
   // Update canvas dimensions based on container size for proper scaling
   useEffect(() => {
+    let resizeTimeout: NodeJS.Timeout;
+
     const updateCanvasDimensions = () => {
       if (containerRef.current) {
         const containerWidth = containerRef.current.clientWidth;
@@ -168,11 +170,19 @@ export function SignatureComponent({
       }
     };
 
+    const debouncedResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(updateCanvasDimensions, 100);
+    };
+
     updateCanvasDimensions();
 
-    // Update on window resize
-    window.addEventListener('resize', updateCanvasDimensions);
-    return () => window.removeEventListener('resize', updateCanvasDimensions);
+    // Update on window resize with debounce
+    window.addEventListener('resize', debouncedResize);
+    return () => {
+      window.removeEventListener('resize', debouncedResize);
+      clearTimeout(resizeTimeout);
+    };
   }, []);
 
   return (
@@ -190,12 +200,18 @@ export function SignatureComponent({
       </div>
 
       {/* Signature Canvas Container */}
+      {/* 
+        Fixed canvas scaling issue: Canvas internal size now matches display size 
+        to ensure drawing coordinates align with cursor position at any scale 
+      */}
       <div
         style={{
           width: '100%',
           maxWidth: '100%',
           overflow: 'hidden',
           marginBottom: '1rem',
+          display: 'flex',
+          justifyContent: 'center',
         }}
       >
         <SignatureCanvas
