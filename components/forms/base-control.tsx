@@ -52,7 +52,7 @@ function BaseControl({
     <div className={`${className || ''}`}>
       {label && (
         <>
-          <label className={styles.titlechildren}>
+          <label>
             {t(label)}
             {required ? <span className={styles.required}></span> : ''}:
           </label>

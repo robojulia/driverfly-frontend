@@ -140,7 +140,10 @@ export default function DashboardLayout({ children, sidebarItems }: DashboardLay
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu className={styles['dropdown-menu']}>
-                    <Dropdown.Item href="/dashboard/my-profile" className={styles['dropdown-item']}>
+                    <Dropdown.Item
+                      href="/dashboard/company/settings/profile"
+                      className={styles['dropdown-item']}
+                    >
                       <Person className="me-2" size={16} /> {t('MY_PROFILE')}
                     </Dropdown.Item>
                     <Dropdown.Item

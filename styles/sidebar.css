@@ -1,5 +1,5 @@
 /* Import variables */
-@import url("./variables.css");
+@import url('./variables.css');
 
 /* Dashboard container */
 .dashboard-container {
@@ -92,6 +92,13 @@
   background: transparent;
   border: none;
   padding: 0;
+  color: white;
+}
+
+.profile .dropdown-toggle:hover,
+.profile .dropdown-toggle:active,
+.profile .dropdown-toggle.btn.show {
+  color: white !important;
 }
 
 .profile-photo {
@@ -105,11 +112,10 @@
 /* Mobile toggle button styling */
 .btn-mobile-toggle {
   position: absolute;
-  top: 20px;
   left: 15px;
   z-index: 1050;
   display: none;
-  background: var(--primary);
+  background: var(--primary-button);
   color: white !important;
   border: none;
   border-radius: 4px;
@@ -210,7 +216,7 @@
 }
 
 .sidebarArea li.has-subitems:after {
-  content: "";
+  content: '';
   position: absolute;
   right: 16px;
   top: 50%;
@@ -461,7 +467,7 @@
   top: 20px;
   right: 20px;
   z-index: 1031;
-  background: var(--primary);
+  background: var(--primary-button);
   color: white;
   border: none;
   border-radius: 4px;

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-export default function Logo() {
+export default function LegacyLogo() {
   return (
     <>
       <div className="logo">

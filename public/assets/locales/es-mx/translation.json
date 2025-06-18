@@ -1,4 +1,6 @@
 {
+  "CHANGE_PASSWORD": "Cambiar Contraseña",
+  "CURRENT_PASSWORD": "Contraseña Actual",
   "HAVE_ANY_ACTIVE_DRIVERS_LICENSE": "¿Tiene licencias de conducir activas en otros estados?",
   "ANY_ACTIVE_DRIVERS_LICENSE": "Licencias de conducir activas en otros estados",
   "FORM_COMPLETED": "Formulario completado",

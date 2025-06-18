@@ -11,7 +11,7 @@ import { Nav, Navbar, NavDropdown, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 
-export default function MyNav() {
+export default function LegacyNav() {
   const { user } = useAuth();
   const { t } = useTranslation();
 

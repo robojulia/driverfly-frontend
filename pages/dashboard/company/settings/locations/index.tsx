@@ -1,24 +1,24 @@
-import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
-import { Col, Row, Table } from "reactstrap";
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useTranslation } from "../../../../../hooks/use-translation";
+import FullLayout from '../../../../../components/dashboard/layouts/layout/full-layout';
+import { Col, Row, Table } from 'reactstrap';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useTranslation } from '../../../../../hooks/use-translation';
 
-import { EyeFill, PenFill, TrashFill } from "react-bootstrap-icons";
+import { EyeFill, PenFill, TrashFill } from 'react-bootstrap-icons';
 
-import LocationApi from "../../../../api/location";
-import { LocationEntity } from "../../../../../models/company/location.entity";
-import { useAuth } from "../../../../../hooks/use-auth";
-import PageLayout from "../../../../../components/layouts/page/page-layout";
-import { useEffectAsync } from "../../../../../utils/react";
-import { Button, ButtonGroup } from "react-bootstrap";
+import LocationApi from '../../../../api/location';
+import { LocationEntity } from '../../../../../models/company/location.entity';
+import { useAuth } from '../../../../../hooks/use-auth';
+import PageLayout from '../../../../../components/layouts/page/page-layout';
+import { useEffectAsync } from '../../../../../utils/react';
+import { Button, ButtonGroup } from 'react-bootstrap';
 import ViewDataTable, {
   getDataTableColumnKey,
-} from "../../../../../components/view-details/view-data-table";
-import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
-import Link from "next/link";
+} from '../../../../../components/view-details/view-data-table';
+import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
+import Link from 'next/link';
 
 export default function LocationList() {
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function LocationList() {
 
   const { user, hasPermission } = useAuth();
 
-  const columnSettingKey = getDataTableColumnKey("company", user, "locations");
+  const columnSettingKey = getDataTableColumnKey('company', user, 'locations');
 
   const [locations, setLocations] = useState([]);
 
@@ -73,19 +73,19 @@ export default function LocationList() {
   };
 
   const can = {
-    create: hasPermission("CanCreateLocation"),
-    view: hasPermission("CanViewLocation"),
-    update: hasPermission("CanUpdateLocation"),
-    delete: hasPermission("CanDeleteLocation"),
+    create: hasPermission('CanCreateLocation'),
+    view: hasPermission('CanViewLocation'),
+    update: hasPermission('CanUpdateLocation'),
+    delete: hasPermission('CanDeleteLocation'),
   };
 
   return (
     <PageLayout
-      title="TERMINALS"
-      desciption="TERMINALS_DESC"
+      title="LOCATIONS"
+      desciption="LOCATIONS_DESC"
       actions={
         <ButtonGroup>
-          {can.create && <Button onClick={onAddClick}>+ {t("CREATE")}</Button>}
+          {can.create && <Button onClick={onAddClick}>+ {t('CREATE')}</Button>}
         </ButtonGroup>
       }
     >
@@ -93,13 +93,13 @@ export default function LocationList() {
         columnSettingKey={columnSettingKey}
         columns={[
           {
-            id: "name",
-            name: "ID",
+            id: 'name',
+            name: 'ID',
             selector: (v) => v.id,
           },
           {
-            id: "street",
-            name: "STREET",
+            id: 'street',
+            name: 'STREET',
             selector: (v) => v.street,
             cell: (v) => (
               <Link href={`${router.asPath}/${v.id}`}>
@@ -109,18 +109,18 @@ export default function LocationList() {
             hidable: false,
           },
           {
-            id: "city",
-            name: "CITY",
+            id: 'city',
+            name: 'CITY',
             selector: (v) => v.city,
           },
           {
-            id: "state",
-            name: "STATE",
+            id: 'state',
+            name: 'STATE',
             selector: (v) => v.state,
           },
           {
-            id: "zip_code",
-            name: "ZIP_CODE",
+            id: 'zip_code',
+            name: 'ZIP_CODE',
             selector: (v) => v.zip_code,
           },
         ]}
@@ -128,19 +128,19 @@ export default function LocationList() {
           {
             onClick: (e) => onViewClick(l.id),
             icon: EyeFill,
-            label: "VIEW",
+            label: 'VIEW',
             hide: !can.view,
           },
           {
             onClick: (e) => onEditClick(l.id),
             icon: PenFill,
-            label: "EDIT",
+            label: 'EDIT',
             hide: !can.update,
           },
           {
             onClick: (e) => onDeleteClick(l.id),
             icon: TrashFill,
-            label: "DELETE",
+            label: 'DELETE',
             hide: !can.delete,
           },
         ]}

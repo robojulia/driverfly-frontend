@@ -127,7 +127,7 @@ const FullLayout = ({ children }) => {
         {
           pathname: '/dashboard/company/settings/locations',
           icon: GeoAltFill,
-          text: 'TERMINALS',
+          text: 'LOCATIONS',
           permissions: 'CanViewLocation',
           startsWith: true,
         },

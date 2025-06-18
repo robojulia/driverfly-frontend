@@ -121,7 +121,7 @@ export function CompanyForm(props: CompanyFormProps) {
             label={t('ABOUT')}
             name={`about`}
             rows={3}
-            placeholder={t('ABOUT')}
+            placeholder={t('ABOUT_PLACEHOLDER')}
             formik={form}
           />
           <FileInput
