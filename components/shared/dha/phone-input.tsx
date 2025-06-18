@@ -92,17 +92,21 @@ export const DhaPhoneInput: React.FC<PhoneInputProps> = ({
       case 'filled':
         return {
           ...baseStyles,
-          backgroundColor: '#f8f9fa',
+          backgroundColor: 'var(--form-info-bg)',
           borderColor: 'transparent',
-          color: '#1a2b3c',
+          color: 'var(--text-primary)',
         };
       case 'outlined':
       default:
         return {
           ...baseStyles,
-          backgroundColor: '#ffffff',
-          borderColor: error ? '#e74c3c' : isFocused ? '#0073b1' : '#e0e5eb',
-          color: '#1a2b3c',
+          backgroundColor: 'var(--light)',
+          borderColor: error
+            ? 'var(--danger)'
+            : isFocused
+            ? 'var(--primary)'
+            : 'var(--medium-gray)',
+          color: 'var(--text-primary)',
         };
     }
   };
@@ -114,13 +118,13 @@ export const DhaPhoneInput: React.FC<PhoneInputProps> = ({
   };
 
   const focusStyles = isFocused
-    ? '0 0 0 3px rgba(0, 115, 177, 0.1)'
+    ? '0 0 0 3px rgba(95, 203, 196, 0.1)'
     : '0 2px 4px rgba(0, 0, 0, 0.05)';
 
   const phoneInputStyles = getVariantStyles(variant);
 
   const errorStyles: React.CSSProperties = {
-    color: '#e74c3c',
+    color: 'var(--danger)',
     fontSize: '0.875rem',
     marginTop: '0.25rem',
     display: 'flex',
@@ -129,7 +133,7 @@ export const DhaPhoneInput: React.FC<PhoneInputProps> = ({
   };
 
   const helperTextStyles: React.CSSProperties = {
-    color: '#667788',
+    color: 'var(--text-secondary)',
     fontSize: '0.875rem',
     marginTop: '0.25rem',
   };
@@ -218,12 +222,14 @@ export const DhaPhoneInput: React.FC<PhoneInputProps> = ({
           buttonStyle={{
             border: 'none',
             backgroundColor: 'transparent',
-            borderRight: `1px solid ${error ? '#e74c3c' : isFocused ? '#0073b1' : '#e0e5eb'}`,
+            borderRight: `1px solid ${
+              error ? 'var(--danger)' : isFocused ? 'var(--primary)' : 'var(--medium-gray)'
+            }`,
             borderRadius: '8px 0 0 8px',
           }}
           dropdownStyle={{
             borderRadius: '8px',
-            border: '2px solid #e0e5eb',
+            border: '2px solid var(--medium-gray)',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
           }}
           containerStyle={{

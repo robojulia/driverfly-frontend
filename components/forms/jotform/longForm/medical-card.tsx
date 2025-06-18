@@ -136,32 +136,18 @@ export function MedicalCard() {
         {t('MEDICAL_CARD_UPLOAD_TITLE')}
       </h1>
 
-      <div
-        style={{
-          maxWidth: '100%',
-          margin: '0 auto 2rem auto',
-          padding: '1rem',
-          backgroundColor: '#f8f9fa',
-          border: '1px solid #e0e5eb',
-          borderRadius: '8px',
-          color: '#667788',
-          fontSize: '0.95rem',
-          lineHeight: '1.5',
-        }}
-      >
-        <p style={{ margin: '0 0 0.5rem 0', fontWeight: '600', color: '#1a2b3c' }}>
-          🏥 {t('MEDICAL_CARD_UPLOAD_HELP_TITLE')}
-        </p>
-        <p style={{ margin: 0 }}>
+      <div className={styles.formInfoBox}>
+        <p className={styles.formInfoBoxTitle}>🏥 {t('MEDICAL_CARD_UPLOAD_HELP_TITLE')}</p>
+        <p>
           Please upload a clear photo or scan of your DOT medical card. Accepted formats: PDF, Word
           documents, or images (JPG, PNG). Maximum file size: 3MB.
         </p>
       </div>
 
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset} className={styles.formStep}>
-        <div style={{ maxWidth: '100%', margin: '0', padding: '0 1rem' }}>
+        <div className={styles.formContainerPadded}>
           {/* Media Preference Section */}
-          <div style={{ marginBottom: '2rem' }}>
+          <div className={styles.marginBottomLarge}>
             <Checkbox
               name="mediaOptions"
               label={t('MEDIA_PREFERENCE')}
@@ -178,7 +164,7 @@ export function MedicalCard() {
             subtitle="Upload your DOT medical card"
             icon="🏥"
           >
-            <div style={{ position: 'relative' }}>
+            <div className={styles.documentUploadSection}>
               {Boolean(form.values.mediaOptions) ? (
                 <CameraComponent form={form} />
               ) : (
@@ -194,20 +180,13 @@ export function MedicalCard() {
 
               {/* Remove button - appears when document exists */}
               {hasDocument && (
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginTop: '1rem',
-                    padding: '1rem',
-                    borderTop: '1px solid #e0e5eb',
-                  }}
-                >
+                <div className={styles.documentRemoveSection}>
                   <Button
                     variant="danger"
                     size="sm"
                     icon={<Trash />}
                     onClick={handleRemoveDocument}
+                    className={styles.dangerButton}
                   >
                     {Boolean(form.values.mediaOptions) ? t('CLEAR_PHOTO') : t('REMOVE_DOCUMENT')}
                   </Button>

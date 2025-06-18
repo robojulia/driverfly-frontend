@@ -120,25 +120,13 @@ export function BackgroundInfo() {
         {t('BACKGROUND_INFO')}
       </h1>
 
-      <div
-        style={{
-          maxWidth: '100%',
-          margin: '0 auto 2rem auto',
-          padding: '1rem',
-          backgroundColor: '#f8f9fa',
-          border: '1px solid #e0e5eb',
-          borderRadius: '8px',
-          color: '#667788',
-          fontSize: '0.95rem',
-          lineHeight: '1.5',
-        }}
-      >
-        <p style={{ margin: 0 }}>{t('BACKGROUND_INFO_HELP_TEXT')}</p>
+      <div className={styles.formInfoBox}>
+        <p>{t('BACKGROUND_INFO_HELP_TEXT')}</p>
       </div>
 
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset} className={styles.formStep}>
-        <div style={{ maxWidth: '100%', margin: '0', padding: '0 1rem' }}>
-          <div style={{ marginBottom: '2rem' }}>
+        <div className={styles.formContainerPadded}>
+          <div className={styles.marginBottomLarge}>
             <DateInput
               name="birthdate"
               label={t('birthdate')}
@@ -156,21 +144,12 @@ export function BackgroundInfo() {
             />
           </div>
 
-          <div style={{ marginBottom: '1.5rem' }}>
-            <h3
-              style={{
-                fontWeight: '600',
-                marginBottom: '1rem',
-                color: '#1a2b3c',
-                fontSize: '1.1rem',
-              }}
-            >
-              {t('FULL_ADDRESS_QUES')}
-            </h3>
+          <div className={styles.marginBottomMedium}>
+            <h3 className={styles.formSectionHeading}>{t('FULL_ADDRESS_QUES')}</h3>
           </div>
 
           {/* Address Line 1 - Full width */}
-          <div style={{ marginBottom: '1.5rem' }}>
+          <div className={styles.marginBottomMedium}>
             <Input
               name="address_1"
               label={t('ADDRESS_LINE_1')}
@@ -189,7 +168,7 @@ export function BackgroundInfo() {
           </div>
 
           {/* Address Line 2 - Full width */}
-          <div style={{ marginBottom: '1.5rem' }}>
+          <div className={styles.marginBottomMedium}>
             <Input
               name="address_2"
               label={t('ADDRESS_LINE_2')}
@@ -208,14 +187,7 @@ export function BackgroundInfo() {
           </div>
 
           {/* City and State - Side by side on larger screens */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '1rem',
-              marginBottom: '1rem',
-            }}
-          >
+          <div className={styles.formGridEvenColumns}>
             <Input
               name="city"
               label={t('city')}
@@ -244,12 +216,7 @@ export function BackgroundInfo() {
           </div>
 
           {/* ZIP Code - Constrained width */}
-          <div
-            style={{
-              maxWidth: '300px',
-              marginBottom: '1.5rem',
-            }}
-          >
+          <div className={styles.constrainedWidth}>
             <Input
               name="zip_code"
               label={t('zip_code')}

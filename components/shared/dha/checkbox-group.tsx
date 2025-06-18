@@ -154,7 +154,7 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
       alignItems: 'center',
       gap: isSmallMobile ? '0.3rem' : isMobile ? '0.375rem' : '0.5rem',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      backgroundColor: '#ffffff',
+      backgroundColor: 'var(--light)',
       position: 'relative' as const,
       userSelect: 'none' as const,
       opacity: isDisabled ? 0.6 : 1,
@@ -163,7 +163,7 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
     if (error) {
       return {
         ...baseStyles,
-        borderColor: '#e74c3c',
+        borderColor: 'var(--danger)',
         boxShadow: '0 0 0 3px rgba(231, 76, 60, 0.1)',
       };
     }
@@ -171,16 +171,16 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
     if (isSelected) {
       return {
         ...baseStyles,
-        borderColor: '#0073b1',
-        backgroundColor: '#f0f9ff',
-        boxShadow: '0 0 0 3px rgba(0, 115, 177, 0.1)',
+        borderColor: 'var(--primary)',
+        backgroundColor: 'var(--primary-light)',
+        boxShadow: '0 0 0 3px rgba(95, 203, 196, 0.1)',
         transform: 'translateY(-1px)',
       };
     }
 
     return {
       ...baseStyles,
-      borderColor: '#e0e5eb',
+      borderColor: 'var(--medium-gray)',
       boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
     };
   };
@@ -190,16 +190,16 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
     height: isSmallMobile ? '14px' : isMobile ? '16px' : '18px',
     borderRadius: '3px',
     border: '1.5px solid',
-    borderColor: '#e0e5eb',
-    backgroundColor: '#ffffff',
+    borderColor: 'var(--medium-gray)',
+    backgroundColor: 'var(--light)',
     position: 'relative',
     flexShrink: 0,
   };
 
   const checkboxCheckedStyles: React.CSSProperties = {
     ...checkboxStyles,
-    borderColor: '#0073b1',
-    backgroundColor: '#0073b1',
+    borderColor: 'var(--primary)',
+    backgroundColor: 'var(--primary)',
   };
 
   const checkmarkStyles: React.CSSProperties = {
@@ -207,7 +207,7 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    color: '#ffffff',
+    color: 'var(--text-light)',
     fontSize: isSmallMobile ? '8px' : isMobile ? '9px' : '10px',
     fontWeight: 'bold',
   };
@@ -222,7 +222,7 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
 
   const labelStyles: React.CSSProperties = {
     fontWeight: '600',
-    color: '#1a2b3c',
+    color: 'var(--text-primary)',
     margin: 0,
     lineHeight: '1.3',
     wordBreak: 'break-word',
@@ -230,7 +230,7 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
 
   const descriptionStyles: React.CSSProperties = {
     fontSize: '0.75rem',
-    color: '#667788',
+    color: 'var(--text-secondary)',
     margin: 0,
     lineHeight: '1.2',
     wordBreak: 'break-word',
@@ -242,7 +242,7 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   };
 
   const errorStyles: React.CSSProperties = {
-    color: '#e74c3c',
+    color: 'var(--danger)',
     fontSize: '0.875rem',
     marginTop: '0.25rem',
     display: 'flex',
@@ -251,7 +251,7 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   };
 
   const helperTextStyles: React.CSSProperties = {
-    color: '#667788',
+    color: 'var(--text-secondary)',
     fontSize: '0.875rem',
     marginTop: '0.25rem',
   };
@@ -306,14 +306,14 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
               aria-disabled={isDisabled}
               onMouseEnter={(e) => {
                 if (!isDisabled && !isSelected) {
-                  e.currentTarget.style.borderColor = '#0073b1';
+                  e.currentTarget.style.borderColor = 'var(--primary)';
                   e.currentTarget.style.transform = 'translateY(-1px)';
                   e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
                 }
               }}
               onMouseLeave={(e) => {
                 if (!isDisabled && !isSelected) {
-                  e.currentTarget.style.borderColor = '#e0e5eb';
+                  e.currentTarget.style.borderColor = 'var(--medium-gray)';
                   e.currentTarget.style.transform = 'translateY(0)';
                   e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
                 }

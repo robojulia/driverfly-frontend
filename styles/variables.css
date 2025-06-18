@@ -1,8 +1,11 @@
 :root {
   /* Brand Colors */
   --primary: #5fcbc4;
+  --primary-brand: #5fcbc4;
   --primary-light: #cdf4ff;
   --primary-dark: #1c4353;
+  --primary-button: #2c7a7b;
+  --secondary: #5fcbc4;
 
   /* UI Colors */
   --content-bg: #f7f9fc;
@@ -14,14 +17,26 @@
   /* Text Colors */
   --text-light: #ffffff;
   --text-dark: #333333;
+  --text-primary: #1a2b3c;
+  --text-secondary: #667788;
   --text-muted: #6c757d;
+
+  /* Form Colors */
+  --form-info-bg: #f8f9fa;
+  --form-border: #e0e5eb;
+  --form-hover-bg: #f5f7fa;
+  --light: #ffffff;
+  --light-gray: #f8f9fa;
+  --medium-gray: #e0e5eb;
+  --dark: #1a2b3c;
 
   /* Functional Colors */
   --success: #87f934;
   --warning: #f5bf19;
   --warning-light: #fef2f2;
-  --danger: #f44336;
-  --danger-light: #ffebee;
+  --danger: #e74c3c;
+  --danger-dark: #d32f2f;
+  --info: #0dcaf0;
 
   /* Border & Shadow */
   --border-color: #e0e0e0;
@@ -37,6 +52,7 @@
 
   /* Transitions */
   --transition-speed: 0.2s;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   --bs-danger: #c82333;
 }

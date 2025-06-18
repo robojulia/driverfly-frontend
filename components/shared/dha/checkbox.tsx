@@ -67,8 +67,10 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   const checkboxStyles: React.CSSProperties = {
     ...getSizeStyles(size),
     appearance: 'none',
-    backgroundColor: checked ? '#0073b1' : '#ffffff',
-    border: `2px solid ${error ? '#e74c3c' : checked ? '#0073b1' : '#d1d5db'}`,
+    backgroundColor: checked ? 'var(--primary)' : 'var(--light)',
+    border: `2px solid ${
+      error ? 'var(--danger)' : checked ? 'var(--primary)' : 'var(--medium-gray)'
+    }`,
     borderRadius: '4px',
     cursor: disabled ? 'not-allowed' : 'pointer',
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -85,13 +87,13 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   const labelTextStyles: React.CSSProperties = {
     fontSize: '1rem',
     fontWeight: '500',
-    color: disabled ? '#9ca3af' : '#1a2b3c',
+    color: disabled ? 'var(--text-muted)' : 'var(--text-primary)',
     lineHeight: '1.5',
     margin: 0,
   };
 
   const errorStyles: React.CSSProperties = {
-    color: '#e74c3c',
+    color: 'var(--danger)',
     fontSize: '0.875rem',
     marginTop: '0.25rem',
     display: 'flex',
@@ -100,7 +102,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   };
 
   const helperTextStyles: React.CSSProperties = {
-    color: '#667788',
+    color: 'var(--text-secondary)',
     fontSize: '0.875rem',
     marginTop: '0.25rem',
   };
@@ -110,7 +112,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    color: '#ffffff',
+    color: 'var(--text-light)',
     fontSize: size === 'small' ? '10px' : size === 'large' ? '16px' : '12px',
     fontWeight: 'bold',
     pointerEvents: 'none',

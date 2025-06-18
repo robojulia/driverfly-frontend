@@ -38,8 +38,8 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
   const isSmallMobile = screenWidth <= 480;
 
   const cardStyles: React.CSSProperties = {
-    backgroundColor: '#ffffff',
-    border: isSmallMobile ? '1px solid #e0e5eb' : '2px solid #e0e5eb',
+    backgroundColor: 'var(--light)',
+    border: isSmallMobile ? '1px solid var(--medium-gray)' : '2px solid var(--medium-gray)',
     borderRadius: isSmallMobile ? '8px' : '12px',
     padding: isSmallMobile ? '0.75rem' : isMobile ? '0rem' : '1.5rem',
     marginBottom: isSmallMobile ? '0.75rem' : isMobile ? '1rem' : '1.5rem',
@@ -53,7 +53,7 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
     alignItems: 'center',
     marginBottom: isSmallMobile ? '0.75rem' : isMobile ? '1rem' : '1.5rem',
     paddingBottom: isSmallMobile ? '0.5rem' : isMobile ? '0.75rem' : '1rem',
-    borderBottom: '1px solid #e0e5eb',
+    borderBottom: '1px solid var(--medium-gray)',
     flexWrap: isSmallMobile ? 'wrap' : 'nowrap',
     gap: isSmallMobile ? '0.5rem' : '1rem',
   };
@@ -61,7 +61,7 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
   const titleStyles: React.CSSProperties = {
     fontSize: isSmallMobile ? '1rem' : isMobile ? '1.125rem' : '1.25rem',
     fontWeight: '600',
-    color: '#1a2b3c',
+    color: 'var(--text-primary)',
     margin: 0,
     display: 'flex',
     alignItems: 'center',
@@ -81,7 +81,7 @@ export const EquipmentCard: React.FC<EquipmentCardProps> = ({
   const emptyStateStyles: React.CSSProperties = {
     textAlign: 'center',
     padding: isSmallMobile ? '1rem' : isMobile ? '1.5rem' : '2rem',
-    color: '#667788',
+    color: 'var(--text-secondary)',
     fontSize: isSmallMobile ? '0.8rem' : '0.875rem',
     lineHeight: '1.4',
   };

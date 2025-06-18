@@ -12,16 +12,15 @@ interface PrimaryButtonProps {
 }
 
 const enhancedButtonStyles: React.CSSProperties = {
-  background: 'linear-gradient(135deg, #0073b1 0%, #005582 100%)',
+  background: 'linear-gradient(135deg, var(--primary-brand) 0%, var(--primary-dark) 100%)',
   border: 'none',
   borderRadius: '12px',
   padding: '1rem 1.5rem',
   fontWeight: '700',
   fontSize: '1rem',
   minHeight: '48px',
-  boxShadow: '0 4px 12px rgba(0, 115, 177, 0.2)',
-  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-  color: 'white',
+  boxShadow: '0 4px 12px rgba(95, 203, 196, 0.2)',
+  color: 'var(--text-light)',
   cursor: 'pointer',
   display: 'inline-flex',
   alignItems: 'center',
@@ -34,16 +33,15 @@ const enhancedButtonStyles: React.CSSProperties = {
 };
 
 const secondaryButtonStyles: React.CSSProperties = {
-  background: '#ffffff',
-  color: '#333333',
-  border: '2px solid #e0e5eb',
+  background: 'var(--light)',
+  color: 'var(--text-dark)',
+  border: '2px solid var(--medium-gray)',
   borderRadius: '12px',
   padding: '1rem 1.5rem',
   fontWeight: '600',
   fontSize: '1rem',
   minHeight: '48px',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   cursor: 'pointer',
   display: 'inline-flex',
   alignItems: 'center',
@@ -56,8 +54,8 @@ const secondaryButtonStyles: React.CSSProperties = {
 const disabledButtonStyles: React.CSSProperties = {
   opacity: 0.6,
   cursor: 'not-allowed',
-  background: '#e0e5eb',
-  color: '#667788',
+  background: 'var(--medium-gray)',
+  color: 'var(--text-secondary)',
   transform: 'none',
   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
 };
@@ -76,33 +74,33 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
     ...style,
   };
 
+  const combinedClassName = `${styles.formButton} ${className}`.trim();
+
   const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!disabled) {
-      e.currentTarget.style.background = 'linear-gradient(135deg, #005582 0%, #004466 100%)';
-      e.currentTarget.style.transform = 'translateY(-2px)';
-      e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 115, 177, 0.3)';
+      e.currentTarget.style.background =
+        'linear-gradient(135deg, var(--primary-dark) 0%, var(--sidebar-submenu-bg) 100%)';
+      e.currentTarget.style.boxShadow = '0 6px 20px rgba(95, 203, 196, 0.3)';
     }
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!disabled) {
-      e.currentTarget.style.background = 'linear-gradient(135deg, #0073b1 0%, #005582 100%)';
-      e.currentTarget.style.transform = 'translateY(0)';
-      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 115, 177, 0.2)';
+      e.currentTarget.style.background =
+        'linear-gradient(135deg, var(--primary-brand) 0%, var(--primary-dark) 100%)';
+      e.currentTarget.style.boxShadow = '0 4px 12px rgba(95, 203, 196, 0.2)';
     }
   };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!disabled) {
-      e.currentTarget.style.transform = 'translateY(0)';
-      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 115, 177, 0.3)';
+      e.currentTarget.style.boxShadow = '0 2px 8px rgba(95, 203, 196, 0.3)';
     }
   };
 
   const handleMouseUp = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!disabled) {
-      e.currentTarget.style.transform = 'translateY(-2px)';
-      e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 115, 177, 0.3)';
+      e.currentTarget.style.boxShadow = '0 6px 20px rgba(95, 203, 196, 0.3)';
     }
   };
 
@@ -111,7 +109,7 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={className}
+      className={combinedClassName}
       style={buttonStyle}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -137,10 +135,12 @@ export const SecondaryButton: React.FC<PrimaryButtonProps> = ({
     ...style,
   };
 
+  const combinedClassName = `${styles.secondaryButton} ${className}`.trim();
+
   const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!disabled) {
-      e.currentTarget.style.background = '#f5f7fa';
-      e.currentTarget.style.borderColor = '#667788';
+      e.currentTarget.style.background = 'var(--form-hover-bg)';
+      e.currentTarget.style.borderColor = 'var(--text-secondary)';
       e.currentTarget.style.transform = 'translateY(-2px)';
       e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.12)';
     }
@@ -148,8 +148,8 @@ export const SecondaryButton: React.FC<PrimaryButtonProps> = ({
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!disabled) {
-      e.currentTarget.style.background = '#ffffff';
-      e.currentTarget.style.borderColor = '#e0e5eb';
+      e.currentTarget.style.background = 'var(--light)';
+      e.currentTarget.style.borderColor = 'var(--medium-gray)';
       e.currentTarget.style.transform = 'translateY(0)';
       e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.08)';
     }
@@ -160,7 +160,7 @@ export const SecondaryButton: React.FC<PrimaryButtonProps> = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={className}
+      className={combinedClassName}
       style={buttonStyle}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -199,7 +199,7 @@ export const FormActions: React.FC<FormActionsProps> = ({
     gap: '1rem',
     marginTop: '2rem',
     paddingTop: '2rem',
-    borderTop: '1px solid #e0e5eb',
+    borderTop: '1px solid var(--medium-gray)',
   };
 
   const mobileContainerStyle: React.CSSProperties = {

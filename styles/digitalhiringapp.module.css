@@ -130,7 +130,7 @@
 
 .formInput:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: var(--primary-brand);
   box-shadow: 0 0 0 3px rgba(0, 115, 177, 0.1);
 }
 
@@ -154,15 +154,14 @@
 
 /* Button styles */
 .customButton {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--primary-brand) 0%, var(--primary-dark) 100%);
+  color: var(--text-light);
   padding: 1rem 1.5rem;
   border-radius: 12px;
   border: none;
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -170,7 +169,7 @@
   margin-top: 1.5rem;
   min-width: 150px;
   min-height: 48px;
-  box-shadow: 0 4px 12px rgba(0, 115, 177, 0.2);
+  box-shadow: 0 4px 12px rgba(95, 203, 196, 0.2);
   position: relative;
   overflow: hidden;
 }
@@ -191,14 +190,14 @@
 }
 
 .customButton:hover {
-  background: linear-gradient(135deg, var(--primary-dark) 0%, #004466 100%);
+  background: linear-gradient(135deg, var(--primary-brand) 0%, var(--sidebar-submenu-bg) 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 115, 177, 0.3);
+  box-shadow: 0 6px 20px rgba(95, 203, 196, 0.3);
 }
 
 .customButton:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(0, 115, 177, 0.3);
+  box-shadow: 0 2px 8px rgba(95, 203, 196, 0.3);
 }
 
 .customButton:disabled {
@@ -219,7 +218,6 @@
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -231,7 +229,7 @@
 }
 
 .secondaryButton:hover {
-  background: var(--light-gray);
+  background: var(--form-hover-bg);
   border-color: var(--text-secondary);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
@@ -293,10 +291,10 @@
   top: 0;
   left: 0;
   height: 100%;
-  background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+  background: linear-gradient(90deg, var(--primary-brand) 0%, var(--secondary) 100%);
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 115, 177, 0.3);
+  box-shadow: 0 2px 4px rgba(95, 203, 196, 0.3);
 }
 
 .progressStep {
@@ -340,7 +338,7 @@
   border-radius: 50%;
   height: 70px;
   width: 70px;
-  background-color: var(--primary);
+  background-color: var(--primary-brand);
   color: white;
   border: 4px solid white;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -417,14 +415,18 @@
 }
 
 .nextButton {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+  background: linear-gradient(135deg, var(--primary-brand) 0%, var(--primary-dark) 100%) !important;
   color: white !important;
-  border-color: var(--primary) !important;
+  border-color: var(--primary-brand) !important;
 }
 
 .nextButton:hover,
 .nextButton:focus {
-  background: linear-gradient(135deg, var(--primary-dark) 0%, #004466 100%) !important;
+  background: linear-gradient(
+    135deg,
+    var(--primary-dark) 0%,
+    var(--sidebar-submenu-bg) 100%
+  ) !important;
   border-color: var(--primary-dark) !important;
 }
 
@@ -456,7 +458,7 @@
   padding: 20px;
   background-color: var(--light-gray);
   border-radius: var(--border-radius);
-  border-left: 4px solid var(--primary);
+  border-left: 4px solid var(--primary-brand);
 }
 
 /* Special visual effects */
@@ -666,7 +668,7 @@
 .customButton:focus,
 .secondaryButton:focus,
 .btn:focus {
-  outline: 3px solid rgba(0, 115, 177, 0.3);
+  outline: 3px solid rgba(95, 203, 196, 0.3);
   outline-offset: 2px;
 }
 
@@ -697,22 +699,21 @@
 
 /* Enhanced form button - can be used as className={styles.formButton} */
 .formButton {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
-  color: white !important;
+  background: linear-gradient(135deg, var(--primary-brand) 0%, var(--primary-dark) 100%) !important;
+  color: var(--text-light) !important;
   padding: 1rem 1.5rem !important;
   border-radius: 12px !important;
   border: none !important;
   font-weight: 700 !important;
   font-size: 1rem !important;
   cursor: pointer !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
   min-width: 150px !important;
   min-height: 48px !important;
-  box-shadow: 0 4px 12px rgba(0, 115, 177, 0.2) !important;
+  box-shadow: 0 4px 12px rgba(95, 203, 196, 0.2) !important;
   position: relative !important;
   overflow: hidden !important;
   text-decoration: none !important;
@@ -726,7 +727,6 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
 }
 
 .formButton:hover::before {
@@ -734,30 +734,31 @@
 }
 
 .formButton:hover {
-  background: linear-gradient(135deg, var(--primary-dark) 0%, #004466 100%) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(0, 115, 177, 0.3) !important;
-  color: white !important;
+  background: linear-gradient(
+    135deg,
+    var(--primary-dark) 0%,
+    var(--sidebar-submenu-bg) 100%
+  ) !important;
+  box-shadow: 0 6px 20px rgba(95, 203, 196, 0.3) !important;
+  color: var(--text-light) !important;
 }
 
 .formButton:active {
-  transform: translateY(0) !important;
-  box-shadow: 0 2px 8px rgba(0, 115, 177, 0.3) !important;
+  box-shadow: 0 2px 8px rgba(95, 203, 196, 0.3) !important;
 }
 
 .formButton:disabled {
   opacity: 0.6 !important;
   cursor: not-allowed !important;
-  transform: none !important;
   background: var(--medium-gray) !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
   color: var(--text-secondary) !important;
 }
 
 .formButton:focus {
-  outline: 3px solid rgba(0, 115, 177, 0.3) !important;
+  outline: 3px solid rgba(95, 203, 196, 0.3) !important;
   outline-offset: 2px !important;
-  box-shadow: 0 0 0 3px rgba(0, 115, 177, 0.25), 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 0 0 3px rgba(95, 203, 196, 0.25), 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
 /* Mobile responsive for form button */
@@ -777,4 +778,211 @@
     min-height: 56px !important;
     border-radius: 14px !important;
   }
+}
+
+/* Form info box styling */
+.formInfoBox {
+  max-width: 800px;
+  margin: 0 auto 2rem auto;
+  padding: 1rem;
+  background-color: var(--form-info-bg);
+  border: 1px solid var(--form-border);
+  border-radius: var(--border-radius);
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.formInfoBox p {
+  margin: 0;
+}
+
+.formInfoBoxTitle {
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Form section headings */
+.formSectionHeading {
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+/* Form container with max width */
+.formContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.formContainerPadded {
+  max-width: 100%;
+  margin: 0;
+  padding: 0 1rem;
+}
+
+/* Grid layouts */
+.formGridTwoColumn {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.formGridEvenColumns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Spacing utilities */
+.marginBottomLarge {
+  margin-bottom: 2rem;
+}
+
+.marginBottomMedium {
+  margin-bottom: 1.5rem;
+}
+
+.marginBottomSmall {
+  margin-bottom: 1rem;
+}
+
+/* Constrained width utility */
+.constrainedWidth {
+  max-width: 300px;
+  margin-bottom: 1.5rem;
+}
+
+/* Alert/Info boxes with different variants */
+.alertInfo {
+  border: 2px solid var(--primary);
+  background-color: var(--primary-light);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.alertInfoHeading {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.alertInfoText {
+  margin: 0;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+/* Card styling for form sections */
+.formCard {
+  padding: 1.5rem;
+  background-color: var(--form-info-bg);
+  border: 1px solid var(--form-border);
+  border-radius: var(--border-radius);
+  margin-bottom: 2rem;
+}
+
+.formCardHeader {
+  background-color: var(--light);
+  border-bottom: 1px solid var(--form-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.formCardTitle {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.formCardBody {
+  padding: 1.5rem;
+}
+
+/* Button styling improvements */
+.dangerButton {
+  background-color: var(--danger);
+  color: var(--text-light);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+}
+
+.dangerButton:hover {
+  background-color: var(--danger-dark);
+}
+
+.primaryActionButton {
+  background-color: var(--primary-brand);
+  color: var(--text-light);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.primaryActionButton:hover {
+  background-color: var(--primary-dark);
+}
+
+/* Add Another button styling - consistent across all forms */
+.addAnotherButton {
+  background-color: var(--primary-button);
+  color: var(--text-light);
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.addAnotherButton:hover {
+  background-color: var(--primary-dark);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.addAnotherButton:active {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Document upload section styling */
+.documentUploadSection {
+  position: relative;
+}
+
+.documentRemoveSection {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  padding: 1rem;
+  border-top: 1px solid var(--form-border);
 }

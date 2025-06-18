@@ -23,19 +23,19 @@ export const FormLabel: React.FC<FormLabelProps> = ({
         return {
           fontWeight: '700',
           fontSize: '1rem',
-          color: '#1a2b3c',
+          color: 'var(--text-primary)',
         };
       case 'subtitle':
         return {
           fontWeight: '500',
           fontSize: '0.875rem',
-          color: '#667788',
+          color: 'var(--text-secondary)',
         };
       default: // default
         return {
           fontWeight: '600',
           fontSize: '0.9375rem',
-          color: '#1a2b3c',
+          color: 'var(--text-primary)',
         };
     }
   };
@@ -52,7 +52,7 @@ export const FormLabel: React.FC<FormLabelProps> = ({
   };
 
   const requiredStyles: React.CSSProperties = {
-    color: '#e74c3c',
+    color: 'var(--danger)',
     marginLeft: '0.25rem',
   };
 

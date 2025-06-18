@@ -17,26 +17,26 @@ a {
 
 /* DriverFly Application Form Variables */
 :root {
-  --primary: #0073b1;
-  --primary-dark: #005582;
-  --primary-light: #e1f0f7;
-  --secondary: #27ae60;
-  --secondary-dark: #219653;
-  --accent: #f39c12;
+  --primary: #5fcbc4;
+  --primary-dark: #1c4353;
+  --primary-light: #cdf4ff;
+  --secondary: #5fcbc4;
+  --secondary-dark: #1c4353;
+  --accent: #f5bf19;
   --dark: #1a2b3c;
   --dark-alt: #2c3e50;
   --light: #ffffff;
-  --light-gray: #f5f7fa;
+  --light-gray: #f8f9fa;
   --medium-gray: #e0e5eb;
-  --text-primary: #333333;
+  --text-primary: #1a2b3c;
   --text-secondary: #667788;
-  --success: #27ae60;
+  --success: #87f934;
   --error: #e74c3c;
-  --warning: #f39c12;
-  --info: #3498db;
-  --border-radius: 10px;
-  --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  --transition: all 0.3s ease;
+  --warning: #f5bf19;
+  --info: #0dcaf0;
+  --border-radius: 8px;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Bootstrap Button Overrides for Consumer-Facing Pages */

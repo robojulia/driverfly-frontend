@@ -115,7 +115,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
       alignItems: 'center',
       gap: '0.75rem',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      backgroundColor: '#ffffff',
+      backgroundColor: 'var(--light)',
       position: 'relative' as const,
       userSelect: 'none' as const,
       opacity: isDisabled ? 0.6 : 1,
@@ -124,7 +124,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
     if (error) {
       return {
         ...baseStyles,
-        borderColor: '#e74c3c',
+        borderColor: 'var(--danger)',
         boxShadow: '0 0 0 3px rgba(231, 76, 60, 0.1)',
       };
     }
@@ -132,16 +132,16 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
     if (isSelected) {
       return {
         ...baseStyles,
-        borderColor: '#0073b1',
-        backgroundColor: '#f0f9ff',
-        boxShadow: '0 0 0 3px rgba(0, 115, 177, 0.1)',
+        borderColor: 'var(--primary)',
+        backgroundColor: 'var(--primary-light)',
+        boxShadow: '0 0 0 3px rgba(95, 203, 196, 0.1)',
         transform: 'translateY(-1px)',
       };
     }
 
     return {
       ...baseStyles,
-      borderColor: '#e0e5eb',
+      borderColor: 'var(--medium-gray)',
       boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
     };
   };
@@ -151,15 +151,15 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
     height: '20px',
     borderRadius: '50%',
     border: '2px solid',
-    borderColor: value === undefined ? '#e0e5eb' : '#0073b1',
-    backgroundColor: '#ffffff',
+    borderColor: value === undefined ? 'var(--medium-gray)' : 'var(--primary)',
+    backgroundColor: 'var(--light)',
     position: 'relative',
     flexShrink: 0,
   };
 
   const radioCheckedStyles: React.CSSProperties = {
     ...radioStyles,
-    borderColor: '#0073b1',
+    borderColor: 'var(--primary)',
   };
 
   const radioDotStyles: React.CSSProperties = {
@@ -170,7 +170,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
     width: '8px',
     height: '8px',
     borderRadius: '50%',
-    backgroundColor: '#0073b1',
+    backgroundColor: 'var(--primary)',
   };
 
   const contentStyles: React.CSSProperties = {
@@ -182,13 +182,13 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
 
   const labelStyles: React.CSSProperties = {
     fontWeight: '600',
-    color: '#1a2b3c',
+    color: 'var(--text-primary)',
     margin: 0,
   };
 
   const descriptionStyles: React.CSSProperties = {
     fontSize: '0.875rem',
-    color: '#667788',
+    color: 'var(--text-secondary)',
     margin: 0,
   };
 
@@ -198,7 +198,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
   };
 
   const errorStyles: React.CSSProperties = {
-    color: '#e74c3c',
+    color: 'var(--danger)',
     fontSize: '0.875rem',
     marginTop: '0.25rem',
     display: 'flex',
@@ -207,7 +207,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
   };
 
   const helperTextStyles: React.CSSProperties = {
-    color: '#667788',
+    color: 'var(--text-secondary)',
     fontSize: '0.875rem',
     marginTop: '0.25rem',
   };
@@ -254,14 +254,14 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
               aria-disabled={isDisabled}
               onMouseEnter={(e) => {
                 if (!isDisabled && !isSelected) {
-                  e.currentTarget.style.borderColor = '#0073b1';
+                  e.currentTarget.style.borderColor = 'var(--primary)';
                   e.currentTarget.style.transform = 'translateY(-1px)';
                   e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
                 }
               }}
               onMouseLeave={(e) => {
                 if (!isDisabled && !isSelected) {
-                  e.currentTarget.style.borderColor = '#e0e5eb';
+                  e.currentTarget.style.borderColor = 'var(--medium-gray)';
                   e.currentTarget.style.transform = 'translateY(0)';
                   e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
                 }

@@ -41,14 +41,14 @@ export const JobSelect: React.FC<JobSelectProps> = ({
     if (inputRef.current) {
       const rect = inputRef.current.getBoundingClientRect();
       setDropdownPosition({
-        top: rect.bottom + window.scrollY,
-        left: rect.left + window.scrollX,
+        top: rect.bottom,
+        left: rect.left,
         width: rect.width,
       });
     }
   };
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside and handle scroll/resize
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -62,12 +62,28 @@ export const JobSelect: React.FC<JobSelectProps> = ({
       }
     };
 
+    const handleScroll = () => {
+      if (isOpen) {
+        updateDropdownPosition();
+      }
+    };
+
+    const handleResize = () => {
+      if (isOpen) {
+        updateDropdownPosition();
+      }
+    };
+
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      window.addEventListener('scroll', handleScroll, true);
+      window.addEventListener('resize', handleResize);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener('resize', handleResize);
     };
   }, [isOpen]);
 
@@ -97,13 +113,14 @@ export const JobSelect: React.FC<JobSelectProps> = ({
       width: '100%',
     },
     input: {
+      position: 'relative' as const,
       width: '100%',
-      padding: '0.75rem 1rem',
-      border: '1px solid #e0e5eb',
+      padding: '0.75rem 3rem 0.75rem 1rem',
+      border: '1px solid var(--medium-gray)',
       borderRadius: '8px',
       fontSize: '1rem',
-      backgroundColor: '#ffffff',
-      color: '#1a2b3c',
+      backgroundColor: 'var(--light)',
+      color: 'var(--text-primary)',
       cursor: 'pointer',
       transition: 'all 0.3s ease',
     },
@@ -112,8 +129,8 @@ export const JobSelect: React.FC<JobSelectProps> = ({
       top: dropdownPosition.top,
       left: dropdownPosition.left,
       width: dropdownPosition.width,
-      backgroundColor: '#ffffff',
-      border: '1px solid #e0e5eb',
+      backgroundColor: 'var(--light)',
+      border: '1px solid var(--medium-gray)',
       borderRadius: '8px',
       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
       zIndex: 9999,
@@ -125,45 +142,54 @@ export const JobSelect: React.FC<JobSelectProps> = ({
       width: '100%',
       padding: '0.75rem 1rem',
       border: 'none',
-      borderBottom: '1px solid #e0e5eb',
+      borderBottom: '1px solid var(--medium-gray)',
       fontSize: '0.9rem',
-      color: '#1a2b3c',
+      color: 'var(--text-primary)',
       outline: 'none',
     },
     jobItem: {
       padding: '0.75rem 1rem',
-      borderBottom: '1px solid #f5f7fa',
+      borderBottom: '1px solid var(--form-info-bg)',
       cursor: 'pointer',
       transition: 'background-color 0.2s ease',
     },
     jobTitle: {
       fontWeight: '600' as const,
       marginBottom: '4px',
-      color: '#1a2b3c',
+      color: 'var(--text-primary)',
     },
     jobMeta: {
       fontSize: '0.875rem',
-      color: '#667788',
+      color: 'var(--text-secondary)',
     },
     placeholder: {
-      color: '#a0aec0',
+      color: 'var(--text-muted)',
     },
     selectedJobTitle: {
       fontWeight: 'bold' as const,
-      color: '#1a2b3c',
+      color: 'var(--text-primary)',
     },
     selectedJobLocation: {
-      color: '#667788',
+      color: 'var(--text-secondary)',
       marginLeft: '8px',
     },
     dropdownArrow: {
-      float: 'right' as const,
-      color: '#667788',
+      position: 'absolute' as const,
+      right: '1rem',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      width: '0',
+      height: '0',
+      borderLeft: '5px solid transparent',
+      borderRight: '5px solid transparent',
+      borderTop: '5px solid var(--text-secondary)',
+      transition: 'transform 0.2s ease',
+      pointerEvents: 'none' as const,
     },
     noResults: {
       padding: '1rem',
       textAlign: 'center' as const,
-      color: '#667788',
+      color: 'var(--text-secondary)',
     },
   };
 
@@ -228,7 +254,12 @@ export const JobSelect: React.FC<JobSelectProps> = ({
           ) : (
             <span style={styles.placeholder}>{placeholder || 'Select a position'}</span>
           )}
-          <span style={styles.dropdownArrow}>▼</span>
+          <div
+            style={{
+              ...styles.dropdownArrow,
+              transform: `translateY(-50%) ${isOpen ? 'rotate(180deg)' : 'rotate(0deg)'}`,
+            }}
+          />
         </div>
       </div>
 

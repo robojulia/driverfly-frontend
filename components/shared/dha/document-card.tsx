@@ -21,8 +21,8 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   const { t } = useTranslation();
 
   const cardStyles: React.CSSProperties = {
-    backgroundColor: '#ffffff',
-    border: '2px solid #e0e5eb',
+    backgroundColor: 'var(--light)',
+    border: '2px solid var(--medium-gray)',
     borderRadius: '12px',
     padding: '1.5rem',
     marginBottom: '1.5rem',
@@ -36,7 +36,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
     alignItems: 'center',
     marginBottom: '1.5rem',
     paddingBottom: '1rem',
-    borderBottom: '1px solid #e0e5eb',
+    borderBottom: '1px solid var(--medium-gray)',
   };
 
   const titleContainerStyles: React.CSSProperties = {
@@ -48,7 +48,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   const titleStyles: React.CSSProperties = {
     fontSize: '1.25rem',
     fontWeight: '600',
-    color: '#1a2b3c',
+    color: 'var(--text-primary)',
     margin: 0,
     display: 'flex',
     alignItems: 'center',
@@ -57,7 +57,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
 
   const subtitleStyles: React.CSSProperties = {
     fontSize: '0.875rem',
-    color: '#667788',
+    color: 'var(--text-secondary)',
     margin: 0,
   };
 
