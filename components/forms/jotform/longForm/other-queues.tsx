@@ -35,7 +35,7 @@ const useScreenSize = () => {
 export function OtherQueues() {
   const {
     state: { applicantExtras },
-    method: { updateApplicantExtras, stepNext, stepBack },
+    method: { updateApplicantExtras, setApplicantExtras, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
@@ -61,7 +61,25 @@ export function OtherQueues() {
       try {
         console.log('valuesDTO', values);
         const { CDL_NUMBER } = values;
-        updateApplicantExtras(CDL_NUMBER);
+
+        // Check if there are any valid CDL licenses
+        const hasValidLicenses =
+          CDL_NUMBER?.value &&
+          CDL_NUMBER.value.length > 0 &&
+          CDL_NUMBER.value.some(
+            (license) =>
+              license.license_number?.trim() && license.state?.trim() && license.date?.trim()
+          );
+
+        if (hasValidLicenses) {
+          // Update with valid CDL licenses
+          updateApplicantExtras(CDL_NUMBER);
+        } else {
+          // Remove CDL_NUMBER entry entirely if no valid licenses
+          setApplicantExtras(
+            (prev) => prev?.filter((extra) => extra.type !== ApplicantExtras.CDL_NUMBER) || []
+          );
+        }
       } catch (error) {
         console.error('Error submitting other queues form:', error);
       }
