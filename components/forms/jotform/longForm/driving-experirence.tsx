@@ -56,7 +56,6 @@ export function DrivingExperience() {
   const form = useFormik({
     initialValues: {
       license_number: applicant?.license_number || '',
-      state: applicant?.state || '',
       license_expiry: applicant?.license_expiry || '',
       license_state: applicant?.license_state || '',
     },
@@ -67,10 +66,11 @@ export function DrivingExperience() {
     onSubmit: (values) => {
       try {
         // Save form values to applicant context
+        // Use the state from background info for both state fields (backwards compatibility)
         setApplicant({
           ...applicant,
           license_number: values.license_number,
-          state: values.state,
+          state: applicant?.state, // Keep the state from background info
           license_expiry: values.license_expiry,
           license_state: values.license_state,
         });
@@ -86,7 +86,7 @@ export function DrivingExperience() {
 
   // Check if form is valid
   useEffect(() => {
-    const requiredFields = ['license_number', 'state', 'license_expiry', 'license_state'];
+    const requiredFields = ['license_number', 'license_expiry', 'license_state'];
     const hasAllRequiredFields = requiredFields.every((field) => !!form.values[field]);
     const hasNoErrors = Object.keys(form.errors).length === 0;
     setIsFormValid(hasAllRequiredFields && hasNoErrors && form.dirty);
@@ -127,7 +127,6 @@ export function DrivingExperience() {
       // Set form values
       form.setValues({
         license_number: applicant.license_number || '',
-        state: applicant.state || '',
         license_expiry: applicant.license_expiry || '',
         license_state: applicant.license_state || '',
       });
@@ -170,8 +169,7 @@ export function DrivingExperience() {
         }}
       >
         <p style={{ margin: 0 }}>
-          Please provide your Commercial Driver&apos;s License (CDL) information and current address
-          details.
+          Please provide your Commercial Driver&apos;s License (CDL) information.
         </p>
       </div>
 
@@ -222,30 +220,8 @@ export function DrivingExperience() {
             />
           </div>
 
-          {/* Current State and Expiration Date - Side by side on larger screens */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '1rem',
-              marginBottom: '1.5rem',
-            }}
-          >
-            <Select
-              name="state"
-              label={t('CURRENT_STATE')}
-              placeholder={t('STATE')}
-              options={responsiveStateList}
-              value={form.values.state || ''}
-              onChange={form.handleChange}
-              onBlur={form.handleBlur}
-              required
-              error={
-                form.touched.state && form.errors.state ? String(form.errors.state) : undefined
-              }
-              helperText="Select the state where you currently reside"
-            />
-
+          {/* Expiration Date */}
+          <div style={{ marginBottom: '1.5rem', maxWidth: '400px' }}>
             <Input
               name="license_expiry"
               label={t('expiration_date')}
