@@ -241,29 +241,40 @@ export function PhoneNumber() {
         onCloseClick={onCloseClick}
         footer={
           showOtpField ? (
-            <PrimaryButton
-              onClick={verifyOTP}
-              disabled={isVerificationSuccessful || isLoadingProfile}
-            >
-              {isLoadingProfile ? (
-                <>
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                    style={{ marginRight: '0.5rem' }}
-                  />
-                  {t('LOADING')}
-                </>
-              ) : (
-                t('VERIFY_CODE')
-              )}
-            </PrimaryButton>
-          ) : (
-            <PrimaryButton onClick={requestOTP}>{t('ACCESS_EXISTING_PROFILE')}</PrimaryButton>
-          )
+            <div className="d-flex justify-content-between w-100">
+              <SecondaryButton
+                onClick={() => {
+                  seShowtOtpField(false);
+                  setOtp('');
+                  setOtpException(false);
+                  setOtpApplicant(null);
+                }}
+                disabled={isVerificationSuccessful || isLoadingProfile}
+              >
+                {t('BACK')}
+              </SecondaryButton>
+              <PrimaryButton
+                onClick={verifyOTP}
+                disabled={isVerificationSuccessful || isLoadingProfile}
+              >
+                {isLoadingProfile ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      style={{ marginRight: '0.5rem' }}
+                    />
+                    {t('LOADING')}
+                  </>
+                ) : (
+                  t('VERIFY_CODE')
+                )}
+              </PrimaryButton>
+            </div>
+          ) : null
         }
       >
         <div>

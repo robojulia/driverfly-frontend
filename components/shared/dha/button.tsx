@@ -47,37 +47,37 @@ export const Button: React.FC<ButtonProps> = ({
       case 'secondary':
         return {
           ...baseStyles,
-          backgroundColor: '#6c757d',
-          borderColor: '#6c757d',
-          color: '#ffffff',
+          backgroundColor: 'var(--text-secondary)',
+          borderColor: 'var(--text-secondary)',
+          color: 'var(--text-light)',
         };
       case 'outline':
         return {
           ...baseStyles,
           backgroundColor: 'transparent',
-          borderColor: '#0073b1',
-          color: '#0073b1',
+          borderColor: 'var(--primary-button)',
+          color: 'var(--primary-button)',
         };
       case 'danger':
         return {
           ...baseStyles,
-          backgroundColor: '#e74c3c',
-          borderColor: '#e74c3c',
-          color: '#ffffff',
+          backgroundColor: 'var(--danger)',
+          borderColor: 'var(--danger)',
+          color: 'var(--text-light)',
         };
       case 'success':
         return {
           ...baseStyles,
-          backgroundColor: '#28a745',
-          borderColor: '#28a745',
-          color: '#ffffff',
+          backgroundColor: 'var(--success)',
+          borderColor: 'var(--success)',
+          color: 'var(--text-dark)',
         };
       default: // primary
         return {
           ...baseStyles,
-          backgroundColor: '#0073b1',
-          borderColor: '#0073b1',
-          color: '#ffffff',
+          backgroundColor: 'var(--primary-button)',
+          borderColor: 'var(--primary-button)',
+          color: 'var(--text-light)',
         };
     }
   };
@@ -111,14 +111,43 @@ export const Button: React.FC<ButtonProps> = ({
     width: fullWidth ? '100%' : 'auto',
   };
 
-  const hoverStyles: React.CSSProperties = {
-    transform: disabled || loading ? 'none' : 'translateY(-1px)',
-    boxShadow: disabled || loading ? 'none' : '0 4px 12px rgba(0, 115, 177, 0.2)',
+  const getHoverStyles = (variant: string): React.CSSProperties => {
+    if (disabled || loading) return {};
+
+    switch (variant) {
+      case 'secondary':
+        return {
+          transform: 'translateY(-1px)',
+          boxShadow: '0 4px 12px rgba(102, 117, 125, 0.2)',
+        };
+      case 'outline':
+        return {
+          backgroundColor: 'var(--primary-button)',
+          color: 'var(--text-light)',
+          transform: 'translateY(-1px)',
+          boxShadow: '0 4px 12px rgba(95, 203, 196, 0.2)',
+        };
+      case 'danger':
+        return {
+          transform: 'translateY(-1px)',
+          boxShadow: '0 4px 12px rgba(231, 76, 60, 0.2)',
+        };
+      case 'success':
+        return {
+          transform: 'translateY(-1px)',
+          boxShadow: '0 4px 12px rgba(135, 249, 52, 0.2)',
+        };
+      default: // primary
+        return {
+          transform: 'translateY(-1px)',
+          boxShadow: '0 4px 12px rgba(95, 203, 196, 0.2)',
+        };
+    }
   };
 
   const activeStyles: React.CSSProperties = {
     transform: disabled || loading ? 'none' : 'translateY(0)',
-    boxShadow: disabled || loading ? 'none' : '0 2px 4px rgba(0, 115, 177, 0.2)',
+    boxShadow: disabled || loading ? 'none' : '0 2px 4px rgba(95, 203, 196, 0.2)',
   };
 
   const loadingSpinnerStyles: React.CSSProperties = {
@@ -148,13 +177,17 @@ export const Button: React.FC<ButtonProps> = ({
         className={className}
         onMouseEnter={(e) => {
           if (!disabled && !loading) {
-            Object.assign(e.currentTarget.style, hoverStyles);
+            Object.assign(e.currentTarget.style, getHoverStyles(variant));
           }
         }}
         onMouseLeave={(e) => {
           if (!disabled && !loading) {
             e.currentTarget.style.transform = 'translateY(0)';
             e.currentTarget.style.boxShadow = 'none';
+            if (variant === 'outline') {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = 'var(--primary-button)';
+            }
           }
         }}
         onMouseDown={(e) => {
@@ -164,8 +197,7 @@ export const Button: React.FC<ButtonProps> = ({
         }}
         onMouseUp={(e) => {
           if (!disabled && !loading) {
-            e.currentTarget.style.transform = 'translateY(-1px)';
-            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 115, 177, 0.2)';
+            Object.assign(e.currentTarget.style, getHoverStyles(variant));
           }
         }}
       >

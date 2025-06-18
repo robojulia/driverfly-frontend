@@ -124,17 +124,21 @@ export const DateInput: React.FC<DateInputProps> = ({
       case 'filled':
         return {
           ...baseStyles,
-          backgroundColor: '#f8f9fa',
+          backgroundColor: 'var(--form-info-bg)',
           borderColor: 'transparent',
-          color: '#1a2b3c',
+          color: 'var(--text-primary)',
         };
       case 'outlined':
       default:
         return {
           ...baseStyles,
-          backgroundColor: '#ffffff',
-          borderColor: error ? '#e74c3c' : isFocused ? '#0073b1' : '#e0e5eb',
-          color: '#1a2b3c',
+          backgroundColor: 'var(--light)',
+          borderColor: error
+            ? 'var(--danger)'
+            : isFocused
+            ? 'var(--primary)'
+            : 'var(--medium-gray)',
+          color: 'var(--text-primary)',
         };
     }
   };
@@ -152,7 +156,7 @@ export const DateInput: React.FC<DateInputProps> = ({
   };
 
   const focusStyles = isFocused
-    ? '0 0 0 3px rgba(0, 115, 177, 0.1)'
+    ? '0 0 0 3px rgba(95, 203, 196, 0.1)'
     : '0 2px 4px rgba(0, 0, 0, 0.05)';
 
   const inputStyles: React.CSSProperties = {
@@ -169,14 +173,14 @@ export const DateInput: React.FC<DateInputProps> = ({
     top: '50%',
     transform: 'translateY(-50%)',
     [iconPosition === 'left' ? 'left' : 'right']: '0.75rem',
-    color: error ? '#e74c3c' : isFocused ? '#0073b1' : '#667788',
+    color: error ? 'var(--danger)' : isFocused ? 'var(--primary)' : 'var(--text-secondary)',
     fontSize: '1.25rem',
     pointerEvents: 'none',
     zIndex: 1,
   };
 
   const errorStyles: React.CSSProperties = {
-    color: '#e74c3c',
+    color: 'var(--danger)',
     fontSize: '0.875rem',
     marginTop: '0.25rem',
     display: 'flex',
@@ -185,7 +189,7 @@ export const DateInput: React.FC<DateInputProps> = ({
   };
 
   const helperTextStyles: React.CSSProperties = {
-    color: '#667788',
+    color: 'var(--text-secondary)',
     fontSize: '0.875rem',
     marginTop: '0.25rem',
   };

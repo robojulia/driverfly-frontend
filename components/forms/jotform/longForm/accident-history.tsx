@@ -371,20 +371,8 @@ export function AccidentHistory() {
         {t('ACCIDENT_HISTORY')}
       </h1>
 
-      <div
-        style={{
-          maxWidth: '800px',
-          margin: '0 auto 2rem auto',
-          padding: '1rem',
-          backgroundColor: '#f8f9fa',
-          border: '1px solid #e0e5eb',
-          borderRadius: '8px',
-          color: '#667788',
-          fontSize: '0.95rem',
-          lineHeight: '1.5',
-        }}
-      >
-        <p style={{ margin: 0 }}>
+      <div className={styles.formInfoBox}>
+        <p>
           We need to know about any accidents you have been involved in during the last 5 years.
           This information helps us assess your driving record and ensure compliance with safety
           regulations.
@@ -396,7 +384,7 @@ export function AccidentHistory() {
         onReset={form.handleReset}
         className={`${styles.align__text_left} ${styles.formStep}`}
       >
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <div className={styles.formContainer}>
           {/* Primary Question: Have you had any accidents? */}
           <div className="my-4">
             <RadioGroup
@@ -421,16 +409,8 @@ export function AccidentHistory() {
           {/* Accident Details Section */}
           {showAccidentDetails && (
             <div className="my-4">
-              <div
-                style={{
-                  padding: '1.5rem',
-                  backgroundColor: '#f8f9fa',
-                  border: '1px solid #dee2e6',
-                  borderRadius: '8px',
-                  marginBottom: '2rem',
-                }}
-              >
-                <h5 style={{ marginBottom: '1rem', color: '#495057' }}>Accident Information</h5>
+              <div className={styles.formCard}>
+                <h5 className={styles.formCardTitle}>Accident Information</h5>
 
                 {/* General Description */}
                 <div className="mb-4">
@@ -447,11 +427,11 @@ export function AccidentHistory() {
                 </div>
 
                 {/* Specific Accident Details */}
-                <div className="mb-3">
-                  <h6 style={{ color: '#495057', marginBottom: '1rem' }}>
-                    Specific Accident Details
-                  </h6>
-                  <p style={{ fontSize: '0.9rem', color: '#6c757d', marginBottom: '1rem' }}>
+                <div className="mb-5">
+                  <h6 className={styles.formSectionHeading}>Specific Accident Details</h6>
+                  <p
+                    style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1rem' }}
+                  >
                     Please add detailed information for each accident. You currently have{' '}
                     <strong>{form.values.accident_history?.length || 0}</strong> accident(s)
                     recorded.
@@ -464,26 +444,18 @@ export function AccidentHistory() {
                     {form.values.accident_history.map((accident, i) => (
                       <Card
                         key={i}
-                        className="mb-3"
-                        style={{ border: '1px solidrgb(134, 142, 150)' }}
+                        className="mb-3 mt-3"
+                        style={{ border: '1px solid var(--medium-gray)' }}
                       >
-                        <Card.Header
-                          style={{
-                            backgroundColor: '#ffffff',
-                            borderBottom: '1px solid #dee2e6',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <h6 style={{ margin: 0, color: '#495057' }}>Accident #{i + 1}</h6>
+                        <Card.Header className={styles.formCardHeader}>
+                          <h6 className={styles.formCardTitle}>Accident #{i + 1}</h6>
                           <button
                             type="button"
                             onClick={() => handleRemoveAccident(i)}
                             style={{
                               background: 'none',
                               border: 'none',
-                              color: '#dc3545',
+                              color: 'var(--danger)',
                               cursor: 'pointer',
                               padding: '0.25rem',
                             }}
@@ -492,7 +464,7 @@ export function AccidentHistory() {
                             <TrashFill size={16} />
                           </button>
                         </Card.Header>
-                        <Card.Body style={{ padding: '1.5rem' }}>
+                        <Card.Body className={styles.formCardBody}>
                           <Row className="g-3">
                             <div className="col-md-6">
                               <Input
@@ -665,25 +637,7 @@ export function AccidentHistory() {
                   <button
                     type="button"
                     onClick={handleAddAccident}
-                    style={{
-                      backgroundColor: '#007bff',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      padding: '0.75rem 1.5rem',
-                      fontSize: '0.95rem',
-                      cursor: 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      transition: 'background-color 0.2s',
-                    }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.backgroundColor = '#0056b3';
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.backgroundColor = '#007bff';
-                    }}
+                    className={styles.addAnotherButton}
                   >
                     <PlusCircle size={16} />
                     Add Another Accident

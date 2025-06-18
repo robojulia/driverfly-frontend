@@ -34,8 +34,25 @@ export function CdlExperience() {
         years_cdl_experience,
         is_owner_operator,
       });
-      updateApplicantExtras(BUSINESS_NAME);
-      updateApplicantExtras(DOT_NUMBER);
+
+      // Handle BUSINESS_NAME - only update if owner-operator and has value, otherwise remove
+      if (is_owner_operator && BUSINESS_NAME?.value?.trim()) {
+        updateApplicantExtras(BUSINESS_NAME);
+      } else {
+        setApplicantExtras(
+          (prev) => prev?.filter((extra) => extra.type !== ApplicantExtras.BUSINESS_NAME) || []
+        );
+      }
+
+      // Handle DOT_NUMBER - only update if owner-operator and has value, otherwise remove
+      if (is_owner_operator && DOT_NUMBER?.value?.trim()) {
+        updateApplicantExtras(DOT_NUMBER);
+      } else {
+        setApplicantExtras(
+          (prev) => prev?.filter((extra) => extra.type !== ApplicantExtras.DOT_NUMBER) || []
+        );
+      }
+
       stepNext();
     },
     onReset: (values) => {

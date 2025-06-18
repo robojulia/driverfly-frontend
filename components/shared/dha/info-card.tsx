@@ -17,23 +17,23 @@ export const InfoCard: React.FC<InfoCardProps> = ({
     switch (variant) {
       case 'success':
         return {
-          borderColor: '#27ae60',
-          iconColor: '#27ae60',
+          borderColor: 'var(--success)',
+          iconColor: 'var(--success)',
         };
       case 'warning':
         return {
-          borderColor: '#f39c12',
-          iconColor: '#f39c12',
+          borderColor: 'var(--warning)',
+          iconColor: 'var(--warning)',
         };
       case 'error':
         return {
-          borderColor: '#e74c3c',
-          iconColor: '#e74c3c',
+          borderColor: 'var(--danger)',
+          iconColor: 'var(--danger)',
         };
       default: // info
         return {
-          borderColor: '#0073b1',
-          iconColor: '#0073b1',
+          borderColor: 'var(--primary)',
+          iconColor: 'var(--primary)',
         };
     }
   };
@@ -44,8 +44,8 @@ export const InfoCard: React.FC<InfoCardProps> = ({
     container: {
       marginTop: '1.5rem',
       padding: '1.25rem',
-      backgroundColor: '#f8f9fa',
-      border: '1px solid #e9ecef',
+      backgroundColor: 'var(--form-info-bg)',
+      border: '1px solid var(--medium-gray)',
       borderRadius: '8px',
       borderLeft: `4px solid ${colors.borderColor}`,
     },
@@ -67,11 +67,11 @@ export const InfoCard: React.FC<InfoCardProps> = ({
       marginBottom: '0.5rem',
       fontSize: '1rem',
       fontWeight: '600' as const,
-      color: '#1a2b3c',
+      color: 'var(--text-primary)',
     },
     message: {
       margin: 0,
-      color: '#667788',
+      color: 'var(--text-secondary)',
       lineHeight: '1.5',
       fontSize: '0.9375rem',
     },

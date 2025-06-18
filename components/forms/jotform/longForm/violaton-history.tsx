@@ -501,25 +501,7 @@ export function ViolationHistory() {
                   <button
                     type="button"
                     onClick={handleAddViolation}
-                    style={{
-                      backgroundColor: '#007bff',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      padding: '0.75rem 1.5rem',
-                      fontSize: '0.95rem',
-                      cursor: 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      transition: 'background-color 0.2s',
-                    }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.backgroundColor = '#0056b3';
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.backgroundColor = '#007bff';
-                    }}
+                    className={styles.addAnotherButton}
                   >
                     <PlusCircle size={16} />
                     Add Another Violation

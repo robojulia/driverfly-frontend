@@ -4,6 +4,7 @@ import { SignatureComponent } from '../../../signature';
 import { ApplicantExtrasEntity } from '../../../../../models/applicant';
 import { ApplicantExtras } from '../../../../../enums/applicants/applicant-extras.enum';
 import { CompanyPreferenceEnhancementLabel } from '../../../../../enums/company/company-preference-enhancement-label.enum';
+import styles from '../../../../../styles/digitalhiringapp.module.css';
 
 interface DocumentSignatureProps {
   document: any;
@@ -319,21 +320,12 @@ export const DocumentSignature = memo(function DocumentSignature({
 
             {/* Consent Statement */}
             <div className="mb-4">
-              <div
-                className="alert alert-info"
-                style={{
-                  border: '2px solid #0dcaf0',
-                  backgroundColor: '#e7f6fd',
-                  borderRadius: '8px',
-                }}
-              >
-                <h6 className="alert-heading mb-2">
+              <div className={styles.alertInfo}>
+                <h6 className={styles.alertInfoHeading}>
                   <InfoCircle className="me-2" size={16} />
                   By signing this document, you confirm:
                 </h6>
-                <p className="mb-0" style={{ fontStyle: 'italic', lineHeight: '1.5' }}>
-                  &ldquo;{document.consentStatement}&rdquo;
-                </p>
+                <p className={styles.alertInfoText}>&ldquo;{document.consentStatement}&rdquo;</p>
               </div>
             </div>
           </div>
@@ -479,21 +471,12 @@ export const DocumentSignature = memo(function DocumentSignature({
 
       {/* Consent Statement */}
       <div className="mb-4">
-        <div
-          className="alert alert-info"
-          style={{
-            border: '2px solid #0dcaf0',
-            backgroundColor: '#e7f6fd',
-            borderRadius: '8px',
-          }}
-        >
-          <h6 className="alert-heading mb-2">
+        <div className={styles.alertInfo}>
+          <h6 className={styles.alertInfoHeading}>
             <InfoCircle className="me-2" size={16} />
             By signing this document, you confirm:
           </h6>
-          <p className="mb-0" style={{ fontStyle: 'italic', lineHeight: '1.5' }}>
-            &ldquo;{document.consentStatement}&rdquo;
-          </p>
+          <p className={styles.alertInfoText}>&ldquo;{document.consentStatement}&rdquo;</p>
         </div>
       </div>
 
@@ -506,11 +489,13 @@ export const DocumentSignature = memo(function DocumentSignature({
         <div
           className="signature-container"
           style={{
-            border: '2px solid #dee2e6',
+            border: '2px solid var(--medium-gray)',
             borderRadius: '8px',
             padding: '1rem',
-            backgroundColor: '#fff',
-            borderColor: form.values[document.signatureField]?.value ? '#28a745' : '#dee2e6',
+            backgroundColor: 'var(--light)',
+            borderColor: form.values[document.signatureField]?.value
+              ? 'var(--success)'
+              : 'var(--medium-gray)',
             minHeight: '200px',
           }}
         >

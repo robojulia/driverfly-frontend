@@ -76,9 +76,9 @@ export const Select: React.FC<SelectProps> = ({
     padding: '0.75rem 1rem',
     fontSize: '1rem',
     lineHeight: '1.5',
-    color: '#1a2b3c',
-    backgroundColor: '#ffffff',
-    border: `2px solid ${error ? '#e74c3c' : '#e0e5eb'}`,
+    color: 'var(--text-primary)',
+    backgroundColor: 'var(--light)',
+    border: `2px solid ${error ? 'var(--danger)' : 'var(--medium-gray)'}`,
     borderRadius: '8px',
     outline: 'none',
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -91,12 +91,12 @@ export const Select: React.FC<SelectProps> = ({
   };
 
   const focusStyles: React.CSSProperties = {
-    borderColor: '#0073b1',
-    boxShadow: '0 0 0 3px rgba(0, 115, 177, 0.1)',
+    borderColor: 'var(--primary)',
+    boxShadow: '0 0 0 3px rgba(95, 203, 196, 0.1)',
   };
 
   const errorStyles: React.CSSProperties = {
-    color: '#e74c3c',
+    color: 'var(--danger)',
     fontSize: '0.875rem',
     marginTop: '0.25rem',
     display: 'flex',
@@ -105,7 +105,7 @@ export const Select: React.FC<SelectProps> = ({
   };
 
   const helperTextStyles: React.CSSProperties = {
-    color: '#667788',
+    color: 'var(--text-secondary)',
     fontSize: '0.875rem',
     marginTop: '0.25rem',
   };
@@ -130,7 +130,7 @@ export const Select: React.FC<SelectProps> = ({
           Object.assign(e.target.style, focusStyles);
         }}
         onBlur={(e) => {
-          e.target.style.borderColor = error ? '#e74c3c' : '#e0e5eb';
+          e.target.style.borderColor = error ? 'var(--danger)' : 'var(--medium-gray)';
           e.target.style.boxShadow = 'none';
           if (onBlur) onBlur(e);
         }}

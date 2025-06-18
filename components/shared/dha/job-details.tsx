@@ -28,15 +28,15 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job }) => {
   const styles = {
     card: {
       marginTop: '1.5rem',
-      border: '1px solid #e0e5eb',
+      border: '1px solid var(--medium-gray)',
       borderRadius: '12px',
       overflow: 'hidden',
       boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
     },
     header: {
-      background: 'linear-gradient(135deg, #f5f7fa 0%, #e1f0f7 100%)',
+      background: 'linear-gradient(135deg, var(--form-info-bg) 0%, var(--primary-light) 100%)',
       padding: '1.5rem',
-      borderBottom: '1px solid #e0e5eb',
+      borderBottom: '1px solid var(--medium-gray)',
     },
     body: {
       padding: '1.5rem',
@@ -44,14 +44,14 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job }) => {
     title: {
       margin: 0,
       marginBottom: '0.5rem',
-      color: '#1a2b3c',
+      color: 'var(--text-primary)',
     },
     subtitle: {
-      color: '#667788',
+      color: 'var(--text-secondary)',
       fontSize: '1rem',
     },
     sectionTitle: {
-      color: '#1a2b3c',
+      color: 'var(--text-primary)',
       display: 'block' as const,
       marginBottom: '0.5rem',
     },
@@ -59,11 +59,11 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job }) => {
       marginBottom: '0.25rem',
     },
     detailLabel: {
-      color: '#667788',
+      color: 'var(--text-secondary)',
     },
     badge: {
-      backgroundColor: '#0073b1',
-      color: 'white',
+      backgroundColor: 'var(--primary)',
+      color: 'var(--text-light)',
       padding: '0.25rem 0.75rem',
       borderRadius: '20px',
       fontSize: '0.75rem',
@@ -74,22 +74,22 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job }) => {
     },
     salaryRange: {
       fontWeight: '600' as const,
-      color: '#27ae60',
+      color: 'var(--success)',
     },
     requirementsList: {
       margin: 0,
       paddingLeft: '1.25rem',
-      color: '#667788',
+      color: 'var(--text-secondary)',
     },
     requirementItem: {
       marginBottom: '0.25rem',
     },
     moreRequirements: {
-      color: '#0073b1',
+      color: 'var(--primary)',
       fontStyle: 'italic' as const,
     },
     description: {
-      color: '#667788',
+      color: 'var(--text-secondary)',
       lineHeight: '1.6',
       margin: 0,
     },
@@ -116,7 +116,7 @@ export const JobDetails: React.FC<JobDetailsProps> = ({ job }) => {
               {job.employment_type && (
                 <div style={styles.detailItem}>
                   <span style={styles.detailLabel}>{t('EMPLOYMENT_TYPE')}: </span>
-                  <span style={styles.badge}>{job.employment_type}</span>
+                  <span style={styles.badge}>{t(job.employment_type)}</span>
                 </div>
               )}
               {job.experience_level && (

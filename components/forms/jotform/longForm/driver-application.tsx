@@ -96,20 +96,8 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
         {t('DRIVER_APPLICATION')}
       </h1>
 
-      <div
-        style={{
-          maxWidth: '800px',
-          margin: '0 auto 2rem auto',
-          padding: '1rem',
-          backgroundColor: '#f8f9fa',
-          border: '1px solid #e0e5eb',
-          borderRadius: '8px',
-          color: '#667788',
-          fontSize: '0.95rem',
-          lineHeight: '1.5',
-        }}
-      >
-        <p style={{ margin: 0 }}>
+      <div className={styles.formInfoBox}>
+        <p>
           {t(
             '{COMPANY_NAME}_MVR_AND_DMV_AUTHORIZATION',
             { COMPANY_NAME: company?.name ?? applicant?.company?.name },
@@ -119,15 +107,8 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
       </div>
 
       <Form onSubmit={form.handleSubmit} className={styles.formStep}>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: '1rem',
-              marginBottom: '1.5rem',
-            }}
-          >
+        <div className={styles.formContainer}>
+          <div className={styles.formGridTwoColumn}>
             <Input
               name="first_name"
               label={t('FIRST_NAME')}
@@ -163,7 +144,7 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
             />
           </div>
 
-          <div style={{ marginBottom: '2rem' }}>
+          <div className={styles.marginBottomLarge}>
             <DateInput
               name="APPLY_DATE.value"
               label={t('DATE')}
@@ -180,10 +161,8 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
             />
           </div>
 
-          <div style={{ marginBottom: '2rem' }}>
-            <h6 style={{ fontWeight: '600', marginBottom: '1rem', color: '#1a2b3c' }}>
-              {t('SIGNATURE')}
-            </h6>
+          <div className={styles.marginBottomLarge}>
+            <h6 className={styles.formSectionHeading}>{t('SIGNATURE')}</h6>
             <SignatureComponent
               firstName={form.values.first_name}
               lastName={form.values.last_name}
