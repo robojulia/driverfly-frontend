@@ -132,8 +132,8 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
     if (isSelected) {
       return {
         ...baseStyles,
-        borderColor: 'var(--primary)',
-        backgroundColor: 'var(--primary-light)',
+        borderColor: 'var(--primary-button)',
+        backgroundColor: 'var(--primary-button-light)',
         boxShadow: '0 0 0 3px rgba(95, 203, 196, 0.1)',
         transform: 'translateY(-1px)',
       };
@@ -151,7 +151,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
     height: '20px',
     borderRadius: '50%',
     border: '2px solid',
-    borderColor: value === undefined ? 'var(--medium-gray)' : 'var(--primary)',
+    borderColor: value === undefined ? 'var(--medium-gray)' : 'var(--primary-button)',
     backgroundColor: 'var(--light)',
     position: 'relative',
     flexShrink: 0,
@@ -159,7 +159,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
 
   const radioCheckedStyles: React.CSSProperties = {
     ...radioStyles,
-    borderColor: 'var(--primary)',
+    borderColor: 'var(--primary-button)',
   };
 
   const radioDotStyles: React.CSSProperties = {
@@ -170,7 +170,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
     width: '8px',
     height: '8px',
     borderRadius: '50%',
-    backgroundColor: 'var(--primary)',
+    backgroundColor: 'var(--primary-button)',
   };
 
   const contentStyles: React.CSSProperties = {
@@ -254,7 +254,7 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
               aria-disabled={isDisabled}
               onMouseEnter={(e) => {
                 if (!isDisabled && !isSelected) {
-                  e.currentTarget.style.borderColor = 'var(--primary)';
+                  e.currentTarget.style.borderColor = 'var(--primary-button)';
                   e.currentTarget.style.transform = 'translateY(-1px)';
                   e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
                 }
