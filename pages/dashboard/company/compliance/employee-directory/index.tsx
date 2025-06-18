@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { Button, Col, FormGroup, Row } from 'react-bootstrap';
-import { EyeFill, PenFill, TrashFill } from 'react-bootstrap-icons';
+import { EyeFill, PenFill, TrashFill, PersonFill, PersonX } from 'react-bootstrap-icons';
 import 'react-tabs/style/react-tabs.css';
 import { toast } from 'react-toastify';
 import AdditionalFiles from '../../../../../components/dashboard/employee-directory/additional-files';
@@ -40,6 +40,7 @@ import { Pagination, PagingMeta } from '../../../../../types/pagination.type';
 import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
 import { useEffectAsync } from '../../../../../utils/react';
 import EmployeeApi from '../../../../api/employee';
+import DataViewToggle from '../../../../../components/shared/DataViewToggle';
 
 enum ViewModeType {
   EMPLOYEE = 'EMPLOYEE',
@@ -367,28 +368,32 @@ export default function EmployeeDirectory() {
               </p>
             )}
 
-            <FormGroup style={{ float: 'right', display: 'flex', alignItems: 'center' }}>
-              <span className="p-4">
-                {t('VIEW_BY_{name}', { name: 'PAST_EMPLOYEE' }, { translateProps: true })}
-              </span>
-              <FormControlLabel
-                control={
-                  <Switch
-                    value={
-                      viewMode == ViewModeType.EMPLOYEE
-                        ? ViewModeType.EMPLOYEE
-                        : ViewModeType.PAST_EMPLOYEE
-                    }
-                    checked={viewMode == ViewModeType.EMPLOYEE}
-                    onChange={onViewModeChange}
-                  />
+            <div style={{ float: 'right', display: 'flex', alignItems: 'center' }}>
+              <DataViewToggle
+                primaryLabel="ACTIVE_EMPLOYEES"
+                secondaryLabel="PAST_EMPLOYEES"
+                activeView={viewMode}
+                onViewChange={async (newView) => {
+                  resetEmployees();
+                  resetPagingMeta();
+                  router.query.viewMode = newView;
+                  await router.push(router);
+                }}
+                primaryValue={ViewModeType.EMPLOYEE}
+                secondaryValue={ViewModeType.PAST_EMPLOYEE}
+                primaryIcon={<PersonFill />}
+                secondaryIcon={<PersonX />}
+                showCounts={true}
+                primaryCount={
+                  viewMode === ViewModeType.EMPLOYEE ? pagingMeta?.totalItems || 0 : undefined
                 }
-                label=""
+                secondaryCount={
+                  viewMode === ViewModeType.PAST_EMPLOYEE ? pagingMeta?.totalItems || 0 : undefined
+                }
+                variant="pills"
+                size="md"
               />
-              <span className="">
-                {t('VIEW_BY_{name}', { name: 'EMPLOYEE' }, { translateProps: true })}
-              </span>
-            </FormGroup>
+            </div>
           </Col>
         </Row>
       }

@@ -2253,6 +2253,8 @@
   "VIEW_APPLICANTS": "View Applicants",
   "EMPLOYEE_BIRTHDAYS": "Employee Birthdays this week",
   "ACTIVE_JOB_POSTS": "Active Job Posts",
+  "ACTIVE_JOBS": "Active Jobs",
+  "EXPIRED_JOBS": "Expired Jobs",
   "CONVERSION_RATE": "Conversion rate (lead to hire)",
   "SourceBreakdownChartLabel": {
     "DRIVERFLY": "Driverfly",

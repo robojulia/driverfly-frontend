@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { NextRouter, useRouter } from 'next/router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Accordion, Button, ButtonGroup, Col, Row } from 'react-bootstrap';
-import { EyeFill, PencilFill } from 'react-bootstrap-icons';
+import { EyeFill, PencilFill, PersonFill, BriefcaseFill } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
 import ShowEnumFromString from '../../../../components/enum-filters/show-enum-from-string';
@@ -44,6 +44,7 @@ import CustomPagination from '../../../../components/pagination/custom-paginatio
 import { Pagination, PagingMeta } from '../../../../types/pagination.type';
 import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
 import JobApi from '../../../api/job';
+import DataViewToggle from '../../../../components/shared/DataViewToggle';
 
 const ViewMode = {
   job: 'job',
@@ -139,9 +140,6 @@ export default function Applicants() {
     setApplicants([]);
 
     await router.push(router);
-    if (value === ViewMode.job) {
-      toast.info(t('TOGGLE_ON_APPLICANTS'));
-    }
   };
 
   const onChangeStatus = async (
@@ -266,24 +264,31 @@ export default function Applicants() {
           <div
             style={{
               display: 'flex',
-              alignItems: 'end',
+              alignItems: 'center',
               justifyContent: 'end',
             }}
           >
-            <FormGroup style={{ float: 'right' }}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    value={viewMode == ViewMode.applicant ? ViewMode.job : ViewMode.applicant}
-                    checked={viewMode == ViewMode.job}
-                    onChange={onViewModeChange}
-                  />
-                }
-                label={t('VIEW_BY_{name}', {
-                  name: t(viewMode == ViewMode.applicant ? 'JOB' : 'JOB'),
-                })}
-              />
-            </FormGroup>
+            <DataViewToggle
+              primaryLabel="APPLICANTS"
+              secondaryLabel="JOBS"
+              activeView={typeof viewMode === 'string' ? viewMode : ViewMode.applicant}
+              onViewChange={async (newView) => {
+                router.query.viewMode = newView;
+                setApplicants([]);
+                await router.push(router);
+              }}
+              primaryValue={ViewMode.applicant}
+              secondaryValue={ViewMode.job}
+              primaryIcon={<PersonFill />}
+              secondaryIcon={<BriefcaseFill />}
+              showCounts={true}
+              primaryCount={
+                viewMode === ViewMode.applicant ? pagingMeta?.totalItems || 0 : undefined
+              }
+              secondaryCount={viewMode === ViewMode.job ? applicants?.length || 0 : undefined}
+              variant="pills"
+              size="md"
+            />
           </div>
 
           <Row>
