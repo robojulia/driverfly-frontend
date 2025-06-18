@@ -55,8 +55,8 @@ export const Button: React.FC<ButtonProps> = ({
         return {
           ...baseStyles,
           backgroundColor: 'transparent',
-          borderColor: 'var(--primary)',
-          color: 'var(--primary)',
+          borderColor: 'var(--primary-button)',
+          color: 'var(--primary-button)',
         };
       case 'danger':
         return {
@@ -75,8 +75,8 @@ export const Button: React.FC<ButtonProps> = ({
       default: // primary
         return {
           ...baseStyles,
-          backgroundColor: 'var(--primary)',
-          borderColor: 'var(--primary)',
+          backgroundColor: 'var(--primary-button)',
+          borderColor: 'var(--primary-button)',
           color: 'var(--text-light)',
         };
     }
@@ -122,7 +122,7 @@ export const Button: React.FC<ButtonProps> = ({
         };
       case 'outline':
         return {
-          backgroundColor: 'var(--primary)',
+          backgroundColor: 'var(--primary-button)',
           color: 'var(--text-light)',
           transform: 'translateY(-1px)',
           boxShadow: '0 4px 12px rgba(95, 203, 196, 0.2)',
@@ -186,7 +186,7 @@ export const Button: React.FC<ButtonProps> = ({
             e.currentTarget.style.boxShadow = 'none';
             if (variant === 'outline') {
               e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.color = 'var(--primary)';
+              e.currentTarget.style.color = 'var(--primary-button)';
             }
           }
         }}
