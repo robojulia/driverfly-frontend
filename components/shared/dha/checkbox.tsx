@@ -67,9 +67,9 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   const checkboxStyles: React.CSSProperties = {
     ...getSizeStyles(size),
     appearance: 'none',
-    backgroundColor: checked ? 'var(--primary)' : 'var(--light)',
+    backgroundColor: checked ? 'var(--primary-button)' : 'var(--light)',
     border: `2px solid ${
-      error ? 'var(--danger)' : checked ? 'var(--primary)' : 'var(--medium-gray)'
+      error ? 'var(--danger)' : checked ? 'var(--primary-button)' : 'var(--medium-gray)'
     }`,
     borderRadius: '4px',
     cursor: disabled ? 'not-allowed' : 'pointer',
@@ -77,6 +77,11 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     position: 'relative',
     flexShrink: 0,
     marginTop: '0',
+    boxShadow: error
+      ? '0 0 0 3px rgba(231, 76, 60, 0.1)'
+      : checked
+      ? '0 0 0 3px rgba(95, 203, 196, 0.1)'
+      : '0 2px 4px rgba(0, 0, 0, 0.05)',
   };
 
   const labelContainerStyles: React.CSSProperties = {
@@ -86,7 +91,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 
   const labelTextStyles: React.CSSProperties = {
     fontSize: '1rem',
-    fontWeight: '500',
+    fontWeight: '600',
     color: disabled ? 'var(--text-muted)' : 'var(--text-primary)',
     lineHeight: '1.5',
     margin: 0,
@@ -112,11 +117,11 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    color: 'var(--text-light)',
+    color: 'var(--light)',
     fontSize: size === 'small' ? '10px' : size === 'large' ? '16px' : '12px',
     fontWeight: 'bold',
     pointerEvents: 'none',
-    marginTop: '-3px',
+    marginTop: '-1px',
   };
 
   const handleContainerClick = () => {
@@ -131,6 +136,20 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     }
   };
 
+  const handleMouseEnter = (e: React.MouseEvent<HTMLInputElement>) => {
+    if (!disabled && !checked) {
+      e.currentTarget.style.borderColor = 'var(--primary-button)';
+      e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+    }
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLInputElement>) => {
+    if (!disabled && !checked) {
+      e.currentTarget.style.borderColor = 'var(--medium-gray)';
+      e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
+    }
+  };
+
   return (
     <div style={containerStyles} className={className}>
       <div style={checkboxContainerStyles} onClick={handleContainerClick}>
@@ -142,6 +161,8 @@ export const Checkbox: React.FC<CheckboxProps> = ({
             checked={checked}
             onChange={onChange}
             onBlur={onBlur}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
             required={required}
             disabled={disabled}
             style={checkboxStyles}

@@ -45,24 +45,6 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  // Responsive hook to detect screen size
-  const [screenWidth, setScreenWidth] = React.useState(
-    typeof window !== 'undefined' ? window.innerWidth : 1024
-  );
-
-  React.useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const handleResize = () => setScreenWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Determine responsive values based on screen width
-  const isMobile = screenWidth <= 576;
-  const isSmallMobile = screenWidth <= 480;
-  const responsiveColumns = isMobile ? 1 : columns;
-
   // Generate options from enum if provided
   const options = React.useMemo(() => {
     if (enumType && !propOptions) {
@@ -88,47 +70,26 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   };
 
   const getVariantStyles = (variant: string) => {
-    const baseStyles = (() => {
-      switch (variant) {
-        case 'compact':
-          return {
-            padding: '0.5rem 0.75rem',
-            fontSize: '0.8rem',
-            minHeight: '40px',
-          };
-        case 'default':
-          return {
-            padding: '0.75rem 1rem',
-            fontSize: '0.875rem',
-            minHeight: '48px',
-          };
-        default: // card
-          return {
-            padding: '0.875rem 1rem',
-            fontSize: '0.875rem',
-            minHeight: '52px',
-          };
-      }
-    })();
-
-    // Apply mobile overrides
-    if (isSmallMobile) {
-      return {
-        ...baseStyles,
-        padding: '0.425rem 0.625rem',
-        fontSize: '0.75rem',
-        minHeight: '36px',
-      };
-    } else if (isMobile) {
-      return {
-        ...baseStyles,
-        padding: '0.5rem 0.75rem',
-        fontSize: '0.8rem',
-        minHeight: '40px',
-      };
+    switch (variant) {
+      case 'compact':
+        return {
+          padding: '0.75rem 1rem',
+          fontSize: '0.875rem',
+          minHeight: '44px',
+        };
+      case 'default':
+        return {
+          padding: '1rem 1.25rem',
+          fontSize: '1rem',
+          minHeight: '56px',
+        };
+      default: // card
+        return {
+          padding: '1.25rem 1.5rem',
+          fontSize: '1rem',
+          minHeight: '64px',
+        };
     }
-
-    return baseStyles;
   };
 
   const containerStyles: React.CSSProperties = {
@@ -139,20 +100,20 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
 
   const gridStyles: React.CSSProperties = {
     display: 'grid',
-    gridTemplateColumns: `repeat(${responsiveColumns}, 1fr)`,
-    gap: isSmallMobile ? '0.3rem' : isMobile ? '0.375rem' : '0.5rem',
+    gridTemplateColumns: `repeat(${columns}, 1fr)`,
+    gap: '0.75rem',
     marginTop: '0.5rem',
   };
 
   const getOptionStyles = (isSelected: boolean, isDisabled: boolean): React.CSSProperties => {
     const baseStyles = {
       ...getVariantStyles(variant),
-      border: '1.5px solid',
-      borderRadius: '6px',
+      border: '2px solid',
+      borderRadius: '8px',
       cursor: isDisabled ? 'not-allowed' : 'pointer',
       display: 'flex',
       alignItems: 'center',
-      gap: isSmallMobile ? '0.3rem' : isMobile ? '0.375rem' : '0.5rem',
+      gap: '0.75rem',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       backgroundColor: 'var(--light)',
       position: 'relative' as const,
@@ -171,8 +132,8 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
     if (isSelected) {
       return {
         ...baseStyles,
-        borderColor: 'var(--primary)',
-        backgroundColor: 'var(--primary-light)',
+        borderColor: 'var(--primary-button)',
+        backgroundColor: 'var(--primary-button-light)',
         boxShadow: '0 0 0 3px rgba(95, 203, 196, 0.1)',
         transform: 'translateY(-1px)',
       };
@@ -186,10 +147,10 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   };
 
   const checkboxStyles: React.CSSProperties = {
-    width: isSmallMobile ? '14px' : isMobile ? '16px' : '18px',
-    height: isSmallMobile ? '14px' : isMobile ? '16px' : '18px',
-    borderRadius: '3px',
-    border: '1.5px solid',
+    width: '20px',
+    height: '20px',
+    borderRadius: '4px',
+    border: '2px solid',
     borderColor: 'var(--medium-gray)',
     backgroundColor: 'var(--light)',
     position: 'relative',
@@ -198,8 +159,8 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
 
   const checkboxCheckedStyles: React.CSSProperties = {
     ...checkboxStyles,
-    borderColor: 'var(--primary)',
-    backgroundColor: 'var(--primary)',
+    borderColor: 'var(--primary-button)',
+    backgroundColor: 'var(--primary-button)',
   };
 
   const checkmarkStyles: React.CSSProperties = {
@@ -207,8 +168,8 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    color: 'var(--text-light)',
-    fontSize: isSmallMobile ? '8px' : isMobile ? '9px' : '10px',
+    color: 'var(--light)',
+    fontSize: '10px',
     fontWeight: 'bold',
   };
 
@@ -216,24 +177,19 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.125rem',
-    minWidth: 0, // Allow text to wrap properly
+    gap: '0.25rem',
   };
 
   const labelStyles: React.CSSProperties = {
     fontWeight: '600',
     color: 'var(--text-primary)',
     margin: 0,
-    lineHeight: '1.3',
-    wordBreak: 'break-word',
   };
 
   const descriptionStyles: React.CSSProperties = {
-    fontSize: '0.75rem',
+    fontSize: '0.875rem',
     color: 'var(--text-secondary)',
     margin: 0,
-    lineHeight: '1.2',
-    wordBreak: 'break-word',
   };
 
   const iconStyles: React.CSSProperties = {
@@ -306,7 +262,7 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
               aria-disabled={isDisabled}
               onMouseEnter={(e) => {
                 if (!isDisabled && !isSelected) {
-                  e.currentTarget.style.borderColor = 'var(--primary)';
+                  e.currentTarget.style.borderColor = 'var(--primary-button)';
                   e.currentTarget.style.transform = 'translateY(-1px)';
                   e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
                 }
