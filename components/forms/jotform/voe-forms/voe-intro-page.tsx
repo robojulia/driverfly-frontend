@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import VoeFormContext, { VoeFormContextType } from '../../../../context/voeform-context';
 import { useTranslation } from '../../../../hooks/use-translation';
-import styles from '../../../../styles/voe.module.css';
+import styles from '../../../../styles/digitalhiringapp.module.css';
 
 export function IntroPage() {
   const {
@@ -18,38 +18,41 @@ export function IntroPage() {
       stepNext();
     },
   });
-
   return (
-    <Form onSubmit={form.handleSubmit}>
-      <div className={styles.voe_intro}>
-        <div className={styles.voe_header}>
-          <h1 className={styles.voe_title}>{t('VERIFICATION_OF_EMPLOYMENT')}</h1>
-          <h2 className={styles.company_name}>{employer?.name}</h2>
-        </div>
-
-        <div className={styles.info_section}>
-          <div className={styles.applicant_info}>
-            {t('VERIFYING_EMPLOYMENT_FOR', {
-              applicantName: `${applicant?.first_name} ${applicant?.last_name}`,
-            })}
+    <Form onSubmit={form.handleSubmit} className={styles.fadeIn}>
+      <div className={styles.formContainer}>
+        <div className={styles.formCard}>
+          <div className={styles.formCardHeader}>
+            <h1 className={styles.heading__sty}>{t('VERIFICATION_OF_EMPLOYMENT')}</h1>
           </div>
+          <div className={styles.formCardBody}>
+            <h2 className={styles.carrierName}>{employer?.name}</h2>
 
-          <p className={styles.description_text}>{t('VOE_INTRO_DRIVERFLY_DESCRIPTION')}</p>
+            <div className={styles.formInfoBox}>
+              <h3 className={styles.formInfoBoxTitle}>
+                {t('VERIFYING_EMPLOYMENT_FOR', {
+                  applicantName: `${applicant?.first_name} ${applicant?.last_name}`,
+                })}
+              </h3>
 
-          <p className={styles.description_text}>
-            {t('VOE_INTRO_PURPOSE', {
-              applicantName: `${applicant?.first_name} ${applicant?.last_name}`,
-              companyName: `${applicant?.company?.name}`,
-            })}
-          </p>
+              <p className={styles.paragraph}>{t('VOE_INTRO_DRIVERFLY_DESCRIPTION')}</p>
 
-          <p className={styles.description_text}>{t('VOE_INTRO_CONFIDENTIALITY')}</p>
-        </div>
+              <p className={styles.paragraph}>
+                {t('VOE_INTRO_PURPOSE', {
+                  applicantName: `${applicant?.first_name} ${applicant?.last_name}`,
+                  companyName: `${applicant?.company?.name}`,
+                })}
+              </p>
 
-        <div className={styles.action_container}>
-          <Button type="submit" className={styles.action_button}>
-            {t('BEGIN_VERIFICATION')}
-          </Button>
+              <p className={styles.paragraph}>{t('VOE_INTRO_CONFIDENTIALITY')}</p>
+            </div>
+
+            <div className={styles.navigationButtons}>
+              <Button type="submit" className={styles.formButton}>
+                {t('BEGIN_VERIFICATION')}
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </Form>

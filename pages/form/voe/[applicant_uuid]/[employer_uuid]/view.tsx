@@ -6,7 +6,7 @@ import { useTranslation } from '../../../../../hooks/use-translation';
 import { ApplicantEmployerEntity, ApplicantEntity } from '../../../../../models/applicant';
 import { ShowUsFormattedDateTime } from '../../../../../utils/show-us-formatted-date-time';
 import ApplicantApi from '../../../../api/applicant';
-import styles from '../../../../../styles/voe.module.css';
+import styles from '../../../../../styles/digitalhiringapp.module.css';
 
 export interface VoeFormProps {
   applicant: ApplicantEntity;
@@ -16,95 +16,98 @@ export interface VoeFormProps {
 export default function ViewVoeForm({ applicant, employer }: VoeFormProps) {
   const { t } = useTranslation();
   const { voeData } = employer;
-
   return (
-    <div className={styles.container}>
-      <div className={styles.main}>
-        <div className={styles.main__voe_form}>
-          <Row>
-            <h4 className={styles.carrierName}>{t('VOE_SUBMIT_DETAILS')}</h4>
-          </Row>
-          <Row>
-            <span className="text-black my-3 text-center">
-              {t('VERIFICATION_OF_{APPLICANT_NAME}_BY_{EMPLOYER_NAME}', {
-                APPLICANT_NAME: `${applicant?.first_name} ${applicant?.last_name}`,
-                EMPLOYER_NAME: `${employer?.name}`,
-              })}
-            </span>
-          </Row>
-          <ViewCard title="BASIC_QUESTIONAIRE">
-            <ViewDetails
-              default={t('NOT_ANSWERED')}
-              obj={{
-                EMPLOYED_BY_US: Boolean(voeData?.was_employed) ? t('YES') : t('NO'),
-                VOE_DRIVER_QUES: Boolean(voeData?.drived_vehicle) ? t('YES') : t('NO'),
-                SAFETY_PERFORMANCE_REPORT: Boolean(voeData?.safety_performance)
-                  ? t('YES')
-                  : t('NO'),
-                ACCIDENT_REGISTER: Boolean(voeData?.registered_accidents_details)
-                  ? t('YES')
-                  : t('NO'),
-              }}
-            />
-          </ViewCard>
-          <ViewCard title="WAS_EMPLOYED_AS">
-            {console.log('voeData?.end_date', voeData?.end_date)}
-            <ViewDetails
-              obj={{
-                POSITION: voeData?.position || t('N/A'),
-                START_DATE: voeData?.start_date ? formatDate(voeData?.start_date, true) : t('N/A'),
-                END_DATE: voeData?.end_date ? formatDate(voeData?.end_date, true) : t('N/A'),
-              }}
-            />
-          </ViewCard>
+    <div className={styles.main_form}>
+      <div className={styles.formContainer}>
+        <div className={styles.formStep}>
+          <div className={styles.formStepContent}>
+            <Row>
+              <h4 className={styles.formTitle}>{t('VOE_SUBMIT_DETAILS')}</h4>
+            </Row>
+            <Row>
+              <span className="text-black my-3 text-center">
+                {t('VERIFICATION_OF_{APPLICANT_NAME}_BY_{EMPLOYER_NAME}', {
+                  APPLICANT_NAME: `${applicant?.first_name} ${applicant?.last_name}`,
+                  EMPLOYER_NAME: `${employer?.name}`,
+                })}
+              </span>
+            </Row>
+            <ViewCard title="BASIC_QUESTIONAIRE">
+              <ViewDetails
+                default={t('NOT_ANSWERED')}
+                obj={{
+                  EMPLOYED_BY_US: Boolean(voeData?.was_employed) ? t('YES') : t('NO'),
+                  VOE_DRIVER_QUES: Boolean(voeData?.drived_vehicle) ? t('YES') : t('NO'),
+                  SAFETY_PERFORMANCE_REPORT: Boolean(voeData?.safety_performance)
+                    ? t('YES')
+                    : t('NO'),
+                  ACCIDENT_REGISTER: Boolean(voeData?.registered_accidents_details)
+                    ? t('YES')
+                    : t('NO'),
+                }}
+              />
+            </ViewCard>
+            <ViewCard title="WAS_EMPLOYED_AS">
+              {console.log('voeData?.end_date', voeData?.end_date)}
+              <ViewDetails
+                obj={{
+                  POSITION: voeData?.position || t('N/A'),
+                  START_DATE: voeData?.start_date
+                    ? formatDate(voeData?.start_date, true)
+                    : t('N/A'),
+                  END_DATE: voeData?.end_date ? formatDate(voeData?.end_date, true) : t('N/A'),
+                }}
+              />
+            </ViewCard>
 
-          <Row className={`${styles.align__text_left} ${styles.paragraph}`}>
-            <label className={`${styles.bold}`}>{t('VEHICLE_TYPE')}</label>
-            <Col className={`${styles.align__text_left} ${styles.paragraph}`}>
-              <p>{voeData?.drived_vehicle ?? t('N/A')}</p>
-            </Col>
-          </Row>
-
-          {Boolean(voeData?.registered_accidents_details) && (
-            <Row className={`${styles.align__text_left}${styles.paragraph}`}>
-              <label className={`${styles.bold}`}>{t('ACCIDENTS_REPORTED_TO_GOVERNMENT')}</label>
-              <Col className={`${styles.align__text_left}  ${styles.paragraph}`}>
-                <p>{voeData?.accidents_reported_to_government ?? t('N/A')}</p>
+            <Row className={styles.marginBottomMedium}>
+              <label className={styles.formLabel}>{t('VEHICLE_TYPE')}</label>
+              <Col className={styles.marginBottomSmall}>
+                <p>{voeData?.drived_vehicle ?? t('N/A')}</p>
               </Col>
             </Row>
-          )}
 
-          <ViewCard title="SUBMISSION_DETAILS">
-            <ViewDetails
-              obj={{
-                REASON_TO_LEAVE_EMPLOYMENT: t(
-                  voeData?.reason_to_leave
-                    ? `ReasonsForLeavingEmployment.${voeData?.reason_to_leave}`
-                    : 'N/A'
-                ),
-                FULL_NAME: voeData?.focal_person_name,
-                title: voeData?.focal_person_title,
-                phone: voeData?.focal_person_phone,
-                email: voeData?.focal_person_email,
-                DATE: ShowUsFormattedDateTime(voeData?.signed_date, true),
-              }}
-            />
-          </ViewCard>
+            {Boolean(voeData?.registered_accidents_details) && (
+              <Row className={styles.marginBottomMedium}>
+                <label className={styles.formLabel}>{t('ACCIDENTS_REPORTED_TO_GOVERNMENT')}</label>
+                <Col className={styles.marginBottomSmall}>
+                  <p>{voeData?.accidents_reported_to_government ?? t('N/A')}</p>
+                </Col>
+              </Row>
+            )}
 
-          <Row className={`${styles.align__text_left}`}>
-            <label className={`${styles.bold} text-black`}>{t('SIGNATURE')}</label>
-            <Col className="">
-              <img
-                src={voeData?.signature}
-                style={{
-                  width: '100%',
-                  height: '200px',
-                  border: '1px solid black',
+            <ViewCard title="SUBMISSION_DETAILS">
+              <ViewDetails
+                obj={{
+                  REASON_TO_LEAVE_EMPLOYMENT: t(
+                    voeData?.reason_to_leave
+                      ? `ReasonsForLeavingEmployment.${voeData?.reason_to_leave}`
+                      : 'N/A'
+                  ),
+                  FULL_NAME: voeData?.focal_person_name,
+                  title: voeData?.focal_person_title,
+                  phone: voeData?.focal_person_phone,
+                  email: voeData?.focal_person_email,
+                  DATE: ShowUsFormattedDateTime(voeData?.signed_date, true),
                 }}
-                alt="No Signature"
               />
-            </Col>
-          </Row>
+            </ViewCard>
+
+            <Row className={styles.marginBottomMedium}>
+              <label className={`${styles.formLabel} text-black`}>{t('SIGNATURE')}</label>
+              <Col>
+                <img
+                  src={voeData?.signature}
+                  style={{
+                    width: '100%',
+                    height: '200px',
+                    border: '1px solid black',
+                  }}
+                  alt="No Signature"
+                />
+              </Col>
+            </Row>
+          </div>
         </div>
       </div>
     </div>

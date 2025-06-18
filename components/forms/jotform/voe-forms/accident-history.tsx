@@ -10,7 +10,7 @@ import BaseInput from '../../base-input';
 import BaseRadio from '../../base-radio';
 import BaseSelect from '../../base-select';
 import BaseTextArea from '../../base-text-area';
-import styles from '../../../../styles/voe.module.css';
+import styles from '../../../../styles/digitalhiringapp.module.css';
 
 export function AccidentHistory() {
   const {
@@ -86,185 +86,183 @@ export function AccidentHistory() {
       form.values.did_drive_check !== null
     );
   };
-
   return (
-    <>
-      <h1 className={styles.carrierName}>{t('EMPLOYMENT_VERIF')}</h1>
+    <Form onSubmit={form.handleSubmit} className={styles.fadeIn}>
+      <div className={styles.formContainer}>
+        <div className={styles.formStep}>
+          <div className={styles.formStepContent}>
+            <h1 className={styles.heading__sty}>{t('EMPLOYMENT_VERIF')}</h1>
 
-      <Form onSubmit={form.handleSubmit}>
-        <Row>
-          <div className={`${styles.align__text_left} ${styles.bold}`}>
-            <BaseInput
-              className="col my-3 p-0"
-              name="position"
-              label={t(
-                '{applicantName}_WAS_EMPLOYED_AS',
-                {
-                  applicantName: `${applicant?.first_name} ${applicant?.last_name}`,
-                },
-                { translateProps: true }
-              )}
-              placeholder="POSITION"
-              formik={form}
-            />
+            <div className={styles.formGrid}>
+              <div className={styles.marginBottomMedium}>
+                <BaseInput
+                  className="w-100"
+                  name="position"
+                  label={t(
+                    '{applicantName}_WAS_EMPLOYED_AS',
+                    {
+                      applicantName: `${applicant?.first_name} ${applicant?.last_name}`,
+                    },
+                    { translateProps: true }
+                  )}
+                  placeholder="POSITION"
+                  formik={form}
+                />
+              </div>
+
+              <div className={styles.marginBottomMedium}>
+                <BaseInput
+                  className="w-100"
+                  name="start_date"
+                  label="START_DATE"
+                  type="date"
+                  formik={form}
+                  placeholder="MM/YY"
+                  max={new Date().toISOString().split('T')[0]}
+                />
+              </div>
+
+              <div className={styles.marginBottomMedium}>
+                <BaseInput
+                  className="w-100"
+                  name="end_date"
+                  type="date"
+                  label="END_DATE"
+                  formik={form}
+                  placeholder="MM/YY"
+                  max={new Date().toISOString().split('T')[0]}
+                />
+              </div>
+            </div>
+
+            <div className={styles.marginBottomMedium}>
+              <BaseRadio
+                className="w-100"
+                label="VOE_DRIVER_QUESTION"
+                name="did_drive_check"
+                formik={form}
+                labelPrefix="BooleanType"
+                enumType={BooleanType}
+                onChange={({ target: { value } }) => {
+                  form.setFieldValue('did_drive_check', value);
+                  if (value !== BooleanType.YES) {
+                    form.setFieldValue('drived_vehicle', null);
+                  }
+                }}
+                required
+              />
+            </div>
+
+            {form.values?.did_drive_check === BooleanType.YES && (
+              <div className={styles.marginBottomMedium}>
+                <BaseTextArea
+                  className="w-100"
+                  name="drived_vehicle"
+                  label="TYPE_OF_VEHICLE"
+                  formik={form}
+                  required
+                />
+              </div>
+            )}
+
+            <div className={styles.marginBottomMedium}>
+              <BaseRadio
+                className="w-100"
+                label="SAFETY_PERFORMANCE_REPORT"
+                name="safety_performance"
+                formik={form}
+                labelPrefix="BooleanType"
+                onChange={(e) => {
+                  form.setFieldValue(
+                    'safety_performance',
+                    { true: true, false: false }[e.target.value] || false
+                  );
+                  form.setFieldValue('registered_accidents_details', false);
+                }}
+                options={[
+                  {
+                    label: BooleanType.YES,
+                    value: true,
+                  },
+                  {
+                    label: BooleanType.NO,
+                    value: false,
+                  },
+                ]}
+                required
+              />
+            </div>
+
+            {form.values?.safety_performance === true && (
+              <div className={styles.marginBottomMedium}>
+                <BaseRadio
+                  className="w-100"
+                  label="ACCIDENT_REGISTER_DATA"
+                  name="registered_accidents_details"
+                  formik={form}
+                  labelPrefix="BooleanType"
+                  onChange={(e) => {
+                    form.setFieldValue(
+                      'registered_accidents_details',
+                      { true: true, false: false }[e.target.value] || false
+                    );
+                    if (e.target.value === 'false') {
+                      form.setFieldValue('accidents_reported_to_government', null);
+                    }
+                  }}
+                  options={[
+                    {
+                      label: BooleanType.YES,
+                      value: true,
+                    },
+                    {
+                      label: BooleanType.NO,
+                      value: false,
+                    },
+                  ]}
+                  required
+                />
+              </div>
+            )}
+
+            {form.values?.registered_accidents_details === true && (
+              <div className={styles.marginBottomMedium}>
+                <BaseTextArea
+                  required
+                  className="w-100"
+                  name="accidents_reported_to_government"
+                  label="OTHER_GOV_REPORTED_ACCIDENTS"
+                  formik={form}
+                />
+              </div>
+            )}
+
+            <div className={styles.marginBottomLarge}>
+              <BaseSelect
+                className="w-100"
+                required
+                labelPrefix="ReasonsForLeavingEmployment"
+                enumType={ReasonsForLeavingEmployment}
+                name="reason_to_leave"
+                placeholder="CHOOSE"
+                label="REASONS_FOR_LEAVING_EMPLOYMENT"
+                formik={form}
+              />
+            </div>
           </div>
-          <div className={`${styles.align__text_left} ${styles.bold}`}>
-            <BaseInput
-              className="col my-3 p-0"
-              name="start_date"
-              label="START_DATE"
-              type="date"
-              formik={form}
-              placeholder="MM/YY"
-              max={new Date().toISOString().split('T')[0]}
-            />
+
+          <div className={styles.formStepNavigation}>
+            <div className={styles.navigationButtons}>
+              <Button onClick={() => stepBack()} className={styles.secondaryButton}>
+                {t('BACK')}
+              </Button>
+              <Button type="submit" className={styles.formButton} disabled={!isFormValid()}>
+                {t('NEXT')}
+              </Button>
+            </div>
           </div>
-          <div className={`${styles.align__text_left} ${styles.bold}`}>
-            <BaseInput
-              className="col my-3 p-0"
-              name="end_date"
-              type="date"
-              label="END_DATE"
-              formik={form}
-              placeholder="MM/YY"
-              max={new Date().toISOString().split('T')[0]}
-            />
-          </div>
-        </Row>
-
-        <Row className={`${styles.align__text_left} ${styles.bold}`}>
-          <BaseRadio
-            className="float-left my-2 col"
-            label="VOE_DRIVER_QUESTION"
-            name="did_drive_check"
-            formik={form}
-            labelPrefix="BooleanType"
-            enumType={BooleanType}
-            onChange={({ target: { value } }) => {
-              form.setFieldValue('did_drive_check', value);
-              if (value !== BooleanType.YES) {
-                form.setFieldValue('drived_vehicle', null);
-              }
-            }}
-            required
-          />
-        </Row>
-
-        {form.values?.did_drive_check === BooleanType.YES && (
-          <Row className={`${styles.align__text_left} ${styles.bold} ${styles.paragraph}`}>
-            <BaseTextArea
-              className="float-left my-2 col"
-              name="drived_vehicle"
-              label="TYPE_OF_VEHICLE"
-              formik={form}
-              required
-            />
-          </Row>
-        )}
-
-        <Row className={`${styles.align__text_left} ${styles.bold}`}>
-          <BaseRadio
-            className="float-left my-2 col"
-            label="SAFETY_PERFORMANCE_REPORT"
-            name="safety_performance"
-            formik={form}
-            labelPrefix="BooleanType"
-            onChange={(e) => {
-              form.setFieldValue(
-                'safety_performance',
-                { true: true, false: false }[e.target.value] || false
-              );
-              form.setFieldValue('registered_accidents_details', false);
-            }}
-            options={[
-              {
-                label: BooleanType.YES,
-                value: true,
-              },
-              {
-                label: BooleanType.NO,
-                value: false,
-              },
-            ]}
-            required
-          />
-        </Row>
-
-        {form.values?.safety_performance === true && (
-          <Row className={`${styles.align__text_left} ${styles.bold}`}>
-            <BaseRadio
-              className="float-left my-2 col"
-              label="ACCIDENT_REGISTER_DATA"
-              name="registered_accidents_details"
-              formik={form}
-              labelPrefix="BooleanType"
-              onChange={(e) => {
-                form.setFieldValue(
-                  'registered_accidents_details',
-                  { true: true, false: false }[e.target.value] || false
-                );
-                if (e.target.value === 'false') {
-                  form.setFieldValue('accidents_reported_to_government', null);
-                }
-              }}
-              options={[
-                {
-                  label: BooleanType.YES,
-                  value: true,
-                },
-                {
-                  label: BooleanType.NO,
-                  value: false,
-                },
-              ]}
-              required
-            />
-          </Row>
-        )}
-
-        {form.values?.registered_accidents_details === true && (
-          <Row className={`${styles.align__text_left} ${styles.bold} ${styles.paragraph}`}>
-            <BaseTextArea
-              required
-              className="float-left col my-3"
-              name="accidents_reported_to_government"
-              label="OTHER_GOV_REPORTED_ACCIDENTS"
-              formik={form}
-            />
-          </Row>
-        )}
-
-        <Row className={`${styles.align__text_left} ${styles.bold}`}>
-          <BaseSelect
-            className="col my-3"
-            required
-            labelPrefix="ReasonsForLeavingEmployment"
-            enumType={ReasonsForLeavingEmployment}
-            name="reason_to_leave"
-            placeholder="CHOOSE"
-            label="REASONS_FOR_LEAVING_EMPLOYMENT"
-            formik={form}
-          />
-        </Row>
-
-        <Row className="mt-5">
-          <Col className={styles.button_container}>
-            <Button
-              onClick={() => stepBack()}
-              className={`${styles.nav_button} ${styles.back_button}`}
-            >
-              {t('BACK')}
-            </Button>
-            <Button
-              type="submit"
-              className={`${styles.nav_button} ${styles.next_button}`}
-              disabled={!isFormValid()}
-            >
-              {t('NEXT')}
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-    </>
+        </div>
+      </div>
+    </Form>
   );
 }

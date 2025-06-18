@@ -4,7 +4,8 @@ import { Button, Form } from 'react-bootstrap';
 import VoeFormContext, { VoeFormContextType } from '../../../../context/voeform-context';
 import { useTranslation } from '../../../../hooks/use-translation';
 import { ApplicantVoeEntity } from '../../../../models/applicant/applicant-voe.entity';
-import styles from '../../../../styles/voe.module.css';
+import { RadioGroup } from '../../../shared/dha/radio-group';
+import styles from '../../../../styles/digitalhiringapp.module.css';
 
 export function EmployedByUs() {
   const {
@@ -41,78 +42,60 @@ export function EmployedByUs() {
       }
     },
   });
-
   return (
-    <Form onSubmit={form.handleSubmit}>
-      <div className={styles.employment_question}>
-        <div className={styles.question_header}>
-          <h1 className={styles.question_title}>
-            {t('EMPLOYMENT_VERIFICATION_QUESTION', {
-              employerName: employer?.name,
-            })}
-          </h1>
-          <p className={styles.question_description}>
-            {t('EMPLOYMENT_VERIFICATION_DESCRIPTION', {
-              applicantName: `${applicant?.first_name} ${applicant?.last_name}`,
-              employerName: employer?.name,
-            })}
-          </p>
-        </div>
+    <Form onSubmit={form.handleSubmit} className={styles.fadeIn}>
+      <div className={styles.formContainer}>
+        <div className={styles.formStep}>
+          {' '}
+          <div className={styles.formStepContent}>
+            <h1 className={styles.heading__sty}>
+              {t('EMPLOYMENT_VERIFICATION_QUESTION', {
+                employerName: employer?.name,
+              })}
+            </h1>
+            <p className={styles.paragraph}>
+              {t('EMPLOYMENT_VERIFICATION_DESCRIPTION', {
+                applicantName: `${applicant?.first_name} ${applicant?.last_name}`,
+                employerName: employer?.name,
+              })}
+            </p>
 
-        <div className={styles.radio_group}>
-          <div
-            className={`${styles.radio_option} ${
-              form.values.was_employed === true ? styles.selected : ''
-            }`}
-            onClick={() => form.setFieldValue('was_employed', true)}
-          >
-            <label className={styles.radio_label}>
-              <input
-                type="radio"
+            <div className={styles.marginBottomLarge}>
+              <RadioGroup
                 name="was_employed"
-                checked={form.values.was_employed === true}
-                onChange={() => form.setFieldValue('was_employed', true)}
+                options={[
+                  { value: 'true', label: 'YES' },
+                  { value: 'false', label: 'NO' },
+                ]}
+                value={
+                  form.values.was_employed !== null ? String(form.values.was_employed) : undefined
+                }
+                onChange={(value) => form.setFieldValue('was_employed', value === 'true')}
+                required={true}
+                error={
+                  form.touched.was_employed && form.errors.was_employed
+                    ? t('PLEASE_SELECT_AN_OPTION')
+                    : undefined
+                }
+                variant="card"
+                columns={2}
               />
-              {t('YES')}
-            </label>
+            </div>
           </div>
-
-          <div
-            className={`${styles.radio_option} ${
-              form.values.was_employed === false ? styles.selected : ''
-            }`}
-            onClick={() => form.setFieldValue('was_employed', false)}
-          >
-            <label className={styles.radio_label}>
-              <input
-                type="radio"
-                name="was_employed"
-                checked={form.values.was_employed === false}
-                onChange={() => form.setFieldValue('was_employed', false)}
-              />
-              {t('NO')}
-            </label>
+          <div className={styles.formStepNavigation}>
+            <div className={styles.navigationButtons}>
+              <Button onClick={() => stepBack()} className={styles.secondaryButton}>
+                {t('BACK')}
+              </Button>
+              <Button
+                type="submit"
+                className={styles.formButton}
+                disabled={form.values.was_employed === null}
+              >
+                {t('NEXT')}
+              </Button>
+            </div>
           </div>
-        </div>
-
-        {form.touched.was_employed && form.errors.was_employed && (
-          <div className="text-danger text-center mb-3">{t('PLEASE_SELECT_AN_OPTION')}</div>
-        )}
-
-        <div className={styles.button_container}>
-          <Button
-            onClick={() => stepBack()}
-            className={`${styles.nav_button} ${styles.back_button}`}
-          >
-            {t('BACK')}
-          </Button>
-          <Button
-            type="submit"
-            className={`${styles.nav_button} ${styles.next_button}`}
-            disabled={form.values.was_employed === null}
-          >
-            {t('NEXT')}
-          </Button>
         </div>
       </div>
     </Form>

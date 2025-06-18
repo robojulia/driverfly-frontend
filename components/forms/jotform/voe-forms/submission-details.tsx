@@ -7,7 +7,7 @@ import VoeFormContext, { VoeFormContextType } from '../../../../context/voeform-
 import { useTranslation } from '../../../../hooks/use-translation';
 import { ApplicantVoeEntity } from '../../../../models/applicant/applicant-voe.entity';
 import ApplicantApi from '../../../../pages/api/applicant';
-import styles from '../../../../styles/voe.module.css';
+import styles from '../../../../styles/digitalhiringapp.module.css';
 import { globalAjaxExceptionHandler } from '../../../../utils/ajax';
 import { LoaderIcon } from '../../../loading/loader-icon';
 import OverlyPopover from '../../../popover/overly-popover';
@@ -170,111 +170,121 @@ export function SubmissionDetails() {
     () => form.isValidating || form.isSubmitting || !form.isValid || !hasSignature,
     [form.isValidating, form.isSubmitting, form.isValid, hasSignature]
   );
-
   return (
-    <>
-      <h1 className={styles.carrierName}>{t('SUBMISSION_DETAILS')}</h1>
+    <Form onSubmit={form.handleSubmit} onReset={form.handleReset} className={styles.fadeIn}>
+      <div className={styles.formContainer}>
+        <div className={styles.formStep}>
+          <div className={styles.formStepContent}>
+            <h1 className={styles.heading__sty}>{t('SUBMISSION_DETAILS')}</h1>
 
-      <ToastContainer />
-      <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-        <Row className={`${styles.align__text_left} ${styles.bold}`}>
-          <BaseInput
-            className="my-3 float-left col-md-6"
-            label="MY_NAME"
-            name="focal_person_name"
-            formik={form}
-            placeholder={t('ENTER_FULL_NAME_WITH_LAST_NAME')}
-          />
-          <BaseInput
-            className="my-3 float-left col-md-6"
-            label="TITLE"
-            name="focal_person_title"
-            formik={form}
-          />
-        </Row>
+            <ToastContainer />
 
-        <Row className={`${styles.align__text_left} ${styles.bold}`}>
-          <BaseInput
-            className="my-3 float-left col"
-            label="company"
-            value={employer.name}
-            type="text"
-            readOnly
-          />
-        </Row>
+            <div className={styles.formGridTwoColumn}>
+              <div className={styles.marginBottomMedium}>
+                <BaseInput
+                  className="w-100"
+                  label="MY_NAME"
+                  name="focal_person_name"
+                  formik={form}
+                  placeholder={t('ENTER_FULL_NAME_WITH_LAST_NAME')}
+                />
+              </div>
+              <div className={styles.marginBottomMedium}>
+                <BaseInput
+                  className="w-100"
+                  label="TITLE"
+                  name="focal_person_title"
+                  formik={form}
+                />
+              </div>
+            </div>
 
-        <Row className={`${styles.align__text_left} ${styles.bold}`}>
-          <BaseInputPhone
-            className="my-3 float-left col-md-6"
-            label="PHONE"
-            required
-            name="focal_person_phone"
-            formik={form}
-          />
-          <BaseInput
-            className="my-3 float-left col-md-6"
-            label="EMAIL"
-            name="focal_person_email"
-            formik={form}
-          />
-        </Row>
+            <div className={styles.marginBottomMedium}>
+              <BaseInput
+                className="w-100"
+                label="company"
+                value={employer.name}
+                type="text"
+                readOnly
+              />
+            </div>
 
-        <Row className={`${styles.align__text_left} ${styles.bold}`}>
-          <BaseInput
-            className="my-3 float-left col"
-            label="DATE"
-            name="signed_date"
-            type="date"
-            required
-            formik={form}
-          />
-        </Row>
+            <div className={styles.formGridTwoColumn}>
+              <div className={styles.marginBottomMedium}>
+                <BaseInputPhone
+                  className="w-100"
+                  label="PHONE"
+                  required
+                  name="focal_person_phone"
+                  formik={form}
+                />
+              </div>
+              <div className={styles.marginBottomMedium}>
+                <BaseInput
+                  className="w-100"
+                  label="EMAIL"
+                  name="focal_person_email"
+                  formik={form}
+                />
+              </div>
+            </div>
 
-        <Row className={`${styles.align__text_left} ${styles.bold}`}>
-          <OverlyPopover str="TOOLTIP_ALLOW_VOE_SHARE" placement="top">
-            <BaseCheck
-              className="my-3 float-left col"
-              label={t('ALLOW_VOE_SHARE_FOR_{APPLICANT_NAME}', {
-                APPLICANT_NAME: `${applicant.first_name} ${applicant.last_name}`,
-              })}
-              name="allow_share"
-              formik={form}
-            />
-          </OverlyPopover>
-        </Row>
+            <div className={styles.marginBottomMedium}>
+              <BaseInput
+                className="w-100"
+                label="DATE"
+                name="signed_date"
+                type="date"
+                required
+                formik={form}
+              />
+            </div>
 
-        <Row className={`${styles.align__text_left} ${styles.txtcolor}`}>
-          <Col md="10" className="my-3">
-            <h6 className={`${styles.bold} text-black`}>
-              {t('SIGNATURE')}
-              <label className="text-danger">*</label>
-            </h6>
-            <SignatureComponent
-              firstName={getNameParts(form.values.focal_person_name).firstName}
-              lastName={getNameParts(form.values.focal_person_name).lastName}
-              onSignatureChange={handleSignatureChange}
-              initialSignature={form.values.signature}
-              required
-            />
-          </Col>
-        </Row>
+            <div className={styles.marginBottomMedium}>
+              <OverlyPopover str="TOOLTIP_ALLOW_VOE_SHARE" placement="top">
+                <BaseCheck
+                  className="w-100"
+                  label={t('ALLOW_VOE_SHARE_FOR_{APPLICANT_NAME}', {
+                    APPLICANT_NAME: `${applicant.first_name} ${applicant.last_name}`,
+                  })}
+                  name="allow_share"
+                  formik={form}
+                />
+              </OverlyPopover>
+            </div>
 
-        <Row>
-          <Col className={styles.button_container}>
-            <Button onClick={stepBack} className={`${styles.nav_button} ${styles.back_button}`}>
-              {t('BACK')}
-            </Button>
-            <Button
-              type="submit"
-              className={`${styles.nav_button} ${styles.next_button}`}
-              disabled={isSubmitDisabled}
-            >
-              {t('SUBMIT')}
-              <LoaderIcon isLoading={!!form?.isSubmitting} />
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-    </>
+            <div className={styles.formCard}>
+              <div className={styles.formCardHeader}>
+                <h3 className={styles.formCardTitle}>
+                  {t('SIGNATURE')}
+                  <span className={styles.required}></span>
+                </h3>
+              </div>
+              <div className={styles.formCardBody}>
+                <SignatureComponent
+                  firstName={getNameParts(form.values.focal_person_name).firstName}
+                  lastName={getNameParts(form.values.focal_person_name).lastName}
+                  onSignatureChange={handleSignatureChange}
+                  initialSignature={form.values.signature}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.formStepNavigation}>
+            <div className={styles.navigationButtons}>
+              <Button onClick={stepBack} className={styles.secondaryButton}>
+                {t('BACK')}
+              </Button>
+              <Button type="submit" className={styles.formButton} disabled={isSubmitDisabled}>
+                {t('SUBMIT')}
+                <LoaderIcon isLoading={!!form?.isSubmitting} />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Form>
   );
 }
