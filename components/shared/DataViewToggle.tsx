@@ -85,8 +85,8 @@ export const DataViewToggle: React.FC<DataViewToggleProps> = ({
             marginRight: '0.5rem',
           },
           active: {
-            borderBottomColor: 'var(--primary-button)',
-            color: 'var(--primary-button)',
+            borderBottomColor: 'var(--primary-dark)',
+            color: 'var(--primary-dark)',
             fontWeight: '600',
           },
           inactive: {
@@ -113,8 +113,8 @@ export const DataViewToggle: React.FC<DataViewToggleProps> = ({
             gap: sizeStyles.gap,
           },
           active: {
-            backgroundColor: 'var(--primary-button)',
-            borderColor: 'var(--primary-button)',
+            backgroundColor: 'var(--primary-dark)',
+            borderColor: 'var(--primary-dark)',
             color: 'var(--text-light)',
             transform: 'translateY(-1px)',
             boxShadow: '0 4px 8px rgba(95, 203, 196, 0.2)',
@@ -149,7 +149,7 @@ export const DataViewToggle: React.FC<DataViewToggleProps> = ({
             justifyContent: 'center',
           },
           active: {
-            backgroundColor: 'var(--primary-button)',
+            backgroundColor: 'var(--primary-dark)',
             color: 'var(--text-light)',
             boxShadow: '0 2px 4px rgba(95, 203, 196, 0.3)',
             transform: 'translateY(-1px)',
