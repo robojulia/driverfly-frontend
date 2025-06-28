@@ -179,7 +179,6 @@ export function Preferences() {
                 onBlur={form.handleBlur}
                 error={getFieldError('REQUIRE_W2_EMPLOYMENT.value')}
                 helperText={t('SELECT_YOUR_EMPLOYMENT_PREFERENCE')}
-                required
               />
             </div>
           )}
