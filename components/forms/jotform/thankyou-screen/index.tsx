@@ -87,7 +87,7 @@ export function ThankyouPage() {
                 boxShadow: '0 15px 30px rgba(16, 185, 129, 0.4)',
               }}
             >
-              <CheckCircleFill size={50} color="white" />
+              <CheckCircleFill size={90} color="white" />
             </div>
 
             <h1
@@ -138,7 +138,7 @@ export function ThankyouPage() {
               🚛 <strong>Driverfly</strong> - Connecting drivers with opportunities nationwide
             </p>
             <p style={{ margin: 0, opacity: 0.8 }}>
-              © 2024 Driverfly. Driving careers forward, one connection at a time.
+              © 2025 Driverfly. Driving careers forward, one connection at a time.
             </p>
           </div>
         </div>

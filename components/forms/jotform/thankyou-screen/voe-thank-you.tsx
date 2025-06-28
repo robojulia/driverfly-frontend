@@ -71,7 +71,7 @@ export function VoeThankYouPage() {
                     boxShadow: '0 10px 20px rgba(135, 249, 52, 0.3)',
                   }}
                 >
-                  <CheckCircleFill size={40} color="white" />
+                  <CheckCircleFill size={90} color="white" />
                 </div>
 
                 <h1 className={styles.heading__sty}>{t('THANK_YOU')}</h1>
@@ -150,7 +150,7 @@ export function VoeThankYouPage() {
                 className={styles.paragraph}
                 style={{ fontSize: '0.85rem', opacity: 0.6, margin: 0 }}
               >
-                © 2024 Driverfly. Driving careers forward, one connection at a time.
+                © 2025 Driverfly. Driving careers forward, one connection at a time.
               </p>
             </div>
           </div>
