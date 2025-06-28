@@ -1,6 +1,7 @@
 import { useFormik } from 'formik';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
+import * as yup from 'yup';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
 import { useTranslation } from '../../../../hooks/use-translation';
@@ -32,21 +33,43 @@ export function AccidentViolation() {
     }
   };
 
+  const shouldShowWorkAuthorizationCheck = () => {
+    return Boolean(applicant.license_type == DriverLicenseType.NO_CDL);
+  };
+
   const submitForm = (values: AccidentViolationDto) => {
     setApplicant({
       ...applicant,
       can_pass_drug_test: values.can_pass_drug_test,
       moving_violations_count: values.moving_violations_count,
       all_violations_count: values.all_violations_count,
-      authorized_to_work_in_us: values.authorized_to_work_in_us,
+      // Only save work authorization value if the field should be shown
+      authorized_to_work_in_us: shouldShowWorkAuthorizationCheck()
+        ? values.authorized_to_work_in_us
+        : applicant.authorized_to_work_in_us, // Keep existing value if field not shown
       accident_count: values.accident_count,
     });
     stepNext();
   };
 
+  // Create dynamic validation schema based on whether work authorization should be shown
+  const validationSchema = useMemo(() => {
+    const baseSchema = AccidentViolationDto.yupSchema();
+
+    // If work authorization field should not be shown, make it optional
+    if (!shouldShowWorkAuthorizationCheck()) {
+      return baseSchema.shape({
+        ...baseSchema.fields,
+        authorized_to_work_in_us: yup.boolean().optional().nullable(),
+      });
+    }
+
+    return baseSchema;
+  }, [applicant.license_type]);
+
   const form = useFormik({
     initialValues: new AccidentViolationDto(),
-    validationSchema: AccidentViolationDto.yupSchema(),
+    validationSchema: validationSchema,
     onSubmit: handleSubmit,
     onReset: (values) => {
       stepBack();
@@ -82,6 +105,10 @@ export function AccidentViolation() {
       all_violations_count:
         applicantValues.all_violations_count !== null ? applicantValues.all_violations_count : 0,
       accident_count: applicantValues.accident_count !== null ? applicantValues.accident_count : 0,
+      // Set work authorization to null if field is not shown, otherwise keep the applicant value
+      authorized_to_work_in_us: shouldShowWorkAuthorizationCheck()
+        ? applicantValues.authorized_to_work_in_us
+        : null,
     };
 
     // Set values and reset form state to clear any validation errors
@@ -93,7 +120,7 @@ export function AccidentViolation() {
     setTimeout(() => {
       form.validateForm();
     }, 0);
-  }, [applicantValues]);
+  }, [applicantValues, applicant.license_type]);
 
   const handleNext = () => {
     const syntheticEvent = {
@@ -109,10 +136,6 @@ export function AccidentViolation() {
       target: {},
     } as any;
     form.handleReset(syntheticEvent);
-  };
-
-  const shouldShowWorkAuthorizationCheck = () => {
-    return Boolean(applicant.license_type == DriverLicenseType.NO_CDL);
   };
 
   // Define radio group value clearly
