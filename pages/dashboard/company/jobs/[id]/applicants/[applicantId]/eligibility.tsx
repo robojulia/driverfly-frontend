@@ -160,62 +160,61 @@ export default function ApplicantEligibilityDetail({
     }
   };
 
-  const renderRequirementBreakdown = (breakdown: any) => {
-    return Object.entries(breakdown).map(([key, data]: [string, any]) => {
-      const reqStatus = getRequirementStatus(data);
+  const categorizeRequirements = (breakdown: any) => {
+    const critical = [];
+    const important = [];
+    const additional = [];
 
-      return (
-        <Card key={key} className="mb-3 border-0 shadow-sm">
-          <Card.Body>
-            <div className="d-flex justify-content-between align-items-start mb-2">
-              <h6 className="mb-0">{data.category}</h6>
-              <div className="d-flex align-items-center">
-                <Badge
-                  bg={reqStatus.variant}
-                  className="text-uppercase"
-                  style={{ fontSize: '0.75rem' }}
-                >
-                  {reqStatus.status.replace('_', ' ')}
-                </Badge>
-              </div>
-            </div>
-            <div className="mb-2">
-              <div
-                className={`w-100 rounded`}
-                style={{
-                  height: '8px',
-                  backgroundColor:
-                    reqStatus.variant === 'success'
-                      ? '#d4edda'
-                      : reqStatus.variant === 'warning'
-                      ? '#fff3cd'
-                      : '#f8d7da',
-                }}
-              >
-                <div
-                  className={`h-100 rounded`}
-                  style={{
-                    width:
-                      reqStatus.variant === 'success'
-                        ? '100%'
-                        : reqStatus.variant === 'warning'
-                        ? '60%'
-                        : '0%',
-                    backgroundColor:
-                      reqStatus.variant === 'success'
-                        ? '#28a745'
-                        : reqStatus.variant === 'warning'
-                        ? '#ffc107'
-                        : '#dc3545',
-                  }}
-                />
-              </div>
-            </div>
-            <small className="text-muted">{data.details}</small>
-          </Card.Body>
-        </Card>
-      );
+    Object.entries(breakdown).forEach(([key, data]: [string, any]) => {
+      const reqStatus = getRequirementStatus(data);
+      const requirement = { key, data, status: reqStatus };
+
+      // Categorize by importance
+      if (
+        key === 'cdlRequirements' ||
+        key === 'drugTestRequirements' ||
+        key === 'criminalHistoryRequirements'
+      ) {
+        critical.push(requirement);
+      } else if (
+        key === 'experienceRequirements' ||
+        key === 'geographyMatch' ||
+        key === 'mvrRequirements'
+      ) {
+        important.push(requirement);
+      } else {
+        additional.push(requirement);
+      }
     });
+
+    return { critical, important, additional };
+  };
+
+  const renderRequirementCard = (requirement: any) => {
+    const { key, data, status } = requirement;
+
+    return (
+      <div key={key} className="mb-2 p-3 border rounded-3" style={{ backgroundColor: '#f8f9fa' }}>
+        <div className="d-flex justify-content-between align-items-center mb-1">
+          <span className="fw-medium">{data.category}</span>
+          <span style={{ fontSize: '1.2rem' }}>
+            {status.variant === 'success' ? '✅' : status.variant === 'warning' ? '⚠️' : '❌'}
+          </span>
+        </div>
+        <small className="text-muted">{data.details}</small>
+      </div>
+    );
+  };
+
+  const renderRequirementSection = (title: string, requirements: any[], variant: string) => {
+    if (requirements.length === 0) return null;
+
+    return (
+      <Card className="mb-4 border-0 shadow-sm">
+        <Card.Header className={`bg-${variant} text-white`}>{title}</Card.Header>
+        <Card.Body>{requirements.map(renderRequirementCard)}</Card.Body>
+      </Card>
+    );
   };
 
   const compatibility = getCompatibilityStatus(eligibilityStatus, score);
@@ -247,19 +246,35 @@ export default function ApplicantEligibilityDetail({
                       </div>
                     </div>
 
-                    <Badge
-                      bg={compatibility.variant}
-                      className="me-2"
-                      style={{ fontSize: '1rem', padding: '0.6rem 1.2rem' }}
-                    >
-                      {compatibility.label}
-                    </Badge>
-
-                    {applicant.hasApplied && (
-                      <Badge bg="info" style={{ fontSize: '0.9rem', padding: '0.5rem 1rem' }}>
-                        Applied to this job
+                    <div className="d-flex align-items-center mb-2">
+                      <Badge
+                        bg={compatibility.variant}
+                        className="me-2"
+                        style={{ fontSize: '1rem', padding: '0.6rem 1.2rem' }}
+                      >
+                        {compatibility.label}
                       </Badge>
-                    )}
+
+                      <div
+                        className="me-2"
+                        title="Eligibility Score: A score of 0 means the candidate would not work with your organization. A score of 100 means they meet all criteria. Scores above 100 indicate the candidate has extra qualifications you should consider."
+                        style={{ cursor: 'help' }}
+                      >
+                        <Badge
+                          bg="secondary"
+                          className="d-flex align-items-center"
+                          style={{ fontSize: '0.9rem', padding: '0.5rem 0.8rem' }}
+                        >
+                          Score: {Math.round(score)}
+                        </Badge>
+                      </div>
+
+                      {applicant.hasApplied && (
+                        <Badge bg="info" style={{ fontSize: '0.9rem', padding: '0.5rem 1rem' }}>
+                          Applied to this job
+                        </Badge>
+                      )}
+                    </div>
 
                     <div className="mt-2">
                       <small className="text-muted">{compatibility.description}</small>
@@ -277,15 +292,24 @@ export default function ApplicantEligibilityDetail({
             </Card>
 
             {/* Detailed Requirement Analysis */}
-            <Card className="mb-4 border-0 shadow-sm">
-              <Card.Header className="bg-white border-bottom">
-                <h5 className="mb-0">
-                  <TrophyFill className="me-2 text-warning" />
-                  Job Requirement Analysis
-                </h5>
-              </Card.Header>
-              <Card.Body>{renderRequirementBreakdown(detailedBreakdown)}</Card.Body>
-            </Card>
+            <div className="mb-4">
+              <div className="d-flex align-items-center mb-3">
+                <h5 className="mb-0">Job Requirement Analysis</h5>
+              </div>
+
+              {(() => {
+                const { critical, important, additional } =
+                  categorizeRequirements(detailedBreakdown);
+
+                return (
+                  <>
+                    {renderRequirementSection('Critical Requirements', critical, 'danger')}
+                    {renderRequirementSection('Important Requirements', important, 'warning')}
+                    {renderRequirementSection('Additional Qualifications', additional, 'info')}
+                  </>
+                );
+              })()}
+            </div>
 
             {/* Analysis Details */}
             <Row>
@@ -314,10 +338,7 @@ export default function ApplicantEligibilityDetail({
 
               <Col md={6}>
                 <Card className="mb-4 border-0 shadow-sm h-100">
-                  <Card.Header className="bg-danger text-white">
-                    <XCircleFill className="me-2" />
-                    Missing Requirements
-                  </Card.Header>
+                  <Card.Header className="bg-danger text-white">Missing Requirements</Card.Header>
                   <Card.Body>
                     {scoringDetails.requirementsFailed.length > 0 ? (
                       <ul className="list-unstyled mb-0">
@@ -342,7 +363,6 @@ export default function ApplicantEligibilityDetail({
                   <Col md={6}>
                     <Card className="mb-4 border-0 shadow-sm h-100">
                       <Card.Header className="bg-warning text-dark">
-                        <TrophyFill className="me-2" />
                         Additional Strengths
                       </Card.Header>
                       <Card.Body>
@@ -363,7 +383,6 @@ export default function ApplicantEligibilityDetail({
                   <Col md={6}>
                     <Card className="mb-4 border-0 shadow-sm h-100">
                       <Card.Header className="bg-secondary text-white">
-                        <InfoCircleFill className="me-2" />
                         Areas of Concern
                       </Card.Header>
                       <Card.Body>
