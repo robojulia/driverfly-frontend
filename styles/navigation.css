@@ -284,7 +284,6 @@
   font-weight: 600;
   font-size: 0.9rem;
   text-decoration: none;
-  border: 2px solid transparent;
   transition: var(--transition-fast);
   cursor: pointer;
   white-space: nowrap;

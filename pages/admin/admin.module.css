@@ -1,0 +1,40 @@
+.adminCard {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border: 1px solid #e0e0e0;
+}
+
+.adminCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.iconWrapper {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #1b4454 0%, #2d5a6b 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.statusBadge {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.actionButton {
+  margin-top: auto;
+  width: 100%;
+}
+
+.infoCard {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #dee2e6;
+}
+
+.infoCard .card-title {
+  color: #495057;
+  margin-bottom: 0.5rem;
+}

@@ -3,7 +3,15 @@ import Sidebar from '../sidebars/sidebar';
 import { Dropdown, Modal } from 'react-bootstrap';
 import { useAuth } from '../../../../hooks/use-auth';
 import { useTranslation } from '../../../../hooks/use-translation';
-import { BoxArrowRight, Person, List, QuestionCircle, X, InfoCircle } from 'react-bootstrap-icons';
+import {
+  BoxArrowRight,
+  Person,
+  List,
+  QuestionCircle,
+  X,
+  InfoCircle,
+  Tools,
+} from 'react-bootstrap-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useMediaQuery } from 'react-responsive';
@@ -23,7 +31,7 @@ export default function DashboardLayout({ children, sidebarItems }: DashboardLay
   const [hasSubmenu, setHasSubmenu] = useState(false);
   const [showSupportModal, setShowSupportModal] = useState(false);
   const [showVersionModal, setShowVersionModal] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, logout, isSuperAdmin } = useAuth();
   const { t } = useTranslation();
   const router = useRouter();
   const isMobile = useMediaQuery({ query: `(max-width: 991.98px)` });
@@ -154,6 +162,16 @@ export default function DashboardLayout({ children, sidebarItems }: DashboardLay
                       {t('CONTACT_SUPPORT')}
                     </Dropdown.Item>
                     <Dropdown.Divider />
+                    {/* Super Admin Tools */}
+                    {isSuperAdmin && (
+                      <>
+                        <Dropdown.Item href="/admin" className={styles['dropdown-item']}>
+                          <Tools className="me-2" size={16} style={{ color: '#dc3545' }} /> Admin
+                          Tools
+                        </Dropdown.Item>
+                        <Dropdown.Divider />
+                      </>
+                    )}
                     {/* Add Impersonate feature */}
                     <Impersonate />
                     <Dropdown.Item onClick={logout} className={styles['dropdown-item']}>

@@ -1,15 +1,12 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { Container, Navbar } from "react-bootstrap";
-import { Icon } from "react-bootstrap-icons";
-import { ChevronDown, ChevronRight, X } from "react-bootstrap-icons";
-import { useMediaQuery } from "react-responsive";
-import { useAuth } from "../../../../hooks/use-auth";
-import {
-  TranslateInterface,
-  useTranslation,
-} from "../../../../hooks/use-translation";
-import { useEffect, useState } from "react";
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { Container, Navbar } from 'react-bootstrap';
+import { Icon } from 'react-bootstrap-icons';
+import { ChevronDown, ChevronRight, X } from 'react-bootstrap-icons';
+import { useMediaQuery } from 'react-responsive';
+import { useAuth } from '../../../../hooks/use-auth';
+import { TranslateInterface, useTranslation } from '../../../../hooks/use-translation';
+import { useEffect, useState } from 'react';
 
 export interface SidebarProps {
   open?: boolean;
@@ -37,14 +34,7 @@ export interface SidebarItem {
  * @param {SidebarProps} props
  */
 export default function Sidebar(props: SidebarProps) {
-  const {
-    items,
-    open = false,
-    showLogo = true,
-    isSubmenu = false,
-    onToggle,
-    onHasSubmenu,
-  } = props;
+  const { items, open = false, showLogo = true, isSubmenu = false, onToggle, onHasSubmenu } = props;
 
   const isMobile = useMediaQuery({ query: `(max-width: 991.98px)` });
   const router = useRouter();
@@ -86,20 +76,13 @@ export default function Sidebar(props: SidebarProps) {
   };
 
   useEffect(() => {
-    console.log(
-      "Sidebar submenu visible:",
-      hasVisibleSubmenu,
-      "for path:",
-      router.asPath
-    );
+    console.log('Sidebar submenu visible:', hasVisibleSubmenu, 'for path:', router.asPath);
   }, [hasVisibleSubmenu, router.asPath]);
 
   return (
     <>
       <aside
-        className={`sidebarArea ${open ? "showSidebar" : ""} ${
-          isSubmenu ? "submenu-sidebar" : ""
-        }`}
+        className={`sidebarArea ${open ? 'showSidebar' : ''} ${isSubmenu ? 'submenu-sidebar' : ''}`}
       >
         {/* Close button for mobile */}
         {isMobile && !isSubmenu && (
@@ -118,9 +101,9 @@ export default function Sidebar(props: SidebarProps) {
               src="/img/logo.png"
               alt="DriverFly Logo"
               style={{
-                maxWidth: "100%",
-                height: "auto",
-                objectFit: "contain",
+                maxWidth: '100%',
+                height: 'auto',
+                objectFit: 'contain',
               }}
             />
           </div>
@@ -130,9 +113,7 @@ export default function Sidebar(props: SidebarProps) {
         <SidebarArea isMobile={isMobile}>
           {Object.entries(groupedItems).map(([group, groupItems]) => (
             <div key={group} className="nav-group">
-              {group !== "undefined" && (
-                <div className="nav-group-title">{t(group)}</div>
-              )}
+              {group !== 'undefined' && <div className="nav-group-title">{t(group)}</div>}
               {groupItems.map((v) => (
                 <SidebarLink
                   key={v.text}
@@ -163,7 +144,7 @@ export default function Sidebar(props: SidebarProps) {
 function SidebarArea({ children, isMobile }) {
   return (
     <div className="side_bar">
-      <Navbar expand={isMobile ? true : "lg"}>
+      <Navbar expand={isMobile ? true : 'lg'}>
         <Container className="p-0">
           <Navbar.Collapse id="sidebar-nav" className="show">
             <ul>{children}</ul>
@@ -176,7 +157,7 @@ function SidebarArea({ children, isMobile }) {
 
 function groupItemsByCategory(items: SidebarItem[]) {
   return items.reduce((acc, item) => {
-    const group = item.group || "undefined";
+    const group = item.group || 'undefined';
     if (!acc[group]) {
       acc[group] = [];
     }
@@ -225,24 +206,18 @@ function filterItems(values: SidebarItem[], hasPermission): SidebarItem[] {
 }
 
 function IsSelected(item: SidebarItem, currentPath) {
-  if ("isSelected" in item) return item.isSelected;
+  if ('isSelected' in item) return item.isSelected;
 
   if (item.items) {
-    return (item.isSelected = !!findLast(item.items, (v) =>
-      IsSelected(v, currentPath)
-    ));
+    return (item.isSelected = !!findLast(item.items, (v) => IsSelected(v, currentPath)));
   }
 
-  if (item.startsWith)
-    return (item.isSelected = currentPath.startsWith(item.pathname));
+  if (item.startsWith) return (item.isSelected = currentPath.startsWith(item.pathname));
 
   return (item.isSelected = currentPath === item.pathname);
 }
 
-function findLast<In>(
-  arr: In[],
-  predicate: (value: In, index: number) => boolean
-) {
+function findLast<In>(arr: In[], predicate: (value: In, index: number) => boolean) {
   for (let i = arr.length - 1; i > -1; i--) {
     let value = arr[i];
     if (predicate(value, i)) return value;
@@ -263,15 +238,20 @@ function SidebarLink(props: SidebarLinkProps) {
   const [expanded, setExpanded] = useState(false);
 
   if (!pathname && items) pathname = items[0]?.pathname;
+
+  // Safety check to prevent undefined pathname
+  if (!pathname) {
+    console.warn('SidebarLink: pathname is undefined for item:', props.item);
+    pathname = '#';
+  }
+
   const isActive = IsSelected(props.item, currentPath);
   const hasSubItems = items && items.length > 0;
 
   // Automatically expand submenu if any child item is active
   useEffect(() => {
     if (hasSubItems && isMobile) {
-      const hasActiveChild = items.some((item) =>
-        IsSelected(item, currentPath)
-      );
+      const hasActiveChild = items.some((item) => IsSelected(item, currentPath));
       if (hasActiveChild) {
         setExpanded(true);
       }
@@ -290,9 +270,9 @@ function SidebarLink(props: SidebarLinkProps) {
 
   return (
     <li
-      className={`${isActive ? "active" : ""} ${
-        hasSubItems ? "has-subitems" : ""
-      } ${expanded ? "expanded" : ""}`}
+      className={`${isActive ? 'active' : ''} ${hasSubItems ? 'has-subitems' : ''} ${
+        expanded ? 'expanded' : ''
+      }`}
     >
       <Link href={pathname} scroll={true}>
         <a onClick={handleClick}>
@@ -301,7 +281,7 @@ function SidebarLink(props: SidebarLinkProps) {
         </a>
       </Link>
       {isMobile && hasSubItems && (
-        <ul className={expanded ? "show" : "hide"}>
+        <ul className={expanded ? 'show' : 'hide'}>
           {items.map((v, i) => (
             <SidebarLink
               key={i}

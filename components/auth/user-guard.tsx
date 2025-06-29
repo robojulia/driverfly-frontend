@@ -28,6 +28,7 @@ export function UserGuard({ permissions, children }: UserGuardProps) {
     if (await loginGuard()) {
       if (permissions) {
         if (user) {
+          console.log(user);
           if (typeof permissions == 'string') permissions = [permissions];
 
           if (!hasPermission(...permissions)) {
