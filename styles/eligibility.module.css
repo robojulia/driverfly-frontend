@@ -745,7 +745,6 @@
   font-size: var(--eligibility-font-size-sm);
   color: var(--eligibility-light);
   position: relative;
-  border: 2px solid transparent;
   transition: var(--eligibility-transition);
 }
 

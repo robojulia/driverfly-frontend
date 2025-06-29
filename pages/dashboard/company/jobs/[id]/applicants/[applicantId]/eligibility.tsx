@@ -10,7 +10,7 @@ import {
 } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
-import { Container, Row, Col, Card, Badge, Button, Alert, ProgressBar } from 'react-bootstrap';
+import { Container, Row, Col, Card, Badge, Button, Alert } from 'react-bootstrap';
 import FullLayout from '../../../../../../../components/dashboard/layouts/layout/full-layout';
 import ChildPageLayout from '../../../../../../../components/layouts/page/child-page-layout';
 import { useAuth } from '../../../../../../../hooks/use-auth';
@@ -121,73 +121,104 @@ export default function ApplicantEligibilityDetail({
     recommendations,
   } = eligibilityData;
 
-  const getScoreColor = (score: number): string => {
-    if (score >= 90) return 'success';
-    if (score >= 80) return 'primary';
-    if (score >= 60) return 'warning';
-    return 'danger';
-  };
-
-  const getScoreBadgeClass = (score: number): string => {
-    if (score >= 90) return styles.excellent;
-    if (score >= 80) return styles.good;
-    if (score >= 60) return styles.fair;
-    return styles.poor;
-  };
-
-  const getStatusVariant = (status: string): string => {
-    switch (status) {
-      case 'ELIGIBLE':
-        return 'success';
-      case 'PARTIALLY_ELIGIBLE':
-        return 'warning';
-      case 'NOT_ELIGIBLE':
-        return 'danger';
-      default:
-        return 'secondary';
+  const getCompatibilityStatus = (status: string, score: number) => {
+    // Map backend status to new compatibility states
+    if (status === 'ELIGIBLE' && score >= 85) {
+      return {
+        status: 'MATCH',
+        label: 'Match',
+        variant: 'success',
+        icon: '✅',
+        description: 'Strong match for job requirements',
+      };
+    } else if (status === 'ELIGIBLE' || status === 'PARTIALLY_ELIGIBLE') {
+      return {
+        status: 'PARTIALLY_COMPATIBLE',
+        label: 'Partially Compatible',
+        variant: 'warning',
+        icon: '⚠️',
+        description: 'Meets some requirements, may need review',
+      };
+    } else {
+      return {
+        status: 'INCOMPATIBLE',
+        label: 'Incompatible',
+        variant: 'danger',
+        icon: '❌',
+        description: 'Does not meet key job requirements',
+      };
     }
   };
 
-  const formatStatus = (status: string): string => {
-    switch (status) {
-      case 'ELIGIBLE':
-        return 'Eligible';
-      case 'PARTIALLY_ELIGIBLE':
-        return 'Partially Eligible';
-      case 'NOT_ELIGIBLE':
-        return 'Not Eligible';
-      default:
-        return status;
+  const getRequirementStatus = (data: any) => {
+    if (data.status === 'PASS') {
+      return { status: 'MATCH', icon: '✅', variant: 'success' };
+    } else if (data.status === 'PARTIAL') {
+      return { status: 'PARTIALLY_COMPATIBLE', icon: '⚠️', variant: 'warning' };
+    } else {
+      return { status: 'INCOMPATIBLE', icon: '❌', variant: 'danger' };
     }
   };
 
-  const renderScoreBreakdown = (breakdown: any) => {
+  const renderRequirementBreakdown = (breakdown: any) => {
     return Object.entries(breakdown).map(([key, data]: [string, any]) => {
-      const percentage = data.maxPoints > 0 ? (data.points / data.maxPoints) * 100 : 0;
-      const variant =
-        data.status === 'PASS' ? 'success' : data.status === 'PARTIAL' ? 'warning' : 'danger';
+      const reqStatus = getRequirementStatus(data);
 
       return (
         <Card key={key} className="mb-3 border-0 shadow-sm">
           <Card.Body>
             <div className="d-flex justify-content-between align-items-start mb-2">
               <h6 className="mb-0">{data.category}</h6>
-              <Badge bg={variant}>
-                {data.points}/{data.maxPoints} pts
-              </Badge>
+              <div className="d-flex align-items-center">
+                <Badge
+                  bg={reqStatus.variant}
+                  className="text-uppercase"
+                  style={{ fontSize: '0.75rem' }}
+                >
+                  {reqStatus.status.replace('_', ' ')}
+                </Badge>
+              </div>
             </div>
-            <ProgressBar
-              variant={variant}
-              now={percentage}
-              className="mb-2"
-              style={{ height: '8px' }}
-            />
+            <div className="mb-2">
+              <div
+                className={`w-100 rounded`}
+                style={{
+                  height: '8px',
+                  backgroundColor:
+                    reqStatus.variant === 'success'
+                      ? '#d4edda'
+                      : reqStatus.variant === 'warning'
+                      ? '#fff3cd'
+                      : '#f8d7da',
+                }}
+              >
+                <div
+                  className={`h-100 rounded`}
+                  style={{
+                    width:
+                      reqStatus.variant === 'success'
+                        ? '100%'
+                        : reqStatus.variant === 'warning'
+                        ? '60%'
+                        : '0%',
+                    backgroundColor:
+                      reqStatus.variant === 'success'
+                        ? '#28a745'
+                        : reqStatus.variant === 'warning'
+                        ? '#ffc107'
+                        : '#dc3545',
+                  }}
+                />
+              </div>
+            </div>
             <small className="text-muted">{data.details}</small>
           </Card.Body>
         </Card>
       );
     });
   };
+
+  const compatibility = getCompatibilityStatus(eligibilityStatus, score);
 
   const title = `${applicant.firstName} ${applicant.lastName} - Eligibility Analysis`;
 
@@ -202,12 +233,6 @@ export default function ApplicantEligibilityDetail({
                 <Row>
                   <Col md={8}>
                     <div className="d-flex align-items-center mb-3">
-                      <div
-                        className={`${styles.scoreBadge} ${getScoreBadgeClass(score)} me-3`}
-                        style={{ width: '60px', height: '60px', fontSize: '1.1rem' }}
-                      >
-                        {Math.round(score)}
-                      </div>
                       <div>
                         <h4 className="mb-1">
                           <PersonFill className="me-2" />
@@ -217,17 +242,17 @@ export default function ApplicantEligibilityDetail({
                           {applicant.licenseType} • {applicant.yearsExperience} years experience
                         </p>
                         <p className="mb-0 text-muted">
-                          📍 {applicant.location} • 📞 {applicant.phone}
+                          {applicant.location} • {applicant.phone}
                         </p>
                       </div>
                     </div>
 
                     <Badge
-                      bg={getStatusVariant(eligibilityStatus)}
+                      bg={compatibility.variant}
                       className="me-2"
-                      style={{ fontSize: '0.9rem', padding: '0.5rem 1rem' }}
+                      style={{ fontSize: '1rem', padding: '0.6rem 1.2rem' }}
                     >
-                      {formatStatus(eligibilityStatus)}
+                      {compatibility.label}
                     </Badge>
 
                     {applicant.hasApplied && (
@@ -235,6 +260,10 @@ export default function ApplicantEligibilityDetail({
                         Applied to this job
                       </Badge>
                     )}
+
+                    <div className="mt-2">
+                      <small className="text-muted">{compatibility.description}</small>
+                    </div>
                   </Col>
                   <Col md={4} className="text-end">
                     <Link href={`/dashboard/company/applicants/${applicant.id}`}>
@@ -247,24 +276,24 @@ export default function ApplicantEligibilityDetail({
               </Card.Body>
             </Card>
 
-            {/* Detailed Score Breakdown */}
+            {/* Detailed Requirement Analysis */}
             <Card className="mb-4 border-0 shadow-sm">
               <Card.Header className="bg-white border-bottom">
                 <h5 className="mb-0">
                   <TrophyFill className="me-2 text-warning" />
-                  Detailed Score Breakdown
+                  Job Requirement Analysis
                 </h5>
               </Card.Header>
-              <Card.Body>{renderScoreBreakdown(detailedBreakdown)}</Card.Body>
+              <Card.Body>{renderRequirementBreakdown(detailedBreakdown)}</Card.Body>
             </Card>
 
-            {/* Scoring Details */}
+            {/* Analysis Details */}
             <Row>
               <Col md={6}>
                 <Card className="mb-4 border-0 shadow-sm h-100">
                   <Card.Header className="bg-success text-white">
                     <CheckCircleFill className="me-2" />
-                    Requirements Met
+                    Strong Matches
                   </Card.Header>
                   <Card.Body>
                     {scoringDetails.requirementsMet.length > 0 ? (
@@ -277,7 +306,7 @@ export default function ApplicantEligibilityDetail({
                         ))}
                       </ul>
                     ) : (
-                      <p className="text-muted mb-0">No specific requirements met</p>
+                      <p className="text-muted mb-0">No strong matches identified</p>
                     )}
                   </Card.Body>
                 </Card>
@@ -287,7 +316,7 @@ export default function ApplicantEligibilityDetail({
                 <Card className="mb-4 border-0 shadow-sm h-100">
                   <Card.Header className="bg-danger text-white">
                     <XCircleFill className="me-2" />
-                    Requirements Failed
+                    Missing Requirements
                   </Card.Header>
                   <Card.Body>
                     {scoringDetails.requirementsFailed.length > 0 ? (
@@ -300,7 +329,7 @@ export default function ApplicantEligibilityDetail({
                         ))}
                       </ul>
                     ) : (
-                      <p className="text-muted mb-0">No requirements failed</p>
+                      <p className="text-muted mb-0">No missing requirements</p>
                     )}
                   </Card.Body>
                 </Card>
@@ -314,7 +343,7 @@ export default function ApplicantEligibilityDetail({
                     <Card className="mb-4 border-0 shadow-sm h-100">
                       <Card.Header className="bg-warning text-dark">
                         <TrophyFill className="me-2" />
-                        Bonus Points
+                        Additional Strengths
                       </Card.Header>
                       <Card.Body>
                         <ul className="list-unstyled mb-0">
@@ -335,7 +364,7 @@ export default function ApplicantEligibilityDetail({
                     <Card className="mb-4 border-0 shadow-sm h-100">
                       <Card.Header className="bg-secondary text-white">
                         <InfoCircleFill className="me-2" />
-                        Deductions
+                        Areas of Concern
                       </Card.Header>
                       <Card.Body>
                         <ul className="list-unstyled mb-0">

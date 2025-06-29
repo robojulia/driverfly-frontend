@@ -130,6 +130,15 @@ export default function ResetPassword({ passwordResetToken }) {
 }
 
 export async function getServerSideProps(context) {
+  // Temporarily allow access without token for development
+  if (process.env.NODE_ENV === 'development' && !context.query.passwordResetToken) {
+    return {
+      props: {
+        passwordResetToken: 'dev-test-token',
+      },
+    };
+  }
+
   if (!!!context.query.passwordResetToken) {
     return {
       notFound: true,
