@@ -266,7 +266,7 @@ export default function ApplicantEligibilityDetail({
                     </div>
                   </Col>
                   <Col md={4} className="text-end">
-                    <Link href={`/dashboard/company/applicants/${applicant.id}`}>
+                    <Link href={`/dashboard/company/applicants/${applicant.id}/edit`}>
                       <a>
                         <Button variant="outline-primary">View Full Profile</Button>
                       </a>
