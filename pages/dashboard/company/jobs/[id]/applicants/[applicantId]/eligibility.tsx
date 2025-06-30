@@ -112,37 +112,23 @@ export default function ApplicantEligibilityDetail({
     );
   }
 
-  const {
-    applicant,
-    score,
-    eligibilityStatus,
-    scoringDetails,
-    detailedBreakdown,
-    recommendations,
-  } = eligibilityData;
+  const { applicant, eligibilityStatus, scoringDetails, detailedBreakdown, recommendations } =
+    eligibilityData;
 
-  const getCompatibilityStatus = (status: string, score: number) => {
+  const getCompatibilityStatus = (status: string) => {
     // Map backend status to new compatibility states
-    if (status === 'ELIGIBLE' && score >= 85) {
+    if (status === 'ELIGIBLE') {
       return {
-        status: 'MATCH',
-        label: 'Match',
+        status: 'ELIGIBLE',
+        label: 'Eligible',
         variant: 'success',
         icon: '✅',
-        description: 'Strong match for job requirements',
-      };
-    } else if (status === 'ELIGIBLE' || status === 'PARTIALLY_ELIGIBLE') {
-      return {
-        status: 'PARTIALLY_COMPATIBLE',
-        label: 'Partially Compatible',
-        variant: 'warning',
-        icon: '⚠️',
-        description: 'Meets some requirements, may need review',
+        description: 'Meets job requirements',
       };
     } else {
       return {
-        status: 'INCOMPATIBLE',
-        label: 'Incompatible',
+        status: 'NOT_ELIGIBLE',
+        label: 'Not Eligible',
         variant: 'danger',
         icon: '❌',
         description: 'Does not meet key job requirements',
@@ -160,64 +146,50 @@ export default function ApplicantEligibilityDetail({
     }
   };
 
-  const categorizeRequirements = (breakdown: any) => {
-    const critical = [];
-    const important = [];
-    const additional = [];
+  const organizeRequirements = (breakdown: any) => {
+    // Define logical ordering for requirements
+    const requirementOrder = [
+      'cdlRequirements',
+      'experienceRequirements',
+      'geographyMatch',
+      'drugTestRequirements',
+      'criminalHistoryRequirements',
+      'mvrRequirements',
+      'workAuthorizationRequirements',
+      'ageRequirements',
+      'educationRequirements',
+    ];
 
-    Object.entries(breakdown).forEach(([key, data]: [string, any]) => {
-      const reqStatus = getRequirementStatus(data);
-      const requirement = { key, data, status: reqStatus };
+    const requirements = [];
 
-      // Categorize by importance
-      if (
-        key === 'cdlRequirements' ||
-        key === 'drugTestRequirements' ||
-        key === 'criminalHistoryRequirements'
-      ) {
-        critical.push(requirement);
-      } else if (
-        key === 'experienceRequirements' ||
-        key === 'geographyMatch' ||
-        key === 'mvrRequirements'
-      ) {
-        important.push(requirement);
-      } else {
-        additional.push(requirement);
+    // Add requirements in our defined order
+    requirementOrder.forEach((key) => {
+      if (breakdown[key]) {
+        const reqStatus = getRequirementStatus(breakdown[key]);
+        requirements.push({
+          key,
+          data: breakdown[key],
+          status: reqStatus,
+        });
       }
     });
 
-    return { critical, important, additional };
+    // Add any remaining requirements not in our predefined order
+    Object.entries(breakdown).forEach(([key, data]: [string, any]) => {
+      if (!requirementOrder.includes(key)) {
+        const reqStatus = getRequirementStatus(data);
+        requirements.push({
+          key,
+          data,
+          status: reqStatus,
+        });
+      }
+    });
+
+    return requirements;
   };
 
-  const renderRequirementCard = (requirement: any) => {
-    const { key, data, status } = requirement;
-
-    return (
-      <div key={key} className="mb-2 p-3 border rounded-3" style={{ backgroundColor: '#f8f9fa' }}>
-        <div className="d-flex justify-content-between align-items-center mb-1">
-          <span className="fw-medium">{data.category}</span>
-          <span style={{ fontSize: '1.2rem' }}>
-            {status.variant === 'success' ? '✅' : status.variant === 'warning' ? '⚠️' : '❌'}
-          </span>
-        </div>
-        <small className="text-muted">{data.details}</small>
-      </div>
-    );
-  };
-
-  const renderRequirementSection = (title: string, requirements: any[], variant: string) => {
-    if (requirements.length === 0) return null;
-
-    return (
-      <Card className="mb-4 border-0 shadow-sm">
-        <Card.Header className={`bg-${variant} text-white`}>{title}</Card.Header>
-        <Card.Body>{requirements.map(renderRequirementCard)}</Card.Body>
-      </Card>
-    );
-  };
-
-  const compatibility = getCompatibilityStatus(eligibilityStatus, score);
+  const compatibility = getCompatibilityStatus(eligibilityStatus);
 
   const title = `${applicant.firstName} ${applicant.lastName} - Eligibility Analysis`;
 
@@ -255,20 +227,6 @@ export default function ApplicantEligibilityDetail({
                         {compatibility.label}
                       </Badge>
 
-                      <div
-                        className="me-2"
-                        title="Eligibility Score: A score of 0 means the candidate would not work with your organization. A score of 100 means they meet all criteria. Scores above 100 indicate the candidate has extra qualifications you should consider."
-                        style={{ cursor: 'help' }}
-                      >
-                        <Badge
-                          bg="secondary"
-                          className="d-flex align-items-center"
-                          style={{ fontSize: '0.9rem', padding: '0.5rem 0.8rem' }}
-                        >
-                          Score: {Math.round(score)}
-                        </Badge>
-                      </div>
-
                       {applicant.hasApplied && (
                         <Badge bg="info" style={{ fontSize: '0.9rem', padding: '0.5rem 1rem' }}>
                           Applied to this job
@@ -298,15 +256,75 @@ export default function ApplicantEligibilityDetail({
               </div>
 
               {(() => {
-                const { critical, important, additional } =
-                  categorizeRequirements(detailedBreakdown);
+                const requirements = organizeRequirements(detailedBreakdown);
+
+                if (requirements.length === 0) {
+                  return (
+                    <Card className="border-0 shadow-sm">
+                      <Card.Body className="text-center py-4">
+                        <p className="text-muted mb-0">
+                          No specific job requirements available for analysis.
+                        </p>
+                      </Card.Body>
+                    </Card>
+                  );
+                }
 
                 return (
-                  <>
-                    {renderRequirementSection('Critical Requirements', critical, 'danger')}
-                    {renderRequirementSection('Important Requirements', important, 'warning')}
-                    {renderRequirementSection('Additional Qualifications', additional, 'info')}
-                  </>
+                  <Card className="border-0 shadow-sm">
+                    <Card.Body>
+                      <Row className="g-3">
+                        {requirements.map((requirement, index) => {
+                          const borderColor =
+                            requirement.status.variant === 'success'
+                              ? '#28a745'
+                              : requirement.status.variant === 'warning'
+                              ? '#ffc107'
+                              : '#dc3545';
+                          const bgColor =
+                            requirement.status.variant === 'success'
+                              ? '#f8fff9'
+                              : requirement.status.variant === 'warning'
+                              ? '#fffbf0'
+                              : '#fff5f5';
+
+                          return (
+                            <Col key={requirement.key} xs={12} sm={6} lg={4} className="d-flex">
+                              <div
+                                className="w-100 p-3 rounded-3 d-flex flex-column"
+                                style={{
+                                  backgroundColor: bgColor,
+                                  border: `2px solid ${borderColor}20`,
+                                  borderLeft: `4px solid ${borderColor}`,
+                                }}
+                              >
+                                <div className="d-flex justify-content-between align-items-start mb-2">
+                                  <h6 className="mb-0 fw-medium flex-grow-1 me-2">
+                                    {requirement.data.category}
+                                  </h6>
+                                  <span style={{ fontSize: '1.3rem', flexShrink: 0 }}>
+                                    {requirement.status.icon}
+                                  </span>
+                                </div>
+                                <small className="text-muted d-block flex-grow-1 mb-2">
+                                  {requirement.data.details}
+                                </small>
+                                <div className="mt-auto">
+                                  <Badge
+                                    bg={requirement.status.variant}
+                                    className="px-2 py-1"
+                                    style={{ fontSize: '0.75rem' }}
+                                  >
+                                    {requirement.status.status.replace('_', ' ')}
+                                  </Badge>
+                                </div>
+                              </div>
+                            </Col>
+                          );
+                        })}
+                      </Row>
+                    </Card.Body>
+                  </Card>
                 );
               })()}
             </div>
@@ -359,26 +377,6 @@ export default function ApplicantEligibilityDetail({
 
             {(scoringDetails.bonusPoints.length > 0 || scoringDetails.deductions.length > 0) && (
               <Row>
-                {scoringDetails.bonusPoints.length > 0 && (
-                  <Col md={6}>
-                    <Card className="mb-4 border-0 shadow-sm h-100">
-                      <Card.Header className="bg-warning text-dark">
-                        Additional Strengths
-                      </Card.Header>
-                      <Card.Body>
-                        <ul className="list-unstyled mb-0">
-                          {scoringDetails.bonusPoints.map((item, index) => (
-                            <li key={index} className="mb-2">
-                              <TrophyFill className="text-warning me-2" />
-                              {item}
-                            </li>
-                          ))}
-                        </ul>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                )}
-
                 {scoringDetails.deductions.length > 0 && (
                   <Col md={6}>
                     <Card className="mb-4 border-0 shadow-sm h-100">

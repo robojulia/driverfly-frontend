@@ -1,0 +1,224 @@
+/* Campaign Dashboard Styles */
+.campaign-card {
+  transition: all 0.2s ease-in-out;
+  border: 1px solid #e9ecef;
+}
+
+.campaign-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.campaign-stats {
+  border-top: 1px solid #f8f9fa;
+  padding-top: 1rem;
+}
+
+.campaign-stats .col-4 {
+  border-right: 1px solid #f8f9fa;
+}
+
+.campaign-stats .col-4:last-child {
+  border-right: none;
+}
+
+.campaign-dates {
+  border-top: 1px solid #f8f9fa;
+  padding-top: 0.75rem;
+}
+
+.campaign-actions {
+  border-top: 1px solid #f8f9fa;
+  padding-top: 0.75rem;
+}
+
+.campaign-actions .btn-group .btn {
+  border-radius: 0;
+}
+
+.campaign-actions .btn-group .btn:first-child {
+  border-radius: 0.25rem 0 0 0.25rem;
+}
+
+.campaign-actions .btn-group .btn:last-child {
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
+/* Campaign Detail Page */
+.campaign-detail-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.campaign-stat-card {
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e9ecef;
+  background: white;
+}
+
+.campaign-stat-card h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.campaign-stat-card small {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Success rate progress bar */
+.success-rate-progress {
+  height: 8px;
+  border-radius: 4px;
+  background-color: #e9ecef;
+  overflow: hidden;
+}
+
+.success-rate-progress .progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+  transition: width 0.3s ease;
+}
+
+/* Tab navigation */
+.nav-tabs .nav-link {
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #6c757d;
+  padding: 0.75rem 1rem;
+}
+
+.nav-tabs .nav-link.active {
+  border-bottom-color: #007bff;
+  color: #007bff;
+  background: none;
+}
+
+.nav-tabs .nav-link:hover {
+  border-bottom-color: #dee2e6;
+}
+
+/* Target table */
+.targets-table {
+  font-size: 0.875rem;
+}
+
+.targets-table th {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+.targets-table td {
+  vertical-align: middle;
+  padding: 0.75rem;
+}
+
+/* Status badges */
+.badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6c757d;
+}
+
+.empty-state svg {
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .campaign-stats .col-4 {
+    border-right: none;
+    border-bottom: 1px solid #f8f9fa;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .campaign-stats .col-4:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .campaign-actions .btn-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .campaign-actions .btn-group .btn {
+    border-radius: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .campaign-actions .btn-group .btn:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* Animation for campaign loading */
+.campaign-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.campaign-loading .spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* Marketing campaign theme */
+.marketing-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+  border-radius: 0.5rem;
+}
+
+.marketing-header h1 {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.marketing-header p {
+  opacity: 0.9;
+  margin-bottom: 0;
+}
+
+/* Feature flag disabled state */
+.feature-disabled {
+  text-align: center;
+  padding: 3rem;
+  background: #f8f9fa;
+  border-radius: 0.5rem;
+  margin: 2rem 0;
+}
+
+.feature-disabled h3 {
+  color: #6c757d;
+  margin-bottom: 1rem;
+}
+
+.feature-disabled p {
+  color: #6c757d;
+  margin-bottom: 0;
+}

@@ -68,7 +68,7 @@ export const EligibilityBanner: React.FC<EligibilityBannerProps> = ({ jobId, cla
     return null;
   }
 
-  const { totalApplicants, eligibleApplicants, topScorePercent } = summary;
+  const { totalApplicants, eligibleApplicants } = summary;
   const eligibilityRate =
     totalApplicants > 0 ? Math.round((eligibleApplicants / totalApplicants) * 100) : 0;
 
@@ -96,7 +96,7 @@ export const EligibilityBanner: React.FC<EligibilityBannerProps> = ({ jobId, cla
               <div className={styles.eligibilityBannerSubtext}>
                 {totalApplicants > 0 ? (
                   <>
-                    {eligibilityRate}% match rate • Top score: {topScorePercent}%
+                    {eligibilityRate}% match rate • {totalApplicants} total applicants
                   </>
                 ) : (
                   'Check detailed eligibility analysis and discover quality matches'

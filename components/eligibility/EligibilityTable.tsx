@@ -73,13 +73,6 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
     });
   };
 
-  const getScoreBadgeClass = (score: number): string => {
-    if (score >= 90) return styles.excellent;
-    if (score >= 80) return styles.good;
-    if (score >= 60) return styles.fair;
-    return styles.poor;
-  };
-
   const getStatusBadgeClass = (status: string): string => {
     switch (status) {
       case 'ELIGIBLE':
@@ -154,15 +147,8 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
           </div>
         </div>
 
-        <div className={styles.eligibilityStatCard}>
-          <div className={styles.eligibilityStatNumber}>
-            {data.scoredApplicants.length > 0
-              ? Math.round(data.scoredApplicants[0]?.score || 0)
-              : 0}
-            %
-          </div>
-          <div className={styles.eligibilityStatLabel}>Top Score</div>
-          <div className={styles.eligibilityStatSubtext}>Highest match found</div>
+        <div className={styles.eligibilityStatCard} style={{ visibility: 'hidden' }}>
+          {/* Hidden stat card to maintain 3-column layout */}
         </div>
       </div>
 
@@ -176,7 +162,7 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
               onChange={(e) => handleFilterChange('sortBy', e.target.value)}
               className={styles.filterSelect}
             >
-              <option value="score">Eligibility Score</option>
+              <option value="score">Best Match</option>
               <option value="firstName">First Name</option>
               <option value="lastName">Last Name</option>
               <option value="yearsExperience">Experience</option>
@@ -215,7 +201,6 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
         <table className={styles.applicantEligibilityTable}>
           <thead>
             <tr>
-              <th>Score</th>
               <th>Applicant</th>
               <th>Status</th>
               <th>Experience</th>
@@ -227,12 +212,6 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
           <tbody>
             {data.scoredApplicants.map((applicant: ApplicantEligibilityScore) => (
               <tr key={applicant.applicantId}>
-                <td>
-                  <div className={`${styles.scoreBadge} ${getScoreBadgeClass(applicant.score)}`}>
-                    {Math.round(applicant.score)}
-                  </div>
-                </td>
-
                 <td>
                   <div className={styles.applicantInfo}>
                     <div className={styles.applicantName}>

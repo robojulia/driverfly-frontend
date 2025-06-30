@@ -29,16 +29,19 @@ import {
   PersonLinesFill,
   Link45deg,
   CarFront,
+  MegaphoneFill,
 } from 'react-bootstrap-icons';
 import CompanyProfileNav from '../header/company-profile-nav';
 import { useAuth } from '../../../../hooks/use-auth';
 import { useRouter } from 'next/router';
+import { useFeatureFlags } from '../../../../context/feature-flag-context';
 import DashboardLayout from './dashboard-layout';
 
 // company layout
 const FullLayout = ({ children }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const { isFeatureEnabled } = useFeatureFlags();
 
   const { user, isSuperAdmin, company, isCompanyAdmin } = useAuth();
 
@@ -90,6 +93,14 @@ const FullLayout = ({ children }) => {
       text: 'EMPLOYEES',
       startsWith: true,
       group: 'COMPANY',
+    },
+    {
+      pathname: '/dashboard/company/campaigns',
+      icon: MegaphoneFill,
+      text: 'CAMPAIGNS',
+      startsWith: true,
+      group: 'COMPANY',
+      visible: isFeatureEnabled('CAMPAIGNS_ENABLED'),
     },
     {
       icon: FileEarmarkImage,
