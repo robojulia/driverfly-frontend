@@ -6,6 +6,7 @@ import { Trash } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { ApplicantDocumentType } from '../../../../enums/applicants/applicant-document-type.enum';
+import { ApplicantExtras } from '../../../../enums/applicants/applicant-extras.enum';
 import { useTranslation } from '../../../../hooks/use-translation';
 import { DocumentEntity } from '../../../../models/documents/document.entity';
 import { DocumentsDto } from '../../../../models/jot-form/long-form/documents.dto';
@@ -18,7 +19,7 @@ import styles from '../../../../styles/digitalhiringapp.module.css';
 export function DriverLicense() {
   const {
     state: { applicant, steps },
-    method: { setApplicant, stepNext, stepBack },
+    method: { setApplicant, stepNext, stepBack, setApplicantExtras },
   }: JotFormContextType = useContext(JotformContext);
 
   const [isFormValid, setIsFormValid] = useState(false);
@@ -130,6 +131,17 @@ export function DriverLicense() {
         documents: documentsWithoutLicense,
       });
     }
+
+    // Remove related applicant extras (CDL_NUMBER) when driver's license is removed
+    handleApplicantExtrasCleanup();
+  };
+
+  const handleApplicantExtrasCleanup = () => {
+    if (setApplicantExtras) {
+      setApplicantExtras(
+        (prev) => prev?.filter((extra) => extra.type !== ApplicantExtras.CDL_NUMBER) || []
+      );
+    }
   };
 
   return (
@@ -168,7 +180,7 @@ export function DriverLicense() {
           >
             <div className={styles.documentUploadSection}>
               {Boolean(form.values.mediaOptions) ? (
-                <CameraComponent form={form} />
+                <CameraComponent form={form} onRemove={handleApplicantExtrasCleanup} />
               ) : (
                 <FileInput
                   hideView={Boolean(form.values?.document?.id)}
@@ -177,6 +189,7 @@ export function DriverLicense() {
                   accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
                   allowedSizeInByte={3145728}
                   formik={form}
+                  onRemove={handleApplicantExtrasCleanup}
                 />
               )}
 

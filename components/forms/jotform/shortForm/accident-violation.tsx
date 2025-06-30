@@ -210,11 +210,14 @@ export function AccidentViolation() {
               placeholder={t('PLACEHOLDER_FOR_DIGITS')}
               value={form.values.moving_violations_count?.toString() || ''}
               onChange={(e) => {
-                const value = parseInt(e.target.value) || 0;
+                let value = parseInt(e.target.value) || 0;
+                value = Math.min(Math.max(value, 0), 99); // Cap at 99
                 form.setFieldValue('moving_violations_count', value);
               }}
               onBlur={form.handleBlur}
               required
+              min="0"
+              max="99"
               error={
                 form.touched.moving_violations_count && form.errors.moving_violations_count
                   ? String(form.errors.moving_violations_count)
@@ -232,11 +235,14 @@ export function AccidentViolation() {
               placeholder={t('PLACEHOLDER_FOR_DIGITS')}
               value={form.values.all_violations_count?.toString() || ''}
               onChange={(e) => {
-                const value = parseInt(e.target.value) || 0;
+                let value = parseInt(e.target.value) || 0;
+                value = Math.min(Math.max(value, 0), 99); // Cap at 99
                 form.setFieldValue('all_violations_count', value);
               }}
               onBlur={form.handleBlur}
               required
+              min="0"
+              max="99"
               error={
                 form.touched.all_violations_count && form.errors.all_violations_count
                   ? String(form.errors.all_violations_count)
@@ -254,11 +260,14 @@ export function AccidentViolation() {
               placeholder={t('PLACEHOLDER_FOR_DIGITS')}
               value={form.values.accident_count?.toString() || ''}
               onChange={(e) => {
-                const value = parseInt(e.target.value) || 0;
+                let value = parseInt(e.target.value) || 0;
+                value = Math.min(Math.max(value, 0), 99); // Cap at 99
                 form.setFieldValue('accident_count', value);
               }}
               onBlur={form.handleBlur}
               required
+              min="0"
+              max="99"
               error={
                 form.touched.accident_count && form.errors.accident_count
                   ? String(form.errors.accident_count)

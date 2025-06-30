@@ -217,11 +217,14 @@ export function CdlExperience() {
                 placeholder={t('PLACEHOLDER_FOR_DIGITS')}
                 value={form.values.years_cdl_experience?.toString() || ''}
                 onChange={(e) => {
-                  const value = parseFloat(e.target.value) || 0;
+                  let value = parseFloat(e.target.value) || 0;
+                  value = Math.min(Math.max(value, 0), 99); // Cap at 99
                   form.setFieldValue('years_cdl_experience', value);
                 }}
                 onBlur={form.handleBlur}
                 required
+                min="0"
+                max="99"
                 error={
                   form.touched.years_cdl_experience && form.errors.years_cdl_experience
                     ? String(form.errors.years_cdl_experience)

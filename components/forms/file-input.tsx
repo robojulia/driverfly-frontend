@@ -22,6 +22,7 @@ export interface FileInputProps extends BaseControlProps {
   readOnly?: boolean;
   allowedSizeInByte?: number;
   hideView?: boolean | (() => boolean);
+  onRemove?: () => void; // Callback for when document is removed/cleared
 }
 
 export default function FileInput({
@@ -43,6 +44,7 @@ export default function FileInput({
   allowedSizeInByte,
   hideView,
   allowedTypesFriendlyName,
+  onRemove,
 }: FileInputProps) {
   const { t } = useTranslation();
   if (formik) {
@@ -150,6 +152,9 @@ export default function FileInput({
         value: newValue,
       },
     });
+
+    // Call onRemove callback to handle applicant extras cleanup
+    onRemove?.();
   }
 
   const [viewDoc, setViewDoc] = useState('');

@@ -256,6 +256,8 @@ export function VehicleForm(props: VehicleFormProps) {
                 label="Year"
                 name="year"
                 type="int"
+                min={1900}
+                max={new Date().getFullYear() + 1}
                 placeholder="e.g., 2020"
                 formik={form}
               />
@@ -289,6 +291,7 @@ export function VehicleForm(props: VehicleFormProps) {
                     label="Max Speed"
                     name="max_speed"
                     min={1}
+                    max={200}
                     type="int"
                     placeholder="Enter maximum speed"
                     formik={form}

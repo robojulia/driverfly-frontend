@@ -57,7 +57,11 @@ export class VehicleEntity {
       transmission_type: yup.string().nullable(),
       make: yup.string().required().nullable().trim(),
       model: yup.string().nullable(),
-      year: yup.number().min(1900).nullable(),
+      year: yup
+        .number()
+        .min(1900)
+        .max(new Date().getFullYear() + 1, 'Year cannot be in the future')
+        .nullable(),
       photo: yup
         .mixed()
         .when({
@@ -106,10 +110,16 @@ export class VehicleEntity {
       max_speed: yup
         .number()
         .min(0)
+        .max(200, 'Speed cannot exceed 200 mph')
         .when('is_governed', {
           is: true,
-          then: yup.number().min(0).required().nullable(),
-          otherwise: yup.number().min(0).optional().nullable(),
+          then: yup.number().min(0).max(200, 'Speed cannot exceed 200 mph').required().nullable(),
+          otherwise: yup
+            .number()
+            .min(0)
+            .max(200, 'Speed cannot exceed 200 mph')
+            .optional()
+            .nullable(),
         }),
       vin: yup.string().max(17).nullable(),
       unit_number: yup.string().nullable(),

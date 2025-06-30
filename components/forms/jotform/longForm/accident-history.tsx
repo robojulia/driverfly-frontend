@@ -547,7 +547,8 @@ export function AccidentHistory() {
                                 placeholder="0"
                                 value={accident.number_of_injured?.toString() || ''}
                                 onChange={(e) => {
-                                  const value = parseInt(e.target.value) || 0;
+                                  let value = parseInt(e.target.value) || 0;
+                                  value = Math.min(Math.max(value, 0), 999); // Cap at 999
                                   form.setFieldValue(
                                     `accident_history[${i}].number_of_injured`,
                                     value
@@ -564,6 +565,7 @@ export function AccidentHistory() {
                                   )
                                 }
                                 min="0"
+                                max="999"
                                 error={getNestedError(`accident_history.${i}.number_of_injured`)}
                                 icon={<span>🏥</span>}
                               />
@@ -576,7 +578,8 @@ export function AccidentHistory() {
                                 placeholder="0"
                                 value={accident.number_of_fatalaties?.toString() || ''}
                                 onChange={(e) => {
-                                  const value = parseInt(e.target.value) || 0;
+                                  let value = parseInt(e.target.value) || 0;
+                                  value = Math.min(Math.max(value, 0), 999); // Cap at 999
                                   form.setFieldValue(
                                     `accident_history[${i}].number_of_fatalaties`,
                                     value
@@ -593,6 +596,7 @@ export function AccidentHistory() {
                                   )
                                 }
                                 min="0"
+                                max="999"
                                 error={getNestedError(`accident_history.${i}.number_of_fatalaties`)}
                                 icon={<span>⚠️</span>}
                               />
