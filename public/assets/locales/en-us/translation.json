@@ -2468,6 +2468,7 @@
   "DHA_URL_TIP_TEXT": "Tip: to track activity across multiple job boards or channels such as indeed, add \"?source=indeed\" at the end of the URL listed above and insert the entire link into your job posting.",
   "AUTOMATED_RECRUITING_LEAD": "Automated Recruiting Lead",
   "CANOT_EDIT_APPLICANT": "Applicant is in read-only mode and you can't make changes.",
+  "APPLICANT_ALREADY_HIRED": "This applicant has already been hired. You can not edit this applicant.",
   "EDIT_APPLICANT_PROFILE": "Edit Applicant Profile",
   "IMPORT_EMPLOYEES": "Import Employees",
   "NO_APPLICANT_PROFILE_FOUND": "No Applicant Profile Attached",

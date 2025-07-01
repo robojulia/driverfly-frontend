@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { useTranslation } from '../../../../hooks/use-translation';
 import { HearAboutUsDto } from '../../../../models/jot-form/short-form/hear-about.dto';
@@ -12,7 +12,7 @@ import { HearAboutUsType } from '../../../../enums/jotform/hear-about-type.enum'
 import ApplicantApi from '../../../../pages/api/applicant';
 import { globalAjaxExceptionHandler } from '../../../../utils/ajax';
 import { FormActions } from '../form-buttons';
-import { Input, Select } from '../../../shared/dha';
+import { Input, Select, Banner } from '../../../shared/dha';
 
 export function HearAbout() {
   const {
@@ -21,6 +21,7 @@ export function HearAbout() {
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const form = useFormik({
     initialValues: new HearAboutUsDto(),
@@ -51,7 +52,14 @@ export function HearAbout() {
           stepNext();
         } catch (error) {
           console.log(error);
-          globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
+
+          // Check if it's a conflict error with a translatable message
+          if (error?.response?.data?.statusCode === 409 && error?.response?.data?.message) {
+            setErrorMessage(error.response.data.message);
+          } else {
+            // Use the global handler for other types of errors
+            globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
+          }
         }
       } else {
         stepNext();
@@ -109,6 +117,10 @@ export function HearAbout() {
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
         {t('HOW_DID_YOU_HEAR_ABOUT_US')}
       </h1>
+
+      {errorMessage && (
+        <Banner message={t(errorMessage)} variant="error" onDismiss={() => setErrorMessage(null)} />
+      )}
 
       <div
         style={{

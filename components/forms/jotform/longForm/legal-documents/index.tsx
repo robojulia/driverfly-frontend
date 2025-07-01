@@ -18,6 +18,7 @@ import { DocumentPreview } from './document-preview';
 import { DocumentSignature } from './document-signature';
 import { LegalDocumentProvider, useLegalDocuments } from './legal-documents-context';
 import { FormActions, SecondaryButton, PrimaryButton } from '../../form-buttons';
+import { Banner } from '../../../../shared/dha';
 
 // Document definitions with metadata and summaries
 export const LEGAL_DOCUMENTS = [
@@ -107,6 +108,7 @@ function LegalDocumentsContent() {
 
   // Track document expansion state
   const [isDocumentExpanded, setIsDocumentExpanded] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Track initialization to prevent multiple setValues calls
   const isInitialized = useRef(false);
@@ -145,7 +147,14 @@ function LegalDocumentsContent() {
         if (response) stepNext();
       } catch (error) {
         console.log(error);
-        globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
+
+        // Check if it's a conflict error with a translatable message
+        if (error?.response?.data?.statusCode === 409 && error?.response?.data?.message) {
+          setErrorMessage(error.response.data.message);
+        } else {
+          // Use the global handler for other types of errors
+          globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
+        }
       }
     },
     onReset: (values) => {
@@ -330,6 +339,14 @@ function LegalDocumentsContent() {
               Please review and sign the required legal documents to complete your application.
             </p>
           </div>
+
+          {errorMessage && (
+            <Banner
+              message={t(errorMessage)}
+              variant="error"
+              onDismiss={() => setErrorMessage(null)}
+            />
+          )}
 
           {/* Progress Stepper */}
           <DocumentStepper
