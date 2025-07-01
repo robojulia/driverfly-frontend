@@ -1,24 +1,26 @@
 import { BasicEntity } from '../BasicEntity.entity';
 import { CampaignTargetType } from '../../enums/campaigns/campaign-target-type.enum';
-import { CampaignTargetStatus } from '../../enums/campaigns/campaign-target-status.enum';
 
 export interface CampaignTargetEntity extends BasicEntity {
   campaignId: number;
   targetType: CampaignTargetType;
   targetId: number;
-  status: CampaignTargetStatus;
 
-  // Contact information (copied from target at time of campaign creation)
+  // Contact information (from target entity at campaign creation)
   name?: string;
   email?: string;
   phone?: string;
 
-  // Processing details
-  processedAt?: Date;
-  deliveredAt?: Date;
-  failedAt?: Date;
-  errorMessage?: string;
+  // Status derived from processed field
+  status: string; // 'pending' | 'delivered' etc.
 
-  // Content customization
-  customData?: Record<string, any>;
+  // Eligibility score at campaign creation
+  eligibilityScore?: number;
+
+  // Processing details
+  processed: boolean;
+  processedAt?: Date;
+
+  // Additional metadata
+  metadata?: Record<string, any>;
 }

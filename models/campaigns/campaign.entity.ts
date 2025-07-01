@@ -19,6 +19,7 @@ export interface CampaignEntity extends BasicEntity {
   sentCount: number;
   deliveredCount: number;
   failedCount: number;
+  pendingCount: number;
 
   // Timing
   scheduledAt?: Date;

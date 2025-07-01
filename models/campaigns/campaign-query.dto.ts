@@ -1,5 +1,6 @@
 export interface CampaignQueryDto {
   companyId?: number;
+  jobId?: number;
   type?: string;
   status?: string[];
   page?: number;

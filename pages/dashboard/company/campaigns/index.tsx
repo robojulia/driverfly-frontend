@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, CardBody, CardHeader, Button, Badge, Alert } from 'reactstrap';
+import { Container, Row, Col, Card, CardBody, Button, Alert } from 'reactstrap';
 import { useRouter } from 'next/router';
-import { Eye, Pause, Play, X, BarChart } from 'react-bootstrap-icons';
+import { BarChart } from 'react-bootstrap-icons';
 
 import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
 import PageLayout from '../../../../components/layouts/page/page-layout';
+import { CampaignCard } from '../../../../components/campaigns';
 import { useFeatureFlags } from '../../../../context/feature-flag-context';
 import { useTranslation } from '../../../../hooks/use-translation';
 import { useCampaigns } from '../../../../hooks/campaigns/use-campaigns';
 import { CampaignEntity } from '../../../../models/campaigns/campaign.entity';
-import { CampaignStatus } from '../../../../enums/campaigns/campaign-status.enum';
-import { CampaignType } from '../../../../enums/campaigns/campaign-type.enum';
 import styles from '../../../../styles/campaigns.module.css';
 
 const CampaignsPage = () => {
@@ -63,41 +62,6 @@ const CampaignsPage = () => {
     }
   };
 
-  const getStatusBadgeColor = (status: CampaignStatus) => {
-    switch (status) {
-      case CampaignStatus.DRAFT:
-        return 'secondary';
-      case CampaignStatus.SCHEDULED:
-        return 'info';
-      case CampaignStatus.RUNNING:
-        return 'primary';
-      case CampaignStatus.COMPLETED:
-        return 'success';
-      case CampaignStatus.CANCELLED:
-        return 'danger';
-      default:
-        return 'secondary';
-    }
-  };
-
-  const getCampaignTypeLabel = (type: CampaignType) => {
-    switch (type) {
-      case CampaignType.JOB_REACHOUT:
-        return t('JOB_REACHOUT_CAMPAIGN');
-      default:
-        return type;
-    }
-  };
-
-  const formatDate = (date: string | Date) => {
-    return new Date(date).toLocaleDateString();
-  };
-
-  const calculateSuccessRate = (campaign: CampaignEntity) => {
-    if (campaign.totalTargets === 0) return 0;
-    return Math.round((campaign.deliveredCount / campaign.totalTargets) * 100);
-  };
-
   if (loading) {
     return (
       <Container>
@@ -109,12 +73,6 @@ const CampaignsPage = () => {
       </Container>
     );
   }
-
-  // Debug logging (can be removed in production)
-  console.log('CampaignsPage render:', { campaigns, loading, error, campaignsEnabled });
-
-  // Debug logging (can be removed in production)
-  console.log('CampaignsPage render:', { campaigns, loading, error, campaignsEnabled });
 
   return (
     <PageLayout
@@ -158,102 +116,7 @@ const CampaignsPage = () => {
           campaigns.length > 0 &&
           campaigns.map((campaign) => (
             <Col md={6} lg={4} key={campaign.id} className="mb-4">
-              <Card className={`h-100 ${styles.campaignCard}`}>
-                <CardHeader className="bg-white border-bottom">
-                  <div className="d-flex justify-content-between align-items-start">
-                    <div>
-                      <h6 className="mb-1 font-weight-bold">{campaign.name}</h6>
-                      <small className="text-muted">{getCampaignTypeLabel(campaign.type)}</small>
-                    </div>
-                    <Badge color={getStatusBadgeColor(campaign.status)}>
-                      {campaign.status.toUpperCase()}
-                    </Badge>
-                  </div>
-                </CardHeader>
-
-                <CardBody>
-                  {campaign.description && (
-                    <p className="text-muted small mb-3">{campaign.description}</p>
-                  )}
-
-                  <div className={`${styles.campaignStats} mb-3`}>
-                    <div className="row text-center">
-                      <div className="col-4">
-                        <div className="mb-1">
-                          <strong className="d-block">{campaign.totalTargets}</strong>
-                          <small className="text-muted">{t('TARGETS')}</small>
-                        </div>
-                      </div>
-                      <div className="col-4">
-                        <div className="mb-1">
-                          <strong className="d-block">{campaign.deliveredCount}</strong>
-                          <small className="text-muted">{t('DELIVERED')}</small>
-                        </div>
-                      </div>
-                      <div className="col-4">
-                        <div className="mb-1">
-                          <strong className="d-block text-success">
-                            {calculateSuccessRate(campaign)}%
-                          </strong>
-                          <small className="text-muted">{t('SUCCESS')}</small>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className={`${styles.campaignDates} mb-3`}>
-                    <small className="text-muted d-block">
-                      <strong>{t('CREATED')}:</strong> {formatDate(campaign.createdAt)}
-                    </small>
-                    {campaign.startedAt && (
-                      <small className="text-muted d-block">
-                        <strong>{t('STARTED')}:</strong> {formatDate(campaign.startedAt)}
-                      </small>
-                    )}
-                    {campaign.completedAt && (
-                      <small className="text-muted d-block">
-                        <strong>{t('COMPLETED')}:</strong> {formatDate(campaign.completedAt)}
-                      </small>
-                    )}
-                  </div>
-
-                  <div className={styles.campaignActions}>
-                    <div className="btn-group w-100" role="group">
-                      <Button
-                        color="outline-primary"
-                        size="sm"
-                        onClick={() => router.push(`/dashboard/company/campaigns/${campaign.id}`)}
-                      >
-                        <Eye size={14} className="me-1" />
-                        {t('VIEW')}
-                      </Button>
-
-                      {campaign.status === CampaignStatus.RUNNING && (
-                        <Button
-                          color="outline-warning"
-                          size="sm"
-                          onClick={() => handleCampaignAction(campaign.id, 'cancel')}
-                        >
-                          <Pause size={14} className="me-1" />
-                          {t('CANCEL')}
-                        </Button>
-                      )}
-
-                      {(campaign.status === CampaignStatus.COMPLETED ||
-                        campaign.status === CampaignStatus.CANCELLED) && (
-                        <Button
-                          color="outline-success"
-                          size="sm"
-                          onClick={() => handleCampaignAction(campaign.id, 'regenerate')}
-                        >
-                          <Play size={14} className="me-1" />
-                          {t('RESTART')}
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
+              <CampaignCard campaign={campaign} onAction={handleCampaignAction} />
             </Col>
           ))
         )}

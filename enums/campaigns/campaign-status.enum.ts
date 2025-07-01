@@ -1,5 +1,5 @@
 export enum CampaignStatus {
-  DRAFT = 'draft',
+  DRAFT = 'DRAFT',
   SCHEDULED = 'scheduled',
   RUNNING = 'running',
   COMPLETED = 'completed',

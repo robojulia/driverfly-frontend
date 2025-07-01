@@ -451,6 +451,17 @@ body {
   box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25);
 }
 
+.bg-brand {
+  background-color: var(--primary-button) !important;
+  color: var(--text-light) !important;
+  border: none;
+  transition: var(--transition);
+}
+
+.bg-brand:hover {
+  color: var(--text-light) !important;
+}
+
 /* ============================================
    OLD HEADER STYLES - COMMENTED OUT TO AVOID CONFLICTS
    ============================================ */

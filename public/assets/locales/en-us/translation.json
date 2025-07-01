@@ -104,6 +104,9 @@
   "BACK_TO_CAMPAIGNS": "Back to Campaigns",
   "CANCEL_CAMPAIGN": "Cancel Campaign",
   "RESTART_CAMPAIGN": "Restart Campaign",
+  "REFRESH_TARGETS": "Refresh Targets",
+  "REFRESHING_TARGETS": "Refreshing Targets...",
+  "TARGETS_REFRESHED_SUCCESSFULLY": "Campaign targets refreshed successfully",
   "TOTAL_TARGETS": "Total Targets",
   "CAMPAIGN_DETAILS": "Campaign Details",
   "SUCCESS_METRICS": "Success Metrics",
@@ -2722,5 +2725,22 @@
     "MONTH": "Monthly",
     "QUARTER": "Quarterly",
     "ANNUAL": "Annual"
+  },
+  "INTENDED_TARGETS": "Intended Targets",
+  "LAUNCH_CAMPAIGN": "Launch Campaign",
+  "CAMPAIGN_READY_TO_LAUNCH": "Campaign Ready to Launch",
+  "JOB_REACHOUT": "Job Reachout",
+  "DRAFT_CAMPAIGN_EXISTS": "Draft Campaign Exists",
+  "PREVIOUS_CAMPAIGNS": "Previous Campaigns",
+  "MANAGE_DRAFT_CAMPAIGN": "Manage Draft Campaign",
+  "CREATE_NEW_CAMPAIGN": "Create New Campaign",
+  "CAMPAIGN_HISTORY": "Campaign History",
+  "VIEW_ALL_CAMPAIGNS": "View All Campaigns",
+  "ACTIONS": "Actions",
+  "CAMPAIGN_STATES": {
+    "DELIVERED": "Delivered",
+    "FAILED": "Failed",
+    "PENDING": "Pending",
+    "SENT": "Sent"
   }
 }

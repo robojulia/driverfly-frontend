@@ -22,7 +22,7 @@ export const useCampaigns = () => {
       setError(null);
 
       const response: CampaignListResponse = await campaignsApi.findAll(query);
-      setCampaigns(response.data || []);
+      setCampaigns(response.campaigns || []);
       setTotal(response.total || 0);
 
       return response;
@@ -72,14 +72,18 @@ export const useCampaigns = () => {
 
   const regenerateTargets = useCallback(async (id: number) => {
     try {
-      const regeneratedCampaign = await campaignsApi.regenerateTargets(id);
+      // Call regenerate targets API (returns { campaignId, targetCount, message })
+      await campaignsApi.regenerateTargets(id);
+
+      // Reload the updated campaign data
+      const updatedCampaign = await campaignsApi.findById(id);
 
       // Update the campaign in the local state
       setCampaigns((prev) =>
-        prev.map((campaign) => (campaign.id === id ? regeneratedCampaign : campaign))
+        prev.map((campaign) => (campaign.id === id ? updatedCampaign : campaign))
       );
 
-      return regeneratedCampaign;
+      return updatedCampaign;
     } catch (err) {
       console.error('Error regenerating campaign targets:', err);
       throw err;
@@ -114,18 +118,19 @@ export const useCampaign = (id: number) => {
       setLoading(true);
       setError(null);
 
-      // Load campaign details, stats, and targets in parallel
-      const [campaignData, statsData, targetsData] = await Promise.all([
+      // Load campaign details and stats in parallel
+      // Campaign details now include targets
+      const [campaignData, statsData] = await Promise.all([
         campaignsApi.findById(id),
         campaignsApi.getStats(id),
-        campaignsApi.getTargets(id, { page: 1, limit: 100 }),
       ]);
 
       setCampaign(campaignData);
       setStats(statsData);
-      setTargets(targetsData.data);
+      // Extract targets from campaign data
+      setTargets(campaignData.targets || []);
 
-      return { campaign: campaignData, stats: statsData, targets: targetsData.data };
+      return { campaign: campaignData, stats: statsData, targets: campaignData.targets || [] };
     } catch (err) {
       console.error('Error loading campaign:', err);
       setError('Failed to load campaign');
@@ -168,16 +173,48 @@ export const useCampaign = (id: number) => {
     if (!id) return;
 
     try {
-      const regeneratedCampaign = await campaignsApi.regenerateTargets(id);
-      setCampaign(regeneratedCampaign);
-      // Reload the full data to get updated stats and targets
-      await loadCampaign();
-      return regeneratedCampaign;
+      // Call regenerate targets API (returns { campaignId, targetCount, message })
+      await campaignsApi.regenerateTargets(id);
+
+      // Reload the complete campaign data after regeneration
+      const [updatedCampaign, updatedStats] = await Promise.all([
+        campaignsApi.findById(id),
+        campaignsApi.getStats(id),
+      ]);
+
+      setCampaign(updatedCampaign);
+      setTargets(updatedCampaign.targets || []);
+      setStats(updatedStats);
+
+      return updatedCampaign;
     } catch (err) {
       console.error('Error regenerating campaign targets:', err);
       throw err;
     }
-  }, [id, loadCampaign]);
+  }, [id]);
+
+  const deleteTarget = useCallback(
+    async (targetId: number) => {
+      if (!id) return;
+
+      try {
+        await campaignsApi.deleteTarget(id, targetId);
+
+        // Remove the target from local state
+        setTargets((prev) => prev.filter((target) => target.id !== targetId));
+
+        // Reload stats to get updated counts
+        const updatedStats = await campaignsApi.getStats(id);
+        setStats(updatedStats);
+
+        return true;
+      } catch (err) {
+        console.error('Error deleting campaign target:', err);
+        throw err;
+      }
+    },
+    [id]
+  );
 
   useEffect(() => {
     loadCampaign();
@@ -193,5 +230,45 @@ export const useCampaign = (id: number) => {
     updateCampaign,
     cancelCampaign,
     regenerateTargets,
+    deleteTarget,
+  };
+};
+
+export const useJobCampaigns = (jobId: number) => {
+  const [campaigns, setCampaigns] = useState<CampaignEntity[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const campaignsApi = new CampaignsApi();
+
+  const loadJobCampaigns = useCallback(
+    async (status?: string[]) => {
+      if (!jobId) return [];
+
+      try {
+        setLoading(true);
+        setError(null);
+
+        const campaigns = await campaignsApi.findByJobId(jobId, status);
+        setCampaigns(campaigns);
+
+        return campaigns;
+      } catch (err) {
+        console.error('Error loading job campaigns:', err);
+        setError('Failed to load job campaigns');
+        setCampaigns([]);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [jobId]
+  );
+
+  return {
+    campaigns,
+    loading,
+    error,
+    loadJobCampaigns,
   };
 };
