@@ -370,8 +370,8 @@ export default function EmployeeDirectory() {
 
             <div style={{ float: 'right', display: 'flex', alignItems: 'center' }}>
               <DataViewToggle
-                primaryLabel="ACTIVE_EMPLOYEES"
-                secondaryLabel="PAST_EMPLOYEES"
+                primaryLabel={t('ACTIVE_EMPLOYEES')}
+                secondaryLabel={t('PAST_EMPLOYEES')}
                 activeView={viewMode}
                 onViewChange={async (newView) => {
                   resetEmployees();

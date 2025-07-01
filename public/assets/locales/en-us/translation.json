@@ -2280,6 +2280,8 @@
   "NEW_LEADS": "New Leads this week",
   "TOTAL_LEADS": "Total Leads",
   "TOTAL_ACTIVE_EMPLOYEES": "Total Active Employees",
+  "ACTIVE_EMPLOYEES": "Active Employees",
+  "PAST_EMPLOYEES": "Past Employees",
   "WELCOME_TO_DRIVERFLY": "Welcome to Driverfly, {{name}}!",
   "WELCOME_BANNER_DESCRIPTION": "Get started with Driverfly by posting your first job, adding employees, or viewing applicants.",
   "POST_YOUR_FIRST_JOB": "Post Your First Job",
