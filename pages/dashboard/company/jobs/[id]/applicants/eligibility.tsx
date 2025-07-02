@@ -164,7 +164,7 @@ export default function JobApplicantsEligibility({ id }) {
           <div
             className={`${styles.bgDanger} ${styles.textWhite} ${styles.p3} ${styles.rounded} ${styles.textCenter}`}
           >
-            You don't have permission to view job applicants.
+            You don&apos;t have permission to view job applicants.
           </div>
         </div>
       </ChildPageLayout>
@@ -224,8 +224,8 @@ export default function JobApplicantsEligibility({ id }) {
                         <TelephoneFill size={48} className="text-primary mb-3" />
                         <h4 className="mb-2">Reach More Qualified Candidates</h4>
                         <p className="text-muted mb-4">
-                          Don't wait for candidates to find you. Proactively reach out to qualified
-                          drivers who are looking for opportunities.
+                          Don&apos;t wait for candidates to find you. Proactively reach out to
+                          qualified drivers who are looking for opportunities.
                         </p>
                       </div>
 
@@ -254,7 +254,7 @@ export default function JobApplicantsEligibility({ id }) {
                       </div>
 
                       <div className="mb-4">
-                        <h6 className="mb-2">What You'll Get:</h6>
+                        <h6 className="mb-2">What You&apos;ll Get:</h6>
                         <div className="text-start">
                           <div className="mb-2">
                             <CheckCircleFill className="text-success me-2" />
@@ -317,7 +317,8 @@ export default function JobApplicantsEligibility({ id }) {
           <Modal.Body>
             {completedCampaigns.length > 0 && (
               <div className="alert alert-info mb-4">
-                <strong>Note:</strong> You've previously run {completedCampaigns.length} campaign
+                <strong>Note:</strong> You&apos;ve previously run {completedCampaigns.length}{' '}
+                campaign
                 {completedCampaigns.length !== 1 ? 's' : ''} for this job. This will create a fresh
                 campaign with updated targets.
               </div>
@@ -328,8 +329,8 @@ export default function JobApplicantsEligibility({ id }) {
                 Ready to reach {eligibilityStats?.eligibleApplicants || 0} qualified candidates?
               </h5>
               <p className="text-muted">
-                We'll create a targeted calling campaign to reach out to drivers who meet your job
-                requirements but haven't applied yet.
+                We&apos;ll create a targeted calling campaign to reach out to drivers who meet your
+                job requirements but haven&apos;t applied yet.
               </p>
             </div>
 
