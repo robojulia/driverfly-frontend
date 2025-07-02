@@ -38,12 +38,13 @@ import { useCampaign } from '../../../../hooks/campaigns/use-campaigns';
 import { CampaignStatus } from '../../../../enums/campaigns/campaign-status.enum';
 import { CampaignType } from '../../../../enums/campaigns/campaign-type.enum';
 import { CampaignConfigDisplay } from '../../../../components/campaigns';
+import { ManualTargetSelectionModal } from '../../../../components/campaigns/ManualTargetSelectionModal';
 
 const CampaignDetailPage = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const { id } = router.query;
-  const { isFeatureEnabled } = useFeatureFlags();
+  const { isFeatureEnabled, isLoading: flagsLoading } = useFeatureFlags();
 
   const campaignId = id ? parseInt(id as string) : 0;
   const {
@@ -57,6 +58,7 @@ const CampaignDetailPage = () => {
     startCampaign,
     regenerateTargets,
     deleteTarget,
+    addManualTargets,
   } = useCampaign(campaignId);
 
   const [activeTab, setActiveTab] = useState('overview');
@@ -66,11 +68,24 @@ const CampaignDetailPage = () => {
   const [confirmStartModal, setConfirmStartModal] = useState(false);
   const [confirmCancelModal, setConfirmCancelModal] = useState(false);
   const [confirmRefreshModal, setConfirmRefreshModal] = useState(false);
+  const [manualTargetModal, setManualTargetModal] = useState(false);
+  const [addingManualTargets, setAddingManualTargets] = useState(false);
   const [targetToDelete, setTargetToDelete] = useState<{ id: number; name: string } | null>(null);
 
-  // Feature flag check
+  // Feature flag check - only redirect after flags are loaded
+  useEffect(() => {
+    if (!flagsLoading && !isFeatureEnabled('CAMPAIGNS_ENABLED')) {
+      router.push('/dashboard/company');
+    }
+  }, [flagsLoading, isFeatureEnabled, router]);
+
+  // Don't render anything while feature flags are loading
+  if (flagsLoading) {
+    return null;
+  }
+
+  // Don't render if campaigns are disabled
   if (!isFeatureEnabled('CAMPAIGNS_ENABLED')) {
-    router.push('/dashboard/company');
     return null;
   }
 
@@ -155,6 +170,21 @@ const CampaignDetailPage = () => {
       });
       setConfirmDeleteModal(false);
       setTargetToDelete(null);
+    }
+  };
+
+  const handleAddManualTargets = async (applicantIds: number[]) => {
+    try {
+      setAddingManualTargets(true);
+      const result = await addManualTargets(applicantIds);
+
+      // Show success message or handle result
+      console.log('Manual targets added:', result);
+    } catch (err) {
+      console.error('Error adding manual targets:', err);
+      throw err;
+    } finally {
+      setAddingManualTargets(false);
     }
   };
 
@@ -525,6 +555,38 @@ const CampaignDetailPage = () => {
                       <h5 className="fw-bold text-dark mb-0">
                         Campaign Targets ({targets?.length || 0})
                       </h5>
+                      {(campaign?.status || CampaignStatus.DRAFT) === CampaignStatus.DRAFT && (
+                        <div className="d-flex gap-2">
+                          <Button
+                            color="info"
+                            size="sm"
+                            onClick={() => handleCampaignAction('regenerate')}
+                            disabled={regeneratingTargets}
+                          >
+                            {regeneratingTargets ? (
+                              <>
+                                <div
+                                  className="spinner-border spinner-border-sm me-1"
+                                  role="status"
+                                >
+                                  <span className="visually-hidden">Loading...</span>
+                                </div>
+                                {t('REFRESHING_TARGETS')}
+                              </>
+                            ) : (
+                              <>{t('REFRESH_TARGETS')}</>
+                            )}
+                          </Button>
+                          <Button
+                            color="primary"
+                            size="sm"
+                            onClick={() => setManualTargetModal(true)}
+                            disabled={regeneratingTargets || addingManualTargets}
+                          >
+                            {t('ADD_TARGETS')}
+                          </Button>
+                        </div>
+                      )}
                     </div>
 
                     <div className="table-responsive">
@@ -610,27 +672,37 @@ const CampaignDetailPage = () => {
                             : "This campaign doesn't have any targets yet."}
                         </p>
                         {campaign?.status === CampaignStatus.DRAFT && (
-                          <Button
-                            color="primary"
-                            size="sm"
-                            className="mt-3"
-                            onClick={() => handleCampaignAction('regenerate')}
-                            disabled={regeneratingTargets}
-                          >
-                            {regeneratingTargets ? (
-                              <>
-                                <div
-                                  className="spinner-border spinner-border-sm me-1"
-                                  role="status"
-                                >
-                                  <span className="visually-hidden">Loading...</span>
-                                </div>
-                                {t('REFRESHING_TARGETS')}
-                              </>
-                            ) : (
-                              <>{t('REFRESH_TARGETS')}</>
-                            )}
-                          </Button>
+                          <div className="d-flex gap-2 justify-content-center mt-3">
+                            <Button
+                              color="primary"
+                              size="sm"
+                              onClick={() => handleCampaignAction('regenerate')}
+                              disabled={regeneratingTargets}
+                            >
+                              {regeneratingTargets ? (
+                                <>
+                                  <div
+                                    className="spinner-border spinner-border-sm me-1"
+                                    role="status"
+                                  >
+                                    <span className="visually-hidden">Loading...</span>
+                                  </div>
+                                  {t('REFRESHING_TARGETS')}
+                                </>
+                              ) : (
+                                <>{t('REFRESH_TARGETS')}</>
+                              )}
+                            </Button>
+                            <Button
+                              color="outline-primary"
+                              size="sm"
+                              onClick={() => setManualTargetModal(true)}
+                              disabled={regeneratingTargets || addingManualTargets}
+                            >
+                              <People size={14} className="me-1" />
+                              {t('ADD_TARGETS')}
+                            </Button>
+                          </div>
                         )}
                       </div>
                     )}
@@ -762,6 +834,14 @@ const CampaignDetailPage = () => {
               </small>
             </div>
           }
+        />
+
+        {/* Manual Target Selection Modal */}
+        <ManualTargetSelectionModal
+          isOpen={manualTargetModal}
+          onClose={() => setManualTargetModal(false)}
+          onAddTargets={handleAddManualTargets}
+          loading={addingManualTargets}
         />
       </Container>
     </PageLayout>

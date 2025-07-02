@@ -102,4 +102,22 @@ export default class CampaignsApi extends BaseApi {
     const { data } = await this.delete(`${this.baseUrl}/${campaignId}/targets/${targetId}`);
     return data;
   }
+
+  async addManualTargets(
+    campaignId: number,
+    applicantIds: number[]
+  ): Promise<{
+    message: string;
+    addedCount: number;
+    skippedCount: number;
+    details: {
+      addedTargets: number[];
+      skippedTargets: { applicantId: number; reason: string }[];
+    };
+  }> {
+    const { data } = await this.post(`${this.baseUrl}/${campaignId}/targets/manual`, {
+      applicantIds,
+    });
+    return data;
+  }
 }

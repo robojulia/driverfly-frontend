@@ -246,6 +246,25 @@ export const useCampaign = (id: number) => {
     [id]
   );
 
+  const addManualTargets = useCallback(
+    async (applicantIds: number[]) => {
+      if (!id) return;
+
+      try {
+        const result = await campaignsApi.addManualTargets(id, applicantIds);
+
+        // Reload campaign data to get updated targets
+        await loadCampaign();
+
+        return result;
+      } catch (err) {
+        console.error('Error adding manual targets:', err);
+        throw err;
+      }
+    },
+    [id, loadCampaign]
+  );
+
   useEffect(() => {
     loadCampaign();
   }, [loadCampaign]);
@@ -262,6 +281,7 @@ export const useCampaign = (id: number) => {
     startCampaign,
     regenerateTargets,
     deleteTarget,
+    addManualTargets,
   };
 };
 

@@ -15,12 +15,12 @@ import styles from '../../../../styles/campaigns.module.css';
 const CampaignsPage = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { isFeatureEnabled } = useFeatureFlags();
+  const { isFeatureEnabled, isLoading: flagsLoading } = useFeatureFlags();
 
   const [currentPage, setCurrentPage] = useState(1);
 
   // Feature flag check first
-  const campaignsEnabled = isFeatureEnabled('CAMPAIGNS_ENABLED');
+  const campaignsEnabled = !flagsLoading && isFeatureEnabled('CAMPAIGNS_ENABLED');
 
   const { campaigns, loading, error, total, loadCampaigns, cancelCampaign, regenerateTargets } =
     useCampaigns();
@@ -39,6 +39,20 @@ const CampaignsPage = () => {
     }
   }, [currentPage, loadCampaigns, campaignsEnabled]);
 
+  // Show loading while feature flags are loading
+  if (flagsLoading) {
+    return (
+      <Container>
+        <div className="text-center">
+          <div className="spinner-border" role="status">
+            <span className="sr-only">{t('LOADING')}</span>
+          </div>
+        </div>
+      </Container>
+    );
+  }
+
+  // Show warning if campaigns are not enabled
   if (!campaignsEnabled) {
     return (
       <PageLayout title="MARKETING_CAMPAIGNS">
