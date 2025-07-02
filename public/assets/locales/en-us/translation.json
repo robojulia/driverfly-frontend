@@ -2749,5 +2749,33 @@
   "CAMPAIGN_ACTIONS": {
     "REFRESH": "Refresh",
     "PAUSE": "Pause"
-  }
+  },
+
+  "COMPANY_DETAILS_FOR_RECRUITING": "Company Details for Recruiting Communications",
+  "COMPANY_DETAILS_HELP_TEXT": "This information helps our system provide better, more personalized communications to potential candidates about your company. When candidates call or express interest, we can share relevant details about your fleet, safety record, culture, and benefits.",
+  "FLEET_SIZE": "Fleet Size",
+  "FLEET_SIZE_PLACEHOLDER": "e.g., 450 trucks, 50-100 vehicles",
+  "FOUNDED_YEAR": "Founded Year",
+  "SAFETY_RATING": "Safety Rating",
+  "SAFETY_RATING_PLACEHOLDER": "e.g., DOT Safety Rating: Satisfactory, Clean safety record",
+  "COMPANY_CULTURE": "Company Culture",
+  "COMPANY_CULTURE_PLACEHOLDER": "Describe your company culture to help candidates understand what it's like to work at your company",
+  "COMPANY_BENEFITS": "Company Benefits",
+  "COMPANY_BENEFITS_PLACEHOLDER": "Describe the benefits and perks you offer to drivers",
+  "SPECIALTIES": "Specialties & Services",
+  "SPECIALTIES_PLACEHOLDER": "Select the types of freight and services your company specializes in",
+  "LONG_HAUL": "Long Haul",
+  "REGIONAL": "Regional",
+  "LOCAL_DELIVERY": "Local Delivery",
+  "DEDICATED_FREIGHT": "Dedicated Freight",
+  "OWNER_OPERATOR_SPECIALTY": "Owner Operator",
+  "LEASE_PURCHASE": "Lease Purchase",
+  "FLATBED": "Flatbed",
+  "REFRIGERATED": "Refrigerated",
+  "DRY_VAN": "Dry Van",
+  "TANKER": "Tanker",
+  "HAZMAT": "Hazmat",
+  "OVERSIZED_LOADS": "Oversized Loads",
+  "TEAM_DRIVING": "Team Driving",
+  "TRAINING_PROVIDED": "Training Provided"
 }

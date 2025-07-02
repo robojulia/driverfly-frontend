@@ -15,6 +15,7 @@ import EntityForm from '../../layouts/page/entity-form';
 import BaseInput from '../base-input';
 import BaseInputPhone from '../base-input-phone';
 import BaseTextArea from '../base-text-area';
+import BaseMultiSelect from '../base-multiselect';
 import FileInput from '../file-input';
 import { BaseFormProps } from './base-form-props';
 import Image from 'next/image';
@@ -136,7 +137,11 @@ export function CompanyForm(props: CompanyFormProps) {
           />
           {viewLogo && (
             <div className="col-12">
-              <img className="img-thumbnail" src={viewLogo} />
+              <img
+                className="img-thumbnail"
+                src={viewLogo}
+                style={{ maxWidth: '500px', height: 'auto' }}
+              />
             </div>
           )}
           <UncontrolledTooltip delay={0} placement="top" target="imgpurpose">
@@ -190,6 +195,74 @@ export function CompanyForm(props: CompanyFormProps) {
               />
             </div>
           </div>
+
+          {/* Company Information for Candidate Communication */}
+          <div className="col-12 mt-4">
+            <h5 className="mb-3">{t('COMPANY_DETAILS_FOR_RECRUITING')}</h5>
+            <p className="text-muted mb-3">{t('COMPANY_DETAILS_HELP_TEXT')}</p>
+          </div>
+
+          <BaseInput
+            className="col-6 mt-2"
+            label={t('FLEET_SIZE')}
+            name="fleet_size"
+            placeholder={t('FLEET_SIZE_PLACEHOLDER')}
+            formik={form}
+          />
+          <BaseInput
+            className="col-6 mt-2"
+            label={t('FOUNDED_YEAR')}
+            name="founded_year"
+            type="number"
+            placeholder="1995"
+            formik={form}
+          />
+          <BaseInput
+            className="col-12 mt-2"
+            label={t('SAFETY_RATING')}
+            name="safety_rating"
+            placeholder={t('SAFETY_RATING_PLACEHOLDER')}
+            formik={form}
+          />
+          <BaseTextArea
+            className="col-12 mt-2"
+            label={t('COMPANY_CULTURE')}
+            name="company_culture"
+            rows={3}
+            placeholder={t('COMPANY_CULTURE_PLACEHOLDER')}
+            formik={form}
+          />
+          <BaseTextArea
+            className="col-12 mt-2"
+            label={t('COMPANY_BENEFITS')}
+            name="company_benefits"
+            rows={3}
+            placeholder={t('COMPANY_BENEFITS_PLACEHOLDER')}
+            formik={form}
+          />
+          <BaseMultiSelect
+            className="col-12 mt-2"
+            label={t('SPECIALTIES')}
+            name="specialties"
+            placeholder={t('SPECIALTIES_PLACEHOLDER')}
+            formik={form}
+            options={[
+              { value: 'Long Haul', label: t('LONG_HAUL') },
+              { value: 'Regional', label: t('REGIONAL') },
+              { value: 'Local Delivery', label: t('LOCAL_DELIVERY') },
+              { value: 'Dedicated Freight', label: t('DEDICATED_FREIGHT') },
+              { value: 'Owner Operator', label: t('OWNER_OPERATOR_SPECIALTY') },
+              { value: 'Lease Purchase', label: t('LEASE_PURCHASE') },
+              { value: 'Flatbed', label: t('FLATBED') },
+              { value: 'Refrigerated', label: t('REFRIGERATED') },
+              { value: 'Dry Van', label: t('DRY_VAN') },
+              { value: 'Tanker', label: t('TANKER') },
+              { value: 'Hazmat', label: t('HAZMAT') },
+              { value: 'Oversized Loads', label: t('OVERSIZED_LOADS') },
+              { value: 'Team Driving', label: t('TEAM_DRIVING') },
+              { value: 'Training Provided', label: t('TRAINING_PROVIDED') },
+            ]}
+          />
         </Row>
       </EntityForm>
 
