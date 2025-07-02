@@ -21,10 +21,10 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, onAction }
     switch (status) {
       case CampaignStatus.DRAFT:
         return 'secondary';
-      case CampaignStatus.SCHEDULED:
-        return 'info';
-      case CampaignStatus.RUNNING:
+      case CampaignStatus.ACTIVE:
         return 'primary';
+      case CampaignStatus.PAUSED:
+        return 'info';
       case CampaignStatus.COMPLETED:
         return 'success';
       case CampaignStatus.CANCELLED:
@@ -203,22 +203,10 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, onAction }
                 {t('VIEW')}
               </Button>
 
-              {(campaign.status || CampaignStatus.DRAFT) === CampaignStatus.RUNNING && (
+              {(campaign.status || CampaignStatus.DRAFT) === CampaignStatus.ACTIVE && (
                 <Button color="outline-warning" size="sm" onClick={() => handleAction('cancel')}>
                   <Pause size={14} className="me-1" />
                   {t('CANCEL')}
-                </Button>
-              )}
-
-              {((campaign.status || CampaignStatus.DRAFT) === CampaignStatus.COMPLETED ||
-                (campaign.status || CampaignStatus.DRAFT) === CampaignStatus.CANCELLED) && (
-                <Button
-                  color="outline-success"
-                  size="sm"
-                  onClick={() => handleAction('regenerate')}
-                >
-                  <Play size={14} className="me-1" />
-                  {t('RESTART')}
                 </Button>
               )}
             </div>

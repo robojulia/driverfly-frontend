@@ -19,7 +19,7 @@ The campaign system frontend provides a marketing-style interface for managing a
   - Comprehensive campaign overview
   - Target management and statistics
   - Campaign-specific configuration display
-  - Campaign controls (cancel, restart)
+  - Campaign controls (start, cancel)
 
 - **Navigation Integration**
 
@@ -78,8 +78,8 @@ driverfly-frontend/
 ### Campaign Dashboard Features
 
 - **Campaign Cards**: Display campaign overview with key metrics
-- **Status Indicators**: Visual status badges (Draft, Running, Completed, etc.)
-- **Quick Actions**: View, Cancel, Restart campaigns
+- **Status Indicators**: Visual status badges (Draft, Active, Completed, etc.)
+- **Quick Actions**: View, Cancel (for active campaigns)
 - **Statistics**: Success rates, target counts, delivery metrics
 
 ### Campaign Detail Page

@@ -88,6 +88,7 @@
   "DATE_SAVED": "Date Saved ",
   "CAMPAIGNS": "Campaigns",
   "CREATE_CAMPAIGN": "Create Campaign",
+  "START_CAMPAIGN": "Start campaign",
   "COMING_SOON": "Coming Soon",
   "MARKETING_CAMPAIGNS": "Marketing Campaigns",
   "MANAGE_YOUR_OUTREACH_CAMPAIGNS": "Manage your outreach campaigns and view performance metrics",
@@ -95,17 +96,16 @@
   "CREATE_YOUR_FIRST_CAMPAIGN": "Create your first marketing campaign to start reaching out to potential drivers",
   "JOB_REACHOUT_CAMPAIGN": "Job Outreach Campaign",
   "TARGETS": "Targets",
-  "RESTART": "Restart",
   "ERROR_LOADING_CAMPAIGNS": "Error loading campaigns",
   "ERROR_CANCEL_CAMPAIGN": "Error cancelling campaign",
-  "ERROR_REGENERATE_CAMPAIGN": "Error restarting campaign",
   "CAMPAIGNS_NOT_AVAILABLE": "Campaigns feature is not available",
   "CAMPAIGN_NOT_FOUND": "Campaign not found",
   "BACK_TO_CAMPAIGNS": "Back to Campaigns",
   "CANCEL_CAMPAIGN": "Cancel Campaign",
-  "RESTART_CAMPAIGN": "Restart Campaign",
   "REFRESH_TARGETS": "Refresh Targets",
   "REFRESHING_TARGETS": "Refreshing Targets...",
+  "REFRESH_TARGETS_CONFIRMATION": "Refresh Campaign Targets",
+  "REFRESH_TARGETS_WARNING": "This will recreate all intended targets based on current campaign criteria. Previously deleted targets that meet eligibility requirements will be re-added.",
   "TARGETS_REFRESHED_SUCCESSFULLY": "Campaign targets refreshed successfully",
   "TOTAL_TARGETS": "Total Targets",
   "CAMPAIGN_DETAILS": "Campaign Details",
@@ -2742,5 +2742,12 @@
     "FAILED": "Failed",
     "PENDING": "Pending",
     "SENT": "Sent"
+  },
+  "CAMPAIGN_TYPES": {
+    "JOB_REACHOUT": "Job Reachout"
+  },
+  "CAMPAIGN_ACTIONS": {
+    "REFRESH": "Refresh",
+    "PAUSE": "Pause"
   }
 }

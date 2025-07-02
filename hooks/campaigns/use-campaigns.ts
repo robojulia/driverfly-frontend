@@ -70,6 +70,22 @@ export const useCampaigns = () => {
     }
   }, []);
 
+  const startCampaign = useCallback(async (id: number) => {
+    try {
+      const startedCampaign = await campaignsApi.start(id);
+
+      // Update the campaign in the local state
+      setCampaigns((prev) =>
+        prev.map((campaign) => (campaign.id === id ? startedCampaign : campaign))
+      );
+
+      return startedCampaign;
+    } catch (err) {
+      console.error('Error starting campaign:', err);
+      throw err;
+    }
+  }, []);
+
   const regenerateTargets = useCallback(async (id: number) => {
     try {
       // Call regenerate targets API (returns { campaignId, targetCount, message })
@@ -98,6 +114,7 @@ export const useCampaigns = () => {
     loadCampaigns,
     updateCampaign,
     cancelCampaign,
+    startCampaign,
     regenerateTargets,
   };
 };
@@ -169,6 +186,19 @@ export const useCampaign = (id: number) => {
     }
   }, [id]);
 
+  const startCampaign = useCallback(async () => {
+    if (!id) return;
+
+    try {
+      const startedCampaign = await campaignsApi.start(id);
+      setCampaign(startedCampaign);
+      return startedCampaign;
+    } catch (err) {
+      console.error('Error starting campaign:', err);
+      throw err;
+    }
+  }, [id]);
+
   const regenerateTargets = useCallback(async () => {
     if (!id) return;
 
@@ -229,6 +259,7 @@ export const useCampaign = (id: number) => {
     loadCampaign,
     updateCampaign,
     cancelCampaign,
+    startCampaign,
     regenerateTargets,
     deleteTarget,
   };

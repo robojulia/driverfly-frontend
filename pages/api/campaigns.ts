@@ -51,7 +51,12 @@ export default class CampaignsApi extends BaseApi {
   }
 
   async cancel(id: number): Promise<CampaignEntity> {
-    const { data } = await this.post(`${this.baseUrl}/${id}/cancel`, {});
+    const { data } = await this.patch(`${this.baseUrl}/${id}/cancel`, {});
+    return data;
+  }
+
+  async start(id: number): Promise<CampaignEntity> {
+    const { data } = await this.patch(`${this.baseUrl}/${id}/start`, {});
     return data;
   }
 

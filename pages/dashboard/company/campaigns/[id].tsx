@@ -52,7 +52,9 @@ const CampaignDetailPage = () => {
     stats,
     loading,
     error,
+    loadCampaign,
     cancelCampaign,
+    startCampaign,
     regenerateTargets,
     deleteTarget,
   } = useCampaign(campaignId);
@@ -61,6 +63,9 @@ const CampaignDetailPage = () => {
   const [regeneratingTargets, setRegeneratingTargets] = useState(false);
   const [deletingTargets, setDeletingTargets] = useState<Set<number>>(new Set());
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
+  const [confirmStartModal, setConfirmStartModal] = useState(false);
+  const [confirmCancelModal, setConfirmCancelModal] = useState(false);
+  const [confirmRefreshModal, setConfirmRefreshModal] = useState(false);
   const [targetToDelete, setTargetToDelete] = useState<{ id: number; name: string } | null>(null);
 
   // Feature flag check
@@ -74,16 +79,52 @@ const CampaignDetailPage = () => {
       if (action === 'cancel') {
         await cancelCampaign();
       } else if (action === 'regenerate') {
-        setRegeneratingTargets(true);
-        await regenerateTargets();
+        setConfirmRefreshModal(true);
       }
     } catch (err) {
       console.error(`Error performing ${action} on campaign:`, err);
       // Error handling is managed by the hook
+    }
+  };
+
+  const confirmRefreshTargets = async () => {
+    try {
+      setRegeneratingTargets(true);
+      await regenerateTargets();
+      setConfirmRefreshModal(false);
+    } catch (err) {
+      console.error('Error regenerating targets:', err);
+      // Error handling is managed by the hook
     } finally {
-      if (action === 'regenerate') {
-        setRegeneratingTargets(false);
-      }
+      setRegeneratingTargets(false);
+    }
+  };
+
+  const handleStartCampaign = () => {
+    setConfirmStartModal(true);
+  };
+
+  const confirmStartCampaign = async () => {
+    try {
+      await startCampaign();
+      setConfirmStartModal(false);
+    } catch (err) {
+      console.error('Error starting campaign:', err);
+      // Error handling is managed by the hook
+    }
+  };
+
+  const handleCancelCampaign = () => {
+    setConfirmCancelModal(true);
+  };
+
+  const confirmCancelCampaign = async () => {
+    try {
+      await cancelCampaign();
+      setConfirmCancelModal(false);
+    } catch (err) {
+      console.error('Error cancelling campaign:', err);
+      // Error handling is managed by the hook
     }
   };
 
@@ -121,10 +162,10 @@ const CampaignDetailPage = () => {
     switch (status) {
       case CampaignStatus.DRAFT:
         return 'secondary';
-      case CampaignStatus.SCHEDULED:
-        return 'info';
-      case CampaignStatus.RUNNING:
+      case CampaignStatus.ACTIVE:
         return 'primary';
+      case CampaignStatus.PAUSED:
+        return 'info';
       case CampaignStatus.COMPLETED:
         return 'success';
       case CampaignStatus.CANCELLED:
@@ -137,7 +178,7 @@ const CampaignDetailPage = () => {
   const getCampaignTypeLabel = (type: CampaignType) => {
     switch (type) {
       case CampaignType.JOB_REACHOUT:
-        return t('JOB_REACHOUT_CAMPAIGN');
+        return t('CAMPAIGN_TYPES.JOB_REACHOUT');
       default:
         return type;
     }
@@ -188,21 +229,6 @@ const CampaignDetailPage = () => {
           >
             <ArrowLeft /> {t('BACK_TO_CAMPAIGNS')}
           </Button>
-          {campaign?.status === CampaignStatus.RUNNING && (
-            <Button color="warning" size="sm" onClick={() => handleCampaignAction('cancel')}>
-              <Pause /> {t('PAUSE')}
-            </Button>
-          )}
-          {campaign?.status === CampaignStatus.DRAFT && (
-            <Button
-              disabled
-              color="primary"
-              size="sm"
-              onClick={() => handleCampaignAction('regenerate')}
-            >
-              <Play /> {t('START')}
-            </Button>
-          )}
         </>
       }
     >
@@ -231,62 +257,62 @@ const CampaignDetailPage = () => {
                     </div>
                   </div>
                   <div className="d-flex gap-2">
-                    {(campaign.status || CampaignStatus.DRAFT) === CampaignStatus.RUNNING && (
-                      <Button
-                        color="warning"
-                        size="sm"
-                        onClick={() => handleCampaignAction('cancel')}
-                      >
-                        <Pause size={14} className="me-1" />
-                        {t('CANCEL_CAMPAIGN')}
-                      </Button>
+                    {(campaign.status || CampaignStatus.DRAFT) === CampaignStatus.ACTIVE && (
+                      <>
+                        <Button color="info" size="sm" onClick={loadCampaign}>
+                          <svg
+                            width="14"
+                            height="14"
+                            className="me-1"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                            <path d="M21 3v5h-5" />
+                            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                            <path d="M3 21v-5h5" />
+                          </svg>
+                          {t('REFRESH')}
+                        </Button>
+                        <Button color="warning" size="sm" onClick={handleCancelCampaign}>
+                          <Pause size={14} className="me-1" />
+                          {t('CANCEL_CAMPAIGN')}
+                        </Button>
+                      </>
                     )}
                     {(campaign.status || CampaignStatus.DRAFT) === CampaignStatus.DRAFT && (
-                      <Button
-                        color="info"
-                        size="sm"
-                        onClick={() => handleCampaignAction('regenerate')}
-                        disabled={regeneratingTargets}
-                      >
-                        {regeneratingTargets ? (
-                          <>
-                            <div className="spinner-border spinner-border-sm me-1" role="status">
-                              <span className="visually-hidden">Loading...</span>
-                            </div>
-                            {t('REFRESHING_TARGETS')}
-                          </>
-                        ) : (
-                          <>
-                            <svg
-                              width="14"
-                              height="14"
-                              className="me-1"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                              <path d="M21 3v5h-5" />
-                              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                              <path d="M3 21v-5h5" />
-                            </svg>
-                            {t('REFRESH_TARGETS')}
-                          </>
-                        )}
-                      </Button>
+                      <>
+                        <Button color="success" size="sm" onClick={handleStartCampaign}>
+                          <Play size={14} className="me-1" />
+                          {t('START_CAMPAIGN')}
+                        </Button>
+                        <Button
+                          color="info"
+                          size="sm"
+                          onClick={() => handleCampaignAction('regenerate')}
+                          disabled={regeneratingTargets}
+                        >
+                          {regeneratingTargets ? (
+                            <>
+                              <div className="spinner-border spinner-border-sm me-1" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                              </div>
+                              {t('REFRESHING_TARGETS')}
+                            </>
+                          ) : (
+                            <>{t('REFRESH_TARGETS')}</>
+                          )}
+                        </Button>
+                      </>
                     )}
-                    {((campaign.status || CampaignStatus.DRAFT) === CampaignStatus.COMPLETED ||
-                      (campaign.status || CampaignStatus.DRAFT) === CampaignStatus.CANCELLED) && (
-                      <Button
-                        color="success"
-                        size="sm"
-                        onClick={() => handleCampaignAction('regenerate')}
-                      >
+                    {(campaign.status || CampaignStatus.DRAFT) === CampaignStatus.PAUSED && (
+                      <Button color="success" size="sm" onClick={handleStartCampaign}>
                         <Play size={14} className="me-1" />
-                        {t('RESTART_CAMPAIGN')}
+                        {t('RESUME_CAMPAIGN')}
                       </Button>
                     )}
                   </div>
@@ -640,6 +666,99 @@ const CampaignDetailPage = () => {
               <small>
                 <strong>Note:</strong> This action be reversed by refreshing the targets. The target
                 will be removed from this campaign and will not receive any calls.
+              </small>
+            </div>
+          }
+        />
+
+        {/* Start Campaign Confirmation Modal */}
+        <ConfirmationModal
+          isOpen={confirmStartModal}
+          onClose={() => setConfirmStartModal(false)}
+          onConfirm={confirmStartCampaign}
+          title="Start Campaign"
+          message={
+            <div>
+              <h6 className="mb-1">Start Campaign: {campaign?.name}</h6>
+              <p className="text-muted mb-0">
+                Are you sure you want to start this campaign? This will begin contacting all targets
+                and the campaign will become live.
+              </p>
+            </div>
+          }
+          confirmText="Start Campaign"
+          confirmButtonColor="success"
+          isLoading={false}
+          loadingText="Starting..."
+          icon="success"
+          additionalContent={
+            <div className="alert alert-info">
+              <small>
+                <strong>Note:</strong> Once started, the campaign will begin immediately and targets
+                will start receiving calls. You can pause the campaign at any time.
+              </small>
+            </div>
+          }
+        />
+
+        {/* Cancel Campaign Confirmation Modal */}
+        <ConfirmationModal
+          isOpen={confirmCancelModal}
+          onClose={() => setConfirmCancelModal(false)}
+          onConfirm={confirmCancelCampaign}
+          title="Cancel Campaign"
+          message={
+            <div>
+              <h6 className="mb-1">Cancel Campaign: {campaign?.name}</h6>
+              <p className="text-muted mb-0">
+                Are you sure you want to cancel this campaign? This action cannot be undone and the
+                campaign cannot be restarted.
+              </p>
+            </div>
+          }
+          confirmText="Cancel Campaign"
+          confirmButtonColor="danger"
+          isLoading={false}
+          loadingText="Cancelling..."
+          icon="danger"
+          additionalContent={
+            <div className="alert alert-warning">
+              <small>
+                <strong>Warning:</strong> Cancelling this campaign is permanent. All ongoing calls
+                will be stopped immediately and you will need to create a new campaign to contact
+                these targets again.
+              </small>
+            </div>
+          }
+        />
+
+        {/* Refresh Targets Confirmation Modal */}
+        <ConfirmationModal
+          isOpen={confirmRefreshModal}
+          onClose={() => setConfirmRefreshModal(false)}
+          onConfirm={confirmRefreshTargets}
+          title="Refresh Campaign Targets"
+          message={
+            <div>
+              <h6 className="mb-1">Refresh Targets: {campaign?.name}</h6>
+              <p className="text-muted mb-0">
+                Are you sure you want to refresh the campaign targets? This will recreate all
+                intended targets based on the current campaign criteria.
+              </p>
+            </div>
+          }
+          confirmText="Refresh Targets"
+          confirmButtonColor="primary"
+          isLoading={regeneratingTargets}
+          loadingText="Refreshing..."
+          icon="info"
+          additionalContent={
+            <div className="alert alert-info">
+              <small>
+                <strong>Note:</strong> This action will regenerate all targets based on your
+                campaign criteria. Any previously deleted targets that still meet the eligibility
+                requirements will be re-added to the campaign. The target list will be updated to
+                reflect any changes in your driver database or campaign settings.
               </small>
             </div>
           }
