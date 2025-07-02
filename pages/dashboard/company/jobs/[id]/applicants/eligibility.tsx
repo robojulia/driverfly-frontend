@@ -89,7 +89,7 @@ export default function JobApplicantsEligibility({ id }) {
     };
 
     loadJob();
-  }, [id, company, loadJobCampaigns]);
+  }, [id, company?.id]); // Only depend on company.id, not the entire company object
 
   // Check if there are any existing campaigns
   const draftCampaigns = campaigns.filter((c) => c.status === CampaignStatus.DRAFT);
