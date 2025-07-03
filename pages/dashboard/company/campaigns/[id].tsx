@@ -308,7 +308,7 @@ const CampaignDetailPage = () => {
                           </svg>
                           {t('REFRESH')}
                         </Button>
-                        <Button color="warning" size="sm" onClick={handleCancelCampaign}>
+                        <Button color="danger" size="sm" onClick={handleCancelCampaign}>
                           <Pause size={14} className="me-1" />
                           {t('CANCEL_CAMPAIGN')}
                         </Button>

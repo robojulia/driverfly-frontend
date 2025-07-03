@@ -141,46 +141,6 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, onAction }
           {isDraft ? (
             // Draft mode: Show Launch, Refresh Targets, and View buttons
             <div className="d-grid gap-2">
-              <div className="row g-2">
-                <div className="col-6">
-                  <Button
-                    color="primary"
-                    size="sm"
-                    disabled={true} // We cant launch a draft campaign yet
-                    onClick={() => router.push(`/dashboard/company/campaigns/${campaign.id}`)}
-                    className="w-100"
-                  >
-                    <Play size={14} className="me-1" />
-                    {t('LAUNCH_CAMPAIGN')}
-                  </Button>
-                </div>
-                <div className="col-6">
-                  <Button
-                    color="info"
-                    size="sm"
-                    onClick={() => handleAction('regenerate')}
-                    className="w-100"
-                  >
-                    <svg
-                      width="12"
-                      height="12"
-                      className="me-1"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                      <path d="M21 3v5h-5" />
-                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                      <path d="M3 21v-5h5" />
-                    </svg>
-                    {t('REFRESH_TARGETS')}
-                  </Button>
-                </div>
-              </div>
               <Button
                 color="outline-secondary"
                 size="sm"
