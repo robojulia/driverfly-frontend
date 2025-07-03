@@ -20,7 +20,7 @@ import {
   ViolationHistory,
   WorkedBefore,
 } from './longForm';
-import { ContinueLongForm, HearAbout, SplashPage } from './shortForm';
+import { ContinueLongForm, SplashPage } from './shortForm';
 import { DuiAndEquipment } from './shortForm/dui-and-equipment';
 import { TransmissionAndEndorsement } from './shortForm/transmission-and-endorsement';
 import { ThankyouPage } from './thankyou-screen';
@@ -31,27 +31,26 @@ const getQuickApplyPages = (step: number): JSX.Element =>
     1: <TransmissionAndEndorsement />,
     2: <DuiAndEquipment />,
     3: <Preferences />,
-    4: <HearAbout />,
-    5: <ContinueLongForm />,
-    6: <DriverApplication />,
-    7: <BackgroundInfo />,
-    8: <HighestLevelEducation />,
-    9: <DrivingExperience />,
-    10: <OtherQueues />,
-    11: <DriverLicense />,
-    12: <MedicalCard />,
-    13: <EmergencyContact />,
-    14: <EmploymentHistory />,
-    15: <PastEmploymentHistory />,
-    16: <WorkedBefore />,
-    17: <AccidentHistory />,
-    18: <ViolationHistory />,
-    19: <PastSuspension />,
-    20: <UnableForJob />,
-    21: <FelonyConviction />,
-    22: <DrugTest />,
-    23: <AccordianPage />,
-    24: <ThankyouPage />,
+    4: <ContinueLongForm />,
+    5: <DriverApplication />,
+    6: <BackgroundInfo />,
+    7: <HighestLevelEducation />,
+    8: <DrivingExperience />,
+    9: <OtherQueues />,
+    10: <DriverLicense />,
+    11: <MedicalCard />,
+    12: <EmergencyContact />,
+    13: <EmploymentHistory />,
+    14: <PastEmploymentHistory />,
+    15: <WorkedBefore />,
+    16: <AccidentHistory />,
+    17: <ViolationHistory />,
+    18: <PastSuspension />,
+    19: <UnableForJob />,
+    20: <FelonyConviction />,
+    21: <DrugTest />,
+    22: <AccordianPage />,
+    23: <ThankyouPage />,
   }[step]);
 
 const getQuickApplyStyle = (step: number): CSSProperties | undefined =>

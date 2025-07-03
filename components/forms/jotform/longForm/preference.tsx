@@ -1,5 +1,6 @@
 import { useFormik } from 'formik';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import Form from 'react-bootstrap/Form';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { ApplicantExtras } from '../../../../enums/applicants/applicant-extras.enum';
@@ -10,29 +11,65 @@ import { OtherRequirementType } from '../../../../enums/users/other-requirements
 import { useTranslation } from '../../../../hooks/use-translation';
 import { ApplicantExtrasEntity } from '../../../../models/applicant/applicant-extras.entity';
 import { PreferencesDto } from '../../../../models/jot-form/long-form/preferences.dto';
+import ApplicantApi from '../../../../pages/api/applicant';
+import { globalAjaxExceptionHandler } from '../../../../utils/ajax';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { FormActions } from '../form-buttons';
-import { CheckboxGroup, Select } from '../../../shared/dha';
+import { CheckboxGroup, Select, Banner } from '../../../shared/dha';
 
 export function Preferences() {
   const {
-    state: { applicant, applicantExtras },
-    method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+    state: { applicant, applicantExtras, jobs, utm, company },
+    method: { setApplicant, setApplicantExtras, updateApplicantExtras, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const form = useFormik({
     initialValues: new PreferencesDto(),
     validationSchema: PreferencesDto.yupSchema(),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
+      const applicantApi = new ApplicantApi();
       console.log('values', values);
-      const { routes, REQUIRE_W2_EMPLOYMENT, OTHER_ABSOLUTELY_REQUIREMENTS, preferred_location } =
-        values;
-      setApplicant({ ...applicant, preferred_location, routes });
-      updateApplicantExtras(REQUIRE_W2_EMPLOYMENT);
-      updateApplicantExtras(OTHER_ABSOLUTELY_REQUIREMENTS);
-      stepNext();
+
+      try {
+        const { routes, REQUIRE_W2_EMPLOYMENT, OTHER_ABSOLUTELY_REQUIREMENTS, preferred_location } =
+          values;
+
+        // Update applicant preferences
+        setApplicant({ ...applicant, preferred_location, routes });
+        updateApplicantExtras(REQUIRE_W2_EMPLOYMENT);
+        updateApplicantExtras(OTHER_ABSOLUTELY_REQUIREMENTS);
+
+        // Create the jotform record if applicant can pass drug test
+        if (applicant?.can_pass_drug_test) {
+          const data = await applicantApi.jotform.create(company.id, {
+            applicant: { ...applicant, preferred_location, routes },
+            applicantExtras,
+            jobs,
+            utm,
+          });
+
+          setApplicantExtras(data?.extras);
+          setApplicant({
+            ...applicant,
+            ...data,
+          });
+        }
+
+        stepNext();
+      } catch (error) {
+        console.log(error);
+
+        // Check if it's a conflict error with a translatable message
+        if (error?.response?.data?.statusCode === 409 && error?.response?.data?.message) {
+          setErrorMessage(error.response.data.message);
+        } else {
+          // Use the global handler for other types of errors
+          globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
+        }
+      }
     },
     onReset: (values) => {
       stepBack();
@@ -107,6 +144,10 @@ export function Preferences() {
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
         {t('PREFERENCES')}
       </h1>
+
+      {errorMessage && (
+        <Banner message={t(errorMessage)} variant="error" onDismiss={() => setErrorMessage(null)} />
+      )}
 
       <div
         style={{

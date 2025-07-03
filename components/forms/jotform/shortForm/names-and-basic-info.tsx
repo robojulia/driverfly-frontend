@@ -8,13 +8,16 @@ import { useTranslation } from '../../../../hooks/use-translation';
 import { NamesAndBasicInfoDto } from '../../../../models/jot-form/short-form/names-and-basic-info.dto';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { BooleanTypeExtra } from '../../../../enums/jotform/bool-and-not-sure.enum';
-import { Input, MaskedInput } from '../../../shared/dha';
+import { ApplicantExtras } from '../../../../enums/applicants/applicant-extras.enum';
+import { ApplicantExtrasEntity } from '../../../../models/applicant/applicant-extras.entity';
+import { HearAboutUsType } from '../../../../enums/jotform/hear-about-type.enum';
+import { Input, MaskedInput, Select } from '../../../shared/dha';
 import { FormActions } from '../form-buttons';
 
 export function NamesAndBasicInfo() {
   const {
-    state: { applicant },
-    method: { setApplicant, stepNext, stepBack },
+    state: { applicant, applicantExtras, utm },
+    method: { setApplicant, setApplicantExtras, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
@@ -27,8 +30,17 @@ export function NamesAndBasicInfo() {
     validationSchema: NamesAndBasicInfoDto.yupSchema(),
     onSubmit: async (values) => {
       try {
-        const { first_name, last_name, email, zip_code, authorize_to_communicate } = values;
+        const {
+          first_name,
+          last_name,
+          email,
+          zip_code,
+          authorize_to_communicate,
+          HEAR_ABOUT_US,
+          REFERAL_NAME,
+        } = values;
 
+        // Update applicant with basic info
         setApplicant({
           ...applicant,
           first_name,
@@ -37,6 +49,14 @@ export function NamesAndBasicInfo() {
           zip_code,
           authorize_to_communicate,
         });
+
+        // Update applicant extras with hear about info
+        const filteredExtras = [
+          ...applicantExtras,
+          { ...HEAR_ABOUT_US },
+          { ...REFERAL_NAME },
+        ].filter((v) => !!v?.value);
+        setApplicantExtras(filteredExtras);
 
         stepNext();
       } catch (error) {
@@ -50,14 +70,32 @@ export function NamesAndBasicInfo() {
 
   useEffect(() => {
     const { first_name, last_name, email, zip_code, authorize_to_communicate } = applicant;
+
+    // Find existing hear about extras
+    const apx = applicantExtras?.find((v) => v.type === ApplicantExtras.HEAR_ABOUT_US);
+    const apx_referal_name = applicantExtras?.find((v) => v.type === ApplicantExtras.REFERAL_NAME);
+
+    // Create default hear about objects
+    const hearAboutObject = {
+      ...new ApplicantExtrasEntity(ApplicantExtras.HEAR_ABOUT_US),
+      value: Boolean(utm?.referral_name) ? HearAboutUsType.REFERRAL : null,
+    };
+
+    const referalNameObject = {
+      ...new ApplicantExtrasEntity(ApplicantExtras.REFERAL_NAME),
+      value: Boolean(utm?.referral_name) ? utm?.referral_name : null,
+    };
+
     form.setValues({
       first_name: first_name || '',
       last_name: last_name || '',
       email: email || '',
       zip_code: zip_code || '',
       authorize_to_communicate: authorize_to_communicate || BooleanTypeExtra.YES,
+      HEAR_ABOUT_US: !!apx?.type ? apx : hearAboutObject,
+      REFERAL_NAME: !!apx_referal_name?.type ? apx_referal_name : referalNameObject,
     });
-  }, [applicant]);
+  }, [applicant, applicantExtras, utm]);
 
   const handleNext = () => {
     const syntheticEvent = {
@@ -185,6 +223,57 @@ export function NamesAndBasicInfo() {
               formik={form}
             />
           </Row>
+
+          {/* How Did You Hear About Us Section */}
+          <div style={{ marginTop: '2rem', marginBottom: '1rem' }}>
+            <h4 className={`${styles.jot_form_headers_font}`}>{t('HOW_DID_YOU_HEAR_ABOUT_US')}</h4>
+
+            <Row className={styles.bold}>
+              <div className="col-12 my-3">
+                <Select
+                  name="HEAR_ABOUT_US.value"
+                  label="Select an option"
+                  placeholder="CHOOSE"
+                  labelPrefix="HearAboutUsType"
+                  enumType={HearAboutUsType}
+                  value={form.values?.HEAR_ABOUT_US?.value || ''}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  error={
+                    form.touched?.HEAR_ABOUT_US?.value && form.errors?.HEAR_ABOUT_US?.value
+                      ? String(form.errors.HEAR_ABOUT_US.value)
+                      : undefined
+                  }
+                  disabled={Boolean(utm?.referral_name)}
+                  required
+                />
+              </div>
+
+              {form.values?.HEAR_ABOUT_US?.value === HearAboutUsType.REFERRAL && (
+                <div className="col-12 my-3">
+                  <Input
+                    name="REFERAL_NAME.value"
+                    label={t('REFERRAL_NAME')}
+                    placeholder={t('REFERRAL_NAME')}
+                    value={form.values?.REFERAL_NAME?.value || ''}
+                    onChange={form.handleChange}
+                    onBlur={form.handleBlur}
+                    error={
+                      form.touched?.REFERAL_NAME?.value && form.errors?.REFERAL_NAME?.value
+                        ? String(form.errors.REFERAL_NAME.value)
+                        : undefined
+                    }
+                    disabled={Boolean(utm?.referral_name)}
+                    required
+                    autoComplete="name"
+                    helperText="Please provide the name of the person who referred you"
+                    icon={<span>👤</span>}
+                    size="large"
+                  />
+                </div>
+              )}
+            </Row>
+          </div>
         </div>
 
         <FormActions

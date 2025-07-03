@@ -7,23 +7,8 @@ interface FormProgressProps {
   stepLabels?: string[];
 }
 
-const FormProgress: React.FC<FormProgressProps> = ({
-  currentStep,
-  totalSteps,
-  stepLabels = [],
-}) => {
+const FormProgress: React.FC<FormProgressProps> = ({ currentStep, totalSteps }) => {
   const progress = Math.min(Math.round((currentStep / (totalSteps - 1)) * 100), 100);
-
-  // Generate step labels if not provided
-  const labels = stepLabels.length
-    ? stepLabels
-    : Array.from({ length: totalSteps }, (_, i) => `Step ${i + 1}`);
-
-  // Show at most 5 labels to avoid clutter
-  const visibleLabels =
-    labels.length > 5
-      ? [labels[0], '', labels[Math.floor(labels.length / 2)], '', labels[labels.length - 1]]
-      : labels;
 
   return (
     <div className={styles.progressContainer}>
