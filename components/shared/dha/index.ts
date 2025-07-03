@@ -12,6 +12,7 @@ export { RadioGroup } from './radio-group';
 export { CheckboxGroup } from './checkbox-group';
 export { Checkbox } from './checkbox';
 export { Select } from './select';
+export { TextArea } from './textarea';
 export { EquipmentCard } from './equipment-card';
 export { DocumentCard } from './document-card';
 export { Button } from './button';

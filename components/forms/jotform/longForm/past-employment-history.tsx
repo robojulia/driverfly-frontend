@@ -8,7 +8,15 @@ import { ApplicantEmployerEntity } from '../../../../models/applicant';
 import { PastEmploymentHistoryDto } from '../../../../models/jot-form/long-form/past-employment-history/index.dto';
 import { PastEmploymentPageDto } from '../../../../models/jot-form/long-form/past-employment-page.dto';
 import styles from '../../../../styles/digitalhiringapp.module.css';
-import { Input, Checkbox, RadioGroup, DhaPhoneInput, Select, Button } from '../../../shared/dha';
+import {
+  Input,
+  Checkbox,
+  RadioGroup,
+  DhaPhoneInput,
+  Select,
+  Button,
+  TextArea,
+} from '../../../shared/dha';
 import stateList from '../../../../utils/stateList';
 import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
 import { FormActions } from '../form-buttons';
@@ -569,6 +577,21 @@ export function PastEmploymentHistory() {
                         );
                       }}
                       onBlur={form.handleBlur}
+                    />
+                  </div>
+
+                  {/* Reason for Leaving */}
+                  <div style={{ marginBottom: '1.5rem' }}>
+                    <TextArea
+                      name={`employers[${i}].reason_for_leaving`}
+                      label={t('REASON_FOR_LEAVING')}
+                      placeholder="Please explain why you left this position..."
+                      value={form.values.employers?.[i]?.reason_for_leaving || ''}
+                      onChange={form.handleChange}
+                      onBlur={form.handleBlur}
+                      rows={3}
+                      error={getFieldError(`employers[${i}].reason_for_leaving`) || undefined}
+                      helperText="Provide a brief explanation for leaving this employer"
                     />
                   </div>
                 </div>

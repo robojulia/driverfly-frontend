@@ -333,6 +333,20 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                               label="JOB_DESIGNATED_AS_SATEFY_SENSITIVE"
                               formik={form}
                             />
+
+                            {/* Reason for Leaving - show for all employers (past and current if they left) */}
+                            {(!form.values.employers?.[i]?.is_current ||
+                              form.values.employers?.[i]?.end_at) && (
+                              <BaseTextArea
+                                className="col-12 mt-2"
+                                name={`employers[${i}].reason_for_leaving`}
+                                label="REASON_FOR_LEAVING"
+                                placeholder="Please explain why the applicant left this position..."
+                                formik={form}
+                                rows={3}
+                              />
+                            )}
+
                             <div style={{ display: 'flex', justifyContent: 'right' }}>
                               {(() => {
                                 return renderSendBackgroundRequestButton(

@@ -7,7 +7,7 @@ import { useAsyncFormSave } from '../../../../hooks/use-async-form-save';
 import { ApplicantEmployerEntity } from '../../../../models/applicant';
 import { CurrentEmploymentHistoryPageDto } from '../../../../models/jot-form/long-form/current-employment-history-page.dto';
 import { CurrentEmploymentHistoryDto } from '../../../../models/jot-form/long-form/current-emplyment-history/index.dto';
-import { Input, Checkbox, RadioGroup, DhaPhoneInput, Select } from '../../../shared/dha';
+import { Input, Checkbox, RadioGroup, DhaPhoneInput, Select, TextArea } from '../../../shared/dha';
 import stateList from '../../../../utils/stateList';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
@@ -542,6 +542,28 @@ export function EmploymentHistory() {
                   onBlur={form.handleBlur}
                 />
               </div>
+
+              {/* Reason for Leaving (only show if no longer current or if they indicated they're leaving) */}
+              {(!form.values.employer?.is_current || form.values.employer?.end_at) && (
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <TextArea
+                    name="employer.reason_for_leaving"
+                    label={t('REASON_FOR_LEAVING')}
+                    placeholder="Please explain why you left this position..."
+                    value={form.values.employer?.reason_for_leaving || ''}
+                    onChange={form.handleChange}
+                    onBlur={form.handleBlur}
+                    rows={3}
+                    error={
+                      form.touched.employer?.reason_for_leaving &&
+                      form.errors.employer?.reason_for_leaving
+                        ? String(form.errors.employer.reason_for_leaving)
+                        : undefined
+                    }
+                    helperText="Provide a brief explanation for leaving this employer"
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>
