@@ -6,6 +6,7 @@ import JotformContext, { JotFormContextType } from '../../../../context/jotform-
 import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
 import { useTranslation } from '../../../../hooks/use-translation';
 import { FelonyConvictionDto } from '../../../../models/jot-form/long-form/felony-conviction.dto';
+import ApplicantApi from '../../../../pages/api/applicant';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { FormActions } from '../form-buttons';
 import { RadioGroup } from '../../../shared/dha';
@@ -13,12 +14,25 @@ import BaseTextArea from '../../base-text-area';
 
 export function FelonyConviction() {
   const {
-    state: { applicant },
+    state: { applicant, steps },
     method: { setApplicant, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
   const [isValid, setIsValid] = useState(false);
+
+  // Save form data function
+  const saveFormData = async (formData: any) => {
+    if (!applicant?.id || steps <= 9) return;
+
+    try {
+      const applicantApi = new ApplicantApi();
+      await applicantApi.jotform.update(applicant.id, formData);
+      console.log(`Saved step ${steps} for applicant ${applicant.id}`);
+    } catch (error) {
+      console.error('Save failed:', error);
+    }
+  };
 
   // Enhanced validation schema with conditional requirements
   const validationSchema = yup.object({
@@ -67,11 +81,19 @@ export function FelonyConviction() {
         criminal_history = '__YES_NO_DETAILS__';
       }
 
-      setApplicant({
+      const updatedApplicant = {
         ...applicant,
         criminal_history,
         is_convicted_felony,
+      };
+
+      setApplicant(updatedApplicant);
+
+      // Save form data on submit
+      saveFormData({
+        applicant: updatedApplicant,
       });
+
       stepNext();
     },
     onReset: () => {

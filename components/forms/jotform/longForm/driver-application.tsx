@@ -4,6 +4,7 @@ import { Form } from 'react-bootstrap';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { ApplicantExtras } from '../../../../enums/applicants/applicant-extras.enum';
 import { useTranslation } from '../../../../hooks/use-translation';
+import { useAsyncFormSave } from '../../../../hooks/use-async-form-save';
 import { ApplicantExtrasEntity } from '../../../../models/applicant/applicant-extras.entity';
 import { DriverApplicationDto } from '../../../../models/jot-form/long-form/driver-application.dto';
 import { PrimaryButton } from '../form-buttons';
@@ -17,28 +18,49 @@ export interface DriverApplicationProps {
 
 export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationProps) {
   const {
-    state: { applicant, applicantExtras, company },
+    state: { applicant, applicantExtras, company, steps },
     method: { setApplicant, updateApplicantExtras, stepNext },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
   const [hasSignature, setHasSignature] = useState(false);
 
+  // Initialize async form saving for this component
+  const { saveFormData, isSaving } = useAsyncFormSave(applicant?.id, steps);
+
   const form = useFormik({
     initialValues: new DriverApplicationDto(),
     validationSchema: DriverApplicationDto.yupSchema(),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       try {
         const { first_name, last_name, APPLY_DATE, SIGNATURE, is_automated_recruiting_lead } =
           values;
-        setApplicant({
+
+        // Update local state
+        const updatedApplicant = {
           ...applicant,
           first_name,
           last_name,
           is_automated_recruiting_lead,
-        });
+        };
+        setApplicant(updatedApplicant);
         updateApplicantExtras(APPLY_DATE);
         updateApplicantExtras(SIGNATURE);
+
+        // Save to backend asynchronously
+        saveFormData({
+          applicant: updatedApplicant,
+          applicantExtras: [
+            ...(applicantExtras?.filter(
+              (extra) =>
+                extra.type !== ApplicantExtras.APPLY_DATE &&
+                extra.type !== ApplicantExtras.SIGNATURE
+            ) || []),
+            APPLY_DATE,
+            SIGNATURE,
+          ],
+        });
+
         stepNext();
       } catch (error) {
         console.log(error);

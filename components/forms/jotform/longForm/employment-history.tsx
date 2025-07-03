@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { useTranslation } from '../../../../hooks/use-translation';
+import { useAsyncFormSave } from '../../../../hooks/use-async-form-save';
 import { ApplicantEmployerEntity } from '../../../../models/applicant';
 import { CurrentEmploymentHistoryPageDto } from '../../../../models/jot-form/long-form/current-employment-history-page.dto';
 import { CurrentEmploymentHistoryDto } from '../../../../models/jot-form/long-form/current-emplyment-history/index.dto';
@@ -21,6 +22,9 @@ export function EmploymentHistory() {
   const { t } = useTranslation();
   const [isFormValid, setIsFormValid] = useState(false);
 
+  // Initialize async form saving
+  const { saveFormData } = useAsyncFormSave(applicant?.id, steps);
+
   const form = useFormik({
     initialValues: new CurrentEmploymentHistoryPageDto(),
     validationSchema: CurrentEmploymentHistoryPageDto.yupSchema(),
@@ -33,10 +37,18 @@ export function EmploymentHistory() {
 
       if (!!is_current_employed) employers.push(employer);
 
-      setApplicant({
+      const updatedApplicant = {
         ...applicant,
         employers,
+      };
+
+      setApplicant(updatedApplicant);
+
+      // Save form data on submit
+      saveFormData({
+        applicant: updatedApplicant,
       });
+
       stepNext();
       return;
     },

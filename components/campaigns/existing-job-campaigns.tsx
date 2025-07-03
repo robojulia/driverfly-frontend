@@ -87,7 +87,7 @@ export const ExistingJobCampaigns: React.FC<ExistingJobCampaignsProps> = ({
             <CheckCircleFill size={48} className="text-success mb-3" />
             <h4 className="mb-2">Previous Campaigns</h4>
             <p className="text-muted mb-4">
-              You've run {completedCampaigns.length} campaign
+              You&apos;ve run {completedCampaigns.length} campaign
               {completedCampaigns.length !== 1 ? 's' : ''} for <strong>{jobTitle}</strong>. Review
               past results or create a new campaign.
             </p>

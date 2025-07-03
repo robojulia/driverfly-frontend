@@ -7,6 +7,7 @@ import JotformContext, { JotFormContextType } from '../../../../context/jotform-
 import { useTranslation } from '../../../../hooks/use-translation';
 import { ApplicantAccidentEntity } from '../../../../models/applicant/applicant-accidentr.entity';
 import { AccidentHistoryDto } from '../../../../models/jot-form/long-form/accident-history.dto';
+import ApplicantApi from '../../../../pages/api/applicant';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
 import { FormActions } from '../form-buttons';
@@ -15,11 +16,24 @@ import BaseTextArea from '../../base-text-area';
 
 export function AccidentHistory() {
   const {
-    state: { applicant },
+    state: { applicant, steps },
     method: { setApplicant, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
+
+  // Save form data function
+  const saveFormData = async (formData: any) => {
+    if (!applicant?.id || steps <= 9) return;
+
+    try {
+      const applicantApi = new ApplicantApi();
+      await applicantApi.jotform.update(applicant.id, formData);
+      console.log(`Saved step ${steps} for applicant ${applicant.id}`);
+    } catch (error) {
+      console.error('Save failed:', error);
+    }
+  };
 
   // Updated validation - only validate accident details if they've been started
   const validationSchema = yup.object({
@@ -158,15 +172,17 @@ export function AccidentHistory() {
         // Save the user's choice along with the accident data
         const { accident_count, accident_history, accident_details, has_accidents } = values;
 
+        let updatedApplicant = { ...applicant };
+
         // Always save the data based on the user's choice
         if (has_accidents === false) {
           // User said NO - clear all data but make sure we save empty array to indicate they've been here
-          setApplicant({
-            ...applicant,
+          updatedApplicant = {
+            ...updatedApplicant,
             accident_count: 0,
             accident_details: '',
             accident_history: [], // Empty array indicates they said NO
-          });
+          };
         } else if (has_accidents === true) {
           // User said YES - save current state (even if they haven't added accidents yet)
           const finalDetails =
@@ -174,21 +190,28 @@ export function AccidentHistory() {
               ? accident_details
               : '__YES_NO_DETAILS__'; // Special marker to indicate they said YES but no details yet
 
-          setApplicant({
-            ...applicant,
+          updatedApplicant = {
+            ...updatedApplicant,
             accident_count: accident_count || 0, // Ensure it's a number
             accident_details: finalDetails,
             accident_history: accident_history || [], // Empty array here means YES but no details yet
-          });
+          };
         } else {
           // Shouldn't happen due to validation, but handle gracefully
-          setApplicant({
-            ...applicant,
+          updatedApplicant = {
+            ...updatedApplicant,
             accident_count: accident_count || 0,
             accident_details: accident_details || '',
             accident_history: accident_history || [],
-          });
+          };
         }
+
+        setApplicant(updatedApplicant);
+
+        // Save form data on submit
+        saveFormData({
+          applicant: updatedApplicant,
+        });
 
         stepNext();
       } catch (error) {

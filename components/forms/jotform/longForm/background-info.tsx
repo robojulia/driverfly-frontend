@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { useTranslation } from '../../../../hooks/use-translation';
+import { useAsyncFormSave } from '../../../../hooks/use-async-form-save';
 import { BackgroundInfoDto } from '../../../../models/jot-form/long-form/background-info.dto';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { FormActions } from '../form-buttons';
@@ -29,13 +30,16 @@ const useScreenSize = () => {
 
 export function BackgroundInfo() {
   const {
-    state: { applicant },
+    state: { applicant, applicantExtras, steps },
     method: { setApplicant, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
   const [isFormValid, setIsFormValid] = useState(false);
   const isSmallScreen = useScreenSize();
+
+  // Initialize async form saving
+  const { saveFormData } = useAsyncFormSave(applicant?.id, steps);
 
   // Create responsive state list
   const responsiveStateList = isSmallScreen
@@ -53,20 +57,22 @@ export function BackgroundInfo() {
     initialValues: new BackgroundInfoDto(),
     validationSchema: BackgroundInfoDto.yupSchema(),
     onSubmit: (values) => {
-      try {
-        const { birthdate, city, state, zip_code, address_1, address_2 } = values;
-        setApplicant({
-          ...applicant,
-          birthdate,
-          city,
-          state,
-          zip_code,
-          address_1,
-          address_2,
-        });
-      } catch (error) {
-        console.log(error);
-      }
+      const { birthdate, city, state, zip_code, address_1, address_2 } = values;
+      const updatedApplicant = {
+        ...applicant,
+        birthdate,
+        city,
+        state,
+        zip_code,
+        address_1,
+        address_2,
+      };
+
+      setApplicant(updatedApplicant);
+
+      // Save form data on submit
+      saveFormData({ applicant: updatedApplicant, applicantExtras });
+
       stepNext();
     },
     onReset: (values) => {

@@ -8,6 +8,7 @@ import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
 import { useTranslation } from '../../../../hooks/use-translation';
 import { ApplicantExtrasEntity } from '../../../../models/applicant/applicant-extras.entity';
 import { UnableForJobDto } from '../../../../models/jot-form/long-form/unable-for-job.dto';
+import ApplicantApi from '../../../../pages/api/applicant';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { FormActions } from '../form-buttons';
 import { RadioGroup } from '../../../shared/dha';
@@ -15,12 +16,25 @@ import BaseTextArea from '../../base-text-area';
 
 export function UnableForJob() {
   const {
-    state: { applicantExtras },
+    state: { applicant, applicantExtras, steps },
     method: { updateApplicantExtras, setApplicantExtras, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
   const [isValid, setIsValid] = useState(false);
+
+  // Save form data function
+  const saveFormData = async (formData: any) => {
+    if (!applicant?.id || steps <= 9) return;
+
+    try {
+      const applicantApi = new ApplicantApi();
+      await applicantApi.jotform.update(applicant.id, formData);
+      console.log(`Saved step ${steps} for applicant ${applicant.id}`);
+    } catch (error) {
+      console.error('Save failed:', error);
+    }
+  };
 
   // Enhanced validation schema
   const validationSchema = yup.object({
@@ -54,8 +68,39 @@ export function UnableForJob() {
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: (values) => {
-      const { REASON_FOR_UNABLE_TO_PERFORM_JOB } = values;
-      updateApplicantExtras(REASON_FOR_UNABLE_TO_PERFORM_JOB);
+      console.log('Submitting unable for job form with values:', values);
+
+      if (values.is_unable_to_perform) {
+        // If they cannot perform the job, save the extra with the reason
+        const { REASON_FOR_UNABLE_TO_PERFORM_JOB } = values;
+        updateApplicantExtras(REASON_FOR_UNABLE_TO_PERFORM_JOB);
+
+        // Save form data on submit
+        saveFormData({
+          applicant,
+          applicantExtras: [
+            ...(applicantExtras?.filter(
+              (v) => v?.type !== ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
+            ) || []),
+            REASON_FOR_UNABLE_TO_PERFORM_JOB,
+          ],
+        });
+      } else {
+        // If they can perform the job, remove the extra completely
+        const filteredExtras =
+          applicantExtras?.filter(
+            (v) => v?.type !== ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
+          ) || [];
+
+        setApplicantExtras(filteredExtras);
+
+        // Save form data on submit
+        saveFormData({
+          applicant,
+          applicantExtras: filteredExtras,
+        });
+      }
+
       stepNext();
     },
     onReset: (values) => {

@@ -1,5 +1,6 @@
 import { NextPageContext } from 'next';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { getLongFormPages } from '../../../../components/forms/jotform/jotform-pages';
@@ -11,6 +12,8 @@ import { JobEntity } from '../../../../models/job/job.entity';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import ApplicantApi from '../../../api/applicant';
 import FormProgress from '../../../../components/forms/jotform/form-progress';
+import { useFormPersistence } from '../../../../hooks/use-form-persistence';
+import ProgressSaveIndicator from '../../../../components/forms/jotform/progress-save-indicator';
 
 export interface LongFormProps {
   applicant: ApplicantEntity;
@@ -42,6 +45,56 @@ export default function LongForm({
   // Total number of steps in the long form
   const totalSteps = 20; // Based on getLongFormPages in jotform-pages.tsx
 
+  // Initialize form persistence for browser crash recovery
+  const storageKey = `dha-progress-${initialApplicant.uuid_token}`;
+  const formData = {
+    applicant,
+    applicantExtras,
+  };
+
+  const { saveToStorage, restoreFromStorage, clearStorage, hasStoredData } = useFormPersistence(
+    formData,
+    steps,
+    {
+      storageKey,
+      autoSaveInterval: 2000, // Save 2 seconds after changes
+      storageType: 'localStorage',
+    }
+  );
+
+  // Restore data on component mount if available
+  useEffect(() => {
+    if (hasStoredData) {
+      const restored = restoreFromStorage();
+      if (restored && restored.formData) {
+        // Only restore if we have stored data for later steps
+        if (restored.currentStep > steps) {
+          if (restored.formData.applicant) {
+            setApplicant({ ...applicant, ...restored.formData.applicant });
+          }
+          if (restored.formData.applicantExtras) {
+            setApplicantExtras(restored.formData.applicantExtras);
+          }
+          setSteps(restored.currentStep);
+
+          // Notify user that progress was restored
+          const timestamp = new Date(restored.timestamp).toLocaleString();
+          toast.info(`Progress restored from ${timestamp}`, {
+            position: 'top-center',
+            autoClose: 5000,
+          });
+        }
+      }
+    }
+  }, []); // Only run on mount
+
+  // Clear progress when form is completed (step 20)
+  useEffect(() => {
+    if (steps >= totalSteps) {
+      clearStorage();
+    }
+  }, [steps, totalSteps, clearStorage]);
+
   return (
     <JotformContext.Provider
       value={{
@@ -68,6 +121,7 @@ export default function LongForm({
         <div className={styles.main}>
           <div className={styles.main_form}>
             <FormProgress currentStep={steps} totalSteps={totalSteps} />
+            <ProgressSaveIndicator showLastSaved={true} />
             {getLongFormPages(steps)}
           </div>
         </div>

@@ -4,6 +4,7 @@ import { Form } from 'react-bootstrap';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { EducationLevel } from '../../../../enums/users/education-level.enum';
 import { useTranslation } from '../../../../hooks/use-translation';
+import { useAsyncFormSave } from '../../../../hooks/use-async-form-save';
 import { HighestLevelEducationDto } from '../../../../models/jot-form/long-form/highest-level-education.dto';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { FormActions } from '../form-buttons';
@@ -11,12 +12,15 @@ import { Select } from '../../../shared/dha';
 
 export function HighestLevelEducation() {
   const {
-    state: { applicant },
+    state: { applicant, steps },
     method: { setApplicant, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
   const [isFormValid, setIsFormValid] = useState(false);
+
+  // Initialize async form saving
+  const { saveFormData } = useAsyncFormSave(applicant?.id, steps);
 
   // Convert enum to options array
   const educationOptions = Object.entries(EducationLevel).map(([key, value]) => ({
@@ -29,15 +33,18 @@ export function HighestLevelEducation() {
     validationSchema: HighestLevelEducationDto.yupSchema(),
     onSubmit: (values) => {
       const { highest_degree } = values;
-      try {
-        setApplicant({
-          ...applicant,
-          highest_degree,
-        });
-        stepNext();
-      } catch (error) {
-        console.log(error);
-      }
+
+      const updatedApplicant = {
+        ...applicant,
+        highest_degree,
+      };
+
+      setApplicant(updatedApplicant);
+
+      // Save form data on submit
+      saveFormData({ applicant: updatedApplicant });
+
+      stepNext();
     },
     onReset: (values) => {
       stepBack();

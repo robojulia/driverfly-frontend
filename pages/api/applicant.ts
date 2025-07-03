@@ -47,8 +47,12 @@ export default class ApplicantApi extends BaseApi {
     return data;
   }
 
-  async update(id: number, dto: ApplicantEntity): Promise<ApplicantEntity> {
-    const { data } = await this.put(this.baseUrl + '/' + id, dto);
+  async update(
+    id: number,
+    dto: ApplicantEntity,
+    config?: AxiosRequestConfig
+  ): Promise<ApplicantEntity> {
+    const { data } = await this.put(this.baseUrl + '/' + id, dto, config);
 
     return data;
   }
@@ -198,10 +202,11 @@ export default class ApplicantApi extends BaseApi {
       return data;
     },
     update: async (
-      applicantId: number,
-      dto: UpsertApplicantJotformDto
+      id: number,
+      dto: UpsertApplicantJotformDto,
+      config?: AxiosRequestConfig
     ): Promise<ApplicantEntity> => {
-      const { data } = await this.put(`${this.jotform.baseUrl()}/${applicantId}`, dto);
+      const { data } = await this.put(`${this.jotform.baseUrl()}/${id}`, dto, config);
       return data;
     },
     mark: async (uuid_token: string, status: ApplicantFormStatus): Promise<void> => {

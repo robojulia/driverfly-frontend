@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { useTranslation } from '../../../../hooks/use-translation';
+import { useAsyncFormSave } from '../../../../hooks/use-async-form-save';
 import { DrivingExperienceDto } from '../../../../models/jot-form/long-form/driving-experience.dto';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { getCDLFormat } from '../../../../utils/cdl-formats';
@@ -30,7 +31,7 @@ const useScreenSize = () => {
 
 export function DrivingExperience() {
   const {
-    state: { applicant },
+    state: { applicant, applicantExtras, steps },
     method: { setApplicant, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
@@ -38,6 +39,9 @@ export function DrivingExperience() {
   const current_date = new Date();
   const [isFormValid, setIsFormValid] = useState(false);
   const isSmallScreen = useScreenSize();
+
+  // Initialize async form saving
+  const { saveFormData } = useAsyncFormSave(applicant?.id, steps);
 
   // Create responsive state list
   const responsiveStateList = isSmallScreen
@@ -64,20 +68,21 @@ export function DrivingExperience() {
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: (values) => {
-      try {
-        // Save form values to applicant context
-        // Use the state from background info for both state fields (backwards compatibility)
-        setApplicant({
-          ...applicant,
-          license_number: values.license_number,
-          state: applicant?.state, // Keep the state from background info
-          license_expiry: values.license_expiry,
-          license_state: values.license_state,
-        });
-        stepNext();
-      } catch (error) {
-        console.error('Error submitting driving experience form:', error);
-      }
+      const updatedApplicant = {
+        ...applicant,
+        license_number: values.license_number,
+        license_expiry: values.license_expiry,
+        license_state: values.license_state,
+      };
+
+      setApplicant(updatedApplicant);
+
+      // Save form data on submit
+      saveFormData({
+        applicant: updatedApplicant,
+      });
+
+      stepNext();
     },
     onReset: () => {
       stepBack();

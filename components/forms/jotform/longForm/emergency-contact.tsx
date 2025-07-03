@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { useTranslation } from '../../../../hooks/use-translation';
+import { useAsyncFormSave } from '../../../../hooks/use-async-form-save';
 import { EmergenyContactDto } from '../../../../models/jot-form/long-form/emergency-contact.dto';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { FormActions } from '../form-buttons';
@@ -10,30 +11,36 @@ import { Input, DhaPhoneInput } from '../../../shared/dha';
 
 export function EmergencyContact() {
   const {
-    state: { applicant },
+    state: { applicant, steps },
     method: { setApplicant, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
   const [isFormValid, setIsFormValid] = useState(false);
 
+  // Initialize async form saving
+  const { saveFormData } = useAsyncFormSave(applicant?.id, steps);
+
   const form = useFormik({
     initialValues: new EmergenyContactDto(),
     validationSchema: EmergenyContactDto.yupSchema(),
-    onSubmit: (values) => {
-      try {
-        const { emergency_contact_name, emergency_contact_number, emergency_contact_relationship } =
-          values;
-        setApplicant({
-          ...applicant,
-          emergency_contact_name,
-          emergency_contact_number,
-          emergency_contact_relationship,
-        });
-        stepNext();
-      } catch (error) {
-        console.log(error);
-      }
+    onSubmit: async (values) => {
+      const { emergency_contact_name, emergency_contact_number, emergency_contact_relationship } =
+        values;
+
+      const updatedApplicant = {
+        ...applicant,
+        emergency_contact_name,
+        emergency_contact_number,
+        emergency_contact_relationship,
+      };
+
+      setApplicant(updatedApplicant);
+
+      // Save form data on submit
+      saveFormData({ applicant: updatedApplicant });
+
+      stepNext();
     },
     onReset: (values) => {
       stepBack();

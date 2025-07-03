@@ -5,6 +5,7 @@ import * as yup from 'yup';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { useTranslation } from '../../../../hooks/use-translation';
 import { DrugTestDto } from '../../../../models/jot-form/long-form/drug-test.dto';
+import ApplicantApi from '../../../../pages/api/applicant';
 import BaseTextArea from '../../base-text-area';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { FormActions } from '../form-buttons';
@@ -13,12 +14,25 @@ import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
 
 export function DrugTest() {
   const {
-    state: { applicant },
+    state: { applicant, applicantExtras, steps },
     method: { setApplicant, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
   const [isValid, setIsValid] = useState(false);
+
+  // Save form data function
+  const saveFormData = async (formData: any) => {
+    if (!applicant?.id || steps <= 9) return;
+
+    try {
+      const applicantApi = new ApplicantApi();
+      await applicantApi.jotform.update(applicant.id, formData);
+      console.log(`Saved step ${steps} for applicant ${applicant.id}`);
+    } catch (error) {
+      console.error('Save failed:', error);
+    }
+  };
 
   // Enhanced validation schema with conditional requirements
   const validationSchema = yup.object({
@@ -67,11 +81,19 @@ export function DrugTest() {
         positive_drug_test_details = '__YES_NO_DETAILS__';
       }
 
-      setApplicant({
+      const updatedApplicant = {
         ...applicant,
         positive_drug_test: positive_drug_test,
         positive_drug_test_details: positive_drug_test_details,
+      };
+
+      setApplicant(updatedApplicant);
+
+      // Save form data on submit
+      saveFormData({
+        applicant: updatedApplicant,
       });
+
       stepNext();
     },
     onReset: (values) => {

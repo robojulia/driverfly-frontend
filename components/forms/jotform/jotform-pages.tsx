@@ -36,6 +36,27 @@ import { AtsJobs } from './shortForm/ats-jobs';
 import { TransmissionAndEndorsement } from './shortForm/transmission-and-endorsement';
 import { DuiAndEquipment } from './shortForm/dui-and-equipment';
 import { AlreadyAppliedPage } from './already-applied';
+import { withAsyncSave } from './with-async-save';
+
+// Wrap long form components with async saving capability
+const DriverApplicationWithSave = withAsyncSave(DriverApplication, 'DriverApplication');
+const BackgroundInfoWithSave = withAsyncSave(BackgroundInfo, 'BackgroundInfo');
+const HighestLevelEducationWithSave = withAsyncSave(HighestLevelEducation, 'HighestLevelEducation');
+const DrivingExperienceWithSave = withAsyncSave(DrivingExperience, 'DrivingExperience');
+const OtherQueuesWithSave = withAsyncSave(OtherQueues, 'OtherQueues');
+const DriverLicenseWithSave = withAsyncSave(DriverLicense, 'DriverLicense');
+const MedicalCardWithSave = withAsyncSave(MedicalCard, 'MedicalCard');
+const EmergencyContactWithSave = withAsyncSave(EmergencyContact, 'EmergencyContact');
+const EmploymentHistoryWithSave = withAsyncSave(EmploymentHistory, 'EmploymentHistory');
+const PastEmploymentHistoryWithSave = withAsyncSave(PastEmploymentHistory, 'PastEmploymentHistory');
+const WorkedBeforeWithSave = withAsyncSave(WorkedBefore, 'WorkedBefore');
+const AccidentHistoryWithSave = withAsyncSave(AccidentHistory, 'AccidentHistory');
+const ViolationHistoryWithSave = withAsyncSave(ViolationHistory, 'ViolationHistory');
+const PastSuspensionWithSave = withAsyncSave(PastSuspension, 'PastSuspension');
+const UnableForJobWithSave = withAsyncSave(UnableForJob, 'UnableForJob');
+const FelonyConvictionWithSave = withAsyncSave(FelonyConviction, 'FelonyConviction');
+const DrugTestWithSave = withAsyncSave(DrugTest, 'DrugTest');
+const LegalDocumentsPageWithSave = withAsyncSave(LegalDocumentsPage, 'LegalDocumentsPage');
 
 const getFullFormPages = (step: number): JSX.Element =>
   ({
@@ -75,24 +96,24 @@ const getFullFormStyle = (step: number): CSSProperties | undefined => ({}[step])
 
 const getLongFormPages = (step: number): JSX.Element =>
   ({
-    0: <DriverApplication />,
-    1: <BackgroundInfo />,
-    2: <HighestLevelEducation />,
-    3: <DrivingExperience />,
-    4: <OtherQueues />,
-    5: <DriverLicense />,
-    6: <MedicalCard />,
-    7: <EmergencyContact />,
-    8: <EmploymentHistory />,
-    9: <PastEmploymentHistory />,
-    10: <WorkedBefore />,
-    11: <AccidentHistory />,
-    12: <ViolationHistory />,
-    13: <PastSuspension />,
-    14: <UnableForJob />,
-    15: <FelonyConviction />,
-    16: <DrugTest />,
-    17: <LegalDocumentsPage />,
+    0: <DriverApplicationWithSave />,
+    1: <BackgroundInfoWithSave />,
+    2: <HighestLevelEducationWithSave />,
+    3: <DrivingExperienceWithSave />,
+    4: <OtherQueuesWithSave />,
+    5: <DriverLicenseWithSave />,
+    6: <MedicalCardWithSave />,
+    7: <EmergencyContactWithSave />,
+    8: <EmploymentHistoryWithSave />,
+    9: <PastEmploymentHistoryWithSave />,
+    10: <WorkedBeforeWithSave />,
+    11: <AccidentHistoryWithSave />,
+    12: <ViolationHistoryWithSave />,
+    13: <PastSuspensionWithSave />,
+    14: <UnableForJobWithSave />,
+    15: <FelonyConvictionWithSave />,
+    16: <DrugTestWithSave />,
+    17: <LegalDocumentsPageWithSave />,
     19: <ThankyouPage />,
   }[step]);
 

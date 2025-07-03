@@ -4,6 +4,7 @@ import { Form, Row } from 'react-bootstrap';
 import jotformContext from '../../../../context/jotform-context';
 import { useTranslation } from '../../../../hooks/use-translation';
 import { WorkedBeforeDto } from '../../../../models/jot-form/long-form/worked-before.dto';
+import ApplicantApi from '../../../../pages/api/applicant';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
 import { FormActions } from '../form-buttons';
@@ -11,11 +12,24 @@ import { Input, RadioGroup } from '../../../shared/dha';
 
 export function WorkedBefore() {
   const {
-    state: { applicant },
+    state: { applicant, steps },
     method: { setApplicant, stepNext, stepBack },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
+
+  // Save form data function
+  const saveFormData = async (formData: any) => {
+    if (!applicant?.id || steps <= 9) return;
+
+    try {
+      const applicantApi = new ApplicantApi();
+      await applicantApi.jotform.update(applicant.id, formData);
+      console.log(`Saved step ${steps} for applicant ${applicant.id}`);
+    } catch (error) {
+      console.error('Save failed:', error);
+    }
+  };
 
   const form = useFormik({
     initialValues: {
@@ -29,7 +43,15 @@ export function WorkedBefore() {
     validateOnMount: true,
     validateOnChange: true,
     onSubmit: (values) => {
-      setApplicant({ ...applicant, ...values });
+      const updatedApplicant = { ...applicant, ...values };
+
+      setApplicant(updatedApplicant);
+
+      // Save form data on submit
+      saveFormData({
+        applicant: updatedApplicant,
+      });
+
       stepNext();
     },
     onReset: () => {

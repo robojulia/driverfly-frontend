@@ -7,6 +7,7 @@ import JotformContext, { JotFormContextType } from '../../../../context/jotform-
 import { useTranslation } from '../../../../hooks/use-translation';
 import { ApplicantMovingViolationEntity } from '../../../../models/applicant/applicant-moving-violation.entity';
 import { ViolationHistoryDto } from '../../../../models/jot-form/long-form/violation-history.dto';
+import ApplicantApi from '../../../../pages/api/applicant';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
 import { FormActions } from '../form-buttons';
@@ -15,11 +16,24 @@ import BaseTextArea from '../../base-text-area';
 
 export function ViolationHistory() {
   const {
-    state: { applicant },
+    state: { applicant, steps },
     method: { stepBack, stepNext, setApplicant },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
+
+  // Save form data function
+  const saveFormData = async (formData: any) => {
+    if (!applicant?.id || steps <= 9) return;
+
+    try {
+      const applicantApi = new ApplicantApi();
+      await applicantApi.jotform.update(applicant.id, formData);
+      console.log(`Saved step ${steps} for applicant ${applicant.id}`);
+    } catch (error) {
+      console.error('Save failed:', error);
+    }
+  };
 
   // Updated validation - only validate violation details if they've been started
   const validationSchema = yup.object({
@@ -129,16 +143,20 @@ export function ViolationHistory() {
         moving_violation_history = [];
       }
 
-      try {
-        setApplicant({
-          ...applicant,
-          moving_violations_details,
-          moving_violations_count,
-          moving_violation_history,
-        });
-      } catch (error) {
-        console.log(error);
-      }
+      const updatedApplicant = {
+        ...applicant,
+        moving_violations_details,
+        moving_violations_count,
+        moving_violation_history,
+      };
+
+      setApplicant(updatedApplicant);
+
+      // Save form data on submit
+      saveFormData({
+        applicant: updatedApplicant,
+      });
+
       stepNext();
     },
     onReset: (values) => {

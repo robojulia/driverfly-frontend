@@ -8,6 +8,7 @@ import JotformContext, { JotFormContextType } from '../../../../context/jotform-
 import { ApplicantDocumentType } from '../../../../enums/applicants/applicant-document-type.enum';
 import { ApplicantExtras } from '../../../../enums/applicants/applicant-extras.enum';
 import { useTranslation } from '../../../../hooks/use-translation';
+import { useAsyncFormSave } from '../../../../hooks/use-async-form-save';
 import { DocumentEntity } from '../../../../models/documents/document.entity';
 import { DocumentsDto } from '../../../../models/jot-form/long-form/documents.dto';
 import { FormActions } from '../form-buttons';
@@ -23,6 +24,9 @@ export function DriverLicense() {
   }: JotFormContextType = useContext(JotformContext);
 
   const [isFormValid, setIsFormValid] = useState(false);
+
+  // Initialize async form saving
+  const { saveFormData } = useAsyncFormSave(applicant?.id, steps);
 
   const isDriverLicense = (v: DocumentEntity): boolean =>
     v?.type == ApplicantDocumentType.DRIVER_LICENSE;
@@ -45,29 +49,26 @@ export function DriverLicense() {
     onSubmit: (values, { resetForm }) => {
       const { document } = values;
 
-      if (isMissingDocRouteActive || isLongFormRouteActive) {
-        if (!!document?.file_base64) {
-          const documents: DocumentEntity[] =
-            applicant?.documents?.filter(isNotDriverLicense) || [];
-          setApplicant({
-            ...applicant,
-            documents: [...documents, { ...document }],
-          });
-        }
-        stepNext();
-      } else if (dhaRouteActive || quickApplyRouteActive) {
-        if (!!document?.file_base64) {
-          const documents: DocumentEntity[] =
-            applicant?.documents?.filter(isNotDriverLicense) || [];
-          setApplicant({
-            ...applicant,
-            documents: [...documents, { ...document }],
-          });
-        }
-        stepNext();
-      } else {
-        toast.error(t('MUST_ADD_FILE'));
+      let updatedApplicant = { ...applicant };
+      let documents: DocumentEntity[] = applicant?.documents?.filter(isNotDriverLicense) || [];
+
+      if (!!document?.file_base64) {
+        documents = [...documents, { ...document }];
       }
+
+      updatedApplicant = {
+        ...updatedApplicant,
+        documents,
+      };
+
+      setApplicant(updatedApplicant);
+
+      // Save form data on submit
+      saveFormData({
+        applicant: updatedApplicant,
+      });
+
+      stepNext();
     },
     onReset: (values) => {
       stepBack();
@@ -79,7 +80,6 @@ export function DriverLicense() {
 
   // Check if form is valid
   useEffect(() => {
-    const hasDocument = !!form.values.document?.file_base64;
     const hasNoErrors = Object.keys(form.errors).length === 0;
     // Form is valid even without document, but only invalid if there are errors
     setIsFormValid(hasNoErrors);
