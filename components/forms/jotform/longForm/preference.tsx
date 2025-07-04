@@ -42,21 +42,18 @@ export function Preferences() {
         updateApplicantExtras(REQUIRE_W2_EMPLOYMENT);
         updateApplicantExtras(OTHER_ABSOLUTELY_REQUIREMENTS);
 
-        // Create the jotform record if applicant can pass drug test
-        if (applicant?.can_pass_drug_test) {
-          const data = await applicantApi.jotform.create(company.id, {
-            applicant: { ...applicant, preferred_location, routes },
-            applicantExtras,
-            jobs,
-            utm,
-          });
+        const data = await applicantApi.jotform.create(company.id, {
+          applicant: { ...applicant, preferred_location, routes },
+          applicantExtras,
+          jobs,
+          utm,
+        });
 
-          setApplicantExtras(data?.extras);
-          setApplicant({
-            ...applicant,
-            ...data,
-          });
-        }
+        setApplicantExtras(data?.extras);
+        setApplicant({
+          ...applicant,
+          ...data,
+        });
 
         stepNext();
       } catch (error) {
