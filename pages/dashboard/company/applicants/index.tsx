@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { NextRouter, useRouter } from 'next/router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Accordion, Button, ButtonGroup, Col, Row } from 'react-bootstrap';
-import { EyeFill, PencilFill, PersonFill, BriefcaseFill } from 'react-bootstrap-icons';
+import { EyeFill, PencilFill, PersonFill } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
 import ShowEnumFromString from '../../../../components/enum-filters/show-enum-from-string';
@@ -24,8 +24,6 @@ import {
   ApplicantReasonCodeQuit,
 } from '../../../../enums/applicants/applicant-reason-codes.enum';
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
-import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
-import { JobGeography } from '../../../../enums/jobs/job-geography.enum';
 import { DriverEndorsement } from '../../../../enums/users/driver-endorsement.enum';
 import { VehicleTransmissionType } from '../../../../enums/vehicles/vehicle-transmission-type.enum';
 import { useAuth } from '../../../../hooks/use-auth';
@@ -43,18 +41,9 @@ import joinArrayElements from '../../../../utils/join-in-order.utils';
 import CustomPagination from '../../../../components/pagination/custom-pagination';
 import { Pagination, PagingMeta } from '../../../../types/pagination.type';
 import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
-import JobApi from '../../../api/job';
-import DataViewToggle from '../../../../components/shared/DataViewToggle';
 
-const ViewMode = {
-  job: 'job',
-  applicant: 'applicant',
-};
 interface ConsolodatedApplicant extends ApplicantEntity {
   jobs?: ConsolodatedApplicantJob[];
-}
-interface ConsolodatedJob extends JobEntity {
-  applicants?: ConsolodatedApplicantJob[];
 }
 interface ConsolodatedApplicantJob extends ApplicantJobEntity {
   // todo: extend with qualifications
@@ -76,9 +65,7 @@ export default function Applicants() {
   const router = useRouter();
 
   let { user, company, hasPermission } = useAuth();
-  let { viewMode, jobId } = router.query;
-
-  if (!ViewMode[`${viewMode}`]) viewMode = ViewMode.applicant;
+  let { jobId } = router.query;
 
   const [loading, setLoading] = useState<boolean>(true);
   const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
@@ -87,26 +74,24 @@ export default function Applicants() {
   const [filtersChanged, setFiltersChanged] = useState<boolean>(false);
 
   const fetchApplicant = async () => {
-    if (viewMode === ViewMode.applicant) {
-      setLoading(true);
-      const api = new ApplicantApi();
-      const data = await api.list({
-        jobId: jobId as any as number,
-        without: ['applicant_dac', 'applicant_extras'],
-        ...filters,
-        is_paginated: true,
-        page: filtersChanged ? 1 : pagingMeta?.currentPage,
-        limit: pagingMeta?.itemsPerPage,
-      });
-      setApplicants((data as Pagination<ApplicantEntity>)?.items);
-      setFiltersChanged(false);
-      setPagingMeta({
-        ...pagingMeta,
-        currentPage: filtersChanged ? 1 : pagingMeta?.currentPage,
-        totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems,
-      });
-      setTimeout(() => setLoading(false), 1000);
-    }
+    setLoading(true);
+    const api = new ApplicantApi();
+    const data = await api.list({
+      jobId: jobId as any as number,
+      without: ['applicant_dac', 'applicant_extras'],
+      ...filters,
+      is_paginated: true,
+      page: filtersChanged ? 1 : pagingMeta?.currentPage,
+      limit: pagingMeta?.itemsPerPage,
+    });
+    setApplicants((data as Pagination<ApplicantEntity>)?.items);
+    setFiltersChanged(false);
+    setPagingMeta({
+      ...pagingMeta,
+      currentPage: filtersChanged ? 1 : pagingMeta?.currentPage,
+      totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems,
+    });
+    setTimeout(() => setLoading(false), 1000);
   };
 
   useEffectAsync(
@@ -118,7 +103,7 @@ export default function Applicants() {
 
   useEffect(() => {
     setFilters(new SearchApplicantDto());
-  }, [viewMode]);
+  }, []);
 
   const onViewClick = (id: number) => {
     router.push(`${router.pathname}/${id}`);
@@ -126,20 +111,6 @@ export default function Applicants() {
 
   const onEditClick = (id: number) => {
     router.push(`${router.pathname}/${id}/edit`);
-  };
-
-  /**
-   *
-   * @param {React.ChangeEvent<HTMLInputElement} e
-   */
-  const onViewModeChange = async (e) => {
-    const { value } = e.target;
-
-    router.query.viewMode = value;
-
-    setApplicants([]);
-
-    await router.push(router);
   };
 
   const onChangeStatus = async (
@@ -227,20 +198,18 @@ export default function Applicants() {
                 alignItems: 'center',
               }}
             >
-              {viewMode === ViewMode.applicant && (
-                <Accordion.Button
-                  className="mr-3 text-black theme-filter-btn"
-                  style={{
-                    width: 'auto',
-                    fontSize: '.95rem',
-                    lineHeight: '1.5',
-                    padding: '.25rem 1.5rem',
-                    borderRadius: '.2rem',
-                  }}
-                >
-                  <div className="mr-2">{t('FILTERS')}</div>
-                </Accordion.Button>
-              )}
+              <Accordion.Button
+                className="mr-3 text-black theme-filter-btn"
+                style={{
+                  width: 'auto',
+                  fontSize: '.95rem',
+                  lineHeight: '1.5',
+                  padding: '.25rem 1.5rem',
+                  borderRadius: '.2rem',
+                }}
+              >
+                <div className="mr-2">{t('FILTERS')}</div>
+              </Accordion.Button>
               {canCreate && (
                 <ButtonGroup size="sm" style={{ float: 'right' }}>
                   <Button
@@ -261,74 +230,28 @@ export default function Applicants() {
             </div>
           }
         >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'end',
-            }}
-          >
-            <DataViewToggle
-              primaryLabel="APPLICANTS"
-              secondaryLabel="JOBS"
-              activeView={typeof viewMode === 'string' ? viewMode : ViewMode.applicant}
-              onViewChange={async (newView) => {
-                router.query.viewMode = newView;
-                setApplicants([]);
-                await router.push(router);
-              }}
-              primaryValue={ViewMode.applicant}
-              secondaryValue={ViewMode.job}
-              primaryIcon={<PersonFill />}
-              secondaryIcon={<BriefcaseFill />}
-              showCounts={true}
-              primaryCount={
-                viewMode === ViewMode.applicant ? pagingMeta?.totalItems || 0 : undefined
-              }
-              secondaryCount={viewMode === ViewMode.job ? applicants?.length || 0 : undefined}
-              variant="pills"
-              size="md"
-            />
-          </div>
-
           <Row>
             <Col className="force-overflow p-0">
-              {viewMode === ViewMode.applicant && (
-                <Accordion.Body>
-                  <ApplicantFilterForm onSearch={setFilters} />
-                </Accordion.Body>
-              )}
+              <Accordion.Body>
+                <ApplicantFilterForm onSearch={setFilters} />
+              </Accordion.Body>
 
               {loading ? (
                 <div className="spinner-border mt-3 ml-1" role="status">
                   <span className="sr-only">Loading...</span>
                 </div>
               ) : (
-                <>
-                  {viewMode == ViewMode.applicant && (
-                    <ApplicantView
-                      totalItems={pagingMeta?.totalItems}
-                      setPagingMeta={setPagingMeta}
-                      pagingMeta={pagingMeta}
-                      router={router}
-                      applicants={applicants}
-                      onViewClick={onViewClick}
-                      onEditClick={onEditClick}
-                      onChangeStatus={onChangeStatus}
-                      t={t}
-                    />
-                  )}
-                  {viewMode == ViewMode.job && (
-                    <JobView
-                      router={router}
-                      applicants={applicants}
-                      onViewClick={onViewClick}
-                      onEditClick={onEditClick}
-                      onChangeStatus={onChangeStatus}
-                      t={t}
-                    />
-                  )}
-                </>
+                <ApplicantView
+                  totalItems={pagingMeta?.totalItems}
+                  setPagingMeta={setPagingMeta}
+                  pagingMeta={pagingMeta}
+                  router={router}
+                  applicants={applicants}
+                  onViewClick={onViewClick}
+                  onEditClick={onEditClick}
+                  onChangeStatus={onChangeStatus}
+                  t={t}
+                />
               )}
             </Col>
           </Row>
@@ -488,69 +411,6 @@ function getApplicantStatus(applicantJob: ApplicantJobEntity, t: TranslateInterf
   }
 }
 
-function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
-  // calculate if applicant meets basic qualifications:
-  const results = {
-    meets_basic_qualifications: true,
-    qualification_fail_reason: [],
-  };
-
-  if (applicant?.years_cdl_experience < job?.min_years_experience) {
-    results.meets_basic_qualifications = false;
-    results?.qualification_fail_reason?.push('YEARS_OF_CDL_EXPERIENCE_TOO_LOW');
-  }
-
-  if (applicant?.accident_count > 0) {
-    if (job?.must_have_clean_mvr) {
-      results.meets_basic_qualifications = false;
-      results?.qualification_fail_reason?.push('DOES_NOT_HAVE_CLEAN_MVR');
-    } else if (job?.mvr_requirements?.length) {
-      // complicated check around max violations
-      // since violation count isn't specific
-      // we just want to pull the max number
-      // and check against that
-      const mvr = job?.mvr_requirements?.reduce((p, c) => {
-        if (p?.max_count >= c?.max_count) return p;
-
-        return c;
-      });
-
-      if (mvr && mvr?.max_count > applicant?.accident_count) {
-        results.meets_basic_qualifications = false;
-        results?.qualification_fail_reason?.push('VIOLATION_COUNT_GREATER_THAN_MAX');
-      }
-    }
-  }
-
-  if (!applicant?.can_pass_drug_test && job?.must_pass_drug_test) {
-    results.meets_basic_qualifications = false;
-    results?.qualification_fail_reason?.push('CANNOT_PASS_DRUG_TEST');
-  }
-
-  job?.required_skills?.forEach((skill) => {
-    // cannot process OTHER type
-    if (skill?.type != JobEquipmentType.OTHER) {
-      const experience = applicant?.equipment_experience?.find((v) => v?.type == skill?.type);
-
-      if (!experience) {
-        results.meets_basic_qualifications = false;
-        results?.qualification_fail_reason?.push({
-          key: 'DOES_NOT_HAVE_{name}_EXPERIENCE',
-          name: `JobEquipmentType.${skill?.type}`,
-        });
-      } else if (experience?.years < skill?.years) {
-        results.meets_basic_qualifications = false;
-        results?.qualification_fail_reason?.push({
-          key: 'YEARS_OF_{name}_EXPERIENCE_TOO_LOW',
-          name: `JobEquipmentType.${skill?.type}`,
-        });
-      }
-    }
-  });
-
-  return results;
-}
-
 interface ViewProps {
   applicants: ApplicantEntity[];
   onChangeStatus: (
@@ -588,24 +448,7 @@ function ApplicantView(props: ViewProps) {
     }));
   };
 
-  const items: ConsolodatedApplicant[] = applicants?.map((applicant) => {
-    return {
-      ...applicant,
-      jobs: applicant.jobs?.map((aJob) => {
-        const requirements = evaluateJobRequirements(applicant, aJob.job);
-        requirements.qualification_fail_reason = requirements.qualification_fail_reason.map((v) => {
-          if (typeof v == 'string') return t(v);
-
-          return t(v.key, { name: v.name }, { translateProps: true });
-        });
-
-        return {
-          ...aJob,
-          ...requirements,
-        };
-      }),
-    };
-  });
+  const items: ConsolodatedApplicant[] = applicants;
   return (
     <div className="applicant__table__sty ellipsis_remove">
       <ViewDataTable<ConsolodatedApplicant>
@@ -892,190 +735,5 @@ function ApplicantView(props: ViewProps) {
         />
       </div>
     </div>
-  );
-}
-
-function JobView(props: ViewProps) {
-  const { router, applicants, onChangeStatus, onViewClick, onEditClick, t } = props;
-
-  const { company, hasPermission } = useAuth();
-
-  const [jobs, setJobs] = useState<ConsolodatedJob[]>([]);
-
-  const fetchJobs = async () => {
-    const api = new JobApi();
-    const data = await api.applicants({
-      companyId: company?.id,
-    });
-    setJobs(data as JobEntity[]);
-  };
-
-  useEffectAsync(async () => await fetchJobs(), []);
-
-  for (const [, job] of jobs?.entries()) {
-    job?.applicants?.map((applicant) => {
-      const requirements = evaluateJobRequirements(applicant?.applicant, job);
-      requirements.qualification_fail_reason = requirements?.qualification_fail_reason?.map((v) => {
-        if (typeof v == 'string') return t(v);
-
-        return t(v?.key, { name: v?.name }, { translateProps: true });
-      });
-
-      applicant['qualification_fail_reason'] = requirements?.qualification_fail_reason;
-      applicant['meets_basic_qualifications'] = requirements?.meets_basic_qualifications;
-    });
-  }
-
-  return (
-    <ViewDataTable<ConsolodatedJob>
-      columns={[
-        {
-          id: 'Id',
-          name: 'ID',
-          selector: (job) => job?.id,
-          hidable: true,
-        },
-        {
-          id: 'job',
-          name: 'JOB',
-          selector: (job) => job?.title,
-          hidable: false,
-          cell: (j) => (
-            <Link href={`/dashboard/company/jobs/${j?.id}`}>
-              <a>{j?.title}</a>
-            </Link>
-          ),
-        },
-        {
-          id: 'location',
-          name: 'LOCATION',
-          selector: (job) => buildAddress(job?.location),
-        },
-        {
-          id: 'geography',
-          name: 'GEOGRAPHY',
-          selector: (job) => (job?.geography ? t(`JobGeography.${job?.geography}`) : ''),
-        },
-        {
-          id: 'type',
-          name: 'TYPE',
-          selector: (job) =>
-            job?.employment_type ? t(`JobEmploymentType.${job?.employment_type}`) : '',
-        },
-        {
-          id: 'weekly_range',
-          name: 'WEEKLY_RANGE',
-          selector: (job) =>
-            `${numbers?.toCurrency(job?.min_weekly_pay)} - ${numbers?.toCurrency(
-              job?.max_weekly_pay
-            )}`,
-        },
-      ]}
-      items={jobs}
-      expandableRowsComponent={({ data }) => (
-        <ViewDataTable<ConsolodatedApplicantJob>
-          columns={[
-            {
-              name: 'ID',
-              selector: (aJob) => aJob?.applicant?.id,
-            },
-            {
-              name: 'NAME',
-              selector: (aJob) => getApplicantName(aJob?.applicant),
-              cell: (aJob) => (
-                <Link href={`${router?.pathname}/${aJob?.applicant?.id}/edit`}>
-                  <a>{getApplicantName(aJob?.applicant)}</a>
-                </Link>
-              ),
-              hidable: false,
-            },
-            {
-              name: 'CITY',
-              selector: (aJob) => aJob?.applicant?.city,
-            },
-            {
-              name: 'STATE',
-              selector: (aJob) => aJob?.applicant?.state,
-            },
-            {
-              name: 'DATE_APPLIED',
-              selector: (aJob) => new Date(aJob?.created_at)?.toDateString(),
-              hidable: false,
-            },
-            {
-              name: 'STATUS',
-              cell: (aJob) => (
-                <OverlyPopover skipTranslate slice_at={40} str={getApplicantStatus(aJob, t)} />
-              ),
-              selector: (aJob) => getApplicantStatus(aJob, t),
-              hidable: false,
-            },
-            {
-              name: 'MEETS_BASIC_QUALIFICATIONS',
-              selector: (aJob) => t(aJob?.meets_basic_qualifications ? 'YES' : 'NO'),
-              hidable: false,
-            },
-            {
-              name: 'REASONS_IF_NO',
-              selector: (aJob) => aJob?.qualification_fail_reason?.join(),
-              hidable: false,
-            },
-            {
-              id: 'date_added',
-              name: 'DATE_ADDED',
-              selector: (aJob) => aJob?.applicant?.created_at,
-              cell: (aJob) => <ShowFormattedDate date={aJob?.applicant?.created_at} />,
-              hidable: false,
-            },
-            {
-              name: 'ASSIGNED_TO',
-              selector: (aJob) => aJob?.applicant?.assignedUser?.name || t('NONE'),
-              hidable: false,
-            },
-            {
-              cell: (aJob) => {
-                const hideStatus = Boolean(
-                  applicants
-                    ?.find((a) => a?.id == aJob?.applicant?.id)
-                    ?.jobs?.find((j) => j?.id != aJob?.id && j?.status?.startsWith('COMPLETED_'))
-                )
-                  ? [
-                      ApplicantStatus.COMPLETED_EMPLOYED,
-                      ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
-                      ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE,
-                    ]
-                  : [];
-                return (
-                  <BaseSelect
-                    hideOptions={hideStatus}
-                    name={aJob?.applicant?.id?.toString()}
-                    value=""
-                    onChange={(e) => onChangeStatus(e, aJob?.applicant, data)}
-                    placeholder={'CHANGE_STATUS'}
-                    labelPrefix="ApplicantStatus"
-                    enumType={ApplicantStatus}
-                  />
-                );
-              },
-            },
-          ]}
-          hideSearch
-          actions={(row) => [
-            {
-              icon: EyeFill,
-              label: 'VIEW',
-              onClick: (e) => onViewClick(row?.applicant?.id),
-            },
-            {
-              icon: PencilFill,
-              label: 'EDIT',
-              onClick: (e) => onEditClick(row?.applicant?.id),
-              hide: !hasPermission('CanUpdateApplicant'),
-            },
-          ]}
-          items={data.applicants}
-        />
-      )}
-    />
   );
 }
