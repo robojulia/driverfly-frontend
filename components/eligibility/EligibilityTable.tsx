@@ -125,33 +125,6 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
 
   return (
     <div className={`${styles.eligibilityContainer} ${className} ${styles.fadeIn}`}>
-      {/* Summary Stats */}
-      <div className={styles.eligibilityStatsContainer}>
-        <div className={styles.eligibilityStatCard}>
-          <div className={styles.eligibilityStatNumber}>{data.totalApplicants}</div>
-          <div className={styles.eligibilityStatLabel}>Total Applicants</div>
-          <div className={styles.eligibilityStatSubtext}>Available in system</div>
-        </div>
-
-        <div
-          className={`${styles.eligibilityStatCard} ${
-            data.eligibleApplicants > 10 ? styles.highlight : ''
-          }`}
-        >
-          <div className={styles.eligibilityStatNumber}>{data.eligibleApplicants}</div>
-          <div className={styles.eligibilityStatLabel}>Eligible Applicants</div>
-          <div className={styles.eligibilityStatSubtext}>
-            {data.totalApplicants > 0
-              ? `${Math.round((data.eligibleApplicants / data.totalApplicants) * 100)}% match rate`
-              : 'No applicants yet'}
-          </div>
-        </div>
-
-        <div className={styles.eligibilityStatCard} style={{ visibility: 'hidden' }}>
-          {/* Hidden stat card to maintain 3-column layout */}
-        </div>
-      </div>
-
       {/* Filters */}
       <div className={styles.filtersContainer}>
         <div className={styles.filterRow}>

@@ -37,7 +37,7 @@ export default function ApplicantEligibilityDetail({
   const [eligibilityData, setEligibilityData] = useState<DetailedEligibilityResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const backPath = `/dashboard/company/jobs/${jobId}/applicants/eligibility`;
+  const backPath = `/dashboard/company/jobs/${jobId}`;
 
   useEffect(() => {
     const loadData = async () => {
@@ -454,7 +454,7 @@ export default function ApplicantEligibilityDetail({
                       </Button>
                     </a>
                   </Link>
-                  <Link href={`/dashboard/company/jobs/${jobId}/applicants/eligibility`}>
+                  <Link href={`/dashboard/company/jobs/${jobId}`}>
                     <a>
                       <Button variant="outline-secondary" className="w-100">
                         <ArrowLeft className="me-2" />

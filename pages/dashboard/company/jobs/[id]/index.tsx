@@ -1,60 +1,53 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Button, ButtonGroup } from 'react-bootstrap';
-import { Pencil } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import FullLayout from '../../../../../components/dashboard/layouts/layout/full-layout';
 import ChildPageLayout from '../../../../../components/layouts/page/child-page-layout';
+import { JobDashboard } from '../../../../../components/job-dashboard/JobDashboard';
 import { useAuth } from '../../../../../hooks/use-auth';
 import { useTranslation } from '../../../../../hooks/use-translation';
 import { useEffectAsync } from '../../../../../utils/react';
-
-import { DeleteButton } from '../../../../../components/buttons/delete-button';
-import { ReactivateJobButton } from '../../../../../components/jobs/reactivate-job';
-import ViewJobDetail from '../../../../../components/jobs/view-job-detail';
-import { EligibilityBanner } from '../../../../../components/eligibility';
 import { JobEntity } from '../../../../../models/job/job.entity';
 import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
 import JobApi from '../../../../api/job';
-import styles from '../../../../../styles/eligibility.module.css';
 
 export default function ViewJob({ id }) {
   const router = useRouter();
-
   const { t } = useTranslation();
-
-  const { hasPermission, company } = useAuth();
-
+  const { company } = useAuth();
   const [job, setJob] = useState<JobEntity>(new JobEntity());
+  const [loading, setLoading] = useState(true);
 
   const backPath = '/dashboard/company/jobs';
-
   const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
 
   useEffectAsync(async () => {
     if (id) {
-      const api = new JobApi();
+      try {
+        setLoading(true);
+        const api = new JobApi();
+        const data = await api.getById(+id);
 
-      const data = await api.getById(+id);
+        if (!data || data.company.id != company?.id) {
+          toast.error(t('UNABLE_TO_FIND_{name}', { name: t('JOB') }));
+          goBack();
+          return;
+        }
 
-      if (!data || data.company.id != company?.id) {
-        toast.error(t('UNABLE_TO_FIND_{name}', { name: t('JOB') }));
+        setJob(data);
+      } catch (error) {
+        toast.error(t('UNABLE_TO_FIND_{name}', { name: 'JOB' }, { translateProps: true }));
         goBack();
-        return;
+      } finally {
+        setLoading(false);
       }
-
-      setJob(data);
     } else {
       toast.error(t('UNABLE_TO_FIND_{name}', { name: 'JOB' }, { translateProps: true }));
       goBack();
     }
   }, [id, company]);
 
-  async function onEditClick() {
-    await router.push(router.asPath + `/edit`);
-  }
-
-  async function onDeleteClick() {
+  async function onJobDelete() {
     try {
       const api = new JobApi();
       await api.remove(+id);
@@ -71,48 +64,31 @@ export default function ViewJob({ id }) {
     }
   }
 
-  const can = {
-    update: hasPermission('CanUpdateJob'),
-    delete: hasPermission('CanDeleteJob'),
-  };
+  function onJobUpdate(updatedJob: JobEntity) {
+    setJob(updatedJob);
+  }
 
-  const title = t('VIEW_{name}', { name: 'JOB' }, { translateProps: true });
+  if (loading) {
+    return (
+      <ChildPageLayout
+        backPath={backPath}
+        title={t('VIEW_{name}', { name: 'JOB' }, { translateProps: true })}
+      >
+        <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ minHeight: '400px' }}
+        >
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </ChildPageLayout>
+    );
+  }
 
   return (
-    <ChildPageLayout
-      backPath={backPath}
-      title={title}
-      actions={
-        <ButtonGroup>
-          <ReactivateJobButton
-            variant="outline-success"
-            job={job}
-            className="border-0"
-            onComplete={(j) => setJob(j)}
-          />
-          {can.delete && <DeleteButton onDelete={onDeleteClick} />}
-          {can.update && (
-            <Button type="button" onClick={onEditClick}>
-              <Pencil /> {t('EDIT')}
-            </Button>
-          )}
-        </ButtonGroup>
-      }
-    >
-      {job.id && (
-        <div className={styles.eligibilityIntegration}>
-          <EligibilityBanner jobId={job.id} className={styles.jobDetailBanner} />
-        </div>
-      )}
-
-      <ViewJobDetail
-        job={job}
-        canApply={false}
-        canSave={false}
-        hideVehicles={false}
-        hideCompanyName={true}
-        hideSocialLinks={true}
-      />
+    <ChildPageLayout backPath={backPath} title={`Job Dashboard: ${job.title || 'Loading...'}`}>
+      {job.id && <JobDashboard job={job} onJobUpdate={onJobUpdate} onJobDelete={onJobDelete} />}
     </ChildPageLayout>
   );
 }
