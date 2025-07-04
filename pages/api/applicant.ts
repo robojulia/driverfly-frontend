@@ -99,6 +99,15 @@ export default class ApplicantApi extends BaseApi {
     return data;
   }
 
+  // new api to fetch all applicants by phone number
+  async searchApplicantsByPhone(params: ApplicantEntity): Promise<ApplicantEntity[]> {
+    const { data } = await this.get(
+      this.buildUrl(this.baseUrl + '/search-applicants-by-phone', params)
+    );
+
+    return data;
+  }
+
   async requestOTP(dto: ApplicantEntity): Promise<any> {
     const { data } = await this.post(this.baseUrl + '/request-otp', dto);
 

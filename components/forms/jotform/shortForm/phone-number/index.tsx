@@ -21,7 +21,7 @@ import { socketInitializer } from './socketInitializer';
 
 export function PhoneNumber() {
   const {
-    state: { applicant, companyJobs, steps },
+    state: { applicant, companyJobs, steps, company },
     method: {
       setApplicant,
       setSteps,
@@ -48,13 +48,23 @@ export function PhoneNumber() {
       try {
         const { phone } = values;
         const applicantApi = new ApplicantApi();
-        const applicantPhoneExists = await applicantApi.searchByPublic({
+
+        // Search for all existing applicants with this phone number
+        const existingApplicants = await applicantApi.searchApplicantsByPhone({
           phone,
         });
 
-        if (applicantPhoneExists) {
+        // Check if any of the found applicants belong to the current company
+        const currentCompanyApplicant = existingApplicants.find(
+          (applicant) => applicant.company?.id === company?.id
+        );
+
+        if (currentCompanyApplicant) {
+          // Applicant has previously applied to THIS company - show modal for profile recovery
           setOpenModal(true);
         } else {
+          // Either no existing applicants found, or applicants exist but for different companies
+          // Allow them to proceed with creating a new application for this company
           setApplicant({
             ...applicant,
             phone,
@@ -63,6 +73,12 @@ export function PhoneNumber() {
         }
       } catch (error) {
         console.log('error', error);
+        // If there's an error (like applicant not found), just proceed
+        setApplicant({
+          ...applicant,
+          phone: values.phone,
+        });
+        stepNext();
       }
     },
     onReset: (values) => {
@@ -362,7 +378,7 @@ export function PhoneNumber() {
                 <h5 className="mb-2">{t('We Found Your Previous Application')}</h5>
                 <p className="mb-0">
                   {t(
-                    'This phone number is already associated with an existing application in our system.'
+                    'This phone number is already associated with an existing application to this company in our system.'
                   )}
                 </p>
               </Alert>
