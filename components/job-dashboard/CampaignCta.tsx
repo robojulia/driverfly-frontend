@@ -107,16 +107,6 @@ export function CampaignCta({
     return null;
   }
 
-  // Debug logging
-  console.log('CampaignCta Debug:', {
-    campaigns,
-    campaignsLength: campaigns.length,
-    hasExistingCampaigns,
-    draftCampaigns,
-    completedCampaigns,
-    eligibilityStats,
-  });
-
   return (
     <>
       {hasExistingCampaigns ? (

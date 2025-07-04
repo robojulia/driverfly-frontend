@@ -10,6 +10,7 @@ import {
   StarFill,
 } from 'react-bootstrap-icons';
 import { JobEntity } from '../../models/job/job.entity';
+import { useTranslation } from '../../hooks/use-translation';
 import styles from '../../styles/job-dashboard.module.css';
 
 interface JobDetailsOverviewProps {
@@ -18,16 +19,18 @@ interface JobDetailsOverviewProps {
 }
 
 export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, className = '' }) => {
+  const { t } = useTranslation();
+
   const formatSalary = (min?: number, max?: number) => {
-    if (!min && !max) return 'Not specified';
+    if (!min && !max) return t('NOT_SPECIFIED');
     if (min && max) return `$${min.toLocaleString()} - $${max.toLocaleString()}`;
     if (min) return `$${min.toLocaleString()}+`;
-    if (max) return `Up to $${max.toLocaleString()}`;
-    return 'Not specified';
+    if (max) return `${t('UP_TO')} $${max.toLocaleString()}`;
+    return t('NOT_SPECIFIED');
   };
 
   const formatDate = (date?: string | Date) => {
-    if (!date) return 'Not specified';
+    if (!date) return t('NOT_SPECIFIED');
     const dateObj = typeof date === 'string' ? new Date(date) : date;
     return dateObj.toLocaleDateString('en-US', {
       month: 'long',
@@ -39,11 +42,14 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
   const getStatusDisplay = (status: string) => {
     switch (status?.toLowerCase()) {
       case 'active':
-        return { label: 'Active', class: styles.statusActive };
+        return { label: t('ACTIVE'), class: styles.statusActive };
       case 'inactive':
-        return { label: 'Inactive', class: styles.statusInactive };
+        return { label: t('INACTIVE'), class: styles.statusInactive };
       default:
-        return { label: status || 'Unknown', class: styles.statusInactive };
+        return {
+          label: status ? t(status.toUpperCase()) : t('UNKNOWN'),
+          class: styles.statusInactive,
+        };
     }
   };
 
@@ -56,11 +62,11 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
         <div className={styles.detailSection}>
           <h3 className={styles.detailSectionTitle}>
             <FileTextFill />
-            Job Information
+            {t('JOB_INFORMATION')}
           </h3>
           <div className={styles.detailGrid}>
             <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>Status</div>
+              <div className={styles.detailLabel}>{t('STATUS')}</div>
               <div className={`${styles.detailValue}`}>
                 <span className={`${styles.statusBadge} ${statusDisplay.class}`}>
                   {statusDisplay.label}
@@ -68,16 +74,22 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
               </div>
             </div>
             <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>Employment Type</div>
-              <div className={styles.detailValue}>{job.employment_type || 'Not specified'}</div>
+              <div className={styles.detailLabel}>{t('EMPLOYMENT_TYPE')}</div>
+              <div className={styles.detailValue}>
+                {job.employment_type ? t(job.employment_type.toUpperCase()) : t('NOT_SPECIFIED')}
+              </div>
             </div>
             <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>Geography</div>
-              <div className={styles.detailValue}>{job.geography || 'Not specified'}</div>
+              <div className={styles.detailLabel}>{t('GEOGRAPHY')}</div>
+              <div className={styles.detailValue}>
+                {job.geography ? t(job.geography.toUpperCase()) : t('NOT_SPECIFIED')}
+              </div>
             </div>
             <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>CDL Required</div>
-              <div className={styles.detailValue}>{job.cdl_class || 'None'}</div>
+              <div className={styles.detailLabel}>{t('CDL_REQUIRED')}</div>
+              <div className={styles.detailValue}>
+                {job.cdl_class ? t(`CDL_CLASS_${job.cdl_class}`) : t('NONE')}
+              </div>
             </div>
           </div>
         </div>
@@ -86,22 +98,26 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
         <div className={styles.detailSection}>
           <h3 className={styles.detailSectionTitle}>
             <GeoAltFill />
-            Location & Schedule
+            {t('LOCATION_AND_SCHEDULE')}
           </h3>
           <div className={styles.detailGrid}>
             <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>Location</div>
+              <div className={styles.detailLabel}>{t('LOCATION')}</div>
               <div className={styles.detailValue}>
-                {job.location ? `${job.location.city}, ${job.location.state}` : 'Not specified'}
+                {job.location ? `${job.location.city}, ${job.location.state}` : t('NOT_SPECIFIED')}
               </div>
             </div>
             <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>Schedule</div>
-              <div className={styles.detailValue}>{job.schedule || 'Not specified'}</div>
+              <div className={styles.detailLabel}>{t('SCHEDULE')}</div>
+              <div className={styles.detailValue}>
+                {job.schedule ? t(job.schedule.toUpperCase()) : t('NOT_SPECIFIED')}
+              </div>
             </div>
             <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>Home Time</div>
-              <div className={styles.detailValue}>{(job as any).home_time || 'Not specified'}</div>
+              <div className={styles.detailLabel}>{t('HOME_TIME')}</div>
+              <div className={styles.detailValue}>
+                {(job as any).home_time || t('NOT_SPECIFIED')}
+              </div>
             </div>
           </div>
         </div>
@@ -110,29 +126,29 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
         <div className={styles.detailSection}>
           <h3 className={styles.detailSectionTitle}>
             <CurrencyDollar />
-            Compensation
+            {t('COMPENSATION')}
           </h3>
           <div className={styles.detailGrid}>
             <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>Weekly Pay</div>
+              <div className={styles.detailLabel}>{t('WEEKLY_PAY')}</div>
               <div className={styles.detailValue}>
                 {formatSalary(job.min_weekly_pay, job.max_weekly_pay)}
               </div>
             </div>
             <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>Per Mile</div>
+              <div className={styles.detailLabel}>{t('PER_MILE')}</div>
               <div className={styles.detailValue}>
                 {(job as any).per_mile_pay
-                  ? `$${(job as any).per_mile_pay.toFixed(2)}/mile`
-                  : 'Not specified'}
+                  ? `$${(job as any).per_mile_pay.toFixed(2)}/${t('MILE').toLowerCase()}`
+                  : t('NOT_SPECIFIED')}
               </div>
             </div>
             <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>Sign-on Bonus</div>
+              <div className={styles.detailLabel}>{t('SIGN_ON_BONUS')}</div>
               <div className={styles.detailValue}>
                 {(job as any).sign_on_bonus
                   ? `$${(job as any).sign_on_bonus.toLocaleString()}`
-                  : 'None'}
+                  : t('NONE')}
               </div>
             </div>
           </div>
@@ -142,25 +158,27 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
         <div className={styles.detailSection}>
           <h3 className={styles.detailSectionTitle}>
             <StarFill />
-            Requirements
+            {t('REQUIREMENTS')}
           </h3>
           <div className={styles.detailGrid}>
             <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>Min Experience</div>
+              <div className={styles.detailLabel}>{t('MIN_EXPERIENCE')}</div>
               <div className={styles.detailValue}>
-                {job.min_years_experience ? `${job.min_years_experience} years` : 'No minimum'}
+                {job.min_years_experience
+                  ? `${job.min_years_experience} ${t('YEARS')}`
+                  : t('NO_MINIMUM')}
               </div>
             </div>
             <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>Clean MVR</div>
+              <div className={styles.detailLabel}>{t('CLEAN_MVR')}</div>
               <div className={styles.detailValue}>
-                {job.must_have_clean_mvr ? 'Required' : 'Not required'}
+                {job.must_have_clean_mvr ? t('REQUIRED') : t('NOT_REQUIRED')}
               </div>
             </div>
             <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>Drug Test</div>
+              <div className={styles.detailLabel}>{t('DRUG_TEST')}</div>
               <div className={styles.detailValue}>
-                {job.must_pass_drug_test ? 'Required' : 'Not required'}
+                {job.must_pass_drug_test ? t('REQUIRED') : t('NOT_REQUIRED')}
               </div>
             </div>
           </div>
@@ -171,7 +189,7 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
           <div className={styles.detailSection}>
             <h3 className={styles.detailSectionTitle}>
               <FileTextFill />
-              Description
+              {t('DESCRIPTION')}
             </h3>
             <div
               className={styles.detailValue}
@@ -187,19 +205,19 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
         <div className={styles.detailSection}>
           <h3 className={styles.detailSectionTitle}>
             <CalendarEventFill />
-            Timeline
+            {t('TIMELINE')}
           </h3>
           <div className={styles.detailGrid}>
             <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>Posted</div>
+              <div className={styles.detailLabel}>{t('POSTED')}</div>
               <div className={styles.detailValue}>{formatDate(job.created_at)}</div>
             </div>
             <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>Expires</div>
+              <div className={styles.detailLabel}>{t('EXPIRES')}</div>
               <div className={styles.detailValue}>{formatDate(job.expiry_date)}</div>
             </div>
             <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>Last Updated</div>
+              <div className={styles.detailLabel}>{t('LAST_UPDATED')}</div>
               <div className={styles.detailValue}>{formatDate((job as any).updated_at)}</div>
             </div>
           </div>
@@ -210,12 +228,12 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
           <div className={styles.detailSection}>
             <h3 className={styles.detailSectionTitle}>
               <CheckSquareFill />
-              Benefits
+              {t('BENEFITS')}
             </h3>
             <div className="d-flex flex-wrap gap-2">
               {job.benefits.map((benefit, index) => (
                 <span key={index} className="badge bg-primary" style={{ fontSize: '0.875rem' }}>
-                  {benefit}
+                  {t(benefit.toUpperCase().replace(/[^A-Z0-9]/g, '_'))}
                 </span>
               ))}
             </div>
@@ -227,9 +245,25 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
           <div className={styles.detailSection}>
             <h3 className={styles.detailSectionTitle}>
               <TruckFrontFill />
-              Equipment
+              {t('EQUIPMENT')}
             </h3>
-            <div className={styles.detailValue}>{job.equipment_type}</div>
+            <div className={styles.detailValue}>
+              {Array.isArray(job.equipment_type)
+                ? job.equipment_type
+                    .map((equipment) =>
+                      t(
+                        String(equipment)
+                          .toUpperCase()
+                          .replace(/[^A-Z0-9]/g, '_')
+                      )
+                    )
+                    .join(', ')
+                : t(
+                    String(job.equipment_type)
+                      .toUpperCase()
+                      .replace(/[^A-Z0-9]/g, '_')
+                  )}
+            </div>
           </div>
         )}
       </div>
