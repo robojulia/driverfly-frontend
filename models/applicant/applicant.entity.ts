@@ -95,6 +95,7 @@ export class ApplicantEntity {
   must_pass_drug_test?: boolean = true;
   positive_drug_test?: boolean = false;
   positive_drug_test_details?: string;
+  is_sap_participant?: boolean;
   equipment_experience?: ApplicantExperienceEntity[] = [];
   equipment_owned?: ApplicantEquipmentEntity[] = [];
   employers?: ApplicantEmployerEntity[] = [];
@@ -249,6 +250,7 @@ export class ApplicantEntity {
 
       positive_drug_test: yup.bool().nullable(),
       positive_drug_test_details: yup.string().nullable(),
+      is_sap_participant: yup.bool().nullable(),
       equipment_experience: (yup.array(ApplicantExperienceEntity.yupSchema()) as any).unique(
         'type',
         { mapper: ApplicantExperienceEntity.key }
@@ -379,6 +381,7 @@ export class ApplicantEntity {
 
       positive_drug_test: yup.bool().nullable(),
       positive_drug_test_details: yup.string().nullable(),
+      is_sap_participant: yup.bool().nullable(),
       equipment_experience: (yup.array(ApplicantExperienceEntity.yupSchema()) as any).unique(
         'type',
         { mapper: ApplicantExperienceEntity.key }
@@ -645,6 +648,7 @@ export class ApplicantEntity {
 
       positive_drug_test: yup.bool().nullable(),
       positive_drug_test_details: yup.string().nullable(),
+      is_sap_participant: yup.bool().nullable(),
       equipment_experience: (
         yup.array(ApplicantExperienceEntity.yupSchemaForImport()) as any
       ).unique('type', { mapper: ApplicantExperienceEntity.key }),

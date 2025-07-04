@@ -58,24 +58,38 @@ export function DrugTest() {
         ),
       otherwise: (schema) => schema.nullable(),
     }),
+    is_sap_participant: yup.boolean().when('positive_drug_test', {
+      is: true,
+      then: (schema) =>
+        schema
+          .nullable()
+          .test(
+            'is-selected',
+            'Please select whether you have participated in an SAP program',
+            (value) => value !== null
+          ),
+      otherwise: (schema) => schema.nullable(),
+    }),
   });
 
   const form = useFormik({
     initialValues: {
       positive_drug_test: null as boolean | null,
       positive_drug_test_details: '',
+      is_sap_participant: null as boolean | null,
     },
     validationSchema,
     validateOnMount: false,
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: (values) => {
-      let { positive_drug_test_details, positive_drug_test } = values;
+      let { positive_drug_test_details, positive_drug_test, is_sap_participant } = values;
 
       // Handle state persistence for radio button restoration
       if (positive_drug_test === false) {
-        // User said NO - clear details
+        // User said NO - clear details and SAP participation
         positive_drug_test_details = '';
+        is_sap_participant = null;
       } else if (positive_drug_test === true && !positive_drug_test_details) {
         // User said YES but provided no details - save marker for state restoration
         positive_drug_test_details = '__YES_NO_DETAILS__';
@@ -85,6 +99,7 @@ export function DrugTest() {
         ...applicant,
         positive_drug_test: positive_drug_test,
         positive_drug_test_details: positive_drug_test_details,
+        is_sap_participant: is_sap_participant,
       };
 
       setApplicant(updatedApplicant);
@@ -104,6 +119,7 @@ export function DrugTest() {
   useEffect(() => {
     const existingPositiveDrugTest = applicant?.positive_drug_test;
     const existingDrugTestDetails = applicant?.positive_drug_test_details || '';
+    const existingSapParticipant = applicant?.is_sap_participant;
 
     // Enhanced state detection for form restoration
     let positiveDrugTestState: boolean | null = null;
@@ -122,6 +138,7 @@ export function DrugTest() {
       positive_drug_test: positiveDrugTestState,
       positive_drug_test_details:
         existingDrugTestDetails === '__YES_NO_DETAILS__' ? '' : existingDrugTestDetails, // Clean up marker for display
+      is_sap_participant: existingSapParticipant ?? null,
     });
   }, [applicant]);
 
@@ -130,12 +147,16 @@ export function DrugTest() {
     // The question must be answered
     const questionAnswered = form.values.positive_drug_test !== null;
 
+    // If they said YES to positive drug test, SAP question must be answered
+    const sapQuestionAnswered =
+      form.values.positive_drug_test !== true || form.values.is_sap_participant !== null;
+
     // Check if there are any validation errors
     const hasNoErrors = Object.keys(form.errors).length === 0;
 
-    // Basic requirement: question answered, no validation errors
+    // Basic requirement: question answered, SAP question answered if needed, no validation errors
     // Details are now optional - users can proceed and fill later
-    return questionAnswered && hasNoErrors;
+    return questionAnswered && sapQuestionAnswered && hasNoErrors;
   };
 
   // Helper function to determine if drug test details should be required (have started filling)
@@ -162,6 +183,12 @@ export function DrugTest() {
     return undefined;
   };
 
+  const getSapParticipantValue = () => {
+    if (form.values.is_sap_participant === true) return BooleanType.YES;
+    if (form.values.is_sap_participant === false) return BooleanType.NO;
+    return undefined;
+  };
+
   // Handle radio group changes
   const handleDrugTestChange = (value: string) => {
     const hasPositiveTest = value === BooleanType.YES;
@@ -169,10 +196,24 @@ export function DrugTest() {
     form.setFieldValue('positive_drug_test', hasPositiveTest);
     form.setFieldTouched('positive_drug_test', true);
 
-    // If they don't have a positive test, clear the details
+    // If they don't have a positive test, clear the details and SAP participation
     if (!hasPositiveTest) {
       form.setFieldValue('positive_drug_test_details', '');
+      form.setFieldValue('is_sap_participant', null);
     }
+
+    // Force validation to run immediately
+    setTimeout(() => {
+      form.validateForm();
+    }, 0);
+  };
+
+  // Handle SAP participation changes
+  const handleSapParticipantChange = (value: string) => {
+    const isSapParticipant = value === BooleanType.YES;
+
+    form.setFieldValue('is_sap_participant', isSapParticipant);
+    form.setFieldTouched('is_sap_participant', true);
 
     // Force validation to run immediately
     setTimeout(() => {
@@ -185,6 +226,7 @@ export function DrugTest() {
     form.setFieldTouched('positive_drug_test', true);
     if (form.values.positive_drug_test === true) {
       form.setFieldTouched('positive_drug_test_details', true);
+      form.setFieldTouched('is_sap_participant', true);
     }
 
     // Validate the form
@@ -286,6 +328,39 @@ export function DrugTest() {
                   treatment completed. This information helps us understand your commitment to
                   safety.
                 </small>
+              </div>
+            </div>
+          )}
+
+          {/* SAP Participation Question */}
+          {form.values.positive_drug_test === true && (
+            <div className="my-4">
+              <div
+                style={{
+                  padding: '1rem',
+                  backgroundColor: '#fff3cd',
+                  border: '1px solid #ffeaa7',
+                  borderRadius: '8px',
+                  marginBottom: '1rem',
+                }}
+              >
+                <RadioGroup
+                  name="is_sap_participant"
+                  label={t('SAP_PARTICIPATION_QUESTION')}
+                  enumType={BooleanType}
+                  value={getSapParticipantValue()}
+                  onChange={handleSapParticipantChange}
+                  required
+                  error={
+                    form.touched.is_sap_participant && form.errors.is_sap_participant
+                      ? String(form.errors.is_sap_participant)
+                      : undefined
+                  }
+                  labelPrefix="BooleanType"
+                  columns={2}
+                  variant="card"
+                  helperText="SAP programs are designed to help individuals with substance abuse issues return to safety-sensitive work"
+                />
               </div>
             </div>
           )}

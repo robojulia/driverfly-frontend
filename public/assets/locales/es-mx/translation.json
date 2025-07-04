@@ -9,5 +9,6 @@
   "INCOMPLETE_FORM": "Formulario incompleto",
   "applied_jobs": "Trabajos aplicados",
   "HAVE_YOU_HAD_VIOLATIONS_LAST_3_YEARS": "¿Ha tenido alguna violación de tránsito en los últimos 3 años?",
-  "VIOLATION_HISTORY": "Historial de Violaciones"
+  "VIOLATION_HISTORY": "Historial de Violaciones",
+  "SAP_PARTICIPATION_QUESTION": "¿Alguna vez ha sido o es actualmente participante en un programa SAP (Profesional de Abuso de Sustancias)?"
 }
