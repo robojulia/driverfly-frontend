@@ -2855,5 +2855,8 @@
   "BONUSES": "Bonuses",
   "FUEL_DISCOUNT": "Fuel Discount",
   "RIDER_POLICY": "Rider Policy",
-  "PET_POLICY": "Pet Policy"
+  "PET_POLICY": "Pet Policy",
+  "SIGN_ON_BONUS": "Sign-on bonus",
+  "REQUIRED": "Required",
+  "OPTIONAL": "Optional"
 }
