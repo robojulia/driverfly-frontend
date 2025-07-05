@@ -66,5 +66,15 @@
   "BONUSES": "Bonos",
   "FUEL_DISCOUNT": "Descuento en Combustible",
   "RIDER_POLICY": "Política de Acompañantes",
-  "PET_POLICY": "Política de Mascotas"
+  "PET_POLICY": "Política de Mascotas",
+  "MANAGE_YOUR_CANDIDATE_POOL": "Gestiona tu grupo de candidatos y seguimiento de aplicaciones",
+  "YOUR_CANDIDATE_POOL": "Tu Grupo de Candidatos",
+  "APPLICANTS_PAGE_EXPLANATION": "Esta página muestra todos los conductores que han expresado interés en trabajar para tu empresa. Cada fila representa un candidato único, y puedes expandir cualquier fila para ver a cuáles trabajos específicos han aplicado.",
+  "TIP": "Consejo",
+  "CLICK_ARROW_TO_EXPAND_JOBS": "Haz clic en la flecha (▶) junto al nombre de cualquier candidato para ver todos los trabajos a los que han aplicado, junto con su estado de calificación para cada posición.",
+  "CHECK_ELIGIBILITY": "Verificar Elegibilidad",
+  "VIEW_DETAILED_ANALYSIS": "Ver análisis detallado de calificaciones para este trabajo",
+  "JOB_APPLICATIONS": "Aplicaciones de Trabajo",
+  "NO_APPLIED_JOBS_FOUND": "No se encontraron aplicaciones de trabajo",
+  "SHOWING_ALL_JOBS_APPLIED_TO": "Mostrando todos los trabajos a los que este candidato ha aplicado con tu empresa"
 }

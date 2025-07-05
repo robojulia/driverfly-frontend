@@ -190,6 +190,7 @@ export default function Applicants() {
       <Accordion defaultActiveKey="0" flush>
         <PageLayout
           title="APPLICANTS"
+          desciption="MANAGE_YOUR_CANDIDATE_POOL"
           actions={
             <div
               style={{
@@ -230,6 +231,27 @@ export default function Applicants() {
             </div>
           }
         >
+          {/* Explanatory Section */}
+          <div
+            className="mb-4 p-3"
+            style={{ backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef' }}
+          >
+            <div className="d-flex align-items-start">
+              <div className="me-3">
+                <PersonFill size={24} className="text-primary" />
+              </div>
+              <div>
+                <h6 className="mb-2 text-primary">{t('YOUR_CANDIDATE_POOL')}</h6>
+                <p className="mb-2 text-muted" style={{ fontSize: '0.95rem' }}>
+                  {t('APPLICANTS_PAGE_EXPLANATION')}
+                </p>
+                <small className="text-secondary">
+                  <strong>{t('TIP')}:</strong> {t('CLICK_ARROW_TO_EXPAND_JOBS')}
+                </small>
+              </div>
+            </div>
+          </div>
+
           <Row>
             <Col className="force-overflow p-0">
               <Accordion.Body>
@@ -452,6 +474,7 @@ function ApplicantView(props: ViewProps) {
   return (
     <div className="applicant__table__sty ellipsis_remove">
       <ViewDataTable<ConsolodatedApplicant>
+        columnSettingKey="applicant-table-column-preferences"
         customStyles={{
           headRow: {
             style: {
@@ -652,78 +675,118 @@ function ApplicantView(props: ViewProps) {
           },
         ]}
         expandableRowsComponent={({ data }) => (
-          <ViewDataTable<ConsolodatedApplicantJob>
-            noDataComponent={<>{t('NO_APPLIED_JOBS_FOUND')}</>}
-            columns={[
-              {
-                name: 'ID',
-                selector: (aJob) => aJob.job.id,
-                hidable: false,
-              },
-
-              {
-                name: 'JOB',
-                selector: (aJob) => aJob.job.title,
-                hidable: false,
-              },
-              {
-                id: 'location',
-                name: 'LOCATION',
-                selector: (aJob) => buildAddress(aJob.job.location),
-              },
-              {
-                name: 'DATE_APPLIED',
-                selector: (aJob) => new Date(aJob.created_at).toDateString(),
-                hidable: false,
-              },
-              {
-                name: 'STATUS',
-                cell: (aJob) => (
-                  <OverlyPopover skipTranslate slice_at={40} str={getApplicantStatus(aJob, t)} />
-                ),
-                selector: (aJob) => getApplicantStatus(aJob, t), //t(`ApplicantStatus.${aJob.status}`),
-                hidable: false,
-              },
-              {
-                name: 'MEETS_BASIC_QUALIFICATIONS',
-                selector: (aJob) => t(aJob.meets_basic_qualifications ? 'YES' : 'NO'),
-                hidable: false,
-              },
-              {
-                name: 'REASONS_IF_NO',
-                selector: (aJob) => aJob.qualification_fail_reason?.join(),
-                hidable: false,
-              },
-              {
-                cell: (aJob) => {
-                  const hideStatus = Boolean(
-                    data?.jobs?.find(
-                      (j) => j?.id != aJob?.id && j?.status?.startsWith('COMPLETED_')
-                    )
-                  )
-                    ? [
-                        ApplicantStatus.COMPLETED_EMPLOYED,
-                        ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
-                        ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE,
-                      ]
-                    : [];
-                  return (
-                    <BaseSelect
-                      hideOptions={hideStatus}
-                      name={data.id.toString()}
-                      value=""
-                      onChange={(e) => onChangeStatus(e, data, aJob.job)}
-                      placeholder={'CHANGE_STATUS'}
-                      labelPrefix="ApplicantStatus"
-                      enumType={ApplicantStatus}
-                    />
-                  );
+          <div
+            className="p-3"
+            style={{ backgroundColor: '#f8f9fa', borderLeft: '4px solid #007bff' }}
+          >
+            <div className="mb-3">
+              <h6 className="text-primary mb-2">
+                <strong>{getApplicantName(data)}</strong> {t('JOB_APPLICATIONS')}
+              </h6>
+              <p className="text-muted small mb-3">{t('SHOWING_ALL_JOBS_APPLIED_TO')}</p>
+            </div>
+            <ViewDataTable<ConsolodatedApplicantJob>
+              noDataComponent={
+                <div className="text-center py-3 text-muted">
+                  <small>{t('NO_APPLIED_JOBS_FOUND')}</small>
+                </div>
+              }
+              columns={[
+                {
+                  name: 'ID',
+                  selector: (aJob) => aJob.job.id,
+                  hidable: false,
                 },
-              },
-            ]}
-            hideSearch
-            items={data.jobs}
-          />
+
+                {
+                  name: 'JOB',
+                  selector: (aJob) => aJob.job.title,
+                  cell: (aJob) => (
+                    <Link href={`/dashboard/company/jobs/${aJob.job.id}`}>
+                      <a className="text-primary text-decoration-underline">{aJob.job.title}</a>
+                    </Link>
+                  ),
+                  hidable: false,
+                },
+                {
+                  id: 'location',
+                  name: 'LOCATION',
+                  selector: (aJob) => buildAddress(aJob.job.location),
+                },
+                {
+                  name: 'DATE_APPLIED',
+                  selector: (aJob) => new Date(aJob.created_at).toDateString(),
+                  hidable: false,
+                },
+                {
+                  name: 'STATUS',
+                  cell: (aJob) => (
+                    <OverlyPopover skipTranslate slice_at={40} str={getApplicantStatus(aJob, t)} />
+                  ),
+                  selector: (aJob) => getApplicantStatus(aJob, t), //t(`ApplicantStatus.${aJob.status}`),
+                  hidable: false,
+                },
+                {
+                  name: 'MEETS_BASIC_QUALIFICATIONS',
+                  cell: (aJob) => (
+                    <div className="d-flex align-items-center">
+                      <span
+                        className={`badge ${
+                          aJob.meets_basic_qualifications ? 'bg-success' : 'bg-danger'
+                        } me-2`}
+                      >
+                        {t(aJob.meets_basic_qualifications ? 'YES' : 'NO')}
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="outline-primary"
+                        title={t('VIEW_DETAILED_ANALYSIS')}
+                        onClick={() =>
+                          router.push(
+                            `/dashboard/company/jobs/${aJob.job.id}/applicants/${data.id}/eligibility`
+                          )
+                        }
+                      >
+                        {t('CHECK_ELIGIBILITY')}
+                      </Button>
+                    </div>
+                  ),
+                  selector: (aJob) => t(aJob.meets_basic_qualifications ? 'YES' : 'NO'),
+                  hidable: false,
+                  width: '250px',
+                },
+
+                {
+                  cell: (aJob) => {
+                    const hideStatus = Boolean(
+                      data?.jobs?.find(
+                        (j) => j?.id != aJob?.id && j?.status?.startsWith('COMPLETED_')
+                      )
+                    )
+                      ? [
+                          ApplicantStatus.COMPLETED_EMPLOYED,
+                          ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
+                          ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE,
+                        ]
+                      : [];
+                    return (
+                      <BaseSelect
+                        hideOptions={hideStatus}
+                        name={data.id.toString()}
+                        value=""
+                        onChange={(e) => onChangeStatus(e, data, aJob.job)}
+                        placeholder={'CHANGE_STATUS'}
+                        labelPrefix="ApplicantStatus"
+                        enumType={ApplicantStatus}
+                      />
+                    );
+                  },
+                },
+              ]}
+              hideSearch
+              items={data.jobs}
+            />
+          </div>
         )}
       />
       <div style={{ marginRight: '7%' }}>

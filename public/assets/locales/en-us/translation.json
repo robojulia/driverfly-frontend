@@ -1605,7 +1605,7 @@
   "DELETE_CONFIRMATION": "Delete Confirmation",
   "DO_NOT_DELETE": "Do Not Delete",
   "COMPANIES": "Companies",
-  "NO_APPLIED_JOBS_FOUND": "No applied jobs found",
+  "NO_APPLIED_JOBS_FOUND": "No job applications found",
   "MAIL_SUCCESSFULLY_SEND": "Mail Sussessfully Send",
   "THANKS_FOR_CONTACTING_US": "Thanks For Contacting Us",
   "UNABLE_TO_SEND_ME": "Unable To Send Me",
@@ -2858,5 +2858,14 @@
   "PET_POLICY": "Pet Policy",
   "SIGN_ON_BONUS": "Sign-on bonus",
   "REQUIRED": "Required",
-  "OPTIONAL": "Optional"
+  "OPTIONAL": "Optional",
+  "MANAGE_YOUR_CANDIDATE_POOL": "Manage your candidate pool and track applications",
+  "YOUR_CANDIDATE_POOL": "Your Candidate Pool",
+  "APPLICANTS_PAGE_EXPLANATION": "This page shows all drivers who have expressed interest in working for your company. Each row represents a unique candidate, and you can expand any row to see which specific jobs they've applied to.",
+  "TIP": "Tip",
+  "CLICK_ARROW_TO_EXPAND_JOBS": "Click the arrow (▶) next to any applicant's name to see all jobs they've applied to, along with their qualification status for each position.",
+  "CHECK_ELIGIBILITY": "Check Eligibility",
+  "VIEW_DETAILED_ANALYSIS": "View detailed qualification analysis for this job",
+  "JOB_APPLICATIONS": "Job Applications",
+  "SHOWING_ALL_JOBS_APPLIED_TO": "Showing all jobs this candidate has applied to with your company"
 }
