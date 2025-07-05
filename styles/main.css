@@ -17,6 +17,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.text-primary-brand {
+  color: var(--primary-dark) !important;
+}
+
 /* Dashboard Layout Styles */
 .dashboard-container {
   display: flex;

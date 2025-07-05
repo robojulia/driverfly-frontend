@@ -238,10 +238,10 @@ export default function Applicants() {
           >
             <div className="d-flex align-items-start">
               <div className="me-3">
-                <PersonFill size={24} className="text-primary" />
+                <PersonFill size={24} className="text-primary-brand" />
               </div>
               <div>
-                <h6 className="mb-2 text-primary">{t('YOUR_CANDIDATE_POOL')}</h6>
+                <h6 className="mb-2 text-primary-brand">{t('YOUR_CANDIDATE_POOL')}</h6>
                 <p className="mb-2 text-muted" style={{ fontSize: '0.95rem' }}>
                   {t('APPLICANTS_PAGE_EXPLANATION')}
                 </p>
@@ -680,7 +680,7 @@ function ApplicantView(props: ViewProps) {
             style={{ backgroundColor: '#f8f9fa', borderLeft: '4px solid #007bff' }}
           >
             <div className="mb-3">
-              <h6 className="text-primary mb-2">
+              <h6 className="text-primary-brand mb-2">
                 <strong>{getApplicantName(data)}</strong> {t('JOB_APPLICATIONS')}
               </h6>
               <p className="text-muted small mb-3">{t('SHOWING_ALL_JOBS_APPLIED_TO')}</p>
