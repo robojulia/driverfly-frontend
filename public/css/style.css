@@ -120,7 +120,7 @@ a:hover {
 .dropdown-item:active,
 .dropdown-item:focus,
 .dropdown-item:hover {
-  color: white;
+  color: black !important;
   text-decoration: none;
   background-color: unset;
 }
@@ -243,6 +243,7 @@ h2 {
 
 .dropdown-item:hover {
   color: white !important;
+  background-color: var(--primary-dark) !important;
 }
 
 .nav-link i.fa.fa-bell-o {
