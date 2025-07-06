@@ -91,6 +91,13 @@ const CampaignDetailPage = () => {
     }
   }, [flagsLoading, isFeatureEnabled, router]);
 
+  // Update selected communication type when campaign loads
+  useEffect(() => {
+    if (campaign?.communicationType) {
+      setSelectedCommunicationType(campaign.communicationType);
+    }
+  }, [campaign?.communicationType]);
+
   // Don't render anything while feature flags are loading
   if (flagsLoading) {
     return null;
@@ -100,13 +107,6 @@ const CampaignDetailPage = () => {
   if (!isFeatureEnabled('CAMPAIGNS_ENABLED')) {
     return null;
   }
-
-  // Update selected communication type when campaign loads
-  useEffect(() => {
-    if (campaign?.communicationType) {
-      setSelectedCommunicationType(campaign.communicationType);
-    }
-  }, [campaign?.communicationType]);
 
   const handleCampaignAction = async (action: 'cancel' | 'regenerate') => {
     try {
