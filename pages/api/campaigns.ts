@@ -3,6 +3,7 @@ import { CampaignEntity } from '../../models/campaigns/campaign.entity';
 import { CampaignTargetEntity } from '../../models/campaigns/campaign-target.entity';
 import { CampaignQueryDto } from '../../models/campaigns/campaign-query.dto';
 import { UpdateCampaignDto } from '../../models/campaigns/update-campaign.dto';
+import { CampaignCommunicationType } from '../../enums/campaigns/campaign-communication-type.enum';
 
 export interface CreateJobReachoutCampaignDto {
   jobId: number;
@@ -10,6 +11,7 @@ export interface CreateJobReachoutCampaignDto {
   description?: string;
   minScore?: number;
   filters?: any;
+  communicationType?: CampaignCommunicationType;
 }
 
 export interface CampaignStatsResponse {

@@ -8,11 +8,13 @@ import {
   StarFill,
   FilterCircleFill,
   CheckCircleFill,
+  ChatDotsFill,
 } from 'react-bootstrap-icons';
 import { ExistingJobCampaigns } from '../campaigns';
 import { JobEntity } from '../../models/job/job.entity';
 import { CampaignEntity } from '../../models/campaigns/campaign.entity';
 import { CampaignStatus } from '../../enums/campaigns/campaign-status.enum';
+import { CampaignCommunicationType } from '../../enums/campaigns/campaign-communication-type.enum';
 import { useTranslation } from '../../hooks/use-translation';
 import { globalAjaxExceptionHandler } from '../../utils/ajax';
 import CampaignsApi, { CreateJobReachoutCampaignDto } from '../../pages/api/campaigns';
@@ -36,6 +38,8 @@ export function CampaignCta({
   const { t } = useTranslation();
   const [campaignModalOpen, setCampaignModalOpen] = useState(false);
   const [creatingCampaign, setCreatingCampaign] = useState(false);
+  const [selectedCommunicationType, setSelectedCommunicationType] =
+    useState<CampaignCommunicationType>(CampaignCommunicationType.VOICE);
 
   // Check if there are any existing campaigns
   const draftCampaigns = campaigns.filter((c) => c.status === CampaignStatus.DRAFT);
@@ -61,9 +65,14 @@ export function CampaignCta({
 
       const campaignDto: CreateJobReachoutCampaignDto = {
         jobId: job.id,
-        name: `Job Reachout - ${job.title}`,
-        description: `Reaching out to qualified candidates for ${job.title} position`,
+        name: `${
+          selectedCommunicationType === CampaignCommunicationType.SMS ? 'SMS' : 'Voice'
+        } Campaign - ${job.title}`,
+        description: `${
+          selectedCommunicationType === CampaignCommunicationType.SMS ? 'Text messaging' : 'Calling'
+        } qualified candidates for ${job.title} position`,
         minScore: 50, // Minimum eligibility score
+        communicationType: selectedCommunicationType,
         filters: {
           appliedOnly: false, // Exclude those who already applied to this job
           excludeDirectApplicants: true, // Only get candidates who applied to company but not this specific job
@@ -119,7 +128,11 @@ export function CampaignCta({
         <Card className="border-0 shadow-sm position-sticky" style={{ top: '20px' }}>
           <Card.Body className="text-center p-4">
             <div className="mb-3">
-              <TelephoneFill size={48} className="text-primary mb-3" />
+              {selectedCommunicationType === CampaignCommunicationType.SMS ? (
+                <ChatDotsFill size={48} className="text-primary mb-3" />
+              ) : (
+                <TelephoneFill size={48} className="text-primary mb-3" />
+              )}
               <h4 className="mb-2">Reach More Qualified Candidates</h4>
               <p className="text-muted mb-4">
                 Don&apos;t wait for candidates to find you. Proactively reach out to qualified
@@ -180,8 +193,14 @@ export function CampaignCta({
               onClick={() => setCampaignModalOpen(true)}
               disabled={!eligibilityStats?.eligibleApplicants}
             >
-              <TelephoneFill className="me-2" />
-              Create Calling Campaign
+              {selectedCommunicationType === CampaignCommunicationType.SMS ? (
+                <ChatDotsFill className="me-2" />
+              ) : (
+                <TelephoneFill className="me-2" />
+              )}
+              Create{' '}
+              {selectedCommunicationType === CampaignCommunicationType.SMS ? 'SMS' : 'Calling'}{' '}
+              Campaign
             </Button>
 
             {!eligibilityStats?.eligibleApplicants && (
@@ -197,13 +216,67 @@ export function CampaignCta({
       <Modal show={campaignModalOpen} onHide={() => setCampaignModalOpen(false)} size="lg" centered>
         <Modal.Header closeButton>
           <Modal.Title>
-            <TelephoneFill className="me-2" />
+            {selectedCommunicationType === CampaignCommunicationType.SMS ? (
+              <ChatDotsFill className="me-2" />
+            ) : (
+              <TelephoneFill className="me-2" />
+            )}
             {completedCampaigns.length > 0
-              ? 'Create New Calling Campaign'
-              : 'Create Calling Campaign'}
+              ? `Create New ${
+                  selectedCommunicationType === CampaignCommunicationType.SMS ? 'SMS' : 'Calling'
+                } Campaign`
+              : `Create ${
+                  selectedCommunicationType === CampaignCommunicationType.SMS ? 'SMS' : 'Calling'
+                } Campaign`}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {/* Communication Type Selection */}
+          <Card className="border-light mb-4">
+            <Card.Header className="bg-light">
+              <h6 className="mb-0">Choose Communication Method</h6>
+            </Card.Header>
+            <Card.Body>
+              <Row>
+                <Col md={6}>
+                  <Card
+                    className={`h-100 ${
+                      selectedCommunicationType === CampaignCommunicationType.VOICE
+                        ? 'border-primary'
+                        : 'border-light'
+                    }`}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setSelectedCommunicationType(CampaignCommunicationType.VOICE)}
+                  >
+                    <Card.Body className="text-center p-3">
+                      <TelephoneFill size={32} className="text-primary mb-2" />
+                      <h6>Voice Calls</h6>
+                      <small className="text-muted">
+                        Personal phone conversations with candidates
+                      </small>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col md={6}>
+                  <Card
+                    className={`h-100 ${
+                      selectedCommunicationType === CampaignCommunicationType.SMS
+                        ? 'border-primary'
+                        : 'border-light'
+                    }`}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setSelectedCommunicationType(CampaignCommunicationType.SMS)}
+                  >
+                    <Card.Body className="text-center p-3">
+                      <ChatDotsFill size={32} className="text-success mb-2" />
+                      <h6>SMS Messages</h6>
+                      <small className="text-muted">Text messages to candidates' phones</small>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
           {completedCampaigns.length > 0 && (
             <div className="alert alert-info mb-4">
               <strong>Note:</strong> You&apos;ve previously run {completedCampaigns.length} campaign
@@ -217,8 +290,10 @@ export function CampaignCta({
               Ready to reach {eligibilityStats?.eligibleApplicants || 0} qualified candidates?
             </h5>
             <p className="text-muted">
-              We&apos;ll create a targeted calling campaign to reach out to drivers who meet your
-              job requirements but haven&apos;t applied yet.
+              We&apos;ll create a targeted{' '}
+              {selectedCommunicationType === CampaignCommunicationType.SMS ? 'SMS' : 'calling'}{' '}
+              campaign to reach out to drivers who meet your job requirements but haven&apos;t
+              applied yet.
             </p>
           </div>
 
@@ -259,7 +334,11 @@ export function CampaignCta({
                 <span className="text-primary h5">{eligibilityStats?.eligibleApplicants || 0}</span>
               </Col>
               <Col xs={4}>
-                <TelephoneFill className="text-success mb-2 d-block" size={24} />
+                {selectedCommunicationType === CampaignCommunicationType.SMS ? (
+                  <ChatDotsFill className="text-success mb-2 d-block" size={24} />
+                ) : (
+                  <TelephoneFill className="text-success mb-2 d-block" size={24} />
+                )}
                 <strong>Est. Contacts</strong>
                 <br />
                 <span className="text-success h5">
@@ -298,7 +377,11 @@ export function CampaignCta({
               </>
             ) : (
               <>
-                <TelephoneFill className="me-2" />
+                {selectedCommunicationType === CampaignCommunicationType.SMS ? (
+                  <ChatDotsFill className="me-2" />
+                ) : (
+                  <TelephoneFill className="me-2" />
+                )}
                 Create Campaign
               </>
             )}

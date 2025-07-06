@@ -1,11 +1,12 @@
 import React from 'react';
 import { Card, CardBody, CardHeader, Button, Badge } from 'reactstrap';
-import { Eye, Pause, Play } from 'react-bootstrap-icons';
+import { Eye, Pause, Play, TelephoneFill, ChatDotsFill } from 'react-bootstrap-icons';
 import { useRouter } from 'next/router';
 import { useTranslation } from '../../hooks/use-translation';
 import { CampaignEntity } from '../../models/campaigns/campaign.entity';
 import { CampaignStatus } from '../../enums/campaigns/campaign-status.enum';
 import { CampaignType } from '../../enums/campaigns/campaign-type.enum';
+import { CampaignCommunicationType } from '../../enums/campaigns/campaign-communication-type.enum';
 import styles from '../../styles/campaigns.module.css';
 
 interface CampaignCardProps {
@@ -69,9 +70,19 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, onAction }
               className="mb-1 font-weight-bold"
               onClick={() => router.push(`/dashboard/company/campaigns/${campaign.id}`)}
             >
+              {campaign.communicationType === CampaignCommunicationType.SMS ? (
+                <ChatDotsFill className="me-2 text-success" size={16} />
+              ) : (
+                <TelephoneFill className="me-2 text-primary" size={16} />
+              )}
               {campaign.name}
             </h6>
-            <small className="text-muted">{getCampaignTypeLabel(campaign.type)}</small>
+            <small className="text-muted d-block">{getCampaignTypeLabel(campaign.type)}</small>
+            <small className="text-muted">
+              {campaign.communicationType === CampaignCommunicationType.SMS
+                ? 'SMS Campaign'
+                : 'Voice Campaign'}
+            </small>
           </div>
           <Badge color={getStatusBadgeColor(campaign.status || CampaignStatus.DRAFT)}>
             {(campaign.status || CampaignStatus.DRAFT).toUpperCase()}

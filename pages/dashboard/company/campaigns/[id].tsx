@@ -27,6 +27,10 @@ import {
   X,
   ChevronLeft,
   Trash,
+  TelephoneFill,
+  ChatDotsFill,
+  PencilSquare,
+  CheckLg,
 } from 'react-bootstrap-icons';
 
 import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
@@ -37,8 +41,10 @@ import { useTranslation } from '../../../../hooks/use-translation';
 import { useCampaign } from '../../../../hooks/campaigns/use-campaigns';
 import { CampaignStatus } from '../../../../enums/campaigns/campaign-status.enum';
 import { CampaignType } from '../../../../enums/campaigns/campaign-type.enum';
+import { CampaignCommunicationType } from '../../../../enums/campaigns/campaign-communication-type.enum';
 import { CampaignConfigDisplay } from '../../../../components/campaigns';
 import { ManualTargetSelectionModal } from '../../../../components/campaigns/ManualTargetSelectionModal';
+import CampaignsApi from '../../../../pages/api/campaigns';
 
 const CampaignDetailPage = () => {
   const { t } = useTranslation();
@@ -71,6 +77,12 @@ const CampaignDetailPage = () => {
   const [manualTargetModal, setManualTargetModal] = useState(false);
   const [addingManualTargets, setAddingManualTargets] = useState(false);
   const [targetToDelete, setTargetToDelete] = useState<{ id: number; name: string } | null>(null);
+  const [editingCommunicationType, setEditingCommunicationType] = useState(false);
+  const [selectedCommunicationType, setSelectedCommunicationType] =
+    useState<CampaignCommunicationType>(
+      campaign?.communicationType || CampaignCommunicationType.VOICE
+    );
+  const [updatingCommunicationType, setUpdatingCommunicationType] = useState(false);
 
   // Feature flag check - only redirect after flags are loaded
   useEffect(() => {
@@ -88,6 +100,13 @@ const CampaignDetailPage = () => {
   if (!isFeatureEnabled('CAMPAIGNS_ENABLED')) {
     return null;
   }
+
+  // Update selected communication type when campaign loads
+  useEffect(() => {
+    if (campaign?.communicationType) {
+      setSelectedCommunicationType(campaign.communicationType);
+    }
+  }, [campaign?.communicationType]);
 
   const handleCampaignAction = async (action: 'cancel' | 'regenerate') => {
     try {
@@ -188,6 +207,36 @@ const CampaignDetailPage = () => {
     }
   };
 
+  const handleUpdateCommunicationType = async () => {
+    if (!campaign || selectedCommunicationType === campaign.communicationType) {
+      setEditingCommunicationType(false);
+      return;
+    }
+
+    try {
+      setUpdatingCommunicationType(true);
+      const campaignsApi = new CampaignsApi();
+      await campaignsApi.update(campaign.id, {
+        communicationType: selectedCommunicationType,
+      });
+
+      // Refresh campaign data
+      await loadCampaign();
+      setEditingCommunicationType(false);
+    } catch (err) {
+      console.error('Error updating communication type:', err);
+      // Reset to original value
+      setSelectedCommunicationType(campaign.communicationType);
+    } finally {
+      setUpdatingCommunicationType(false);
+    }
+  };
+
+  const cancelEditCommunicationType = () => {
+    setSelectedCommunicationType(campaign?.communicationType || CampaignCommunicationType.VOICE);
+    setEditingCommunicationType(false);
+  };
+
   const getStatusBadgeColor = (status: CampaignStatus) => {
     switch (status) {
       case CampaignStatus.DRAFT:
@@ -277,13 +326,26 @@ const CampaignDetailPage = () => {
               <div className="flex-grow-1">
                 <div className="d-flex justify-content-between align-items-start">
                   <div>
-                    <h1 className="h3 mb-0">{campaign.name}</h1>
+                    <h1 className="h3 mb-0">
+                      {campaign.communicationType === CampaignCommunicationType.SMS ? (
+                        <ChatDotsFill className="text-success me-2" size={24} />
+                      ) : (
+                        <TelephoneFill className="text-primary me-2" size={24} />
+                      )}
+                      {campaign.name}
+                    </h1>
                     <div className="d-flex align-items-center gap-2 mt-1">
                       <Badge color={getStatusBadgeColor(campaign.status || CampaignStatus.DRAFT)}>
                         {(campaign.status || CampaignStatus.DRAFT).toUpperCase()}
                       </Badge>
                       <span className="text-muted">•</span>
                       <span className="text-muted">{getCampaignTypeLabel(campaign.type)}</span>
+                      <span className="text-muted">•</span>
+                      <span className="text-muted">
+                        {campaign.communicationType === CampaignCommunicationType.SMS
+                          ? 'SMS'
+                          : 'Voice'}
+                      </span>
                     </div>
                   </div>
                   <div className="d-flex gap-2">
@@ -455,6 +517,92 @@ const CampaignDetailPage = () => {
                             <dd className="col-sm-8">{campaign.name}</dd>
                             <dt className="col-sm-4">{t('TYPE')}:</dt>
                             <dd className="col-sm-8">{getCampaignTypeLabel(campaign.type)}</dd>
+                            <dt className="col-sm-4">Communication:</dt>
+                            <dd className="col-sm-8">
+                              {editingCommunicationType &&
+                              campaign.status === CampaignStatus.DRAFT ? (
+                                <div className="d-flex align-items-center gap-2">
+                                  <div className="d-flex gap-2">
+                                    <Button
+                                      size="sm"
+                                      color={
+                                        selectedCommunicationType ===
+                                        CampaignCommunicationType.VOICE
+                                          ? 'primary'
+                                          : 'outline-secondary'
+                                      }
+                                      onClick={() =>
+                                        setSelectedCommunicationType(
+                                          CampaignCommunicationType.VOICE
+                                        )
+                                      }
+                                    >
+                                      <TelephoneFill size={14} className="me-1" />
+                                      Voice
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      color={
+                                        selectedCommunicationType === CampaignCommunicationType.SMS
+                                          ? 'success'
+                                          : 'outline-secondary'
+                                      }
+                                      onClick={() =>
+                                        setSelectedCommunicationType(CampaignCommunicationType.SMS)
+                                      }
+                                    >
+                                      <ChatDotsFill size={14} className="me-1" />
+                                      SMS
+                                    </Button>
+                                  </div>
+                                  <div className="d-flex gap-1">
+                                    <Button
+                                      size="sm"
+                                      color="success"
+                                      onClick={handleUpdateCommunicationType}
+                                      disabled={updatingCommunicationType}
+                                    >
+                                      <CheckLg size={12} />
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      color="secondary"
+                                      onClick={cancelEditCommunicationType}
+                                      disabled={updatingCommunicationType}
+                                    >
+                                      <X size={12} />
+                                    </Button>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="d-flex align-items-center gap-2">
+                                  <span>
+                                    {campaign.communicationType ===
+                                    CampaignCommunicationType.SMS ? (
+                                      <>
+                                        <ChatDotsFill className="text-success me-1" size={14} />
+                                        SMS Campaign
+                                      </>
+                                    ) : (
+                                      <>
+                                        <TelephoneFill className="text-primary me-1" size={14} />
+                                        Voice Campaign
+                                      </>
+                                    )}
+                                  </span>
+                                  {campaign.status === CampaignStatus.DRAFT && (
+                                    <Button
+                                      size="sm"
+                                      color="link"
+                                      className="p-0 text-muted"
+                                      onClick={() => setEditingCommunicationType(true)}
+                                    >
+                                      <PencilSquare size={12} />
+                                    </Button>
+                                  )}
+                                </div>
+                              )}
+                            </dd>
                             <dt className="col-sm-4">{t('STATUS')}:</dt>
                             <dd className="col-sm-8">
                               <Badge color={getStatusBadgeColor(campaign.status)}>
