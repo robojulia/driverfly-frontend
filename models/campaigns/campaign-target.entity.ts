@@ -19,6 +19,7 @@ export interface CampaignTargetEntity extends BasicEntity {
 
   // Processing details
   processed: boolean;
+  failed: boolean;
   processedAt?: Date;
 
   // Additional metadata

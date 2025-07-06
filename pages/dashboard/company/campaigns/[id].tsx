@@ -272,6 +272,30 @@ const CampaignDetailPage = () => {
     return Math.round((stats.deliveredCount / stats.totalTargets) * 100);
   };
 
+  const getTargetStatus = (target: any) => {
+    if (!target.processed) {
+      return 'pending';
+    } else if (target.failed) {
+      return 'failed';
+    } else {
+      return 'delivered';
+    }
+  };
+
+  const getTargetStatusBadgeColor = (status: string) => {
+    switch (status) {
+      case 'delivered':
+        return 'success';
+      case 'failed':
+        return 'danger';
+      case 'sent':
+        return 'primary';
+      case 'pending':
+      default:
+        return 'secondary';
+    }
+  };
+
   if (loading) {
     return (
       <PageLayout title={t('CAMPAIGN_DETAILS')}>
@@ -755,57 +779,50 @@ const CampaignDetailPage = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {targets?.map((target) => (
-                            <tr key={target.id}>
-                              <td>{target.name || '-'}</td>
-                              <td>{target.email || '-'}</td>
-                              <td>{target.phone || '-'}</td>
-                              <td>
-                                <Badge
-                                  color={
-                                    target.status === 'delivered'
-                                      ? 'success'
-                                      : target.status === 'failed'
-                                      ? 'danger'
-                                      : target.status === 'sent'
-                                      ? 'primary'
-                                      : 'secondary'
-                                  }
-                                >
-                                  {target.status.toUpperCase()}
-                                </Badge>
-                              </td>
-                              <td>{target.processedAt ? formatDate(target.processedAt) : '-'}</td>
-                              {(campaign?.status || CampaignStatus.DRAFT) ===
-                                CampaignStatus.DRAFT && (
+                          {targets?.map((target) => {
+                            const targetStatus = getTargetStatus(target);
+                            return (
+                              <tr key={target.id}>
+                                <td>{target.name || '-'}</td>
+                                <td>{target.email || '-'}</td>
+                                <td>{target.phone || '-'}</td>
                                 <td>
-                                  <Button
-                                    color="danger"
-                                    size="sm"
-                                    outline
-                                    onClick={() => handleDeleteTarget(target.id)}
-                                    disabled={deletingTargets.has(target.id)}
-                                    title="Remove target from campaign"
-                                  >
-                                    {deletingTargets.has(target.id) ? (
-                                      <>
-                                        <div
-                                          className="spinner-border spinner-border-sm me-1"
-                                          role="status"
-                                          style={{ width: '12px', height: '12px' }}
-                                        >
-                                          <span className="visually-hidden">Deleting...</span>
-                                        </div>
-                                        Removing...
-                                      </>
-                                    ) : (
-                                      'Remove'
-                                    )}
-                                  </Button>
+                                  <Badge color={getTargetStatusBadgeColor(targetStatus)}>
+                                    {targetStatus.toUpperCase()}
+                                  </Badge>
                                 </td>
-                              )}
-                            </tr>
-                          ))}
+                                <td>{target.processedAt ? formatDate(target.processedAt) : '-'}</td>
+                                {(campaign?.status || CampaignStatus.DRAFT) ===
+                                  CampaignStatus.DRAFT && (
+                                  <td>
+                                    <Button
+                                      color="danger"
+                                      size="sm"
+                                      outline
+                                      onClick={() => handleDeleteTarget(target.id)}
+                                      disabled={deletingTargets.has(target.id)}
+                                      title="Remove target from campaign"
+                                    >
+                                      {deletingTargets.has(target.id) ? (
+                                        <>
+                                          <div
+                                            className="spinner-border spinner-border-sm me-1"
+                                            role="status"
+                                            style={{ width: '12px', height: '12px' }}
+                                          >
+                                            <span className="visually-hidden">Deleting...</span>
+                                          </div>
+                                          Removing...
+                                        </>
+                                      ) : (
+                                        'Remove'
+                                      )}
+                                    </Button>
+                                  </td>
+                                )}
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </Table>
                     </div>
