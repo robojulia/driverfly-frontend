@@ -259,7 +259,7 @@ const CampaignDetailPage = () => {
       case CampaignType.JOB_REACHOUT:
         return t('CAMPAIGN_TYPES.JOB_REACHOUT');
       default:
-        return type;
+        return t(type);
     }
   };
 
