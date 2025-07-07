@@ -122,4 +122,16 @@ export default class CampaignsApi extends BaseApi {
     });
     return data;
   }
+
+  async addTestUserToCampaign(
+    campaignId: number
+  ): Promise<{ message: string; testTargetId: number }> {
+    const { data } = await this.post(`${this.baseUrl}/test/add-user`, { campaignId });
+    return data;
+  }
+
+  async sendTestCampaign(campaignId: number): Promise<{ message: string; status: string }> {
+    const { data } = await this.post(`${this.baseUrl}/test/send`, { campaignId });
+    return data;
+  }
 }

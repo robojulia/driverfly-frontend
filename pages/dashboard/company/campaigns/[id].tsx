@@ -37,12 +37,18 @@ import FullLayout from '../../../../components/dashboard/layouts/layout/full-lay
 import PageLayout from '../../../../components/layouts/page/page-layout';
 import { ConfirmationModal } from '../../../../components/shared';
 import { useFeatureFlags } from '../../../../context/feature-flag-context';
+import { useUserContext } from '../../../../context/user-context';
 import { useTranslation } from '../../../../hooks/use-translation';
 import { useCampaign } from '../../../../hooks/campaigns/use-campaigns';
 import { CampaignStatus } from '../../../../enums/campaigns/campaign-status.enum';
 import { CampaignType } from '../../../../enums/campaigns/campaign-type.enum';
 import { CampaignCommunicationType } from '../../../../enums/campaigns/campaign-communication-type.enum';
 import { CampaignConfigDisplay } from '../../../../components/campaigns';
+import {
+  CampaignOverview,
+  CampaignTargetList,
+  CampaignTestView,
+} from '../../../../components/campaigns/detail';
 import { ManualTargetSelectionModal } from '../../../../components/campaigns/ManualTargetSelectionModal';
 import CampaignsApi from '../../../../pages/api/campaigns';
 
@@ -51,6 +57,7 @@ const CampaignDetailPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const { isFeatureEnabled, isLoading: flagsLoading } = useFeatureFlags();
+  const { user } = useUserContext();
 
   const campaignId = id ? parseInt(id as string) : 0;
   const {
@@ -84,6 +91,12 @@ const CampaignDetailPage = () => {
     );
   const [updatingCommunicationType, setUpdatingCommunicationType] = useState(false);
 
+  // Test campaign state
+  const [addingTestTarget, setAddingTestTarget] = useState(false);
+  const [sendingTest, setSendingTest] = useState(false);
+  const [testSent, setTestSent] = useState(false);
+  const [testError, setTestError] = useState<string | null>(null);
+
   // Feature flag check - only redirect after flags are loaded
   useEffect(() => {
     if (!flagsLoading && !isFeatureEnabled('CAMPAIGNS_ENABLED')) {
@@ -107,6 +120,61 @@ const CampaignDetailPage = () => {
   if (!isFeatureEnabled('CAMPAIGNS_ENABLED')) {
     return null;
   }
+
+  // Test campaign handlers
+  const handleAddTestTarget = async () => {
+    try {
+      setAddingTestTarget(true);
+      setTestError(null);
+
+      const campaignsApi = new CampaignsApi();
+      await campaignsApi.addTestUserToCampaign(campaignId);
+
+      // Refresh campaign data to update targets
+      await loadCampaign();
+      setTestSent(false); // Reset test sent status when adding new test target
+    } catch (error: any) {
+      console.error('Error adding test target:', error);
+      setTestError(error.message || 'Failed to add test target');
+    } finally {
+      setAddingTestTarget(false);
+    }
+  };
+
+  const handleSendTest = async () => {
+    try {
+      setSendingTest(true);
+      setTestError(null);
+
+      const campaignsApi = new CampaignsApi();
+      await campaignsApi.sendTestCampaign(campaignId);
+
+      setTestSent(true);
+    } catch (error: any) {
+      console.error('Error sending test:', error);
+      setTestError(error.message || 'Failed to send test campaign');
+    } finally {
+      setSendingTest(false);
+    }
+  };
+
+  const getUserPhoneNumber = () => {
+    return user?.contact_number || user?.cell_number || 'No phone number';
+  };
+
+  const hasPhoneNumber = () => {
+    return !!(user?.contact_number || user?.cell_number);
+  };
+
+  // Helper function to filter out test targets
+  const getNonTestTargets = () => {
+    return targets?.filter((target) => !target.isTest) || [];
+  };
+
+  // Helper function to check if current user is already a test target
+  const isCurrentUserTestTarget = () => {
+    return targets?.some((target) => target.isTest && target.targetId === user?.id) || false;
+  };
 
   const handleCampaignAction = async (action: 'cancel' | 'regenerate') => {
     try {
@@ -376,22 +444,6 @@ const CampaignDetailPage = () => {
                     {(campaign.status || CampaignStatus.DRAFT) === CampaignStatus.ACTIVE && (
                       <>
                         <Button color="info" size="sm" onClick={loadCampaign}>
-                          <svg
-                            width="14"
-                            height="14"
-                            className="me-1"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                            <path d="M21 3v5h-5" />
-                            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                            <path d="M3 21v-5h5" />
-                          </svg>
                           {t('REFRESH')}
                         </Button>
                         <Button color="danger" size="sm" onClick={handleCancelCampaign}>
@@ -519,7 +571,7 @@ const CampaignDetailPage = () => {
                       }}
                     >
                       <People size={16} className="me-2" />
-                      {t('TARGETS')} ({targets?.length || 0})
+                      {t('TARGETS')} ({getNonTestTargets().length})
                     </NavLink>
                   </NavItem>
                 </Nav>
@@ -528,349 +580,53 @@ const CampaignDetailPage = () => {
               <CardBody className="p-4">
                 <TabContent activeTab={activeTab}>
                   <TabPane tabId="overview">
-                    <div className="mb-4">
-                      <h5 className="fw-bold text-dark mb-3">Campaign Overview</h5>
-                    </div>
+                    <CampaignOverview
+                      campaign={campaign}
+                      stats={stats}
+                      editingCommunicationType={editingCommunicationType}
+                      selectedCommunicationType={selectedCommunicationType}
+                      updatingCommunicationType={updatingCommunicationType}
+                      t={t}
+                      getStatusBadgeColor={getStatusBadgeColor}
+                      getCampaignTypeLabel={getCampaignTypeLabel}
+                      formatDate={formatDate}
+                      calculateSuccessRate={calculateSuccessRate}
+                      setEditingCommunicationType={setEditingCommunicationType}
+                      setSelectedCommunicationType={setSelectedCommunicationType}
+                      handleUpdateCommunicationType={handleUpdateCommunicationType}
+                      cancelEditCommunicationType={cancelEditCommunicationType}
+                    />
 
-                    <Row>
-                      <Col md={6}>
-                        <div className="bg-light rounded p-3 h-100">
-                          <h6 className="fw-semibold text-dark mb-3">{t('CAMPAIGN_DETAILS')}</h6>
-                          <dl className="row mb-0">
-                            <dt className="col-sm-4">{t('NAME')}:</dt>
-                            <dd className="col-sm-8">{campaign.name}</dd>
-                            <dt className="col-sm-4">{t('TYPE')}:</dt>
-                            <dd className="col-sm-8">{getCampaignTypeLabel(campaign.type)}</dd>
-                            <dt className="col-sm-4">Communication:</dt>
-                            <dd className="col-sm-8">
-                              {editingCommunicationType &&
-                              campaign.status === CampaignStatus.DRAFT ? (
-                                <div className="d-flex align-items-center gap-2">
-                                  <div className="d-flex gap-2">
-                                    <Button
-                                      size="sm"
-                                      color={
-                                        selectedCommunicationType ===
-                                        CampaignCommunicationType.VOICE
-                                          ? 'primary'
-                                          : 'outline-secondary'
-                                      }
-                                      onClick={() =>
-                                        setSelectedCommunicationType(
-                                          CampaignCommunicationType.VOICE
-                                        )
-                                      }
-                                    >
-                                      <TelephoneFill size={14} className="me-1" />
-                                      Voice
-                                    </Button>
-                                    <Button
-                                      size="sm"
-                                      color={
-                                        selectedCommunicationType === CampaignCommunicationType.SMS
-                                          ? 'success'
-                                          : 'outline-secondary'
-                                      }
-                                      onClick={() =>
-                                        setSelectedCommunicationType(CampaignCommunicationType.SMS)
-                                      }
-                                    >
-                                      <ChatDotsFill size={14} className="me-1" />
-                                      SMS
-                                    </Button>
-                                  </div>
-                                  <div className="d-flex gap-1">
-                                    <Button
-                                      size="sm"
-                                      color="success"
-                                      onClick={handleUpdateCommunicationType}
-                                      disabled={updatingCommunicationType}
-                                    >
-                                      <CheckLg size={12} />
-                                    </Button>
-                                    <Button
-                                      size="sm"
-                                      color="secondary"
-                                      onClick={cancelEditCommunicationType}
-                                      disabled={updatingCommunicationType}
-                                    >
-                                      <X size={12} />
-                                    </Button>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="d-flex align-items-center gap-2">
-                                  <span>
-                                    {campaign.communicationType ===
-                                    CampaignCommunicationType.SMS ? (
-                                      <>
-                                        <ChatDotsFill className="text-success me-1" size={14} />
-                                        SMS Campaign
-                                      </>
-                                    ) : (
-                                      <>
-                                        <TelephoneFill className="text-primary me-1" size={14} />
-                                        Voice Campaign
-                                      </>
-                                    )}
-                                  </span>
-                                  {campaign.status === CampaignStatus.DRAFT && (
-                                    <Button
-                                      size="sm"
-                                      color="link"
-                                      className="p-0 text-muted"
-                                      onClick={() => setEditingCommunicationType(true)}
-                                    >
-                                      <PencilSquare size={12} />
-                                    </Button>
-                                  )}
-                                </div>
-                              )}
-                            </dd>
-                            <dt className="col-sm-4">{t('STATUS')}:</dt>
-                            <dd className="col-sm-8">
-                              <Badge color={getStatusBadgeColor(campaign.status)}>
-                                {campaign.status.toUpperCase()}
-                              </Badge>
-                            </dd>
-                            <dt className="col-sm-4">{t('CREATED')}:</dt>
-                            <dd className="col-sm-8">{formatDate(campaign.createdAt)}</dd>
-                            {campaign.startedAt && (
-                              <>
-                                <dt className="col-sm-4">{t('STARTED')}:</dt>
-                                <dd className="col-sm-8">{formatDate(campaign.startedAt)}</dd>
-                              </>
-                            )}
-                            {campaign.completedAt && (
-                              <>
-                                <dt className="col-sm-4">{t('COMPLETED')}:</dt>
-                                <dd className="col-sm-8">{formatDate(campaign.completedAt)}</dd>
-                              </>
-                            )}
-                            {campaign.description && (
-                              <>
-                                <dt className="col-sm-4">{t('DESCRIPTION')}:</dt>
-                                <dd className="col-sm-8">{campaign.description}</dd>
-                              </>
-                            )}{' '}
-                          </dl>
-                        </div>
-                      </Col>
-
-                      <Col md={6}>
-                        <div className="bg-light rounded p-3 h-100">
-                          <h6 className="fw-semibold text-dark mb-3">{t('SUCCESS_METRICS')}</h6>
-                          <div className="mb-3">
-                            <div className="d-flex justify-content-between mb-1">
-                              <span>{t('SUCCESS_RATE')}</span>
-                              <span>
-                                <strong>{calculateSuccessRate()}%</strong>
-                              </span>
-                            </div>
-                            <div className="progress">
-                              <div
-                                className="progress-bar bg-success"
-                                style={{ width: `${calculateSuccessRate()}%` }}
-                              />
-                            </div>
-                          </div>
-
-                          {stats && (
-                            <div className="row text-center">
-                              <div className="col-6 mb-2">
-                                <div className="border rounded p-2">
-                                  <strong className="d-block text-primary">
-                                    {stats.sentCount}
-                                  </strong>
-                                  <small className="text-muted">{t('MESSAGES_SENT')}</small>
-                                </div>
-                              </div>
-                              <div className="col-6 mb-2">
-                                <div className="border rounded p-2">
-                                  <strong className="d-block text-success">
-                                    {stats.deliveredCount}
-                                  </strong>
-                                  <small className="text-muted">
-                                    {t('CAMPAIGN_STATES.DELIVERED')}
-                                  </small>
-                                </div>
-                              </div>
-                              <div className="col-6">
-                                <div className="border rounded p-2">
-                                  <strong className="d-block text-danger">
-                                    {stats.failedCount}
-                                  </strong>
-                                  <small className="text-muted">
-                                    {t('CAMPAIGN_STATES.FAILED')}
-                                  </small>
-                                </div>
-                              </div>
-                              <div className="col-6">
-                                <div className="border rounded p-2">
-                                  <strong className="d-block text-warning">
-                                    {stats.pendingCount}
-                                  </strong>
-                                  <small className="text-muted">
-                                    {t('CAMPAIGN_STATES.PENDING')}
-                                  </small>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </Col>
-                    </Row>
+                    {/* Test Campaign Section */}
+                    <CampaignTestView
+                      campaign={campaign}
+                      user={user}
+                      addingTestTarget={addingTestTarget}
+                      sendingTest={sendingTest}
+                      testSent={testSent}
+                      testError={testError}
+                      isCurrentUserTestTarget={isCurrentUserTestTarget}
+                      getUserPhoneNumber={getUserPhoneNumber}
+                      hasPhoneNumber={hasPhoneNumber}
+                      handleAddTestTarget={handleAddTestTarget}
+                      handleSendTest={handleSendTest}
+                    />
                   </TabPane>
 
                   <TabPane tabId="targets">
-                    <div className="d-flex justify-content-between align-items-center mb-3">
-                      <h5 className="fw-bold text-dark mb-0">
-                        Campaign Targets ({targets?.length || 0})
-                      </h5>
-                      {(campaign?.status || CampaignStatus.DRAFT) === CampaignStatus.DRAFT && (
-                        <div className="d-flex gap-2">
-                          <Button
-                            color="info"
-                            size="sm"
-                            onClick={() => handleCampaignAction('regenerate')}
-                            disabled={regeneratingTargets}
-                          >
-                            {regeneratingTargets ? (
-                              <>
-                                <div
-                                  className="spinner-border spinner-border-sm me-1"
-                                  role="status"
-                                >
-                                  <span className="visually-hidden">Loading...</span>
-                                </div>
-                                {t('REFRESHING_TARGETS')}
-                              </>
-                            ) : (
-                              <>{t('REFRESH_TARGETS')}</>
-                            )}
-                          </Button>
-                          <Button
-                            color="primary"
-                            size="sm"
-                            onClick={() => setManualTargetModal(true)}
-                            disabled={regeneratingTargets || addingManualTargets}
-                          >
-                            {t('ADD_TARGETS')}
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="table-responsive">
-                      <Table hover className="align-middle">
-                        <thead className="table-light">
-                          <tr>
-                            <th className="fw-semibold">{t('NAME')}</th>
-                            <th className="fw-semibold">{t('EMAIL')}</th>
-                            <th className="fw-semibold">{t('PHONE')}</th>
-                            <th className="fw-semibold">{t('STATUS')}</th>
-                            <th className="fw-semibold">{t('PROCESSED_AT')}</th>
-                            {(campaign?.status || CampaignStatus.DRAFT) ===
-                              CampaignStatus.DRAFT && (
-                              <th className="fw-semibold" style={{ width: '100px' }}>
-                                {t('ACTIONS')}
-                              </th>
-                            )}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {targets?.map((target) => {
-                            const targetStatus = getTargetStatus(target);
-                            return (
-                              <tr key={target.id}>
-                                <td>{target.name || '-'}</td>
-                                <td>{target.email || '-'}</td>
-                                <td>{target.phone || '-'}</td>
-                                <td>
-                                  <Badge color={getTargetStatusBadgeColor(targetStatus)}>
-                                    {targetStatus.toUpperCase()}
-                                  </Badge>
-                                </td>
-                                <td>{target.processedAt ? formatDate(target.processedAt) : '-'}</td>
-                                {(campaign?.status || CampaignStatus.DRAFT) ===
-                                  CampaignStatus.DRAFT && (
-                                  <td>
-                                    <Button
-                                      color="danger"
-                                      size="sm"
-                                      outline
-                                      onClick={() => handleDeleteTarget(target.id)}
-                                      disabled={deletingTargets.has(target.id)}
-                                      title="Remove target from campaign"
-                                    >
-                                      {deletingTargets.has(target.id) ? (
-                                        <>
-                                          <div
-                                            className="spinner-border spinner-border-sm me-1"
-                                            role="status"
-                                            style={{ width: '12px', height: '12px' }}
-                                          >
-                                            <span className="visually-hidden">Deleting...</span>
-                                          </div>
-                                          Removing...
-                                        </>
-                                      ) : (
-                                        'Remove'
-                                      )}
-                                    </Button>
-                                  </td>
-                                )}
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </Table>
-                    </div>
-
-                    {(!targets || targets.length === 0) && (
-                      <div className="text-center py-5">
-                        <People size={48} className="text-muted mb-3" />
-                        <h6 className="text-muted mb-2">No Targets Found</h6>
-                        <p className="text-muted small mb-0">
-                          {campaign?.status === CampaignStatus.DRAFT
-                            ? "This campaign doesn't have any targets yet. Use the 'Refresh Targets' button to generate targets based on your campaign criteria."
-                            : "This campaign doesn't have any targets yet."}
-                        </p>
-                        {campaign?.status === CampaignStatus.DRAFT && (
-                          <div className="d-flex gap-2 justify-content-center mt-3">
-                            <Button
-                              color="primary"
-                              size="sm"
-                              onClick={() => handleCampaignAction('regenerate')}
-                              disabled={regeneratingTargets}
-                            >
-                              {regeneratingTargets ? (
-                                <>
-                                  <div
-                                    className="spinner-border spinner-border-sm me-1"
-                                    role="status"
-                                  >
-                                    <span className="visually-hidden">Loading...</span>
-                                  </div>
-                                  {t('REFRESHING_TARGETS')}
-                                </>
-                              ) : (
-                                <>{t('REFRESH_TARGETS')}</>
-                              )}
-                            </Button>
-                            <Button
-                              color="outline-primary"
-                              size="sm"
-                              onClick={() => setManualTargetModal(true)}
-                              disabled={regeneratingTargets || addingManualTargets}
-                            >
-                              <People size={14} className="me-1" />
-                              {t('ADD_TARGETS')}
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                    <CampaignTargetList
+                      campaign={campaign}
+                      nonTestTargets={getNonTestTargets()}
+                      regeneratingTargets={regeneratingTargets}
+                      deletingTargets={deletingTargets}
+                      t={t}
+                      getTargetStatus={getTargetStatus}
+                      getTargetStatusBadgeColor={getTargetStatusBadgeColor}
+                      formatDate={formatDate}
+                      handleCampaignAction={handleCampaignAction}
+                      handleDeleteTarget={handleDeleteTarget}
+                      setManualTargetModal={setManualTargetModal}
+                    />
                   </TabPane>
                 </TabContent>
               </CardBody>

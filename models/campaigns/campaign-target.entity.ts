@@ -22,6 +22,9 @@ export interface CampaignTargetEntity extends BasicEntity {
   failed: boolean;
   processedAt?: Date;
 
+  // Test target flag
+  isTest?: boolean;
+
   // Additional metadata
   metadata?: Record<string, any>;
 }
