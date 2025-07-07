@@ -270,7 +270,7 @@ export function CampaignCta({
                     <Card.Body className="text-center p-3">
                       <ChatDotsFill size={32} className="text-success mb-2" />
                       <h6>SMS Messages</h6>
-                      <small className="text-muted">Text messages to candidates' phones</small>
+                      <small className="text-muted">Text messages to candidates&apos; phones</small>
                     </Card.Body>
                   </Card>
                 </Col>

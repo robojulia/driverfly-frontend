@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { Container, Row, Col, Card, Badge } from 'react-bootstrap';
 import { useAuth } from '../../hooks/use-auth';
 import DashboardLayout from '../../components/dashboard/layouts/layout/dashboard-layout';
-import { Flag, Gear, Database, People, GraphUp, Shield } from 'react-bootstrap-icons';
+import { Flag, Gear, Database, People, GraphUp, Shield, Phone } from 'react-bootstrap-icons';
 import Link from 'next/link';
 import styles from './admin.module.css';
 
