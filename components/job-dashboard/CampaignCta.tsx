@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { Card, Button, Badge, Modal, Row, Col } from 'react-bootstrap';
@@ -9,6 +9,7 @@ import {
   FilterCircleFill,
   CheckCircleFill,
   ChatDotsFill,
+  InfoCircleFill,
 } from 'react-bootstrap-icons';
 import { ExistingJobCampaigns } from '../campaigns';
 import { JobEntity } from '../../models/job/job.entity';
@@ -17,7 +18,10 @@ import { CampaignStatus } from '../../enums/campaigns/campaign-status.enum';
 import { CampaignCommunicationType } from '../../enums/campaigns/campaign-communication-type.enum';
 import { useTranslation } from '../../hooks/use-translation';
 import { globalAjaxExceptionHandler } from '../../utils/ajax';
-import CampaignsApi, { CreateJobReachoutCampaignDto } from '../../pages/api/campaigns';
+import CampaignsApi, {
+  CreateJobReachoutCampaignDto,
+  CampaignReachPreviewResponse,
+} from '../../pages/api/campaigns';
 
 interface CampaignCtaProps {
   job: JobEntity;
@@ -40,6 +44,8 @@ export function CampaignCta({
   const [creatingCampaign, setCreatingCampaign] = useState(false);
   const [selectedCommunicationType, setSelectedCommunicationType] =
     useState<CampaignCommunicationType>(CampaignCommunicationType.VOICE);
+  const [reachPreview, setReachPreview] = useState<CampaignReachPreviewResponse | null>(null);
+  const [loadingReachPreview, setLoadingReachPreview] = useState(false);
 
   // Check if there are any existing campaigns
   const draftCampaigns = campaigns.filter((c) => c.status === CampaignStatus.DRAFT);
@@ -48,6 +54,39 @@ export function CampaignCta({
   );
   const hasExistingCampaigns = campaigns.length > 0;
   const hasDraftCampaign = draftCampaigns.length > 0;
+
+  const fetchReachPreview = async (communicationType: CampaignCommunicationType) => {
+    try {
+      setLoadingReachPreview(true);
+      const campaignsApi = new CampaignsApi();
+      const preview = await campaignsApi.getCampaignReachPreview({
+        jobId: job.id,
+        communicationType,
+        minScore: 50, // Match the minScore used in campaign creation
+      });
+      setReachPreview(preview);
+    } catch (error) {
+      console.error('Failed to fetch reach preview:', error);
+      // Fallback to old stats if available
+      setReachPreview(null);
+    } finally {
+      setLoadingReachPreview(false);
+    }
+  };
+
+  // Fetch reach preview when modal opens or communication type changes
+  useEffect(() => {
+    if (campaignModalOpen) {
+      fetchReachPreview(selectedCommunicationType);
+    }
+  }, [campaignModalOpen, selectedCommunicationType, job.id]);
+
+  const handleCommunicationTypeChange = (type: CampaignCommunicationType) => {
+    setSelectedCommunicationType(type);
+    if (campaignModalOpen) {
+      fetchReachPreview(type);
+    }
+  };
 
   const handleCreateCampaign = async () => {
     // Prevent creating duplicate draft campaigns
@@ -246,7 +285,7 @@ export function CampaignCta({
                         : 'border-light'
                     }`}
                     style={{ cursor: 'pointer' }}
-                    onClick={() => setSelectedCommunicationType(CampaignCommunicationType.VOICE)}
+                    onClick={() => handleCommunicationTypeChange(CampaignCommunicationType.VOICE)}
                   >
                     <Card.Body className="text-center p-3">
                       <TelephoneFill size={32} className="text-primary mb-2" />
@@ -265,7 +304,7 @@ export function CampaignCta({
                         : 'border-light'
                     }`}
                     style={{ cursor: 'pointer' }}
-                    onClick={() => setSelectedCommunicationType(CampaignCommunicationType.SMS)}
+                    onClick={() => handleCommunicationTypeChange(CampaignCommunicationType.SMS)}
                   >
                     <Card.Body className="text-center p-3">
                       <ChatDotsFill size={32} className="text-success mb-2" />
@@ -287,7 +326,15 @@ export function CampaignCta({
 
           <div className="text-center mb-4">
             <h5>
-              Ready to reach {eligibilityStats?.eligibleApplicants || 0} qualified candidates?
+              Ready to reach{' '}
+              {loadingReachPreview ? (
+                <span className="spinner-border spinner-border-sm mx-2" />
+              ) : reachPreview ? (
+                reachPreview.estimatedContacts
+              ) : (
+                eligibilityStats?.eligibleApplicants || 0
+              )}{' '}
+              qualified candidates?
             </h5>
             <p className="text-muted">
               We&apos;ll create a targeted{' '}
@@ -295,6 +342,24 @@ export function CampaignCta({
               campaign to reach out to drivers who meet your job requirements but haven&apos;t
               applied yet.
             </p>
+
+            {/* Show SMS filtering info if applicable */}
+            {selectedCommunicationType === CampaignCommunicationType.SMS &&
+              reachPreview &&
+              reachPreview.filteringDetails.filteredForSms > 0 && (
+                <div className="alert alert-info mt-3">
+                  <InfoCircleFill className="me-2" />
+                  <strong>SMS Compliance:</strong> {reachPreview.filteringDetails.filteredForSms}{' '}
+                  candidates were filtered out because they don&apos;t authorize SMS communication.
+                  <div className="mt-2">
+                    {reachPreview.filteringDetails.reasons.noPhoneNumber > 0 && (
+                      <small className="d-block">
+                        • {reachPreview.filteringDetails.reasons.noPhoneNumber} have no phone number
+                      </small>
+                    )}
+                  </div>
+                </div>
+              )}
           </div>
 
           <Card className="border-primary mb-4">
@@ -314,12 +379,15 @@ export function CampaignCta({
                   <strong>CDL Required:</strong> {job.cdl_class || 'None'}
                 </Col>
                 <Col md={6}>
-                  <strong>Target Pool:</strong> {eligibilityStats?.eligibleApplicants || 0}{' '}
-                  candidates
-                  <br />
-                  <strong>Min Score:</strong> 50% match
-                  <br />
-                  <strong>Excludes:</strong> Already applied
+                  <strong>Target Pool:</strong>{' '}
+                  {loadingReachPreview ? (
+                    <span className="spinner-border spinner-border-sm" />
+                  ) : (
+                    <>
+                      {reachPreview?.qualifiedPool ?? eligibilityStats?.eligibleApplicants ?? 0}{' '}
+                      candidates
+                    </>
+                  )}
                 </Col>
               </Row>
             </Card.Body>
@@ -327,31 +395,28 @@ export function CampaignCta({
 
           <div className="bg-light rounded p-3 mb-4">
             <Row className="text-center">
-              <Col xs={4}>
-                <PeopleFill className="text-primary mb-2 d-block" size={24} />
-                <strong>Qualified Pool</strong>
+              <Col xs={6}>
+                <strong> Qualified Pool</strong>
                 <br />
-                <span className="text-primary h5">{eligibilityStats?.eligibleApplicants || 0}</span>
-              </Col>
-              <Col xs={4}>
-                {selectedCommunicationType === CampaignCommunicationType.SMS ? (
-                  <ChatDotsFill className="text-success mb-2 d-block" size={24} />
+                {loadingReachPreview ? (
+                  <span className="spinner-border spinner-border-sm" />
                 ) : (
-                  <TelephoneFill className="text-success mb-2 d-block" size={24} />
+                  <span className="text-primary h5">
+                    {reachPreview?.qualifiedPool ?? eligibilityStats?.eligibleApplicants ?? 0}
+                  </span>
                 )}
+              </Col>
+              <Col xs={6}>
                 <strong>Est. Contacts</strong>
                 <br />
-                <span className="text-success h5">
-                  {Math.round((eligibilityStats?.eligibleApplicants || 0) * 0.7)}
-                </span>
-              </Col>
-              <Col xs={4}>
-                <StarFill className="text-warning mb-2 d-block" size={24} />
-                <strong>Est. Interest</strong>
-                <br />
-                <span className="text-warning h5">
-                  {Math.round((eligibilityStats?.eligibleApplicants || 0) * 0.2)}
-                </span>
+                {loadingReachPreview ? (
+                  <span className="spinner-border spinner-border-sm" />
+                ) : (
+                  <span className="text-success h5">
+                    {reachPreview?.estimatedContacts ??
+                      Math.round((eligibilityStats?.eligibleApplicants || 0) * 0.7)}
+                  </span>
+                )}
               </Col>
             </Row>
           </div>

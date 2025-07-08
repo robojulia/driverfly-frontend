@@ -14,6 +14,27 @@ export interface CreateJobReachoutCampaignDto {
   communicationType?: CampaignCommunicationType;
 }
 
+export interface CampaignReachPreviewQuery {
+  jobId: number;
+  communicationType: CampaignCommunicationType;
+  minScore?: number;
+  states?: string[];
+}
+
+export interface CampaignReachPreviewResponse {
+  qualifiedPool: number;
+  estimatedContacts: number;
+  estimatedInterest: number;
+  filteringDetails: {
+    totalEligible: number;
+    filteredForSms: number;
+    reasons: {
+      noSmsAuthorization: number;
+      noPhoneNumber: number;
+    };
+  };
+}
+
 export interface CampaignStatsResponse {
   totalTargets: number;
   sentCount: number;
@@ -34,6 +55,13 @@ export default class CampaignsApi extends BaseApi {
 
   async createJobReachoutCampaign(dto: CreateJobReachoutCampaignDto): Promise<CampaignEntity> {
     const { data } = await this.post(`${this.baseUrl}/job-reachout`, dto);
+    return data;
+  }
+
+  async getCampaignReachPreview(
+    query: CampaignReachPreviewQuery
+  ): Promise<CampaignReachPreviewResponse> {
+    const { data } = await this.get(this.buildUrl(`${this.baseUrl}/reach-preview`, query));
     return data;
   }
 
