@@ -232,7 +232,7 @@ export default function JobListing() {
         id: 'applicantsCount',
         name: 'APPLICANTS',
         cell: (j) => (
-          <Link href={`/dashboard/company/applicants?jobId=${j.id}&viewMode=applicant`}>
+          <Link href={`/dashboard/company/jobs/${j.id}`}>
             <a className="btn btn-link">
               <span className="badge badge-pill badge-primary">{j.applicantsCount}</span>
             </a>
