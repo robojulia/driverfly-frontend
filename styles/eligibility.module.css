@@ -832,6 +832,86 @@
   box-shadow: var(--eligibility-shadow-sm);
 }
 
+/* Interest Level Badges */
+.interestBadge {
+  padding: var(--eligibility-spacing-xs) var(--eligibility-spacing-sm);
+  border-radius: 20px;
+  font-size: var(--eligibility-font-size-xs);
+  font-weight: var(--eligibility-font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid transparent;
+  display: inline-block;
+  transition: var(--eligibility-transition);
+  margin-bottom: var(--eligibility-spacing-xs);
+}
+
+.interestBadge.interestHigh {
+  background: #e8f5e8;
+  color: #2e7d32;
+  border-color: #4caf50;
+}
+
+.interestBadge.interestMedium {
+  background: #fff8e1;
+  color: #ef6c00;
+  border-color: #ffb74d;
+}
+
+.interestBadge.interestLow {
+  background: #f3e5f5;
+  color: #7b1fa2;
+  border-color: #ba68c8;
+}
+
+.interestBadge.interestNone {
+  background: #f5f5f5;
+  color: #616161;
+  border-color: #e0e0e0;
+}
+
+.interestBadge:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--eligibility-shadow-sm);
+}
+
+/* Interest Level Cell */
+.interestLevelCell {
+  flex-direction: column;
+  gap: var(--eligibility-spacing-xs);
+}
+
+.engagementCount {
+  font-size: var(--eligibility-font-size-xs);
+  color: var(--eligibility-gray-600);
+  font-weight: var(--eligibility-font-weight-normal);
+}
+
+/* Recent Engagement Badge */
+.recentEngagementBadge {
+  background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: var(--eligibility-font-weight-bold);
+  margin-left: var(--eligibility-spacing-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
+  }
+  to {
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.6);
+  }
+}
+
 /* Applicant Info */
 .applicantInfo {
   display: flex;

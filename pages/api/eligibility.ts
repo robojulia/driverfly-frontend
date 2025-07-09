@@ -7,7 +7,14 @@ export interface EligibilityQueryParams {
   offset?: number;
   appliedOnly?: boolean;
   states?: string[];
-  sortBy?: 'score' | 'firstName' | 'lastName' | 'yearsExperience' | 'createdAt';
+  sortBy?:
+    | 'score'
+    | 'firstName'
+    | 'lastName'
+    | 'yearsExperience'
+    | 'createdAt'
+    | 'interestLevel'
+    | 'engagementCount';
   sortOrder?: 'ASC' | 'DESC';
 }
 
@@ -21,6 +28,10 @@ export interface ApplicantBasicInfo {
   licenseType: string;
   yearsExperience: number;
   hasApplied: boolean;
+  interestTier?: 'HIGH' | 'MEDIUM' | 'LOW' | 'NONE';
+  engagementCount?: number;
+  daysSinceLastEngagement?: number | null;
+  lastEngagementDate?: string | null;
 }
 
 export interface ScoringDetails {

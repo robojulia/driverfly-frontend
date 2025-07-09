@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { EyeFill, PersonFill, GeoAltFill, CalendarFill } from 'react-bootstrap-icons';
+import { EyeFill, PersonFill, GeoAltFill, CalendarFill, StarFill } from 'react-bootstrap-icons';
 import Link from 'next/link';
 import { useTranslation } from '../../hooks/use-translation';
 import EligibilityApi, {
@@ -99,6 +99,43 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
     }
   };
 
+  const getInterestLevelBadgeClass = (tier: string): string => {
+    switch (tier) {
+      case 'HIGH':
+        return styles.interestHigh;
+      case 'MEDIUM':
+        return styles.interestMedium;
+      case 'LOW':
+        return styles.interestLow;
+      case 'NONE':
+      default:
+        return styles.interestNone;
+    }
+  };
+
+  const formatInterestLevel = (tier: string): string => {
+    switch (tier) {
+      case 'HIGH':
+        return 'High';
+      case 'MEDIUM':
+        return 'Medium';
+      case 'LOW':
+        return 'Low';
+      case 'NONE':
+      default:
+        return 'No Activity';
+    }
+  };
+
+  const shouldShowEngagementBadge = (applicant: any): boolean => {
+    return (
+      applicant.hasApplied &&
+      applicant.interestTier &&
+      applicant.daysSinceLastEngagement !== null &&
+      applicant.daysSinceLastEngagement <= 3
+    );
+  };
+
   if (loading && !data) {
     return (
       <div className={`${styles.eligibilityContainer} ${className}`}>
@@ -136,6 +173,8 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
               className={styles.filterSelect}
             >
               <option value="score">Best Match</option>
+              <option value="interestLevel">Interest Level</option>
+              <option value="engagementCount">Engagement Count</option>
               <option value="firstName">First Name</option>
               <option value="lastName">Last Name</option>
               <option value="yearsExperience">Experience</option>
@@ -163,7 +202,7 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
                 checked={filters.appliedOnly || false}
                 onChange={(e) => handleFilterChange('appliedOnly', e.target.checked)}
               />
-              <label htmlFor="appliedOnly">Applied to this job only</label>
+              <label htmlFor="appliedOnly">Job applicants only</label>
             </div>
           </div>
         </div>
@@ -177,6 +216,7 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
               <th>Applicant</th>
               <th>Status</th>
               <th>Experience</th>
+              <th>Interest</th>
               <th>Location</th>
               <th>Applied</th>
               <th>Actions</th>
@@ -190,12 +230,13 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
                     <div className={styles.applicantName}>
                       <PersonFill />
                       {applicant.applicant.firstName} {applicant.applicant.lastName}
+                      {shouldShowEngagementBadge(applicant.applicant) ? (
+                        <span className={styles.recentEngagementBadge}>
+                          <StarFill size={12} />
+                        </span>
+                      ) : null}
                     </div>
                     <div className={styles.applicantDetails}>{applicant.applicant.phone}</div>
-                    <div className={styles.applicantLocation}>
-                      <GeoAltFill />
-                      {applicant.applicant.location}
-                    </div>
                   </div>
                 </td>
 
@@ -213,6 +254,22 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
                   <div>
                     <strong>{applicant.applicant.yearsExperience}</strong> years
                   </div>
+                </td>
+
+                <td>
+                  {applicant.applicant.hasApplied && applicant.applicant.interestTier ? (
+                    <div className={styles.interestLevelCell}>
+                      <span
+                        className={`${styles.interestBadge} ${getInterestLevelBadgeClass(
+                          applicant.applicant.interestTier
+                        )}`}
+                      >
+                        {formatInterestLevel(applicant.applicant.interestTier)}
+                      </span>
+                    </div>
+                  ) : (
+                    <span className={styles.textGray500}>-</span>
+                  )}
                 </td>
 
                 <td>

@@ -11,6 +11,8 @@ import {
   BarChartFill,
   InfoCircleFill,
   TelephoneFill,
+  ChevronDown,
+  ChevronUp,
 } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { DeleteButton } from '../buttons/delete-button';
@@ -48,6 +50,7 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
   const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [eligibilityStats, setEligibilityStats] = useState(null);
   const [loadingStats, setLoadingStats] = useState(true);
+  const [campaignCtaExpanded, setCampaignCtaExpanded] = useState(false);
 
   // Load campaigns for this job
   const { campaigns, loading: campaignsLoading, loadJobCampaigns } = useJobCampaigns(job.id);
@@ -182,6 +185,31 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
 
   const statusDisplay = getStatusDisplay(job.status);
 
+  // Helper functions for campaign CTA toggle
+  const getActiveCampaign = () => {
+    return campaigns.find((c) => c.status === 'ACTIVE' || c.status === 'DRAFT');
+  };
+
+  const getCampaignToggleText = () => {
+    const activeCampaign = getActiveCampaign();
+    if (activeCampaign) {
+      const status = activeCampaign.status === 'ACTIVE' ? 'active' : 'draft';
+      return `Campaign in ${status}`;
+    }
+    const candidateCount = eligibilityStats?.eligibleApplicants || 0;
+    return `Reach ${candidateCount} candidates`;
+  };
+
+  const getCampaignToggleClass = () => {
+    const activeCampaign = getActiveCampaign();
+    if (activeCampaign) {
+      return activeCampaign.status === 'ACTIVE'
+        ? styles.campaignToggleActive
+        : styles.campaignToggleDraft;
+    }
+    return '';
+  };
+
   const tabs = [
     {
       id: 'overview' as TabType,
@@ -280,6 +308,41 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
       <div className={styles.tabContent}>
         {activeTab === 'overview' && (
           <div className={styles.overviewContainer}>
+            {/* Mobile Campaign Toggle */}
+            <div className={styles.campaignToggleContainer}>
+              <button
+                className={`${styles.campaignToggle} ${getCampaignToggleClass()} ${
+                  campaignCtaExpanded ? styles.campaignToggleExpanded : ''
+                }`}
+                onClick={() => setCampaignCtaExpanded(!campaignCtaExpanded)}
+              >
+                <div className={styles.campaignToggleContent}>
+                  <TelephoneFill className={styles.campaignToggleIcon} />
+                  <span className={styles.campaignToggleText}>{getCampaignToggleText()}</span>
+                </div>
+                {campaignCtaExpanded ? (
+                  <ChevronUp className={styles.campaignToggleChevron} />
+                ) : (
+                  <ChevronDown className={styles.campaignToggleChevron} />
+                )}
+              </button>
+
+              {/* Collapsible Campaign CTA for mobile */}
+              <div
+                className={`${styles.campaignCtaCollapsible} ${
+                  campaignCtaExpanded ? styles.campaignCtaExpanded : ''
+                }`}
+              >
+                <CampaignCta
+                  job={job}
+                  campaigns={campaigns}
+                  campaignsLoading={campaignsLoading}
+                  eligibilityStats={eligibilityStats}
+                  onCampaignCreated={loadJobCampaigns}
+                />
+              </div>
+            </div>
+
             <div className={styles.overviewMainLayout}>
               {/* Main Content: Eligibility Overview with Stats + Table */}
               <div className={styles.overviewMainContent}>
@@ -291,7 +354,7 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
                 />
               </div>
 
-              {/* Right Sidebar: Campaign CTA */}
+              {/* Right Sidebar: Campaign CTA (Desktop) */}
               <div className={styles.overviewSidebar}>
                 <CampaignCta
                   job={job}
