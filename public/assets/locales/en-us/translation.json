@@ -2327,6 +2327,8 @@
     "DIRECT_JOB_APPLY": "Direct Job Apply",
     "DIGITAL_HIRING_APP": "Digital Hiring App"
   },
+  "CREATED": "Created",
+  "OVERVIEW": "Overview",
   "DRUG_TEST_VALIDATION": "You answered that you cannot pass a drug test.",
   "SAP_RESOURCE_PAGE": "SAP resource page",
   "DRUG_TEST_VALIDATION_FAIL_MESSAGE": "Please note that all US registered trucking companies require that drivers pass drug tests during the hiring process... i.e. you WILL be tested and if you fail you WILL have to go through the SAP program.",
