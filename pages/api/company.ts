@@ -1,15 +1,16 @@
-import { CompanyEntity } from "../../models/company/company.entity";
-import BaseApi from "./_baseApi";
-import { FindManyOptions } from "../../models/general/find-many-options.dto";
-import { CompanyPreferenceCategory } from "../../enums/company/company-preference-category.enum";
-import { CompanyPreferenceEntity } from "../../models/company/company-preferences.entity";
-import { CompanyManagerEntity } from "../../models/company/company-manager.entity";
-import { LocationEntity } from "../../models/company/location.entity";
+import { CompanyEntity } from '../../models/company/company.entity';
+import { CompanyPhoneNumberEntity } from '../../models/company/company-phone-number.entity';
+import BaseApi from './_baseApi';
+import { FindManyOptions } from '../../models/general/find-many-options.dto';
+import { CompanyPreferenceCategory } from '../../enums/company/company-preference-category.enum';
+import { CompanyPreferenceEntity } from '../../models/company/company-preferences.entity';
+import { CompanyManagerEntity } from '../../models/company/company-manager.entity';
+import { LocationEntity } from '../../models/company/location.entity';
 
 export default class CompanyApi extends BaseApi {
-  baseUrl: string = "companies"
+  baseUrl: string = 'companies';
   async list(params?: { withPhoto?: boolean }): Promise<CompanyEntity[]> {
-    const { data } = await this.get(this.buildUrl(this.baseUrl + "/list", params));
+    const { data } = await this.get(this.buildUrl(this.baseUrl + '/list', params));
 
     return data;
   }
@@ -51,13 +52,14 @@ export default class CompanyApi extends BaseApi {
     remove: async (): Promise<void> => {
       await this.delete(this.baseUrl);
     },
-
   };
 
   employer = {
-    baseUrl: "employer",
+    baseUrl: 'employer',
     getById: async (id: number, withJobs?: boolean): Promise<CompanyEntity> => {
-      const { data } = await this.get(`${this.employer.baseUrl}/${id}?withJobs=${Boolean(withJobs)}`);
+      const { data } = await this.get(
+        `${this.employer.baseUrl}/${id}?withJobs=${Boolean(withJobs)}`
+      );
 
       return data;
     },
@@ -67,7 +69,9 @@ export default class CompanyApi extends BaseApi {
     //   return data;
     // },
     getBySlug: async (slug: string, withPhotoPath?: boolean): Promise<CompanyEntity> => {
-      const { data } = await this.get(`${this.employer.baseUrl}/fetch/${slug}?withPhotoPath=${Boolean(withPhotoPath)}`);
+      const { data } = await this.get(
+        `${this.employer.baseUrl}/fetch/${slug}?withPhotoPath=${Boolean(withPhotoPath)}`
+      );
 
       return data;
     },
@@ -86,29 +90,39 @@ export default class CompanyApi extends BaseApi {
 
       return data;
     },
-  }
+  };
 
   preferences = {
     baseUrl: (companyId: number) => `company/${companyId}/preferences`,
-    list: async (companyId: number, query?: { category?: CompanyPreferenceCategory, label?: string }): Promise<CompanyPreferenceEntity[]> => {
+    list: async (
+      companyId: number,
+      query?: { category?: CompanyPreferenceCategory; label?: string }
+    ): Promise<CompanyPreferenceEntity[]> => {
       const { data } = await this.get(this.buildUrl(this.preferences.baseUrl(companyId), query));
 
       return data;
     },
-    create: async (companyId: number, dto: CompanyPreferenceEntity): Promise<CompanyPreferenceEntity> => {
+    create: async (
+      companyId: number,
+      dto: CompanyPreferenceEntity
+    ): Promise<CompanyPreferenceEntity> => {
       const { data } = await this.post(this.preferences.baseUrl(companyId), dto);
 
       return data;
     },
-    update: async (companyId: number, id: number, dto: CompanyPreferenceEntity): Promise<CompanyPreferenceEntity> => {
+    update: async (
+      companyId: number,
+      id: number,
+      dto: CompanyPreferenceEntity
+    ): Promise<CompanyPreferenceEntity> => {
       const { data } = await this.put(`${this.preferences.baseUrl(companyId)}/${id}`, dto);
 
       return data;
     },
     remove: async (companyId: number, id: number): Promise<void> => {
       await this.delete(`${this.preferences.baseUrl(companyId)}/${id}`);
-    }
-  }
+    },
+  };
 
   manager = {
     baseUrl: (id?: number) => `company/manager/${id ?? ''}`,
@@ -134,8 +148,13 @@ export default class CompanyApi extends BaseApi {
     },
     remove: async (companyId: number, id: number): Promise<void> => {
       await this.delete(`${this.manager.baseUrl(companyId)}/${id}`);
-    }
-  }
+    },
+  };
 
-
+  phoneNumbers = {
+    list: async (companyId: number): Promise<CompanyPhoneNumberEntity[]> => {
+      const { data } = await this.get(`${this.baseUrl}/${companyId}/phone-numbers`);
+      return data;
+    },
+  };
 }

@@ -32,6 +32,22 @@ const AdminDashboard = () => {
       statusColor: 'success',
     },
     {
+      title: 'Phone Numbers',
+      description: 'View and manage Twilio phone numbers and their assignments',
+      icon: <Phone size={24} />,
+      href: '/admin/phone-numbers',
+      status: 'Active',
+      statusColor: 'success',
+    },
+    {
+      title: 'Company Management',
+      description: 'Manage companies and their phone number assignments',
+      icon: <People size={24} />,
+      href: '/admin/companies',
+      status: 'Active',
+      statusColor: 'success',
+    },
+    {
       title: 'User Management',
       description: 'Advanced user and permission management',
       icon: <People size={24} />,

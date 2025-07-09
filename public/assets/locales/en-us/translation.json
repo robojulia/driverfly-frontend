@@ -39,6 +39,7 @@
   "job_applied_success_message": "Your application has been submitted successfully",
   "QUICK_APPLY_MESSAGE_{JOB}_{COMPANY}": "Thanks for applying to {{JOB}} with {{COMPANY}}. Would you like to be considered for other jobs that match your criteria?",
   "COMPLETE_APPLICATION": "Complete Application",
+  "MESSAGE_SENT_SUCCESSFULLY": "Message sent successfully",
   "SUCCESS": "Successful",
   "job_applied_failure_message": "Your application can not be submitted",
   "create_driverfly_account": "Create a DriverFly account?",
@@ -2872,5 +2873,13 @@
   "CHECK_ELIGIBILITY": "Check Eligibility",
   "VIEW_DETAILED_ANALYSIS": "View detailed qualification analysis for this job",
   "JOB_APPLICATIONS": "Job Applications",
-  "SHOWING_ALL_JOBS_APPLIED_TO": "Showing all jobs this candidate has applied to with your company"
+  "SHOWING_ALL_JOBS_APPLIED_TO": "Showing all jobs this candidate has applied to with your company",
+  "SENDING_FROM": "Sending from",
+  "NO_PHONE_NUMBER_PROVISIONED": "No phone number provisioned",
+  "MESSAGING_UNAVAILABLE": "Messaging Unavailable",
+  "NO_PHONE_NUMBER_PROVISIONED_MESSAGE": "Your company does not have a dedicated phone number for SMS messaging.",
+  "CONTACT_DRIVERFLY_SUPPORT_FOR_PHONE_NUMBER": "Please contact DriverFly Support to request a phone number for your company.",
+  "NO_PHONE_NUMBER_PROVISIONED_CONTACT_SUPPORT": "Your company needs a dedicated phone number to send messages. Please contact DriverFly Support.",
+  "LOADING_PHONE_NUMBERS": "Loading phone numbers...",
+  "MESSAGING_DISABLED_NO_PHONE_NUMBER": "Messaging disabled - no phone number available"
 }

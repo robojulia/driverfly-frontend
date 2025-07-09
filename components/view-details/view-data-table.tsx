@@ -1,18 +1,15 @@
-import React, { ReactNode, useEffect, useState } from "react";
-import { Button, ButtonGroup, Container, Dropdown } from "react-bootstrap";
-import { Gear, Search } from "react-bootstrap-icons";
-import DataTable, {
-  TableColumn,
-  TableStyles,
-} from "react-data-table-component";
+import React, { ReactNode, useEffect, useState } from 'react';
+import { Button, ButtonGroup, Container, Dropdown } from 'react-bootstrap';
+import { Gear, Search } from 'react-bootstrap-icons';
+import DataTable, { TableColumn, TableStyles } from 'react-data-table-component';
 // import {
 //     ExpandableRowsComponent,
 // } from "react-data-table-component/dist/src/DataTable/types";
-import { useStatefulStorage } from "../../hooks/use-stateful-storage";
-import { useTranslation } from "../../hooks/use-translation";
-import { UserEntity } from "../../models/user/user.entity";
-import BaseInput from "../forms/base-input";
-import ListActions, { ListActionOptions } from "../list-actions/list-actions";
+import { useStatefulStorage } from '../../hooks/use-stateful-storage';
+import { useTranslation } from '../../hooks/use-translation';
+import { UserEntity } from '../../models/user/user.entity';
+import BaseInput from '../forms/base-input';
+import ListActions, { ListActionOptions } from '../list-actions/list-actions';
 
 export interface ViewTableProps<TElement> {
   columns: ViewTableColumn<TElement>[];
@@ -38,34 +35,30 @@ export interface ViewTableColumn<TElement> extends TableColumn<TElement> {
 }
 
 export function getDataTableColumnKey(
-  type: "company" | "driver" | "admin",
+  type: 'company' | 'driver' | 'admin',
   user: UserEntity,
   entity: string
 ) {
   return `${type}.${user?.id || 0}.${entity}.columns`;
 }
 
-export default function ViewDataTable<TElement>(
-  props: ViewTableProps<TElement>
-) {
+export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>) {
   const { t } = useTranslation();
 
   // const storageApi = useStorage();
   const description = props?.description;
   const storage = useStatefulStorage<(string | number)[]>({
-    type: "local",
-    key: props.columnSettingKey || "default",
+    type: 'local',
+    key: props.columnSettingKey || 'default',
   });
 
   const hideable = new Set(
-    props.columns
-      .filter((v) => v.id != null && (!("hidable" in v) || v.hidable))
-      .map((v) => v.id)
+    props.columns.filter((v) => v.id != null && (!('hidable' in v) || v.hidable)).map((v) => v.id)
   );
 
   const [items, setItems] = useState([]);
   const [columns, setColumns] = useState<TableColumn<TElement>[]>([]);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     if (!search) setItems(props.items);
@@ -80,26 +73,19 @@ export default function ViewDataTable<TElement>(
     }));
     if (props.actions) {
       columns.push({
-        maxWidth: "10px",
+        maxWidth: '10px',
         cell: (j) => <ListActions options={props.actions(j)} />,
       });
     }
     setColumns(columns);
   }, [props, storage?.item, search]);
 
-  // useEffect(() => {
-  // }, [
-  //     storage?.item
-  // ]);
-
   const doSearch = (search: string) => {
     setItems(
       props.items.filter((v) =>
         columns.some(
           (c) =>
-            !c.hide &&
-            c.selector &&
-            !!c.selector(v)?.toString()?.toLowerCase()?.includes(search)
+            !c.hide && c.selector && !!c.selector(v)?.toString()?.toLowerCase()?.includes(search)
         )
       )
     );
@@ -108,11 +94,6 @@ export default function ViewDataTable<TElement>(
   const onSearchClick = (e?: React.MouseEvent) => {
     doSearch(search);
   };
-
-  // const onSearchKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-  //     if (e.key == "Enter") onSearchClick();
-
-  // };
 
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const search = e.target.value.toLowerCase();
@@ -132,9 +113,7 @@ export default function ViewDataTable<TElement>(
         hide: v.id == column.id ? (v.hide ? 0 : 1) : v.hide,
       }));
 
-      storage?.setItem(
-        newColumns.filter((v) => v.id != null && !v.hide).map((v) => v.id)
-      );
+      storage?.setItem(newColumns.filter((v) => v.id != null && !v.hide).map((v) => v.id));
 
       setColumns(newColumns);
     }
@@ -151,20 +130,20 @@ export default function ViewDataTable<TElement>(
           .filter((v) => !v.hide)
           .map((v) => ({
             ...v,
-            name: typeof v.name == "string" ? t(v.name) : v.name,
+            name: typeof v.name == 'string' ? t(v.name) : v.name,
             // hide: v.id && hideable.has(`${v.id}`) && !visible.has(`${v.id}`) ? 1 : 0,
             sortable: v.sortable || !!v.name,
           }))}
         striped
         responsive
         fixedHeader
-        noDataComponent={props.noDataComponent || <>{t("NO_RECORDS_FOUND")}</>}
+        noDataComponent={props.noDataComponent || <>{t('NO_RECORDS_FOUND')}</>}
         selectableRows={Boolean(props.enableSelectableRows)}
         onSelectedRowsChange={props.selectableRowChangeHandler}
         expandableRowExpanded={(row) =>
           !props.preExpanded
             ? false
-            : typeof props.preExpanded == "boolean"
+            : typeof props.preExpanded == 'boolean'
             ? props.preExpanded
             : props.preExpanded(row)
         }
@@ -187,17 +166,9 @@ export default function ViewDataTable<TElement>(
                 <ButtonGroup>
                   {!props.hideSetting && (
                     <>
-                      <BaseInput
-                        placeholder="SEARCH"
-                        onChange={onSearchChange}
-                        value={search}
-                      />
+                      <BaseInput placeholder="SEARCH" onChange={onSearchChange} value={search} />
 
-                      <Button
-                        variant="primary"
-                        type="button"
-                        onClick={onSearchClick}
-                      >
+                      <Button variant="primary" type="button" onClick={onSearchClick}>
                         <Search />
                       </Button>
                     </>
@@ -205,10 +176,7 @@ export default function ViewDataTable<TElement>(
 
                   {canHideColumns && (
                     <Dropdown autoClose="outside">
-                      <Dropdown.Toggle
-                        variant=""
-                        className="btn-group-end theme-general-btn"
-                      >
+                      <Dropdown.Toggle variant="" className="btn-group-end theme-general-btn">
                         <Gear />
                       </Dropdown.Toggle>
                       <Dropdown.Menu className="select_dropdown data_table_dropdown">
@@ -221,11 +189,7 @@ export default function ViewDataTable<TElement>(
                               onClick={() => onColumnHide(v)}
                             >
                               {v.hide == 1 ? (
-                                <del>
-                                  {typeof v.name == "string"
-                                    ? t(v.name)
-                                    : v.name}
-                                </del>
+                                <del>{typeof v.name == 'string' ? t(v.name) : v.name}</del>
                               ) : !hideable.has(v.id) ? (
                                 <>{t(v.name as any)}</>
                               ) : (
