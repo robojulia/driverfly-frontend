@@ -131,11 +131,19 @@ function LegalDocumentsContent() {
 
         let response: ApplicantEntity;
         if (applicant?.id) {
-          response = await applicantApi.jotform.update(applicant.id, {
-            applicant,
-            applicantExtras: filtered_extras,
-            jobs,
-          });
+          response = await applicantApi.jotform.update(
+            applicant.id,
+            {
+              applicant,
+              applicantExtras: filtered_extras,
+              jobs,
+            },
+            {
+              params: {
+                completeApplication: 'true',
+              },
+            }
+          );
         } else {
           response = await applicantApi.jotform.create(company.id, {
             applicant,
