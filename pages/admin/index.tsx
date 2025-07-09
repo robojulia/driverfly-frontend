@@ -49,11 +49,11 @@ const AdminDashboard = () => {
     },
     {
       title: 'User Management',
-      description: 'Advanced user and permission management',
+      description: 'Manage all users in the system and their administrative privileges',
       icon: <People size={24} />,
       href: '/admin/users',
-      status: 'Coming Soon',
-      statusColor: 'secondary',
+      status: 'Active',
+      statusColor: 'success',
     },
   ];
 
