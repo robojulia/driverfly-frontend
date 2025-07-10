@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Badge, Card, Col, Row, Spinner } from 'react-bootstrap';
+import { Alert, Badge, Card, Col, Row, Spinner, Button, Modal, Form } from 'react-bootstrap';
 import {
   TelephoneFill,
   CheckCircleFill,
@@ -7,6 +7,7 @@ import {
   Building,
   Calendar,
   Gear,
+  PencilSquare,
 } from 'react-bootstrap-icons';
 import ViewDataTable, { ViewTableColumn } from '../view-details/view-data-table';
 import { useTranslation } from '../../hooks/use-translation';
@@ -21,6 +22,12 @@ const PhoneNumbersManagement: React.FC = () => {
   const [summary, setSummary] = useState<PhoneNumbersSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Edit modal state
+  const [editModalShow, setEditModalShow] = useState(false);
+  const [editingNumber, setEditingNumber] = useState<TwilioPhoneNumberInfo | null>(null);
+  const [newFriendlyName, setNewFriendlyName] = useState('');
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -45,6 +52,46 @@ const PhoneNumbersManagement: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEditFriendlyName = (phoneNumber: TwilioPhoneNumberInfo) => {
+    setEditingNumber(phoneNumber);
+    setNewFriendlyName(phoneNumber.friendlyName || '');
+    setEditModalShow(true);
+  };
+
+  const handleSaveFriendlyName = async () => {
+    if (!editingNumber) return;
+
+    try {
+      setUpdating(true);
+      const api = new PhoneNumbersApi();
+      await api.updatePhoneNumberFriendlyName(editingNumber.phoneNumber, newFriendlyName);
+
+      // Update the local state
+      setPhoneNumbers((prev) =>
+        prev.map((num) =>
+          num.phoneNumber === editingNumber.phoneNumber
+            ? { ...num, friendlyName: newFriendlyName }
+            : num
+        )
+      );
+
+      setEditModalShow(false);
+      setEditingNumber(null);
+      setNewFriendlyName('');
+    } catch (err: any) {
+      console.error('Failed to update friendly name:', err);
+      setError(err.response?.data?.message || 'Failed to update friendly name');
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleCloseEditModal = () => {
+    setEditModalShow(false);
+    setEditingNumber(null);
+    setNewFriendlyName('');
   };
 
   const formatPhoneNumber = (phoneNumber: string): string => {
@@ -168,6 +215,26 @@ const PhoneNumbersManagement: React.FC = () => {
       minWidth: '120px',
       cell: (row) => <code className="small text-muted">{row.sid}</code>,
       hidable: true,
+    },
+    {
+      id: 'actions',
+      name: 'Actions',
+      selector: (row) => row.sid,
+      sortable: false,
+      minWidth: '100px',
+      cell: (row) => (
+        <div className="d-flex gap-2">
+          <Button
+            variant="outline-primary"
+            size="sm"
+            onClick={() => handleEditFriendlyName(row)}
+            title="Edit friendly name"
+          >
+            <PencilSquare size={14} />
+          </Button>
+        </div>
+      ),
+      ignoreRowClick: true,
     },
   ];
 
@@ -316,6 +383,58 @@ const PhoneNumbersManagement: React.FC = () => {
           </Card.Body>
         </Card>
       )}
+
+      {/* Edit Friendly Name Modal */}
+      <Modal show={editModalShow} onHide={handleCloseEditModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Friendly Name</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {editingNumber && (
+            <div className="mb-3">
+              <div className="d-flex align-items-center mb-2">
+                <TelephoneFill className="text-primary me-2" />
+                <strong>{formatPhoneNumber(editingNumber.phoneNumber)}</strong>
+              </div>
+              <div className="text-muted small">
+                SID: <code>{editingNumber.sid}</code>
+              </div>
+            </div>
+          )}
+          <Form.Group>
+            <Form.Label>Friendly Name</Form.Label>
+            <Form.Control
+              type="text"
+              value={newFriendlyName}
+              onChange={(e) => setNewFriendlyName(e.target.value)}
+              placeholder="Enter a friendly name for this number"
+              disabled={updating}
+            />
+            <Form.Text className="text-muted">
+              This name helps you identify the purpose or owner of this phone number.
+            </Form.Text>
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseEditModal} disabled={updating}>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={handleSaveFriendlyName}
+            disabled={updating || !newFriendlyName.trim()}
+          >
+            {updating ? (
+              <>
+                <Spinner animation="border" size="sm" className="me-2" />
+                Updating...
+              </>
+            ) : (
+              'Save Changes'
+            )}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

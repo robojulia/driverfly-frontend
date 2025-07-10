@@ -99,4 +99,18 @@ export default class PhoneNumbersApi extends BaseApi {
     const response = await this.get(url);
     return response.data;
   }
+
+  /**
+   * Update the friendly name of a phone number
+   */
+  async updatePhoneNumberFriendlyName(
+    phoneNumber: string,
+    friendlyName: string
+  ): Promise<TwilioPhoneNumberInfo> {
+    const response = await this.post(
+      `/twilio/admin/phone-numbers/${encodeURIComponent(phoneNumber)}/update-friendly-name`,
+      { friendlyName }
+    );
+    return response.data;
+  }
 }
