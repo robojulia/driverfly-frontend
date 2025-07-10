@@ -4,9 +4,19 @@ import { useEffect } from 'react';
 import { Container, Row, Col, Card, Badge } from 'react-bootstrap';
 import { useAuth } from '../../hooks/use-auth';
 import DashboardLayout from '../../components/dashboard/layouts/layout/dashboard-layout';
-import { Flag, Gear, Database, People, GraphUp, Shield, Phone } from 'react-bootstrap-icons';
+import {
+  Flag,
+  Gear,
+  Database,
+  People,
+  GraphUp,
+  Shield,
+  Phone,
+  Grid3x3Gap,
+} from 'react-bootstrap-icons';
 import Link from 'next/link';
 import styles from './admin.module.css';
+import { getAdminSidebarItems } from '../../utils/admin-sidebar-config';
 
 const AdminDashboard = () => {
   const { user, isSuperAdmin } = useAuth();
@@ -23,6 +33,14 @@ const AdminDashboard = () => {
   }
 
   const adminTools = [
+    {
+      title: 'Microservices',
+      description: 'Access and manage microservice tools and administrative interfaces',
+      icon: <Grid3x3Gap size={24} />,
+      href: '/admin/microservices',
+      status: 'Active',
+      statusColor: 'primary',
+    },
     {
       title: 'Feature Flags',
       description: 'Manage application feature flags and rollouts',
@@ -57,24 +75,8 @@ const AdminDashboard = () => {
     },
   ];
 
-  // Simple sidebar items for admin (we'll use company items as base)
-  const sidebarItems = [
-    {
-      name: 'Dashboard',
-      pathname: '/dashboard/company',
-      icon: 'home',
-      text: 'Dashboard',
-    },
-    {
-      name: 'Admin Tools',
-      pathname: '/admin',
-      icon: 'shield',
-      text: 'Admin Tools',
-    },
-  ];
-
   return (
-    <DashboardLayout sidebarItems={sidebarItems}>
+    <DashboardLayout sidebarItems={getAdminSidebarItems('Admin Tools')}>
       <Container fluid className="py-4">
         <Row className="mb-4">
           <Col>
@@ -92,9 +94,6 @@ const AdminDashboard = () => {
                     <div className={`${styles.iconWrapper} me-3`}>{tool.icon}</div>
                     <div className="flex-grow-1">
                       <h5 className="card-title mb-1">{tool.title}</h5>
-                      <Badge bg={tool.statusColor} className={styles.statusBadge}>
-                        {tool.status}
-                      </Badge>
                     </div>
                   </div>
 

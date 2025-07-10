@@ -5,6 +5,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useAuth } from '../../hooks/use-auth';
 import DashboardLayout from '../../components/dashboard/layouts/layout/dashboard-layout';
 import CompanyManager from '../../components/admin/CompanyManager';
+import { getAdminSidebarItems } from '../../utils/admin-sidebar-config';
 
 const AdminCompanies = () => {
   const { user, isSuperAdmin } = useAuth();
@@ -20,36 +21,8 @@ const AdminCompanies = () => {
     return null;
   }
 
-  // Simple sidebar items for admin
-  const sidebarItems = [
-    {
-      name: 'Dashboard',
-      pathname: '/dashboard/company',
-      icon: 'home',
-      text: 'Dashboard',
-    },
-    {
-      name: 'Admin Tools',
-      pathname: '/admin',
-      icon: 'shield',
-      text: 'Admin Tools',
-    },
-    {
-      name: 'Phone Numbers',
-      pathname: '/admin/phone-numbers',
-      icon: 'phone',
-      text: 'Phone Numbers',
-    },
-    {
-      name: 'Companies',
-      pathname: '/admin/companies',
-      icon: 'building',
-      text: 'Companies',
-    },
-  ];
-
   return (
-    <DashboardLayout sidebarItems={sidebarItems}>
+    <DashboardLayout sidebarItems={getAdminSidebarItems('Companies')}>
       <Container fluid className="py-4">
         <Row className="mb-4">
           <Col>

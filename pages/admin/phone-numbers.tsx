@@ -5,6 +5,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useAuth } from '../../hooks/use-auth';
 import DashboardLayout from '../../components/dashboard/layouts/layout/dashboard-layout';
 import PhoneNumbersManagement from '../../components/admin/PhoneNumbersManagement';
+import { getAdminSidebarItems } from '../../utils/admin-sidebar-config';
 
 const AdminPhoneNumbersPage = () => {
   const { user, isSuperAdmin } = useAuth();
@@ -20,30 +21,8 @@ const AdminPhoneNumbersPage = () => {
     return null;
   }
 
-  // Simple sidebar items for admin
-  const sidebarItems = [
-    {
-      name: 'Dashboard',
-      pathname: '/dashboard/company',
-      icon: 'home',
-      text: 'Dashboard',
-    },
-    {
-      name: 'Admin Tools',
-      pathname: '/admin',
-      icon: 'shield',
-      text: 'Admin Tools',
-    },
-    {
-      name: 'Phone Numbers',
-      pathname: '/admin/phone-numbers',
-      icon: 'phone',
-      text: 'Phone Numbers',
-    },
-  ];
-
   return (
-    <DashboardLayout sidebarItems={sidebarItems}>
+    <DashboardLayout sidebarItems={getAdminSidebarItems('Phone Numbers')}>
       <Container fluid className="py-4">
         <Row className="mb-4">
           <Col>

@@ -19,6 +19,7 @@ import { Plus, Pencil, Trash, Eye, EyeSlash } from 'react-bootstrap-icons';
 import FeatureFlagsApi, { FeatureFlag } from '../api/feature-flags';
 import { toast } from 'react-toastify';
 import styles from '../admin.module.css';
+import { getAdminSidebarItems } from '../../utils/admin-sidebar-config';
 
 interface FeatureFlagFormData {
   key: string;
@@ -395,21 +396,7 @@ export default function FeatureFlagsAdmin() {
 }
 
 FeatureFlagsAdmin.getLayout = function getLayout(page) {
-  // Same sidebar items as admin dashboard
-  const sidebarItems = [
-    {
-      name: 'Dashboard',
-      pathname: '/dashboard/company',
-      icon: 'home',
-      text: 'Dashboard',
-    },
-    {
-      name: 'Admin Tools',
-      pathname: '/admin',
-      icon: 'shield',
-      text: 'Admin Tools',
-    },
-  ];
-
-  return <DashboardLayout sidebarItems={sidebarItems}>{page}</DashboardLayout>;
+  return (
+    <DashboardLayout sidebarItems={getAdminSidebarItems('Feature Flags')}>{page}</DashboardLayout>
+  );
 };
