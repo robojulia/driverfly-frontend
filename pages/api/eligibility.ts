@@ -28,6 +28,7 @@ export interface ApplicantBasicInfo {
   licenseType: string;
   yearsExperience: number;
   hasApplied: boolean;
+  isInterested: boolean;
   interestTier?: 'HIGH' | 'MEDIUM' | 'LOW' | 'NONE';
   engagementCount?: number;
   daysSinceLastEngagement?: number | null;

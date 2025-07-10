@@ -267,6 +267,15 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
                         {formatInterestLevel(applicant.applicant.interestTier)}
                       </span>
                     </div>
+                  ) : applicant.applicant.isInterested && !applicant.applicant.hasApplied ? (
+                    <div className={styles.interestLevelCell}>
+                      <span
+                        className={`${styles.interestBadge} ${styles.interestedBadge}`}
+                        title="This candidate has expressed interest but has not yet applied"
+                      >
+                        Interested
+                      </span>
+                    </div>
                   ) : (
                     <span className={styles.textGray500}>-</span>
                   )}
