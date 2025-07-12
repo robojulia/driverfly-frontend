@@ -473,6 +473,96 @@
   gap: 16px;
 }
 
+/* Job Details Card */
+.jobDetailsCard {
+  background: var(--primary-light);
+  border: 1px solid var(--form-border);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.jobLocation,
+.jobType,
+.jobSalary {
+  margin: 8px 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.jobDetailLabel {
+  font-weight: 600;
+  color: var(--primary-dark);
+  display: inline-block;
+  min-width: 140px;
+}
+
+.jobDetailRow {
+  margin: 12px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* Job Details Table */
+.jobDetailsTable {
+  width: 100%;
+  border-collapse: collapse;
+  background: transparent;
+  margin: 0;
+  border-spacing: 0;
+}
+
+.jobDetailsTable td {
+  padding: 12px 16px;
+  vertical-align: top;
+  border: none;
+  background: transparent;
+  line-height: 1.5;
+}
+
+.jobDetailsTable .jobDetailLabel {
+  font-weight: 600;
+  color: var(--primary-dark);
+  width: auto;
+  min-width: auto;
+  text-align: left;
+  white-space: nowrap;
+  padding-right: 16px;
+}
+
+.jobDetailsTable .jobDetailValue {
+  color: var(--text-primary);
+  width: 100%;
+  word-wrap: break-word;
+  padding-left: 0;
+}
+
+.jobDescription {
+  margin: 12px 0 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.jobLocation {
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.jobType {
+  text-transform: capitalize;
+}
+
+.jobSalary {
+  font-weight: 600;
+  color: var(--success);
+}
+
 /* Responsive adjustments */
 @media screen and (max-width: 900px) {
   .main_form,

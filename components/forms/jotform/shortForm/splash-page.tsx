@@ -4,18 +4,35 @@ import JotformContext, { JotFormContextType } from '../../../../context/jotform-
 import { useTranslation } from '../../../../hooks/use-translation';
 import { PrimaryButton } from '../form-buttons';
 import styles from '../../../../styles/digitalhiringapp.module.css';
+import { SplashPageJobView } from './splash-page-job-view';
 
 export function SplashPage() {
   const {
-    state: { steps, applicant, company, companyJobs },
+    state: { steps, applicant, company, companyJobs, directJob, isDirectJobApplication },
     method: { stepNext, setSteps },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
 
+  const handleNext = () => {
+    if (isDirectJobApplication) {
+      // Go directly to PhoneNumber page (step 2)
+      setSteps(2);
+    } else if (companyJobs.length > 0) {
+      stepNext(); // Go to job selection page (step 1)
+    } else {
+      setSteps(steps + 2); // Skip job selection if no jobs available
+    }
+  };
+
   return (
     <>
-      <Form onSubmit={() => (companyJobs.length > 0 ? stepNext() : setSteps(steps + 2))}>
+      <Form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleNext();
+        }}
+      >
         <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
           {t(
             '{name}_carrier',
@@ -23,8 +40,15 @@ export function SplashPage() {
             { translateProps: true }
           )}
         </h1>
-        <h4 className={styles.Application}>{t('DRIVER_APPLICATION')}</h4>
-        <h6 className={styles.paragraph}>{t('JOTFORM_WELCOME')}</h6>
+
+        {isDirectJobApplication && directJob ? (
+          <SplashPageJobView job={directJob} />
+        ) : (
+          <>
+            <h4 className={styles.Application}>{t('DRIVER_APPLICATION')}</h4>
+            <h6 className={styles.paragraph}>{t('JOTFORM_WELCOME')}</h6>
+          </>
+        )}
 
         <Row className="mt-5 text-center">
           <Col>
@@ -35,7 +59,7 @@ export function SplashPage() {
                 maxWidth: '200px',
               }}
             >
-              Start Application
+              {isDirectJobApplication ? 'Start Job Application' : 'Start Application'}
             </PrimaryButton>
           </Col>
         </Row>

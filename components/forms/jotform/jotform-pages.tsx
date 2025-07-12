@@ -57,8 +57,8 @@ const FelonyConvictionWithSave = withAsyncSave(FelonyConviction, 'FelonyConvicti
 const DrugTestWithSave = withAsyncSave(DrugTest, 'DrugTest');
 const LegalDocumentsPageWithSave = withAsyncSave(LegalDocumentsPage, 'LegalDocumentsPage');
 
-const getFullFormPages = (step: number): JSX.Element =>
-  ({
+const getFullFormPages = (step: number, isDirectJobApplication?: boolean): JSX.Element => {
+  const pages = {
     0: <SplashPage />,
     1: <AtsJobs />,
     2: <PhoneNumber />,
@@ -88,9 +88,27 @@ const getFullFormPages = (step: number): JSX.Element =>
     26: <DrugTest />,
     27: <LegalDocumentsPage />,
     28: <ThankyouPage />,
-  }[step]);
+  };
 
-const getFullFormStyle = (step: number): CSSProperties | undefined => ({}[step]);
+  // If it's a direct job application and user is trying to access AtsJobs (step 1),
+  // redirect them to PhoneNumber (step 2) instead
+  if (isDirectJobApplication && step === 1) {
+    return pages[2]; // Return PhoneNumber page
+  }
+
+  return pages[step];
+};
+
+const getFullFormStyle = (
+  step: number,
+  isDirectJobApplication?: boolean
+): CSSProperties | undefined => {
+  // Adjust step for direct job applications
+  if (isDirectJobApplication && step >= 1) {
+    step = step + 1;
+  }
+  return {}[step];
+};
 
 const getLongFormPages = (step: number): JSX.Element =>
   ({
@@ -132,6 +150,16 @@ const getSuggestedJobPages = (step: number, jobId?: number): JSX.Element =>
   }[step]);
 const getLongFormStyle = (step: number): CSSProperties | undefined => ({}[step]);
 
+/**
+ * Calculate total steps based on application type
+ * @param isDirectJobApplication - Whether this is a direct job application (skips job selection)
+ * @returns Total number of steps in the form
+ */
+const getTotalSteps = (isDirectJobApplication: boolean = false): number => {
+  const baseSteps = 29; // Total steps in full form
+  return isDirectJobApplication ? baseSteps - 1 : baseSteps; // Skip AtsJobs step for direct applications
+};
+
 export {
   getFullFormPages,
   getFullFormStyle,
@@ -139,4 +167,5 @@ export {
   getLongFormStyle,
   getMissingDocumentsPages,
   getSuggestedJobPages,
+  getTotalSteps,
 };

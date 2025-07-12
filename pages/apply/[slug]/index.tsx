@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
   getFullFormPages,
   getFullFormStyle,
+  getTotalSteps,
 } from '../../../components/forms/jotform/jotform-pages';
 import FormProgress from '../../../components/forms/jotform/form-progress';
 import { DevPageNavigator } from '../../../components/developer/dev-page-navigator';
@@ -25,12 +26,25 @@ export interface FullFormProps {
   preferences: CompanyPreferenceEntity[];
   utm?: UtmReferral;
   employerJobs?: JobEntity[];
+  directJobId?: number | null;
+  directJob?: JobEntity | null;
 }
-export default function FullForm({ employer, preferences, utm, employerJobs }: FullFormProps) {
-  const [jobs, setJobs] = useState<JobEntity[]>([]);
+export default function FullForm({
+  employer,
+  preferences,
+  utm,
+  employerJobs,
+  directJobId,
+  directJob,
+}: FullFormProps) {
+  const [jobs, setJobs] = useState<JobEntity[]>(directJob ? [directJob] : []);
   const [companyJobs, setCompanyJobs] = useState<JobEntity[]>(employerJobs);
   const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
   const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>([]);
+  const [directJobState, setDirectJobState] = useState<JobEntity | null>(directJob || null);
+
+  const isDirectJobApplication = Boolean(directJobId && directJob);
+
   const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
     setApplicantExtras((oldApx) => {
       oldApx = oldApx?.filter((v) => v.type != applicantExtrasEntity?.type);
@@ -41,12 +55,19 @@ export default function FullForm({ employer, preferences, utm, employerJobs }: F
   const stepNext = (): void => setSteps(steps + 1);
   const stepBack = (): void => setSteps(steps - 1);
 
-  // Total number of steps in the form
-  const totalSteps = 29; // Based on getFullFormPages in jotform-pages.tsx
+  // Calculate total steps based on application type
+  const totalSteps = getTotalSteps(isDirectJobApplication);
 
   useEffect(() => {
     setApplicant((oldValues) => ({ ...oldValues, company: employer }));
   }, [employer]);
+
+  // Auto-select the direct job if present
+  useEffect(() => {
+    if (isDirectJobApplication && directJob) {
+      setJobs([directJob]);
+    }
+  }, [isDirectJobApplication, directJob]);
 
   return (
     <JotformContext.Provider
@@ -60,6 +81,9 @@ export default function FullForm({ employer, preferences, utm, employerJobs }: F
           steps,
           utm,
           company: employer,
+          directJobId,
+          directJob: directJobState,
+          isDirectJobApplication,
         },
         method: {
           setApplicant,
@@ -70,16 +94,17 @@ export default function FullForm({ employer, preferences, utm, employerJobs }: F
           setSteps,
           stepNext,
           stepBack,
+          setDirectJob: setDirectJobState,
         },
       }}
     >
       <div className={styles.container}>
         <div className={styles.main}>
-          <div className={styles.main_form} style={getFullFormStyle(steps)}>
+          <div className={styles.main_form} style={getFullFormStyle(steps, isDirectJobApplication)}>
             {steps > 0 && steps < totalSteps - 1 && (
               <FormProgress currentStep={steps} totalSteps={totalSteps} />
             )}
-            {getFullFormPages(steps)}
+            {getFullFormPages(steps, isDirectJobApplication)}
           </div>
         </div>
       </div>
@@ -93,6 +118,7 @@ export default function FullForm({ employer, preferences, utm, employerJobs }: F
 export async function getServerSideProps({ query }: NextPageContext) {
   try {
     let slug = String(query?.slug);
+    const jobId = query?.jobId ? parseInt(String(query.jobId), 10) : null;
 
     const utm: UtmReferral = {
       utm_source: (query?.utm_source as string) ?? null,
@@ -128,7 +154,41 @@ export async function getServerSideProps({ query }: NextPageContext) {
       withoutPagination: true,
     })) as JobEntity[];
 
-    return { props: { employer, preferences, utm, employerJobs } };
+    // Handle direct job application
+    let directJob: JobEntity | null = null;
+    if (jobId) {
+      try {
+        directJob = await jobApi.getById(jobId);
+
+        // Verify that the job belongs to the specified company
+        if (!directJob || directJob.company?.id !== employer.id) {
+          console.error(
+            `form/jotform: Job ${jobId} not found or doesn't belong to company ${employer.name}`
+          );
+          return { notFound: true };
+        }
+
+        // Verify job is active
+        if (directJob.status !== Status.ACTIVE) {
+          console.error(`form/jotform: Job ${jobId} is not active (status = ${directJob.status})`);
+          return { notFound: true };
+        }
+      } catch (error) {
+        console.error(`form/jotform: Error fetching job ${jobId}:`, error.message);
+        return { notFound: true };
+      }
+    }
+
+    return {
+      props: {
+        employer,
+        preferences,
+        utm,
+        employerJobs,
+        directJobId: jobId,
+        directJob,
+      },
+    };
   } catch (error) {
     console.error(
       `form/jotform: Exception when attempting to fetch details for companyId: ${query?.companyId}`,
