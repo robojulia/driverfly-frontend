@@ -19,7 +19,7 @@ import { CheckboxGroup, Select, Banner } from '../../../shared/dha';
 
 export function Preferences() {
   const {
-    state: { applicant, applicantExtras, jobs, utm, company },
+    state: { applicant, applicantExtras, jobs, utm, company, isEditingExistingApplicant },
     method: { setApplicant, setApplicantExtras, updateApplicantExtras, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
@@ -42,12 +42,29 @@ export function Preferences() {
         updateApplicantExtras(REQUIRE_W2_EMPLOYMENT);
         updateApplicantExtras(OTHER_ABSOLUTELY_REQUIREMENTS);
 
-        const data = await applicantApi.jotform.create(company.id, {
-          applicant: { ...applicant, preferred_location, routes },
-          applicantExtras,
-          jobs,
-          utm,
-        });
+        let data;
+
+        if (isEditingExistingApplicant && applicant?.id) {
+          // UPDATE existing applicant - this is much more efficient!
+          console.log('Updating existing applicant:', applicant.id);
+          data = await applicantApi.jotform.update(applicant.id, {
+            applicant: { ...applicant, preferred_location, routes },
+            applicantExtras,
+            jobs,
+            utm,
+          });
+
+          toast.success(t('APPLICATION_UPDATED_SUCCESSFULLY'));
+        } else {
+          // CREATE new applicant (original flow)
+          console.log('Creating new applicant for company:', company.id);
+          data = await applicantApi.jotform.create(company.id, {
+            applicant: { ...applicant, preferred_location, routes },
+            applicantExtras,
+            jobs,
+            utm,
+          });
+        }
 
         setApplicantExtras(data?.extras);
         setApplicant({
@@ -139,8 +156,12 @@ export function Preferences() {
   return (
     <>
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
-        {t('PREFERENCES')}
+        {isEditingExistingApplicant ? t('UPDATE_PREFERENCES') : t('PREFERENCES')}
       </h1>
+
+      {isEditingExistingApplicant && (
+        <Banner message={t('UPDATING_EXISTING_APPLICATION_MESSAGE')} variant="info" />
+      )}
 
       {errorMessage && (
         <Banner message={t(errorMessage)} variant="error" onDismiss={() => setErrorMessage(null)} />

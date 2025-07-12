@@ -443,4 +443,12 @@ export default class ApplicantApi extends BaseApi {
     const { data } = await this.get(`${this.baseUrl}/search-lite?${query.toString()}`);
     return data;
   }
+
+  // Get all jobs that an applicant has applied for by phone number
+  async getAppliedJobsByPhone(phone: string): Promise<ApplicantJobEntity[]> {
+    const { data } = await this.get(
+      `${this.baseUrl}/applied-jobs-by-phone?phone=${encodeURIComponent(phone)}`
+    );
+    return data;
+  }
 }

@@ -4,6 +4,7 @@ import { Button, Col, Form, Row, Alert, Spinner } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import JotformContext, { JotFormContextType } from '../../../../../context/jotform-context';
 import { ApplicantExtras } from '../../../../../enums/applicants/applicant-extras.enum';
+import { ApplicantStatus } from '../../../../../enums/applicants/applicant-status.enum';
 import { MessageStatus } from '../../../../../enums/conversation/message-status.enum';
 import { useTranslation } from '../../../../../hooks/use-translation';
 import { ApplicantOTPEntity } from '../../../../../models/applicant/applicant-otp.entity';
@@ -19,14 +20,24 @@ import { OTPInput, FormLabel } from '../../../../shared/dha';
 import { PrimaryButton, SecondaryButton } from '../../form-buttons';
 import { socketInitializer } from './socketInitializer';
 
+// Types for better UX flow management
+interface ExistingApplicantScenario {
+  type: 'SAME_COMPANY_SAME_JOB' | 'SAME_COMPANY_NEW_JOB' | 'DIFFERENT_COMPANY' | 'NEW_APPLICANT';
+  applicant?: any;
+  hasAppliedToCurrentJob?: boolean;
+  jobTitle?: string;
+  companyName?: string;
+}
+
 export function PhoneNumber() {
   const {
-    state: { applicant, companyJobs, steps, company },
+    state: { applicant, companyJobs, steps, company, directJob, isDirectJobApplication },
     method: {
       setApplicant,
       setSteps,
       stepNext,
       stepBack,
+      setIsEditingExistingApplicant,
       // setApplicantExtras
     },
   }: JotFormContextType = useContext(JotformContext);
@@ -40,6 +51,89 @@ export function PhoneNumber() {
   const [isResending, setIsResending] = useState<boolean>(false);
   const [isVerificationSuccessful, setIsVerificationSuccessful] = useState<boolean>(false);
   const [isLoadingProfile, setIsLoadingProfile] = useState<boolean>(false);
+  const [applicantScenario, setApplicantScenario] = useState<ExistingApplicantScenario | null>(
+    null
+  );
+  const [isCreatingJobApplication, setIsCreatingJobApplication] = useState<boolean>(false);
+  const [showAlreadyAppliedAlert, setShowAlreadyAppliedAlert] = useState<boolean>(false);
+
+  // Helper function to analyze applicant scenario
+  const analyzeApplicantScenario = (existingApplicants: any[]): ExistingApplicantScenario => {
+    const currentCompanyApplicant = existingApplicants.find(
+      (applicant) => applicant.company?.id === company?.id
+    );
+
+    if (currentCompanyApplicant) {
+      // Check if they've already applied to this specific job (if it's a direct job application)
+      if (isDirectJobApplication && directJob) {
+        const hasAppliedToCurrentJob = currentCompanyApplicant.jobs?.some(
+          (job: any) => job.job?.id === directJob.id
+        );
+
+        if (hasAppliedToCurrentJob) {
+          return {
+            type: 'SAME_COMPANY_SAME_JOB',
+            applicant: currentCompanyApplicant,
+            hasAppliedToCurrentJob: true,
+            jobTitle: directJob.title,
+            companyName: company.name,
+          };
+        } else {
+          return {
+            type: 'SAME_COMPANY_NEW_JOB',
+            applicant: currentCompanyApplicant,
+            hasAppliedToCurrentJob: false,
+            jobTitle: directJob.title,
+            companyName: company.name,
+          };
+        }
+      } else {
+        // Not a direct job application, but same company
+        return {
+          type: 'SAME_COMPANY_NEW_JOB',
+          applicant: currentCompanyApplicant,
+          hasAppliedToCurrentJob: false,
+          companyName: company.name,
+        };
+      }
+    } else if (existingApplicants.length > 0) {
+      // Has applied to other companies
+      return {
+        type: 'DIFFERENT_COMPANY',
+        companyName: company.name,
+        jobTitle: directJob?.title,
+      };
+    } else {
+      // Completely new applicant
+      return {
+        type: 'NEW_APPLICANT',
+        companyName: company.name,
+        jobTitle: directJob?.title,
+      };
+    }
+  };
+
+  // Enhanced function to create job application immediately after phone verification
+  const createJobApplicationImmediately = async (applicantData: any) => {
+    if (!isDirectJobApplication || !directJob) return;
+
+    try {
+      setIsCreatingJobApplication(true);
+      const applicantApi = new ApplicantApi();
+
+      // Create the applicant-job relationship immediately
+      await applicantApi.jobs.create(applicantData.id, directJob.id, {
+        status: ApplicantStatus.NEW_APPLIED_SHORT_FORM,
+      });
+
+      toast.success(t('JOB_APPLICATION_CREATED_SUCCESS', { jobTitle: directJob.title }));
+    } catch (error) {
+      console.error('Failed to create job application:', error);
+      toast.error(t('JOB_APPLICATION_CREATION_FAILED'));
+    } finally {
+      setIsCreatingJobApplication(false);
+    }
+  };
 
   const form = useFormik({
     initialValues: new PhoneNumberDto(),
@@ -49,22 +143,43 @@ export function PhoneNumber() {
         const { phone } = values;
         const applicantApi = new ApplicantApi();
 
-        // Search for all existing applicants with this phone number
+        // Check if applicant has already applied for any jobs with this phone number
+        const appliedJobs = await applicantApi.getAppliedJobsByPhone(phone);
+
+        // Check if they've already applied to this specific job
+        if (isDirectJobApplication && directJob) {
+          const hasAppliedToCurrentJob = appliedJobs.some(
+            (appliedJob) =>
+              appliedJob.job?.id === directJob.id && appliedJob.company?.id === company?.id
+          );
+
+          if (hasAppliedToCurrentJob) {
+            // User has already applied to this specific job - show immediate alert
+            setShowAlreadyAppliedAlert(true);
+            setApplicantScenario({
+              type: 'SAME_COMPANY_SAME_JOB',
+              hasAppliedToCurrentJob: true,
+              jobTitle: directJob.title,
+              companyName: company.name,
+            });
+            return; // Don't proceed further
+          }
+        }
+
+        // If no direct conflict, continue with the existing applicant search flow
         const existingApplicants = await applicantApi.searchApplicantsByPhone({
           phone,
         });
 
-        // Check if any of the found applicants belong to the current company
-        const currentCompanyApplicant = existingApplicants.find(
-          (applicant) => applicant.company?.id === company?.id
-        );
+        // Analyze the scenario for better UX
+        const scenario = analyzeApplicantScenario(existingApplicants);
+        setApplicantScenario(scenario);
 
-        if (currentCompanyApplicant) {
-          // Applicant has previously applied to THIS company - show modal for profile recovery
+        if (scenario.type === 'SAME_COMPANY_NEW_JOB') {
+          // Show modal to confirm they want to apply to a new job with existing profile
           setOpenModal(true);
         } else {
-          // Either no existing applicants found, or applicants exist but for different companies
-          // Allow them to proceed with creating a new application for this company
+          // NEW_APPLICANT or DIFFERENT_COMPANY - proceed normally
           setApplicant({
             ...applicant,
             phone,
@@ -107,14 +222,33 @@ export function PhoneNumber() {
       // Show verification success state
       setIsVerificationSuccessful(true);
 
-      // Set applicant data
+      // Set applicant data - we're now in "edit mode"
       setApplicant(applicantExistingProfile);
+      setIsEditingExistingApplicant(true);
+
+      // Handle job application creation for SAME_COMPANY_NEW_JOB scenario
+      if (
+        applicantScenario?.type === 'SAME_COMPANY_NEW_JOB' &&
+        isDirectJobApplication &&
+        directJob
+      ) {
+        await createJobApplicationImmediately(applicantExistingProfile);
+      }
 
       // Add a slight delay before proceeding to next step for better UX
       setTimeout(() => {
         setOpenModal(false);
         setIsLoadingProfile(false);
-        stepNext();
+
+        // For users with existing profiles applying to new jobs, advance to Names & Basic Info
+        // to allow them to review and update their basic information
+        if (applicantScenario?.type === 'SAME_COMPANY_NEW_JOB') {
+          // Jump to step 3 (Names & Basic Info) to let them review/update their profile
+          setSteps(3);
+        } else {
+          // For other scenarios, proceed normally to next step
+          stepNext();
+        }
       }, 2000);
     } catch (error) {
       globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
@@ -123,17 +257,113 @@ export function PhoneNumber() {
     }
   };
 
-  const handleLeavePreviousProfile = () => {
-    setOpenModal(false);
-    setApplicant({
-      ...applicant,
-      phone: form.values.phone,
-    });
-    stepNext();
+  // Helper function to get modal title based on scenario
+  const getModalTitle = (): string => {
+    switch (applicantScenario?.type) {
+      case 'SAME_COMPANY_SAME_JOB':
+        return t('EXISTING_APPLICATION_FOUND');
+      case 'SAME_COMPANY_NEW_JOB':
+        return t('EXISTING_PROFILE_FOUND');
+      default:
+        return t('EXISTING_ACCOUNT_FOUND');
+    }
+  };
+
+  // Helper function to get modal content based on scenario
+  const getModalContent = (): JSX.Element => {
+    if (!applicantScenario) return null;
+
+    switch (applicantScenario.type) {
+      case 'SAME_COMPANY_SAME_JOB':
+        return (
+          <Alert variant="warning" className="mb-4">
+            <div className="text-center">
+              <i
+                className="fa fa-exclamation-triangle mb-3"
+                style={{ fontSize: '48px', color: '#ffc107' }}
+              />
+              <h5 className="mb-3">{t('ALREADY_APPLIED_TO_THIS_JOB')}</h5>
+              <p className="mb-2">
+                {t('ALREADY_APPLIED_MESSAGE', {
+                  jobTitle: applicantScenario.jobTitle,
+                  companyName: applicantScenario.companyName,
+                })}
+              </p>
+              <p className="mb-3">{t('REVIEW_AND_UPDATE_ENCOURAGEMENT')}</p>
+              <p className="mb-0 text-success">
+                <i className="fa fa-check-circle me-2" />
+                {t('CHOOSE_REVIEW_UPDATE')}
+              </p>
+            </div>
+          </Alert>
+        );
+
+      case 'SAME_COMPANY_NEW_JOB':
+        return (
+          <Alert variant="success" className="mb-4">
+            <div className="text-center">
+              <i className="fa fa-user-check mb-3" style={{ fontSize: '48px', color: '#28a745' }} />
+              <h5 className="mb-3">{t('WELCOME_BACK')}</h5>
+              <p className="mb-2">
+                {t('WELCOME_BACK_EXISTING_PROFILE', {
+                  companyName: applicantScenario.companyName,
+                })}
+              </p>
+              {applicantScenario.jobTitle && (
+                <p className="mb-2">
+                  <strong>
+                    {t('YOU_ARE_APPLYING_FOR_JOB', {
+                      jobTitle: applicantScenario.jobTitle,
+                    })}
+                  </strong>
+                </p>
+              )}
+              <p className="mb-0">
+                {t(
+                  'We will update your profile and submit your application for this new position.'
+                )}
+              </p>
+            </div>
+          </Alert>
+        );
+
+      default:
+        return (
+          <Alert variant="info" className="mb-4">
+            <h5 className="mb-2">{t('EXISTING_PROFILE_FOUND')}</h5>
+            <p className="mb-0">
+              {t('This phone number is associated with an existing application to this company.')}
+            </p>
+          </Alert>
+        );
+    }
   };
 
   const onCloseClick = () => {
     setOpenModal(false);
+  };
+
+  const handleGoToMyApplication = async () => {
+    // User wants to access their existing application
+    try {
+      const applicantApi = new ApplicantApi();
+      const { phone } = form.values;
+      const OTPresponse = await applicantApi.requestOTP({ phone });
+      setOtpApplicant(OTPresponse);
+      seShowtOtpField(true);
+      setOpenModal(true); // Open the modal to show OTP verification
+      // Don't hide the alert immediately - let the OTP flow take precedence
+    } catch (error) {
+      console.error('Failed to send OTP:', error);
+      toast.error(t('UNABLE_TO_SEND_OTP'));
+    }
+  };
+
+  const handleTryDifferentPhone = () => {
+    // Reset the form to allow user to enter a different phone number
+    setShowAlreadyAppliedAlert(false);
+    setApplicantScenario(null);
+    form.resetForm();
   };
 
   const requestOTP = async () => {
@@ -250,9 +480,47 @@ export function PhoneNumber() {
         </Alert>
       </div>
 
+      {/* Already Applied Alert - Show immediately when user has already applied but not during OTP flow */}
+      {showAlreadyAppliedAlert && applicantScenario && !showOtpField && (
+        <div className="mb-4">
+          <Alert variant="warning" className="border-warning">
+            <div className="text-center">
+              <i
+                className="fa fa-exclamation-triangle mb-3"
+                style={{ fontSize: '48px', color: '#ffc107' }}
+              />
+              <h4 className="mb-3">{t('ALREADY_APPLIED_TO_THIS_JOB')}</h4>
+              <p className="mb-3">
+                {t('ALREADY_APPLIED_MESSAGE', {
+                  jobTitle: applicantScenario.jobTitle,
+                  companyName: applicantScenario.companyName,
+                })}
+              </p>
+              <p className="mb-4 text-info">
+                {t(
+                  'You can access your existing application to review or update it, or try with a different phone number if this is not your application.'
+                )}
+              </p>
+
+              <div className="d-flex justify-content-center gap-3">
+                <PrimaryButton onClick={handleGoToMyApplication} className="px-4 py-2">
+                  <i className="fa fa-file-text me-2" />
+                  {t('GO_TO_MY_APPLICATION')}
+                </PrimaryButton>
+
+                <SecondaryButton onClick={handleTryDifferentPhone} className="px-4 py-2">
+                  <i className="fa fa-phone me-2" />
+                  {t('TRY_DIFFERENT_PHONE')}
+                </SecondaryButton>
+              </div>
+            </div>
+          </Alert>
+        </div>
+      )}
+
       <ViewModal
         show={openModal}
-        title={t('EXISTING_ACCOUNT_FOUND')}
+        title={getModalTitle()}
         size="lg"
         onCloseClick={onCloseClick}
         footer={
@@ -271,9 +539,9 @@ export function PhoneNumber() {
               </SecondaryButton>
               <PrimaryButton
                 onClick={verifyOTP}
-                disabled={isVerificationSuccessful || isLoadingProfile}
+                disabled={isVerificationSuccessful || isLoadingProfile || isCreatingJobApplication}
               >
-                {isLoadingProfile ? (
+                {isLoadingProfile || isCreatingJobApplication ? (
                   <>
                     <Spinner
                       as="span"
@@ -283,7 +551,7 @@ export function PhoneNumber() {
                       aria-hidden="true"
                       style={{ marginRight: '0.5rem' }}
                     />
-                    {t('LOADING')}
+                    {isCreatingJobApplication ? t('CREATING_APPLICATION') : t('LOADING')}
                   </>
                 ) : (
                   t('VERIFY_CODE')
@@ -307,7 +575,19 @@ export function PhoneNumber() {
                       aria-hidden="true"
                     ></i>
                     <h5 className="mb-2">{t('VERIFICATION_SUCCESSFUL')}</h5>
-                    <p className="mb-0">{t('LOADING_PROFILE_DATA')}</p>
+                    <p className="mb-0">
+                      {applicantScenario?.type === 'SAME_COMPANY_SAME_JOB'
+                        ? t('PREPARING_APPLICATION_UPDATE')
+                        : applicantScenario?.type === 'SAME_COMPANY_NEW_JOB'
+                        ? t('ADVANCING_TO_APPLICATION_REVIEW')
+                        : t('LOADING_PROFILE_DATA')}
+                    </p>
+                    {applicantScenario?.type === 'SAME_COMPANY_SAME_JOB' && (
+                      <p className="mt-2 mb-0 text-success">
+                        <i className="fa fa-edit me-2" />
+                        {t('REDIRECTING_TO_UPDATE_APPLICATION')}
+                      </p>
+                    )}
                     <div className="mt-3">
                       <Spinner animation="border" variant="primary" />
                     </div>
@@ -374,22 +654,21 @@ export function PhoneNumber() {
             </>
           ) : (
             <>
-              <Alert variant="info" className="mb-4">
-                <h5 className="mb-2">{t('We Found Your Previous Application')}</h5>
-                <p className="mb-0">
-                  {t(
-                    'This phone number is already associated with an existing application to this company in our system.'
-                  )}
-                </p>
-              </Alert>
+              {/* Smart content based on scenario */}
+              {getModalContent()}
 
               <div className="text-center mb-4">
-                <h5>{t('You have two options:')}</h5>
+                {applicantScenario?.type === 'SAME_COMPANY_SAME_JOB' ? (
+                  <h5>{t('UPDATE_EXISTING_APPLICATION')}</h5>
+                ) : (
+                  <h5>{t('CONTINUE_WITH_EXISTING_PROFILE')}</h5>
+                )}
+
                 <div className="d-flex justify-content-center mt-4">
                   <div
-                    className="text-center mx-3 p-3 border rounded"
+                    className="text-center mx-auto p-4 border rounded"
                     style={{
-                      width: '250px',
+                      maxWidth: '400px',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease-in-out',
                       boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
@@ -406,39 +685,19 @@ export function PhoneNumber() {
                       e.currentTarget.style.transform = 'translateY(0)';
                     }}
                   >
-                    <h6 className="font-weight-bold text-primary">
-                      {t('Access Existing Profile')}
+                    <h6 className="font-weight-bold text-primary mb-3">
+                      {applicantScenario?.type === 'SAME_COMPANY_SAME_JOB'
+                        ? t('UPDATE_MY_APPLICATION')
+                        : t('USE_EXISTING_PROFILE')}
                     </h6>
-                    <p className="text-muted">
-                      {t(
-                        "Continue with your previous information. We'll send a verification code to your phone."
-                      )}
+                    <p className="text-muted mb-3">
+                      {applicantScenario?.type === 'SAME_COMPANY_SAME_JOB'
+                        ? t('ENHANCE_APPLICATION_DESCRIPTION')
+                        : t('USE_EXISTING_PROFILE_DESCRIPTION')}
                     </p>
-                  </div>
-                  <div
-                    className="text-center mx-3 p-3 border rounded"
-                    style={{
-                      width: '250px',
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease-in-out',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-                    }}
-                    onClick={handleLeavePreviousProfile}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#f8f9fa';
-                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = '';
-                      e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                    }}
-                  >
-                    <h6 className="font-weight-bold text-primary">{t('Start Fresh')}</h6>
-                    <p className="text-muted">
-                      {t('Begin a new application with this phone number.')}
-                    </p>
+                    <Button variant="primary" className="px-4">
+                      {t('CONTINUE')}
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -446,50 +705,54 @@ export function PhoneNumber() {
           )}
         </div>
       </ViewModal>
-      <Form
-        className={`${styles.align__text_left} ${styles.formStep}`}
-        onSubmit={form.handleSubmit}
-        onReset={form.handleReset}
-      >
-        <div style={{ maxWidth: '600px', margin: '0' }}>
-          <Row className={styles.bold}>
-            <div className="col-12 my-3">
-              <BaseInputPhone
-                className="w-100"
-                required
-                name="phone"
-                label="Phone Number"
-                formik={form}
-              />
-            </div>
-          </Row>
-        </div>
 
-        <FormActions
-          onNext={() => {
-            const syntheticEvent = {
-              preventDefault: () => {},
-              target: {},
-            } as any;
-            form.handleSubmit(syntheticEvent);
-          }}
-          onBack={() => {
-            const syntheticEvent = {
-              preventDefault: () => {},
-              target: {},
-            } as any;
-            form.handleReset(syntheticEvent);
-          }}
-          isSubmitting={form.isSubmitting}
-          isValid={form.isValid && !form.isValidating}
-          nextButtonText={
-            <>
-              {t('NEXT')} <LoaderIcon isLoading={!!form?.isSubmitting} />
-            </>
-          }
-          backButtonText={t('BACK')}
-        />
-      </Form>
+      {/* Show form only if not showing already applied alert AND not showing OTP field */}
+      {!showAlreadyAppliedAlert && !showOtpField && (
+        <Form
+          className={`${styles.align__text_left} ${styles.formStep}`}
+          onSubmit={form.handleSubmit}
+          onReset={form.handleReset}
+        >
+          <div style={{ maxWidth: '600px', margin: '0' }}>
+            <Row className={styles.bold}>
+              <div className="col-12 my-3">
+                <BaseInputPhone
+                  className="w-100"
+                  required
+                  name="phone"
+                  label="Phone Number"
+                  formik={form}
+                />
+              </div>
+            </Row>
+          </div>
+
+          <FormActions
+            onNext={() => {
+              const syntheticEvent = {
+                preventDefault: () => {},
+                target: {},
+              } as any;
+              form.handleSubmit(syntheticEvent);
+            }}
+            onBack={() => {
+              const syntheticEvent = {
+                preventDefault: () => {},
+                target: {},
+              } as any;
+              form.handleReset(syntheticEvent);
+            }}
+            isSubmitting={form.isSubmitting}
+            isValid={form.isValid && !form.isValidating}
+            nextButtonText={
+              <>
+                {t('NEXT')} <LoaderIcon isLoading={!!form?.isSubmitting} />
+              </>
+            }
+            backButtonText={t('BACK')}
+          />
+        </Form>
+      )}
     </>
   );
 }

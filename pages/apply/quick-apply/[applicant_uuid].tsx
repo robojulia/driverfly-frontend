@@ -1,14 +1,17 @@
-import { NextPageContext } from "next";
-import { useState } from "react";
-import "react-toastify/dist/ReactToastify.css";
-import { getQuickApplyPages, getQuickApplyStyle } from "../../../components/forms/jotform/quick-apply-pages";
-import JotformContext from "../../../context/jotform-context";
-import { ApplicantEntity, ApplicantExtrasEntity } from "../../../models/applicant";
-import { CompanyPreferenceEntity } from "../../../models/company/company-preferences.entity";
-import { CompanyEntity } from "../../../models/company/company.entity";
-import styles from "../../../styles/digitalhiringapp.module.css";
-import ApplicantApi from "../../api/applicant";
-import CompanyApi from "../../api/company";
+import { NextPageContext } from 'next';
+import { useState } from 'react';
+import 'react-toastify/dist/ReactToastify.css';
+import {
+  getQuickApplyPages,
+  getQuickApplyStyle,
+} from '../../../components/forms/jotform/quick-apply-pages';
+import JotformContext from '../../../context/jotform-context';
+import { ApplicantEntity, ApplicantExtrasEntity } from '../../../models/applicant';
+import { CompanyPreferenceEntity } from '../../../models/company/company-preferences.entity';
+import { CompanyEntity } from '../../../models/company/company.entity';
+import styles from '../../../styles/digitalhiringapp.module.css';
+import ApplicantApi from '../../api/applicant';
+import CompanyApi from '../../api/company';
 
 export interface QuickApplyProps {
   entity: ApplicantEntity;
@@ -18,12 +21,11 @@ export interface QuickApplyProps {
 export default function QuickApply({ entity, company, preferences }: QuickApplyProps) {
   const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
   const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>(entity.extras);
+  const [isEditingExistingApplicant, setIsEditingExistingApplicant] = useState<boolean>(true); // Quick apply is always editing existing
   const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
     setApplicantExtras((oldApx) => {
-      oldApx = oldApx?.filter((v) => (v.type != applicantExtrasEntity?.type));
-      return !!oldApx
-        ? [...oldApx, { ...applicantExtrasEntity }]
-        : [{ ...applicantExtrasEntity }];
+      oldApx = oldApx?.filter((v) => v.type != applicantExtrasEntity?.type);
+      return !!oldApx ? [...oldApx, { ...applicantExtrasEntity }] : [{ ...applicantExtrasEntity }];
     });
 
   const [steps, setSteps] = useState<number>(0);
@@ -39,6 +41,7 @@ export default function QuickApply({ entity, company, preferences }: QuickApplyP
           companyPreferences: preferences,
           steps,
           company,
+          isEditingExistingApplicant,
         },
         method: {
           setApplicant,
@@ -46,6 +49,7 @@ export default function QuickApply({ entity, company, preferences }: QuickApplyP
           setApplicantExtras,
           stepNext,
           stepBack,
+          setIsEditingExistingApplicant,
         },
       }}
     >
@@ -74,27 +78,21 @@ export async function getServerSideProps({ query }: NextPageContext) {
     if (!!!applicant_uuid) return { notFound: true };
 
     const applicantApi = new ApplicantApi();
-    const entity: ApplicantEntity = await applicantApi.fetchByUuidToken(
-      applicant_uuid,
-      {
-        withRelations: [
-          "extras",
-          "documents",
-          "employers",
-          "accident_history",
-          "moving_violation_history",
-        ]
-      }
-    );
+    const entity: ApplicantEntity = await applicantApi.fetchByUuidToken(applicant_uuid, {
+      withRelations: [
+        'extras',
+        'documents',
+        'employers',
+        'accident_history',
+        'moving_violation_history',
+      ],
+    });
 
     if (!!!entity) return { notFound: true };
 
     const companyApi = new CompanyApi();
-    const company: CompanyEntity = await companyApi.employer.getById(
-      entity?.company?.id
-    );
-    const preferences: CompanyPreferenceEntity[] =
-      await companyApi.preferences.list(company.id);
+    const company: CompanyEntity = await companyApi.employer.getById(entity?.company?.id);
+    const preferences: CompanyPreferenceEntity[] = await companyApi.preferences.list(company.id);
     entity.company = company;
 
     return { props: { entity, company, preferences } };

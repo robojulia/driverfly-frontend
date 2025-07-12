@@ -42,6 +42,7 @@ export default function FullForm({
   const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
   const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>([]);
   const [directJobState, setDirectJobState] = useState<JobEntity | null>(directJob || null);
+  const [isEditingExistingApplicant, setIsEditingExistingApplicant] = useState<boolean>(false);
 
   const isDirectJobApplication = Boolean(directJobId && directJob);
 
@@ -84,6 +85,7 @@ export default function FullForm({
           directJobId,
           directJob: directJobState,
           isDirectJobApplication,
+          isEditingExistingApplicant,
         },
         method: {
           setApplicant,
@@ -95,6 +97,7 @@ export default function FullForm({
           stepNext,
           stepBack,
           setDirectJob: setDirectJobState,
+          setIsEditingExistingApplicant,
         },
       }}
     >

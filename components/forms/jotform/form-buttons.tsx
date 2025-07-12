@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styles from '../../../styles/digitalhiringapp.module.css';
 import { useTranslation } from '../../../hooks/use-translation';
+import JotformContext, { JotFormContextType } from '../../../context/jotform-context';
 
 interface PrimaryButtonProps {
   onClick?: () => void;

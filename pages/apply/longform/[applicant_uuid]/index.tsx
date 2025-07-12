@@ -32,6 +32,7 @@ export default function LongForm({
   const [applicant, setApplicant] = useState<ApplicantEntity>(initialApplicant);
   const [applicantExtras, setApplicantExtras] =
     useState<ApplicantExtrasEntity[]>(initialApplicantExtras);
+  const [isEditingExistingApplicant, setIsEditingExistingApplicant] = useState<boolean>(true); // Long form is always editing existing
   const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
     setApplicantExtras((oldApx) => {
       oldApx = oldApx?.filter((v) => v.type != applicantExtrasEntity?.type);
@@ -105,6 +106,7 @@ export default function LongForm({
           companyPreferences,
           steps,
           company: applicant?.company,
+          isEditingExistingApplicant,
         },
         method: {
           setApplicant,
@@ -114,6 +116,7 @@ export default function LongForm({
           setSteps,
           stepNext,
           stepBack,
+          setIsEditingExistingApplicant,
         },
       }}
     >

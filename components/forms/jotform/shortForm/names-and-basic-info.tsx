@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useRef } from 'react';
 import { useFormik } from 'formik';
 import Form from 'react-bootstrap/Form';
 import { Row } from 'react-bootstrap';
@@ -68,7 +68,14 @@ export function NamesAndBasicInfo() {
     },
   });
 
+  const hasInitialized = useRef(false);
+
   useEffect(() => {
+    // Only update if we have applicant data and haven't initialized yet
+    if (!applicant || hasInitialized.current) {
+      return;
+    }
+
     const { first_name, last_name, email, zip_code, authorize_to_communicate } = applicant;
 
     // Find existing hear about extras
@@ -86,15 +93,20 @@ export function NamesAndBasicInfo() {
       value: Boolean(utm?.referral_name) ? utm?.referral_name : null,
     };
 
-    form.setValues({
+    // Prepare the new form values
+    const newValues = {
       first_name: first_name || '',
       last_name: last_name || '',
       email: email || '',
       zip_code: zip_code || '',
       authorize_to_communicate: authorize_to_communicate || BooleanTypeExtra.YES,
-      HEAR_ABOUT_US: !!apx?.type ? apx : hearAboutObject,
-      REFERAL_NAME: !!apx_referal_name?.type ? apx_referal_name : referalNameObject,
-    });
+      HEAR_ABOUT_US: apx || hearAboutObject,
+      REFERAL_NAME: apx_referal_name || referalNameObject,
+    };
+
+    // Set values only once when component mounts with data
+    form.setValues(newValues);
+    hasInitialized.current = true;
   }, [applicant, applicantExtras, utm]);
 
   const handleNext = () => {

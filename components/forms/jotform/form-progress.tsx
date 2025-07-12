@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styles from '../../../styles/digitalhiringapp.module.css';
+import JotformContext, { JotFormContextType } from '../../../context/jotform-context';
+import { useTranslation } from '../../../hooks/use-translation';
 
 interface FormProgressProps {
   currentStep: number;
@@ -8,6 +10,11 @@ interface FormProgressProps {
 }
 
 const FormProgress: React.FC<FormProgressProps> = ({ currentStep, totalSteps }) => {
+  const {
+    state: { isEditingExistingApplicant },
+  }: JotFormContextType = useContext(JotformContext);
+
+  const { t } = useTranslation();
   const progress = Math.min(Math.round((currentStep / (totalSteps - 1)) * 100), 100);
 
   return (
@@ -27,8 +34,18 @@ const FormProgress: React.FC<FormProgressProps> = ({ currentStep, totalSteps }) 
 
       <div className={styles.align__text_center}>
         <span className={styles.txtcolor}>
-          Step {currentStep + 1} of {totalSteps}
+          {isEditingExistingApplicant
+            ? t('UPDATING_STEP_OF_TOTAL', { currentStep: currentStep + 1, totalSteps })
+            : t('STEP_OF_TOTAL', { currentStep: currentStep + 1, totalSteps })}
         </span>
+        {isEditingExistingApplicant && (
+          <div className="mt-1">
+            <small className="text-success">
+              <i className="fa fa-edit me-1" />
+              {t('UPDATE_MODE_INDICATOR')}
+            </small>
+          </div>
+        )}
       </div>
     </div>
   );
