@@ -25,12 +25,13 @@ import { EmbeddedCodeExamples } from './embedded-code-examples';
 
 export interface CompanyFormProps extends BaseFormProps<CompanyEntity> {
   showClickToCopy?: boolean | (() => boolean);
+  skipApiCall?: boolean; // If true, form will not make API call but just pass data to onSaveComplete
 }
 
 export function CompanyForm(props: CompanyFormProps) {
   const { user } = useAuth();
   const { t } = useTranslation();
-  let { className, entity, onSaveComplete, onSaveError, showClickToCopy } = props;
+  let { className, entity, onSaveComplete, onSaveError, showClickToCopy, skipApiCall } = props;
 
   const [viewLogo, setViewLogo] = useState('');
 
@@ -38,8 +39,15 @@ export function CompanyForm(props: CompanyFormProps) {
     initialValues: new CompanyEntity(),
     validationSchema: CompanyEntity.yupSchema(t),
     onSubmit: async (dto) => {
-      const api = new CompanyApi();
       try {
+        // If skipApiCall is true, just pass the form data to onSaveComplete without making API call
+        if (skipApiCall) {
+          if (onSaveComplete) onSaveComplete(dto);
+          return;
+        }
+
+        // Normal API call flow
+        const api = new CompanyApi();
         let company = null;
         if (entity?.id) {
           company = await api.update(entity.id, dto);
