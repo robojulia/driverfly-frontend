@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { ApplicantDocumentType } from '../../enums/applicants/applicant-document-type.enum';
 import { ApplicantFormStatus } from '../../enums/applicants/applicant-form-status.enum';
 import { ApplicantOnBoardingChecklist } from '../../enums/applicants/applicant-onboarding-checklist.enum';
@@ -88,33 +88,51 @@ export default class ApplicantApi extends BaseApi {
   }
 
   async searchByPublic(params: ApplicantEntity): Promise<any> {
-    const { data } = await this.get(this.buildUrl(this.baseUrl + '/public-search', params));
+    // This is a public endpoint, so we make the call directly with axios to avoid authentication
+    const baseURL = process.env.BASE_URL_API;
+    const { data } = await axios.get(`${baseURL}/${this.baseUrl}/public-search${this.buildQueryString(params)}`);
 
     return data;
   }
   // new api to fetch applicant Profile
   async searchApplicantProfile(params: ApplicantEntity): Promise<ApplicantEntity> {
-    const { data } = await this.get(this.buildUrl(this.baseUrl + '/search-applicant', params));
+    // This is a public endpoint, so we make the call directly with axios to avoid authentication
+    const baseURL = process.env.BASE_URL_API;
+    const url = this.buildUrl(this.baseUrl + '/search-applicant', params);
+    const { data } = await axios.get(`${baseURL}/${this.baseUrl}/search-applicant${this.buildQueryString(params)}`);
 
     return data;
   }
 
   // new api to fetch all applicants by phone number
   async searchApplicantsByPhone(params: ApplicantEntity): Promise<ApplicantEntity[]> {
-    const { data } = await this.get(
-      this.buildUrl(this.baseUrl + '/search-applicants-by-phone', params)
-    );
+    // This is a public endpoint, so we make the call directly with axios to avoid authentication
+    const baseURL = process.env.BASE_URL_API;
+    const { data } = await axios.get(`${baseURL}/${this.baseUrl}/search-applicants-by-phone${this.buildQueryString(params)}`);
+
+    return data;
+  }
+
+  // new api to get most recent applicant for prefill functionality
+  async getMostRecentApplicantForPrefill(params: ApplicantEntity): Promise<ApplicantEntity> {
+    // This is a public endpoint, so we make the call directly with axios to avoid authentication
+    const baseURL = process.env.BASE_URL_API;
+    const { data } = await axios.get(`${baseURL}/${this.baseUrl}/get-recent-applicant-for-phone-number${this.buildQueryString(params)}`);
 
     return data;
   }
 
   async requestOTP(dto: ApplicantEntity): Promise<any> {
-    const { data } = await this.post(this.baseUrl + '/request-otp', dto);
+    // This is a public endpoint, so we make the call directly with axios to avoid authentication
+    const baseURL = process.env.BASE_URL_API;
+    const { data } = await axios.post(`${baseURL}/${this.baseUrl}/request-otp`, dto);
 
     return data;
   }
   async verifyOTP(dto: VerifyOTPDto): Promise<ApplicantEntity> {
-    const { data } = await this.post(this.baseUrl + '/verify-otp', dto);
+    // This is a public endpoint, so we make the call directly with axios to avoid authentication
+    const baseURL = process.env.BASE_URL_API;
+    const { data } = await axios.post(`${baseURL}/${this.baseUrl}/verify-otp`, dto);
 
     return data;
   }
@@ -375,7 +393,9 @@ export default class ApplicantApi extends BaseApi {
       jobId: number,
       dto: ApplicantJobEntity
     ): Promise<ApplicantEntity> => {
-      const { data } = await this.post(this.jobs.baseUrl(applicantId) + `/${jobId}`, dto);
+      // This is now a public endpoint, so we make the call directly with axios to avoid authentication
+      const baseURL = process.env.BASE_URL_API;
+      const { data } = await axios.post(`${baseURL}/${this.baseUrl}/${applicantId}/jobs/${jobId}`, dto);
 
       return data;
     },
@@ -446,8 +466,10 @@ export default class ApplicantApi extends BaseApi {
 
   // Get all jobs that an applicant has applied for by phone number
   async getAppliedJobsByPhone(phone: string): Promise<ApplicantJobEntity[]> {
-    const { data } = await this.get(
-      `${this.baseUrl}/applied-jobs-by-phone?phone=${encodeURIComponent(phone)}`
+    // This is a public endpoint, so we make the call directly with axios to avoid authentication
+    const baseURL = process.env.BASE_URL_API;
+    const { data } = await axios.get(
+      `${baseURL}/${this.baseUrl}/applied-jobs-by-phone?phone=${encodeURIComponent(phone)}`
     );
     return data;
   }

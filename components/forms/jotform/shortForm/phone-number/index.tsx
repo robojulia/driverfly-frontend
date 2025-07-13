@@ -19,14 +19,23 @@ import { FormActions } from '../../form-buttons';
 import { OTPInput, FormLabel } from '../../../../shared/dha';
 import { PrimaryButton, SecondaryButton } from '../../form-buttons';
 import { socketInitializer } from './socketInitializer';
+import { SameCompanySameJobAlert } from './SameCompanySameJobAlert';
+import { DifferentCompanySameApplicantAlert } from './DifferentCompanySameApplicantAlert';
 
 // Types for better UX flow management
 interface ExistingApplicantScenario {
-  type: 'SAME_COMPANY_SAME_JOB' | 'SAME_COMPANY_NEW_JOB' | 'DIFFERENT_COMPANY' | 'NEW_APPLICANT';
+  type:
+    | 'SAME_COMPANY_SAME_JOB'
+    | 'SAME_COMPANY_NEW_JOB'
+    | 'DIFFERENT_COMPANY'
+    | 'DIFFERENT_COMPANY_PREFILL'
+    | 'NEW_APPLICANT';
   applicant?: any;
   hasAppliedToCurrentJob?: boolean;
   jobTitle?: string;
   companyName?: string;
+  mostRecentCompanyName?: string;
+  mostRecentApplicant?: any;
 }
 
 export function PhoneNumber() {
@@ -56,6 +65,7 @@ export function PhoneNumber() {
   );
   const [isCreatingJobApplication, setIsCreatingJobApplication] = useState<boolean>(false);
   const [showAlreadyAppliedAlert, setShowAlreadyAppliedAlert] = useState<boolean>(false);
+  const [shouldPrefillApplication, setShouldPrefillApplication] = useState<boolean>(false);
 
   // Helper function to analyze applicant scenario
   const analyzeApplicantScenario = (existingApplicants: any[]): ExistingApplicantScenario => {
@@ -97,11 +107,14 @@ export function PhoneNumber() {
         };
       }
     } else if (existingApplicants.length > 0) {
-      // Has applied to other companies
+      // Has applied to other companies - get most recent for potential prefill
+      const mostRecentApplicant = existingApplicants[0]; // Already ordered by created_at DESC
       return {
-        type: 'DIFFERENT_COMPANY',
+        type: 'DIFFERENT_COMPANY_PREFILL',
         companyName: company.name,
         jobTitle: directJob?.title,
+        mostRecentCompanyName: mostRecentApplicant?.company?.name,
+        mostRecentApplicant: mostRecentApplicant,
       };
     } else {
       // Completely new applicant
@@ -178,8 +191,11 @@ export function PhoneNumber() {
         if (scenario.type === 'SAME_COMPANY_NEW_JOB') {
           // Show modal to confirm they want to apply to a new job with existing profile
           setOpenModal(true);
+        } else if (scenario.type === 'DIFFERENT_COMPANY_PREFILL') {
+          // Show modal to offer prefilling with previous application data
+          setOpenModal(true);
         } else {
-          // NEW_APPLICANT or DIFFERENT_COMPANY - proceed normally
+          // NEW_APPLICANT or other scenarios - proceed normally
           setApplicant({
             ...applicant,
             phone,
@@ -214,17 +230,49 @@ export function PhoneNumber() {
 
     try {
       setIsLoadingProfile(true);
-      const applicantExistingProfile = await applicantApi.verifyOTP({
-        applicantId,
-        otp,
-      });
+
+      // For DIFFERENT_COMPANY_PREFILL, we need to get the full profile for prefilling
+      let applicantProfile;
+      if (applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' && shouldPrefillApplication) {
+        // Get the most recent applicant profile with full data for prefilling
+        applicantProfile = await applicantApi.getMostRecentApplicantForPrefill({
+          phone: form.values.phone,
+        });
+
+        // Clear sensitive company-specific data while keeping personal information
+        if (applicantProfile) {
+          // Reset company-specific fields but keep personal data
+          applicantProfile.company = company;
+          applicantProfile.id = null; // This will create a new applicant
+          applicantProfile.uuid_token = null;
+          applicantProfile.jobs = [];
+          applicantProfile.notes = [];
+          applicantProfile.created_at = null;
+
+          // Keep personal information for prefilling
+          // first_name, last_name, phone, email, birthdate, etc. will be preserved
+        }
+      } else {
+        // For same company scenarios, verify OTP and get existing profile
+        applicantProfile = await applicantApi.verifyOTP({
+          applicantId,
+          otp,
+        });
+      }
 
       // Show verification success state
       setIsVerificationSuccessful(true);
 
-      // Set applicant data - we're now in "edit mode"
-      setApplicant(applicantExistingProfile);
-      setIsEditingExistingApplicant(true);
+      // Set applicant data
+      if (applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' && shouldPrefillApplication) {
+        // Use prefilled data for new company
+        setApplicant(applicantProfile);
+        setIsEditingExistingApplicant(false); // This is a new applicant with prefilled data
+      } else {
+        // Use existing profile for same company
+        setApplicant(applicantProfile);
+        setIsEditingExistingApplicant(true);
+      }
 
       // Handle job application creation for SAME_COMPANY_NEW_JOB scenario
       if (
@@ -232,7 +280,7 @@ export function PhoneNumber() {
         isDirectJobApplication &&
         directJob
       ) {
-        await createJobApplicationImmediately(applicantExistingProfile);
+        await createJobApplicationImmediately(applicantProfile);
       }
 
       // Add a slight delay before proceeding to next step for better UX
@@ -245,6 +293,12 @@ export function PhoneNumber() {
         if (applicantScenario?.type === 'SAME_COMPANY_NEW_JOB') {
           // Jump to step 3 (Names & Basic Info) to let them review/update their profile
           setSteps(3);
+        } else if (
+          applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' &&
+          shouldPrefillApplication
+        ) {
+          // For prefilled applications, go to next step to let them review prefilled data
+          stepNext();
         } else {
           // For other scenarios, proceed normally to next step
           stepNext();
@@ -264,6 +318,8 @@ export function PhoneNumber() {
         return t('EXISTING_APPLICATION_FOUND');
       case 'SAME_COMPANY_NEW_JOB':
         return t('EXISTING_PROFILE_FOUND');
+      case 'DIFFERENT_COMPANY_PREFILL':
+        return t('PREVIOUS_APPLICATION_FOUND');
       default:
         return t('EXISTING_ACCOUNT_FOUND');
     }
@@ -327,6 +383,35 @@ export function PhoneNumber() {
           </Alert>
         );
 
+      case 'DIFFERENT_COMPANY_PREFILL':
+        return (
+          <Alert variant="info" className="mb-4">
+            <div className="text-center">
+              <i className="fa fa-copy mb-3" style={{ fontSize: '48px', color: '#17a2b8' }} />
+              <h5 className="mb-3">{t('PREFILL_APPLICATION_AVAILABLE')}</h5>
+              <p className="mb-2">
+                {t('PREVIOUS_APPLICATION_DETECTED', {
+                  previousCompany: applicantScenario.mostRecentCompanyName,
+                  currentCompany: applicantScenario.companyName,
+                })}
+              </p>
+              {applicantScenario.jobTitle && (
+                <p className="mb-2">
+                  <strong>
+                    {t('YOU_ARE_APPLYING_FOR_JOB', {
+                      jobTitle: applicantScenario.jobTitle,
+                    })}
+                  </strong>
+                </p>
+              )}
+              <p className="mb-0 text-success">
+                <i className="fa fa-clock-o me-2" />
+                {t('SAVE_TIME_WITH_PREFILL')}
+              </p>
+            </div>
+          </Alert>
+        );
+
       default:
         return (
           <Alert variant="info" className="mb-4">
@@ -372,8 +457,18 @@ export function PhoneNumber() {
     const applicantApi = new ApplicantApi();
     const { phone } = form.values;
     try {
-      const OTPresponse = await applicantApi.requestOTP({ phone });
-      setOtpApplicant(OTPresponse);
+      let otpResponse;
+
+      if (applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL') {
+        // For cross-company prefill, we don't need existing applicant ID
+        // We'll use the phone number to get the most recent profile
+        otpResponse = await applicantApi.requestOTP({ phone });
+      } else {
+        // For same company scenarios, use the existing flow
+        otpResponse = await applicantApi.requestOTP({ phone });
+      }
+
+      setOtpApplicant(otpResponse);
       seShowtOtpField(true);
     } catch (error) {
       console.log('errors', error);
@@ -657,6 +752,64 @@ export function PhoneNumber() {
               {/* Smart content based on scenario */}
               {getModalContent()}
 
+              {applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' && (
+                <div className="mb-4">
+                  <h6 className="mb-3">{t('CHOOSE_APPLICATION_METHOD')}</h6>
+
+                  <div className="d-flex flex-column gap-3">
+                    {/* Option 1: Prefill with existing data */}
+                    <div
+                      className={`border rounded p-3 cursor-pointer ${
+                        shouldPrefillApplication ? 'border-primary bg-light' : ''
+                      }`}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => setShouldPrefillApplication(true)}
+                    >
+                      <div className="d-flex align-items-center">
+                        <input
+                          type="radio"
+                          name="applicationMethod"
+                          checked={shouldPrefillApplication}
+                          onChange={() => setShouldPrefillApplication(true)}
+                          className="me-3"
+                        />
+                        <div>
+                          <h6 className="mb-1">{t('PREFILL_WITH_PREVIOUS_DATA')}</h6>
+                          <p className="mb-0 text-muted small">
+                            {t('PREFILL_DESCRIPTION', {
+                              previousCompany: applicantScenario.mostRecentCompanyName,
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Option 2: Start fresh */}
+                    <div
+                      className={`border rounded p-3 cursor-pointer ${
+                        !shouldPrefillApplication ? 'border-primary bg-light' : ''
+                      }`}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => setShouldPrefillApplication(false)}
+                    >
+                      <div className="d-flex align-items-center">
+                        <input
+                          type="radio"
+                          name="applicationMethod"
+                          checked={!shouldPrefillApplication}
+                          onChange={() => setShouldPrefillApplication(false)}
+                          className="me-3"
+                        />
+                        <div>
+                          <h6 className="mb-1">{t('START_FRESH_APPLICATION')}</h6>
+                          <p className="mb-0 text-muted small">{t('START_FRESH_DESCRIPTION')}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="text-center mb-4">
                 {applicantScenario?.type === 'SAME_COMPANY_SAME_JOB' ? (
                   <h5>{t('UPDATE_EXISTING_APPLICATION')}</h5>
@@ -688,15 +841,48 @@ export function PhoneNumber() {
                     <h6 className="font-weight-bold text-primary mb-3">
                       {applicantScenario?.type === 'SAME_COMPANY_SAME_JOB'
                         ? t('UPDATE_MY_APPLICATION')
+                        : applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL'
+                        ? shouldPrefillApplication
+                          ? t('CONTINUE_WITH_PREFILL')
+                          : t('START_FRESH')
                         : t('USE_EXISTING_PROFILE')}
                     </h6>
                     <p className="text-muted mb-3">
                       {applicantScenario?.type === 'SAME_COMPANY_SAME_JOB'
                         ? t('ENHANCE_APPLICATION_DESCRIPTION')
+                        : applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL'
+                        ? shouldPrefillApplication
+                          ? t('VERIFY_IDENTITY_TO_PREFILL')
+                          : t('VERIFY_IDENTITY_TO_START_FRESH')
                         : t('USE_EXISTING_PROFILE_DESCRIPTION')}
                     </p>
-                    <Button variant="primary" className="px-4">
-                      {t('CONTINUE')}
+                    <Button
+                      variant="primary"
+                      className="px-4"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // Handle special case for DIFFERENT_COMPANY_PREFILL without prefilling
+                        if (
+                          applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' &&
+                          !shouldPrefillApplication
+                        ) {
+                          // Skip OTP verification and proceed with fresh application
+                          setApplicant({
+                            ...applicant,
+                            phone: form.values.phone,
+                          });
+                          setOpenModal(false);
+                          stepNext();
+                        } else {
+                          // Normal flow with OTP verification
+                          requestOTP();
+                        }
+                      }}
+                    >
+                      {applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' &&
+                      !shouldPrefillApplication
+                        ? t('START_APPLICATION')
+                        : t('CONTINUE')}
                     </Button>
                   </div>
                 </div>
