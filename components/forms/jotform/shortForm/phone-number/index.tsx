@@ -47,7 +47,8 @@ export function PhoneNumber() {
       stepNext,
       stepBack,
       setIsEditingExistingApplicant,
-      // setApplicantExtras
+      setIsPrefilled,
+      setApplicantExtras,
     },
   }: JotFormContextType = useContext(JotformContext);
 
@@ -266,11 +267,19 @@ export function PhoneNumber() {
       // Set applicant data
       if (applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' && shouldPrefillApplication) {
         // Use prefilled data for new company
-        setApplicant(applicantProfile);
+        setApplicant({
+          ...applicantProfile,
+          documents: applicantProfile.documents || [], // Ensure documents are explicitly set
+        });
+        setApplicantExtras(applicantProfile.extras || []); // Set the extras from the prefilled profile
         setIsEditingExistingApplicant(false); // This is a new applicant with prefilled data
       } else {
         // Use existing profile for same company
-        setApplicant(applicantProfile);
+        setApplicant({
+          ...applicantProfile,
+          documents: applicantProfile.documents || [], // Ensure documents are explicitly set
+        });
+        setApplicantExtras(applicantProfile.extras || []); // Set the extras from the existing profile
         setIsEditingExistingApplicant(true);
       }
 
@@ -291,14 +300,23 @@ export function PhoneNumber() {
         // For users with existing profiles applying to new jobs, advance to Names & Basic Info
         // to allow them to review and update their basic information
         if (applicantScenario?.type === 'SAME_COMPANY_NEW_JOB') {
-          // Jump to step 3 (Names & Basic Info) to let them review/update their profile
-          setSteps(3);
+          // For returning users updating their application, show ApplicationSummary
+          setIsPrefilled(true);
+          setIsEditingExistingApplicant(true);
+          setSteps(-1); // Special step for ApplicationSummary
+        } else if (applicantScenario?.type === 'SAME_COMPANY_SAME_JOB') {
+          // For returning users updating the same job application, show ApplicationSummary
+          setIsPrefilled(true);
+          setIsEditingExistingApplicant(true);
+          setSteps(-1); // Special step for ApplicationSummary
         } else if (
           applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' &&
           shouldPrefillApplication
         ) {
-          // For prefilled applications, go to next step to let them review prefilled data
-          stepNext();
+          // For prefilled applications, set the prefilled flag and go to ApplicationSummary
+          setIsPrefilled(true);
+          setIsEditingExistingApplicant(true);
+          setSteps(-1); // Special step for ApplicationSummary
         } else {
           // For other scenarios, proceed normally to next step
           stepNext();

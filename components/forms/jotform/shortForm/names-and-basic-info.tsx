@@ -128,7 +128,7 @@ export function NamesAndBasicInfo() {
   return (
     <>
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
-        {t('personal_information')}
+        Personal Information
       </h1>
 
       <Form

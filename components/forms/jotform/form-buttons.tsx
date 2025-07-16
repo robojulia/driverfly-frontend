@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styles from '../../../styles/digitalhiringapp.module.css';
-import { useTranslation } from '../../../hooks/use-translation';
 import JotformContext, { JotFormContextType } from '../../../context/jotform-context';
 
 interface PrimaryButtonProps {
@@ -174,33 +173,45 @@ export const SecondaryButton: React.FC<PrimaryButtonProps> = ({
 interface FormActionsProps {
   onNext?: () => void;
   onBack?: () => void;
+  onSaveAndFinish?: () => void;
   isSubmitting?: boolean;
   isValid?: boolean;
   showBackButton?: boolean;
+  showSaveAndFinish?: boolean;
   nextButtonText?: React.ReactNode;
   backButtonText?: React.ReactNode;
+  saveAndFinishText?: React.ReactNode;
 }
 
 export const FormActions: React.FC<FormActionsProps> = ({
   onNext,
   onBack,
+  onSaveAndFinish,
   isSubmitting = false,
   isValid = true,
   showBackButton = true,
+  showSaveAndFinish = false,
   nextButtonText,
   backButtonText,
+  saveAndFinishText,
 }) => {
-  const { t } = useTranslation();
+  const {
+    state: { isPrefilled },
+  }: JotFormContextType = useContext(JotformContext);
   const isMobile = useIsMobile();
+
+  // Automatically show save and finish for prefilled applications
+  const shouldShowSaveAndFinish = showSaveAndFinish || isPrefilled;
 
   const containerStyle: React.CSSProperties = {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: shouldShowSaveAndFinish ? 'space-between' : 'space-between',
     alignItems: 'center',
     gap: '1rem',
     marginTop: '2rem',
     paddingTop: '2rem',
     borderTop: '1px solid var(--medium-gray)',
+    flexWrap: 'wrap',
   };
 
   const mobileContainerStyle: React.CSSProperties = {
@@ -213,17 +224,40 @@ export const FormActions: React.FC<FormActionsProps> = ({
     <div style={isMobile ? mobileContainerStyle : containerStyle}>
       {showBackButton && (
         <SecondaryButton type="reset" onClick={onBack} style={isMobile ? { width: '100%' } : {}}>
-          {backButtonText || t('BACK')}
+          {backButtonText || 'Back'}
         </SecondaryButton>
       )}
-      <PrimaryButton
-        type="submit"
-        disabled={isSubmitting || !isValid}
-        onClick={onNext}
-        style={isMobile ? { width: '100%' } : {}}
-      >
-        {nextButtonText || t('NEXT')}
-      </PrimaryButton>
+
+      <div style={{ display: 'flex', gap: '1rem', flex: 1, justifyContent: 'flex-end' }}>
+        {shouldShowSaveAndFinish && onSaveAndFinish && (
+          <SecondaryButton
+            type="button"
+            onClick={onSaveAndFinish}
+            disabled={isSubmitting || !isValid}
+            style={
+              isMobile
+                ? { width: '100%' }
+                : {
+                    backgroundColor: 'var(--success)',
+                    color: 'white',
+                    border: '1px solid var(--success)',
+                  }
+            }
+          >
+            <i className="fa fa-save me-2" />
+            {saveAndFinishText || 'Save & Finish'}
+          </SecondaryButton>
+        )}
+
+        <PrimaryButton
+          type="submit"
+          disabled={isSubmitting || !isValid}
+          onClick={onNext}
+          style={isMobile ? { width: '100%' } : {}}
+        >
+          {nextButtonText || 'Next'}
+        </PrimaryButton>
+      </div>
     </div>
   );
 };

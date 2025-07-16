@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import styles from '../../../styles/digitalhiringapp.module.css';
 import JotformContext, { JotFormContextType } from '../../../context/jotform-context';
-import { useTranslation } from '../../../hooks/use-translation';
 
 interface FormProgressProps {
   currentStep: number;
@@ -11,11 +10,15 @@ interface FormProgressProps {
 
 const FormProgress: React.FC<FormProgressProps> = ({ currentStep, totalSteps }) => {
   const {
-    state: { isEditingExistingApplicant },
+    state: { isEditingExistingApplicant, isPrefilled },
+    method: { setSteps },
   }: JotFormContextType = useContext(JotformContext);
 
-  const { t } = useTranslation();
   const progress = Math.min(Math.round((currentStep / (totalSteps - 1)) * 100), 100);
+
+  const handleReturnToSummary = () => {
+    setSteps(-1); // Navigate to ApplicationSummary
+  };
 
   return (
     <div className={styles.progressContainer}>
@@ -35,15 +38,27 @@ const FormProgress: React.FC<FormProgressProps> = ({ currentStep, totalSteps }) 
       <div className={styles.align__text_center}>
         <span className={styles.txtcolor}>
           {isEditingExistingApplicant
-            ? t('UPDATING_STEP_OF_TOTAL', { currentStep: currentStep + 1, totalSteps })
-            : t('STEP_OF_TOTAL', { currentStep: currentStep + 1, totalSteps })}
+            ? `Updating Step ${currentStep + 1} of ${totalSteps}`
+            : `Step ${currentStep + 1} of ${totalSteps}`}
         </span>
         {isEditingExistingApplicant && (
           <div className="mt-1">
             <small className="text-success">
               <i className="fa fa-edit me-1" />
-              {t('UPDATE_MODE_INDICATOR')}
+              Updating Application
             </small>
+          </div>
+        )}
+        {isPrefilled && (
+          <div className="mt-2">
+            <button
+              type="button"
+              className="btn btn-outline-primary btn-sm"
+              onClick={handleReturnToSummary}
+            >
+              <i className="fa fa-list me-1" />
+              Return to Summary
+            </button>
           </div>
         )}
       </div>

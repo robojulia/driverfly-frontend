@@ -90,7 +90,9 @@ export default class ApplicantApi extends BaseApi {
   async searchByPublic(params: ApplicantEntity): Promise<any> {
     // This is a public endpoint, so we make the call directly with axios to avoid authentication
     const baseURL = process.env.BASE_URL_API;
-    const { data } = await axios.get(`${baseURL}/${this.baseUrl}/public-search${this.buildQueryString(params)}`);
+    const { data } = await axios.get(
+      `${baseURL}/${this.baseUrl}/public-search${this.buildQueryString(params)}`
+    );
 
     return data;
   }
@@ -99,7 +101,9 @@ export default class ApplicantApi extends BaseApi {
     // This is a public endpoint, so we make the call directly with axios to avoid authentication
     const baseURL = process.env.BASE_URL_API;
     const url = this.buildUrl(this.baseUrl + '/search-applicant', params);
-    const { data } = await axios.get(`${baseURL}/${this.baseUrl}/search-applicant${this.buildQueryString(params)}`);
+    const { data } = await axios.get(
+      `${baseURL}/${this.baseUrl}/search-applicant${this.buildQueryString(params)}`
+    );
 
     return data;
   }
@@ -108,7 +112,9 @@ export default class ApplicantApi extends BaseApi {
   async searchApplicantsByPhone(params: ApplicantEntity): Promise<ApplicantEntity[]> {
     // This is a public endpoint, so we make the call directly with axios to avoid authentication
     const baseURL = process.env.BASE_URL_API;
-    const { data } = await axios.get(`${baseURL}/${this.baseUrl}/search-applicants-by-phone${this.buildQueryString(params)}`);
+    const { data } = await axios.get(
+      `${baseURL}/${this.baseUrl}/search-applicants-by-phone${this.buildQueryString(params)}`
+    );
 
     return data;
   }
@@ -117,7 +123,11 @@ export default class ApplicantApi extends BaseApi {
   async getMostRecentApplicantForPrefill(params: ApplicantEntity): Promise<ApplicantEntity> {
     // This is a public endpoint, so we make the call directly with axios to avoid authentication
     const baseURL = process.env.BASE_URL_API;
-    const { data } = await axios.get(`${baseURL}/${this.baseUrl}/get-recent-applicant-for-phone-number${this.buildQueryString(params)}`);
+    const { data } = await axios.get(
+      `${baseURL}/${this.baseUrl}/get-recent-applicant-for-phone-number${this.buildQueryString(
+        params
+      )}`
+    );
 
     return data;
   }
@@ -395,7 +405,10 @@ export default class ApplicantApi extends BaseApi {
     ): Promise<ApplicantEntity> => {
       // This is now a public endpoint, so we make the call directly with axios to avoid authentication
       const baseURL = process.env.BASE_URL_API;
-      const { data } = await axios.post(`${baseURL}/${this.baseUrl}/${applicantId}/jobs/${jobId}`, dto);
+      const { data } = await axios.post(
+        `${baseURL}/${this.baseUrl}/${applicantId}/jobs/${jobId}`,
+        dto
+      );
 
       return data;
     },

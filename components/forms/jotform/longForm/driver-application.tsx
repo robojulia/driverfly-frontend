@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import { Form } from 'react-bootstrap';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { ApplicantExtras } from '../../../../enums/applicants/applicant-extras.enum';
@@ -18,12 +18,13 @@ export interface DriverApplicationProps {
 
 export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationProps) {
   const {
-    state: { applicant, applicantExtras, company, steps },
+    state: { applicant, applicantExtras, company, steps, isPrefilled },
     method: { setApplicant, updateApplicantExtras, stepNext },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
   const [hasSignature, setHasSignature] = useState(false);
+  const hasSkipped = useRef(false);
 
   // Initialize async form saving for this component
   const { saveFormData, isSaving } = useAsyncFormSave(applicant?.id, steps);
@@ -93,6 +94,17 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
     // Check if there's an initial signature
     setHasSignature(!!apx_sign?.value);
   }, [applicant]);
+
+  // Separate effect to handle auto-skip for prefilled applications with existing signatures
+  useEffect(() => {
+    const apx_sign = applicantExtras?.find((v) => v.type == ApplicantExtras.SIGNATURE);
+
+    // If this is a prefilled application and user already has a signature, skip this step
+    if (isPrefilled && apx_sign?.value && stepNext && !hasSkipped.current) {
+      hasSkipped.current = true;
+      stepNext();
+    }
+  }, [isPrefilled, applicantExtras, stepNext]);
 
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const now = new Date().toLocaleString('en-US', { timeZone: userTimeZone });

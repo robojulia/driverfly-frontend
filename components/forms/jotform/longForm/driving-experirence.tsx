@@ -56,11 +56,19 @@ export function DrivingExperience() {
   // Get the CDL format based on the selected state
   const cdlFormat = getCDLFormat(selectedIssuedState);
 
+  // Helper function to format date for date input
+  const formatDateForInput = (dateString: string | null): string => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '';
+    return date.toISOString().split('T')[0];
+  };
+
   // Initialize the form
   const form = useFormik({
     initialValues: {
       license_number: applicant?.license_number || '',
-      license_expiry: applicant?.license_expiry || '',
+      license_expiry: formatDateForInput(applicant?.license_expiry),
       license_state: applicant?.license_state || '',
     },
     validationSchema: DrivingExperienceDto.yupSchema(),
@@ -94,8 +102,26 @@ export function DrivingExperience() {
     const requiredFields = ['license_number', 'license_expiry', 'license_state'];
     const hasAllRequiredFields = requiredFields.every((field) => !!form.values[field]);
     const hasNoErrors = Object.keys(form.errors).length === 0;
-    setIsFormValid(hasAllRequiredFields && hasNoErrors && form.dirty);
-  }, [form.values, form.errors, form.dirty]);
+
+    // For prefilled forms, allow proceeding if all fields are filled correctly
+    // Only require dirty state if starting from empty form
+    const isEmpty = requiredFields.every((field) => !form.initialValues[field]);
+    const isValid = hasAllRequiredFields && hasNoErrors && (form.dirty || !isEmpty);
+
+    // Debug logging to understand validation state
+    console.log('Form validation state:', {
+      hasAllRequiredFields,
+      hasNoErrors,
+      isEmpty,
+      dirty: form.dirty,
+      isValid,
+      values: form.values,
+      errors: form.errors,
+      initialValues: form.initialValues,
+    });
+
+    setIsFormValid(isValid);
+  }, [form.values, form.errors, form.dirty, form.initialValues]);
 
   // Handle issuing state change
   const handleIssuedStateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -129,12 +155,23 @@ export function DrivingExperience() {
         setSelectedIssuedState(applicant.license_state);
       }
 
-      // Set form values
-      form.setValues({
+      // Set form values and mark as touched to ensure validation runs
+      const newValues = {
         license_number: applicant.license_number || '',
-        license_expiry: applicant.license_expiry || '',
+        license_expiry: formatDateForInput(applicant.license_expiry),
         license_state: applicant.license_state || '',
-      });
+      };
+
+      form.setValues(newValues);
+
+      // If we have prefilled data, mark the fields as touched to trigger validation
+      if (applicant.license_number || applicant.license_expiry || applicant.license_state) {
+        form.setTouched({
+          license_number: true,
+          license_expiry: true,
+          license_state: true,
+        });
+      }
     }
   }, [applicant]);
 
