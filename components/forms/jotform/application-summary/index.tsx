@@ -380,37 +380,43 @@ export function ApplicationSummary() {
             applicant?.last_name ||
             applicant?.email ||
             applicant?.phone) && (
-            <div className="mb-4 p-3 bg-light rounded border">
+            <div
+              className="mb-4 p-3 rounded border"
+              style={{ backgroundColor: '#f8f9fa', borderColor: '#e9ecef' }}
+            >
               <div className="d-flex align-items-center justify-content-center mb-2">
-                <i className="fa fa-user-circle text-primary me-2" style={{ fontSize: '1.5rem' }} />
-                <h4 className="mb-0">
+                <i
+                  className="fa fa-user-circle me-2"
+                  style={{ fontSize: '1.5rem', color: '#0d6efd' }}
+                />
+                <h4 className="mb-0 text-dark">
                   {applicant?.first_name || applicant?.last_name
                     ? `${applicant?.first_name || ''} ${applicant?.last_name || ''}`.trim()
                     : 'Application in Progress'}
                 </h4>
               </div>
-              <div className="text-muted">
+              <div className="text-dark">
                 {applicant?.email && (
                   <div className="mb-1">
-                    <i className="fa fa-envelope me-2" />
+                    <i className="fa fa-envelope me-2" style={{ color: '#28a745' }} />
                     {applicant.email}
                   </div>
                 )}
                 {applicant?.phone && (
                   <div className="mb-1">
-                    <i className="fa fa-phone me-2" />
+                    <i className="fa fa-phone me-2" style={{ color: '#28a745' }} />
                     {applicant.phone}
                   </div>
                 )}
                 {applicant?.zip_code && (
                   <div className="mb-1">
-                    <i className="fa fa-map-marker me-2" />
+                    <i className="fa fa-map-marker me-2" style={{ color: '#17a2b8' }} />
                     ZIP: {applicant.zip_code}
                   </div>
                 )}
                 {applicant?.license_type && (
                   <div className="mb-0">
-                    <i className="fa fa-id-card me-2" />
+                    <i className="fa fa-id-card me-2" style={{ color: '#fd7e14' }} />
                     {formatLicenseType(applicant.license_type)}
                     {applicant?.years_cdl_experience &&
                       ` • ${applicant.years_cdl_experience} years experience`}
@@ -420,7 +426,7 @@ export function ApplicationSummary() {
             </div>
           )}
 
-          <p className="text-muted">
+          <p className="text-dark">
             Review your information below and click any section to edit.
             <br />
             Click "Continue" when you're ready to proceed to the detailed application.
@@ -459,17 +465,23 @@ export function ApplicationSummary() {
 
               return (
                 <div className="d-flex align-items-center justify-content-center">
-                  <span className="me-2">Application Completion:</span>
+                  <span className="me-2 text-dark fw-bold">Application Completion:</span>
                   <div className="progress me-2" style={{ width: '200px', height: '20px' }}>
                     <div
-                      className={`progress-bar ${
-                        completionPercentage === 100 ? 'bg-success' : 'bg-warning'
-                      }`}
-                      style={{ width: `${completionPercentage}%` }}
+                      className="progress-bar"
+                      style={{
+                        width: `${completionPercentage}%`,
+                        backgroundColor:
+                          completionPercentage === 100
+                            ? '#28a745'
+                            : completionPercentage >= 50
+                            ? '#17a2b8'
+                            : '#fd7e14',
+                      }}
                     ></div>
                   </div>
-                  <span className="fw-bold">{completionPercentage}%</span>
-                  <span className="text-muted ms-2">
+                  <span className="fw-bold text-dark">{completionPercentage}%</span>
+                  <span className="ms-2 text-dark">
                     ({completeSections}/{totalSections} sections)
                   </span>
                 </div>
@@ -524,24 +536,48 @@ export function ApplicationSummary() {
                         {/* Status indicator */}
                         {isComplete ? (
                           <i
-                            className="fa fa-check-circle text-success"
-                            style={{ fontSize: '1.2rem' }}
+                            className="fa fa-check-circle"
+                            style={{
+                              fontSize: '1.5rem',
+                              color: '#198754',
+                              textShadow: '0 0 3px rgba(25,135,84,0.3)',
+                            }}
                           />
                         ) : isPartiallyComplete ? (
                           <i
-                            className="fa fa-exclamation-circle text-warning"
-                            style={{ fontSize: '1.2rem' }}
+                            className="fa fa-exclamation-triangle"
+                            style={{
+                              fontSize: '1.5rem',
+                              color: '#ff6b00',
+                              textShadow: '0 0 3px rgba(255,107,0,0.3)',
+                            }}
                           />
                         ) : (
                           <i
-                            className="fa fa-times-circle text-danger"
-                            style={{ fontSize: '1.2rem' }}
+                            className="fa fa-times-circle"
+                            style={{
+                              fontSize: '1.5rem',
+                              color: '#dc3545',
+                              textShadow: '0 0 3px rgba(220,53,69,0.3)',
+                            }}
                           />
                         )}
                       </Col>
                       <Col md={9}>
-                        <h6 className="mb-1">{section.title}</h6>
-                        <p className={`mb-0 ${isComplete ? 'text-muted' : 'text-warning'}`}>
+                        <h6
+                          className="mb-1"
+                          style={{ color: '#000000', fontWeight: '600', fontSize: '1.1rem' }}
+                        >
+                          {section.title}
+                        </h6>
+                        <p
+                          className={`mb-0`}
+                          style={{
+                            color: isComplete ? '#2c3e50' : '#000000',
+                            fontWeight: isComplete ? '400' : '600',
+                            fontSize: '0.95rem',
+                          }}
+                        >
                           {section.summary}
                         </p>
                       </Col>
@@ -571,7 +607,7 @@ export function ApplicationSummary() {
         </div>
 
         <div className="text-center mt-3  p-10">
-          <small>
+          <small className="text-dark">
             <i className="fa fa-info-circle me-1" />
             You can return to this summary anytime during the application process.
           </small>

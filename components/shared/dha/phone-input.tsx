@@ -18,6 +18,7 @@ interface PhoneInputProps {
   autoComplete?: string;
   variant?: 'default' | 'outlined' | 'filled';
   size?: 'small' | 'medium' | 'large';
+  noMargin?: boolean; // New prop to override margin
 }
 
 export const DhaPhoneInput: React.FC<PhoneInputProps> = ({
@@ -35,6 +36,7 @@ export const DhaPhoneInput: React.FC<PhoneInputProps> = ({
   autoComplete,
   variant = 'outlined',
   size = 'medium',
+  noMargin = false, // Default to false to maintain existing behavior
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [internalValue, setInternalValue] = useState(value || '1'); // Always maintain at least country code
@@ -114,7 +116,7 @@ export const DhaPhoneInput: React.FC<PhoneInputProps> = ({
   const containerStyles: React.CSSProperties = {
     position: 'relative',
     width: '100%',
-    marginBottom: '1rem',
+    marginBottom: noMargin ? '0' : '1rem', // Conditional margin based on noMargin prop
   };
 
   const focusStyles = isFocused
