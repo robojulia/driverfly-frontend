@@ -403,9 +403,7 @@ export function PhoneNumber() {
                 </p>
               )}
               <p className="mb-0">
-                {t(
-                  'We will update your profile and submit your application for this new position.'
-                )}
+                We will update your profile and submit your application for this new position.
               </p>
             </div>
           </Alert>
@@ -416,12 +414,11 @@ export function PhoneNumber() {
           <Alert variant="info" className="mb-4">
             <div className="text-center">
               <i className="fa fa-copy mb-3" style={{ fontSize: '48px', color: '#17a2b8' }} />
-              <h5 className="mb-3">{t('PREFILL_APPLICATION_AVAILABLE')}</h5>
+              <h5 className="mb-3">Prefill Application Available</h5>
               <p className="mb-2">
-                {t('PREVIOUS_APPLICATION_DETECTED', {
-                  previousCompany: applicantScenario.mostRecentCompanyName,
-                  currentCompany: applicantScenario.companyName,
-                })}
+                We found a previous application from {applicantScenario.mostRecentCompanyName}.
+                Would you like to prefill your application for {applicantScenario.companyName} to
+                save time?
               </p>
               {applicantScenario.jobTitle && (
                 <p className="mb-2">
@@ -434,7 +431,7 @@ export function PhoneNumber() {
               )}
               <p className="mb-0 text-success">
                 <i className="fa fa-clock-o me-2" />
-                {t('SAVE_TIME_WITH_PREFILL')}
+                Save time by using your previous application data
               </p>
             </div>
           </Alert>
@@ -445,7 +442,7 @@ export function PhoneNumber() {
           <Alert variant="info" className="mb-4">
             <h5 className="mb-2">{t('EXISTING_PROFILE_FOUND')}</h5>
             <p className="mb-0">
-              {t('This phone number is associated with an existing application to this company.')}
+              This phone number is associated with an existing application to this company.
             </p>
           </Alert>
         );
@@ -634,9 +631,8 @@ export function PhoneNumber() {
                     })}
                   </p>
                   <p className="mb-4 text-info">
-                    {t(
-                      'You can access your existing application to review or update it, or try with a different phone number if this is not your application.'
-                    )}
+                    You can access your existing application to review or update it, or try with a
+                    different phone number if this is not your application.
                   </p>
                 </>
               )}
@@ -659,7 +655,7 @@ export function PhoneNumber() {
                   <i className="fa fa-phone me-2" />
                   {applicantScenario.type === 'SAME_COMPANY_NO_JOB'
                     ? 'Try Different Phone'
-                    : t('TRY_DIFFERENT_PHONE')}
+                    : 'Try Different Phone Number'}
                 </SecondaryButton>
               </div>
             </div>
@@ -700,10 +696,10 @@ export function PhoneNumber() {
                       aria-hidden="true"
                       style={{ marginRight: '0.5rem' }}
                     />
-                    {isCreatingJobApplication ? t('CREATING_APPLICATION') : t('LOADING')}
+                    Creating Application...
                   </>
                 ) : (
-                  t('VERIFY_CODE')
+                  'Verify Code'
                 )}
               </PrimaryButton>
             </div>
@@ -726,15 +722,15 @@ export function PhoneNumber() {
                     <h5 className="mb-2">{t('VERIFICATION_SUCCESSFUL')}</h5>
                     <p className="mb-0">
                       {applicantScenario?.type === 'SAME_COMPANY_SAME_JOB'
-                        ? t('PREPARING_APPLICATION_UPDATE')
+                        ? 'Preparing your application for updates...'
                         : applicantScenario?.type === 'SAME_COMPANY_NEW_JOB'
-                        ? t('ADVANCING_TO_APPLICATION_REVIEW')
-                        : t('LOADING_PROFILE_DATA')}
+                        ? 'Advancing to application review...'
+                        : 'Loading profile data...'}
                     </p>
                     {applicantScenario?.type === 'SAME_COMPANY_SAME_JOB' && (
                       <p className="mt-2 mb-0 text-success">
                         <i className="fa fa-edit me-2" />
-                        {t('REDIRECTING_TO_UPDATE_APPLICATION')}
+                        Taking you to your existing application to review and update.
                       </p>
                     )}
                     <div className="mt-3">
@@ -759,7 +755,7 @@ export function PhoneNumber() {
                     isDisabled={isVerificationSuccessful || isLoadingProfile}
                   />
                   <p className="text-muted mt-2 small text-center">
-                    {t('CANT_FIND_CODE_START_FROM_SCRATCH')}
+                    Can't find the code? Check your messages or request a new one.
                   </p>
                 </div>
               )}
@@ -795,7 +791,7 @@ export function PhoneNumber() {
                         }
                       }}
                     >
-                      {isResending ? t('SENDING') : t('SEND_A_NEW_CODE')}
+                      {isResending ? 'Sending...' : 'Send a new code'}
                     </button>
                   </p>
                 </Alert>
@@ -808,7 +804,7 @@ export function PhoneNumber() {
 
               {applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' && (
                 <div className="mb-4">
-                  <h6 className="mb-3">{t('CHOOSE_APPLICATION_METHOD')}</h6>
+                  <h6 className="mb-3">Choose Application Method</h6>
 
                   <div className="d-flex flex-column gap-3">
                     {/* Option 1: Prefill with existing data */}
@@ -828,11 +824,10 @@ export function PhoneNumber() {
                           className="me-3"
                         />
                         <div>
-                          <h6 className="mb-1">{t('PREFILL_WITH_PREVIOUS_DATA')}</h6>
+                          <h6 className="mb-1">Use Previous Application Data</h6>
                           <p className="mb-0 text-muted small">
-                            {t('PREFILL_DESCRIPTION', {
-                              previousCompany: applicantScenario.mostRecentCompanyName,
-                            })}
+                            Save time by copying your information from{' '}
+                            {applicantScenario.mostRecentCompanyName}.
                           </p>
                         </div>
                       </div>
@@ -855,8 +850,10 @@ export function PhoneNumber() {
                           className="me-3"
                         />
                         <div>
-                          <h6 className="mb-1">{t('START_FRESH_APPLICATION')}</h6>
-                          <p className="mb-0 text-muted small">{t('START_FRESH_DESCRIPTION')}</p>
+                          <h6 className="mb-1">Start Fresh Application</h6>
+                          <p className="mb-0 text-muted small">
+                            Enter all your information from scratch.
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -866,9 +863,9 @@ export function PhoneNumber() {
 
               <div className="text-center mb-4">
                 {applicantScenario?.type === 'SAME_COMPANY_SAME_JOB' ? (
-                  <h5>{t('UPDATE_EXISTING_APPLICATION')}</h5>
+                  <h5>Update Existing Application</h5>
                 ) : (
-                  <h5>{t('CONTINUE_WITH_EXISTING_PROFILE')}</h5>
+                  <h5>Continue with Existing Profile</h5>
                 )}
 
                 <div className="d-flex justify-content-center mt-4">
@@ -897,18 +894,18 @@ export function PhoneNumber() {
                         ? t('UPDATE_MY_APPLICATION')
                         : applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL'
                         ? shouldPrefillApplication
-                          ? t('CONTINUE_WITH_PREFILL')
-                          : t('START_FRESH')
-                        : t('USE_EXISTING_PROFILE')}
+                          ? 'Continue with Previous Data'
+                          : 'Start Fresh'
+                        : 'Use Existing Profile'}
                     </h6>
                     <p className="text-muted mb-3">
                       {applicantScenario?.type === 'SAME_COMPANY_SAME_JOB'
-                        ? t('ENHANCE_APPLICATION_DESCRIPTION')
+                        ? "Review and enhance your existing application. We'll verify your identity first and then let you update your information."
                         : applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL'
                         ? shouldPrefillApplication
-                          ? t('VERIFY_IDENTITY_TO_PREFILL')
-                          : t('VERIFY_IDENTITY_TO_START_FRESH')
-                        : t('USE_EXISTING_PROFILE_DESCRIPTION')}
+                          ? "We'll verify your identity first, then prefill your application with previous data."
+                          : "We'll verify your identity first, then start a fresh application."
+                        : "Submit your existing information for this position. You'll be able to review and update your details after applying."}
                     </p>
                     <Button
                       variant="primary"
@@ -935,8 +932,8 @@ export function PhoneNumber() {
                     >
                       {applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' &&
                       !shouldPrefillApplication
-                        ? t('START_APPLICATION')
-                        : t('CONTINUE')}
+                        ? 'Start Application'
+                        : 'Continue'}
                     </Button>
                   </div>
                 </div>
@@ -986,10 +983,10 @@ export function PhoneNumber() {
             isValid={form.isValid && !form.isValidating}
             nextButtonText={
               <>
-                {t('NEXT')} <LoaderIcon isLoading={!!form?.isSubmitting} />
+                Next <LoaderIcon isLoading={!!form?.isSubmitting} />
               </>
             }
-            backButtonText={t('BACK')}
+            backButtonText="Back"
           />
         </Form>
       )}
