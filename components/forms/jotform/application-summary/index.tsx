@@ -98,6 +98,21 @@ export function ApplicationSummary() {
     return hasCriminalIndicator;
   };
 
+  // Helper function to check if user has any DUI history
+  const hasDuiHistory = () => {
+    return applicant?.has_past_dui === true;
+  };
+
+  // Helper function to check if safety record has any data worth showing
+  const hasSafetyRecordData = () => {
+    const hasAccidents = applicant?.accident_count > 0 || hasAccidentHistory();
+    const hasViolations = applicant?.moving_violations_count > 0 || hasViolationHistory();
+    const cannotPassDrugTest = applicant?.can_pass_drug_test === false;
+    const hasLicenseRevoked = applicant?.license_revoked === true;
+
+    return hasAccidents || hasViolations || cannotPassDrugTest || hasLicenseRevoked;
+  };
+
   // Build summary sections with single-line summaries
   const summarySections: SummarySection[] = [
     // Step 0-1: Jobs Selection
@@ -161,16 +176,20 @@ export function ApplicationSummary() {
           }) | ${applicant?.emergency_contact_number || 'No phone'}`
         : 'No emergency contact provided',
     },
-    // Step 5: Safety Record (Enhanced)
-    {
-      title: 'Safety Record',
-      stepNumber: 5,
-      summary: `Drug Test: ${applicant?.can_pass_drug_test ? 'Yes' : 'No'} | Violations: ${
-        applicant?.moving_violations_count || 0
-      } | Accidents: ${applicant?.accident_count || 0} | License Revoked: ${
-        applicant?.license_revoked ? 'Yes' : 'No'
-      }`,
-    },
+    // Safety Record - only show if user has safety-related data
+    ...(hasSafetyRecordData()
+      ? [
+          {
+            title: 'Safety Record',
+            stepNumber: 5,
+            summary: `Drug Test: ${applicant?.can_pass_drug_test ? 'Yes' : 'No'} | Violations: ${
+              applicant?.moving_violations_count || 0
+            } | Accidents: ${applicant?.accident_count || 0} | License Revoked: ${
+              applicant?.license_revoked ? 'Yes' : 'No'
+            }`,
+          },
+        ]
+      : []),
     // Accident History - only show if user has accidents
     ...(hasAccidentHistory()
       ? [
@@ -231,35 +250,51 @@ export function ApplicationSummary() {
       }
       return [];
     })(),
+    // DUI History - only show if user actually has DUI history
+    ...(hasDuiHistory()
+      ? [
+          {
+            title: 'DUI History',
+            stepNumber: 7,
+            summary: applicant?.has_past_dui
+              ? `Past DUI: Yes${
+                  applicant?.dui_years
+                    ? ` (${
+                        Array.isArray(applicant.dui_years)
+                          ? applicant.dui_years.join(', ')
+                          : applicant.dui_years
+                      })`
+                    : ''
+                }`
+              : 'Past DUI: No',
+          },
+        ]
+      : []),
     // Step 6: Transmission & Endorsements
     {
       title: 'Equipment Experience',
       stepNumber: 6,
-      summary: `Transmissions: ${
-        Array.isArray(applicant?.transmission_type)
-          ? applicant.transmission_type.join(', ')
-          : applicant?.transmission_type || 'Not specified'
-      } | Endorsements: ${
-        Array.isArray(applicant?.endorsements)
-          ? applicant.endorsements.join(', ')
-          : applicant?.endorsements || 'None'
-      }`,
-    },
-    // Step 7: DUI & Equipment
-    {
-      title: 'DUI History',
-      stepNumber: 7,
-      summary: applicant?.has_past_dui
-        ? `Past DUI: Yes${
-            applicant?.dui_years
-              ? ` (${
-                  Array.isArray(applicant.dui_years)
-                    ? applicant.dui_years.join(', ')
-                    : applicant.dui_years
-                })`
-              : ''
-          }`
-        : 'Past DUI: No',
+      summary: (() => {
+        // Handle transmissions
+        let transmissionText = 'None selected';
+        if (Array.isArray(applicant?.transmission_type) && applicant.transmission_type.length > 0) {
+          transmissionText = applicant.transmission_type.join(', ');
+        } else if (applicant?.transmission_type && !Array.isArray(applicant.transmission_type)) {
+          // Handle case where it might be a string (fallback)
+          transmissionText = String(applicant.transmission_type);
+        }
+
+        // Handle endorsements
+        let endorsementText = 'None selected';
+        if (Array.isArray(applicant?.endorsements) && applicant.endorsements.length > 0) {
+          endorsementText = applicant.endorsements.join(', ');
+        } else if (applicant?.endorsements && !Array.isArray(applicant.endorsements)) {
+          // Handle case where it might be a string (fallback)
+          endorsementText = String(applicant.endorsements);
+        }
+
+        return `Transmissions: ${transmissionText} | Endorsements: ${endorsementText}`;
+      })(),
     },
     // Step 8: Preferences
     {
@@ -339,6 +374,52 @@ export function ApplicationSummary() {
       <div className={styles.formContainer}>
         <div className="text-center mb-4">
           <h2 className="mb-3">Application Summary</h2>
+
+          {/* Applicant Identity Section */}
+          {(applicant?.first_name ||
+            applicant?.last_name ||
+            applicant?.email ||
+            applicant?.phone) && (
+            <div className="mb-4 p-3 bg-light rounded border">
+              <div className="d-flex align-items-center justify-content-center mb-2">
+                <i className="fa fa-user-circle text-primary me-2" style={{ fontSize: '1.5rem' }} />
+                <h4 className="mb-0">
+                  {applicant?.first_name || applicant?.last_name
+                    ? `${applicant?.first_name || ''} ${applicant?.last_name || ''}`.trim()
+                    : 'Application in Progress'}
+                </h4>
+              </div>
+              <div className="text-muted">
+                {applicant?.email && (
+                  <div className="mb-1">
+                    <i className="fa fa-envelope me-2" />
+                    {applicant.email}
+                  </div>
+                )}
+                {applicant?.phone && (
+                  <div className="mb-1">
+                    <i className="fa fa-phone me-2" />
+                    {applicant.phone}
+                  </div>
+                )}
+                {applicant?.zip_code && (
+                  <div className="mb-1">
+                    <i className="fa fa-map-marker me-2" />
+                    ZIP: {applicant.zip_code}
+                  </div>
+                )}
+                {applicant?.license_type && (
+                  <div className="mb-0">
+                    <i className="fa fa-id-card me-2" />
+                    {formatLicenseType(applicant.license_type)}
+                    {applicant?.years_cdl_experience &&
+                      ` • ${applicant.years_cdl_experience} years experience`}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           <p className="text-muted">
             Review your information below and click any section to edit.
             <br />
@@ -349,14 +430,30 @@ export function ApplicationSummary() {
           <div className="mt-3">
             {(() => {
               const completeSections = populatedSections.filter((section) => {
-                const isComplete =
-                  !section.summary.toLowerCase().includes('not provided') &&
-                  !section.summary.toLowerCase().includes('not uploaded') &&
-                  !section.summary.toLowerCase().includes('no ') &&
-                  section.summary.trim() !== '';
-                return isComplete;
+                // Use the same completion logic as the individual sections
+                if (section.title === 'Legal Documents') {
+                  return signatureStatus.allSigned;
+                } else if (section.title === 'Documents') {
+                  return hasDriverLicense && hasMedicalCard;
+                } else if (
+                  section.title === 'Safety Record' ||
+                  section.title === 'DUI History' ||
+                  section.title === 'Accident History' ||
+                  section.title === 'Violation History' ||
+                  section.title === 'Criminal History'
+                ) {
+                  // These sections are complete if they appear (since they only appear when data exists)
+                  return true;
+                } else {
+                  // For other sections, use the existing logic
+                  return (
+                    !section.summary.toLowerCase().includes('not provided') &&
+                    !section.summary.toLowerCase().includes('not uploaded') &&
+                    !section.summary.toLowerCase().includes('no ') &&
+                    section.summary.trim() !== ''
+                  );
+                }
               }).length;
-
               const totalSections = populatedSections.length;
               const completionPercentage = Math.round((completeSections / totalSections) * 100);
 
@@ -384,18 +481,39 @@ export function ApplicationSummary() {
         <Row>
           {populatedSections.map((section, index) => {
             // Determine if this section has complete data
-            const isComplete =
-              !section.summary.toLowerCase().includes('not provided') &&
-              !section.summary.toLowerCase().includes('not uploaded') &&
-              !section.summary.toLowerCase().includes('no ') &&
-              section.summary.trim() !== '';
+            let isComplete = false;
+            let isPartiallyComplete = false;
 
-            // Special handling for certain sections
-            const isDocumentSection = section.title === 'Documents';
-            const isSignatureSection = section.title === 'Legal Documents';
-            const isPartiallyComplete =
-              (isDocumentSection && (hasDriverLicense || hasMedicalCard)) ||
-              (isSignatureSection && signatureStatus.signed > 0);
+            // Special handling for different section types
+            if (section.title === 'Legal Documents') {
+              // Legal Documents: Complete only if all 4/4 are signed
+              isComplete = signatureStatus.allSigned;
+              isPartiallyComplete = signatureStatus.signed > 0 && !signatureStatus.allSigned;
+            } else if (section.title === 'Documents') {
+              // Documents: Complete if both driver license AND medical card are uploaded
+              isComplete = hasDriverLicense && hasMedicalCard;
+              isPartiallyComplete = hasDriverLicense || hasMedicalCard;
+            } else if (section.title === 'Safety Record') {
+              // Safety Record: If it appears, it means they provided data, so it's complete
+              isComplete = true;
+            } else if (section.title === 'DUI History') {
+              // DUI History: If it appears, it means they have DUI history, so it's complete
+              isComplete = true;
+            } else if (
+              section.title === 'Accident History' ||
+              section.title === 'Violation History' ||
+              section.title === 'Criminal History'
+            ) {
+              // These history sections: If they appear, it means data was provided, so they're complete
+              isComplete = true;
+            } else {
+              // For other sections, use the existing logic
+              isComplete =
+                !section.summary.toLowerCase().includes('not provided') &&
+                !section.summary.toLowerCase().includes('not uploaded') &&
+                !section.summary.toLowerCase().includes('no ') &&
+                section.summary.trim() !== '';
+            }
 
             return (
               <Col md={12} key={index} className="mb-3">

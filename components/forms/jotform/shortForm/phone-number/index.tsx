@@ -27,6 +27,7 @@ interface ExistingApplicantScenario {
   type:
     | 'SAME_COMPANY_SAME_JOB'
     | 'SAME_COMPANY_NEW_JOB'
+    | 'SAME_COMPANY_NO_JOB'
     | 'DIFFERENT_COMPANY'
     | 'DIFFERENT_COMPANY_PREFILL'
     | 'NEW_APPLICANT';
@@ -99,11 +100,11 @@ export function PhoneNumber() {
           };
         }
       } else {
-        // Not a direct job application, but same company
+        // No direct job application, but same company - this is a general application update
         return {
-          type: 'SAME_COMPANY_NEW_JOB',
+          type: 'SAME_COMPANY_NO_JOB',
           applicant: currentCompanyApplicant,
-          hasAppliedToCurrentJob: false,
+          hasAppliedToCurrentJob: true, // They have a general application
           companyName: company.name,
         };
       }
@@ -192,6 +193,10 @@ export function PhoneNumber() {
         if (scenario.type === 'SAME_COMPANY_NEW_JOB') {
           // Show modal to confirm they want to apply to a new job with existing profile
           setOpenModal(true);
+        } else if (scenario.type === 'SAME_COMPANY_NO_JOB') {
+          // Show "Already Applied" alert for general applications when user already has a company application
+          setShowAlreadyAppliedAlert(true);
+          // Don't proceed - let user choose to access existing application or try different phone
         } else if (scenario.type === 'DIFFERENT_COMPANY_PREFILL') {
           // Show modal to offer prefilling with previous application data
           setOpenModal(true);
@@ -306,6 +311,11 @@ export function PhoneNumber() {
           setSteps(-1); // Special step for ApplicationSummary
         } else if (applicantScenario?.type === 'SAME_COMPANY_SAME_JOB') {
           // For returning users updating the same job application, show ApplicationSummary
+          setIsPrefilled(true);
+          setIsEditingExistingApplicant(true);
+          setSteps(-1); // Special step for ApplicationSummary
+        } else if (applicantScenario?.type === 'SAME_COMPANY_NO_JOB') {
+          // For general company applications, show ApplicationSummary to review existing application
           setIsPrefilled(true);
           setIsEditingExistingApplicant(true);
           setSteps(-1); // Special step for ApplicationSummary
@@ -602,28 +612,54 @@ export function PhoneNumber() {
                 className="fa fa-exclamation-triangle mb-3"
                 style={{ fontSize: '48px', color: '#ffc107' }}
               />
-              <h4 className="mb-3">{t('ALREADY_APPLIED_TO_THIS_JOB')}</h4>
-              <p className="mb-3">
-                {t('ALREADY_APPLIED_MESSAGE', {
-                  jobTitle: applicantScenario.jobTitle,
-                  companyName: applicantScenario.companyName,
-                })}
-              </p>
-              <p className="mb-4 text-info">
-                {t(
-                  'You can access your existing application to review or update it, or try with a different phone number if this is not your application.'
-                )}
-              </p>
+              {applicantScenario.type === 'SAME_COMPANY_NO_JOB' ? (
+                <>
+                  <h4 className="mb-3">Already Applied to This Company</h4>
+                  <p className="mb-3">
+                    You already have an application with{' '}
+                    <strong>{applicantScenario.companyName}</strong>.
+                  </p>
+                  <p className="mb-4 text-info">
+                    You can access your existing application to review or update it, or try with a
+                    different phone number if this is not your application.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h4 className="mb-3">{t('ALREADY_APPLIED_TO_THIS_JOB')}</h4>
+                  <p className="mb-3">
+                    {t('ALREADY_APPLIED_MESSAGE', {
+                      jobTitle: applicantScenario.jobTitle,
+                      companyName: applicantScenario.companyName,
+                    })}
+                  </p>
+                  <p className="mb-4 text-info">
+                    {t(
+                      'You can access your existing application to review or update it, or try with a different phone number if this is not your application.'
+                    )}
+                  </p>
+                </>
+              )}
 
               <div className="d-flex justify-content-center gap-3">
-                <PrimaryButton onClick={handleGoToMyApplication} className="px-4 py-2">
+                <PrimaryButton
+                  onClick={handleGoToMyApplication}
+                  style={{ padding: '0.75rem 1rem', minWidth: '160px' }}
+                >
                   <i className="fa fa-file-text me-2" />
-                  {t('GO_TO_MY_APPLICATION')}
+                  {applicantScenario.type === 'SAME_COMPANY_NO_JOB'
+                    ? 'View My Application'
+                    : t('GO_TO_MY_APPLICATION')}
                 </PrimaryButton>
 
-                <SecondaryButton onClick={handleTryDifferentPhone} className="px-4 py-2">
+                <SecondaryButton
+                  onClick={handleTryDifferentPhone}
+                  style={{ padding: '0.75rem 1rem', minWidth: '160px' }}
+                >
                   <i className="fa fa-phone me-2" />
-                  {t('TRY_DIFFERENT_PHONE')}
+                  {applicantScenario.type === 'SAME_COMPANY_NO_JOB'
+                    ? 'Try Different Phone'
+                    : t('TRY_DIFFERENT_PHONE')}
                 </SecondaryButton>
               </div>
             </div>

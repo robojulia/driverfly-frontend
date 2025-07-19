@@ -4,9 +4,10 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import { ArrowRight, CurrencyDollar } from 'react-bootstrap-icons';
 import { useAuth } from '../../hooks/use-auth';
 import { useTranslation } from '../../hooks/use-translation';
+import { useJobAnalytics } from '../../hooks/use-job-analytics';
 import { ViewJobDetailProps } from '../../types/job/view-job-detail-props.type';
 import { buildAddress } from '../../utils/common';
-import JobApply from '../apply';
+import { EnhancedJobApply } from '../apply/enhanced-job-apply';
 import SaveJob from '../dashboard/driver/save-job';
 import FlagJob from '../flag/flag-a-job';
 import JobDescription from '../job-description/job-description';
@@ -17,6 +18,7 @@ import JobVehicles from './job-vehicles';
 import ShowFormattedDate from './show-formatted-date';
 import { isExpired } from '../../utils/date';
 import { ShowUsFormattedDateTime } from '../../utils/show-us-formatted-date-time';
+import JobApply from '../apply';
 
 export default function ViewJobDetail(props: ViewJobDetailProps) {
   const {
@@ -35,8 +37,22 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
   const { t } = useTranslation();
   const [encourageModal, setEncourageModal] = React.useState(false);
   const { user, company } = useAuth();
+  const { trackJobClick, trackApplicationStart } = useJobAnalytics();
 
-  console.log(job);
+  // Create click handlers for analytics
+  const handleQuickApplyClick = () => {
+    trackJobClick(job.id, job.company?.id, 'apply-button');
+    trackApplicationStart(job.id, job.company?.id);
+  };
+
+  const handleApplyNowClick = () => {
+    trackJobClick(job.id, job.company?.id, 'apply-button');
+    trackApplicationStart(job.id, job.company?.id);
+  };
+
+  const handleCompanyClick = () => {
+    trackJobClick(job.id, job.company?.id, 'company-name');
+  };
 
   return (
     <section className="top-links-sec ort-general p-3 vehicle-img">
@@ -75,7 +91,11 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                       <>
                         {t('BY')}{' '}
                         <Link href={`/employer/${job?.company?.slug}`}>
-                          <span role="button" className="employer text-theme">
+                          <span
+                            role="button"
+                            className="employer text-theme"
+                            onClick={handleCompanyClick}
+                          >
                             {job?.company?.name}
                           </span>
                         </Link>
@@ -101,7 +121,11 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
             {!!quick_apply ? (
               <div className="ort-btn mt-lg-4 mt-0">
                 <Link href={`/apply/suggested-job/${quick_apply}/${job.id}`}>
-                  <button type="button" className="btn theme-primary-btn">
+                  <button
+                    type="button"
+                    className="btn theme-primary-btn"
+                    onClick={handleQuickApplyClick}
+                  >
                     {' '}
                     {t('QUICK_APPLY')}
                     <ArrowRight />
@@ -109,19 +133,26 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                 </Link>
               </div>
             ) : (
-              !company?.id &&
-              canApply && <JobApply setEncourageModal={setEncourageModal} job={job} />
-            )}
-
-            {/* Direct Application Link */}
-            {canApply && job.company?.slug && (
-              <div className="ort-btn mt-3">
-                <Link href={`/apply/${job.company.slug}?jobId=${job.id}`}>
-                  <button type="button" className="btn btn-outline-primary w-100">
-                    Apply now <ArrowRight />
-                  </button>
-                </Link>
-              </div>
+              <>
+                {!company?.id && canApply && (
+                  <EnhancedJobApply setEncourageModal={setEncourageModal} job={job} />
+                )}
+                <JobApply job={job} setEncourageModal={setEncourageModal} />
+                {/* Direct Application Link */}
+                {canApply && job.company?.slug && (
+                  <div className="ort-btn mt-3">
+                    <Link href={`/apply/${job.company.slug}?jobId=${job.id}`}>
+                      <button
+                        type="button"
+                        className="btn btn-outline-primary w-100"
+                        onClick={handleApplyNowClick}
+                      >
+                        Apply now <ArrowRight />
+                      </button>
+                    </Link>
+                  </div>
+                )}
+              </>
             )}
 
             {!company?.id && canSave && <SaveJob job={job} />}

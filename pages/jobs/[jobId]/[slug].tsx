@@ -3,6 +3,7 @@ import { PublicLayout } from '../../../components/layouts/public-layout';
 import RelatedJobs from '../../../components/related-jobs/related-jobs';
 import StructuredData from '../../../components/seo/structured-data';
 import { useTranslation } from '../../../hooks/use-translation';
+import { useAutoJobViewTracking } from '../../../hooks/use-job-analytics';
 import { JobEntity } from '../../../models/job/job.entity';
 import { JobDetailProps } from '../../../types/job/job-detail-props.type';
 import { Pagination } from '../../../types/pagination.type';
@@ -12,6 +13,9 @@ export default function Detail({ job, relatedJobs, quick_apply, error }: JobDeta
   console.error('error', error);
 
   const { t } = useTranslation();
+
+  // Automatically track job view when page loads
+  useAutoJobViewTracking(job?.id, job?.company?.id);
 
   return (
     <>
@@ -52,11 +56,23 @@ export async function getServerSideProps({ params, query }) {
       take: 3,
     })) as Pagination<JobEntity>;
     return {
-      props: { job: job, relatedJobs: items, quick_apply: quick_apply || null },
+      props: {
+        job: job || {},
+        relatedJobs: items || [],
+        quick_apply: quick_apply || null,
+        error: null,
+      },
     };
   } catch (error) {
     console.error('Exception is here:', error?.response?.data);
-    return { props: { job: {}, relatedJobs: [], error: error?.response?.data } };
+    return {
+      props: {
+        job: {},
+        relatedJobs: [],
+        quick_apply: null,
+        error: error?.response?.data || null,
+      },
+    };
   }
 }
 
