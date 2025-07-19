@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
-import { Trash } from 'react-bootstrap-icons';
+import { Trash, Eye } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { ApplicantDocumentType } from '../../../../enums/applicants/applicant-document-type.enum';
@@ -15,6 +15,9 @@ import { FormActions } from '../form-buttons';
 import { DocumentCard, Checkbox, Button } from '../../../shared/dha';
 import FileInput from '../../file-input';
 import { CameraComponent } from './camera';
+import ViewModal from '../../../view-details/view-modal';
+import ViewPdf from '../../../view-details/view-pdf';
+import DocumentApi from '../../../../pages/api/document';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 
 export function MedicalCard() {
@@ -24,6 +27,7 @@ export function MedicalCard() {
   }: JotFormContextType = useContext(JotformContext);
 
   const [isFormValid, setIsFormValid] = useState(false);
+  const [viewDoc, setViewDoc] = useState('');
 
   // Initialize async form saving
   const { saveFormData } = useAsyncFormSave(applicant?.id, steps);
@@ -149,6 +153,27 @@ export function MedicalCard() {
     // }
   };
 
+  const handleViewDocument = async () => {
+    const doc = applicant?.documents?.find(isMedicalCard);
+    if (doc?.id) {
+      try {
+        const api = new DocumentApi();
+        const document = await api.getSignedUrl(doc.id);
+        console.log('Medical card document response:', document);
+        setViewDoc(document.path);
+      } catch (error) {
+        console.error('Error getting signed URL:', error);
+        toast.error('Failed to load document');
+      }
+    } else if (doc?.path) {
+      setViewDoc(doc.path);
+    }
+  };
+
+  const closeDocumentViewer = () => {
+    setViewDoc('');
+  };
+
   return (
     <>
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
@@ -184,6 +209,50 @@ export function MedicalCard() {
             icon="🏥"
           >
             <div className={styles.documentUploadSection}>
+              {/* Show existing document preview if available */}
+              {(() => {
+                const existingDoc = applicant?.documents?.find(isMedicalCard);
+                if (existingDoc && !form.values.mediaOptions) {
+                  return (
+                    <div
+                      className={styles.existingDocumentPreview}
+                      style={{ marginBottom: '1rem' }}
+                    >
+                      <div className="d-flex align-items-center justify-content-between p-3 border rounded bg-light">
+                        <div className="d-flex align-items-center">
+                          <span className="me-2">🏥</span>
+                          <div>
+                            <div className="fw-bold">Current Medical Card</div>
+                            <small className="text-muted">
+                              {existingDoc.name || 'Uploaded document'}
+                            </small>
+                          </div>
+                        </div>
+                        <div className="d-flex gap-2">
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            icon={<Eye />}
+                            onClick={handleViewDocument}
+                          >
+                            View
+                          </Button>
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            icon={<Trash />}
+                            onClick={handleRemoveDocument}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
+              })()}
+
               {Boolean(form.values.mediaOptions) ? (
                 <CameraComponent form={form} onRemove={handleApplicantExtrasCleanup} />
               ) : (
@@ -226,6 +295,57 @@ export function MedicalCard() {
           backButtonText={t('BACK')}
         />
       </Form>
+
+      {/* Document Viewers */}
+      {(() => {
+        const existingDoc = applicant?.documents?.find(isMedicalCard);
+        if (viewDoc && existingDoc) {
+          // Determine file type from name or mime_type
+          const fileName = existingDoc.name || '';
+          const isPdf =
+            existingDoc.mime_type?.includes('application/pdf') ||
+            fileName.toLowerCase().endsWith('.pdf');
+          const isImage =
+            existingDoc.mime_type?.includes('image/') ||
+            /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(fileName);
+
+          console.log('Medical card viewer logic:', {
+            fileName,
+            isPdf,
+            isImage,
+            mime_type: existingDoc.mime_type,
+            viewDoc,
+          });
+
+          if (isPdf) {
+            return (
+              <ViewPdf name={existingDoc?.name} url={viewDoc} onCloseClick={closeDocumentViewer} />
+            );
+          } else if (isImage) {
+            return (
+              <ViewModal
+                show={!!viewDoc}
+                title={existingDoc?.name || 'Medical Card'}
+                onCloseClick={closeDocumentViewer}
+              >
+                <img className="img-thumbnail w-100" src={viewDoc} alt="Medical Card" />
+              </ViewModal>
+            );
+          } else {
+            // Default to image viewer for unknown types
+            return (
+              <ViewModal
+                show={!!viewDoc}
+                title={existingDoc?.name || 'Medical Card'}
+                onCloseClick={closeDocumentViewer}
+              >
+                <img className="img-thumbnail w-100" src={viewDoc} alt="Medical Card" />
+              </ViewModal>
+            );
+          }
+        }
+        return null;
+      })()}
     </>
   );
 }

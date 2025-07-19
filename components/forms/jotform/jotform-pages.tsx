@@ -36,6 +36,7 @@ import { TransmissionAndEndorsement } from './shortForm/transmission-and-endorse
 import { DuiAndEquipment } from './shortForm/dui-and-equipment';
 import { AlreadyAppliedPage } from './already-applied';
 import { withAsyncSave } from './with-async-save';
+import { ApplicationSummary } from './application-summary';
 
 // Wrap long form components with async saving capability
 const DriverApplicationWithSave = withAsyncSave(DriverApplication, 'DriverApplication');
@@ -57,7 +58,16 @@ const FelonyConvictionWithSave = withAsyncSave(FelonyConviction, 'FelonyConvicti
 const DrugTestWithSave = withAsyncSave(DrugTest, 'DrugTest');
 const LegalDocumentsPageWithSave = withAsyncSave(LegalDocumentsPage, 'LegalDocumentsPage');
 
-const getFullFormPages = (step: number, isDirectJobApplication?: boolean): JSX.Element => {
+const getFullFormPages = (
+  step: number,
+  isDirectJobApplication?: boolean,
+  isPrefilled?: boolean
+): JSX.Element => {
+  // Special case: if isPrefilled and step is -1, show ApplicationSummary
+  if (isPrefilled && step === -1) {
+    return <ApplicationSummary />;
+  }
+
   const pages = {
     0: <SplashPage />,
     1: <AtsJobs />,

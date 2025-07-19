@@ -24,6 +24,7 @@ export default function SuggestedJobs({ entity, job, company }: SuggestedJobsPro
   const [jobs, setJobs] = useState<JobEntity[]>([job]);
   const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
   const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>(entity.extras);
+  const [isEditingExistingApplicant, setIsEditingExistingApplicant] = useState<boolean>(true); // Suggested jobs are always editing existing
 
   const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
     setApplicantExtras((oldApx) => {
@@ -49,6 +50,7 @@ export default function SuggestedJobs({ entity, job, company }: SuggestedJobsPro
           steps,
           jobs,
           company,
+          isEditingExistingApplicant,
         },
         method: {
           setApplicant,
@@ -56,6 +58,7 @@ export default function SuggestedJobs({ entity, job, company }: SuggestedJobsPro
           stepNext,
           stepBack,
           setJobs,
+          setIsEditingExistingApplicant,
         },
       }}
     >

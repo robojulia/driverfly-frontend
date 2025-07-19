@@ -17,6 +17,7 @@ export interface MissingDocumentsProps {
 
 export default function MissingDocuments({ entity }: MissingDocumentsProps) {
   const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
+  const [isEditingExistingApplicant, setIsEditingExistingApplicant] = useState<boolean>(true); // Missing docs are always editing existing
 
   const [steps, setSteps] = useState<number>(0);
   const stepNext = (): void => setSteps(steps + 1);
@@ -32,11 +33,13 @@ export default function MissingDocuments({ entity }: MissingDocumentsProps) {
           applicant,
           steps,
           company: applicant?.company,
+          isEditingExistingApplicant,
         },
         method: {
           setApplicant,
           stepNext,
           stepBack,
+          setIsEditingExistingApplicant,
         },
       }}
     >

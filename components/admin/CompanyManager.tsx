@@ -4,17 +4,26 @@ import {
   Building,
   TelephoneFill,
   Plus,
+  PlusCircle,
+  Link45deg,
   Trash,
   Gear,
   CheckCircleFill,
   XCircleFill,
+  Diagram3,
 } from 'react-bootstrap-icons';
 import ViewDataTable, { ViewTableColumn } from '../view-details/view-data-table';
 import { useTranslation } from '../../hooks/use-translation';
+import { CompanyForm } from '../forms/company/company-form';
+import { CompanyEntity } from '../../models/company/company.entity';
 import CompaniesApi, {
   CompanyWithPhoneNumber,
   ProvisionPhoneNumberRequest,
   AssignPhoneNumberRequest,
+  ParentCompanyRequest,
+  UnparentCompanyRequest,
+  PotentialParent,
+  CreateSubCompanyRequest,
 } from '../../pages/api/companies';
 
 const CompanyManager: React.FC = () => {
@@ -27,7 +36,12 @@ const CompanyManager: React.FC = () => {
   // Modal states
   const [showProvisionModal, setShowProvisionModal] = useState(false);
   const [showAssignModal, setShowAssignModal] = useState(false);
+  const [showParentModal, setShowParentModal] = useState(false);
+  const [showUnparentModal, setShowUnparentModal] = useState(false);
+  const [showCreateSubCompanyModal, setShowCreateSubCompanyModal] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<CompanyWithPhoneNumber | null>(null);
+  const [potentialParents, setPotentialParents] = useState<PotentialParent[]>([]);
+  const [parentSearchTerm, setParentSearchTerm] = useState('');
 
   // Form states
   const [provisionForm, setProvisionForm] = useState({
@@ -41,6 +55,10 @@ const CompanyManager: React.FC = () => {
   const [assignForm, setAssignForm] = useState({
     phoneNumber: '',
     twilioSid: '',
+  });
+
+  const [parentForm, setParentForm] = useState({
+    parentId: 0,
   });
 
   useEffect(() => {
@@ -164,6 +182,90 @@ const CompanyManager: React.FC = () => {
     }
   };
 
+  const handleParentCompany = async () => {
+    if (!selectedCompany || !parentForm.parentId) return;
+
+    try {
+      setActionLoading(selectedCompany.id);
+      const api = new CompaniesApi();
+
+      const request: ParentCompanyRequest = {
+        parentId: parentForm.parentId,
+      };
+
+      await api.setParentCompany(selectedCompany.id, request);
+
+      // Reload data to see the changes
+      await loadData();
+
+      // Close modal and reset form
+      setShowParentModal(false);
+      setParentForm({ parentId: 0 });
+      setSelectedCompany(null);
+    } catch (err: any) {
+      console.error('Failed to parent company:', err);
+      setError(err.response?.data?.message || 'Failed to parent company');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleSetParentCompany = async () => {
+    if (!selectedCompany || !parentForm.parentId) return;
+
+    try {
+      setActionLoading(selectedCompany.id);
+      const api = new CompaniesApi();
+
+      const request: ParentCompanyRequest = {
+        parentId: parentForm.parentId,
+      };
+
+      await api.setParentCompany(selectedCompany.id, request);
+
+      // Reload data to see the changes
+      await loadData();
+
+      // Close modal and reset form
+      setShowParentModal(false);
+      setParentForm({ parentId: 0 });
+      setSelectedCompany(null);
+      setPotentialParents([]);
+    } catch (err: any) {
+      console.error('Failed to set parent company:', err);
+      setError(err.response?.data?.message || 'Failed to set parent company');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleUnparentCompany = async () => {
+    if (!selectedCompany) return;
+
+    try {
+      setActionLoading(selectedCompany.id);
+      const api = new CompaniesApi();
+
+      const request: UnparentCompanyRequest = {
+        confirm: true,
+      };
+
+      await api.unparentCompany(selectedCompany.id, request);
+
+      // Reload data to see the changes
+      await loadData();
+
+      // Close modal and reset state
+      setShowUnparentModal(false);
+      setSelectedCompany(null);
+    } catch (err: any) {
+      console.error('Failed to unparent company:', err);
+      setError(err.response?.data?.message || 'Failed to unparent company');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const openProvisionModal = (company: CompanyWithPhoneNumber) => {
     setSelectedCompany(company);
     setShowProvisionModal(true);
@@ -172,6 +274,73 @@ const CompanyManager: React.FC = () => {
   const openAssignModal = (company: CompanyWithPhoneNumber) => {
     setSelectedCompany(company);
     setShowAssignModal(true);
+  };
+
+  const openParentModal = async (company: CompanyWithPhoneNumber) => {
+    setSelectedCompany(company);
+    try {
+      const api = new CompaniesApi();
+      const parents = await api.getPotentialParents(company.id);
+      setPotentialParents(parents);
+      setParentForm({ parentId: 0 });
+      setParentSearchTerm('');
+      setShowParentModal(true);
+    } catch (err: any) {
+      console.error('Failed to load potential parents:', err);
+      setError(err.response?.data?.message || 'Failed to load potential parents');
+    }
+  };
+
+  const openUnparentModal = (company: CompanyWithPhoneNumber) => {
+    setSelectedCompany(company);
+    setShowUnparentModal(true);
+  };
+
+  const openCreateSubCompanyModal = (company: CompanyWithPhoneNumber) => {
+    setSelectedCompany(company);
+    setShowCreateSubCompanyModal(true);
+  };
+
+  const handleCreateSubCompany = async (companyData: CompanyEntity) => {
+    if (!selectedCompany) return;
+
+    try {
+      setActionLoading(selectedCompany.id);
+      const api = new CompaniesApi();
+
+      const request: CreateSubCompanyRequest = {
+        name: companyData.name!,
+        parentId: selectedCompany.id,
+        about: companyData.about,
+        website: companyData.website,
+        location: companyData.location,
+        phone: companyData.phone,
+        facebook: companyData.facebook,
+        instagram: companyData.instagram,
+        linkedin: companyData.linkedin,
+        twitter: companyData.twitter,
+        fleet_size: companyData.fleet_size,
+        founded_year: companyData.founded_year,
+        safety_rating: companyData.safety_rating,
+        company_culture: companyData.company_culture,
+        company_benefits: companyData.company_benefits,
+        specialties: companyData.specialties,
+      };
+
+      await api.createSubCompany(request);
+
+      // Reload data to see the new sub-company
+      await loadData();
+
+      // Close modal and reset state
+      setShowCreateSubCompanyModal(false);
+      setSelectedCompany(null);
+    } catch (err: any) {
+      console.error('Failed to create sub-company:', err);
+      setError(err.response?.data?.message || 'Failed to create sub-company');
+    } finally {
+      setActionLoading(null);
+    }
   };
 
   const formatPhoneNumber = (phoneNumber: string): string => {
@@ -215,50 +384,188 @@ const CompanyManager: React.FC = () => {
     );
   };
 
-  const renderPhoneNumberActions = (company: CompanyWithPhoneNumber) => {
-    const isLoading = actionLoading === company.id;
+  const renderParentCompany = (company: CompanyWithPhoneNumber) => {
+    // Count sub-companies
+    const subCompaniesCount = companies.filter((c) => c.parent?.id === company.id).length;
 
-    if (company.managedPhoneNumber) {
+    if (!company.parent) {
       return (
-        <Button
-          variant="outline-danger"
-          size="sm"
-          onClick={() => handleReleasePhoneNumber(company)}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <Spinner animation="border" size="sm" />
-          ) : (
-            <>
-              <Trash className="me-1" />
-              Release
-            </>
+        <div className="d-flex align-items-center justify-content-between p-2">
+          <div className="d-flex align-items-center">
+            <XCircleFill className="text-muted me-2" />
+            <span className="text-muted">No parent</span>
+          </div>
+          {subCompaniesCount > 0 && (
+            <Badge bg="info" pill className="ms-2">
+              {subCompaniesCount} sub-{subCompaniesCount === 1 ? 'company' : 'companies'}
+            </Badge>
           )}
-        </Button>
+        </div>
       );
     }
 
     return (
-      <div className="d-flex gap-2">
-        <Button
-          variant="primary"
-          size="sm"
-          onClick={() => openProvisionModal(company)}
-          disabled={isLoading}
-        >
-          <Plus className="me-1" />
-          Provision
-        </Button>
-        <Button
-          variant="outline-primary"
-          size="sm"
-          onClick={() => openAssignModal(company)}
-          disabled={isLoading}
-        >
-          <Gear className="me-1" />
-          Assign
-        </Button>
+      <div className="d-flex align-items-center justify-content-between p-2">
+        <div className="d-flex align-items-center">
+          <Building className="text-primary me-2" />
+          <div className="ms-1">
+            <div className="fw-bold mb-1">{company.parent.name}</div>
+            {company.parent.slug && <div className="text-muted small">{company.parent.slug}</div>}
+          </div>
+        </div>
+        {subCompaniesCount > 0 && (
+          <Badge bg="info" pill className="ms-2 flex-shrink-0">
+            {subCompaniesCount} sub-{subCompaniesCount === 1 ? 'company' : 'companies'}
+          </Badge>
+        )}
       </div>
+    );
+  };
+
+  const renderPhoneNumberActions = (company: CompanyWithPhoneNumber) => {
+    const isLoading = actionLoading === company.id;
+
+    if (!company.managedPhoneNumber) {
+      return (
+        <div className="d-flex gap-2">
+          <Button
+            variant="outline-primary"
+            size="sm"
+            onClick={() => openProvisionModal(company)}
+            disabled={isLoading}
+            title="Provision New Number"
+          >
+            {isLoading ? (
+              <Spinner animation="border" size="sm" />
+            ) : (
+              <>
+                <PlusCircle className="me-1" />
+                Provision
+              </>
+            )}
+          </Button>
+          <Button
+            variant="outline-secondary"
+            size="sm"
+            onClick={() => openAssignModal(company)}
+            disabled={isLoading}
+            title="Assign Existing Number"
+          >
+            {isLoading ? (
+              <Spinner animation="border" size="sm" />
+            ) : (
+              <>
+                <Link45deg className="me-1" />
+                Assign
+              </>
+            )}
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <Button
+        variant="outline-danger"
+        size="sm"
+        onClick={() => handleReleasePhoneNumber(company)}
+        disabled={isLoading}
+        title="Release Number"
+      >
+        {isLoading ? (
+          <Spinner animation="border" size="sm" />
+        ) : (
+          <>
+            <Trash className="me-1" />
+            Release
+          </>
+        )}
+      </Button>
+    );
+  };
+
+  const renderParentingActions = (company: CompanyWithPhoneNumber) => {
+    const isLoading = actionLoading === company.id;
+
+    if (company.parent) {
+      return (
+        <div className="d-flex gap-2">
+          <Button
+            variant="outline-primary"
+            size="sm"
+            onClick={() => openParentModal(company)}
+            disabled={isLoading}
+            title="Change Parent"
+          >
+            {isLoading ? (
+              <Spinner animation="border" size="sm" />
+            ) : (
+              <>
+                <Diagram3 className="me-1" />
+                Change
+              </>
+            )}
+          </Button>
+          <Button
+            variant="outline-danger"
+            size="sm"
+            onClick={() => openUnparentModal(company)}
+            disabled={isLoading}
+            title="Remove Parent"
+          >
+            {isLoading ? (
+              <Spinner animation="border" size="sm" />
+            ) : (
+              <>
+                <XCircleFill className="me-1" />
+                Unparent
+              </>
+            )}
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <Button
+        variant="primary"
+        size="sm"
+        onClick={() => openParentModal(company)}
+        disabled={isLoading}
+        title="Set Parent Company"
+      >
+        {isLoading ? (
+          <Spinner animation="border" size="sm" />
+        ) : (
+          <>
+            <Diagram3 className="me-1" />
+            Set Parent
+          </>
+        )}
+      </Button>
+    );
+  };
+
+  const renderSubCompanyActions = (company: CompanyWithPhoneNumber) => {
+    const isLoading = actionLoading === company.id;
+
+    return (
+      <Button
+        variant="success"
+        size="sm"
+        onClick={() => openCreateSubCompanyModal(company)}
+        disabled={isLoading}
+        title="Create Sub-Company"
+      >
+        {isLoading ? (
+          <Spinner animation="border" size="sm" />
+        ) : (
+          <>
+            <PlusCircle className="me-1" />
+            Add Sub-Company
+          </>
+        )}
+      </Button>
     );
   };
 
@@ -298,11 +605,24 @@ const CompanyManager: React.FC = () => {
       cell: renderPhoneNumberStatus,
     },
     {
+      id: 'parent',
+      name: 'Parent Company',
+      sortable: false,
+      minWidth: '200px',
+      cell: renderParentCompany,
+    },
+    {
       id: 'actions',
       name: 'Actions',
       sortable: false,
-      minWidth: '150px',
-      cell: renderPhoneNumberActions,
+      minWidth: '200px',
+      cell: (company) => (
+        <div className="d-flex gap-2 flex-wrap">
+          {renderPhoneNumberActions(company)}
+          {renderParentingActions(company)}
+          {renderSubCompanyActions(company)}
+        </div>
+      ),
     },
   ];
 
@@ -485,6 +805,140 @@ const CompanyManager: React.FC = () => {
             )}
           </Button>
         </Modal.Footer>
+      </Modal>
+
+      {/* Parent Company Modal */}
+      <Modal show={showParentModal} onHide={() => setShowParentModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Parent Company</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            Parent <strong>{selectedCompany?.name}</strong> under another company
+          </p>
+
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Search Parent Company</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter company name"
+                value={parentSearchTerm}
+                onChange={(e) => setParentSearchTerm(e.target.value)}
+              />
+            </Form.Group>
+
+            <div>
+              {potentialParents
+                .filter(
+                  (parent) =>
+                    parent.name.toLowerCase().includes(parentSearchTerm.toLowerCase()) ||
+                    (parent.slug &&
+                      parent.slug.toLowerCase().includes(parentSearchTerm.toLowerCase()))
+                )
+                .map((parent) => (
+                  <div
+                    key={parent.id}
+                    className={`d-flex justify-content-between align-items-center p-2 border-bottom ${
+                      parentForm.parentId === parent.id ? 'bg-light' : ''
+                    }`}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setParentForm({ parentId: parent.id })}
+                  >
+                    <div>
+                      <div className="fw-bold">{parent.name}</div>
+                      {parent.slug && <div className="text-muted small">{parent.slug}</div>}
+                    </div>
+                    {parentForm.parentId === parent.id && (
+                      <CheckCircleFill className="text-success" />
+                    )}
+                  </div>
+                ))}
+
+              {potentialParents.filter(
+                (parent) =>
+                  parent.name.toLowerCase().includes(parentSearchTerm.toLowerCase()) ||
+                  (parent.slug &&
+                    parent.slug.toLowerCase().includes(parentSearchTerm.toLowerCase()))
+              ).length === 0 &&
+                parentSearchTerm && (
+                  <div className="text-muted small">No companies match your search</div>
+                )}
+
+              {potentialParents.length === 0 && !parentSearchTerm && (
+                <div className="text-muted small">No potential parents found</div>
+              )}
+            </div>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowParentModal(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={handleParentCompany}
+            disabled={actionLoading === selectedCompany?.id || !parentForm.parentId}
+          >
+            {actionLoading === selectedCompany?.id ? (
+              <Spinner animation="border" size="sm" />
+            ) : (
+              'Parent Company'
+            )}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Unparent Company Modal */}
+      <Modal show={showUnparentModal} onHide={() => setShowUnparentModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Unparent Company</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            Unparent <strong>{selectedCompany?.name}</strong> from its parent company
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowUnparentModal(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            onClick={handleUnparentCompany}
+            disabled={actionLoading === selectedCompany?.id}
+          >
+            {actionLoading === selectedCompany?.id ? (
+              <Spinner animation="border" size="sm" />
+            ) : (
+              'Unparent Company'
+            )}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Create Sub-Company Modal */}
+      <Modal
+        show={showCreateSubCompanyModal}
+        onHide={() => setShowCreateSubCompanyModal(false)}
+        size="lg"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Create Sub-Company</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="mb-3">
+            Create a new sub-company under <strong>{selectedCompany?.name}</strong>
+          </p>
+
+          <CompanyForm
+            entity={new CompanyEntity()}
+            onSaveComplete={handleCreateSubCompany}
+            onSaveError={() => setShowCreateSubCompanyModal(false)}
+            showClickToCopy={false}
+            skipApiCall={true}
+          />
+        </Modal.Body>
       </Modal>
     </>
   );

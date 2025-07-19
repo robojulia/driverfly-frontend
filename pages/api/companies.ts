@@ -14,6 +14,11 @@ export interface CompanyWithPhoneNumber {
   status?: string;
   about?: string;
   website?: string;
+  parent?: {
+    id: number;
+    name: string;
+    slug?: string;
+  } | null;
   managedPhoneNumber?: CompanyPhoneNumber | null;
   [key: string]: any;
 }
@@ -35,6 +40,39 @@ export interface AssignPhoneNumberRequest {
 
 export interface ReleasePhoneNumberRequest {
   releaseFromTwilio?: boolean;
+}
+
+export interface ParentCompanyRequest {
+  parentId: number;
+}
+
+export interface UnparentCompanyRequest {
+  confirm: boolean;
+}
+
+export interface CreateSubCompanyRequest {
+  name: string;
+  parentId: number;
+  about?: string;
+  website?: string;
+  location?: string;
+  phone?: string;
+  facebook?: string;
+  instagram?: string;
+  linkedin?: string;
+  twitter?: string;
+  fleet_size?: string;
+  founded_year?: number;
+  safety_rating?: string;
+  company_culture?: string;
+  company_benefits?: string;
+  specialties?: string[];
+}
+
+export interface PotentialParent {
+  id: number;
+  name: string;
+  slug?: string;
 }
 
 class CompaniesApi extends BaseApi {
@@ -84,6 +122,36 @@ class CompaniesApi extends BaseApi {
    */
   async getCompanyPhoneNumbers(companyId: number): Promise<CompanyPhoneNumber[]> {
     const response = await this.get(`${this.phoneNumbersUrl}/company/${companyId}`);
+    return response.data;
+  }
+
+  /**
+   * Get potential parent companies for a company
+   */
+  async getPotentialParents(companyId: number): Promise<PotentialParent[]> {
+    const response = await this.get(`${this.baseUrl}/${companyId}/potential-parents`);
+    return response.data;
+  }
+
+  /**
+   * Set parent company for a company
+   */
+  async setParentCompany(companyId: number, request: ParentCompanyRequest): Promise<void> {
+    await this.put(`${this.baseUrl}/${companyId}/parent`, request);
+  }
+
+  /**
+   * Remove parent company from a company
+   */
+  async unparentCompany(companyId: number, request: UnparentCompanyRequest): Promise<void> {
+    await this.put(`${this.baseUrl}/${companyId}/unparent`, request);
+  }
+
+  /**
+   * Create a sub-company with parent relationship
+   */
+  async createSubCompany(request: CreateSubCompanyRequest): Promise<CompanyWithPhoneNumber> {
+    const response = await this.post(`${this.baseUrl}/sub-company`, request);
     return response.data;
   }
 }
