@@ -119,6 +119,7 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
           </Col>
           <Col md={3}>
             {!!quick_apply ? (
+              /* Quick Apply - Special scenario */
               <div className="ort-btn mt-lg-4 mt-0">
                 <Link href={`/apply/suggested-job/${quick_apply}/${job.id}`}>
                   <button
@@ -132,27 +133,28 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                   </button>
                 </Link>
               </div>
-            ) : (
+            ) : !company?.id && canApply ? (
+              /* For regular users (drivers) who can apply */
               <>
-                {!company?.id && canApply && (
-                  <EnhancedJobApply setEncourageModal={setEncourageModal} job={job} />
-                )}
-                <JobApply job={job} setEncourageModal={setEncourageModal} />
-                {/* Direct Application Link */}
-                {canApply && job.company?.slug && (
-                  <div className="ort-btn mt-3">
+                <EnhancedJobApply setEncourageModal={setEncourageModal} job={job} />
+                {/* Alternative: Direct application link */}
+                {job.company?.slug && (
+                  <div className="text-center mt-2">
+                    <small className="text-muted">or</small>
                     <Link href={`/apply/${job.company.slug}?jobId=${job.id}`}>
-                      <button
-                        type="button"
-                        className="btn btn-outline-primary w-100"
+                      <a
+                        className="d-block text-decoration-none small text-primary mt-1"
                         onClick={handleApplyNowClick}
                       >
-                        Apply now <ArrowRight />
-                      </button>
+                        Go to full application form →
+                      </a>
                     </Link>
                   </div>
                 )}
               </>
+            ) : (
+              /* For company users or when can't apply - show basic JobApply */
+              <JobApply job={job} setEncourageModal={setEncourageModal} />
             )}
 
             {!company?.id && canSave && <SaveJob job={job} />}

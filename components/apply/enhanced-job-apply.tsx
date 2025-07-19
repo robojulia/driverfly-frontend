@@ -380,16 +380,16 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
     <>
       {applicant?.jobs?.length > 0 && applicant?.jobs?.some((item) => item?.job?.id == job?.id) ? (
         <div className="ort-btn mt-lg-4 mt-0">
-          <Button type="button" disabled={true}>
+          <button type="button" className="btn theme-primary-btn w-100" disabled={true}>
             {t('APPLIED')}
-          </Button>
+          </button>
         </div>
       ) : (
         <div className="ort-btn mt-lg-4 mt-0">
-          <Button type="button" onClick={onApplyClick}>
+          <button type="button" className="btn theme-primary-btn w-100" onClick={onApplyClick}>
             {t('APPLY_NOW')}
             <ArrowRight />
-          </Button>
+          </button>
         </div>
       )}
 
