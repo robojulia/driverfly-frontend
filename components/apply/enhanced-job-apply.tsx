@@ -244,9 +244,29 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
     setExistingApplicant(null);
     setHasAppliedToCurrentJob(false);
 
+    // Reset form to clean initial state
     apply_form.resetForm();
-  };
 
+    // Reinitialize with clean default values
+    const cleanData = new ApplicantEntity();
+    cleanData.years_cdl_experience = 0;
+    cleanData.moving_violations_count = 0;
+    cleanData.accident_count = 0;
+    cleanData.all_violations_count = 0;
+    cleanData.documents = [];
+    cleanData.phone = '';
+    cleanData.first_name = '';
+    cleanData.last_name = '';
+    cleanData.email = '';
+    cleanData.zip_code = '';
+    cleanData.can_pass_drug_test = true;
+    cleanData.authorize_to_communicate = BooleanTypeExtra.YES;
+
+    apply_form.setValues({
+      ...apply_form.initialValues,
+      ...cleanData,
+    });
+  };
   const apply_form = useFormik({
     initialValues: {
       ...new ApplicantEntity(),
@@ -431,11 +451,44 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
       },
     });
 
-    // Reset conflict states when opening modal
+    // Reset all states when opening modal for a clean start
     setShowPhoneConflict(false);
     setExistingApplicant(null);
     setHasAppliedToCurrentJob(false);
     setApplicationStatus(null);
+    setShowPrefillSection(false);
+    setShowOtpField(false);
+    setOtp('');
+    setOtpApplicant(null);
+    setOtpException(false);
+    setIsPrefilled(false);
+    setPrefillPhone('');
+    setShowForm(true);
+    setShowDrugErrorMessage(false);
+
+    // Reset the form to initial clean state
+    apply_form.resetForm();
+
+    // Reinitialize with clean default values
+    const cleanData = new ApplicantEntity();
+    cleanData.years_cdl_experience = 0;
+    cleanData.moving_violations_count = 0;
+    cleanData.accident_count = 0;
+    cleanData.all_violations_count = 0;
+    cleanData.documents = [];
+    cleanData.phone = '';
+    cleanData.first_name = '';
+    cleanData.last_name = '';
+    cleanData.email = '';
+    cleanData.zip_code = '';
+    cleanData.can_pass_drug_test = true;
+    cleanData.authorize_to_communicate = BooleanTypeExtra.YES;
+
+    apply_form.setValues({
+      ...apply_form.initialValues,
+      ...cleanData,
+    });
+
     setShowModal(true);
   };
 
@@ -444,6 +497,42 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
     setShowForm(true);
     setShowDrugErrorMessage(false);
     setEncourageModal(false); // Always set to false since we don't need the encourage modal
+
+    // Reset all form and prefill states when closing modal
+    setShowPrefillSection(false);
+    setShowOtpField(false);
+    setOtp('');
+    setOtpApplicant(null);
+    setOtpException(false);
+    setIsPrefilled(false);
+    setPrefillPhone('');
+    setShowPhoneConflict(false);
+    setExistingApplicant(null);
+    setHasAppliedToCurrentJob(false);
+    setApplicationStatus(null);
+
+    // Reset the form to initial values
+    apply_form.resetForm();
+
+    // Reinitialize with clean default values
+    const cleanData = new ApplicantEntity();
+    cleanData.years_cdl_experience = 0;
+    cleanData.moving_violations_count = 0;
+    cleanData.accident_count = 0;
+    cleanData.all_violations_count = 0;
+    cleanData.documents = [];
+    cleanData.phone = '';
+    cleanData.first_name = '';
+    cleanData.last_name = '';
+    cleanData.email = '';
+    cleanData.zip_code = '';
+    cleanData.can_pass_drug_test = true;
+    cleanData.authorize_to_communicate = BooleanTypeExtra.YES;
+
+    apply_form.setValues({
+      ...apply_form.initialValues,
+      ...cleanData,
+    });
   };
 
   const handleDriversLicenseSubmit = (document: DocumentEntity) => {
