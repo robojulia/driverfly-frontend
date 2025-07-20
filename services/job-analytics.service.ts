@@ -68,7 +68,34 @@ export class JobAnalyticsService {
    */
   private getAnalyticsBaseUrl(): string {
     // Use the same environment variable as BaseApi
-    const baseUrl = process.env.BASE_URL_API || 'http://localhost:4000/api';
+    let baseUrl = process.env.BASE_URL_API;
+
+    // If not set, try to detect from window location in browser
+    if (!baseUrl && typeof window !== 'undefined') {
+      // In development, default to localhost:4000/api
+      // In production, this should be set via environment variables
+      const hostname = window.location.hostname;
+      const isDevelopment = hostname === 'localhost' || hostname === '127.0.0.1';
+
+      if (isDevelopment) {
+        baseUrl = 'http://localhost:4000/api';
+      } else {
+        // For production, construct from current domain
+        const protocol = window.location.protocol;
+        baseUrl = `${protocol}//${hostname}/api`;
+      }
+    }
+
+    if (!baseUrl) {
+      baseUrl = 'http://localhost:4000/api';
+    }
+
+    // Debug logging in development
+    if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+      console.debug('[Analytics] Using base URL:', baseUrl);
+      console.debug('[Analytics] Environment BASE_URL_API:', process.env.BASE_URL_API);
+    }
+
     return baseUrl;
   }
 

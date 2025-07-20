@@ -1,16 +1,16 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
 import { isBrowser } from '../../utils/common';
-import * as https from "https";
+import * as https from 'https';
 
 // Utility function to get token from storage without React hooks
 function getTokenFromStorage(): string | null {
   if (!isBrowser()) return null;
-  
+
   try {
-    const storageKey = "user";
+    const storageKey = 'user';
     const json = localStorage.getItem(storageKey);
-    
+
     if (json) {
       const user = JSON.parse(json);
       if (user && user.token && user.jwt) {
@@ -18,8 +18,8 @@ function getTokenFromStorage(): string | null {
         const now = new Date();
         const expMsSinceEpoc = user.jwt.exp * 1000;
         const refreshBufferWindow = 10 * 1000; // 10 seconds
-        const msToExpiry = Math.max(0, (expMsSinceEpoc - now.getTime()) - refreshBufferWindow);
-        
+        const msToExpiry = Math.max(0, expMsSinceEpoc - now.getTime() - refreshBufferWindow);
+
         if (msToExpiry > 0) {
           return user.token;
         }
@@ -28,7 +28,7 @@ function getTokenFromStorage(): string | null {
   } catch (error) {
     console.error('Error getting token from storage:', error);
   }
-  
+
   return null;
 }
 
@@ -36,8 +36,30 @@ export default class BaseApi {
   private mergeRequestConfig(config?: AxiosRequestConfig): AxiosRequestConfig {
     if (!config) config = {};
 
-    if (!config.baseURL)
+    if (!config.baseURL) {
       config.baseURL = process.env.BASE_URL_API;
+
+      // If environment variable is not set, provide a fallback
+      if (!config.baseURL) {
+        // In development, default to localhost:4000/api
+        // In production, this should be set via environment variables
+        if (isBrowser() && typeof window !== 'undefined') {
+          const hostname = window.location.hostname;
+          const isDevelopment = hostname === 'localhost' || hostname === '127.0.0.1';
+
+          if (isDevelopment) {
+            config.baseURL = 'http://localhost:4000/api';
+          } else {
+            // For production, construct from current domain
+            const protocol = window.location.protocol;
+            config.baseURL = `${protocol}//${hostname}/api`;
+          }
+        } else {
+          // Server-side fallback
+          config.baseURL = 'http://localhost:4000/api';
+        }
+      }
+    }
 
     const token = getTokenFromStorage();
 
@@ -46,23 +68,21 @@ export default class BaseApi {
      * This block modifies the AxiosRequestConfig to
      * lower the SSL security settings for backend API requests
      * to allow an incomplete SSL certificate chain to be used
-     * 
+     *
      * This method is being retained in the event it needs to be
      * re-implemented in the future
      */
     if (false && !isBrowser()) {
       config.httpsAgent = new https.Agent({
-        rejectUnauthorized: false
-      })
+        rejectUnauthorized: false,
+      });
     }
 
     // console.log("BaseApi: ", token);
 
-    if (!config.headers)
-      config.headers = {};
+    if (!config.headers) config.headers = {};
 
-    if (token && !config.headers.Authorization)
-      config.headers.Authorization = `Bearer ${token}`;
+    if (token && !config.headers.Authorization) config.headers.Authorization = `Bearer ${token}`;
 
     return config;
   }
@@ -93,8 +113,7 @@ export default class BaseApi {
 
   async delete(url, body?: any, config?: AxiosRequestConfig) {
     config = this.mergeRequestConfig(config);
-    if (body)
-      config.data = body;
+    if (body) config.data = body;
 
     return axios.delete(url, config);
   }
@@ -104,36 +123,36 @@ export default class BaseApi {
   }
 
   buildQueryString(params: any): string {
-    let qs = "";
+    let qs = '';
 
-    const seperator = "&";
+    const seperator = '&';
 
     if (params) {
-      qs = Object
-        .entries(params)
+      qs = Object.entries(params)
         .filter(([key, value]) => value != null)
         .map((v) => {
           let [key, value] = v;
           switch (typeof value) {
-            case "undefined": value = null;
-            case "object":
+            case 'undefined':
+              value = null;
+            case 'object':
               if (value instanceof Date) {
                 value = value.toISOString();
-              }
-              else if (value instanceof Array) {
-                return value.map(v => `${key}[]=${encodeURIComponent(v as string)}`).join(seperator);
-              }
-              else {
-                throw new Error("Object is unsupported by this parser");
+              } else if (value instanceof Array) {
+                return value
+                  .map((v) => `${key}[]=${encodeURIComponent(v as string)}`)
+                  .join(seperator);
+              } else {
+                throw new Error('Object is unsupported by this parser');
               }
               break;
           }
 
           return `${key}=${encodeURIComponent(value as string)}`;
-        }).join(seperator);
+        })
+        .join(seperator);
     }
 
-    return qs ? "?" + qs : qs;
-
+    return qs ? '?' + qs : qs;
   }
 }
