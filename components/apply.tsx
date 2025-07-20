@@ -33,11 +33,31 @@ import { LoaderIcon } from './loading/loader-icon';
 import ViewCard from './view-details/view-card';
 import ViewModal from './view-details/view-modal';
 
+/**
+ * @deprecated This component is deprecated. Use EnhancedJobApply instead for better UX and analytics.
+ * EnhancedJobApply provides:
+ * - Proper unauthenticated jotform endpoints (no 401 errors)
+ * - Better phone conflict handling
+ * - Quick fill functionality
+ * - Enhanced analytics tracking
+ * - Improved three-case applicant handling
+ * 
+ * This component should only be used in legacy contexts where migration is not yet complete.
+ */
 export default function JobApply({ job, setEncourageModal }) {
   const { user } = useAuth();
   const { t } = useTranslation();
   const jobApi = new JobApi();
   const applicantApi = new ApplicantApi();
+
+  // Log deprecation warning in development
+  if (process.env.NODE_ENV === 'development') {
+    console.warn(
+      '⚠️ DEPRECATED: JobApply component is deprecated. Use EnhancedJobApply instead.',
+      'Job ID:', job?.id,
+      'Job Title:', job?.title
+    );
+  }
   const userApi = new UserApi();
 
   const [showModal, setShowModal] = useState(false);
@@ -137,17 +157,10 @@ export default function JobApply({ job, setEncourageModal }) {
   const onCloseClick = () => {
     // apply_form.resetForm()
 
-    if (!!applicant?.id) {
-      setShowModal(false);
-      setShowForm(true);
-      setShowDrugErrorMessage(false);
-      setEncourageModal(true);
-    } else {
-      setShowModal(false);
-      setShowForm(true);
-      setShowDrugErrorMessage(false);
-      setEncourageModal(false);
-    }
+    setShowModal(false);
+    setShowForm(true);
+    setShowDrugErrorMessage(false);
+    setEncourageModal(false); // Always set to false since we don't need the encourage modal
   };
 
   useEffect(() => {

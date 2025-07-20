@@ -16,6 +16,7 @@ import { UtmReferral } from '../../../models/auth/utm-referral.interface';
 import { CompanyPreferenceEntity } from '../../../models/company/company-preferences.entity';
 import { CompanyEntity } from '../../../models/company/company.entity';
 import { JobEntity } from '../../../models/job/job.entity';
+import { useJobAnalytics } from '../../../hooks/use-job-analytics';
 
 import styles from '../../../styles/digitalhiringapp.module.css';
 import CompanyApi from '../../api/company';
@@ -37,6 +38,8 @@ export default function FullForm({
   directJobId,
   directJob,
 }: FullFormProps) {
+  const { trackApplicationStart } = useJobAnalytics();
+
   const [jobs, setJobs] = useState<JobEntity[]>(directJob ? [directJob] : []);
   const [companyJobs, setCompanyJobs] = useState<JobEntity[]>(employerJobs);
   const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
@@ -59,6 +62,35 @@ export default function FullForm({
 
   // Calculate total steps based on application type
   const totalSteps = getTotalSteps(isDirectJobApplication);
+
+  // Track "Entered the DHA application (FullForm component)" analytics
+  useEffect(() => {
+    if (isDirectJobApplication && directJob) {
+      trackApplicationStart(directJob.id, directJob.company?.id || employer.id, {
+        source: 'dha_full_form',
+        applicationType: 'full_application',
+        additional: {
+          formType: 'DHA_FullForm',
+          isDirectJobApplication: true,
+          jobId: directJob.id,
+          companyId: directJob.company?.id || employer.id,
+          utm,
+        },
+      });
+    } else if (employer?.id) {
+      // For general company applications (not job-specific)
+      trackApplicationStart(0, employer.id, {
+        source: 'dha_full_form',
+        applicationType: 'full_application',
+        additional: {
+          formType: 'DHA_FullForm',
+          isDirectJobApplication: false,
+          companyId: employer.id,
+          utm,
+        },
+      });
+    }
+  }, [isDirectJobApplication, directJob, employer?.id, trackApplicationStart, utm]);
 
   useEffect(() => {
     setApplicant((oldValues) => ({ ...oldValues, company: employer }));

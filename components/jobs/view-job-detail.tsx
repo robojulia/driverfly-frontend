@@ -137,7 +137,7 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
               /* For regular users (drivers) who can apply */
               <>
                 <EnhancedJobApply setEncourageModal={setEncourageModal} job={job} />
-                {/* Alternative: Direct application link */}
+                {/* Full application form link */}
                 {job.company?.slug && (
                   <div className="text-center mt-2">
                     <small className="text-muted">or</small>
@@ -152,8 +152,25 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                   </div>
                 )}
               </>
+            ) : canApply ? (
+              /* For cases where user can apply but might be a company user - still show full form option */
+              <>
+                <EnhancedJobApply setEncourageModal={setEncourageModal} job={job} />
+                {job.company?.slug && (
+                  <div className="text-center mt-2">
+                    <Link href={`/apply/${job.company.slug}?jobId=${job.id}`}>
+                      <a
+                        className="d-block text-decoration-none small text-primary mt-1"
+                        onClick={handleApplyNowClick}
+                      >
+                        Go to full application form →
+                      </a>
+                    </Link>
+                  </div>
+                )}
+              </>
             ) : (
-              /* For company users or when can't apply - show basic JobApply */
+              /* For company users or when can't apply - using legacy JobApply for minimal functionality */
               <JobApply job={job} setEncourageModal={setEncourageModal} />
             )}
 
@@ -177,30 +194,6 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
           </Row>
         </Container>
       </div>
-      <ViewModal show={user == null && encourageModal == true} closeText="CANCEL">
-        <>
-          <Row>
-            <p
-              className="d-flex justify-content-center align-items-center text-green-500"
-              style={{ color: 'green' }}
-            >
-              <b>{t('CONGRATS_ON_APPLYING')}</b>
-            </p>
-          </Row>
-          <Row>
-            <div className="mb-2 d-flex justify-content-center align-items-center">
-              <Button href="/signup">{t('PLEASE_PROCEED_WITH_REGISTRATION')}</Button>
-            </div>
-          </Row>
-          <Row>
-            <div className="mt-2 d-flex justify-content-center align-items-center">
-              <p>
-                <b>{t('GET_REGISTERED_MESSAGE_QUICK_APPLY')}</b>
-              </p>
-            </div>
-          </Row>
-        </>
-      </ViewModal>
     </section>
   );
 }

@@ -96,6 +96,9 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
   const [otpException, setOtpException] = useState(false);
   const [isPrefilled, setIsPrefilled] = useState(false);
+  const [applicationStatus, setApplicationStatus] = useState<
+    'new' | 'update' | 'additional' | null
+  >(null);
 
   // Helper function to extract error string
   const getErrorString = (error: any): string | undefined => {
@@ -202,6 +205,22 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
       setIsPrefilled(true);
       setShowPrefillSection(false);
       setShowOtpField(false);
+
+      // Clear any existing phone conflicts since we've verified the phone
+      setShowPhoneConflict(false);
+      setExistingApplicant(null);
+      setHasAppliedToCurrentJob(false);
+
+      // Track "Used Quick Fill" analytics event
+      trackJobClick(job.id, job.company?.id, 'apply-button', {
+        source: 'enhanced-quick-apply',
+        buttonType: 'quick_fill',
+        additional: {
+          quickFillUsed: true,
+          prefillPhone: prefillPhone.substr(-4), // Only track last 4 digits for privacy
+        },
+      });
+
       toast.success('Profile loaded successfully!');
     } catch (error) {
       setOtpException(true);
@@ -219,6 +238,12 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
     setOtpException(false);
     setIsPrefilled(false);
     setPrefillPhone('');
+    
+    // Clear phone conflicts when resetting prefill
+    setShowPhoneConflict(false);
+    setExistingApplicant(null);
+    setHasAppliedToCurrentJob(false);
+    
     apply_form.resetForm();
   };
 
@@ -267,46 +292,106 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
         ];
 
         try {
-          let response;
+          let applicantResult;
+          let statusMessage = '';
 
-          if (isPrefilled) {
-            // For prefilled applications, check if user already has application with this company
-            const existingApplicants = await applicantApi.searchApplicantsByPhone({
-              phone: dto.phone,
-            });
-            const companyApplicant = existingApplicants.find(
-              (applicant) => applicant.company?.id === job.company?.id
-            );
-
-            if (companyApplicant) {
-              // User has existing application with company - create new job application using existing applicant
-              // Update the existing applicant with any new form data
-              const updatedApplicant = await applicantApi.update(companyApplicant.id, dto);
-              // Then create job application
-              response = await jobApi.apply(job.id, { ...dto, id: companyApplicant.id });
-            } else {
-              // User doesn't have application with this company - create both applicant and job application
-              response = await jobApi.apply(job.id, dto);
-            }
-          } else {
-            // Regular application flow
-            response = await jobApi.apply(job.id, dto);
-          }
-
-          setApplicant(response);
-
-          // Track successful application
-          trackApplicationStart(job.id, job.company?.id, {
-            applicationSource: isPrefilled
-              ? 'enhanced-quick-apply-prefilled'
-              : 'enhanced-quick-apply',
-            additional: {
-              hasDriversLicense: !!dto.documents?.length,
-              isPrefilled,
-            },
+          // Always search for existing applicants by phone first
+          const existingApplicants = await applicantApi.searchApplicantsByPhone({
+            phone: dto.phone,
           });
 
-          toast.success(t('job_applied_success_message'));
+          const companyApplicant = existingApplicants.find(
+            (applicant) => applicant.company?.id === job.company?.id
+          );
+
+          if (companyApplicant) {
+            // Case 2 & 3: Existing applicant for this company
+
+            // Check if they've already applied to this specific job
+            const existingJobApplication = companyApplicant.jobs?.find(
+              (appliedJob) => appliedJob.id === job.id
+            );
+
+            if (existingJobApplication) {
+              // Case 3: Same company, same job - update their information
+              setApplicationStatus('update');
+              applicantResult = await applicantApi.jotform.update(companyApplicant.id, {
+                applicant: dto,
+                jobs: [{ id: job.id }], // Keep the existing job application
+                applicantExtras: dto.extras || [],
+                utm: {},
+              });
+
+              statusMessage = 'Application updated successfully';
+
+              // Track update event
+              trackApplicationStart(job.id, job.company?.id, {
+                applicationSource: isPrefilled
+                  ? 'enhanced-quick-apply-prefilled-update'
+                  : 'enhanced-quick-apply-update',
+                applicationType: 'update_existing',
+                additional: {
+                  hasDriversLicense: !!dto.documents?.length,
+                  isPrefilled,
+                  isUpdate: true,
+                  existingApplicantId: companyApplicant.id,
+                },
+              });
+            } else {
+              // Case 2: Same company, different job - add new job application
+              setApplicationStatus('additional');
+              const existingJobs = companyApplicant.jobs || [];
+              applicantResult = await applicantApi.jotform.update(companyApplicant.id, {
+                applicant: dto,
+                jobs: [...existingJobs.map((j) => ({ id: j.id })), { id: job.id }], // Add new job
+                applicantExtras: dto.extras || [],
+                utm: {},
+              });
+
+              statusMessage = t('job_applied_success_message');
+
+              // Track new job application for existing applicant
+              trackApplicationStart(job.id, job.company?.id, {
+                applicationSource: isPrefilled
+                  ? 'enhanced-quick-apply-prefilled-existing'
+                  : 'enhanced-quick-apply-existing',
+                applicationType: 'additional_job',
+                additional: {
+                  hasDriversLicense: !!dto.documents?.length,
+                  isPrefilled,
+                  existingApplicantId: companyApplicant.id,
+                  totalJobsApplied: existingJobs.length + 1,
+                },
+              });
+            }
+          } else {
+            // Case 1: New applicant - create using jotform endpoint
+            setApplicationStatus('new');
+            applicantResult = await applicantApi.jotform.create(job.company.id, {
+              applicant: dto,
+              jobs: [{ id: job.id }],
+              applicantExtras: dto.extras || [],
+              utm: {},
+            });
+
+            statusMessage = t('job_applied_success_message');
+
+            // Track new applicant creation
+            trackApplicationStart(job.id, job.company?.id, {
+              applicationSource: isPrefilled
+                ? 'enhanced-quick-apply-prefilled-new'
+                : 'enhanced-quick-apply-new',
+              applicationType: 'new_applicant',
+              additional: {
+                hasDriversLicense: !!dto.documents?.length,
+                isPrefilled,
+                isNewApplicant: true,
+              },
+            });
+          }
+
+          setApplicant(applicantResult);
+          toast.success(statusMessage);
           setShowForm(false);
         } catch (e) {
           globalAjaxExceptionHandler(e, { formik: apply_form, toast: toast, t: t });
@@ -337,30 +422,28 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
   }, [showModal]);
 
   const onApplyClick = (): void => {
-    // Track quick apply start
-    trackJobClick(job.id, job.company?.id, 'quick-apply-started', {
+    // Track "Clicked Apply Now" analytics event
+    trackJobClick(job.id, job.company?.id, 'apply-button', {
       source: 'enhanced-quick-apply',
+      buttonType: 'apply_now',
+      additional: {
+        clickType: 'quick_apply_modal_open',
+      },
     });
 
     // Reset conflict states when opening modal
     setShowPhoneConflict(false);
     setExistingApplicant(null);
     setHasAppliedToCurrentJob(false);
+    setApplicationStatus(null);
     setShowModal(true);
   };
 
   const onCloseClick = () => {
-    if (!!applicant?.id) {
-      setShowModal(false);
-      setShowForm(true);
-      setShowDrugErrorMessage(false);
-      setEncourageModal(true);
-    } else {
-      setShowModal(false);
-      setShowForm(true);
-      setShowDrugErrorMessage(false);
-      setEncourageModal(false);
-    }
+    setShowModal(false);
+    setShowForm(true);
+    setShowDrugErrorMessage(false);
+    setEncourageModal(false); // Always set to false since we don't need the encourage modal
   };
 
   const handleDriversLicenseSubmit = (document: DocumentEntity) => {
@@ -623,8 +706,16 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
                       <Button
                         variant="primary"
                         onClick={() => {
-                          // TODO: Implement OTP flow for existing applicants
-                          toast.info('Access existing application feature coming soon');
+                          if (hasAppliedToCurrentJob) {
+                            // For already applied, just show info message
+                            toast.info('Access existing application feature coming soon');
+                          } else {
+                            // For existing profile, trigger quick fill flow
+                            setShowPhoneConflict(false);
+                            setExistingApplicant(null);
+                            setShowPrefillSection(true);
+                            setPrefillPhone(apply_form.values.phone);
+                          }
                         }}
                       >
                         <i className="fa fa-file-text me-2" />
