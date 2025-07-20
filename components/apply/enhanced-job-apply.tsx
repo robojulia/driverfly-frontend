@@ -162,7 +162,18 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
       toast.success('Verification code sent!');
     } catch (error) {
       console.error('Failed to send OTP:', error);
-      toast.error('Unable to send verification code. Please try again.');
+
+      // Handle specific error cases
+      if (
+        error.response?.status === 404 &&
+        error.response?.data?.message === 'PHONE_NUMBER_NOT_FOUND'
+      ) {
+        toast.error(
+          `No Driverfly profile found for this phone number. Please check the number or apply as a new applicant.`
+        );
+      } else {
+        toast.error('Unable to send verification code. Please try again.');
+      }
     } finally {
       setIsSendingOtp(false);
     }
@@ -183,6 +194,17 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
         applicantId: otpApplicant.applicantId,
         otp,
       });
+
+      // Check if this phone number has already applied to this specific job
+      const appliedJobs = await applicantApi.getAppliedJobsByPhone(prefillPhone);
+      const hasAppliedToThisJob = appliedJobs.some(
+        (appliedJob) => appliedJob.job?.id === job.id && appliedJob.company?.id === job.company?.id
+      );
+
+      if (hasAppliedToThisJob) {
+        setHasAppliedToCurrentJob(true);
+        setShowPhoneConflict(true);
+      }
 
       // Prefill the form with existing data
       apply_form.setValues({
@@ -206,10 +228,12 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
       setShowPrefillSection(false);
       setShowOtpField(false);
 
-      // Clear any existing phone conflicts since we've verified the phone
-      setShowPhoneConflict(false);
-      setExistingApplicant(null);
-      setHasAppliedToCurrentJob(false);
+      // Only clear phone conflicts if they haven't already applied to this job
+      if (!hasAppliedToThisJob) {
+        setShowPhoneConflict(false);
+        setExistingApplicant(null);
+        setHasAppliedToCurrentJob(false);
+      }
 
       // Track "Used Quick Fill" analytics event
       trackJobClick(job.id, job.company?.id, 'apply-button', {
@@ -286,10 +310,11 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
     validationSchema: enhancedQuickApplyValidationSchema,
     onSubmit: async (dto, { resetForm }) => {
       // Skip phone check if this is a prefilled application - phone was already verified
-      if (!isPrefilled) {
+      // Or if we already know they have applied to this job (allow updates)
+      if (!isPrefilled && !hasAppliedToCurrentJob) {
         const hasConflict = await checkPhoneNumber(dto.phone);
-        if (hasConflict) {
-          return; // Show conflict UI instead of submitting
+        if (hasConflict && !hasAppliedToCurrentJob) {
+          return; // Show conflict UI instead of submitting (only block for different jobs, not updates)
         }
       }
 
@@ -342,7 +367,7 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
                 utm: {},
               });
 
-              statusMessage = 'Application updated successfully';
+              statusMessage = `Your application for "${job.title}" has been updated successfully! We have your latest information and will be in touch soon.`;
 
               // Track update event
               trackApplicationStart(job.id, job.company?.id, {
@@ -440,6 +465,13 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
       ...data,
     });
   }, [showModal]);
+
+  // Check phone number when form gets prefilled
+  useEffectAsync(async () => {
+    if (isPrefilled && apply_form.values.phone && apply_form.values.phone.length >= 10) {
+      await checkPhoneNumber(apply_form.values.phone);
+    }
+  }, [isPrefilled, apply_form.values.phone]);
 
   const onApplyClick = (): void => {
     // Track "Clicked Apply Now" analytics event
@@ -571,7 +603,7 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
         show={showModal}
         closeText="CANCEL"
         onCloseClick={onCloseClick}
-        title="apply_for_this_job"
+        title={hasAppliedToCurrentJob ? 'Update Your Application' : 'apply_for_this_job'}
         footer={
           showForm && (
             <Button
@@ -579,7 +611,7 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
                 !!apply_form.isSubmitting ||
                 !apply_form.isValid ||
                 !!apply_form.isValidating ||
-                showPhoneConflict ||
+                (showPhoneConflict && !isPrefilled) || // Disable if phone conflict exists and not yet verified via OTP
                 isCheckingPhone
               }
               type="submit"
@@ -587,15 +619,73 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
               onClick={() => apply_form.handleSubmit()}
               loading={!!apply_form.isSubmitting || isCheckingPhone}
             >
-              {isCheckingPhone ? t('CHECKING_PHONE') : t('submit')}
+              {isCheckingPhone
+                ? t('CHECKING_PHONE')
+                : showPhoneConflict && !isPrefilled
+                ? 'Verify Identity to Continue'
+                : hasAppliedToCurrentJob
+                ? 'Update Application'
+                : t('submit')}
             </Button>
           )
         }
       >
         {showForm ? (
           <form onSubmit={apply_form.handleSubmit}>
+            {/* Existing Application Notice */}
+            {showPhoneConflict && hasAppliedToCurrentJob && !isPrefilled && (
+              <div className="mb-4">
+                <Alert variant="info">
+                  <div className="text-center">
+                    <i
+                      className="fa fa-info-circle mb-3"
+                      style={{
+                        fontSize: '48px',
+                        color: 'var(--info)',
+                      }}
+                    />
+                    <h5 className="mb-3" style={{ color: 'var(--text-primary)' }}>
+                      You Have Already Applied to This Position
+                    </h5>
+                    <p className="mb-3" style={{ color: 'var(--text-primary)' }}>
+                      You previously submitted an application for &quot;{job.title}&quot; at{' '}
+                      {job.company?.name}.
+                    </p>
+                    <p className="mb-4" style={{ color: 'var(--text-secondary)' }}>
+                      To update your application, please verify your identity with a code sent to
+                      your phone.
+                    </p>
+
+                    {!showOtpField ? (
+                      <Button
+                        variant="primary"
+                        size="lg"
+                        onClick={() => {
+                          // Trigger the Quick Fill flow with the current phone number
+                          setShowPhoneConflict(false);
+                          setShowPrefillSection(true);
+                          setPrefillPhone(apply_form.values.phone);
+                        }}
+                        disabled={!apply_form.values.phone}
+                      >
+                        <>
+                          <i className="fa fa-mobile me-2" />
+                          Send Verification Code
+                        </>
+                      </Button>
+                    ) : (
+                      <p className="text-center" style={{ color: 'var(--text-secondary)' }}>
+                        <i className="fa fa-arrow-down me-2" />
+                        Use the Quick Fill section below to verify your identity
+                      </p>
+                    )}
+                  </div>
+                </Alert>
+              </div>
+            )}
+
             {/* Quick Prefill CTA Header */}
-            {!isPrefilled && !showPrefillSection && (
+            {!isPrefilled && !showPrefillSection && !showPhoneConflict && (
               <div className={`mb-4 p-4 ${styles.ctaSection}`}>
                 <div className="text-center">
                   <i
@@ -607,7 +697,7 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
                   </h5>
                   <p className={`mb-3 ${styles.sectionText}`}>
                     Save time by using your existing profile. Just enter your phone number and
-                    verify with OTP.
+                    verify with a code sent to your phone.
                   </p>
                   <Button
                     variant="primary"
@@ -722,7 +812,7 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
               </div>
             )}
 
-            {/* Prefilled Success Alert */}
+            {/* Prefilled Success Alert - Show when profile is loaded via OTP */}
             {isPrefilled && (
               <div className="mb-4">
                 <Alert variant="success">
@@ -761,54 +851,42 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
               </p>
             </div>
 
-            {/* Phone Conflict Alert */}
-            {showPhoneConflict && (
+            {/* Phone Conflict Alert - Only for existing profile, different job */}
+            {showPhoneConflict && !hasAppliedToCurrentJob && (
               <div className="mb-4">
-                <Alert variant={hasAppliedToCurrentJob ? 'warning' : 'info'}>
+                <Alert variant="info">
                   <div className="text-center">
                     <i
-                      className={`fa ${
-                        hasAppliedToCurrentJob ? 'fa-exclamation-triangle' : 'fa-user-check'
-                      } mb-3`}
+                      className="fa fa-user-check mb-3"
                       style={{
                         fontSize: '48px',
-                        color: hasAppliedToCurrentJob ? 'var(--warning)' : 'var(--info)',
+                        color: 'var(--info)',
                       }}
                     />
                     <h5 className="mb-3" style={{ color: 'var(--text-primary)' }}>
-                      {hasAppliedToCurrentJob
-                        ? t('ALREADY_APPLIED_TO_THIS_JOB')
-                        : t('EXISTING_PROFILE_FOUND')}
+                      {t('EXISTING_PROFILE_FOUND')}
                     </h5>
                     <p className="mb-3" style={{ color: 'var(--text-primary)' }}>
-                      {hasAppliedToCurrentJob
-                        ? `You have already applied to "${job.title}" at ${job.company?.name}.`
-                        : `We found an existing profile for this phone number at ${job.company?.name}.`}
+                      {`We found an existing profile for this phone number at ${job.company?.name}.`}
                     </p>
                     <p className="mb-4" style={{ color: 'var(--text-secondary)' }}>
-                      {hasAppliedToCurrentJob
-                        ? 'You can access your existing application to review or update it, or use a different phone number if this is not your application.'
-                        : 'You can use your existing profile to apply faster, or continue with a new application using different contact information.'}
+                      You can use your existing profile to apply faster, or continue with a new
+                      application using different contact information.
                     </p>
 
                     <div className="d-flex justify-content-center gap-3">
                       <Button
                         variant="primary"
                         onClick={() => {
-                          if (hasAppliedToCurrentJob) {
-                            // For already applied, just show info message
-                            toast.info('Access existing application feature coming soon');
-                          } else {
-                            // For existing profile, trigger quick fill flow
-                            setShowPhoneConflict(false);
-                            setExistingApplicant(null);
-                            setShowPrefillSection(true);
-                            setPrefillPhone(apply_form.values.phone);
-                          }
+                          // For existing profile, trigger quick fill flow
+                          setShowPhoneConflict(false);
+                          setExistingApplicant(null);
+                          setShowPrefillSection(true);
+                          setPrefillPhone(apply_form.values.phone);
                         }}
                       >
                         <i className="fa fa-file-text me-2" />
-                        {hasAppliedToCurrentJob ? 'Access My Application' : 'Use Existing Profile'}
+                        Use Existing Profile
                       </Button>
 
                       <Button
@@ -827,35 +905,6 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
                   </div>
                 </Alert>
               </div>
-            )}
-
-            {/* Prefilled Success Message */}
-            {isPrefilled && (
-              <Alert variant="success" className="mb-4">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div className="d-flex align-items-center">
-                    <i
-                      className="fa fa-check-circle me-2"
-                      style={{
-                        fontSize: '1.5rem',
-                        color: 'var(--success)',
-                      }}
-                    ></i>
-                    <div>
-                      <strong style={{ color: 'var(--text-primary)' }}>
-                        Profile Loaded Successfully!
-                      </strong>
-                      <p className="mb-0 mt-1" style={{ color: 'var(--text-primary)' }}>
-                        Your information has been pre-filled from your existing Driverfly profile.
-                        Please review and update any fields as needed before submitting.
-                      </p>
-                    </div>
-                  </div>
-                  <Button variant="outline" size="sm" onClick={resetPrefill}>
-                    Start Over
-                  </Button>
-                </div>
-              </Alert>
             )}
 
             {/* Personal Information */}
@@ -1188,11 +1237,14 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
                     style={{ color: 'var(--success)' }}
                   />
                   <h5 className="mb-3" style={{ color: 'var(--success)' }}>
-                    Application Submitted Successfully!
+                    {applicationStatus === 'update'
+                      ? 'Application Updated Successfully!'
+                      : 'Application Submitted Successfully!'}
                   </h5>
                   <p className={styles.sectionText}>
-                    Thank you for your interest. We will review your application and contact you
-                    soon.
+                    {applicationStatus === 'update'
+                      ? `Your application for "${job.title}" has been updated with your latest information. We will review the changes and contact you soon.`
+                      : 'Thank you for your interest. We will review your application and contact you soon.'}
                   </p>
                 </div>
               </Col>
