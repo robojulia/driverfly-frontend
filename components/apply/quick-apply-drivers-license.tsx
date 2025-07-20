@@ -185,10 +185,10 @@ export function QuickApplyDriversLicense({
         <div className="alert alert-info mb-4">
           <div className="d-flex justify-content-between align-items-start">
             <div>
-              <h5 className="mb-2">📄 Driver's License Required</h5>
+              <h5 className="mb-2">📄 Driver&apos;s License Required</h5>
               <p className="mb-2">
-                To complete your quick application, we need a clear photo of your valid driver's
-                license.
+                To complete your quick application, we need a clear photo of your valid
+                driver&apos;s license.
               </p>
               <Button variant="outline" size="sm" onClick={() => setShowInstructions(true)}>
                 View Photo Guidelines

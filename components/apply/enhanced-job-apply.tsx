@@ -238,12 +238,12 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
     setOtpException(false);
     setIsPrefilled(false);
     setPrefillPhone('');
-    
+
     // Clear phone conflicts when resetting prefill
     setShowPhoneConflict(false);
     setExistingApplicant(null);
     setHasAppliedToCurrentJob(false);
-    
+
     apply_form.resetForm();
   };
 
@@ -668,7 +668,7 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
                 consent agreement.
                 <br />
                 <strong>Optional fields:</strong> Education level, years of experience, violation
-                history, and driver's license upload can help improve your application.
+                history, and driver&apos;s license upload can help improve your application.
               </p>
             </div>
 
@@ -948,7 +948,7 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
                   <div className="d-flex justify-content-between align-items-center">
                     <div>
                       <h6 className={`mb-2 fw-bold ${styles.sectionTitle}`}>
-                        📄 Driver's License{' '}
+                        📄 Driver&apos;s License{' '}
                         <span
                           className={`fw-normal ${styles.sectionSubtext}`}
                           style={{ fontSize: '0.9rem' }}

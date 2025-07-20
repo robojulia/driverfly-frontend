@@ -41,7 +41,7 @@ import ViewModal from './view-details/view-modal';
  * - Quick fill functionality
  * - Enhanced analytics tracking
  * - Improved three-case applicant handling
- * 
+ *
  * This component should only be used in legacy contexts where migration is not yet complete.
  */
 export default function JobApply({ job, setEncourageModal }) {
@@ -54,8 +54,10 @@ export default function JobApply({ job, setEncourageModal }) {
   if (process.env.NODE_ENV === 'development') {
     console.warn(
       '⚠️ DEPRECATED: JobApply component is deprecated. Use EnhancedJobApply instead.',
-      'Job ID:', job?.id,
-      'Job Title:', job?.title
+      'Job ID:',
+      job?.id,
+      'Job Title:',
+      job?.title
     );
   }
   const userApi = new UserApi();
