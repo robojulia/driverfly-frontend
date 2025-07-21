@@ -27,6 +27,11 @@ export default class UserApi extends BaseApi {
     const { data } = await this.put(`user/${id}/restore`, null);
   }
 
+  async toggleCompanyDisabled(id: number, disabled: boolean): Promise<UserEntity> {
+    const { data } = await this.put(`user/${id}`, { company_disabled: disabled });
+    return data;
+  }
+
   async list(companyId?: number): Promise<UserEntity[]> {
     const { data } = await this.get(this.buildUrl('user/list', { companyId }));
 

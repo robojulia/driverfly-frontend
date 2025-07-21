@@ -995,6 +995,10 @@
   "ACCOUNT_ALREADY_VERIFIED": "You account already verified",
   "ACCOUNT_DELETED": "You account is deleted",
   "ACCOUNT_DISABLED": "You account is disabled",
+  "ACCOUNT_DISABLED_BY_COMPANY": "Your account has been disabled by your company administrator",
+  "DISABLE_USER": "Disable User",
+  "DISABLE_USER_EXPLANATION": "When disabled, this user will be immediately logged out and unable to log back in until re-enabled by a company administrator",
+  "DISABLE_USER_WARNING": "This action takes effect immediately and will terminate any active sessions",
   "USER_ALREADY_EXISTS": "The user is not logged in but already has an account based on the email address (user must log in)",
   "ACCOUNT_ALREADY_EXISTS_WITH_EMAIL": "The user already has an account based on the email address (You can login or reset password)",
   "ACCOUNT_ALREADY_EXISTS_WITH_PHONE_{censor_email}": "This phone number is already tied to an account with the username {{censor_email}} (Please log in with that email address or click \"Forgot Password\". For further assistance, please contact us at help@driverfly.co.)",
@@ -1694,7 +1698,7 @@
   "Status": {
     "ACTIVE": "Active",
     "DELETED": "Deleted",
-    "DEACTIVE": "In Active"
+    "DEACTIVE": "Not Active"
   },
   "UNABLE_TO_RESTORE": "Unable to restore.",
   "DESCRIPTION": "Description",

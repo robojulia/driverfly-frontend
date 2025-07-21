@@ -429,7 +429,8 @@ export function ApplicationSummary() {
           <p className="text-dark">
             Review your information below and click any section to edit.
             <br />
-            Click "Continue" when you're ready to proceed to the detailed application.
+            Click &ldquo;Continue&rdquo; when you&apos;re ready to proceed to the detailed
+            application.
           </p>
 
           {/* Completion Status */}
