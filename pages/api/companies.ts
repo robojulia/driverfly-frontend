@@ -12,6 +12,7 @@ export interface CompanyWithPhoneNumber {
   name: string;
   slug?: string;
   status?: string;
+  disabled?: boolean;
   about?: string;
   website?: string;
   parent?: {
@@ -88,6 +89,17 @@ class CompaniesApi extends BaseApi {
         includePhoneNumbers,
       },
     });
+    return response.data;
+  }
+
+  /**
+   * Update a company
+   */
+  async updateCompany(
+    companyId: number,
+    data: Partial<CompanyWithPhoneNumber>
+  ): Promise<CompanyWithPhoneNumber> {
+    const response = await this.put(`${this.baseUrl}/${companyId}`, data);
     return response.data;
   }
 

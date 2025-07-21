@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Badge, Button, Card, Col, Modal, Row, Spinner, Form } from 'react-bootstrap';
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  Col,
+  Modal,
+  Row,
+  Spinner,
+  Form,
+  Dropdown,
+} from 'react-bootstrap';
 import {
   Building,
   TelephoneFill,
@@ -11,6 +22,9 @@ import {
   CheckCircleFill,
   XCircleFill,
   Diagram3,
+  ThreeDotsVertical,
+  ShieldFillCheck,
+  ShieldFillExclamation,
 } from 'react-bootstrap-icons';
 import ViewDataTable, { ViewTableColumn } from '../view-details/view-data-table';
 import { useTranslation } from '../../hooks/use-translation';
@@ -39,6 +53,7 @@ const CompanyManager: React.FC = () => {
   const [showParentModal, setShowParentModal] = useState(false);
   const [showUnparentModal, setShowUnparentModal] = useState(false);
   const [showCreateSubCompanyModal, setShowCreateSubCompanyModal] = useState(false);
+  const [showActionsModal, setShowActionsModal] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<CompanyWithPhoneNumber | null>(null);
   const [potentialParents, setPotentialParents] = useState<PotentialParent[]>([]);
   const [parentSearchTerm, setParentSearchTerm] = useState('');
@@ -177,6 +192,36 @@ const CompanyManager: React.FC = () => {
     } catch (err: any) {
       console.error('Failed to release phone number:', err);
       setError(err.response?.data?.message || 'Failed to release phone number');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleToggleCompanyDisabled = async (company: CompanyWithPhoneNumber) => {
+    const action = company.disabled ? 'enable' : 'disable';
+    const confirmed = window.confirm(
+      `Are you sure you want to ${action} the company "${company.name}"? This will ${
+        company.disabled ? 'restore access to' : 'block access for'
+      } all company users.`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setActionLoading(company.id);
+      const api = new CompaniesApi();
+
+      // Update company with disabled toggle
+      await api.updateCompany(company.id, {
+        ...company,
+        disabled: !company.disabled,
+      });
+
+      // Reload data to see the changes
+      await loadData();
+    } catch (err: any) {
+      console.error(`Failed to ${action} company:`, err);
+      setError(err.response?.data?.message || `Failed to ${action} company`);
     } finally {
       setActionLoading(null);
     }
@@ -422,147 +467,26 @@ const CompanyManager: React.FC = () => {
     );
   };
 
-  const renderPhoneNumberActions = (company: CompanyWithPhoneNumber) => {
+  const renderCompanyActions = (company: CompanyWithPhoneNumber) => {
     const isLoading = actionLoading === company.id;
-
-    if (!company.managedPhoneNumber) {
-      return (
-        <div className="d-flex gap-2">
-          <Button
-            variant="outline-primary"
-            size="sm"
-            onClick={() => openProvisionModal(company)}
-            disabled={isLoading}
-            title="Provision New Number"
-          >
-            {isLoading ? (
-              <Spinner animation="border" size="sm" />
-            ) : (
-              <>
-                <PlusCircle className="me-1" />
-                Provision
-              </>
-            )}
-          </Button>
-          <Button
-            variant="outline-secondary"
-            size="sm"
-            onClick={() => openAssignModal(company)}
-            disabled={isLoading}
-            title="Assign Existing Number"
-          >
-            {isLoading ? (
-              <Spinner animation="border" size="sm" />
-            ) : (
-              <>
-                <Link45deg className="me-1" />
-                Assign
-              </>
-            )}
-          </Button>
-        </div>
-      );
-    }
-
-    return (
-      <Button
-        variant="outline-danger"
-        size="sm"
-        onClick={() => handleReleasePhoneNumber(company)}
-        disabled={isLoading}
-        title="Release Number"
-      >
-        {isLoading ? (
-          <Spinner animation="border" size="sm" />
-        ) : (
-          <>
-            <Trash className="me-1" />
-            Release
-          </>
-        )}
-      </Button>
-    );
-  };
-
-  const renderParentingActions = (company: CompanyWithPhoneNumber) => {
-    const isLoading = actionLoading === company.id;
-
-    if (company.parent) {
-      return (
-        <div className="d-flex gap-2">
-          <Button
-            variant="outline-primary"
-            size="sm"
-            onClick={() => openParentModal(company)}
-            disabled={isLoading}
-            title="Change Parent"
-          >
-            {isLoading ? (
-              <Spinner animation="border" size="sm" />
-            ) : (
-              <>
-                <Diagram3 className="me-1" />
-                Change
-              </>
-            )}
-          </Button>
-          <Button
-            variant="outline-danger"
-            size="sm"
-            onClick={() => openUnparentModal(company)}
-            disabled={isLoading}
-            title="Remove Parent"
-          >
-            {isLoading ? (
-              <Spinner animation="border" size="sm" />
-            ) : (
-              <>
-                <XCircleFill className="me-1" />
-                Unparent
-              </>
-            )}
-          </Button>
-        </div>
-      );
-    }
 
     return (
       <Button
         variant="primary"
         size="sm"
-        onClick={() => openParentModal(company)}
+        onClick={() => {
+          setSelectedCompany(company);
+          setShowActionsModal(true);
+        }}
         disabled={isLoading}
-        title="Set Parent Company"
+        title="View all actions for this company"
       >
         {isLoading ? (
           <Spinner animation="border" size="sm" />
         ) : (
           <>
-            <Diagram3 className="me-1" />
-            Set Parent
-          </>
-        )}
-      </Button>
-    );
-  };
-
-  const renderSubCompanyActions = (company: CompanyWithPhoneNumber) => {
-    const isLoading = actionLoading === company.id;
-
-    return (
-      <Button
-        variant="success"
-        size="sm"
-        onClick={() => openCreateSubCompanyModal(company)}
-        disabled={isLoading}
-        title="Create Sub-Company"
-      >
-        {isLoading ? (
-          <Spinner animation="border" size="sm" />
-        ) : (
-          <>
-            <PlusCircle className="me-1" />
-            Add Sub-Company
+            <Gear className="me-1" />
+            View Actions
           </>
         )}
       </Button>
@@ -589,10 +513,16 @@ const CompanyManager: React.FC = () => {
     {
       id: 'status',
       name: 'Status',
-      selector: (row) => row.status || 'Unknown',
+      selector: (row) => (row.disabled ? 'Disabled' : row.status || 'Unknown'),
       sortable: true,
       minWidth: '100px',
       cell: (company) => {
+        // If company is disabled, show disabled status regardless of other status
+        if (company.disabled) {
+          return <Badge bg="danger">Disabled</Badge>;
+        }
+
+        // Otherwise show the normal status
         const statusColor = company.status === 'active' ? 'success' : 'secondary';
         return <Badge bg={statusColor}>{company.status || 'Unknown'}</Badge>;
       },
@@ -615,13 +545,9 @@ const CompanyManager: React.FC = () => {
       id: 'actions',
       name: 'Actions',
       sortable: false,
-      minWidth: '200px',
+      minWidth: '250px',
       cell: (company) => (
-        <div className="d-flex gap-2 flex-wrap">
-          {renderPhoneNumberActions(company)}
-          {renderParentingActions(company)}
-          {renderSubCompanyActions(company)}
-        </div>
+        <div className="d-flex gap-2 flex-wrap">{renderCompanyActions(company)}</div>
       ),
     },
   ];
@@ -645,21 +571,173 @@ const CompanyManager: React.FC = () => {
             </h5>
           </div>
         </Card.Header>
-        <Card.Body>
+        <Card.Body style={{ paddingBottom: '120px', overflow: 'visible' }}>
           {error && (
             <Alert variant="danger" dismissible onClose={() => setError(null)}>
               {error}
             </Alert>
           )}
 
-          <ViewDataTable<CompanyWithPhoneNumber>
-            columns={columns}
-            items={companies}
-            columnSettingKey="admin.companies.columns"
-            description="Companies with phone number management status and actions"
-          />
+          <div style={{ overflow: 'visible' }}>
+            <ViewDataTable<CompanyWithPhoneNumber>
+              columns={columns}
+              items={companies}
+              columnSettingKey="admin.companies.columns"
+              description="Companies with phone number management status and actions"
+            />
+          </div>
         </Card.Body>
       </Card>
+
+      {/* Company Actions Modal */}
+      <Modal show={showActionsModal} onHide={() => setShowActionsModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <Building className="me-2" />
+            Company Actions - {selectedCompany?.name}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="d-grid gap-3">
+            {/* Phone Number Actions */}
+            <div>
+              <h6 className="mb-3">
+                <TelephoneFill className="me-2" />
+                Phone Number Management
+              </h6>
+              <div className="d-grid gap-2">
+                {!selectedCompany?.managedPhoneNumber ? (
+                  <>
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        setShowActionsModal(false);
+                        openProvisionModal(selectedCompany!);
+                      }}
+                    >
+                      <TelephoneFill className="me-2" />
+                      Provision New Phone Number
+                    </Button>
+                    <Button
+                      variant="outline-secondary"
+                      onClick={() => {
+                        setShowActionsModal(false);
+                        openAssignModal(selectedCompany!);
+                      }}
+                    >
+                      <Link45deg className="me-2" />
+                      Assign Existing Number
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    variant="outline-danger"
+                    onClick={() => {
+                      setShowActionsModal(false);
+                      handleReleasePhoneNumber(selectedCompany!);
+                    }}
+                  >
+                    <Trash className="me-2" />
+                    Release Phone Number
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {/* Company Structure Actions */}
+            <div>
+              <h6 className="mb-3">
+                <Diagram3 className="me-2" />
+                Company Structure
+              </h6>
+              <div className="d-grid gap-2">
+                {selectedCompany?.parent ? (
+                  <>
+                    <Button
+                      variant="outline-primary"
+                      onClick={() => {
+                        setShowActionsModal(false);
+                        openParentModal(selectedCompany!);
+                      }}
+                    >
+                      <Diagram3 className="me-2" />
+                      Change Parent Company
+                    </Button>
+                    <Button
+                      variant="outline-danger"
+                      onClick={() => {
+                        setShowActionsModal(false);
+                        openUnparentModal(selectedCompany!);
+                      }}
+                    >
+                      <XCircleFill className="me-2" />
+                      Remove Parent Company
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    variant="outline-primary"
+                    onClick={() => {
+                      setShowActionsModal(false);
+                      openParentModal(selectedCompany!);
+                    }}
+                  >
+                    <Diagram3 className="me-2" />
+                    Set Parent Company
+                  </Button>
+                )}
+
+                <Button
+                  variant="success"
+                  onClick={() => {
+                    setShowActionsModal(false);
+                    openCreateSubCompanyModal(selectedCompany!);
+                  }}
+                >
+                  <PlusCircle className="me-2" />
+                  Create Sub-Company
+                </Button>
+              </div>
+            </div>
+
+            {/* Company Status Actions */}
+            <div>
+              <h6 className="mb-3">
+                <ShieldFillCheck className="me-2" />
+                Company Status
+              </h6>
+              <div className="d-grid">
+                <Button
+                  variant={selectedCompany?.disabled ? 'success' : 'warning'}
+                  onClick={() => {
+                    setShowActionsModal(false);
+                    if (selectedCompany) {
+                      handleToggleCompanyDisabled(selectedCompany);
+                    }
+                  }}
+                >
+                  {selectedCompany?.disabled ? (
+                    <>
+                      <ShieldFillCheck className="me-2" />
+                      Enable Company
+                    </>
+                  ) : (
+                    <>
+                      <ShieldFillExclamation className="me-2" />
+                      Disable Company
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowActionsModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       {/* Provision Phone Number Modal */}
       <Modal show={showProvisionModal} onHide={() => setShowProvisionModal(false)}>

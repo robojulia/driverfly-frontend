@@ -755,7 +755,7 @@ export function PhoneNumber() {
                     isDisabled={isVerificationSuccessful || isLoadingProfile}
                   />
                   <p className="text-muted mt-2 small text-center">
-                    Can't find the code? Check your messages or request a new one.
+                    Can&apos;t find the code? Check your messages or request a new one.
                   </p>
                 </div>
               )}

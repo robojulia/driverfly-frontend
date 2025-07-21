@@ -217,7 +217,7 @@ export function DriverLicense() {
                         <div className="d-flex align-items-center">
                           <span className="me-2">📄</span>
                           <div>
-                            <div className="fw-bold">Current Driver's License</div>
+                            <div className="fw-bold">Current Driver&apos;s License</div>
                             <small className="text-muted">
                               {existingDoc.name || 'Uploaded document'}
                             </small>

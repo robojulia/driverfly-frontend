@@ -17,6 +17,7 @@ import { useRouter } from 'next/router';
 import { useMediaQuery } from 'react-responsive';
 import CompanyProfileNav from '../header/company-profile-nav';
 import Impersonate from '../../../impersonate/impersonate';
+import CompanyDisableBanner from '../../../company/disable-banner/company-disable-banner';
 import styles from '../../../../public/css/dashboard-layout.module.css';
 import { getBuildInfo } from '../../../../utils/version';
 
@@ -193,6 +194,9 @@ export default function DashboardLayout({ children, sidebarItems }: DashboardLay
             </div>
           </div>
         </header>
+
+        {/* Company Disable Banner */}
+        <CompanyDisableBanner />
 
         {/* Main Content */}
         <main className="main-content">{children}</main>

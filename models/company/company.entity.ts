@@ -10,6 +10,7 @@ export class CompanyEntity {
   website?: string;
   photo?: DocumentEntity;
   status?: Status;
+  disabled?: boolean;
   uuid_token?: string;
   slug?: string;
   location?: string;
