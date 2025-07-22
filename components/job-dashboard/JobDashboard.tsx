@@ -13,6 +13,7 @@ import {
   TelephoneFill,
   ChevronDown,
   ChevronUp,
+  BoxArrowUpRight,
 } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { DeleteButton } from '../buttons/delete-button';
@@ -20,6 +21,7 @@ import { ReactivateJobButton } from '../jobs/reactivate-job';
 import { EligibilityOverview } from './EligibilityOverview';
 import { JobDetailsOverview } from './JobDetailsOverview';
 import { CampaignCta } from './CampaignCta';
+import { JobAnalyticsDashboard } from '../analytics/JobAnalyticsDashboard';
 import { JobEntity } from '../../models/job/job.entity';
 import { useAuth } from '../../hooks/use-auth';
 import { useTranslation } from '../../hooks/use-translation';
@@ -47,7 +49,14 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
   const { hasPermission } = useAuth();
 
   const [job, setJob] = useState<JobEntity>(initialJob);
-  const [activeTab, setActiveTab] = useState<TabType>('overview');
+  const [activeTab, setActiveTab] = useState<TabType>(() => {
+    // Persist active tab across token refreshes using sessionStorage
+    if (typeof window !== 'undefined') {
+      const savedTab = sessionStorage.getItem(`jobDashboard_activeTab_${initialJob.id}`);
+      return (savedTab as TabType) || 'overview';
+    }
+    return 'overview';
+  });
   const [eligibilityStats, setEligibilityStats] = useState(null);
   const [loadingStats, setLoadingStats] = useState(true);
   const [campaignCtaExpanded, setCampaignCtaExpanded] = useState(false);
@@ -123,6 +132,29 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
       loadEligibilityStats();
     }
   }, [job.id, loadJobCampaigns]);
+
+  // Helper function to change tabs and persist selection
+  const handleTabChange = (tabId: TabType) => {
+    setActiveTab(tabId);
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(`jobDashboard_activeTab_${job.id}`, tabId);
+    }
+  };
+
+  // Helper function to generate job posting URL
+  const getJobPostingUrl = () => {
+    if (!job.title || !job.id) return '#';
+
+    // Create a slug from the job title (similar to how it's likely generated)
+    const slug = job.title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Replace multiple hyphens with single
+      .trim();
+
+    return `/jobs/${job.id}/${slug}`;
+  };
 
   const handleEditClick = () => {
     router.push(`${router.asPath}/edit`);
@@ -267,6 +299,15 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
             </div>
 
             <div className={styles.actions}>
+              <Button
+                href={getJobPostingUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="me-2"
+              >
+                <BoxArrowUpRight className="me-1" />
+                View Job Posting
+              </Button>
               <ReactivateJobButton
                 variant="outline-success"
                 job={job}
@@ -294,7 +335,7 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
             <button
               key={tab.id}
               className={`${styles.tab} ${activeTab === tab.id ? styles.tabActive : ''}`}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
             >
               <tab.icon className="me-2" />
               {tab.label}
@@ -370,15 +411,7 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
 
         {activeTab === 'details' && <JobDetailsOverview job={job} />}
 
-        {activeTab === 'analytics' && (
-          <div className="text-center p-5">
-            <BarChartFill size={48} className="text-muted mb-3" />
-            <h4 className="text-muted">Analytics Coming Soon</h4>
-            <p className="text-muted">
-              Track application trends, conversion rates, and campaign performance.
-            </p>
-          </div>
-        )}
+        {activeTab === 'analytics' && <JobAnalyticsDashboard job={job} />}
       </div>
     </div>
   );
