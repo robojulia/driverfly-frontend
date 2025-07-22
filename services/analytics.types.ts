@@ -1,16 +1,23 @@
 // Analytics event types and interfaces
+
+export type AnalyticsClickType =
+  | 'apply-button'
+  | 'job-title'
+  | 'company-name'
+  | 'job-details'
+  | 'contact-info'
+  | 'external-link'
+  | 'share-button'
+  | 'drivers-license-uploaded'
+  | 'quick-apply-drivers-license-opened'
+  | 'job_listing_click'
+  | 'risky_action';
+
 export interface AnalyticsEvent {
   jobId: number;
   companyId: number;
   eventType: 'view' | 'click' | 'application';
-  clickType?:
-    | 'apply-button'
-    | 'job-title'
-    | 'company-name'
-    | 'job-details'
-    | 'contact-info'
-    | 'external-link'
-    | 'share-button';
+  clickType?: AnalyticsClickType;
   metadata?: TrackingMetadata;
 }
 

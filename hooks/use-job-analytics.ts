@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { jobAnalytics, JobAnalyticsService } from '../services/job-analytics.service';
-import { TrackingMetadata } from '../services/analytics.types';
+import { AnalyticsClickType, AnalyticsEvent, TrackingMetadata } from '../services/analytics.types';
 
 /**
  * React hook for job analytics tracking
@@ -27,8 +27,13 @@ export const useJobAnalytics = () => {
 
   // Track job click
   const trackJobClick = useCallback(
-    (jobId: number, companyId: number, clickType: string, metadata?: Partial<TrackingMetadata>) => {
-      jobAnalytics.trackJobClick(jobId, companyId, clickType, metadata);
+    (
+      jobId: number,
+      companyId: number,
+      clickType: AnalyticsClickType,
+      metadata?: Partial<TrackingMetadata>
+    ) => {
+      return jobAnalytics.trackJobClick(jobId, companyId, clickType, metadata);
     },
     []
   );
@@ -95,14 +100,14 @@ export const useAutoJobViewTracking = (
 export const useJobClickTracking = (
   jobId: number,
   companyId: number,
-  clickType: string,
+  clickType: AnalyticsClickType,
   metadata?: Partial<TrackingMetadata>
 ) => {
   const { trackJobClick } = useJobAnalytics();
 
   return useCallback(
     (event?: React.MouseEvent) => {
-      trackJobClick(jobId, companyId, clickType, metadata);
+      trackJobClick(jobId, companyId, clickType as AnalyticsClickType, metadata);
     },
     [jobId, companyId, clickType, metadata, trackJobClick]
   );

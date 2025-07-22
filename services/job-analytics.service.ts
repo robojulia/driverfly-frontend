@@ -3,6 +3,7 @@ import {
   TrackingMetadata,
   AnalyticsResponse,
   BatchAnalyticsResponse,
+  AnalyticsClickType,
 } from './analytics.types';
 import analyticsApi from './analytics-api.service';
 
@@ -145,14 +146,7 @@ export class JobAnalyticsService {
   public trackJobClick(
     jobId: number,
     companyId: number,
-    clickType:
-      | 'apply-button'
-      | 'job-title'
-      | 'company-name'
-      | 'job-details'
-      | 'contact-info'
-      | 'external-link'
-      | 'share-button',
+    clickType: AnalyticsClickType,
     metadata?: Partial<TrackingMetadata>
   ): void {
     this.queueEvent({
