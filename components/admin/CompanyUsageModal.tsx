@@ -48,9 +48,10 @@ const CompanyUsageModal: React.FC<CompanyUsageModalProps> = ({ show, onHide, com
   }
 
   const usage = company.usage;
-  const targetProcessingRate = usage.targets.totalTargets > 0 
-    ? (usage.targets.processedTargets / usage.targets.totalTargets) * 100 
-    : 0;
+  const targetProcessingRate =
+    usage.targets.totalTargets > 0
+      ? (usage.targets.processedTargets / usage.targets.totalTargets) * 100
+      : 0;
 
   const formatDate = (date: string | Date): string => {
     return new Date(date).toLocaleDateString('en-US', {
@@ -94,7 +95,11 @@ const CompanyUsageModal: React.FC<CompanyUsageModalProps> = ({ show, onHide, com
                 <div className="d-flex align-items-center mb-2">
                   <strong>Company:</strong>
                   <span className="ms-2">{company.name}</span>
-                  {company.slug && <Badge bg="secondary" className="ms-2">{company.slug}</Badge>}
+                  {company.slug && (
+                    <Badge bg="secondary" className="ms-2">
+                      {company.slug}
+                    </Badge>
+                  )}
                 </div>
                 {company.parent && (
                   <div className="d-flex align-items-center mb-2">
@@ -106,11 +111,17 @@ const CompanyUsageModal: React.FC<CompanyUsageModalProps> = ({ show, onHide, com
               <Col md={6}>
                 <div className="d-flex align-items-center mb-2">
                   <strong>Status:</strong>
-                  <Badge 
-                    bg={company.disabled ? 'danger' : (company.status === 'active' ? 'success' : 'secondary')} 
+                  <Badge
+                    bg={
+                      company.disabled
+                        ? 'danger'
+                        : company.status === 'active'
+                        ? 'success'
+                        : 'secondary'
+                    }
                     className="ms-2"
                   >
-                    {company.disabled ? 'Disabled' : (company.status || 'Unknown')}
+                    {company.disabled ? 'Disabled' : company.status || 'Unknown'}
                   </Badge>
                 </div>
                 <div className="d-flex align-items-center">
@@ -136,18 +147,28 @@ const CompanyUsageModal: React.FC<CompanyUsageModalProps> = ({ show, onHide, com
                 <div className="mb-3">
                   <div className="d-flex justify-content-between align-items-center mb-2">
                     <span className="fw-bold">Total Campaigns</span>
-                    <Badge bg="primary" pill>{usage.campaigns.totalCampaigns}</Badge>
+                    <Badge bg="primary" pill>
+                      {usage.campaigns.totalCampaigns}
+                    </Badge>
                   </div>
                 </div>
 
                 <div className="mb-3">
                   <div className="d-flex justify-content-between align-items-center mb-1">
                     <span>Draft Campaigns</span>
-                    {getStatusBadge(usage.campaigns.draftCampaigns, usage.campaigns.totalCampaigns, 'secondary')}
+                    {getStatusBadge(
+                      usage.campaigns.draftCampaigns,
+                      usage.campaigns.totalCampaigns,
+                      'secondary'
+                    )}
                   </div>
-                  <ProgressBar 
-                    variant="secondary" 
-                    now={usage.campaigns.totalCampaigns > 0 ? (usage.campaigns.draftCampaigns / usage.campaigns.totalCampaigns) * 100 : 0} 
+                  <ProgressBar
+                    variant="secondary"
+                    now={
+                      usage.campaigns.totalCampaigns > 0
+                        ? (usage.campaigns.draftCampaigns / usage.campaigns.totalCampaigns) * 100
+                        : 0
+                    }
                     style={{ height: '8px' }}
                   />
                 </div>
@@ -155,11 +176,19 @@ const CompanyUsageModal: React.FC<CompanyUsageModalProps> = ({ show, onHide, com
                 <div className="mb-3">
                   <div className="d-flex justify-content-between align-items-center mb-1">
                     <span>Active Campaigns</span>
-                    {getStatusBadge(usage.campaigns.activeCampaigns, usage.campaigns.totalCampaigns, 'warning')}
+                    {getStatusBadge(
+                      usage.campaigns.activeCampaigns,
+                      usage.campaigns.totalCampaigns,
+                      'warning'
+                    )}
                   </div>
-                  <ProgressBar 
-                    variant="warning" 
-                    now={usage.campaigns.totalCampaigns > 0 ? (usage.campaigns.activeCampaigns / usage.campaigns.totalCampaigns) * 100 : 0} 
+                  <ProgressBar
+                    variant="warning"
+                    now={
+                      usage.campaigns.totalCampaigns > 0
+                        ? (usage.campaigns.activeCampaigns / usage.campaigns.totalCampaigns) * 100
+                        : 0
+                    }
                     style={{ height: '8px' }}
                   />
                 </div>
@@ -167,11 +196,20 @@ const CompanyUsageModal: React.FC<CompanyUsageModalProps> = ({ show, onHide, com
                 <div className="mb-3">
                   <div className="d-flex justify-content-between align-items-center mb-1">
                     <span>Completed Campaigns</span>
-                    {getStatusBadge(usage.campaigns.completedCampaigns, usage.campaigns.totalCampaigns, 'success')}
+                    {getStatusBadge(
+                      usage.campaigns.completedCampaigns,
+                      usage.campaigns.totalCampaigns,
+                      'success'
+                    )}
                   </div>
-                  <ProgressBar 
-                    variant="success" 
-                    now={usage.campaigns.totalCampaigns > 0 ? (usage.campaigns.completedCampaigns / usage.campaigns.totalCampaigns) * 100 : 0} 
+                  <ProgressBar
+                    variant="success"
+                    now={
+                      usage.campaigns.totalCampaigns > 0
+                        ? (usage.campaigns.completedCampaigns / usage.campaigns.totalCampaigns) *
+                          100
+                        : 0
+                    }
                     style={{ height: '8px' }}
                   />
                 </div>
@@ -192,18 +230,24 @@ const CompanyUsageModal: React.FC<CompanyUsageModalProps> = ({ show, onHide, com
                 <div className="mb-3">
                   <div className="d-flex justify-content-between align-items-center mb-2">
                     <span className="fw-bold">Total Targets</span>
-                    <Badge bg="info" pill>{usage.targets.totalTargets}</Badge>
+                    <Badge bg="info" pill>
+                      {usage.targets.totalTargets}
+                    </Badge>
                   </div>
                 </div>
 
                 <div className="mb-3">
                   <div className="d-flex justify-content-between align-items-center mb-1">
                     <span>Processed Targets</span>
-                    {getStatusBadge(usage.targets.processedTargets, usage.targets.totalTargets, 'primary')}
+                    {getStatusBadge(
+                      usage.targets.processedTargets,
+                      usage.targets.totalTargets,
+                      'primary'
+                    )}
                   </div>
-                  <ProgressBar 
-                    variant="primary" 
-                    now={targetProcessingRate} 
+                  <ProgressBar
+                    variant="primary"
+                    now={targetProcessingRate}
                     style={{ height: '8px' }}
                   />
                 </div>
@@ -211,11 +255,19 @@ const CompanyUsageModal: React.FC<CompanyUsageModalProps> = ({ show, onHide, com
                 <div className="mb-3">
                   <div className="d-flex justify-content-between align-items-center mb-1">
                     <span>Successful Targets</span>
-                    {getStatusBadge(usage.targets.successfulTargets, usage.targets.totalTargets, 'success')}
+                    {getStatusBadge(
+                      usage.targets.successfulTargets,
+                      usage.targets.totalTargets,
+                      'success'
+                    )}
                   </div>
-                  <ProgressBar 
-                    variant="success" 
-                    now={usage.targets.totalTargets > 0 ? (usage.targets.successfulTargets / usage.targets.totalTargets) * 100 : 0} 
+                  <ProgressBar
+                    variant="success"
+                    now={
+                      usage.targets.totalTargets > 0
+                        ? (usage.targets.successfulTargets / usage.targets.totalTargets) * 100
+                        : 0
+                    }
                     style={{ height: '8px' }}
                   />
                 </div>
@@ -223,11 +275,19 @@ const CompanyUsageModal: React.FC<CompanyUsageModalProps> = ({ show, onHide, com
                 <div className="mb-3">
                   <div className="d-flex justify-content-between align-items-center mb-1">
                     <span>Failed Targets</span>
-                    {getStatusBadge(usage.targets.failedTargets, usage.targets.totalTargets, 'danger')}
+                    {getStatusBadge(
+                      usage.targets.failedTargets,
+                      usage.targets.totalTargets,
+                      'danger'
+                    )}
                   </div>
-                  <ProgressBar 
-                    variant="danger" 
-                    now={usage.targets.totalTargets > 0 ? (usage.targets.failedTargets / usage.targets.totalTargets) * 100 : 0} 
+                  <ProgressBar
+                    variant="danger"
+                    now={
+                      usage.targets.totalTargets > 0
+                        ? (usage.targets.failedTargets / usage.targets.totalTargets) * 100
+                        : 0
+                    }
                     style={{ height: '8px' }}
                   />
                 </div>
@@ -235,11 +295,19 @@ const CompanyUsageModal: React.FC<CompanyUsageModalProps> = ({ show, onHide, com
                 <div className="mb-3">
                   <div className="d-flex justify-content-between align-items-center mb-1">
                     <span>Pending Targets</span>
-                    {getStatusBadge(usage.targets.unprocessedTargets, usage.targets.totalTargets, 'secondary')}
+                    {getStatusBadge(
+                      usage.targets.unprocessedTargets,
+                      usage.targets.totalTargets,
+                      'secondary'
+                    )}
                   </div>
-                  <ProgressBar 
-                    variant="secondary" 
-                    now={usage.targets.totalTargets > 0 ? (usage.targets.unprocessedTargets / usage.targets.totalTargets) * 100 : 0} 
+                  <ProgressBar
+                    variant="secondary"
+                    now={
+                      usage.targets.totalTargets > 0
+                        ? (usage.targets.unprocessedTargets / usage.targets.totalTargets) * 100
+                        : 0
+                    }
                     style={{ height: '8px' }}
                   />
                 </div>

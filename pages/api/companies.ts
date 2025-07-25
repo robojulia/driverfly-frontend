@@ -105,7 +105,10 @@ class CompaniesApi extends BaseApi {
   /**
    * Get all companies with optional phone numbers and usage data
    */
-  async getAllCompanies(includePhoneNumbers = true, includeUsage = false): Promise<CompanyWithPhoneNumber[]> {
+  async getAllCompanies(
+    includePhoneNumbers = true,
+    includeUsage = false
+  ): Promise<CompanyWithPhoneNumber[]> {
     const response = await this.get(this.baseUrl, {
       params: {
         includePhoneNumbers,
