@@ -7,6 +7,27 @@ export interface CompanyPhoneNumber {
   createdAt: Date;
 }
 
+export interface CampaignUsageMetrics {
+  totalCampaigns: number;
+  draftCampaigns: number;
+  activeCampaigns: number;
+  completedCampaigns: number;
+}
+
+export interface TargetUsageMetrics {
+  totalTargets: number;
+  processedTargets: number;
+  unprocessedTargets: number;
+  failedTargets: number;
+  successfulTargets: number;
+}
+
+export interface CompanyUsageData {
+  campaigns: CampaignUsageMetrics;
+  targets: TargetUsageMetrics;
+  lastUpdated: Date;
+}
+
 export interface CompanyWithPhoneNumber {
   id: number;
   name: string;
@@ -21,6 +42,7 @@ export interface CompanyWithPhoneNumber {
     slug?: string;
   } | null;
   managedPhoneNumber?: CompanyPhoneNumber | null;
+  usage?: CompanyUsageData | null;
   [key: string]: any;
 }
 
@@ -81,12 +103,13 @@ class CompaniesApi extends BaseApi {
   private phoneNumbersUrl = '/admin/phone-numbers';
 
   /**
-   * Get all companies with phone number information
+   * Get all companies with optional phone numbers and usage data
    */
-  async getAllCompanies(includePhoneNumbers = true): Promise<CompanyWithPhoneNumber[]> {
+  async getAllCompanies(includePhoneNumbers = true, includeUsage = false): Promise<CompanyWithPhoneNumber[]> {
     const response = await this.get(this.baseUrl, {
       params: {
         includePhoneNumbers,
+        includeUsage,
       },
     });
     return response.data;

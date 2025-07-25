@@ -25,11 +25,13 @@ import {
   ThreeDotsVertical,
   ShieldFillCheck,
   ShieldFillExclamation,
+  BarChart,
 } from 'react-bootstrap-icons';
 import ViewDataTable, { ViewTableColumn } from '../view-details/view-data-table';
 import { useTranslation } from '../../hooks/use-translation';
 import { CompanyForm } from '../forms/company/company-form';
 import { CompanyEntity } from '../../models/company/company.entity';
+import CompanyUsageModal from './CompanyUsageModal';
 import CompaniesApi, {
   CompanyWithPhoneNumber,
   ProvisionPhoneNumberRequest,
@@ -54,6 +56,7 @@ const CompanyManager: React.FC = () => {
   const [showUnparentModal, setShowUnparentModal] = useState(false);
   const [showCreateSubCompanyModal, setShowCreateSubCompanyModal] = useState(false);
   const [showActionsModal, setShowActionsModal] = useState(false);
+  const [showUsageModal, setShowUsageModal] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<CompanyWithPhoneNumber | null>(null);
   const [potentialParents, setPotentialParents] = useState<PotentialParent[]>([]);
   const [parentSearchTerm, setParentSearchTerm] = useState('');
@@ -86,7 +89,7 @@ const CompanyManager: React.FC = () => {
       setError(null);
 
       const api = new CompaniesApi();
-      const companiesData = await api.getAllCompanies(true);
+      const companiesData = await api.getAllCompanies(true, true); // Include usage data
 
       setCompanies(companiesData);
     } catch (err: any) {
@@ -471,25 +474,46 @@ const CompanyManager: React.FC = () => {
     const isLoading = actionLoading === company.id;
 
     return (
-      <Button
-        variant="primary"
-        size="sm"
-        onClick={() => {
-          setSelectedCompany(company);
-          setShowActionsModal(true);
-        }}
-        disabled={isLoading}
-        title="View all actions for this company"
-      >
-        {isLoading ? (
-          <Spinner animation="border" size="sm" />
-        ) : (
-          <>
-            <Gear className="me-1" />
-            View Actions
-          </>
-        )}
-      </Button>
+      <div className="d-flex gap-2">
+        <Button
+          variant="outline-info"
+          size="sm"
+          onClick={() => {
+            setSelectedCompany(company);
+            setShowUsageModal(true);
+          }}
+          disabled={isLoading}
+          title="View usage metrics for this company"
+        >
+          {isLoading ? (
+            <Spinner animation="border" size="sm" />
+          ) : (
+            <>
+              <BarChart className="me-1" />
+              View Usage
+            </>
+          )}
+        </Button>
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={() => {
+            setSelectedCompany(company);
+            setShowActionsModal(true);
+          }}
+          disabled={isLoading}
+          title="View all actions for this company"
+        >
+          {isLoading ? (
+            <Spinner animation="border" size="sm" />
+          ) : (
+            <>
+              <Gear className="me-1" />
+              View Actions
+            </>
+          )}
+        </Button>
+      </div>
     );
   };
 
@@ -545,7 +569,7 @@ const CompanyManager: React.FC = () => {
       id: 'actions',
       name: 'Actions',
       sortable: false,
-      minWidth: '250px',
+      minWidth: '300px',
       cell: (company) => (
         <div className="d-flex gap-2 flex-wrap">{renderCompanyActions(company)}</div>
       ),
@@ -1018,6 +1042,13 @@ const CompanyManager: React.FC = () => {
           />
         </Modal.Body>
       </Modal>
+
+      {/* Company Usage Modal */}
+      <CompanyUsageModal
+        show={showUsageModal}
+        onHide={() => setShowUsageModal(false)}
+        company={selectedCompany}
+      />
     </>
   );
 };
