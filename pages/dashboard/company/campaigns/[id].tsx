@@ -38,17 +38,20 @@ import PageLayout from '../../../../components/layouts/page/page-layout';
 import { ConfirmationModal } from '../../../../components/shared';
 import { useFeatureFlags } from '../../../../context/feature-flag-context';
 import { useUserContext } from '../../../../context/user-context';
+import { useAuth } from '../../../../hooks/use-auth';
 import { useTranslation } from '../../../../hooks/use-translation';
 import { useCampaign } from '../../../../hooks/campaigns/use-campaigns';
 import { CampaignStatus } from '../../../../enums/campaigns/campaign-status.enum';
 import { CampaignType } from '../../../../enums/campaigns/campaign-type.enum';
 import { CampaignCommunicationType } from '../../../../enums/campaigns/campaign-communication-type.enum';
+import { CampaignTargetType } from '../../../../enums/campaigns/campaign-target-type.enum';
 import { CampaignConfigDisplay } from '../../../../components/campaigns';
 import {
   CampaignOverview,
   CampaignTargetList,
   CampaignTestView,
 } from '../../../../components/campaigns/detail';
+import { AdminCampaignTest } from '../../../../components/campaigns/detail/AdminCampaignTest';
 import { ManualTargetSelectionModal } from '../../../../components/campaigns/ManualTargetSelectionModal';
 import CampaignsApi from '../../../../pages/api/campaigns';
 
@@ -57,7 +60,9 @@ const CampaignDetailPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const { isFeatureEnabled, isLoading: flagsLoading } = useFeatureFlags();
-  const { user } = useUserContext();
+  const { user, isSuperAdmin } = useAuth();
+
+  console.log(user, isSuperAdmin);
 
   const campaignId = id ? parseInt(id as string) : 0;
   const {
@@ -335,6 +340,35 @@ const CampaignDetailPage = () => {
     return new Date(date).toLocaleDateString();
   };
 
+  const addCurrentUserAsTestTarget = () => {
+    if (!user || !campaign) return;
+
+    // Add current user as a test target for the campaign
+    const testTarget = {
+      id: Date.now(), // Temporary ID for UI
+      campaignId: campaign.id,
+      targetType: CampaignTargetType.LEAD, // Use 'lead' type for test users
+      targetId: user.id,
+      name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Test User',
+      email: user.email,
+      phone: user.cell_number || '+1234567890', // Fallback for testing
+      status: 'pending',
+      processed: false,
+      failed: false,
+      isTest: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    // This would typically be done via API call to actually add the test target
+    // For now, we'll just update the local state for UI purposes
+    if (campaign.targets) {
+      campaign.targets.push(testTarget as any);
+    } else {
+      campaign.targets = [testTarget as any];
+    }
+  };
+
   const calculateSuccessRate = () => {
     if (!stats || stats.totalTargets === 0) return 0;
     return Math.round((stats.deliveredCount / stats.totalTargets) * 100);
@@ -387,6 +421,8 @@ const CampaignDetailPage = () => {
       </PageLayout>
     );
   }
+
+  console.log(campaign, isSuperAdmin && campaign.type === CampaignType.JOB_REACHOUT);
 
   return (
     <PageLayout
@@ -611,6 +647,14 @@ const CampaignDetailPage = () => {
                       handleAddTestTarget={handleAddTestTarget}
                       handleSendTest={handleSendTest}
                     />
+
+                    {/* Admin Test Campaign Section - Super Admin Only */}
+                    {isSuperAdmin && campaign.type === CampaignType.JOB_REACHOUT && (
+                      <AdminCampaignTest
+                        campaign={campaign}
+                        onAddTestTarget={addCurrentUserAsTestTarget}
+                      />
+                    )}
                   </TabPane>
 
                   <TabPane tabId="targets">
