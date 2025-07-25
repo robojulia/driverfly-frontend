@@ -169,12 +169,22 @@ export const AdminCampaignTest: React.FC<AdminCampaignTestProps> = ({
     <Row className="mt-5">
       <Col>
         <Card className="border-warning shadow-sm">
-          <CardHeader className="bg-warning bg-opacity-10 border-warning py-3">
+          <CardHeader className="bg-warning bg-opacity-15 border-warning py-4">
             <div className="d-flex align-items-center">
-              <Gear className="me-2 text-warning" size={20} />
-              <div>
-                <h5 className="fw-semibold text-warning mb-1">Admin Testing Tool</h5>
-                <small className="text-muted">Job Reachout Campaign Call Results</small>
+              <div
+                className="d-flex align-items-center justify-content-center bg-warning text-white rounded-circle me-3"
+                style={{ width: '40px', height: '40px' }}
+              >
+                <Gear size={20} />
+              </div>
+              <div className="flex-grow-1">
+                <h5 className="fw-bold text-dark mb-1">Job Reachout Campaign Call Results</h5>
+                <p className="text-muted mb-0 small">
+                  Test different call outcomes and simulate campaign microservice responses
+                </p>
+              </div>
+              <div className="badge bg-warning text-dark px-3 py-2 fw-semibold">
+                Admin Testing Tool
               </div>
             </div>
           </CardHeader>
@@ -191,13 +201,15 @@ export const AdminCampaignTest: React.FC<AdminCampaignTestProps> = ({
               </Alert>
             )}
 
-            <div className="alert alert-info mb-4">
+            <div className="bg-light border-start border-4 border-info p-3 mb-4 rounded-end">
               <div className="d-flex align-items-start">
-                <QuestionCircleFill className="text-info me-2 mt-1" size={16} />
+                <QuestionCircleFill className="text-info me-3 mt-1 flex-shrink-0" size={18} />
                 <div>
-                  <strong>About this tool:</strong> Test different call outcomes for job reachout
-                  campaigns. This simulates campaign microservice responses to test SMS delivery and
-                  engagement creation.
+                  <h6 className="fw-semibold text-dark mb-2">About this tool</h6>
+                  <p className="mb-0 text-muted">
+                    Test different call outcomes for job reachout campaigns. This simulates campaign
+                    microservice responses to test SMS delivery and engagement creation.
+                  </p>
                 </div>
               </div>
             </div>

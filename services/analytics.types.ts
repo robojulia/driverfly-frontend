@@ -25,9 +25,9 @@ export interface TrackingMetadata {
   referrer?: string;
   userAgent?: string;
   viewport?: string;
-  campaignId?: string;
-  source?: string;
-  medium?: string;
+  campaignId?: string; // Campaign ID from either ?campaignId= or ?utm_campaign= URL parameters
+  source?: string; // Traffic source (utm_source, or 'campaign' for direct campaign links)
+  medium?: string; // Traffic medium (utm_medium, or 'sms' for campaign SMS links)
   page?: string;
   buttonType?: string;
   timestamp?: number;

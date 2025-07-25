@@ -137,7 +137,11 @@ export class JobAnalyticsService {
       },
     });
 
-    console.debug(`[Analytics] Tracked job view: ${jobId}`);
+    console.debug(
+      `[Analytics] Tracked job view: ${jobId}${
+        metadata?.campaignId ? ` (campaign: ${metadata.campaignId})` : ''
+      }`
+    );
   }
 
   /**
@@ -162,7 +166,12 @@ export class JobAnalyticsService {
       },
     });
 
-    console.debug(`[Analytics] Tracked job click: ${jobId}, type: ${clickType}`);
+    const campaignInfo = metadata?.campaignId || this.getBaseMetadata().campaignId;
+    console.debug(
+      `[Analytics] Tracked job click: ${jobId}, type: ${clickType}${
+        campaignInfo ? ` (campaign: ${campaignInfo})` : ''
+      }`
+    );
   }
 
   /**
@@ -352,13 +361,18 @@ export class JobAnalyticsService {
 
     const urlParams = new URLSearchParams(window.location.search);
 
+    // Extract campaign ID from both UTM parameter and direct campaignId parameter
+    const utmCampaign = urlParams.get('utm_campaign');
+    const directCampaignId = urlParams.get('campaignId');
+    const campaignId = directCampaignId || utmCampaign || undefined;
+
     return {
       referrer: document.referrer,
       userAgent: navigator.userAgent,
       viewport: `${window.innerWidth}x${window.innerHeight}`,
-      campaignId: urlParams.get('utm_campaign') || undefined,
-      source: urlParams.get('utm_source') || undefined,
-      medium: urlParams.get('utm_medium') || undefined,
+      campaignId,
+      source: urlParams.get('utm_source') || (directCampaignId ? 'campaign' : undefined),
+      medium: urlParams.get('utm_medium') || (directCampaignId ? 'sms' : undefined),
     };
   }
 

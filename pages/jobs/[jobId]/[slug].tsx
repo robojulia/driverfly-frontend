@@ -9,13 +9,27 @@ import { JobDetailProps } from '../../../types/job/job-detail-props.type';
 import { Pagination } from '../../../types/pagination.type';
 import JobApi from '../../api/job';
 
-export default function Detail({ job, relatedJobs, quick_apply, error }: JobDetailProps) {
+export default function Detail({
+  job,
+  relatedJobs,
+  quick_apply,
+  campaignInfo,
+  error,
+}: JobDetailProps) {
   console.error('error', error);
 
   const { t } = useTranslation();
 
-  // Automatically track job view when page loads
-  useAutoJobViewTracking(job?.id, job?.company?.id);
+  // Automatically track job view when page loads, including campaign metadata
+  const viewMetadata = campaignInfo?.campaignId
+    ? {
+        campaignId: campaignInfo.campaignId,
+        source: campaignInfo.source,
+        medium: campaignInfo.medium,
+      }
+    : undefined;
+
+  useAutoJobViewTracking(job?.id, job?.company?.id, viewMetadata);
 
   return (
     <>
@@ -43,7 +57,7 @@ export default function Detail({ job, relatedJobs, quick_apply, error }: JobDeta
 export async function getServerSideProps({ params, query }) {
   try {
     const { jobId } = params;
-    const { quick_apply } = query;
+    const { quick_apply, campaignId, utm_campaign, utm_source, utm_medium } = query;
 
     if (!!!jobId) return { notFound: true };
 
@@ -55,11 +69,20 @@ export async function getServerSideProps({ params, query }) {
       companyId: job.company?.id,
       take: 3,
     })) as Pagination<JobEntity>;
+
+    // Extract campaign information for analytics
+    const campaignInfo = {
+      campaignId: campaignId || utm_campaign || null,
+      source: utm_source || (campaignId ? 'campaign' : null),
+      medium: utm_medium || (campaignId ? 'sms' : null),
+    };
+
     return {
       props: {
         job: job || {},
         relatedJobs: items || [],
         quick_apply: quick_apply || null,
+        campaignInfo,
         error: null,
       },
     };
