@@ -25,6 +25,7 @@ import { JobAnalyticsDashboard } from '../analytics/JobAnalyticsDashboard';
 import { JobEntity } from '../../models/job/job.entity';
 import { useAuth } from '../../hooks/use-auth';
 import { useTranslation } from '../../hooks/use-translation';
+import { useFeatureFlag } from '../../context/feature-flag-context';
 import { useJobCampaigns } from '../../hooks/campaigns/use-campaigns';
 import { globalAjaxExceptionHandler } from '../../utils/ajax';
 import JobApi from '../../pages/api/job';
@@ -47,6 +48,7 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
   const router = useRouter();
   const { t } = useTranslation();
   const { hasPermission } = useAuth();
+  const campaignsEnabled = useFeatureFlag('CAMPAIGNS_ENABLED');
 
   const [job, setJob] = useState<JobEntity>(initialJob);
   const [activeTab, setActiveTab] = useState<TabType>(() => {
@@ -61,8 +63,12 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
   const [loadingStats, setLoadingStats] = useState(true);
   const [campaignCtaExpanded, setCampaignCtaExpanded] = useState(false);
 
-  // Load campaigns for this job
-  const { campaigns, loading: campaignsLoading, loadJobCampaigns } = useJobCampaigns(job.id);
+  // Load campaigns for this job - only if campaigns are enabled
+  const {
+    campaigns,
+    loading: campaignsLoading,
+    loadJobCampaigns,
+  } = useJobCampaigns(campaignsEnabled ? job.id : null);
 
   // Load eligibility stats and campaigns
   useEffect(() => {
@@ -110,8 +116,10 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
 
         setEligibilityStats(eligibilityStats);
 
-        // Load existing campaigns for this job
-        await loadJobCampaigns();
+        // Load existing campaigns for this job - only if campaigns are enabled
+        if (campaignsEnabled) {
+          await loadJobCampaigns();
+        }
       } catch (error) {
         console.error('Failed to load eligibility stats:', error);
         // Set default stats on error
@@ -131,7 +139,14 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
     if (job.id) {
       loadEligibilityStats();
     }
-  }, [job.id, loadJobCampaigns]);
+  }, [job.id, loadJobCampaigns, campaignsEnabled]);
+
+  // Redirect to overview if user is on analytics tab but campaigns are disabled
+  useEffect(() => {
+    if (!campaignsEnabled && activeTab === 'analytics') {
+      handleTabChange('overview');
+    }
+  }, [campaignsEnabled, activeTab]);
 
   // Helper function to change tabs and persist selection
   const handleTabChange = (tabId: TabType) => {
@@ -254,11 +269,15 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
       label: 'Job Details',
       icon: BarChartFill,
     },
-    {
-      id: 'analytics' as TabType,
-      label: 'Analytics',
-      icon: BarChartFill,
-    },
+    ...(campaignsEnabled
+      ? [
+          {
+            id: 'analytics' as TabType,
+            label: 'Analytics',
+            icon: BarChartFill,
+          },
+        ]
+      : []),
   ];
 
   const can = {
@@ -349,40 +368,42 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
       <div className={styles.tabContent}>
         {activeTab === 'overview' && (
           <div className={styles.overviewContainer}>
-            {/* Mobile Campaign Toggle */}
-            <div className={styles.campaignToggleContainer}>
-              <button
-                className={`${styles.campaignToggle} ${getCampaignToggleClass()} ${
-                  campaignCtaExpanded ? styles.campaignToggleExpanded : ''
-                }`}
-                onClick={() => setCampaignCtaExpanded(!campaignCtaExpanded)}
-              >
-                <div className={styles.campaignToggleContent}>
-                  <TelephoneFill className={styles.campaignToggleIcon} />
-                  <span className={styles.campaignToggleText}>{getCampaignToggleText()}</span>
-                </div>
-                {campaignCtaExpanded ? (
-                  <ChevronUp className={styles.campaignToggleChevron} />
-                ) : (
-                  <ChevronDown className={styles.campaignToggleChevron} />
-                )}
-              </button>
+            {/* Mobile Campaign Toggle - Only if campaigns enabled */}
+            {campaignsEnabled && (
+              <div className={styles.campaignToggleContainer}>
+                <button
+                  className={`${styles.campaignToggle} ${getCampaignToggleClass()} ${
+                    campaignCtaExpanded ? styles.campaignToggleExpanded : ''
+                  }`}
+                  onClick={() => setCampaignCtaExpanded(!campaignCtaExpanded)}
+                >
+                  <div className={styles.campaignToggleContent}>
+                    <TelephoneFill className={styles.campaignToggleIcon} />
+                    <span className={styles.campaignToggleText}>{getCampaignToggleText()}</span>
+                  </div>
+                  {campaignCtaExpanded ? (
+                    <ChevronUp className={styles.campaignToggleChevron} />
+                  ) : (
+                    <ChevronDown className={styles.campaignToggleChevron} />
+                  )}
+                </button>
 
-              {/* Collapsible Campaign CTA for mobile */}
-              <div
-                className={`${styles.campaignCtaCollapsible} ${
-                  campaignCtaExpanded ? styles.campaignCtaExpanded : ''
-                }`}
-              >
-                <CampaignCta
-                  job={job}
-                  campaigns={campaigns}
-                  campaignsLoading={campaignsLoading}
-                  eligibilityStats={eligibilityStats}
-                  onCampaignCreated={loadJobCampaigns}
-                />
+                {/* Collapsible Campaign CTA for mobile */}
+                <div
+                  className={`${styles.campaignCtaCollapsible} ${
+                    campaignCtaExpanded ? styles.campaignCtaExpanded : ''
+                  }`}
+                >
+                  <CampaignCta
+                    job={job}
+                    campaigns={campaigns}
+                    campaignsLoading={campaignsLoading}
+                    eligibilityStats={eligibilityStats}
+                    onCampaignCreated={loadJobCampaigns}
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
             <div className={styles.overviewMainLayout}>
               {/* Main Content: Eligibility Overview with Stats + Table */}
@@ -395,23 +416,25 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
                 />
               </div>
 
-              {/* Right Sidebar: Campaign CTA (Desktop) */}
-              <div className={styles.overviewSidebar}>
-                <CampaignCta
-                  job={job}
-                  campaigns={campaigns}
-                  campaignsLoading={campaignsLoading}
-                  eligibilityStats={eligibilityStats}
-                  onCampaignCreated={loadJobCampaigns}
-                />
-              </div>
+              {/* Right Sidebar: Campaign CTA (Desktop) - Only if campaigns enabled */}
+              {campaignsEnabled && (
+                <div className={styles.overviewSidebar}>
+                  <CampaignCta
+                    job={job}
+                    campaigns={campaigns}
+                    campaignsLoading={campaignsLoading}
+                    eligibilityStats={eligibilityStats}
+                    onCampaignCreated={loadJobCampaigns}
+                  />
+                </div>
+              )}
             </div>
           </div>
         )}
 
         {activeTab === 'details' && <JobDetailsOverview job={job} />}
 
-        {activeTab === 'analytics' && <JobAnalyticsDashboard job={job} />}
+        {activeTab === 'analytics' && campaignsEnabled && <JobAnalyticsDashboard job={job} />}
       </div>
     </div>
   );
