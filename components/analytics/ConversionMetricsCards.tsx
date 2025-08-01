@@ -54,12 +54,9 @@ export const ConversionMetricsCards: React.FC<ConversionMetricsCardsProps> = ({
 }) => {
   const periodLabel = period === '7d' ? 'week' : period === '30d' ? 'month' : '90 days';
 
-  // Calculate total interactions (apply clicks + full application starts)
-  const totalInteractions = metrics.clickToApply + (metrics.applicationsStarted || 0);
-
-  // Calculate percentage of interactions that led to completed applications
-  const interactionToApplicationRate =
-    totalInteractions > 0 ? (metrics.totalApplications / totalInteractions) * 100 : 0;
+  // Calculate percentage of apply clicks that led to completed applications
+  const clickToApplicationRate =
+    metrics.clickToApply > 0 ? (metrics.totalApplications / metrics.clickToApply) * 100 : 0;
 
   return (
     <Row className="mb-4">
@@ -75,9 +72,9 @@ export const ConversionMetricsCards: React.FC<ConversionMetricsCardsProps> = ({
       <Col sm={6} lg={3} className="mb-3">
         <MetricCard
           title="Apply Clicks"
-          value={metrics.clickToApply + (metrics.applicationsStarted || 0)}
+          value={metrics.clickToApply}
           icon={CursorFill}
-          subtitle={`${metrics.clickToApply} clicks + ${metrics.applicationsStarted || 0} starts`}
+          subtitle={`Button clicks to apply`}
         />
       </Col>
 
@@ -86,7 +83,7 @@ export const ConversionMetricsCards: React.FC<ConversionMetricsCardsProps> = ({
           title="Applications"
           value={metrics.totalApplications}
           icon={FileText}
-          subtitle={`${interactionToApplicationRate.toFixed(1)}% of interactions`}
+          subtitle={`${clickToApplicationRate.toFixed(1)}% of apply clicks`}
         />
       </Col>
 

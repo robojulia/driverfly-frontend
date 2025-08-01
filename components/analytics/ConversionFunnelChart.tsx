@@ -62,9 +62,6 @@ const FunnelStage: React.FC<FunnelStageProps> = ({
 export const ConversionFunnelChart: React.FC<ConversionFunnelChartProps> = ({ metrics }) => {
   const maxValue = metrics.views || 1; // Avoid division by zero
 
-  // Calculate total interactions from views (apply clicks + DHA starts)
-  const totalInteractions = metrics.clickToApply + (metrics.applicationsStarted || 0);
-
   const stages = [
     {
       label: 'Job Views',
@@ -72,10 +69,6 @@ export const ConversionFunnelChart: React.FC<ConversionFunnelChartProps> = ({ me
       percentage: 100,
       color: '#0d6efd', // Bootstrap primary blue
     },
-  ];
-
-  // Show the two parallel paths from views
-  const parallelPaths = [
     {
       label: 'Apply Clicks',
       count: metrics.clickToApply,
@@ -83,19 +76,12 @@ export const ConversionFunnelChart: React.FC<ConversionFunnelChartProps> = ({ me
       color: '#6f42c1', // Bootstrap purple
     },
     {
-      label: 'Full Applications Started',
-      count: metrics.applicationsStarted || 0,
-      percentage: ((metrics.applicationsStarted || 0) / maxValue) * 100,
-      color: '#fd7e14', // Bootstrap orange
+      label: 'Applications Completed',
+      count: metrics.totalApplications,
+      percentage: (metrics.totalApplications / maxValue) * 100,
+      color: '#198754', // Bootstrap green
     },
   ];
-
-  const finalStage = {
-    label: 'Applications Completed',
-    count: metrics.totalApplications,
-    percentage: (metrics.totalApplications / maxValue) * 100,
-    color: '#198754', // Bootstrap green
-  };
 
   if (maxValue === 0 || metrics.views === 0) {
     return (
@@ -112,71 +98,43 @@ export const ConversionFunnelChart: React.FC<ConversionFunnelChartProps> = ({ me
     <div className="overflow-auto">
       <div className="mb-3">
         <small className="text-muted">
-          Job seekers can take multiple paths from viewing to applying
+          Job posting conversion funnel - views to completed applications
         </small>
       </div>
 
       <div className="min-width-300">
-        {/* First stage - Job Views */}
-        <FunnelStage
-          key="views"
-          label={stages[0].label}
-          count={stages[0].count}
-          percentage={stages[0].percentage}
-          width={stages[0].percentage}
-          color={stages[0].color}
-          isLast={false}
-        />
-
-        {/* Parallel paths section */}
-        <div className="my-3 ps-3">
-          <div className="small text-muted mb-2 text-center">↓ Multiple interaction paths ↓</div>
-
-          {parallelPaths.map((path, index) => (
-            <div key={path.label} className="mb-2">
-              <FunnelStage
-                label={path.label}
-                count={path.count}
-                percentage={path.percentage}
-                width={path.percentage}
-                color={path.color}
-                isLast={false}
-              />
-            </div>
-          ))}
-
-          <div className="small text-muted text-center mt-2">↓ Both paths can lead to ↓</div>
-        </div>
-
-        {/* Final stage - Applications Completed */}
-        <FunnelStage
-          key="completed"
-          label={finalStage.label}
-          count={finalStage.count}
-          percentage={finalStage.percentage}
-          width={finalStage.percentage}
-          color={finalStage.color}
-          isLast={true}
-        />
+        {/* Render each stage in sequence */}
+        {stages.map((stage, index) => (
+          <div key={stage.label} className="mb-3">
+            <FunnelStage
+              label={stage.label}
+              count={stage.count}
+              percentage={stage.percentage}
+              width={stage.percentage}
+              color={stage.color}
+              isLast={index === stages.length - 1}
+            />
+          </div>
+        ))}
       </div>
 
       <div className="mt-4 p-3 bg-light rounded">
         <div className="row text-center g-2">
-          <div className="col-12 col-md-3">
+          <div className="col-6 col-md-3">
+            <div className="h6 mb-1">{metrics.views}</div>
+            <div className="small text-muted">Views</div>
+          </div>
+          <div className="col-6 col-md-3">
             <div className="h6 mb-1">{metrics.clickToApply}</div>
             <div className="small text-muted">Apply Clicks</div>
           </div>
-          <div className="col-12 col-md-3">
-            <div className="h6 mb-1">{metrics.applicationsStarted || 0}</div>
-            <div className="small text-muted">DHA Starts</div>
-          </div>
-          <div className="col-12 col-md-3">
-            <div className="h6 mb-1">{totalInteractions}</div>
-            <div className="small text-muted">Total Interactions</div>
-          </div>
-          <div className="col-12 col-md-3">
+          <div className="col-6 col-md-3">
             <div className="h6 mb-1">{metrics.totalApplications}</div>
-            <div className="small text-muted">Applications Completed</div>
+            <div className="small text-muted">Applications</div>
+          </div>
+          <div className="col-6 col-md-3">
+            <div className="h6 mb-1">{metrics.overallConversionRate.toFixed(1)}%</div>
+            <div className="small text-muted">Conversion Rate</div>
           </div>
         </div>
       </div>
