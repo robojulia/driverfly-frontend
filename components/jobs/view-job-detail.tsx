@@ -119,7 +119,7 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
           </Col>
           <Col md={3}>
             {!!quick_apply ? (
-              /* Quick Apply - Special scenario */
+              /* Quick Apply - Special scenario for suggested jobs */
               <div className="ort-btn mt-lg-4 mt-0">
                 <Link href={`/apply/suggested-job/${quick_apply}/${job.id}`}>
                   <button
@@ -133,44 +133,11 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                   </button>
                 </Link>
               </div>
-            ) : !company?.id && canApply ? (
-              /* For regular users (drivers) who can apply */
-              <>
-                <EnhancedJobApply setEncourageModal={setEncourageModal} job={job} />
-                {/* Full application form link */}
-                {job.company?.slug && (
-                  <div className="text-center mt-2">
-                    <small className="text-muted">or</small>
-                    <Link href={`/apply/${job.company.slug}?jobId=${job.id}`}>
-                      <a
-                        className="d-block text-decoration-none small text-primary mt-1"
-                        onClick={handleApplyNowClick}
-                      >
-                        Go to full application form →
-                      </a>
-                    </Link>
-                  </div>
-                )}
-              </>
             ) : canApply ? (
-              /* For cases where user can apply but might be a company user - still show full form option */
-              <>
-                <EnhancedJobApply setEncourageModal={setEncourageModal} job={job} />
-                {job.company?.slug && (
-                  <div className="text-center mt-2">
-                    <Link href={`/apply/${job.company.slug}?jobId=${job.id}`}>
-                      <a
-                        className="d-block text-decoration-none small text-primary mt-1"
-                        onClick={handleApplyNowClick}
-                      >
-                        Go to full application form →
-                      </a>
-                    </Link>
-                  </div>
-                )}
-              </>
+              /* Enhanced apply for all users who can apply */
+              <EnhancedJobApply setEncourageModal={setEncourageModal} job={job} />
             ) : (
-              /* For company users or when can't apply - using legacy JobApply for minimal functionality */
+              /* Fallback for users who cannot apply */
               <JobApply job={job} setEncourageModal={setEncourageModal} />
             )}
 

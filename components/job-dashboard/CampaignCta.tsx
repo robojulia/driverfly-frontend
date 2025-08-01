@@ -17,6 +17,7 @@ import { CampaignEntity } from '../../models/campaigns/campaign.entity';
 import { CampaignStatus } from '../../enums/campaigns/campaign-status.enum';
 import { CampaignCommunicationType } from '../../enums/campaigns/campaign-communication-type.enum';
 import { useTranslation } from '../../hooks/use-translation';
+import { useFeatureFlag } from '../../context/feature-flag-context';
 import { globalAjaxExceptionHandler } from '../../utils/ajax';
 import CampaignsApi, {
   CreateJobReachoutCampaignDto,
@@ -40,10 +41,14 @@ export function CampaignCta({
 }: CampaignCtaProps) {
   const router = useRouter();
   const { t } = useTranslation();
+  const callCampaignsEnabled = useFeatureFlag('CallCampaignsEnabled');
+
   const [campaignModalOpen, setCampaignModalOpen] = useState(false);
   const [creatingCampaign, setCreatingCampaign] = useState(false);
   const [selectedCommunicationType, setSelectedCommunicationType] =
-    useState<CampaignCommunicationType>(CampaignCommunicationType.VOICE);
+    useState<CampaignCommunicationType>(
+      callCampaignsEnabled ? CampaignCommunicationType.VOICE : CampaignCommunicationType.SMS
+    );
   const [reachPreview, setReachPreview] = useState<CampaignReachPreviewResponse | null>(null);
   const [loadingReachPreview, setLoadingReachPreview] = useState(false);
 
@@ -80,6 +85,13 @@ export function CampaignCta({
       fetchReachPreview(selectedCommunicationType);
     }
   }, [campaignModalOpen, selectedCommunicationType, job.id]);
+
+  // Update default communication type when feature flag changes
+  useEffect(() => {
+    if (!callCampaignsEnabled) {
+      setSelectedCommunicationType(CampaignCommunicationType.SMS);
+    }
+  }, [callCampaignsEnabled]);
 
   const handleCommunicationTypeChange = (type: CampaignCommunicationType) => {
     setSelectedCommunicationType(type);
@@ -283,15 +295,33 @@ export function CampaignCta({
                       selectedCommunicationType === CampaignCommunicationType.VOICE
                         ? 'border-primary'
                         : 'border-light'
-                    }`}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => handleCommunicationTypeChange(CampaignCommunicationType.VOICE)}
+                    } ${!callCampaignsEnabled ? 'opacity-50' : ''}`}
+                    style={{
+                      cursor: callCampaignsEnabled ? 'pointer' : 'not-allowed',
+                    }}
+                    onClick={() => {
+                      if (callCampaignsEnabled) {
+                        handleCommunicationTypeChange(CampaignCommunicationType.VOICE);
+                      }
+                    }}
                   >
                     <Card.Body className="text-center p-3">
-                      <TelephoneFill size={32} className="text-primary mb-2" />
-                      <h6>Voice Calls</h6>
+                      <TelephoneFill
+                        size={32}
+                        className={`mb-2 ${callCampaignsEnabled ? 'text-primary' : 'text-muted'}`}
+                      />
+                      <h6 className={callCampaignsEnabled ? '' : 'text-muted'}>
+                        Voice Calls
+                        {!callCampaignsEnabled && (
+                          <Badge bg="secondary" className="ms-2">
+                            Coming Soon
+                          </Badge>
+                        )}
+                      </h6>
                       <small className="text-muted">
-                        Personal phone conversations with candidates
+                        {callCampaignsEnabled
+                          ? 'Personal phone conversations with candidates'
+                          : 'Call campaigns are coming soon!'}
                       </small>
                     </Card.Body>
                   </Card>
@@ -300,15 +330,22 @@ export function CampaignCta({
                   <Card
                     className={`h-100 ${
                       selectedCommunicationType === CampaignCommunicationType.SMS
-                        ? 'border-primary'
+                        ? 'border-success'
                         : 'border-light'
-                    }`}
+                    } ${!callCampaignsEnabled ? 'border-success bg-light' : ''}`}
                     style={{ cursor: 'pointer' }}
                     onClick={() => handleCommunicationTypeChange(CampaignCommunicationType.SMS)}
                   >
                     <Card.Body className="text-center p-3">
                       <ChatDotsFill size={32} className="text-success mb-2" />
-                      <h6>SMS Messages</h6>
+                      <h6>
+                        SMS Messages
+                        {!callCampaignsEnabled && (
+                          <Badge bg="success" className="ms-2">
+                            Recommended
+                          </Badge>
+                        )}
+                      </h6>
                       <small className="text-muted">Text messages to candidates&apos; phones</small>
                     </Card.Body>
                   </Card>
@@ -316,6 +353,16 @@ export function CampaignCta({
               </Row>
             </Card.Body>
           </Card>
+
+          {!callCampaignsEnabled && (
+            <div className="alert alert-info mb-4">
+              <InfoCircleFill className="me-2" />
+              <strong>SMS campaigns are currently available.</strong> Voice call campaigns are
+              coming soon! SMS campaigns provide effective reach and higher engagement rates with
+              qualified candidates.
+            </div>
+          )}
+
           {completedCampaigns.length > 0 && (
             <div className="alert alert-info mb-4">
               <strong>Note:</strong> You&apos;ve previously run {completedCampaigns.length} campaign
