@@ -116,7 +116,7 @@ export function VehicleForm(props: VehicleFormProps) {
     if (form.values.trailer_type === VehicleTrailerType.OTHER) {
       console.log('- trailer_type_other:', form.values.trailer_type_other);
     }
-    if (form.values.accessories?.includes(VehicleAccessory.OTHER)) {
+    if ((form.values.accessories || []).includes(VehicleAccessory.OTHER)) {
       console.log('- accessory_other:', form.values.accessory_other);
     }
     console.log('Current Validation Errors:', form.errors);
@@ -144,7 +144,7 @@ export function VehicleForm(props: VehicleFormProps) {
   }, []);
 
   const handleAccessoryClick = (accessory: VehicleAccessory) => {
-    const currentAccessories = [...form.values.accessories];
+    const currentAccessories = [...(form.values.accessories || [])];
     const index = currentAccessories.indexOf(accessory);
     if (index === -1) {
       currentAccessories.push(accessory);
@@ -404,34 +404,62 @@ export function VehicleForm(props: VehicleFormProps) {
                   <div
                     key={accessory}
                     className={`accessory-item ${
-                      form.values.accessories.includes(accessory) ? 'selected' : ''
+                      (form.values.accessories || []).includes(accessory) ? 'selected' : ''
                     }`}
                     onClick={() => handleAccessoryClick(accessory)}
                     style={{
                       padding: '12px 16px',
                       border: '1px solid #ddd',
-                      borderRadius: '4px',
+                      borderRadius: '6px',
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '10px',
-                      backgroundColor: form.values.accessories.includes(accessory)
-                        ? '#f0f9ff'
+                      backgroundColor: (form.values.accessories || []).includes(accessory)
+                        ? '#e3f2fd'
                         : '#fff',
+                      borderColor: (form.values.accessories || []).includes(accessory)
+                        ? '#2196f3'
+                        : '#ddd',
                       transition: 'all 0.2s ease',
+                      minHeight: '48px',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!(form.values.accessories || []).includes(accessory)) {
+                        e.currentTarget.style.backgroundColor = '#f5f5f5';
+                        e.currentTarget.style.borderColor = '#bbb';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!(form.values.accessories || []).includes(accessory)) {
+                        e.currentTarget.style.backgroundColor = '#fff';
+                        e.currentTarget.style.borderColor = '#ddd';
+                      }
                     }}
                   >
                     <input
                       type="checkbox"
-                      checked={form.values.accessories.includes(accessory)}
+                      checked={(form.values.accessories || []).includes(accessory)}
                       onChange={() => {}}
-                      style={{ margin: 0 }}
+                      style={{ 
+                        margin: 0,
+                        width: '18px',
+                        height: '18px',
+                        accentColor: '#2196f3'
+                      }}
                     />
-                    <span style={{ flex: 1 }}>{t(`VehicleAccessory.${accessory}`)}</span>
+                    <span style={{ 
+                      flex: 1,
+                      fontSize: '14px',
+                      fontWeight: (form.values.accessories || []).includes(accessory) ? '500' : '400',
+                      color: (form.values.accessories || []).includes(accessory) ? '#1976d2' : '#333'
+                    }}>
+                      {t(`VehicleAccessory.${accessory}`)}
+                    </span>
                   </div>
                 ))}
               </div>
-              {form.values.accessories.includes(VehicleAccessory.OTHER) && (
+              {(form.values.accessories || []).includes(VehicleAccessory.OTHER) && (
                 <BaseTextArea
                   className="mt-3"
                   label="Other Accessories"
@@ -525,8 +553,44 @@ const styles = `
 
 .vehicle-form .accessories-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.vehicle-form .accessory-item {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #fff;
+  transition: all 0.2s ease;
+  min-height: 48px;
+}
+
+.vehicle-form .accessory-item:hover {
+  background-color: #f5f5f5;
+  border-color: #bbb;
+}
+
+.vehicle-form .accessory-item.selected {
+  background-color: #e3f2fd;
+  border-color: #2196f3;
+}
+
+.vehicle-form .accessory-item.selected span {
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.vehicle-form .accessory-item input[type="checkbox"] {
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  accent-color: #2196f3;
 }
 
 @media (max-width: 768px) {

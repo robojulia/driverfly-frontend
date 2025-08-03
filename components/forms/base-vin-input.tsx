@@ -44,9 +44,21 @@ export default function BaseVinInput({
   };
 
   const formatVinDisplay = (vin: string) => {
+    if (!vin) return '';
     // Format as groups of 4 for better readability (optional)
     return vin.replace(/(.{4})/g, '$1 ').trim();
   };
+
+  const getVinValidationMessage = (vin: string) => {
+    if (!vin) return '';
+    if (vin.length < 17) {
+      return 'VIN must be 17 characters long';
+    }
+    return '';
+  };
+
+  const currentValue = formik.values[name] || '';
+  const validationMessage = getVinValidationMessage(currentValue);
 
   return (
     <BaseInput
@@ -56,10 +68,18 @@ export default function BaseVinInput({
       required={required}
       placeholder={placeholder || 'Enter 17-character VIN'}
       maxLength={17}
-      value={formik.values[name] || ''}
+      value={currentValue}
       onChange={handleVinChange}
       onBlur={formik.handleBlur}
-      error={formik.touched[name] && formik.errors[name] ? String(formik.errors[name]) : undefined}
+      error={
+        formik.touched[name] && (formik.errors[name] || validationMessage)
+          ? String(formik.errors[name] || validationMessage)
+          : undefined
+      }
+      helpText={currentValue.length > 0 && currentValue.length < 17 ? 
+        `VIN should be 17 characters (currently ${currentValue.length})` : 
+        undefined
+      }
     />
   );
 }

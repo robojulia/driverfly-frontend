@@ -63,6 +63,8 @@ export default function Dashboard() {
       const a = await applicantApi.list({
         withHired: true,
         is_paginated: false,
+        // Ensure we get all applicant data without exclusions
+        without: [],
       });
       setApplicants(a as ApplicantEntity[]);
       const e = (await employeeApi.list({
