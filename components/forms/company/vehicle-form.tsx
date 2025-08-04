@@ -33,6 +33,11 @@ export interface VehicleFormProps extends BaseFormProps<VehicleEntity> {}
 export function VehicleForm(props: VehicleFormProps) {
   const { t } = useTranslation();
   let { className, entity, onSaveComplete, onSaveError } = props;
+  
+  // Add styles to document head
+  useEffect(() => {
+    addStyles();
+  }, []);
   const [employees, setEmployees] = useState<EmployeeEntity[]>([]);
   const [employeeSearch, setEmployeeSearch] = useState('');
   const [showEmployeeDropdown, setShowEmployeeDropdown] = useState(false);
@@ -524,99 +529,109 @@ export function VehicleForm(props: VehicleFormProps) {
   );
 }
 
-// Add this to your global CSS or component styles
-const styles = `
-.vehicle-form {
-  width: 100%;
-  min-width: 800px;
-  max-width: none;
-  margin: 0;
-}
+// Add styles to the document head
+const addStyles = () => {
+  if (typeof document !== 'undefined') {
+    const styleId = 'vehicle-form-styles';
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement('style');
+      style.id = styleId;
+      style.textContent = `
+        .vehicle-form {
+          width: 100% !important;
+          min-width: 800px !important;
+          max-width: none !important;
+          margin: 0 !important;
+        }
 
-.vehicle-form .form-section {
-  background: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  width: 100%;
-}
+        .vehicle-form .form-section {
+          background: #fff;
+          border-radius: 8px;
+          padding: 20px;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+          width: 100%;
+        }
 
-.vehicle-form .form-control {
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  padding: 8px 12px;
-}
+        .vehicle-form .form-control {
+          border-radius: 4px;
+          border: 1px solid #ddd;
+          padding: 8px 12px;
+        }
 
-.vehicle-form .form-control:focus {
-  border-color: #2684ff;
-  box-shadow: 0 0 0 1px #2684ff;
-}
+        .vehicle-form .form-control:focus {
+          border-color: #2684ff;
+          box-shadow: 0 0 0 1px #2684ff;
+        }
 
-.vehicle-form .form-label {
-  font-weight: 500;
-  margin-bottom: 8px;
-}
+        .vehicle-form .form-label {
+          font-weight: 500;
+          margin-bottom: 8px;
+        }
 
-.vehicle-form .accessories-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-  margin-bottom: 16px;
-  width: 100%;
-}
+        .vehicle-form .accessories-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 12px;
+          margin-bottom: 16px;
+          width: 100%;
+        }
 
-.vehicle-form .accessory-item {
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 8px 12px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #fff;
-  transition: all 0.2s ease;
-  min-height: 40px;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
+        .vehicle-form .accessory-item {
+          border: 1px solid #ddd;
+          border-radius: 6px;
+          padding: 8px 12px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background-color: #fff;
+          transition: all 0.2s ease;
+          min-height: 40px;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
 
-.vehicle-form .accessory-item:hover {
-  background-color: #f5f5f5;
-  border-color: #bbb;
-}
+        .vehicle-form .accessory-item:hover {
+          background-color: #f5f5f5;
+          border-color: #bbb;
+        }
 
-.vehicle-form .accessory-item.selected {
-  background-color: #e3f2fd;
-  border-color: #2196f3;
-}
+        .vehicle-form .accessory-item.selected {
+          background-color: #e3f2fd;
+          border-color: #2196f3;
+        }
 
-.vehicle-form .accessory-item.selected span {
-  color: #1976d2;
-  font-weight: 500;
-}
+        .vehicle-form .accessory-item.selected span {
+          color: #1976d2;
+          font-weight: 500;
+        }
 
-.vehicle-form .accessory-item input[type="checkbox"] {
-  margin: 0;
-  width: 18px;
-  height: 18px;
-  accent-color: #2196f3;
-  flex-shrink: 0;
-}
+        .vehicle-form .accessory-item input[type="checkbox"] {
+          margin: 0;
+          width: 18px;
+          height: 18px;
+          accent-color: #2196f3;
+          flex-shrink: 0;
+        }
 
-.vehicle-form .accessory-item span {
-  flex: 1;
-  min-width: 0;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
+        .vehicle-form .accessory-item span {
+          flex: 1;
+          min-width: 0;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
 
-@media (max-width: 768px) {
-  .vehicle-form .form-section {
-    padding: 16px;
+        @media (max-width: 768px) {
+          .vehicle-form .form-section {
+            padding: 16px;
+          }
+          
+          .vehicle-form .accessories-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
   }
-  
-  .vehicle-form .accessories-grid {
-    grid-template-columns: 1fr;
-  }
-}
-`;
+};
