@@ -174,7 +174,7 @@ export function VehicleForm(props: VehicleFormProps) {
       showActionsAtBoth={false}
       actionButtonDown={true}
     >
-      <Container className="px-4 py-3">
+      <Container fluid className="px-4 py-3">
         <Row>
           <Col lg={6}>
             <div className="form-section h-100">
@@ -525,7 +525,7 @@ export function VehicleForm(props: VehicleFormProps) {
 // Add this to your global CSS or component styles
 const styles = `
 .vehicle-form {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
