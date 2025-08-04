@@ -555,13 +555,13 @@ const addStyles = () => {
         
         /* Override Bootstrap modal width constraints */
         .modal-xl {
-          max-width: 95% !important;
-          width: 95% !important;
+          max-width: 1200px !important;
+          width: 1200px !important;
         }
         
         .modal-xl .modal-dialog {
-          max-width: 95% !important;
-          width: 95% !important;
+          max-width: 1200px !important;
+          width: 1200px !important;
         }
         
         .modal-xl .modal-body {
@@ -571,8 +571,8 @@ const addStyles = () => {
         
         /* Additional overrides for modal context */
         .modal .modal-dialog {
-          max-width: 95% !important;
-          width: 95% !important;
+          max-width: 1200px !important;
+          width: 1200px !important;
         }
         
         .modal .modal-content {
@@ -583,8 +583,8 @@ const addStyles = () => {
         /* Force override Bootstrap's 500px constraint */
         @media (min-width: 576px) {
           .modal .modal-dialog {
-            max-width: 95% !important;
-            width: 95% !important;
+            max-width: 1200px !important;
+            width: 1200px !important;
           }
         }
         
@@ -680,6 +680,26 @@ const addStyles = () => {
           
           .vehicle-form .accessories-grid {
             grid-template-columns: 1fr;
+          }
+        }
+        
+        /* Responsive modal sizing */
+        @media (max-width: 1300px) {
+          .modal-xl,
+          .modal-xl .modal-dialog,
+          .modal .modal-dialog {
+            max-width: 95% !important;
+            width: 95% !important;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          .modal-xl,
+          .modal-xl .modal-dialog,
+          .modal .modal-dialog {
+            max-width: 98% !important;
+            width: 98% !important;
+            margin: 0.5rem auto !important;
           }
         }
       `;
