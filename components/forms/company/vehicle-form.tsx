@@ -528,6 +528,7 @@ export function VehicleForm(props: VehicleFormProps) {
 const styles = `
 .vehicle-form {
   width: 100%;
+  min-width: 800px;
   max-width: none;
   margin: 0;
 }
