@@ -281,7 +281,8 @@ export class ApplicantEntity {
           test: (value, context) => {
             console.log('value?.length', value?.length);
 
-            if (value?.length < 17) {
+            // Only validate length if the value is not empty
+            if (value && value.length > 0 && value.length < 17) {
               return context.createError({ message: 'yup.phone' });
             }
             return true;
@@ -289,7 +290,9 @@ export class ApplicantEntity {
         })
         .nullable(),
       email: yup.string().email().nullable(),
-      birthdate: yup.date().nullable(),
+      birthdate: yup.date()
+        .max(new Date(), 'BIRTHDATE_CANNOT_BE_IN_THE_FUTURE')
+        .nullable(),
       address_1: yup.string().nullable(),
       address_2: yup.string().nullable(),
       street: yup.string().nullable(),

@@ -72,7 +72,7 @@ export default function JobListing() {
       limit: pagingMeta?.itemsPerPage,
       page: pagingMeta.currentPage,
       expiry_status,
-      company_id: user?.company?.id, // Add company filter to only show jobs from current company
+      companyId: user?.company?.id, // Add company filter to only show jobs from current company
     });
     setJobs((data as Pagination<JobEntity>)?.items);
     setPagingMeta({

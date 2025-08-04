@@ -38,6 +38,7 @@ import { ApplicantJobEntity } from "../../../models/applicant/applicant-job.enti
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import { DocumentEntity } from "../../../models/documents/document.entity";
 import { JobEntity } from "../../../models/job/job.entity";
+import { SearchCompanyJobsDto } from "../../../models/job/search-company-jobs.dto";
 
 import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
 import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
@@ -75,6 +76,7 @@ import { VehicleEntity } from "../../../models/company/vehicle.entity";
 import VehicleApi from "../../../pages/api/vehicle";
 import { VehicleType } from "../../../enums/vehicles/vehicle-type.enum";
 import { VehicleForm } from "./vehicle-form";
+import { ExpiryStatus } from "../../../enums/jobs/expiry-status.enum";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> {}
 
@@ -112,6 +114,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
     onSubmit: async (values) => {
       console.log("submitted ", values);
 
+      // Debug validation
+      try {
+        await ApplicantEntity.yupSchemaForApplicantForm().validate(values);
+        console.log("Form validation passed");
+      } catch (validationError) {
+        console.error("Form validation failed:", validationError);
+        return;
+      }
+
       values.extras = values.extras?.filter(
         (v) => v.value != undefined || v.value != null
       );
@@ -129,8 +140,11 @@ export function ApplicantForm(props: ApplicantFormProps) {
         values.all_violations_count = 0;
       }
 
+      console.log("Values after processing:", values); // Added for debugging
+
       try {
         if (entity?.id) {
+          console.log("Updating existing applicant with ID:", entity.id); // Added for debugging
           values = await applicantApi.update(entity.id, {
             ...values,
             documents: [
@@ -144,8 +158,11 @@ export function ApplicantForm(props: ApplicantFormProps) {
             ]?.filter((v) => !!v),
           } as ApplicantEntity);
         } else {
+          console.log("Creating new applicant"); // Added for debugging
           values = await applicantApi.create(values);
         }
+
+        console.log("Applicant saved successfully:", values); // Added for debugging
 
         for (let i = 0; i < entity?.jobs?.length; i++) {
           let job = entity?.jobs[i];
@@ -169,6 +186,12 @@ export function ApplicantForm(props: ApplicantFormProps) {
         if (onSaveComplete) onSaveComplete(values);
       } catch (e) {
         console.error("Unable to save applicant info", e);
+        console.error("Error details:", { // Added for debugging
+          message: e.message,
+          response: e.response?.data,
+          status: e.response?.status,
+          statusText: e.response?.statusText
+        });
         if (
           !globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
         )
@@ -193,7 +216,10 @@ export function ApplicantForm(props: ApplicantFormProps) {
     // });
 
     const api = new JobApi();
-    const jobs: JobEntity[] = (await api.list()) as JobEntity[];
+    const searchDto: SearchCompanyJobsDto = {
+      expiry_status: ExpiryStatus.ACTIVE
+    };
+    const jobs: JobEntity[] = (await api.list(searchDto)) as JobEntity[];
 
     setJobs(jobs);
 
@@ -245,12 +271,19 @@ export function ApplicantForm(props: ApplicantFormProps) {
         extras,
       });
     } else {
-      await form.setValues({
-        ...new ApplicantEntity(),
-        type: ApplicantType.COMPANY,
-        extras,
-        // extras: extras.map(({ id, type, value }) => ({ ...new ApplicantExtrasEntity(type, id), value })),
-      });
+      // Only set form values for new applicant if the form is empty or hasn't been initialized
+      // This prevents overwriting user input when creating a new applicant
+      const currentFormValues = form.values;
+      const isFormEmpty = !currentFormValues.first_name && !currentFormValues.last_name && !currentFormValues.email && !currentFormValues.phone;
+      
+      if (isFormEmpty) {
+        await form.setValues({
+          ...new ApplicantEntity(),
+          type: ApplicantType.COMPANY,
+          extras,
+          // extras: extras.map(({ id, type, value }) => ({ ...new ApplicantExtrasEntity(type, id), value })),
+        });
+      }
     }
   }, [entity]);
 
@@ -323,6 +356,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
   }, [form.values]);
 
   const today = new Date();
+  const todayFormatted = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD for date input max attribute
   const OldThan18Year = new Date(
     today.getFullYear() - 18,
     today.getMonth(),
@@ -402,7 +436,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                   name="birthdate"
                   placeholder="MM/DD/YYYY"
                   formik={form}
-                  max={OldThan18Year}
+                  max={OldThan18Year} // Prevents selecting dates less than 18 years ago AND future dates
                 />
                 <BaseInputPhone
                   className="col-12"
@@ -2116,6 +2150,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
         )}
         show={typeof createVehicle == "number"}
         onCloseClick={() => setCreateVehicle(false)}
+        size="xl"
       >
         <VehicleForm onSaveComplete={onVehicleAdded} />
       </ViewModal>

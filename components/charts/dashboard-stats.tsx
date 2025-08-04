@@ -83,12 +83,18 @@ export const DashboardStats = () => {
     });
 
     // Calculate conversion rate: hired applicants / total leads (not total applicants)
-    const hiredApplicants = uniqueApplicants.filter((a) => Boolean(a?.is_hired));
+    // const hiredApplicants = uniqueApplicants.filter((a) => Boolean(a?.is_hired));
+    // const conversionRate = totalLeads > 0
+    //   ? (
+    //       (hiredApplicants.filter(a => a.current_application_status?.startsWith('NEW_')).length / totalLeads) *
+    //       100
+    //     ).toFixed(1)
+    //   : 0;
+
+    // Calculate conversion rate: active employees / total leads
+    const activeEmployees = employees.filter((v) => v?.status === EmployeeStatus.ACTIVE).length;
     const conversionRate = totalLeads > 0
-      ? (
-          (hiredApplicants.filter(a => a.current_application_status?.startsWith('NEW_')).length / totalLeads) *
-          100
-        ).toFixed(1)
+      ? ((activeEmployees / totalLeads) * 100).toFixed(1)
       : 0;
 
     const stats: StatCard[] = [

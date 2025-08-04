@@ -1,8 +1,10 @@
 export async function bootstrapInit() {
-  // Import bootstrap directly instead of using useEffectAsync
-  try {
-    await import('bootstrap');
-  } catch (error) {
-    console.warn('Bootstrap could not be loaded:', error);
+  // Only import bootstrap on the client side
+  if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+    try {
+      await import('bootstrap');
+    } catch (error) {
+      console.warn('Bootstrap could not be loaded:', error);
+    }
   }
 }

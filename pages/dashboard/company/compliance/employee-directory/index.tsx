@@ -439,32 +439,34 @@ export default function EmployeeDirectory() {
         title="CONFIRMATION"
         show={modalAction?.type == 'DELETE'}
         onCloseClick={resetModalAction}
-        size="sm"
+        size="md"
+        centered={true}
+        className="confirmation-modal"
       >
         <>
           <Row>
             <Col className="d-flex justify-content-center align-items-center">
-              <h4 className="mt-4">{t('ARE_YOU_SURE_TO_DELETE_OR_MOVE_TO_PAST_EMPLOYEE')}</h4>
+              <h4 className="mt-4 mb-4 text-center">{t('ARE_YOU_SURE_TO_DELETE_OR_MOVE_TO_PAST_EMPLOYEE')}</h4>
             </Col>
           </Row>
-          <Row className="mt-90 my-10">
-            <Col>
+          <Row className="mt-4">
+            <Col md={6} className="mb-3">
               <button
                 onClick={() => onDeleteClick()}
                 type="button"
-                className="theme-danger-btn btn-block btn-theme w-50 p-3 m-auto"
+                className="theme-danger-btn btn-block btn-theme w-100 p-3"
+                style={{ minHeight: '48px' }}
               >
-                {' '}
                 {t('DELETE')}
               </button>
             </Col>
-            <Col>
+            <Col md={6} className="mb-3">
               <button
                 onClick={() => onMoveToPastEmploeeClick()}
                 type="button"
-                className="theme-primary-btn btn-block btn-theme w-50 p-3 m-auto"
+                className="theme-primary-btn btn-block btn-theme w-100 p-3"
+                style={{ minHeight: '48px' }}
               >
-                {' '}
                 {t('MOVE_TO_PAST_EMPLOYEE')}
               </button>
             </Col>

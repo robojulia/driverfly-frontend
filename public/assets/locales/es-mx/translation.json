@@ -76,5 +76,7 @@
   "VIEW_DETAILED_ANALYSIS": "Ver análisis detallado de calificaciones para este trabajo",
   "JOB_APPLICATIONS": "Aplicaciones de Trabajo",
   "NO_APPLIED_JOBS_FOUND": "No se encontraron aplicaciones de trabajo",
-  "SHOWING_ALL_JOBS_APPLIED_TO": "Mostrando todos los trabajos a los que este candidato ha aplicado con tu empresa"
+  "SHOWING_ALL_JOBS_APPLIED_TO": "Mostrando todos los trabajos a los que este candidato ha aplicado con tu empresa",
+  "BIRTHDATE": "Fecha de Nacimiento",
+  "BIRTHDATE_CANNOT_BE_IN_THE_FUTURE": "La fecha de nacimiento no puede estar en el futuro"
 }

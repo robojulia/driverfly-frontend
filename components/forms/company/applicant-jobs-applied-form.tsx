@@ -14,6 +14,7 @@ import { useTranslation } from "../../../hooks/use-translation";
 import { ApplicantJobEntity } from "../../../models/applicant/applicant-job.entity";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import { JobEntity } from "../../../models/job/job.entity";
+import { SearchCompanyJobsDto } from "../../../models/job/search-company-jobs.dto";
 import ApplicantApi from "../../../pages/api/applicant";
 import JobApi from "../../../pages/api/job";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
@@ -23,6 +24,7 @@ import { formFailed, formSuccess } from "../../../utils/toast";
 import ViewCard from "../../view-details/view-card";
 import BaseSelect from "../base-select";
 import { BaseFormProps } from "./base-form-props";
+import { ExpiryStatus } from "../../../enums/jobs/expiry-status.enum";
 
 export interface ApplicantJobsAppliedFormProps extends BaseFormProps<ApplicantEntity> {
 	isSubmitting: boolean;
@@ -112,7 +114,10 @@ export function ApplicantJobsAppliedForm(props: ApplicantJobsAppliedFormProps) {
 
 	useEffectAsync(async () => {
 		const api = new JobApi();
-		const jobs: JobEntity[] = await api.list() as JobEntity[];
+		const searchDto: SearchCompanyJobsDto = {
+			expiry_status: ExpiryStatus.ACTIVE
+		};
+		const jobs: JobEntity[] = await api.list(searchDto) as JobEntity[];
 
 		setJobs(jobs);
 	}, [user]);
