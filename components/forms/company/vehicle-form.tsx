@@ -543,6 +543,25 @@ const addStyles = () => {
           max-width: none !important;
           margin: 0 !important;
         }
+        
+        /* Target modal context specifically */
+        .modal .vehicle-form {
+          width: 100% !important;
+          min-width: 800px !important;
+          max-width: none !important;
+          margin: 0 !important;
+        }
+        
+        /* Override Bootstrap modal width constraints */
+        .modal-xl {
+          max-width: 95% !important;
+          width: 95% !important;
+        }
+        
+        .modal-xl .modal-body {
+          width: 100% !important;
+          max-width: none !important;
+        }
 
         .vehicle-form .form-section {
           background: #fff;
