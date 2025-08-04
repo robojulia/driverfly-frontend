@@ -408,23 +408,25 @@ export function VehicleForm(props: VehicleFormProps) {
                       (form.values.accessories || []).includes(accessory) ? 'selected' : ''
                     }`}
                     onClick={() => handleAccessoryClick(accessory)}
-                    style={{
-                      padding: '12px 16px',
-                      border: '1px solid #ddd',
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                      backgroundColor: (form.values.accessories || []).includes(accessory)
-                        ? '#e3f2fd'
-                        : '#fff',
-                      borderColor: (form.values.accessories || []).includes(accessory)
-                        ? '#2196f3'
-                        : '#ddd',
-                      transition: 'all 0.2s ease',
-                      minHeight: '48px',
-                    }}
+                                         style={{
+                       padding: '8px 12px',
+                       border: '1px solid #ddd',
+                       borderRadius: '6px',
+                       cursor: 'pointer',
+                       display: 'flex',
+                       alignItems: 'center',
+                       gap: '8px',
+                       backgroundColor: (form.values.accessories || []).includes(accessory)
+                         ? '#e3f2fd'
+                         : '#fff',
+                       borderColor: (form.values.accessories || []).includes(accessory)
+                         ? '#2196f3'
+                         : '#ddd',
+                       transition: 'all 0.2s ease',
+                       minHeight: '40px',
+                       wordWrap: 'break-word',
+                       overflowWrap: 'break-word',
+                     }}
                     onMouseEnter={(e) => {
                       if (!(form.values.accessories || []).includes(accessory)) {
                         e.currentTarget.style.backgroundColor = '#f5f5f5';
@@ -554,7 +556,7 @@ const styles = `
 
 .vehicle-form .accessories-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 12px;
   margin-bottom: 16px;
 }
@@ -562,14 +564,16 @@ const styles = `
 .vehicle-form .accessory-item {
   border: 1px solid #ddd;
   border-radius: 6px;
-  padding: 12px 16px;
+  padding: 8px 12px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   background-color: #fff;
   transition: all 0.2s ease;
-  min-height: 48px;
+  min-height: 40px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .vehicle-form .accessory-item:hover {
@@ -592,6 +596,14 @@ const styles = `
   width: 18px;
   height: 18px;
   accent-color: #2196f3;
+  flex-shrink: 0;
+}
+
+.vehicle-form .accessory-item span {
+  flex: 1;
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 @media (max-width: 768px) {
