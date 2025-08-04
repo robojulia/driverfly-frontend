@@ -174,7 +174,7 @@ export function VehicleForm(props: VehicleFormProps) {
       showActionsAtBoth={false}
       actionButtonDown={true}
     >
-      <Container fluid className="px-4 py-3">
+      <Container fluid className="py-3">
         <Row>
           <Col lg={6}>
             <div className="form-section h-100">
@@ -527,8 +527,9 @@ export function VehicleForm(props: VehicleFormProps) {
 // Add this to your global CSS or component styles
 const styles = `
 .vehicle-form {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
 }
 
 .vehicle-form .form-section {
@@ -536,6 +537,7 @@ const styles = `
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  width: 100%;
 }
 
 .vehicle-form .form-control {
@@ -556,9 +558,10 @@ const styles = `
 
 .vehicle-form .accessories-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 12px;
   margin-bottom: 16px;
+  width: 100%;
 }
 
 .vehicle-form .accessory-item {
