@@ -490,7 +490,7 @@ export default function StoredFiles() {
             fileId: null,
           })
         }
-        size="md"
+        size="lg"
         centered={true}
         className="confirmation-modal"
       >
