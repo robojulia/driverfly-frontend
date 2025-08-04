@@ -115,7 +115,8 @@ export function ApplicantJobsAppliedForm(props: ApplicantJobsAppliedFormProps) {
 	useEffectAsync(async () => {
 		const api = new JobApi();
 		const searchDto: SearchCompanyJobsDto = {
-			expiry_status: ExpiryStatus.ACTIVE
+			expiry_status: ExpiryStatus.ACTIVE,
+			companyId: user?.company?.id,
 		};
 		const jobs: JobEntity[] = await api.list(searchDto) as JobEntity[];
 

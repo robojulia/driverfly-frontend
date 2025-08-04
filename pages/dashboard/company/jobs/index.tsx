@@ -178,6 +178,7 @@ export default function JobListing() {
   const fetchJobOptions = async () => {
     const data: JobEntity[] = (await jobApi.list({
       is_paginated: false,
+      companyId: user?.company?.id,
     })) as JobEntity[];
     setJobOptions(data);
   };
@@ -200,6 +201,11 @@ export default function JobListing() {
         id: 'id',
         name: 'ID',
         selector: (j) => j.id,
+      },
+      {
+        id: 'company_id',
+        name: 'COMPANY_ID',
+        selector: (j) => j.company?.id || 'N/A',
       },
       {
         id: 'job_title',
