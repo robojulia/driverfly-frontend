@@ -9,7 +9,7 @@ export interface ViewModalProps {
   header?: string | JSX.Element | JSX.Element[];
   footer?: string | JSX.Element | JSX.Element[];
   closeText?: string;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'lg' | 'xl';
   onCloseClick?: () => void;
   readonly children?: React.ReactChildren | React.ReactChild;
   className?: string;
