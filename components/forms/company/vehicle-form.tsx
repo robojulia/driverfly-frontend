@@ -542,6 +542,7 @@ const addStyles = () => {
           min-width: 800px !important;
           max-width: none !important;
           margin: 0 !important;
+          padding: 0 !important;
         }
         
         /* Target modal context specifically */
@@ -558,9 +559,41 @@ const addStyles = () => {
           width: 95% !important;
         }
         
+        .modal-xl .modal-dialog {
+          max-width: 95% !important;
+          width: 95% !important;
+        }
+        
         .modal-xl .modal-body {
           width: 100% !important;
           max-width: none !important;
+        }
+        
+        /* Additional overrides for modal context */
+        .modal .modal-dialog {
+          max-width: 95% !important;
+          width: 95% !important;
+        }
+        
+        .modal .modal-content {
+          width: 100% !important;
+          max-width: none !important;
+        }
+        
+        /* Force override Bootstrap's 500px constraint */
+        @media (min-width: 576px) {
+          .modal .modal-dialog {
+            max-width: 95% !important;
+            width: 95% !important;
+          }
+        }
+        
+        /* Override global CSS vehicle-form styles */
+        .vehicle-form.vehicle-form {
+          max-width: none !important;
+          width: 100% !important;
+          margin: 0 !important;
+          padding: 0 !important;
         }
 
         .vehicle-form .form-section {
