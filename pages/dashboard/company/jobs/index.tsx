@@ -395,7 +395,7 @@ export default function JobListing() {
                     viewMode === ViewModeType.EXPIRED ? pagingMeta?.totalItems || 0 : undefined
                   }
                   variant="pills"
-                  size="md"
+                  size="lg"
                 />
               </div>
             </Col>

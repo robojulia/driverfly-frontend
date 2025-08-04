@@ -391,7 +391,7 @@ export default function EmployeeDirectory() {
                   viewMode === ViewModeType.PAST_EMPLOYEE ? pagingMeta?.totalItems || 0 : undefined
                 }
                 variant="pills"
-                size="md"
+                size="lg"
               />
             </div>
           </Col>
@@ -439,7 +439,7 @@ export default function EmployeeDirectory() {
         title="CONFIRMATION"
         show={modalAction?.type == 'DELETE'}
         onCloseClick={resetModalAction}
-        size="md"
+        size="lg"
         centered={true}
         className="confirmation-modal"
       >
