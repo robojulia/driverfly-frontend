@@ -35,7 +35,7 @@ export class JobEntity {
   description?: string;
   description_short?: string;
   drivers_needed?: number;
-  expiry_date?: string | Date;
+  expiry_date?: string | Date | null;
   geography?: JobGeography;
   schedule?: JobSchedule;
   schedule_other?: string;
