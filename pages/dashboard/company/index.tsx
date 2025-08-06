@@ -24,6 +24,7 @@ import DashboardChartContext from '../../../context/dashboard-chart-context';
 import { EmployeeStatus } from '../../../enums/applicants/employee-status.enum';
 import { Status } from '../../../enums/status.enum';
 import { useAuth } from '../../../hooks/use-auth';
+import { useFeatureFlags } from '../../../context/feature-flag-context';
 import { ApplicantEntity } from '../../../models/applicant';
 import { EmployeeEntity } from '../../../models/employee/employee.entity';
 import { JobEntity } from '../../../models/job/job.entity';
@@ -34,6 +35,7 @@ import JobApi from '../../api/job';
 
 export default function Dashboard() {
   const { hasPermission, company } = useAuth();
+  const { isFeatureEnabled } = useFeatureFlags();
   const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
   const [employees, setEmployees] = useState<EmployeeEntity[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -96,13 +98,7 @@ export default function Dashboard() {
   };
 
   const handleAutoRecruiting = () => {
-    preferences?.find(
-      (pref) => pref?.label == CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING
-    )?.value;
-
-    setModalAction({
-      label: CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING,
-    });
+    router.push('/dashboard/company/auto-recruiting');
   };
 
   useEffectAsync(async () => {
@@ -225,13 +221,15 @@ export default function Dashboard() {
                   </ChartWrapper>
                 </Col>
 
-                <Col lg={3} md={4} sm={12}>
-                  <PromotionalCTA
-                    title="Sign Up For Auto Recruiting"
-                    buttonText="Get Drivers Now!"
-                    onClick={handleAutoRecruiting}
-                  />
-                </Col>
+                {isFeatureEnabled('AUTORECRUITING_ENABLED') && (
+                  <Col lg={3} md={4} sm={12}>
+                    <PromotionalCTA
+                      title="Sign Up For Auto Recruiting"
+                      buttonText="Get Drivers Now!"
+                      onClick={handleAutoRecruiting}
+                    />
+                  </Col>
+                )}
               </Row>
             </div>
           </DashboardChartContext.Provider>

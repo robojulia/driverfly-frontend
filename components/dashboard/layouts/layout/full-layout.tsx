@@ -30,6 +30,7 @@ import {
   Link45deg,
   CarFront,
   MegaphoneFill,
+  Lightning,
 } from 'react-bootstrap-icons';
 import CompanyProfileNav from '../header/company-profile-nav';
 import { useAuth } from '../../../../hooks/use-auth';
@@ -101,6 +102,14 @@ const FullLayout = ({ children }) => {
       startsWith: true,
       group: 'COMPANY',
       visible: isFeatureEnabled('CAMPAIGNS_ENABLED'),
+    },
+    {
+      pathname: '/dashboard/company/auto-recruiting',
+      icon: Lightning,
+      text: 'AUTO_RECRUITING',
+      startsWith: true,
+      group: 'COMPANY',
+      visible: isFeatureEnabled('AUTORECRUITING_ENABLED'),
     },
     {
       icon: FileEarmarkImage,

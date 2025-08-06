@@ -1,0 +1,102 @@
+.auto-recruiting-onboarding {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.step-connector {
+  position: relative;
+}
+
+.step-connector::after {
+  content: '';
+  position: absolute;
+  top: 40px;
+  right: -50px;
+  width: 100px;
+  height: 2px;
+  background-color: #e9ecef;
+  z-index: 1;
+}
+
+.step-connector:last-child::after {
+  display: none;
+}
+
+.benefit-card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.benefit-card:hover {
+  transform: translateY(-2px);
+}
+
+.flow-step {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.flow-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 30px;
+  bottom: -2rem;
+  width: 2px;
+  height: 2rem;
+  background-color: #e9ecef;
+}
+
+.legal-consent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.consent-checkbox {
+  font-size: 1.1rem;
+}
+
+.enable-button {
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+  transition: all 0.2s ease-in-out;
+}
+
+.enable-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
+}
+
+.enable-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+  .step-connector::after {
+    display: none;
+  }
+
+  .flow-step:not(:last-child)::after {
+    display: none;
+  }
+}
+
+/* Animation for loading states */
+.loading-pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

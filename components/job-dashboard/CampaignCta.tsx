@@ -255,9 +255,22 @@ export function CampaignCta({
             </Button>
 
             {!eligibilityStats?.eligibleApplicants && (
-              <small className="text-muted mt-2 d-block">
-                No eligible candidates found for this job
-              </small>
+              <div className="alert alert-warning mt-3 text-start">
+                <InfoCircleFill className="me-2" />
+                <strong>Campaign Unavailable</strong>
+                <div className="mt-2">
+                  <small>
+                    No eligible candidates found for this job. Campaigns can only target candidates
+                    who:
+                  </small>
+                  <ul className="mb-0 mt-1" style={{ fontSize: '0.875rem' }}>
+                    <li>Have applied to your company but not this specific job</li>
+                    <li>Meet critical job requirements (CDL, experience, geography)</li>
+                    <li>Have a minimum eligibility score of 50+</li>
+                    <li>Can pass drug tests and background checks if required</li>
+                  </ul>
+                </div>
+              </div>
             )}
           </Card.Body>
         </Card>
