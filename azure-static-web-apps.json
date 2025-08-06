@@ -1,0 +1,38 @@
+{
+  "routes": [
+    {
+      "route": "/api/*",
+      "serve": "/api/*",
+      "statusCode": 200
+    },
+    {
+      "route": "/*",
+      "serve": "/index.html",
+      "statusCode": 200
+    }
+  ],
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": [
+      "/images/*", 
+      "/css/*", 
+      "/js/*", 
+      "/api/*", 
+      "/*.ico", 
+      "/*.json", 
+      "/*.png", 
+      "/*.jpg", 
+      "/*.jpeg", 
+      "/*.gif", 
+      "/*.svg",
+      "/*.woff",
+      "/*.woff2",
+      "/*.ttf",
+      "/*.eot"
+    ]
+  },
+  "platform": {
+    "apiRuntime": "node:20"
+  },
+  "trailingSlash": "auto"
+} 

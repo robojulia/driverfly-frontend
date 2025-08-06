@@ -1,0 +1,41 @@
+stages:
+  - build
+  - deploy-azure
+
+variables:
+  NODE_VERSION: "20"
+
+cache:
+  paths:
+    - node_modules/
+
+build:
+  stage: build
+  image: node:${NODE_VERSION}
+  before_script:
+    - npm install --legacy-peer-deps
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - .next/
+      - public/
+      - package.json
+      - next.config.js
+      - azure-static-web-apps.json
+    expire_in: 1 hour
+  only:
+    - main
+
+deploy-azure:
+  stage: deploy-azure
+  image: node:${NODE_VERSION}
+  before_script:
+    - npm install -g @azure/static-web-apps-cli
+  script:
+    - swa deploy .next --env production --deployment-token $AZURE_STATIC_WEB_APPS_API_TOKEN
+  environment:
+    name: azure-production
+    url: $AZURE_STATIC_WEB_APPS_URL
+  only:
+    - main
