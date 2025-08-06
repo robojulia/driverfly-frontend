@@ -32,3 +32,14 @@ Object.entries(buildInfo).forEach(([key, value]) => {
 fs.writeFileSync(envPath, envContent);
 
 console.log('Build info updated:', buildInfo);
+
+// Copy en-us.html to index.html for Azure Static Web Apps compatibility
+const sourcePath = path.join(process.cwd(), '.next', 'server', 'pages', 'en-us.html');
+const targetPath = path.join(process.cwd(), '.next', 'index.html');
+
+if (fs.existsSync(sourcePath)) {
+  fs.copyFileSync(sourcePath, targetPath);
+  console.log('Copied en-us.html to index.html for Azure Static Web Apps');
+} else {
+  console.log('Warning: en-us.html not found, skipping copy to index.html');
+}
