@@ -490,14 +490,13 @@ export default function StoredFiles() {
             fileId: null,
           })
         }
-        size="sm"
+        size="lg"
+        centered={true}
+        className="confirmation-modal"
       >
-        <div
-          className="d-flex flex-column align-items-center justify-content-between w-100 gap-5"
-          style={{ background: "1D4345" }}
-        >
-          <h2>{t("ARE_YOU_SURE_YOU_WANT_TO_DELETE_FILE")}</h2>
-          <div className="gap-4 d-flex justify-content-between">
+        <div className="d-flex flex-column align-items-center justify-content-center w-100">
+          <h4 className="mb-4 text-center">{t("ARE_YOU_SURE_YOU_WANT_TO_DELETE_FILE")}</h4>
+          <div className="d-flex gap-3 justify-content-center">
             <button
               type="button"
               onClick={() => {
@@ -505,7 +504,8 @@ export default function StoredFiles() {
                   setDeleteBtnDisableStatus(true);
               }}
               disabled={deleteBtnDisableStatus}
-              className="btn btn-danger px-5"
+              className="btn btn-danger px-4 py-2"
+              style={{ minWidth: '100px' }}
             >
               {t("yes")}
             </button>
@@ -517,7 +517,8 @@ export default function StoredFiles() {
                   fileId: null,
                 })
               }
-              className="theme-primary-btn btn-block btn-theme px-5"
+              className="theme-primary-btn btn-block btn-theme px-4 py-2"
+              style={{ minWidth: '100px' }}
             >
               {t("no")}
             </button>

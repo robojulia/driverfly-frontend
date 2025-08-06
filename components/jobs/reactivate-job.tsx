@@ -25,10 +25,11 @@ export function ReactivateJobButton(props: ReactivateJobProps) {
 
     const onConfirmClick = React.useCallback(async (e: React.MouseEvent) => {
         try {
-            const data = await jobApi.update(+job.id, {
+            const updateData = {
                 ...job,
-                expiry_date: expiryDate,
-            });
+                expiry_date: expiryDate || null,
+            };
+            const data = await jobApi.update(+job.id, updateData);
             onComplete?.(data);
         } catch (e) {
             toast.error("UNABLE_TO_SAVE_INFORMATION");
@@ -59,7 +60,7 @@ export function ReactivateJobButton(props: ReactivateJobProps) {
                 footer={
                     <ButtonGroup>
                         <Button
-                            disabled={isExpired(expiryDate) || !expiryDate}
+                            disabled={isExpired(expiryDate)}
                             type="button"
                             variant="info"
                             onClick={onConfirmClick}
@@ -75,6 +76,7 @@ export function ReactivateJobButton(props: ReactivateJobProps) {
                     displayPlaceholder
                     type="date"
                     // min={new Date().toISOString().split("T")[0]}
+                    placeholder="Leave empty for no expiration"
                     onChange={({ target: { value } }) => setExpiryDate(value)}
                     value={expiryDate}
                     error={isExpired(expiryDate) && "EXPIRATION_DATE_MUST_BE_IN_FUTURE"}

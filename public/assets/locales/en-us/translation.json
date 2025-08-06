@@ -1400,6 +1400,7 @@
   "QUANTITY": "Quantity",
   "TRANSMISSION_EXPERIENCE": "Transmission Experience",
   "BIRTHDATE": "Birthdate",
+  "BIRTHDATE_CANNOT_BE_IN_THE_FUTURE": "Birthdate cannot be in the future",
   "HIGHEST_DEGREE": "Highest Degree",
   "EMERGENCY_CONTACT": "Emergency Contact",
   "FULL_NAME": "Full Name",

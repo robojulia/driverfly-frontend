@@ -410,7 +410,12 @@ export function JobForm(props: JobFormProps) {
       const dto = {
         ...form.values,
       };
-      if (dto.expiry_date) dto.expiry_date = new Date(dto.expiry_date).toISOString();
+      // If expiry_date is provided, convert to ISO string, otherwise set to null for never expire
+      if (dto.expiry_date) {
+        dto.expiry_date = new Date(dto.expiry_date).toISOString();
+      } else {
+        dto.expiry_date = null;
+      }
       // if (dto.orientation_start_at) dto.orientation_start_at = new Date(dto.orientation_start_at).toISOString();
       // if (dto.orientation_end_at) dto.orientation_end_at = new Date(dto.orientation_end_at).toISOString();
       if (dto.min_experience_in_months) {
@@ -521,6 +526,7 @@ export function JobForm(props: JobFormProps) {
                 displayPlaceholder
                 type="date"
                 min={new Date().toISOString().split('T')[0]}
+                placeholder="Leave empty for no expiration"
                 formik={form}
               />
               <BaseInput

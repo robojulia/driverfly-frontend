@@ -466,6 +466,78 @@ body {
   color: var(--text-light) !important;
 }
 
+/* Confirmation Modal Styles */
+.modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+  color: var(--text-light);
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+  padding: 1.5rem;
+}
+
+.modal-header .modal-title {
+  color: var(--text-light);
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.modal-body {
+  padding: 2rem;
+  text-align: center;
+}
+
+.modal-body h4 {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border-color);
+  padding: 1.5rem;
+  background: var(--light);
+  border-radius: 0 0 12px 12px;
+}
+
+/* Confirmation Modal Button Styles */
+.confirmation-modal .btn {
+  min-width: 120px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.confirmation-modal .btn-danger {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: var(--text-light);
+}
+
+.confirmation-modal .btn-danger:hover {
+  background: var(--danger-dark);
+  border-color: var(--danger-dark);
+  transform: translateY(-1px);
+}
+
+.confirmation-modal .theme-primary-btn {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--text-light) !important;
+}
+
+.confirmation-modal .theme-primary-btn:hover {
+  background: var(--primary-dark) !important;
+  border-color: var(--primary-dark) !important;
+  transform: translateY(-1px);
+}
+
 /* ============================================
    OLD HEADER STYLES - COMMENTED OUT TO AVOID CONFLICTS
    ============================================ */

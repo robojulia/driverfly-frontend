@@ -33,6 +33,11 @@ export interface VehicleFormProps extends BaseFormProps<VehicleEntity> {}
 export function VehicleForm(props: VehicleFormProps) {
   const { t } = useTranslation();
   let { className, entity, onSaveComplete, onSaveError } = props;
+  
+  // Add styles to document head
+  useEffect(() => {
+    addStyles();
+  }, []);
   const [employees, setEmployees] = useState<EmployeeEntity[]>([]);
   const [employeeSearch, setEmployeeSearch] = useState('');
   const [showEmployeeDropdown, setShowEmployeeDropdown] = useState(false);
@@ -116,7 +121,7 @@ export function VehicleForm(props: VehicleFormProps) {
     if (form.values.trailer_type === VehicleTrailerType.OTHER) {
       console.log('- trailer_type_other:', form.values.trailer_type_other);
     }
-    if (form.values.accessories?.includes(VehicleAccessory.OTHER)) {
+    if ((form.values.accessories || []).includes(VehicleAccessory.OTHER)) {
       console.log('- accessory_other:', form.values.accessory_other);
     }
     console.log('Current Validation Errors:', form.errors);
@@ -144,7 +149,7 @@ export function VehicleForm(props: VehicleFormProps) {
   }, []);
 
   const handleAccessoryClick = (accessory: VehicleAccessory) => {
-    const currentAccessories = [...form.values.accessories];
+    const currentAccessories = [...(form.values.accessories || [])];
     const index = currentAccessories.indexOf(accessory);
     if (index === -1) {
       currentAccessories.push(accessory);
@@ -171,9 +176,10 @@ export function VehicleForm(props: VehicleFormProps) {
       id={entity?.id}
       formik={form}
       submitLabel={entity?.id ? 'Forms.UPDATE_VEHICLE' : 'Forms.CREATE_VEHICLE'}
-      showActionsAtBoth={true}
+      showActionsAtBoth={false}
+      actionButtonDown={true}
     >
-      <Container className="px-4 py-3">
+      <Container fluid className="py-3">
         <Row>
           <Col lg={6}>
             <div className="form-section h-100">
@@ -404,34 +410,64 @@ export function VehicleForm(props: VehicleFormProps) {
                   <div
                     key={accessory}
                     className={`accessory-item ${
-                      form.values.accessories.includes(accessory) ? 'selected' : ''
+                      (form.values.accessories || []).includes(accessory) ? 'selected' : ''
                     }`}
                     onClick={() => handleAccessoryClick(accessory)}
-                    style={{
-                      padding: '12px 16px',
-                      border: '1px solid #ddd',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                      backgroundColor: form.values.accessories.includes(accessory)
-                        ? '#f0f9ff'
-                        : '#fff',
-                      transition: 'all 0.2s ease',
+                                         style={{
+                       padding: '8px 12px',
+                       border: '1px solid #ddd',
+                       borderRadius: '6px',
+                       cursor: 'pointer',
+                       display: 'flex',
+                       alignItems: 'center',
+                       gap: '8px',
+                       backgroundColor: (form.values.accessories || []).includes(accessory)
+                         ? '#e3f2fd'
+                         : '#fff',
+                       borderColor: (form.values.accessories || []).includes(accessory)
+                         ? '#2196f3'
+                         : '#ddd',
+                       transition: 'all 0.2s ease',
+                       minHeight: '40px',
+                       wordWrap: 'break-word',
+                       overflowWrap: 'break-word',
+                     }}
+                    onMouseEnter={(e) => {
+                      if (!(form.values.accessories || []).includes(accessory)) {
+                        e.currentTarget.style.backgroundColor = '#f5f5f5';
+                        e.currentTarget.style.borderColor = '#bbb';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!(form.values.accessories || []).includes(accessory)) {
+                        e.currentTarget.style.backgroundColor = '#fff';
+                        e.currentTarget.style.borderColor = '#ddd';
+                      }
                     }}
                   >
                     <input
                       type="checkbox"
-                      checked={form.values.accessories.includes(accessory)}
+                      checked={(form.values.accessories || []).includes(accessory)}
                       onChange={() => {}}
-                      style={{ margin: 0 }}
+                      style={{ 
+                        margin: 0,
+                        width: '18px',
+                        height: '18px',
+                        accentColor: '#2196f3'
+                      }}
                     />
-                    <span style={{ flex: 1 }}>{t(`VehicleAccessory.${accessory}`)}</span>
+                    <span style={{ 
+                      flex: 1,
+                      fontSize: '14px',
+                      fontWeight: (form.values.accessories || []).includes(accessory) ? '500' : '400',
+                      color: (form.values.accessories || []).includes(accessory) ? '#1976d2' : '#333'
+                    }}>
+                      {t(`VehicleAccessory.${accessory}`)}
+                    </span>
                   </div>
                 ))}
               </div>
-              {form.values.accessories.includes(VehicleAccessory.OTHER) && (
+              {(form.values.accessories || []).includes(VehicleAccessory.OTHER) && (
                 <BaseTextArea
                   className="mt-3"
                   label="Other Accessories"
@@ -493,49 +529,181 @@ export function VehicleForm(props: VehicleFormProps) {
   );
 }
 
-// Add this to your global CSS or component styles
-const styles = `
-.vehicle-form {
-  max-width: 800px;
-  margin: 0 auto;
-}
+// Add styles to the document head
+const addStyles = () => {
+  if (typeof document !== 'undefined') {
+    const styleId = 'vehicle-form-styles';
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement('style');
+      style.id = styleId;
+      style.textContent = `
+        .vehicle-form {
+          width: 100% !important;
+          min-width: 800px !important;
+          max-width: none !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        
+        /* Target modal context specifically */
+        .modal .vehicle-form {
+          width: 100% !important;
+          min-width: 800px !important;
+          max-width: none !important;
+          margin: 0 !important;
+        }
+        
+        /* Override Bootstrap modal width constraints */
+        .modal-xl {
+          max-width: 1200px !important;
+          width: 1200px !important;
+        }
+        
+        .modal-xl .modal-dialog {
+          max-width: 1200px !important;
+          width: 1200px !important;
+        }
+        
+        .modal-xl .modal-body {
+          width: 100% !important;
+          max-width: none !important;
+        }
+        
+        /* Additional overrides for modal context */
+        .modal .modal-dialog {
+          max-width: 1200px !important;
+          width: 1200px !important;
+        }
+        
+        .modal .modal-content {
+          width: 100% !important;
+          max-width: none !important;
+        }
+        
+        /* Force override Bootstrap's 500px constraint */
+        @media (min-width: 576px) {
+          .modal .modal-dialog {
+            max-width: 1200px !important;
+            width: 1200px !important;
+          }
+        }
+        
+        /* Override global CSS vehicle-form styles */
+        .vehicle-form.vehicle-form {
+          max-width: none !important;
+          width: 100% !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
 
-.vehicle-form .form-section {
-  background: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
+        .vehicle-form .form-section {
+          background: #fff;
+          border-radius: 8px;
+          padding: 20px;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+          width: 100%;
+        }
 
-.vehicle-form .form-control {
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  padding: 8px 12px;
-}
+        .vehicle-form .form-control {
+          border-radius: 4px;
+          border: 1px solid #ddd;
+          padding: 8px 12px;
+        }
 
-.vehicle-form .form-control:focus {
-  border-color: #2684ff;
-  box-shadow: 0 0 0 1px #2684ff;
-}
+        .vehicle-form .form-control:focus {
+          border-color: #2684ff;
+          box-shadow: 0 0 0 1px #2684ff;
+        }
 
-.vehicle-form .form-label {
-  font-weight: 500;
-  margin-bottom: 8px;
-}
+        .vehicle-form .form-label {
+          font-weight: 500;
+          margin-bottom: 8px;
+        }
 
-.vehicle-form .accessories-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-}
+        .vehicle-form .accessories-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 12px;
+          margin-bottom: 16px;
+          width: 100%;
+        }
 
-@media (max-width: 768px) {
-  .vehicle-form .form-section {
-    padding: 16px;
+        .vehicle-form .accessory-item {
+          border: 1px solid #ddd;
+          border-radius: 6px;
+          padding: 8px 12px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background-color: #fff;
+          transition: all 0.2s ease;
+          min-height: 40px;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+
+        .vehicle-form .accessory-item:hover {
+          background-color: #f5f5f5;
+          border-color: #bbb;
+        }
+
+        .vehicle-form .accessory-item.selected {
+          background-color: #e3f2fd;
+          border-color: #2196f3;
+        }
+
+        .vehicle-form .accessory-item.selected span {
+          color: #1976d2;
+          font-weight: 500;
+        }
+
+        .vehicle-form .accessory-item input[type="checkbox"] {
+          margin: 0;
+          width: 18px;
+          height: 18px;
+          accent-color: #2196f3;
+          flex-shrink: 0;
+        }
+
+        .vehicle-form .accessory-item span {
+          flex: 1;
+          min-width: 0;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+
+        @media (max-width: 768px) {
+          .vehicle-form .form-section {
+            padding: 16px;
+          }
+          
+          .vehicle-form .accessories-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+        
+        /* Responsive modal sizing */
+        @media (max-width: 1300px) {
+          .modal-xl,
+          .modal-xl .modal-dialog,
+          .modal .modal-dialog {
+            max-width: 95% !important;
+            width: 95% !important;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          .modal-xl,
+          .modal-xl .modal-dialog,
+          .modal .modal-dialog {
+            max-width: 98% !important;
+            width: 98% !important;
+            margin: 0.5rem auto !important;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
   }
-  
-  .vehicle-form .accessories-grid {
-    grid-template-columns: 1fr;
-  }
-}
-`;
+};

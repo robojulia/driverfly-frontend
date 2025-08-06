@@ -9,6 +9,7 @@ import { useTranslation } from "../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import { HireApplicantDto } from "../../../models/applicant/hire-applicant.dto";
 import { JobEntity } from "../../../models/job/job.entity";
+import { SearchCompanyJobsDto } from "../../../models/job/search-company-jobs.dto";
 import EmployeeApi from "../../../pages/api/employee";
 import JobApi from "../../../pages/api/job";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
@@ -18,6 +19,7 @@ import ViewModal from "../../view-details/view-modal";
 import BaseSelect from "../base-select";
 import { BaseFormProps } from "./base-form-props";
 import { JobForm } from "./job-form";
+import { ExpiryStatus } from "../../../enums/jobs/expiry-status.enum";
 
 export interface HireApplicantFormProps
   extends BaseFormProps<ApplicantEntity> {}
@@ -33,7 +35,11 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
 
   useEffectAsync(async () => {
     const api = new JobApi();
-    const jobs: JobEntity[] = (await api.list()) as JobEntity[];
+    const searchDto: SearchCompanyJobsDto = {
+      expiry_status: ExpiryStatus.ACTIVE,
+      companyId: user?.company?.id,
+    };
+    const jobs: JobEntity[] = (await api.list(searchDto)) as JobEntity[];
 
     setJobs(jobs);
   }, [user]);

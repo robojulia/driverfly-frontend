@@ -50,7 +50,10 @@ export function calculateAge(birthday: Date | string): number | undefined {
   return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
 
-export function isExpired(dateString: Date | string): boolean {
+export function isExpired(dateString: Date | string | null): boolean {
+  // If no expiry date is provided (null), the job never expires
+  if (!dateString) return false;
+  
   const givenDate = new Date(dateString);
   const currentDate = new Date();
 

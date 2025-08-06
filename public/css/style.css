@@ -765,7 +765,7 @@ input[type='range']::-webkit-slider-thumb {
 .footer-social-icons {
   display: flex;
   align-items: center;
-  justify-content: end;
+  justify-content: flex-end;
   padding-top: 5px;
 }
 
@@ -2633,7 +2633,7 @@ button:active {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: start;
+  align-items: flex-start;
   overflow-y: auto;
 }
 
@@ -2667,7 +2667,7 @@ input::-webkit-inner-spin-button {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  align-items: end;
+  align-items: flex-end;
 }
 
 .help-text {

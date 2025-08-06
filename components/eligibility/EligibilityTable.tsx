@@ -306,13 +306,13 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
                       </a>
                     </Link>
 
-                    <Link href={`/dashboard/company/applicants/${applicant.applicantId}`}>
+                    {/* <Link href={`/dashboard/company/applicants/${applicant.applicantId}`}>
                       <a
                         className={`${styles.button} ${styles.buttonOutlineSecondary} ${styles.buttonSm}`}
                       >
                         Profile
                       </a>
-                    </Link>
+                    </Link> */}
                   </div>
                 </td>
               </tr>

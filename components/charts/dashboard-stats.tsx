@@ -35,6 +35,7 @@ export const DashboardStats = () => {
     const jobs = state?.jobs || [];
     const today = new Date();
     const currentWeek = moment().isoWeek();
+    const currentYear = moment().year();
 
     let newLeads = 0;
     let totalLeads = 0;
@@ -52,9 +53,21 @@ export const DashboardStats = () => {
 
     // Calculate applicant stats using unique applicants
     uniqueApplicants.forEach((a) => {
-      if (!a.is_hired && a?.current_application_status?.startsWith("NEW_")) {
+      const isNewStatus = a?.current_application_status?.startsWith("NEW_");
+      
+      // Improved week calculation - check both week and year
+      let isThisWeek = false;
+      if (a?.created_at) {
+        const createdMoment = moment(a.created_at);
+        const createdWeek = createdMoment.isoWeek();
+        const createdYear = createdMoment.year();
+        isThisWeek = createdWeek === currentWeek && createdYear === currentYear;
+      }
+
+      // Count as lead if status starts with NEW_ (regardless of hired status)
+      if (isNewStatus) {
         totalLeads++;
-        if (moment(a?.created_at).isoWeek() === currentWeek) {
+        if (isThisWeek) {
           newLeads++;
         }
       }
@@ -69,13 +82,19 @@ export const DashboardStats = () => {
       }
     });
 
-    // Calculate conversion rate using unique applicants
-    const conversionRate = uniqueApplicants.length
-      ? (
-          (uniqueApplicants.filter((a) => Boolean(a?.is_hired))?.length /
-            uniqueApplicants.length) *
-          100
-        ).toFixed(1)
+    // Calculate conversion rate: hired applicants / total leads (not total applicants)
+    // const hiredApplicants = uniqueApplicants.filter((a) => Boolean(a?.is_hired));
+    // const conversionRate = totalLeads > 0
+    //   ? (
+    //       (hiredApplicants.filter(a => a.current_application_status?.startsWith('NEW_')).length / totalLeads) *
+    //       100
+    //     ).toFixed(1)
+    //   : 0;
+
+    // Calculate conversion rate: active employees / total leads
+    const activeEmployees = employees.filter((v) => v?.status === EmployeeStatus.ACTIVE).length;
+    const conversionRate = totalLeads > 0
+      ? ((activeEmployees / totalLeads) * 100).toFixed(1)
       : 0;
 
     const stats: StatCard[] = [

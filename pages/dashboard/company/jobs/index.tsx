@@ -72,6 +72,7 @@ export default function JobListing() {
       limit: pagingMeta?.itemsPerPage,
       page: pagingMeta.currentPage,
       expiry_status,
+      companyId: user?.company?.id, // Add company filter to only show jobs from current company
     });
     setJobs((data as Pagination<JobEntity>)?.items);
     setPagingMeta({
@@ -159,7 +160,7 @@ export default function JobListing() {
       try {
         const updatedJob = await jobApi.update(+reactivateJob.id, {
           ...reactivateJob,
-          expiry_date: expiryDate,
+          expiry_date: expiryDate || null,
         });
         setReactivateJob(null);
         setExpiryDate('');
@@ -177,6 +178,7 @@ export default function JobListing() {
   const fetchJobOptions = async () => {
     const data: JobEntity[] = (await jobApi.list({
       is_paginated: false,
+      companyId: user?.company?.id,
     })) as JobEntity[];
     setJobOptions(data);
   };
@@ -199,6 +201,11 @@ export default function JobListing() {
         id: 'id',
         name: 'ID',
         selector: (j) => j.id,
+      },
+      {
+        id: 'company_id',
+        name: 'COMPANY_ID',
+        selector: (j) => j.company?.id || 'N/A',
       },
       {
         id: 'job_title',
@@ -394,7 +401,7 @@ export default function JobListing() {
                     viewMode === ViewModeType.EXPIRED ? pagingMeta?.totalItems || 0 : undefined
                   }
                   variant="pills"
-                  size="md"
+                  size="lg"
                 />
               </div>
             </Col>
@@ -432,7 +439,7 @@ export default function JobListing() {
         footer={
           <ButtonGroup>
             <Button
-              disabled={isExpired(expiryDate) || !expiryDate}
+              disabled={isExpired(expiryDate)}
               type="button"
               variant="info"
               onClick={onConfirmReactivateClick}
@@ -448,6 +455,7 @@ export default function JobListing() {
           displayPlaceholder
           type="date"
           min={new Date(Date.now() + 86400000).toISOString().split('T')[0]}
+          placeholder="Leave empty for no expiration"
           onChange={({ target: { value } }) => setExpiryDate(value)}
           value={expiryDate}
           error={isExpired(expiryDate) && 'EXPIRATION_DATE_MUST_BE_IN_FUTURE'}
