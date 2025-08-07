@@ -151,14 +151,12 @@ export default function UserList() {
 
   const tabs = {
     [`Status.${Status.ACTIVE}`]: createUsersTable(
-      users.filter((u) => u.id != user.id && u.status == Status.ACTIVE)
+      users.filter((u) => u.status == Status.ACTIVE && !u.company_disabled)
     ),
     [`Status.${Status.DEACTIVE}`]: createUsersTable(
-      users.filter((u) => u.id != user.id && u.status == Status.DEACTIVE)
+      users.filter((u) => u.status == Status.DEACTIVE || u.company_disabled)
     ),
-    [`Status.${Status.DELETED}`]: createUsersTable(
-      users.filter((u) => u.id != user.id && u.status == Status.DELETED)
-    ),
+    [`Status.${Status.DELETED}`]: createUsersTable(users.filter((u) => u.status == Status.DELETED)),
   };
 
   function createUsersTable(users: UserEntity[]) {
@@ -226,25 +224,27 @@ export default function UserList() {
             onClick: (e) => onEditClick(j.id),
             icon: PenFill,
             label: 'EDIT',
-            hide: !can.editUser,
+            hide: !can.editUser || j.id === user.id,
           },
           {
             onClick: (e) => onToggleCompanyDisabledClick(j.id, !j.company_disabled),
             icon: j.company_disabled ? PersonCheck : PersonX,
             label: j.company_disabled ? 'ENABLE_USER' : 'DISABLE_USER',
-            hide: !can.disableUser || j.status !== Status.ACTIVE,
+            hide: !can.disableUser || j.status !== Status.ACTIVE || j.id === user.id,
           },
           {
             onClick: (e) => onDeleteClick(j.id),
             icon: TrashFill,
             label: 'DELETE',
-            hide: !((can.deleteUser && j.status == Status.ACTIVE) || j.status == Status.DEACTIVE),
+            hide:
+              !((can.deleteUser && j.status == Status.ACTIVE) || j.status == Status.DEACTIVE) ||
+              j.id === user.id,
           },
           {
             onClick: (e) => onRestoreClick(j.id),
             icon: ArrowCounterclockwise,
             label: 'RESTORE',
-            hide: !(can.deleteUser && j.status == Status.DELETED),
+            hide: !(can.deleteUser && j.status == Status.DELETED) || j.id === user.id,
           },
         ]}
         items={users}
