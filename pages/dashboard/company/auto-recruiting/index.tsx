@@ -25,7 +25,7 @@ const AutoRecruitingPage = () => {
           const autoRecruitingPref = preferences.find(
             (pref) => pref.label === 'ENROLL_IN_AUTO_RECRUITING'
           );
-          setIsAutoRecruitingEnabled(autoRecruitingPref?.value === 'true');
+          setIsAutoRecruitingEnabled(autoRecruitingPref?.value === true);
         }
       } catch (error) {
         console.error('Error fetching auto-recruiting status:', error);
@@ -41,17 +41,70 @@ const AutoRecruitingPage = () => {
   const handleEnableAutoRecruiting = async () => {
     try {
       if (company?.id) {
-        await companyApi.preferences.create(company.id, {
-          category: CompanyPreferenceCategory.AUTO_RECRUITING,
+        // First, try to find if the preference already exists
+        const preferences = await companyApi.preferences.list(company.id, {
           label: 'ENROLL_IN_AUTO_RECRUITING',
-          value: 'true',
         });
+        const autoRecruitingPref = preferences.find(
+          (pref) => pref.label === 'ENROLL_IN_AUTO_RECRUITING'
+        );
+
+        if (autoRecruitingPref?.id) {
+          // Update existing preference to true
+          await companyApi.preferences.update(company.id, autoRecruitingPref.id, {
+            ...autoRecruitingPref,
+            value: true,
+          });
+        } else {
+          // Create new preference
+          await companyApi.preferences.create(company.id, {
+            category: CompanyPreferenceCategory.AUTO_RECRUITING,
+            label: 'ENROLL_IN_AUTO_RECRUITING',
+            value: true,
+          });
+        }
+
         setIsAutoRecruitingEnabled(true);
         toast.success('Auto Recruiting has been enabled successfully!');
       }
     } catch (error) {
       console.error('Error enabling auto-recruiting:', error);
       toast.error('Failed to enable Auto Recruiting. Please try again.');
+    }
+  };
+
+  const handleDisableAutoRecruiting = async () => {
+    try {
+      if (company?.id) {
+        // Find the existing preference
+        const preferences = await companyApi.preferences.list(company.id, {
+          label: 'ENROLL_IN_AUTO_RECRUITING',
+        });
+        const autoRecruitingPref = preferences.find(
+          (pref) => pref.label === 'ENROLL_IN_AUTO_RECRUITING'
+        );
+
+        if (autoRecruitingPref?.id) {
+          // Update the existing preference to false
+          await companyApi.preferences.update(company.id, autoRecruitingPref.id, {
+            ...autoRecruitingPref,
+            value: false,
+          });
+        } else {
+          // Create a new preference set to false
+          await companyApi.preferences.create(company.id, {
+            category: CompanyPreferenceCategory.AUTO_RECRUITING,
+            label: 'ENROLL_IN_AUTO_RECRUITING',
+            value: false,
+          });
+        }
+
+        setIsAutoRecruitingEnabled(false);
+        toast.success('Auto Recruiting has been disabled successfully.');
+      }
+    } catch (error) {
+      console.error('Error disabling auto-recruiting:', error);
+      toast.error('Failed to disable Auto Recruiting. Please try again.');
     }
   };
 
@@ -72,7 +125,7 @@ const AutoRecruitingPage = () => {
       <Row>
         <Col>
           {isAutoRecruitingEnabled ? (
-            <AutoRecruitingDashboard />
+            <AutoRecruitingDashboard onDisable={handleDisableAutoRecruiting} />
           ) : (
             <AutoRecruitingOnboarding onEnable={handleEnableAutoRecruiting} />
           )}

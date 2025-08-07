@@ -1,8 +1,28 @@
-import React from 'react';
-import { Card, CardBody, CardHeader } from 'reactstrap';
-import { Speedometer2, PeopleFill, GraphUp } from 'react-bootstrap-icons';
+import React, { useState } from 'react';
+import { Card, CardBody, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Speedometer2, PeopleFill, GraphUp, ExclamationTriangleFill } from 'react-bootstrap-icons';
 
-const AutoRecruitingDashboard = () => {
+interface AutoRecruitingDashboardProps {
+  onDisable?: () => Promise<void>;
+}
+
+const AutoRecruitingDashboard: React.FC<AutoRecruitingDashboardProps> = ({ onDisable }) => {
+  const [showOptOutModal, setShowOptOutModal] = useState(false);
+  const [isDisabling, setIsDisabling] = useState(false);
+
+  const handleOptOut = async () => {
+    if (!onDisable) return;
+
+    setIsDisabling(true);
+    try {
+      await onDisable();
+      setShowOptOutModal(false);
+    } catch (error) {
+      console.error('Error disabling auto-recruiting:', error);
+    } finally {
+      setIsDisabling(false);
+    }
+  };
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -51,7 +71,63 @@ const AutoRecruitingDashboard = () => {
             management tools.
           </p>
         </div>
+
+        {/* Opt-out Link */}
+        <div className="mt-5 pt-4 border-top">
+          <button
+            type="button"
+            className="btn btn-link text-muted p-0"
+            style={{ fontSize: '0.875rem', textDecoration: 'none' }}
+            onClick={() => setShowOptOutModal(true)}
+          >
+            Disable Auto Recruiting
+          </button>
+        </div>
       </div>
+
+      {/* Opt-out Confirmation Modal */}
+      <Modal isOpen={showOptOutModal} toggle={() => setShowOptOutModal(false)} size="md">
+        <ModalHeader toggle={() => setShowOptOutModal(false)}>
+          <ExclamationTriangleFill className="text-warning me-2" />
+          Disable Auto Recruiting
+        </ModalHeader>
+        <ModalBody>
+          <div className="mb-3">
+            <h5>Are you sure you want to disable Auto Recruiting?</h5>
+            <p className="text-muted mb-3">
+              Disabling Auto Recruiting will stop the automatic addition of qualified drivers to
+              your applicant pool.
+            </p>
+
+            <div className="alert alert-warning">
+              <strong>This means you will:</strong>
+              <ul className="mb-0 mt-2">
+                <li>Stop receiving auto-recruited driver applications</li>
+                <li>Miss out on qualified candidates from other companies</li>
+                <li>Reduce your driver pipeline significantly</li>
+                <li>Need to rely solely on direct applications</li>
+              </ul>
+            </div>
+
+            <p className="small text-muted">
+              You can always re-enable Auto Recruiting later, but you&apos;ll miss potential
+              candidates in the meantime.
+            </p>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            color="secondary"
+            onClick={() => setShowOptOutModal(false)}
+            disabled={isDisabling}
+          >
+            Keep Auto Recruiting
+          </Button>
+          <Button color="danger" onClick={handleOptOut} disabled={isDisabling}>
+            {isDisabling ? 'Disabling...' : 'Yes, Disable Auto Recruiting'}
+          </Button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 };
