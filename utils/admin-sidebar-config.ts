@@ -41,6 +41,12 @@ export const adminSidebarItems = [
     text: 'Users',
   },
   {
+    name: 'Applicant Search',
+    pathname: '/admin/applicant-search',
+    icon: 'search',
+    text: 'Applicant Search',
+  },
+  {
     name: 'Feature Flags',
     pathname: '/admin/feature-flags',
     icon: 'flag',

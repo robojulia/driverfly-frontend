@@ -13,6 +13,7 @@ import {
   Shield,
   Phone,
   Grid3x3Gap,
+  Search,
 } from 'react-bootstrap-icons';
 import Link from 'next/link';
 import styles from './admin.module.css';
@@ -70,6 +71,15 @@ const AdminDashboard = () => {
       description: 'Manage all users in the system and their administrative privileges',
       icon: <People size={24} />,
       href: '/admin/users',
+      status: 'Active',
+      statusColor: 'success',
+    },
+    {
+      title: 'Applicant Search',
+      description:
+        'Search and view all applicants across the platform with auto-recruiting eligibility insights',
+      icon: <Search size={24} />,
+      href: '/admin/applicant-search',
       status: 'Active',
       statusColor: 'success',
     },
