@@ -1,7 +1,7 @@
-import { useContext, useMemo } from "react";
-import DashboardChartContext from "../../../context/dashboard-chart-context";
-import { PieChart } from "../pie-chart";
-import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
+import { useContext, useMemo } from 'react';
+import DashboardChartContext from '../../../context/dashboard-chart-context';
+import { PieChart } from '../pie-chart';
+import { ApplicantType } from '../../../enums/applicants/applicant-type.enum';
 
 export function SourceBreakdownChart() {
   const { state } = useContext(DashboardChartContext);
@@ -17,6 +17,7 @@ export function SourceBreakdownChart() {
           [ApplicantType.USER]: () => user++,
           [ApplicantType.COMPANY]: () => company++,
           [ApplicantType.DIRECT_JOB_APPLY]: () => jobApply++,
+          [ApplicantType.AUTO_RECRUIT]: () => null,
         })[a.type]();
       }
     });
@@ -27,12 +28,9 @@ export function SourceBreakdownChart() {
     return fetchData();
   }, [state]);
 
-  const labels = [
-    "DIGITAL_HIRING_APP",
-    "DRIVERFLY",
-    "UPLOADED",
-    "DIRECT_JOB_APPLY",
-  ].map((v) => `SourceBreakdownChartLabel.${v}`);
+  const labels = ['DIGITAL_HIRING_APP', 'DRIVERFLY', 'UPLOADED', 'DIRECT_JOB_APPLY'].map(
+    (v) => `SourceBreakdownChartLabel.${v}`
+  );
 
   return (
     <PieChart
