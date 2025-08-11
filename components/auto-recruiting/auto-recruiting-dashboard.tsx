@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
-import { Card, CardBody, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { Speedometer2, PeopleFill, GraphUp, ExclamationTriangleFill } from 'react-bootstrap-icons';
+import { Speedometer2 } from 'react-bootstrap-icons';
+import { Alert } from 'reactstrap';
+import DashboardHeader from './dashboard-header';
+import EmptyState from './empty-state';
+import QuickStats from './quick-stats';
+import ComingSoonBanner from './coming-soon-banner';
+import OptOutLink from './opt-out-link';
+import OptOutModal from './opt-out-modal';
+import AnalyticsDashboard from './analytics-dashboard';
+import { useAutoRecruitingStats } from '../../hooks/useAutoRecruitingStats';
 
 interface AutoRecruitingDashboardProps {
   onDisable?: () => Promise<void>;
@@ -9,6 +17,7 @@ interface AutoRecruitingDashboardProps {
 const AutoRecruitingDashboard: React.FC<AutoRecruitingDashboardProps> = ({ onDisable }) => {
   const [showOptOutModal, setShowOptOutModal] = useState(false);
   const [isDisabling, setIsDisabling] = useState(false);
+  const { stats, isLoading, error, refetch } = useAutoRecruitingStats();
 
   const handleOptOut = async () => {
     if (!onDisable) return;
@@ -23,111 +32,59 @@ const AutoRecruitingDashboard: React.FC<AutoRecruitingDashboardProps> = ({ onDis
       setIsDisabling(false);
     }
   };
+
+  const hasAnalyticsData = stats && stats.totalUniqueApplicants > 0;
+
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h2 className="mb-1">Auto Recruiting Dashboard</h2>
-          <p className="text-muted mb-0">Monitor your automated driver recruitment performance</p>
-        </div>
-      </div>
+      <DashboardHeader />
 
-      {/* Empty State */}
-      <div className="text-center py-5">
-        <div className="mb-4">
-          <Speedometer2 size={64} className="text-muted mb-3" />
-          <h4>Auto Recruiting is Active</h4>
-          <p className="text-muted mb-4">
-            Your auto recruiting system is running. We&apos;re actively finding qualified drivers
-            from other companies and adding them to your applicant pool.
-          </p>
-        </div>
-
-        {/* Quick Stats Placeholders */}
-        <div className="row justify-content-center">
-          <div className="col-md-4 mb-3">
-            <Card className="text-center border-0 bg-light">
-              <CardBody>
-                <PeopleFill size={32} className="text-primary mb-2" />
-                <h5 className="mb-1">0</h5>
-                <small className="text-muted">Drivers Added This Week</small>
-              </CardBody>
-            </Card>
-          </div>
-          <div className="col-md-4 mb-3">
-            <Card className="text-center border-0 bg-light">
-              <CardBody>
-                <GraphUp size={32} className="text-success mb-2" />
-                <h5 className="mb-1">0%</h5>
-                <small className="text-muted">Success Rate</small>
-              </CardBody>
-            </Card>
-          </div>
-        </div>
-
-        <div className="mt-4">
-          <p className="text-muted">
-            <strong>Coming Soon:</strong> Detailed analytics, performance metrics, and campaign
-            management tools.
-          </p>
-        </div>
-
-        {/* Opt-out Link */}
-        <div className="mt-5 pt-4 border-top">
-          <button
-            type="button"
-            className="btn btn-link text-muted p-0"
-            style={{ fontSize: '0.875rem', textDecoration: 'none' }}
-            onClick={() => setShowOptOutModal(true)}
-          >
-            Disable Auto Recruiting
+      {error && (
+        <Alert color="danger" className="mb-4">
+          <strong>Error loading analytics:</strong> {error}
+          <button className="btn btn-sm btn-outline-danger ms-2" onClick={refetch}>
+            Retry
           </button>
-        </div>
-      </div>
+        </Alert>
+      )}
 
-      {/* Opt-out Confirmation Modal */}
-      <Modal isOpen={showOptOutModal} toggle={() => setShowOptOutModal(false)} size="md">
-        <ModalHeader toggle={() => setShowOptOutModal(false)}>
-          <ExclamationTriangleFill className="text-warning me-2" />
-          Disable Auto Recruiting
-        </ModalHeader>
-        <ModalBody>
-          <div className="mb-3">
-            <h5>Are you sure you want to disable Auto Recruiting?</h5>
-            <p className="text-muted mb-3">
-              Disabling Auto Recruiting will stop the automatic addition of qualified drivers to
-              your applicant pool.
-            </p>
+      {!hasAnalyticsData && !isLoading && !error && (
+        <>
+          <EmptyState
+            title="Auto Recruiting is Active"
+            description="Your auto recruiting system is running. We're actively finding qualified drivers from other companies and adding them to your applicant pool."
+            icon={<Speedometer2 size={64} className="text-muted mb-3" />}
+          />
 
-            <div className="alert alert-warning">
-              <strong>This means you will:</strong>
-              <ul className="mb-0 mt-2">
-                <li>Stop receiving auto-recruited driver applications</li>
-                <li>Miss out on qualified candidates from other companies</li>
-                <li>Reduce your driver pipeline significantly</li>
-                <li>Need to rely solely on direct applications</li>
-              </ul>
+          <QuickStats thisWeekApplicants={0} isLoading={false} />
+
+          <ComingSoonBanner />
+        </>
+      )}
+
+      {(hasAnalyticsData || isLoading) && (
+        <>
+          {hasAnalyticsData && <AnalyticsDashboard stats={stats!} isLoading={isLoading} />}
+
+          {isLoading && (
+            <div className="text-center py-5">
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading analytics...</span>
+              </div>
+              <p className="mt-2 text-muted">Loading your auto-recruiting analytics...</p>
             </div>
+          )}
+        </>
+      )}
 
-            <p className="small text-muted">
-              You can always re-enable Auto Recruiting later, but you&apos;ll miss potential
-              candidates in the meantime.
-            </p>
-          </div>
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            color="secondary"
-            onClick={() => setShowOptOutModal(false)}
-            disabled={isDisabling}
-          >
-            Keep Auto Recruiting
-          </Button>
-          <Button color="danger" onClick={handleOptOut} disabled={isDisabling}>
-            {isDisabling ? 'Disabling...' : 'Yes, Disable Auto Recruiting'}
-          </Button>
-        </ModalFooter>
-      </Modal>
+      <OptOutLink onOptOut={() => setShowOptOutModal(true)} />
+
+      <OptOutModal
+        isOpen={showOptOutModal}
+        onClose={() => setShowOptOutModal(false)}
+        onConfirm={handleOptOut}
+        isDisabling={isDisabling}
+      />
     </div>
   );
 };
