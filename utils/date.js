@@ -37,6 +37,11 @@ function dateRange(start_at, end_at, default_end_at) {
 }
 
 function isExpired(dateString) {
+  // If dateString is null, undefined, or empty, the job never expires
+  if (!dateString) {
+    return false;
+  }
+
   const givenDate = new Date(dateString);
   const currentDate = new Date();
 

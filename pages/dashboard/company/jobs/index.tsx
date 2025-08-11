@@ -334,6 +334,7 @@ export default function JobListing() {
       },
     ];
 
+    // Only show reactivate button if job has an expiry date AND is expired
     if (job.expiry_date && new Date(job.expiry_date) < new Date()) {
       actions.push({
         onClick: (e) => onReactivateClick(job),

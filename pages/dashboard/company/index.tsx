@@ -73,10 +73,14 @@ export default function Dashboard() {
         status: [EmployeeStatus.ACTIVE],
       })) as EmployeeEntity[];
       setEmployees(e);
-      const j = ((await jobApi.list({
-        companyId: company?.id,
-      })) as JobEntity[])?.filter(
-        (job) => job?.status == Status.ACTIVE && new Date(job?.expiry_date) >= todayDate
+      const j = (
+        (await jobApi.list({
+          companyId: company?.id,
+        })) as JobEntity[]
+      )?.filter(
+        (job) =>
+          job?.status == Status.ACTIVE &&
+          (!job?.expiry_date || new Date(job?.expiry_date) >= todayDate)
       );
       setJobs(j);
       setIsLoading(false);
