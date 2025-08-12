@@ -61,4 +61,3 @@ restart: down up
 
 restart-dev: down up-dev
 	@echo "Development environment restarted"
-

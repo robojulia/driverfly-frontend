@@ -1,15 +1,19 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  driverfly-frontend:
+  # Development service
+  app-dev:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
     environment:
       - NODE_ENV=development
-      - PORT=3000
       - BASE_URL=${BASE_URL}
       - FRONTEND_BASE_URL=${FRONTEND_BASE_URL}
       - BASE_URL_API=${BASE_URL_API}
@@ -19,37 +23,44 @@ services:
       - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
       - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
       - NEXT_PUBLIC_MICROSOFT_CLARITY=${NEXT_PUBLIC_MICROSOFT_CLARITY}
-    depends_on:
-      - redis
-    volumes:
-      - ./logs:/app/logs
-    networks:
-      - driverfly-network
+    command: npm run dev
+    profiles:
+      - dev
 
-  redis:
-    image: redis:7-alpine
+  # Production service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - driverfly-network
-
-  redis-commander:
-    image: rediscommander/redis-commander:latest
-    ports:
-      - "8081:8081"
+      - "3000:3000"
     environment:
-      - REDIS_HOSTS=local:redis:6379
+      - NODE_ENV=production
+      - BASE_URL=${BASE_URL}
+      - FRONTEND_BASE_URL=${FRONTEND_BASE_URL}
+      - BASE_URL_API=${BASE_URL_API}
+      - MAPBOX_API_KEY=${MAPBOX_API_KEY}
+      - TWILIO_APP_NAME=${TWILIO_APP_NAME}
+      - PHONE_INPUT_COUNTRY_ALLOWED=${PHONE_INPUT_COUNTRY_ALLOWED}
+      - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
+      - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
+      - NEXT_PUBLIC_MICROSOFT_CLARITY=${NEXT_PUBLIC_MICROSOFT_CLARITY}
+    restart: unless-stopped
+    profiles:
+      - prod
+
+  # Nginx reverse proxy (optional)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
     depends_on:
-      - redis
-    networks:
-      - driverfly-network
-
-volumes:
-  redis_data:
-
-networks:
-  driverfly-network:
-    driver: bridge
-
+      - app
+    restart: unless-stopped
+    profiles:
+      - prod
+      - nginx
