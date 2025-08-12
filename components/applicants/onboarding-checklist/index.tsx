@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import { useMemo, useState } from "react";
 import { Button, Form, Table } from "react-bootstrap";
-import { ThreeCircles } from "react-loader-spinner";
+import ThreeCircles from "react-loader-spinner";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../hooks/use-auth";
 import { useTranslation } from "../../../hooks/use-translation";
