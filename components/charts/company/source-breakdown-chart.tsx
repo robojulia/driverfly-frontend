@@ -10,6 +10,7 @@ export function SourceBreakdownChart() {
     let user = 0;
     let company = 0;
     let jobApply = 0;
+    let autoRecruit = 0;
     state.applicants.forEach((a) => {
       if (!a?.is_hired) {
         ({
@@ -17,7 +18,7 @@ export function SourceBreakdownChart() {
           [ApplicantType.USER]: () => user++,
           [ApplicantType.COMPANY]: () => company++,
           [ApplicantType.DIRECT_JOB_APPLY]: () => jobApply++,
-          [ApplicantType.AUTO_RECRUIT]: () => null,
+          [ApplicantType.AUTO_RECRUIT]: () => autoRecruit++,
         })[a.type]();
       }
     });
@@ -28,9 +29,13 @@ export function SourceBreakdownChart() {
     return fetchData();
   }, [state]);
 
-  const labels = ['DIGITAL_HIRING_APP', 'DRIVERFLY', 'UPLOADED', 'DIRECT_JOB_APPLY'].map(
-    (v) => `SourceBreakdownChartLabel.${v}`
-  );
+  const labels = [
+    'DIGITAL_HIRING_APP',
+    'DRIVERFLY',
+    'UPLOADED',
+    'DIRECT_JOB_APPLY',
+    'AUTO_RECRUIT',
+  ].map((v) => `SourceBreakdownChartLabel.${v}`);
 
   return (
     <PieChart
