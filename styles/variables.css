@@ -117,4 +117,11 @@
   --eligibility-z-index-dropdown: 1000;
   --eligibility-z-index-sticky: 1020;
   --eligibility-z-index-modal: 1050;
+
+  /* Auto-Recruit Feature Variables */
+  --auto-recruit-primary: var(--primary-button);
+  --auto-recruit-gradient: linear-gradient(135deg, var(--primary-button) 0%, var(--primary) 100%);
+  --auto-recruit-shadow: 0 2px 4px rgba(44, 122, 123, 0.2);
+  --auto-recruit-shadow-hover: 0 4px 8px rgba(44, 122, 123, 0.3);
+  --auto-recruit-tooltip-bg: rgba(0, 0, 0, 0.9);
 }

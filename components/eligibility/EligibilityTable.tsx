@@ -7,6 +7,7 @@ import EligibilityApi, {
   ApplicantEligibilityScore,
   EligibilityQueryParams,
 } from '../../pages/api/eligibility';
+import AutoRecruitIndicator from './AutoRecruitIndicator';
 import styles from '../../styles/eligibility.module.css';
 
 interface EligibilityTableProps {
@@ -241,13 +242,16 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
                 </td>
 
                 <td>
-                  <span
-                    className={`${styles.statusBadge} ${getStatusBadgeClass(
-                      applicant.eligibilityStatus
-                    )}`}
-                  >
-                    {formatStatus(applicant.eligibilityStatus)}
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span
+                      className={`${styles.statusBadge} ${getStatusBadgeClass(
+                        applicant.eligibilityStatus
+                      )}`}
+                    >
+                      {formatStatus(applicant.eligibilityStatus)}
+                    </span>
+                    {applicant.applicant.type === 'AUTO_RECRUIT' && <AutoRecruitIndicator />}
+                  </div>
                 </td>
 
                 <td>

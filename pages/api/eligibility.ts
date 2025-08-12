@@ -27,6 +27,7 @@ export interface ApplicantBasicInfo {
   location: string;
   licenseType: string;
   yearsExperience: number;
+  type: 'USER' | 'COMPANY' | 'DHA' | 'DIRECT_JOB_APPLY' | 'AUTO_RECRUIT';
   hasApplied: boolean;
   isInterested: boolean;
   interestTier?: 'HIGH' | 'MEDIUM' | 'LOW' | 'NONE';
