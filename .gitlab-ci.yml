@@ -1,70 +1,21 @@
 stages:
   - build
-  - test
-  - deploy
+  - push
+
+default:
+  image: docker:latest
+  services:
+    - docker:dind
 
 variables:
-  DOCKER_DRIVER: overlay2
-  DOCKER_TLS_CERTDIR: "/certs"
-
-# Cache Docker layers between jobs
-cache:
-  paths:
-    - .docker-cache/
-
-before_script:
-  - docker info
+  IMAGE_NAME: "$ACR_LOGIN_SERVER/driverflyfrontend:latest"
 
 build:
   stage: build
-  image: docker:20.10.16
-  services:
-    - docker:20.10.16-dind
-  variables:
-    DOCKER_BUILDKIT: 1
   script:
-    # Login to Azure Container Registry
-    - echo $ACR_PASSWORD | docker login -u $ACR_USERNAME --password-stdin $ACR_LOGIN_SERVER
-    # Build with BuildKit for better caching
-    - docker build --build-arg NODE_ENV=production --cache-from $ACR_LOGIN_SERVER/driverfly-frontend:latest -t $ACR_LOGIN_SERVER/driverfly-frontend:$CI_COMMIT_SHA .
-    - docker tag $ACR_LOGIN_SERVER/driverfly-frontend:$CI_COMMIT_SHA $ACR_LOGIN_SERVER/driverfly-frontend:latest
-    # Push to Azure Container Registry
-    - docker push $ACR_LOGIN_SERVER/driverfly-frontend:$CI_COMMIT_SHA
-    - docker push $ACR_LOGIN_SERVER/driverfly-frontend:latest
+    - echo "Building Docker image..."
+    - docker login $ACR_LOGIN_SERVER -u $ACR_USERNAME -p $ACR_PASSWORD
+    - docker build -t $IMAGE_NAME .
+    - docker push $IMAGE_NAME
   only:
-    - main
-    - develop
-
-deploy:
-  stage: deploy
-  image: mcr.microsoft.com/azure-cli:latest
-  before_script:
-    - az login --service-principal --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
-  script:
-    # Deploy to Azure Container Instances or App Service
-    - |
-      if [ "$CI_COMMIT_BRANCH" = "main" ]; then
-        echo "Deploying to production..."
-        # Deploy to production Azure Container Instance
-        az container create \
-          --resource-group $AZURE_RESOURCE_GROUP \
-          --name driverfly-frontend-prod \
-          --image $ACR_LOGIN_SERVER/driverfly-frontend:$CI_COMMIT_SHA \
-          --dns-name-label driverfly-frontend-prod \
-          --ports 3000 \
-          --environment-variables NODE_ENV=production PORT=3000
-      elif [ "$CI_COMMIT_BRANCH" = "develop" ]; then
-        echo "Deploying to staging..."
-        # Deploy to staging Azure Container Instance
-        az container create \
-          --resource-group $AZURE_RESOURCE_GROUP \
-          --name driverfly-frontend-staging \
-          --image $ACR_LOGIN_SERVER/driverfly-frontend:$CI_COMMIT_SHA \
-          --dns-name-label driverfly-frontend-staging \
-          --ports 3000 \
-          --environment-variables NODE_ENV=staging PORT=3000
-      fi
-  only:
-    - main
-    - develop
-  when: on_success
+    - main 
