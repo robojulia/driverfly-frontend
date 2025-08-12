@@ -34,8 +34,6 @@ build:
   only:
     - main
     - develop
-  tags:
-    - docker
 
 test:
   stage: test
@@ -52,8 +50,6 @@ test:
   only:
     - main
     - develop
-  tags:
-    - docker
 
 deploy:
   stage: deploy
@@ -87,6 +83,4 @@ deploy:
   only:
     - main
     - develop
-  tags:
-    - docker
   when: on_success
