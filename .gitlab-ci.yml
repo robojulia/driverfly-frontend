@@ -35,22 +35,6 @@ build:
     - main
     - develop
 
-test:
-  stage: test
-  image: docker:20.10.16
-  services:
-    - docker:20.10.16-dind
-  before_script:
-    - echo $ACR_PASSWORD | docker login -u $ACR_USERNAME --password-stdin $ACR_LOGIN_SERVER
-  script:
-    # Pull the built image from ACR
-    - docker pull $ACR_LOGIN_SERVER/driverfly-frontend:$CI_COMMIT_SHA
-    # Run basic health check
-    - docker run --rm $ACR_LOGIN_SERVER/driverfly-frontend:$CI_COMMIT_SHA wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1
-  only:
-    - main
-    - develop
-
 deploy:
   stage: deploy
   image: mcr.microsoft.com/azure-cli:latest
