@@ -1,42 +1,15 @@
 stages:
   - build
-  - deploy-azure
-
-variables:
-  NODE_VERSION: "20"
-
-cache:
-  paths:
-    - node_modules/
 
 build:
   stage: build
-  image: node:${NODE_VERSION}
+  image: docker:20.10.16
+  services:
+    - docker:20.10.16-dind
   before_script:
-    - npm install --legacy-peer-deps
+    - echo $ACR_PASSWORD | docker login $ACR_LOGIN_SERVER -u $ACR_USERNAME --password-stdin
   script:
-    - npm run build
-  artifacts:
-    paths:
-      - .next/
-      - public/
-      - package.json
-      - next.config.js
-      - azure-static-web-apps.json
-    expire_in: 1 hour
-  only:
-    - main
-
-deploy-azure:
-  stage: deploy-azure
-  image: node:${NODE_VERSION}
-  before_script:
-    - npm install -g @azure/static-web-apps-cli
-  script:
-    - cp .next/server/pages/en-us.html .next/index.html
-    - swa deploy .next --env production --deployment-token $AZURE_STATIC_WEB_APPS_API_TOKEN
-  environment:
-    name: azure-production
-    url: $AZURE_STATIC_WEB_APPS_URL
+    - docker build -t $ACR_LOGIN_SERVER/driverfly-frontend:latest .
+    - docker push $ACR_LOGIN_SERVER/driverfly-frontend:latest
   only:
     - main
