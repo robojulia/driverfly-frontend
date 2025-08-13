@@ -80,7 +80,7 @@ export default class BaseApi {
       });
     }
 
-    // console.log("BaseApi: ", token);
+    // console.log("BaseApi: ", token); 
 
     if (!config.headers) config.headers = {};
 
