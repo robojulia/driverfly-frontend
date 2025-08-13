@@ -19,9 +19,11 @@ build:
     - docker login $ACR_LOGIN_SERVER -u $ACR_USERNAME -p $ACR_PASSWORD
     - |
       echo "Validating required env vars..."
+      # Disable errexit during validation to avoid accidental failures
+      set +e
       required="BASE_URL FRONTEND_BASE_URL BASE_URL_API"
       for v in $required; do
-        val=$(printenv "$v")
+        eval val="\${$v}"
         if [ -z "$val" ]; then
           echo "ERROR: Missing required CI variable: $v"; exit 1
         else
@@ -30,7 +32,7 @@ build:
       done
       optional="RECAPTCHA_SITE_KEY RECAPTCHA_SECRET_KEY NEXT_PUBLIC_MICROSOFT_CLARITY MAPBOX_API_KEY TWILIO_APP_NAME PHONE_INPUT_COUNTRY_ALLOWED NEXT_PUBLIC_GOOGLE_ANALYTICS"
       for v in $optional; do
-        val=$(printenv "$v")
+        eval val="\${$v}"
         if [ -z "$val" ]; then
           echo "WARN: Optional CI variable not set: $v"
         fi
@@ -47,14 +49,16 @@ build:
       echo "NEXT_PUBLIC_GOOGLE_ANALYTICS=$NEXT_PUBLIC_GOOGLE_ANALYTICS"
       echo "RECAPTCHA_SITE_KEY=$RECAPTCHA_SITE_KEY"
       echo "PHONE_INPUT_COUNTRY_ALLOWED=$PHONE_INPUT_COUNTRY_ALLOWED"
-      # Sensitive values are not printed to avoid leaking secrets
       for v in MAPBOX_API_KEY RECAPTCHA_SECRET_KEY TWILIO_APP_NAME; do
-        if [ -n "$(printenv "$v")" ]; then
+        eval val="\${$v}"
+        if [ -n "$val" ]; then
           echo "$v is set"
         else
           echo "$v is not set"
         fi
       done
+      # Re-enable errexit for subsequent commands
+      set -e
     - |
       docker build --no-cache \
         --build-arg BASE_URL="$BASE_URL" \
