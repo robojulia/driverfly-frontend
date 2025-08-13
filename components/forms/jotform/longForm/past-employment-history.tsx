@@ -79,11 +79,7 @@ export function PastEmploymentHistory() {
             employer.manager_name &&
             employer.email &&
             employer.start_at &&
-            employer.end_at &&
-            employer.address &&
-            employer.zip_code &&
-            employer.city &&
-            employer.state
+            employer.end_at
         );
       setIsFormValid(hasNoErrors && hasValidEmployers);
     } else {
@@ -480,7 +476,6 @@ export function PastEmploymentHistory() {
                       value={form.values.employers?.[i]?.address || ''}
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
-                      required
                       error={getFieldError(`employers[${i}].address`)}
                       autoComplete="address-line1"
                     />
@@ -513,7 +508,6 @@ export function PastEmploymentHistory() {
                       value={form.values.employers?.[i]?.zip_code || ''}
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
-                      required
                       error={getFieldError(`employers[${i}].zip_code`)}
                       autoComplete="postal-code"
                     />
@@ -525,7 +519,6 @@ export function PastEmploymentHistory() {
                       value={form.values.employers?.[i]?.city || ''}
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
-                      required
                       error={getFieldError(`employers[${i}].city`)}
                       autoComplete="address-level2"
                     />
@@ -537,7 +530,6 @@ export function PastEmploymentHistory() {
                       value={form.values.employers?.[i]?.state || ''}
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
-                      required
                       error={getFieldError(`employers[${i}].state`)}
                       options={stateList}
                     />

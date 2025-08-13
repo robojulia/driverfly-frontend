@@ -693,7 +693,7 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
                     style={{ color: 'var(--primary-button)' }}
                   />
                   <h5 className={`mb-3 fw-bold ${styles.sectionTitle}`}>
-                    Applied Driverfly before?
+                    Applied with Driverfly before?
                   </h5>
                   <p className={`mb-3 ${styles.sectionText}`}>
                     Save time by using your existing profile. Just enter your phone number and

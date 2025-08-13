@@ -73,11 +73,7 @@ export function EmploymentHistory() {
         form.values.employer?.title &&
         form.values.employer?.start_at &&
         form.values.employer?.manager_name &&
-        form.values.employer?.email &&
-        form.values.employer?.address &&
-        form.values.employer?.zip_code &&
-        form.values.employer?.city &&
-        form.values.employer?.state
+        form.values.employer?.email
       );
       setIsFormValid(hasNoErrors && requiredFieldsFilled);
     } else {
@@ -431,7 +427,6 @@ export function EmploymentHistory() {
                   value={form.values.employer?.address || ''}
                   onChange={form.handleChange}
                   onBlur={form.handleBlur}
-                  required
                   error={
                     form.touched.employer?.address && form.errors.employer?.address
                       ? String(form.errors.employer?.address)
@@ -468,7 +463,6 @@ export function EmploymentHistory() {
                   value={form.values.employer?.zip_code || ''}
                   onChange={form.handleChange}
                   onBlur={form.handleBlur}
-                  required
                   error={
                     form.touched.employer?.zip_code && form.errors.employer?.zip_code
                       ? String(form.errors.employer?.zip_code)
@@ -484,7 +478,6 @@ export function EmploymentHistory() {
                   value={form.values.employer?.city || ''}
                   onChange={form.handleChange}
                   onBlur={form.handleBlur}
-                  required
                   error={
                     form.touched.employer?.city && form.errors.employer?.city
                       ? String(form.errors.employer?.city)
@@ -501,7 +494,6 @@ export function EmploymentHistory() {
                     value={form.values.employer?.state || ''}
                     onChange={form.handleChange}
                     onBlur={form.handleBlur}
-                    required
                     error={
                       form.touched.employer?.state && form.errors.employer?.state
                         ? String(form.errors.employer?.state)
