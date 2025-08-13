@@ -12,6 +12,7 @@ import { DocumentCard, Button, Input, Checkbox } from '../shared/dha';
 import ViewModal from '../view-details/view-modal';
 import { CameraComponent } from '../forms/jotform/longForm/camera';
 import FileInput from '../forms/file-input';
+import { DRIVER_LICENSE_SIZE_LIMIT } from '../../constants/file-upload.constants';
 import styles from '../../styles/digitalhiringapp.module.css';
 
 interface QuickApplyDriversLicenseProps {
@@ -254,7 +255,7 @@ export function QuickApplyDriversLicense({
               <FileInput
                 name="document"
                 accept="application/pdf,image/*"
-                allowedSizeInByte={3145728} // 3MB
+                allowedSizeInByte={DRIVER_LICENSE_SIZE_LIMIT}
                 formik={form}
               />
             </div>

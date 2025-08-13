@@ -18,6 +18,10 @@ import { CameraComponent } from './camera';
 import ViewModal from '../../../view-details/view-modal';
 import ViewPdf from '../../../view-details/view-pdf';
 import DocumentApi from '../../../../pages/api/document';
+import {
+  DRIVER_LICENSE_SIZE_LIMIT,
+  getFileSizeLimitDescription,
+} from '../../../../constants/file-upload.constants';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 
 export function DriverLicense() {
@@ -179,7 +183,8 @@ export function DriverLicense() {
         <p className={styles.formInfoBoxTitle}>📄 {t('DRIVER_LICENSE_UPLOAD_HELP_TITLE')}</p>
         <p>
           Please upload a clear photo or scan of your driver&apos;s license. Accepted formats: PDF,
-          Word documents, or images (JPG, PNG). Maximum file size: 3MB.
+          Word documents, or images (JPG, PNG).{' '}
+          {getFileSizeLimitDescription(DRIVER_LICENSE_SIZE_LIMIT)}.
         </p>
       </div>
 
@@ -256,7 +261,7 @@ export function DriverLicense() {
                   className="my-3"
                   name="document"
                   accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
-                  allowedSizeInByte={3145728}
+                  allowedSizeInByte={DRIVER_LICENSE_SIZE_LIMIT}
                   formik={form}
                   onRemove={handleApplicantExtrasCleanup}
                 />
