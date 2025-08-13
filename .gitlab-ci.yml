@@ -19,10 +19,11 @@ build:
     - docker login $ACR_LOGIN_SERVER -u $ACR_USERNAME -p $ACR_PASSWORD
     - |
       echo "Validating required env vars..."
-      required=(BASE_URL FRONTEND_BASE_URL BASE_URL_API RECAPTCHA_SITE_KEY RECAPTCHA_SECRET_KEY)
-      for v in "${required[@]}"; do
-        if [ -z "${!v}" ]; then
-          echo "ERROR: Missing required CI variable: $v" && exit 1
+      required="BASE_URL FRONTEND_BASE_URL BASE_URL_API RECAPTCHA_SITE_KEY RECAPTCHA_SECRET_KEY"
+      for v in $required; do
+        val=$(printenv "$v")
+        if [ -z "$val" ]; then
+          echo "ERROR: Missing required CI variable: $v"; exit 1
         else
           echo "OK: $v present"
         fi
