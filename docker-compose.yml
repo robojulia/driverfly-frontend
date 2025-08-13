@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  driverfly-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Add build args for better caching
+      args:
+        - NODE_ENV=production
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - REDIS_URL=redis://redis:6379/0
+      - LOG_LEVEL=info
+    depends_on:
+      redis:
+        condition: service_started
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - driverfly-network
+    restart: unless-stopped
+    # Add resource limits to prevent hanging
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - driverfly-network
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    ports:
+      - "8081:8081"
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    depends_on:
+      redis:
+        condition: service_started
+    networks:
+      - driverfly-network
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+
+networks:
+  driverfly-network:
+    driver: bridge
