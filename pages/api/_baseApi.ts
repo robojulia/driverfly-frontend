@@ -42,7 +42,7 @@ export default class BaseApi {
       // If environment variable is not set, provide a fallback
       if (!config.baseURL) {
         // In development, default to localhost:4000/api
-        // In production, this should be set via environment variables
+        // In production, this should be set via environment variables 
         if (isBrowser() && typeof window !== 'undefined') {
           const hostname = window.location.hostname;
           const isDevelopment = hostname === 'localhost' || hostname === '127.0.0.1';
