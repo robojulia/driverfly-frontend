@@ -37,7 +37,9 @@ export default class BaseApi {
     if (!config) config = {};
 
     if (!config.baseURL) {
-      config.baseURL = process.env.BASE_URL_API;
+      // Prefer public var first so client bundles work reliably
+      const injectedBase = process.env.NEXT_PUBLIC_BASE_URL_API || process.env.BASE_URL_API;
+      config.baseURL = injectedBase;
 
       // If environment variable is not set, provide a fallback
       if (!config.baseURL) {
