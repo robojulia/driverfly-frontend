@@ -33,7 +33,7 @@ export interface VehicleFormProps extends BaseFormProps<VehicleEntity> {}
 export function VehicleForm(props: VehicleFormProps) {
   const { t } = useTranslation();
   let { className, entity, onSaveComplete, onSaveError } = props;
-  
+
   // Add styles to document head
   useEffect(() => {
     addStyles();
@@ -413,25 +413,25 @@ export function VehicleForm(props: VehicleFormProps) {
                       (form.values.accessories || []).includes(accessory) ? 'selected' : ''
                     }`}
                     onClick={() => handleAccessoryClick(accessory)}
-                                         style={{
-                       padding: '8px 12px',
-                       border: '1px solid #ddd',
-                       borderRadius: '6px',
-                       cursor: 'pointer',
-                       display: 'flex',
-                       alignItems: 'center',
-                       gap: '8px',
-                       backgroundColor: (form.values.accessories || []).includes(accessory)
-                         ? '#e3f2fd'
-                         : '#fff',
-                       borderColor: (form.values.accessories || []).includes(accessory)
-                         ? '#2196f3'
-                         : '#ddd',
-                       transition: 'all 0.2s ease',
-                       minHeight: '40px',
-                       wordWrap: 'break-word',
-                       overflowWrap: 'break-word',
-                     }}
+                    style={{
+                      padding: '8px 12px',
+                      border: '1px solid #ddd',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      backgroundColor: (form.values.accessories || []).includes(accessory)
+                        ? '#e3f2fd'
+                        : '#fff',
+                      borderColor: (form.values.accessories || []).includes(accessory)
+                        ? '#2196f3'
+                        : '#ddd',
+                      transition: 'all 0.2s ease',
+                      minHeight: '40px',
+                      wordWrap: 'break-word',
+                      overflowWrap: 'break-word',
+                    }}
                     onMouseEnter={(e) => {
                       if (!(form.values.accessories || []).includes(accessory)) {
                         e.currentTarget.style.backgroundColor = '#f5f5f5';
@@ -449,19 +449,25 @@ export function VehicleForm(props: VehicleFormProps) {
                       type="checkbox"
                       checked={(form.values.accessories || []).includes(accessory)}
                       onChange={() => {}}
-                      style={{ 
+                      style={{
                         margin: 0,
                         width: '18px',
                         height: '18px',
-                        accentColor: '#2196f3'
+                        accentColor: '#2196f3',
                       }}
                     />
-                    <span style={{ 
-                      flex: 1,
-                      fontSize: '14px',
-                      fontWeight: (form.values.accessories || []).includes(accessory) ? '500' : '400',
-                      color: (form.values.accessories || []).includes(accessory) ? '#1976d2' : '#333'
-                    }}>
+                    <span
+                      style={{
+                        flex: 1,
+                        fontSize: '14px',
+                        fontWeight: (form.values.accessories || []).includes(accessory)
+                          ? '500'
+                          : '400',
+                        color: (form.values.accessories || []).includes(accessory)
+                          ? '#2c7a7b'
+                          : '#333',
+                      }}
+                    >
                       {t(`VehicleAccessory.${accessory}`)}
                     </span>
                   </div>
@@ -654,7 +660,7 @@ const addStyles = () => {
         }
 
         .vehicle-form .accessory-item.selected span {
-          color: #1976d2;
+          color: #2c7a7b;
           font-weight: 500;
         }
 

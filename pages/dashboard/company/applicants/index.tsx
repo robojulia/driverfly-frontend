@@ -76,7 +76,7 @@ export default function Applicants() {
   const fetchApplicant = async () => {
     setLoading(true);
     const api = new ApplicantApi();
-    
+
     // Handle special case for "No CDL" filter
     if (filters?.license_type === DriverLicenseType.NO_CDL) {
       // Make two API calls: one for NONE and one for null values
@@ -98,24 +98,24 @@ export default function Applicants() {
           is_paginated: true,
           page: filtersChanged ? 1 : pagingMeta?.currentPage,
           limit: pagingMeta?.itemsPerPage,
-        })
+        }),
       ]);
-      
+
       // Combine the results and remove duplicates
       const noneItems = (noneData as Pagination<ApplicantEntity>)?.items || [];
       const nullItems = (nullData as Pagination<ApplicantEntity>)?.items || [];
-      
+
       // Create a map to track unique applicants by ID
       const uniqueApplicants = new Map();
-      
-      [...noneItems, ...nullItems].forEach(applicant => {
+
+      [...noneItems, ...nullItems].forEach((applicant) => {
         if (!uniqueApplicants.has(applicant.id)) {
           uniqueApplicants.set(applicant.id, applicant);
         }
       });
-      
+
       const combinedItems = Array.from(uniqueApplicants.values());
-      
+
       setApplicants(combinedItems);
       setFiltersChanged(false);
       setPagingMeta({
@@ -141,7 +141,7 @@ export default function Applicants() {
         totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems,
       });
     }
-    
+
     setTimeout(() => setLoading(false), 1000);
   };
 
@@ -728,7 +728,7 @@ function ApplicantView(props: ViewProps) {
         expandableRowsComponent={({ data }) => (
           <div
             className="p-3"
-            style={{ backgroundColor: '#f8f9fa', borderLeft: '4px solid #007bff' }}
+            style={{ backgroundColor: '#f8f9fa', borderLeft: '4px solid #2c7a7b' }}
           >
             <div className="mb-3">
               <h6 className="text-primary-brand mb-2">

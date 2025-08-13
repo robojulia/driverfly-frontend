@@ -2356,7 +2356,7 @@ p {
 * text color classes    
 */
 .text-blue {
-  color: #007bff !important;
+  color: #2c7a7b !important;
 }
 
 input[type='checkbox'] {
@@ -2609,7 +2609,7 @@ input[type='checkbox'] {
 
 button:focus,
 button:active {
-  color: #1976d2;
+  color: #2c7a7b;
 }
 
 .basic-single {
