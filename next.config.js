@@ -8,6 +8,10 @@ module.exports = {
     BASE_URL: process.env.BASE_URL,
     FRONTEND_BASE_URL: process.env.FRONTEND_BASE_URL,
     BASE_URL_API: process.env.BASE_URL_API,
+    NEXT_PUBLIC_BASE_URL_API: process.env.BASE_URL_API, // For API calls
+    NEXT_PUBLIC_BASE_URL: process.env.BASE_URL, // For base URL
+    NEXT_PUBLIC_FRONTEND_BASE_URL: process.env.FRONTEND_BASE_URL, // For frontend URL
+    NEXT_PUBLIC_MAPBOX_API_KEY: process.env.MAPBOX_API_KEY, // For Mapbox
     MAPBOX_API_KEY: process.env.MAPBOX_API_KEY,
     TWILIO_APP_NAME: process.env.TWILIO_APP_NAME,
     PHONE_INPUT_COUNTRY_ALLOWED: process.env.PHONE_INPUT_COUNTRY_ALLOWED,
