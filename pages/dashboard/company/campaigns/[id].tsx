@@ -718,8 +718,9 @@ const CampaignDetailPage = () => {
             <div>
               <h6 className="mb-1">Start Campaign: {campaign?.name}</h6>
               <p className="text-muted mb-0">
-                Are you sure you want to start this campaign? This will begin contacting all targets
-                and the campaign will become live.
+                {selectedCommunicationType === CampaignCommunicationType.SMS
+                  ? 'Are you sure you want to start this campaign? This will begin sending SMS messages to all targets and the campaign will become live.'
+                  : 'Are you sure you want to start this campaign? This will begin contacting all targets by phone and the campaign will become live.'}
               </p>
             </div>
           }
@@ -731,8 +732,7 @@ const CampaignDetailPage = () => {
           additionalContent={
             <div className="alert alert-info">
               <small>
-                <strong>Note:</strong> Once started, the campaign will begin immediately and targets
-                will start receiving calls. You can pause the campaign at any time.
+                <strong>Note:</strong> Once started, the campaign will begin immediately and targets will start receiving {selectedCommunicationType === CampaignCommunicationType.SMS ? 'texts' : 'calls'}. You can pause the campaign at any time.
               </small>
             </div>
           }

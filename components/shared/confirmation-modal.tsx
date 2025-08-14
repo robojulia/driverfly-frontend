@@ -37,15 +37,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 }) => {
   const getIconComponent = () => {
     const iconSize = 24;
-    const iconClass = `text-${
-      icon === 'danger'
-        ? 'danger'
-        : icon === 'warning'
-        ? 'warning'
-        : icon === 'success'
-        ? 'success'
-        : 'info'
-    }`;
+    const iconClass = 'text-white';
 
     switch (icon) {
       case 'danger':
@@ -63,14 +55,14 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   const getIconBackgroundClass = () => {
     switch (icon) {
       case 'danger':
-        return 'bg-danger bg-opacity-10';
+        return 'bg-danger';
       case 'warning':
-        return 'bg-warning bg-opacity-10';
+        return 'bg-warning';
       case 'success':
-        return 'bg-success bg-opacity-10';
+        return 'bg-success';
       case 'info':
       default:
-        return 'bg-info bg-opacity-10';
+        return 'bg-info';
     }
   };
 
