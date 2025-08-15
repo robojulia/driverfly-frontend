@@ -77,7 +77,7 @@ build:
         --build-arg NEXT_PUBLIC_GOOGLE_ANALYTICS="$NEXT_PUBLIC_GOOGLE_ANALYTICS" \
         -t $IMAGE_NAME .
     - echo "Verifying build contains latest code..."
-    - docker run --rm $IMAGE_NAME sh -c 'echo "Build Date: $BUILD_DATE"; echo "Git Commit: $GIT_COMMIT"'
+    - docker run --rm $IMAGE_NAME sh -c "echo Build Date: \$BUILD_DATE; echo Git Commit: \$GIT_COMMIT"
     - docker push $IMAGE_NAME
     - docker tag $IMAGE_NAME $IMAGE_LATEST
     - docker push $IMAGE_LATEST
