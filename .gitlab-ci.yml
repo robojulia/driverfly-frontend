@@ -38,7 +38,8 @@ build:
         fi
       done
       echo "Using BASE_URL_API=$BASE_URL_API"
-      echo "\nEnv snapshot (non-sensitive values):"
+      echo ""
+      echo "Env snapshot (non-sensitive values):"
       echo "BASE_URL=$BASE_URL"
       echo "FRONTEND_BASE_URL=$FRONTEND_BASE_URL"
       echo "BASE_URL_API=$BASE_URL_API"
