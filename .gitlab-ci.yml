@@ -1,6 +1,5 @@
 stages:
   - build
-  - push
 
 default:
   image: docker:latest
