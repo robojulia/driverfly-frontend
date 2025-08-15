@@ -57,6 +57,8 @@ export const EnvDebug: React.FC<EnvDebugProps> = ({ enabled = true }) => {
       }
 
       console.groupEnd();
+    } else {
+      console.log('Not in browser environment');
     }
   }, [enabled]);
 

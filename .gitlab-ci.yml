@@ -8,7 +8,8 @@ default:
     - docker:dind
 
 variables:
-  IMAGE_NAME: "$ACR_LOGIN_SERVER/driverflyfrontend:latest"
+  IMAGE_NAME: "$ACR_LOGIN_SERVER/driverflyfrontend:$CI_COMMIT_SHA"
+  IMAGE_LATEST: "$ACR_LOGIN_SERVER/driverflyfrontend:latest"
   # Required so docker-in-docker works without TLS certs
   DOCKER_TLS_CERTDIR: ""
 
@@ -61,6 +62,8 @@ build:
       set -e
     - |
       docker build --no-cache \
+        --build-arg BUILD_DATE="$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+        --build-arg GIT_COMMIT="$CI_COMMIT_SHA" \
         --build-arg BASE_URL="$BASE_URL" \
         --build-arg FRONTEND_BASE_URL="$FRONTEND_BASE_URL" \
         --build-arg BASE_URL_API="$BASE_URL_API" \
@@ -73,6 +76,10 @@ build:
         --build-arg PHONE_INPUT_COUNTRY_ALLOWED="$PHONE_INPUT_COUNTRY_ALLOWED" \
         --build-arg NEXT_PUBLIC_GOOGLE_ANALYTICS="$NEXT_PUBLIC_GOOGLE_ANALYTICS" \
         -t $IMAGE_NAME .
+    - echo "Verifying build contains latest code..."
+    - docker run --rm $IMAGE_NAME sh -c 'echo "Build Date: $BUILD_DATE"; echo "Git Commit: $GIT_COMMIT"'
     - docker push $IMAGE_NAME
+    - docker tag $IMAGE_NAME $IMAGE_LATEST
+    - docker push $IMAGE_LATEST
   only:
     - main 

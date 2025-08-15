@@ -9,6 +9,12 @@ COPY package*.json ./
 # Install all dependencies (including dev dependencies for build)
 RUN npm ci && npm cache clean --force
 
+# Add build timestamp to invalidate cache for source code layers
+ARG BUILD_DATE
+ARG GIT_COMMIT
+ENV BUILD_DATE=${BUILD_DATE}
+ENV GIT_COMMIT=${GIT_COMMIT}
+
 # Copy source code
 COPY . .
 
