@@ -956,6 +956,7 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
                     label="Phone Number"
                     name="phone"
                     required
+                    disabled={isPrefilled}
                     value={apply_form.values.phone || ''}
                     onChange={apply_form.handleChange}
                     onBlur={(e) => {
