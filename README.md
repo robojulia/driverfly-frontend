@@ -33,7 +33,7 @@ DriverFly is a modern web application built with Next.js, React, and TypeScript,
    ```
    BASE_URL=<your-base-url>
    FRONTEND_BASE_URL=<your-frontend-base-url>
-   BASE_URL_API=<your-api-url>
+   NEXT_PUBLIC_BASE_URL_API=<your-api-url>
    MAPBOX_API_KEY=<your-mapbox-api-key>
    TWILIO_APP_NAME=<your-twilio-app-name>
    PHONE_INPUT_COUNTRY_ALLOWED=<allowed-countries>

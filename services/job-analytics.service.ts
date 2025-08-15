@@ -69,7 +69,7 @@ export class JobAnalyticsService {
    */
   private getAnalyticsBaseUrl(): string {
     // Use the same environment variable as BaseApi
-    let baseUrl = process.env.BASE_URL_API;
+    let baseUrl = process.env.NEXT_PUBLIC_BASE_URL_API;
 
     // If not set, try to detect from window location in browser
     if (!baseUrl && typeof window !== 'undefined') {
@@ -94,7 +94,7 @@ export class JobAnalyticsService {
     // Debug logging in development
     if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
       console.debug('[Analytics] Using base URL:', baseUrl);
-      console.debug('[Analytics] Environment BASE_URL_API:', process.env.BASE_URL_API);
+      console.debug('[Analytics] Environment BASE_URL_API:', process.env.NEXT_PUBLIC_BASE_URL_API);
     }
 
     return baseUrl;
