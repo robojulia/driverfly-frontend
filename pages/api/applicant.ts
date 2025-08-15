@@ -89,7 +89,7 @@ export default class ApplicantApi extends BaseApi {
 
   async searchByPublic(params: ApplicantEntity): Promise<any> {
     // This is a public endpoint, so we make the call directly with axios to avoid authentication
-    const baseURL = process.env.BASE_URL_API;
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL_API;
     const { data } = await axios.get(
       `${baseURL}/${this.baseUrl}/public-search${this.buildQueryString(params)}`
     );
@@ -99,7 +99,7 @@ export default class ApplicantApi extends BaseApi {
   // new api to fetch applicant Profile
   async searchApplicantProfile(params: ApplicantEntity): Promise<ApplicantEntity> {
     // This is a public endpoint, so we make the call directly with axios to avoid authentication
-    const baseURL = process.env.BASE_URL_API;
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL_API;
     const url = this.buildUrl(this.baseUrl + '/search-applicant', params);
     const { data } = await axios.get(
       `${baseURL}/${this.baseUrl}/search-applicant${this.buildQueryString(params)}`
@@ -111,7 +111,7 @@ export default class ApplicantApi extends BaseApi {
   // new api to fetch all applicants by phone number
   async searchApplicantsByPhone(params: ApplicantEntity): Promise<ApplicantEntity[]> {
     // This is a public endpoint, so we make the call directly with axios to avoid authentication
-    const baseURL = process.env.BASE_URL_API;
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL_API;
     const { data } = await axios.get(
       `${baseURL}/${this.baseUrl}/search-applicants-by-phone${this.buildQueryString(params)}`
     );
@@ -122,7 +122,7 @@ export default class ApplicantApi extends BaseApi {
   // new api to get most recent applicant for prefill functionality
   async getMostRecentApplicantForPrefill(params: ApplicantEntity): Promise<ApplicantEntity> {
     // This is a public endpoint, so we make the call directly with axios to avoid authentication
-    const baseURL = process.env.BASE_URL_API;
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL_API;
     const { data } = await axios.get(
       `${baseURL}/${this.baseUrl}/get-recent-applicant-for-phone-number${this.buildQueryString(
         params
@@ -134,14 +134,14 @@ export default class ApplicantApi extends BaseApi {
 
   async requestOTP(dto: ApplicantEntity): Promise<any> {
     // This is a public endpoint, so we make the call directly with axios to avoid authentication
-    const baseURL = process.env.BASE_URL_API;
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL_API;
     const { data } = await axios.post(`${baseURL}/${this.baseUrl}/request-otp`, dto);
 
     return data;
   }
   async verifyOTP(dto: VerifyOTPDto): Promise<ApplicantEntity> {
     // This is a public endpoint, so we make the call directly with axios to avoid authentication
-    const baseURL = process.env.BASE_URL_API;
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL_API;
     const { data } = await axios.post(`${baseURL}/${this.baseUrl}/verify-otp`, dto);
 
     return data;
@@ -404,7 +404,7 @@ export default class ApplicantApi extends BaseApi {
       dto: ApplicantJobEntity
     ): Promise<ApplicantEntity> => {
       // This is now a public endpoint, so we make the call directly with axios to avoid authentication
-      const baseURL = process.env.BASE_URL_API;
+      const baseURL = process.env.NEXT_PUBLIC_BASE_URL_API;
       const { data } = await axios.post(
         `${baseURL}/${this.baseUrl}/${applicantId}/jobs/${jobId}`,
         dto
@@ -480,7 +480,7 @@ export default class ApplicantApi extends BaseApi {
   // Get all jobs that an applicant has applied for by phone number
   async getAppliedJobsByPhone(phone: string): Promise<ApplicantJobEntity[]> {
     // This is a public endpoint, so we make the call directly with axios to avoid authentication
-    const baseURL = process.env.BASE_URL_API;
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL_API;
     const { data } = await axios.get(
       `${baseURL}/${this.baseUrl}/applied-jobs-by-phone?phone=${encodeURIComponent(phone)}`
     );
