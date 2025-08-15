@@ -217,9 +217,6 @@ export default function Header() {
                     aria-expanded={openDropdown === 'more'}
                   >
                     More
-                    <ChevronDown
-                      className={`dropdown-icon ${openDropdown === 'more' ? 'open' : ''}`}
-                    />
                   </button>
                   <ul className={`dropdown-menu ${openDropdown === 'more' ? 'show' : ''}`}>
                     {overflowItems.map((item) => (

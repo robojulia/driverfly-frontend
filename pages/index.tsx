@@ -14,6 +14,7 @@ import HeroSection from '../components/home/hero-section';
 import MotorCarrier from '../components/home/motor-carrier';
 import OwnerOperators from '../components/home/owner-operators';
 import { Check } from 'react-bootstrap-icons';
+import { EnvDebug } from '../components/debug/env-debug';
 
 declare global {
   interface Window {
@@ -198,6 +199,7 @@ export default function Index() {
           <NewsletterSingup />
         </div>
       </section>
+      <EnvDebug enabled={true} />
     </>
   );
 }

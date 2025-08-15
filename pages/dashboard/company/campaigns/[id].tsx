@@ -732,7 +732,10 @@ const CampaignDetailPage = () => {
           additionalContent={
             <div className="alert alert-info">
               <small>
-                <strong>Note:</strong> Once started, the campaign will begin immediately and targets will start receiving {selectedCommunicationType === CampaignCommunicationType.SMS ? 'texts' : 'calls'}. You can pause the campaign at any time.
+                <strong>Note:</strong> Once started, the campaign will begin immediately and targets
+                will start receiving{' '}
+                {selectedCommunicationType === CampaignCommunicationType.SMS ? 'texts' : 'calls'}.
+                You can pause the campaign at any time.
               </small>
             </div>
           }
