@@ -8,7 +8,7 @@ module.exports = {
     // Map to CI/CD-provided NEXT_PUBLIC_* variables so builds receive the correct values
     BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
     FRONTEND_BASE_URL: process.env.NEXT_PUBLIC_FRONTEND_BASE_URL,
-    BASE_URL_API: process.env.NEXT_PUBLIC_BASE_URL_API,
+    BASE_URL_API: process.env.BASE_URL_API,
     NEXT_PUBLIC_BASE_URL_API: process.env.NEXT_PUBLIC_BASE_URL_API, // For API calls
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL, // For base URL
     NEXT_PUBLIC_FRONTEND_BASE_URL: process.env.NEXT_PUBLIC_FRONTEND_BASE_URL, // For frontend URL
@@ -21,50 +21,7 @@ module.exports = {
     NEXT_PUBLIC_GOOGLE_ANALYTICS: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS,
   },
   i18n: {
-    defaultLocale: "en-us",
-    locales: ["en-us"],
+    defaultLocale: 'en-us',
+    locales: ['en-us'],
   },
 };
-
-
-// Injected content via Sentry wizard below
-
-// const { withSentryConfig } = require("@sentry/nextjs");
-
-// export default withSentryConfig(
-//   nextConfig,
-//   {
-//     // For all available options, see:
-//     // https://github.com/getsentry/sentry-webpack-plugin#options
-
-//     // Suppresses source map uploading logs during build
-//     silent: true,
-//     org: "komodal",
-//     project: "driverfly",
-//   },
-//   {
-//     // For all available options, see:
-//     // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
-
-//     // Upload a larger set of source maps for prettier stack traces (increases build time)
-//     widenClientFileUpload: true,
-
-//     // Transpiles SDK to be compatible with IE11 (increases bundle size)
-//     transpileClientSDK: true,
-
-//     // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
-//     tunnelRoute: "/monitoring",
-
-//     // Hides source maps from generated client bundles
-//     hideSourceMaps: true,
-
-//     // Automatically tree-shake Sentry logger statements to reduce bundle size
-//     disableLogger: true,
-
-//     // Enables automatic instrumentation of Vercel Cron Monitors.
-//     // See the following for more information:
-//     // https://docs.sentry.io/product/crons/
-//     // https://vercel.com/docs/cron-jobs
-//     automaticVercelMonitors: true,
-//   }
-// );
