@@ -73,6 +73,23 @@ build:
         --build-arg PHONE_INPUT_COUNTRY_ALLOWED="$PHONE_INPUT_COUNTRY_ALLOWED" \
         --build-arg NEXT_PUBLIC_GOOGLE_ANALYTICS="$NEXT_PUBLIC_GOOGLE_ANALYTICS" \
         -t $IMAGE_NAME .
+    - |
+      echo "=== Final Environment Variables Check ==="
+      echo "All environment variables used in build:"
+      echo "BASE_URL=$BASE_URL"
+      echo "FRONTEND_BASE_URL=$FRONTEND_BASE_URL" 
+      echo "BASE_URL_API=$BASE_URL_API"
+      echo "NEXT_PUBLIC_BASE_URL_API=$NEXT_PUBLIC_BASE_URL_API"
+      echo "NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL"
+      echo "NEXT_PUBLIC_FRONTEND_BASE_URL=$NEXT_PUBLIC_FRONTEND_BASE_URL"
+      echo "MAPBOX_API_KEY length: ${#MAPBOX_API_KEY}"
+      echo "NEXT_PUBLIC_MICROSOFT_CLARITY=$NEXT_PUBLIC_MICROSOFT_CLARITY"
+      echo "RECAPTCHA_SITE_KEY length: ${#RECAPTCHA_SITE_KEY}" 
+      echo "RECAPTCHA_SECRET_KEY length: ${#RECAPTCHA_SECRET_KEY}"
+      echo "TWILIO_APP_NAME=$TWILIO_APP_NAME"
+      echo "PHONE_INPUT_COUNTRY_ALLOWED=$PHONE_INPUT_COUNTRY_ALLOWED"
+      echo "NEXT_PUBLIC_GOOGLE_ANALYTICS=$NEXT_PUBLIC_GOOGLE_ANALYTICS"
+      echo "=== End Environment Variables ==="
     - docker push $IMAGE_NAME
   only:
     - main 
