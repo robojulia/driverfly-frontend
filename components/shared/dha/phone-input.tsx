@@ -183,9 +183,31 @@ export const DhaPhoneInput: React.FC<PhoneInputProps> = ({
   };
 
   const PHONE_INPUT_COUNTRY_ALLOWED = process?.env?.PHONE_INPUT_COUNTRY_ALLOWED?.split(',');
-  const onlyCountries = Array.isArray(PHONE_INPUT_COUNTRY_ALLOWED)
-    ? PHONE_INPUT_COUNTRY_ALLOWED
-    : ['us'];
+  
+  // Validate and filter country codes - ensure they're valid for react-phone-input-2
+  let validCountries = ['us']; // Default fallback
+  
+  if (Array.isArray(PHONE_INPUT_COUNTRY_ALLOWED) && PHONE_INPUT_COUNTRY_ALLOWED.length > 0) {
+    // Map common country codes to their correct format for react-phone-input-2
+    const countryCodeMap = {
+      'pk': 'pk', // Pakistan
+      'us': 'us', // United States
+      'ca': 'ca', // Canada
+      'gb': 'gb', // United Kingdom
+      'in': 'in', // India
+    };
+    
+    validCountries = PHONE_INPUT_COUNTRY_ALLOWED
+      .map(code => code.trim().toLowerCase())
+      .map(code => countryCodeMap[code] || code)
+      .filter(code => code); // Remove any empty codes
+  }
+  
+  const onlyCountries = validCountries.length > 0 ? validCountries : ['us'];
+
+  // Debug logging to help identify the issue
+  console.log('PHONE_INPUT_COUNTRY_ALLOWED env var:', process?.env?.PHONE_INPUT_COUNTRY_ALLOWED);
+  console.log('Final onlyCountries array:', onlyCountries);
 
   return (
     <div style={containerStyles} className={className}>
@@ -207,6 +229,8 @@ export const DhaPhoneInput: React.FC<PhoneInputProps> = ({
           placeholder={placeholder || 'Phone Number'}
           autoFormat
           countryCodeEditable={false}
+          enableSearch={true}
+          searchPlaceholder="Search countries..."
           inputProps={{
             name,
             autoComplete,
