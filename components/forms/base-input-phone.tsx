@@ -67,7 +67,7 @@ function BaseInputPhone({
       });
   }
 
-  const PHONE_INPUT_COUNTRY_ALLOWED = process?.env?.NEXT_PUBLIC_PHONE_INPUT_COUNTRY_ALLOWED?.split(',');
+  const PHONE_INPUT_COUNTRY_ALLOWED = process?.env?.PHONE_INPUT_COUNTRY_ALLOWED?.split(',');
   const onlyCountries = Array.isArray(PHONE_INPUT_COUNTRY_ALLOWED)
     ? PHONE_INPUT_COUNTRY_ALLOWED
     : ['us'];

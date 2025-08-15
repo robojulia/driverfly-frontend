@@ -182,7 +182,7 @@ export const DhaPhoneInput: React.FC<PhoneInputProps> = ({
     }
   };
 
-  const PHONE_INPUT_COUNTRY_ALLOWED = process?.env?.NEXT_PUBLIC_PHONE_INPUT_COUNTRY_ALLOWED?.split(',');
+  const PHONE_INPUT_COUNTRY_ALLOWED = process?.env?.PHONE_INPUT_COUNTRY_ALLOWED?.split(',');
   
   // Validate and filter country codes - ensure they're valid for react-phone-input-2
   let validCountries = ['us']; // Default fallback
@@ -206,7 +206,7 @@ export const DhaPhoneInput: React.FC<PhoneInputProps> = ({
   const onlyCountries = validCountries.length > 0 ? validCountries : ['us'];
 
   // Debug logging to help identify the issue
-  console.log('NEXT_PUBLIC_PHONE_INPUT_COUNTRY_ALLOWED env var:', process?.env?.NEXT_PUBLIC_PHONE_INPUT_COUNTRY_ALLOWED);
+  console.log('PHONE_INPUT_COUNTRY_ALLOWED env var:', process?.env?.PHONE_INPUT_COUNTRY_ALLOWED);
   console.log('Final onlyCountries array:', onlyCountries);
 
   return (
