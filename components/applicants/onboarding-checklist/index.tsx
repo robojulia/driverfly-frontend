@@ -577,15 +577,14 @@ export default function OnboardingChecklist(
       title={props.title ?? "DOCUMENTS"}
       actions={
         <>
-          <Button 
-            size="sm" 
-            variant="success"
-            className="me-2"
-            disabled={isEnablingAllDocuments}
-            onClick={handleEnableAllDocuments}
-          >
-            {isEnablingAllDocuments ? t("ENABLING...") : t("ENABLE_ALL_DOCUMENTS")}
-          </Button>
+                     <Button 
+             size="sm" 
+             className="me-2"
+             disabled={isEnablingAllDocuments}
+             onClick={handleEnableAllDocuments}
+           >
+             {isEnablingAllDocuments ? t("ENABLING...") : t("ENABLE_ALL_DOCUMENTS")}
+           </Button>
           <Button size="sm" onClick={() => setEditList(!editList)}>
             {editList ? t("CANCEL") : t("EDIT_LIST")}
           </Button>
