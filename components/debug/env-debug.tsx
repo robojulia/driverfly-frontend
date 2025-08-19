@@ -30,7 +30,7 @@ export const EnvDebug: React.FC<EnvDebugProps> = ({ enabled = true }) => {
       // Log server-side variables that are mapped through next.config.js env
       const mappedEnvVars = {
         BASE_URL: process.env.BASE_URL,
-        FRONTEND_BASE_URL: process.env.NEXT_PUBLIC_FRONTEND_BASE_URL,
+        FRONTEND_BASE_URL: process.env.FRONTEND_BASE_URL,
         BASE_URL_API: process.env.BASE_URL_API,
         MAPBOX_API_KEY: process.env.MAPBOX_API_KEY,
         TWILIO_APP_NAME: process.env.TWILIO_APP_NAME,
