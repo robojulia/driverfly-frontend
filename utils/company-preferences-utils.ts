@@ -25,6 +25,9 @@ function getAllRequiredDocuments() {
     ApplicantOnBoardingChecklist.RECORD_OF_ATTEMPTS_SAFETY_PERFORMANCE_HISTORY,
     ApplicantOnBoardingChecklist.PSP_RECORD,
     ApplicantOnBoardingChecklist.PRE_EMPLOYMENT_DRUG_TEST,
+    ApplicantOnBoardingChecklist.PROOF_OF_INSURANCE,
+    ApplicantOnBoardingChecklist.VEHICLE_TITLE,
+    ApplicantOnBoardingChecklist.EQUIPMENT_LEASE,
     ApplicantOnBoardingChecklist.SIGNED_HOURS_OF_SERVICE_RECORD_STATEMENT,
     ApplicantOnBoardingChecklist.TWIC_OPTIONAL,
   ];
