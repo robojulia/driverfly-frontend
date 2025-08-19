@@ -2468,6 +2468,9 @@
     "RECORD_OF_ATTEMPTS_SAFETY_PERFORMANCE_HISTORY": "Record of Attempts (Safety Performance History)",
     "PSP_RECORD": "PSP Record",
     "PRE_EMPLOYMENT_DRUG_TEST": "Pre-employment Drug Test",
+    "PROOF_OF_INSURANCE": "Proof of Insurance",
+    "VEHICLE_TITLE": "Vehicle Title",
+    "EQUIPMENT_LEASE": "Equipment Lease Agreement",
     "SIGNED_HOURS_OF_SERVICE_RECORD_STATEMENT": "Signed Hours of Service Record Statement",
     "TWIC_OPTIONAL": "TWIC (Optional)"
   },
@@ -2506,6 +2509,7 @@
   "UPLOAD_FILE": "Upload file",
   "UPLOAD_FILES": "Upload files",
   "UPLOAD_METHOD": "Upload method",
+  "VEHICLE_DOCUMENTS": "Vehicle Documents",
   "AUTO_UPLOAD": "Auto Upload",
   "AUTO_UPLOAD?": "Auto Upload?",
   "DHA_welcome_note": "Welcome To Our Digital Hiring Application",

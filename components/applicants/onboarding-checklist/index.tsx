@@ -268,141 +268,117 @@ export default function OnboardingChecklist(
     </>
   );
 
+  // Define vehicle document types
+  const vehicleDocumentTypes = [
+    ApplicantOnBoardingChecklist.PROOF_OF_INSURANCE,
+    ApplicantOnBoardingChecklist.VEHICLE_TITLE,
+    ApplicantOnBoardingChecklist.EQUIPMENT_LEASE,
+  ];
+
+  // Helper function to render a document table section
+  const renderDocumentTable = (documentTypes: ApplicantOnBoardingChecklist[], isCompleted: boolean, sectionTitle?: string) => {
+    const filteredTypes = companyOnboardingChecklist?.value?.filter((type: ApplicantOnBoardingChecklist) => 
+      documentTypes.includes(type)
+    ) || [];
+
+    if (filteredTypes.length === 0) return null;
+
+    return (
+      <>
+        {sectionTitle && <h6 className="mt-4 mb-3" style={{ color: '#666', fontSize: '0.95rem', fontWeight: '600' }}>{sectionTitle}</h6>}
+        <Table striped>
+          <thead>
+            <tr>
+              <th colSpan={2}>{t("DOCUMENT_NAME")}</th>
+              {isCompleted && <th colSpan={2}>{t("UPDATED_AT")}</th>}
+              <th colSpan={1}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredTypes.map((type: ApplicantOnBoardingChecklist, i) => {
+              const document: DocumentEntity = applicant?.documents?.find(
+                (v) => v.type == type && (isCompleted ? !!v.path : !v.path)
+              );
+              
+              if (isCompleted ? !document : document) return null;
+
+              return (
+                <tr key={i}>
+                  <td colSpan={2}>
+                    {t(`ApplicantOnBoardingChecklist.${type}`)}
+                  </td>
+                  {isCompleted && (
+                    <td colSpan={2}>
+                      <UpdatedAt document={document} t={t} />
+                    </td>
+                  )}
+                  <td colSpan={1} className="border border-2 w-50">
+                    <ButtonList document={document} type={type} />
+                    {form.values?.document?.type == type && (
+                      <Form onSubmit={form.handleSubmit}>
+                        <FileInput
+                          name={`document`}
+                          accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
+                          formik={form}
+                          allowedSizeInByte={3145728}
+                        />
+                        <div className="mt-2 d-flex w-100 ">
+                          <Button
+                            disabled={
+                              form.isSubmitting ||
+                              !form.isValid ||
+                              form.isValidating
+                            }
+                            className="mr-2 w-50 theme-primary-btn"
+                            type="submit"
+                          >
+                            {t(`SAVE`)}
+                          </Button>
+                          <Button
+                            type="button"
+                            className="mr-2 w-50 bg-danger"
+                            onClick={() => {
+                              form.resetForm();
+                            }}
+                          >
+                            {t(`CANCEL`)}
+                          </Button>
+                        </div>
+                      </Form>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
+      </>
+    );
+  };
+
   function ChecklistItems() {
+    // Separate vehicle documents from other documents
+    const otherDocumentTypes = companyOnboardingChecklist?.value?.filter((type: ApplicantOnBoardingChecklist) => 
+      !vehicleDocumentTypes.includes(type)
+    ) || [];
+
     return (
       <>
         <h6 className="mt-2">{t("COMPLETED")}</h6>
-        <Table striped>
-          <thead>
-            <tr>
-              <th colSpan={2}>{t("DOCUMENT_NAME")}</th>
-              <th colSpan={2}>{t("UPDATED_AT")}</th>
-              {/* <th colSpan={2}>{t("UPLOAD_METHOD")}</th> */}
-              <th colSpan={1}></th>
-            </tr>
-          </thead>
-          <tbody>
-            {companyOnboardingChecklist?.value?.map(
-              (type: ApplicantOnBoardingChecklist, i) => {
-                /* Finding the document in the applicant.documents array that has the same type. */
-                const document: DocumentEntity = applicant?.documents?.find(
-                  (v) => v.type == type && !!v.path
-                );
-                if (document)
-                  return (
-                    <tr key={i}>
-                      <td colSpan={2}>
-                        {t(`ApplicantOnBoardingChecklist.${type}`)}
-                      </td>
-                      <td colSpan={2}>
-                        <UpdatedAt document={document} t={t} />
-                      </td>
-                      {/* <td colSpan={2}></td> */}
-                      <td colSpan={1} className="border border-2 w-50">
-                        <ButtonList document={document} type={type} />
-                        {form.values?.document?.type == type && (
-                          <Form onSubmit={form.handleSubmit}>
-                            <FileInput
-                              name={`document`}
-                              accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
-                              formik={form}
-                              allowedSizeInByte={3145728}
-                            />
-                            <div className="mt-2 d-flex w-100 ">
-                              <Button
-                                disabled={
-                                  form.isSubmitting ||
-                                  !form.isValid ||
-                                  form.isValidating
-                                }
-                                className="mr-2 w-50 theme-primary-btn"
-                                type="submit"
-                              >
-                                {t(`SAVE`)}
-                              </Button>
-                              <Button
-                                type="button"
-                                className="mr-2 w-50 bg-danger"
-                                onClick={() => {
-                                  form.resetForm();
-                                }}
-                              >
-                                {t(`CANCEL`)}
-                              </Button>
-                            </div>
-                          </Form>
-                        )}
-                      </td>
-                    </tr>
-                  );
-              }
-            )}
-          </tbody>
-        </Table>
+        
+        {/* Regular Documents */}
+        {renderDocumentTable(otherDocumentTypes, true)}
+        
+        {/* Vehicle Documents Section */}
+        {renderDocumentTable(vehicleDocumentTypes, true, t("VEHICLE_DOCUMENTS"))}
+
         <h6 className="mt-5">{t("UPLOAD_FILES")}</h6>
-        <Table striped>
-          <thead>
-            <tr>
-              <th colSpan={2}>{t("DOCUMENT_NAME")}</th>
-              {/* <th colSpan={2}>{t("AUTO_UPLOAD?")}</th> */}
-              <th colSpan={1}></th>
-            </tr>
-          </thead>
-          <tbody>
-            {companyOnboardingChecklist?.value?.map(
-              (type: ApplicantOnBoardingChecklist, i) => {
-                /* Finding the document in the applicant.documents array that has the same type. */
-                const document: DocumentEntity = applicant?.documents?.find(
-                  (v) => v.type == type && v.path
-                );
-                if (!document)
-                  return (
-                    <tr key={i}>
-                      <td colSpan={2}>
-                        {t(`ApplicantOnBoardingChecklist.${type}`)}
-                      </td>
-                      {/* <td colSpan={2}></td> */}
-                      <td colSpan={1} className="border border-2 w-50">
-                        <ButtonList document={document} type={type} />
-                        {form.values?.document?.type == type && (
-                          <Form onSubmit={form.handleSubmit}>
-                            <FileInput
-                              name={`document`}
-                              accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
-                              formik={form}
-                              allowedSizeInByte={3145728}
-                            />
-                            <div className="mt-2 d-flex w-100 ">
-                              <Button
-                                disabled={
-                                  form.isSubmitting ||
-                                  !form.isValid ||
-                                  form.isValidating
-                                }
-                                className="mr-2 w-50 theme-primary-btn"
-                                type="submit"
-                              >
-                                {t(`SAVE`)}
-                              </Button>
-                              <Button
-                                type="button"
-                                className="mr-2 w-50 bg-danger"
-                                onClick={() => {
-                                  form.resetForm();
-                                }}
-                              >
-                                {t(`CANCEL`)}
-                              </Button>
-                            </div>
-                          </Form>
-                        )}
-                      </td>
-                    </tr>
-                  );
-              }
-            )}
-          </tbody>
-        </Table>
+        
+        {/* Regular Documents Upload */}
+        {renderDocumentTable(otherDocumentTypes, false)}
+        
+        {/* Vehicle Documents Upload Section */}
+        {renderDocumentTable(vehicleDocumentTypes, false, t("VEHICLE_DOCUMENTS"))}
         <h6 className="mt-5">{t("CHECKLIST_ITEMS")}</h6>
         <Table striped>
           <thead>
