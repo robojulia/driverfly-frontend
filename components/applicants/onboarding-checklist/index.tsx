@@ -10,6 +10,7 @@ import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import ApplicantApi from "../../../pages/api/applicant";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { useEffectAsync } from "../../../utils/react";
+import { enableAllDocumentsManually } from "../../../utils/company-preferences-utils";
 import FileInput from "../../forms/file-input";
 import ShowFormattedDate from "../../jobs/show-formatted-date";
 import ViewCard from "../../view-details/view-card";
@@ -57,6 +58,7 @@ export default function OnboardingChecklist(
     useState<CompanyPreferenceEntity[]>();
   const [pdf, setPdf] = useState({});
   const [applicant, setApplicant] = useState<ApplicantEntity>(null);
+  const [isEnablingAllDocuments, setIsEnablingAllDocuments] = useState<boolean>(false);
 
   useEffectAsync(async () => {
     try {
@@ -184,6 +186,34 @@ export default function OnboardingChecklist(
     documentId?: number
   ): Promise<void> => {
     form.setFieldValue("document", { type, id: documentId ?? null });
+  };
+
+  /**
+   * Enables all documents for the company by creating/updating the onboarding checklist preferences
+   */
+  const handleEnableAllDocuments = async (): Promise<void> => {
+    if (!user?.company?.id) {
+      toast.error(t("COMPANY_NOT_FOUND"));
+      return;
+    }
+
+    setIsEnablingAllDocuments(true);
+    try {
+      await enableAllDocumentsManually(user.company.id);
+      
+      // Refresh the preferences to show the updated list
+      const preferences = await companyApi.preferences.list(user.company.id, {
+        category: CompanyPreferenceCategory.ONBOARDING_CHECKLIST,
+      });
+      setCompanyOnboardingPreferences(preferences);
+      
+      toast.success(t("ALL_DOCUMENTS_ENABLED_SUCCESSFULLY"));
+    } catch (error) {
+      console.error("Error enabling all documents:", error);
+      toast.error(t("ERROR_ENABLING_ALL_DOCUMENTS"));
+    } finally {
+      setIsEnablingAllDocuments(false);
+    }
   };
 
   const ButtonList = ({ document, type }) => (
@@ -547,11 +577,18 @@ export default function OnboardingChecklist(
       title={props.title ?? "DOCUMENTS"}
       actions={
         <>
-          {
-            <Button size="sm" onClick={() => setEditList(!editList)}>
-              {editList ? t("CANCEL") : t("EDIT_LIST")}
-            </Button>
-          }
+          <Button 
+            size="sm" 
+            variant="success"
+            className="me-2"
+            disabled={isEnablingAllDocuments}
+            onClick={handleEnableAllDocuments}
+          >
+            {isEnablingAllDocuments ? t("ENABLING...") : t("ENABLE_ALL_DOCUMENTS")}
+          </Button>
+          <Button size="sm" onClick={() => setEditList(!editList)}>
+            {editList ? t("CANCEL") : t("EDIT_LIST")}
+          </Button>
         </>
       }
     >

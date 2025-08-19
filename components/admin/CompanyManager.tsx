@@ -32,6 +32,7 @@ import { useTranslation } from '../../hooks/use-translation';
 import { CompanyForm } from '../forms/company/company-form';
 import { CompanyEntity } from '../../models/company/company.entity';
 import CompanyUsageModal from './CompanyUsageModal';
+import { createDefaultOnboardingChecklistPreferences } from '../../utils/company-preferences-utils';
 import CompaniesApi, {
   CompanyWithPhoneNumber,
   ProvisionPhoneNumberRequest,
@@ -375,7 +376,12 @@ const CompanyManager: React.FC = () => {
         specialties: companyData.specialties,
       };
 
-      await api.createSubCompany(request);
+      const subCompany = await api.createSubCompany(request);
+
+      // Set up default onboarding checklist preferences for the new sub-company
+      if (subCompany?.id) {
+        await createDefaultOnboardingChecklistPreferences(subCompany.id);
+      }
 
       // Reload data to see the new sub-company
       await loadData();
