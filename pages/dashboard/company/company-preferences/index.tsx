@@ -39,7 +39,7 @@ export default function CompanyPreference() {
   const [showAutoVoeModal, setShowAutoVoeModal] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { user, isSuperAdmin, isCompanyAdmin } = useAuth();
+  const { user, isSuperAdmin, isCompanyAdmin, company } = useAuth();
 
   const removeEmploymentTypes = [
     JobEmploymentType.SEASONAL,
@@ -287,6 +287,7 @@ export default function CompanyPreference() {
         <Container fluid>
           {/* Driver Persona Builder - Revolutionary Hiring Criteria */}
           <HiringCriteriaBuilder
+            companyId={company?.id}
             form={form}
             loading={loading}
             filteredEmploymentTypes={FilteredEmploymentTypes}

@@ -151,6 +151,43 @@ export default class CompanyApi extends BaseApi {
 
       return data;
     },
+    testEligibility: async (
+      companyId: number,
+      draftPreferences: {
+        cdl_class?: { value: string[] };
+        employment_type?: { value: string[] };
+        years_cdl_experience?: { value: number };
+        maximum_accidents?: { value: number };
+        maximum_moving_violations?: { value: number };
+        job_geography?: { value: string[] };
+      }
+    ): Promise<{
+      totalApplicants: number;
+      eligibleCount: number;
+      ineligibleCount: number;
+      eligibilityPercentage: number;
+      applicants: Array<{
+        id: number;
+        name: string;
+        isEligible: boolean;
+        failedCriteria: string[];
+        license_type: string;
+        years_cdl_experience: number;
+        accident_count: number;
+        moving_violations_count: number;
+      }>;
+      summary: {
+        healthy: boolean;
+        message: string;
+      };
+    }> => {
+      const { data } = await this.post(
+        `${this.preferences.baseUrl(companyId)}/test-eligibility`,
+        draftPreferences
+      );
+
+      return data;
+    },
   };
 
   manager = {

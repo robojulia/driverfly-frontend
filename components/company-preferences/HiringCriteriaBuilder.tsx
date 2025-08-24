@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Col, Row, Card } from 'react-bootstrap';
 import { FormikProps } from 'formik';
 import styles from '../../styles/hiring-criteria.module.css';
 import { Checkbox } from '../shared/dha/checkbox';
+import CompanyApi from '../../pages/api/company';
 
 // Import enums
 import { DriverLicenseType } from '../../enums/users/driver-license-type.enum';
@@ -15,6 +16,7 @@ interface HiringCriteriaBuilderProps {
   filteredEmploymentTypes: JobEmploymentType[];
   onSubmit: (e: React.FormEvent) => void;
   onReset: () => void;
+  companyId: number;
 }
 
 const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
@@ -23,7 +25,53 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
   filteredEmploymentTypes,
   onSubmit,
   onReset,
+  companyId,
 }) => {
+  const [eligibilityData, setEligibilityData] = useState<{
+    totalApplicants: number;
+    eligibleCount: number;
+    eligibilityPercentage: number;
+    summary: { healthy: boolean; message: string };
+  } | null>(null);
+  const [testingEligibility, setTestingEligibility] = useState(false);
+
+  const companyApi = new CompanyApi();
+
+  // Debounced function to test eligibility
+  const testEligibility = useCallback(
+    async (values: any) => {
+      if (!companyId) return;
+
+      setTestingEligibility(true);
+      try {
+        const draftPreferences = {
+          cdl_class: values.cdl_class,
+          employment_type: values.employment_type,
+          years_cdl_experience: values.years_cdl_experience,
+          maximum_accidents: values.maximum_accidents,
+          maximum_moving_violations: values.maximum_moving_violations,
+          job_geography: values.job_geography,
+        };
+
+        const result = await companyApi.preferences.testEligibility(companyId, draftPreferences);
+        setEligibilityData(result);
+      } catch (error) {
+        console.error('Error testing eligibility:', error);
+      } finally {
+        setTestingEligibility(false);
+      }
+    },
+    [companyId]
+  );
+
+  // Effect to test eligibility when form values change
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      testEligibility(form.values);
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [form.values, testEligibility]);
   return (
     <>
       {/* Driver Persona Builder - Revolutionary Hiring Criteria */}
@@ -42,16 +90,45 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                 <div className="bg-white rounded-pill px-4 py-2 text-dark d-flex align-items-center">
                   <div className="me-3">
                     <div className="d-flex align-items-center">
-                      <div className={`rounded-circle ${styles.healthIndicator} me-2`}></div>
-                      <span className="fw-bold">Hiring Pool: Healthy</span>
+                      <div
+                        className={`rounded-circle ${styles.healthIndicator} me-2`}
+                        style={{
+                          backgroundColor: eligibilityData?.summary.healthy
+                            ? 'var(--success)'
+                            : 'var(--warning)',
+                        }}
+                      ></div>
+                      <span className="fw-bold">
+                        Hiring Pool:{' '}
+                        {testingEligibility
+                          ? 'Calculating...'
+                          : eligibilityData?.summary.healthy
+                          ? 'Healthy'
+                          : 'Needs Attention'}
+                      </span>
                     </div>
-                    <small className="text-muted">~156 of 342 drivers match (46%)</small>
+                    <small className="text-muted">
+                      {testingEligibility
+                        ? 'Testing eligibility...'
+                        : eligibilityData
+                        ? `${eligibilityData.eligibleCount} of ${eligibilityData.totalApplicants} applicants qualify (${eligibilityData.eligibilityPercentage}%)`
+                        : 'Loading applicant data...'}
+                    </small>
                   </div>
                   <div className="ms-3 border-start ps-3">
                     <div className={styles.hiringPoolIndicator}></div>
                   </div>
                 </div>
               </div>
+
+              {/* Eligibility Message */}
+              {eligibilityData?.summary.message && !testingEligibility && (
+                <div className="mb-3">
+                  <small className="text-white opacity-75">
+                    💡 {eligibilityData.summary.message}
+                  </small>
+                </div>
+              )}
             </div>
           </Card.Body>
         </Card>
@@ -95,7 +172,10 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                           }}
                         >
                           <div className="card-body p-3 text-center position-relative">
-                            <div className="position-absolute top-0 end-0" style={{ transform: 'scale(0.8)' }}>
+                            <div
+                              className="position-absolute top-0 end-0"
+                              style={{ transform: 'scale(0.8)' }}
+                            >
                               <Checkbox
                                 name={`cdl-${cdlType}`}
                                 checked={form.values.cdl_class.value?.includes(cdlType) || false}
@@ -137,7 +217,10 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                           }}
                         >
                           <div className="card-body p-3 d-flex align-items-center position-relative">
-                            <div className="position-absolute top-0 end-0" style={{ transform: 'scale(0.8)' }}>
+                            <div
+                              className="position-absolute top-0 end-0"
+                              style={{ transform: 'scale(0.8)' }}
+                            >
                               <Checkbox
                                 name={`employment-${empType}`}
                                 checked={
@@ -189,7 +272,10 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                       }}
                     >
                       <div className="card-body p-4 text-center position-relative">
-                        <div className="position-absolute top-0 end-0" style={{ transform: 'scale(0.8)' }}>
+                        <div
+                          className="position-absolute top-0 end-0"
+                          style={{ transform: 'scale(0.8)' }}
+                        >
                           <Checkbox
                             name={`geography-${geo}`}
                             checked={form.values.job_geography.value?.includes(geo) || false}
