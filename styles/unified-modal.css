@@ -1,0 +1,53 @@
+/* Unified Modal Styles */
+.unified-modal .modal-content {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.unified-modal .modal-header {
+  background-color: #f8f9fa;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.unified-modal .modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #335665;
+}
+
+.unified-modal .modal-body {
+  background-color: #ffffff;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+/* Close button hover effects */
+.unified-modal .btn-link:hover {
+  text-decoration: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .unified-modal .modal-header {
+    padding: 1rem;
+  }
+
+  .unified-modal .modal-body {
+    padding: 1rem;
+  }
+
+  .unified-modal .modal-title {
+    font-size: 1.1rem;
+  }
+}
+
+/* Animation for smooth transitions */
+.unified-modal .modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out;
+}
+
+.unified-modal .modal.show .modal-dialog {
+  transform: none;
+}

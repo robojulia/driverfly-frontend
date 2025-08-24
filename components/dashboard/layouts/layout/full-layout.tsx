@@ -76,6 +76,12 @@ const FullLayout = ({ children }) => {
       group: 'MAIN',
     },
     {
+      pathname: '/dashboard/company/company-preferences',
+      icon: Sliders,
+      text: 'Recruitment',
+      group: 'MAIN',
+    },
+    {
       pathname: '/dashboard/company/messages',
       icon: EnvelopeFill,
       text: 'MESSAGES',
@@ -118,12 +124,7 @@ const FullLayout = ({ children }) => {
       startsWith: true,
       group: 'COMPANY',
     },
-    {
-      pathname: '/dashboard/company/company-preferences',
-      icon: Sliders,
-      text: 'DIGITAL_HIRING_APPLICATION',
-      group: 'COMPANY',
-    },
+
     {
       pathname: '/dashboard/company/settings/vehicles',
       icon: CarFront,
