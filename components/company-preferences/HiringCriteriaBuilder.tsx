@@ -27,17 +27,11 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
     <>
       {/* Driver Persona Builder - Revolutionary Hiring Criteria */}
       <div className={styles.hiringBuilder}>
-        <Card
-          className="border-0 shadow-lg mb-4"
-          style={{
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            color: 'white',
-          }}
-        >
+        <Card className={`border-0 shadow-lg mb-4 ${styles.brandGradient}`}>
           <Card.Body className="p-5">
             <div className="text-center mb-4">
-              <h3 className="mb-2 fw-bold">🧬 Build Your Ideal Driver Profile</h3>
-              <p className="mb-4 opacity-90">
+              <h3 className="mb-2 fw-bold text-white">Build Your Ideal Driver Profile</h3>
+              <p className="mb-4 opacity-90 text-white">
                 Craft your perfect candidate persona with our smart criteria builder. See real-time
                 feedback on your hiring pool as you adjust preferences.
               </p>
@@ -47,10 +41,7 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                 <div className="bg-white rounded-pill px-4 py-2 text-dark d-flex align-items-center">
                   <div className="me-3">
                     <div className="d-flex align-items-center">
-                      <div
-                        className="rounded-circle bg-success me-2"
-                        style={{ width: '12px', height: '12px' }}
-                      ></div>
+                      <div className={`rounded-circle ${styles.healthIndicator} me-2`}></div>
                       <span className="fw-bold">Hiring Pool: Healthy</span>
                     </div>
                     <small className="text-muted">~156 of 342 drivers match (46%)</small>
@@ -64,40 +55,38 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
 
             {/* Smart Presets */}
             <div className="mb-5">
-              <h6 className="mb-3 text-center opacity-90">Quick Start with Smart Presets</h6>
+              <h6 className="mb-3 text-center opacity-90 text-white">
+                Quick Start with Smart Presets
+              </h6>
               <Row className="g-3">
                 <Col md={3}>
                   <div
-                    className={`${styles.presetCard} bg-white bg-opacity-10 rounded-3 p-3 text-center`}
+                    className={`${styles.presetCard} bg-white bg-opacity-10 rounded-3 p-3 text-center text-white`}
                   >
-                    <div className="mb-2">🛡️</div>
                     <div className="fw-bold mb-1">Safety First</div>
                     <small className="opacity-75">Pristine records, high standards</small>
                   </div>
                 </Col>
                 <Col md={3}>
                   <div
-                    className={`${styles.presetCard} bg-white bg-opacity-10 rounded-3 p-3 text-center`}
+                    className={`${styles.presetCard} bg-white bg-opacity-10 rounded-3 p-3 text-center text-white`}
                   >
-                    <div className="mb-2">🌱</div>
                     <div className="fw-bold mb-1">Growing Team</div>
                     <small className="opacity-75">Open to newer drivers</small>
                   </div>
                 </Col>
                 <Col md={3}>
                   <div
-                    className={`${styles.presetCard} bg-white bg-opacity-10 rounded-3 p-3 text-center`}
+                    className={`${styles.presetCard} bg-white bg-opacity-10 rounded-3 p-3 text-center text-white`}
                   >
-                    <div className="mb-2">🏆</div>
                     <div className="fw-bold mb-1">Experience Matters</div>
                     <small className="opacity-75">Veteran drivers only</small>
                   </div>
                 </Col>
                 <Col md={3}>
                   <div
-                    className={`${styles.presetCard} bg-white bg-opacity-10 rounded-3 p-3 text-center`}
+                    className={`${styles.presetCard} bg-white bg-opacity-10 rounded-3 p-3 text-center text-white`}
                   >
-                    <div className="mb-2">⚖️</div>
                     <div className="fw-bold mb-1">Balanced Approach</div>
                     <small className="opacity-75">Industry standard mix</small>
                   </div>
@@ -116,7 +105,7 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
             <div className="mb-5">
               <h6 className="mb-4 d-flex align-items-center">
                 <span className={`${styles.sectionBadge} badge rounded-pill me-2`}>1</span>
-                🚚 Driver Qualifications
+                Driver Qualifications
               </h6>
 
               <Row className="g-4">
@@ -126,9 +115,9 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                     {Object.values(DriverLicenseType).map((cdlType) => (
                       <div key={cdlType} className="col-6">
                         <div
-                          className={`${styles.criteriaCard} card h-100 ${
+                          className={`${styles.criteriaCardSmall} card h-100 ${
                             form.values.cdl_class.value?.includes(cdlType)
-                              ? `${styles.selected} border-primary bg-primary bg-opacity-10`
+                              ? `${styles.selected} ${styles.primarySelected}`
                               : 'border-light'
                           }`}
                           onClick={() => {
@@ -139,13 +128,7 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                             form.setFieldValue('cdl_class.value', newValues);
                           }}
                         >
-                          <div className="card-body p-3 text-center">
-                            <div className="mb-2">
-                              {cdlType === DriverLicenseType.NO_CDL && '🆕'}
-                              {cdlType === DriverLicenseType.CDL_CLASS_A && '🚛'}
-                              {cdlType === DriverLicenseType.CDL_CLASS_B && '🚚'}
-                              {cdlType === DriverLicenseType.CDL_CLASS_C && '🚐'}
-                            </div>
+                          <div className="card-body p-2 text-center">
                             <div className="fw-semibold small">
                               {cdlType === DriverLicenseType.NO_CDL && 'No CDL'}
                               {cdlType === DriverLicenseType.CDL_CLASS_A && 'Class A CDL'}
@@ -173,7 +156,7 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                         <div
                           className={`${styles.criteriaCard} card ${
                             form.values.employment_type.value?.includes(empType)
-                              ? `${styles.selected} border-success bg-success bg-opacity-10`
+                              ? `${styles.selected} ${styles.brandSelected}`
                               : 'border-light'
                           }`}
                           onClick={() => {
@@ -185,11 +168,6 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                           }}
                         >
                           <div className="card-body p-3 d-flex align-items-center">
-                            <div className="me-3">
-                              {empType === JobEmploymentType.W2 && '💼'}
-                              {empType === JobEmploymentType.CONTRACT && '🤝'}
-                              {empType === JobEmploymentType.OWNER_OPERATOR && '👑'}
-                            </div>
                             <div>
                               <div className="fw-semibold">
                                 {empType === JobEmploymentType.W2 && 'Company Driver (W2)'}
@@ -217,7 +195,7 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
             <div className="mb-5">
               <h6 className="mb-4 d-flex align-items-center">
                 <span className={`${styles.sectionBadge} badge rounded-pill me-2`}>2</span>
-                📍 Geographic Scope
+                Geographic Scope
               </h6>
 
               <div className="row g-3">
@@ -226,7 +204,7 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                     <div
                       className={`${styles.criteriaCard} card h-100 ${
                         form.values.job_geography.value?.includes(geo)
-                          ? `${styles.selected} border-info bg-info bg-opacity-10`
+                          ? `${styles.selected} ${styles.infoSelected}`
                           : 'border-light'
                       }`}
                       onClick={() => {
@@ -238,11 +216,6 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                       }}
                     >
                       <div className="card-body p-4 text-center">
-                        <div className="mb-3" style={{ fontSize: '2rem' }}>
-                          {geo === JobGeography.LOCAL && '🏠'}
-                          {geo === JobGeography.REGIONAL && '🗺️'}
-                          {geo === JobGeography.OTR && '🌎'}
-                        </div>
                         <div className="fw-bold mb-2">
                           {geo === JobGeography.LOCAL && 'Local'}
                           {geo === JobGeography.REGIONAL && 'Regional'}
@@ -264,7 +237,7 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
             <div className="mb-5">
               <h6 className="mb-4 d-flex align-items-center">
                 <span className={`${styles.sectionBadge} badge rounded-pill me-2`}>3</span>
-                📊 Experience & Safety Standards
+                Experience & Safety Standards
               </h6>
 
               <Row className="g-4">
@@ -272,7 +245,6 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                   <div className={`${styles.experienceCard} card border-0 h-100`}>
                     <div className="card-body p-4">
                       <div className="d-flex align-items-center mb-3">
-                        <div className="me-2">📅</div>
                         <div>
                           <div className="fw-semibold">CDL Experience</div>
                           <div className="text-muted small">Minimum years required</div>
@@ -301,7 +273,7 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                       </div>
 
                       <div className="text-center">
-                        <div className="h4 mb-1 text-primary">
+                        <div className={`h4 mb-1 ${styles.sliderValue}`}>
                           {form.values.years_cdl_experience.value || 0} years
                         </div>
                         <div className="small text-muted">
@@ -316,7 +288,7 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                           {(form.values.years_cdl_experience.value || 0) >= 8 && 'Industry veteran'}
                         </div>
                         <div className={`${styles.contextTip} x-small text-muted mt-1`}>
-                          💡 Industry avg: 3-5 years
+                          Industry avg: 3-5 years
                         </div>
                       </div>
                     </div>
@@ -327,7 +299,6 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                   <div className={`${styles.experienceCard} card border-0 h-100`}>
                     <div className="card-body p-4">
                       <div className="d-flex align-items-center mb-3">
-                        <div className="me-2">🚗</div>
                         <div>
                           <div className="fw-semibold">Maximum Accidents</div>
                           <div className="text-muted small">In past 3 years</div>
@@ -353,7 +324,7 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                       </div>
 
                       <div className="text-center">
-                        <div className="h4 mb-1 text-primary">
+                        <div className={`h4 mb-1 ${styles.sliderValue}`}>
                           {form.values.maximum_accidents.value || 0} max
                         </div>
                         <div className="small text-muted">
@@ -365,7 +336,7 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                             'Learning from experience'}
                         </div>
                         <div className={`${styles.contextTip} x-small text-muted mt-1`}>
-                          💡 Most companies: 0-2 accidents
+                          Most companies: 0-2 accidents
                         </div>
                       </div>
                     </div>
@@ -376,7 +347,6 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                   <div className={`${styles.experienceCard} card border-0 h-100`}>
                     <div className="card-body p-4">
                       <div className="d-flex align-items-center mb-3">
-                        <div className="me-2">⚠️</div>
                         <div>
                           <div className="fw-semibold">Maximum Violations</div>
                           <div className="text-muted small">Moving violations, 3 years</div>
@@ -405,7 +375,7 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                       </div>
 
                       <div className="text-center">
-                        <div className="h4 mb-1 text-primary">
+                        <div className={`h4 mb-1 ${styles.sliderValue}`}>
                           {form.values.maximum_moving_violations.value || 0} max
                         </div>
                         <div className="small text-muted">
@@ -418,7 +388,7 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                             'Room for improvement'}
                         </div>
                         <div className={`${styles.contextTip} x-small text-muted mt-1`}>
-                          💡 Industry standard: 2-3 violations
+                          Industry standard: 2-3 violations
                         </div>
                       </div>
                     </div>

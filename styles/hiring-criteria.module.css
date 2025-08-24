@@ -1,5 +1,18 @@
 /* Enhanced Hiring Criteria Form Styles */
 
+/* Brand Gradient using CSS variables */
+.brandGradient {
+  background: linear-gradient(135deg, var(--primary-button) 0%, var(--primary) 100%) !important;
+  color: white !important;
+}
+
+/* Health indicator using brand colors */
+.healthIndicator {
+  width: 12px;
+  height: 12px;
+  background: var(--success);
+}
+
 .hiringBuilder {
   position: relative;
 }
@@ -10,21 +23,35 @@
   transition: all 0.3s ease;
 }
 
-.hiringBuilder .preset-card {
+.hiringBuilder .presetCard {
   transition: all 0.3s ease;
   cursor: pointer;
   border: 2px solid transparent;
 }
 
-.hiringBuilder .preset-card:hover {
+.hiringBuilder .presetCard:hover {
   transform: translateY(-4px);
   background: rgba(255, 255, 255, 0.2) !important;
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-.hiringBuilder .preset-card.active {
+.hiringBuilder .presetCard.active {
   border-color: rgba(255, 255, 255, 0.5);
   background: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Smaller criteria cards for CDL requirements */
+.criteriaCardSmall {
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  min-height: 80px;
+}
+
+.criteriaCardSmall:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .criteriaCard {
@@ -34,7 +61,8 @@
   overflow: hidden;
 }
 
-.criteriaCard::before {
+.criteriaCard::before,
+.criteriaCardSmall::before {
   content: '';
   position: absolute;
   top: 0;
@@ -46,28 +74,51 @@
   transition: opacity 0.3s ease;
 }
 
-.criteriaCard:hover::before {
+.criteriaCard:hover::before,
+.criteriaCardSmall:hover::before {
   opacity: 1;
 }
 
-.criteriaCard:hover {
+.criteriaCard:hover,
+.criteriaCardSmall:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.criteriaCard.selected {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0, 123, 255, 0.3);
+/* Brand-based selection styles */
+.primarySelected {
+  background: var(--primary-light) !important;
+  border-color: var(--primary-button) !important;
+  color: var(--text-dark) !important;
 }
 
-.criteriaCard.selected::after {
+.brandSelected {
+  background: var(--primary-button-light) !important;
+  border-color: var(--primary-button) !important;
+  color: var(--text-dark) !important;
+}
+
+.infoSelected {
+  background: var(--primary-light) !important;
+  border-color: var(--primary) !important;
+  color: var(--text-dark) !important;
+}
+
+.criteriaCard.selected,
+.criteriaCardSmall.selected {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(44, 122, 123, 0.3);
+}
+
+.criteriaCard.selected::after,
+.criteriaCardSmall.selected::after {
   content: '✓';
   position: absolute;
   top: 8px;
   right: 8px;
   width: 20px;
   height: 20px;
-  background: #28a745;
+  background: var(--success);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -84,7 +135,7 @@
 .smartSlider .form-range {
   height: 8px;
   border-radius: 4px;
-  background: linear-gradient(90deg, #28a745, #ffc107, #dc3545);
+  background: linear-gradient(90deg, var(--success), var(--warning), var(--danger));
   appearance: none;
   -webkit-appearance: none;
 }
@@ -95,7 +146,7 @@
   height: 20px;
   width: 20px;
   border-radius: 50%;
-  background: #007bff;
+  background: var(--primary-button);
   cursor: pointer;
   border: 3px solid white;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
@@ -111,7 +162,7 @@
   height: 20px;
   width: 20px;
   border-radius: 50%;
-  background: #007bff;
+  background: var(--primary-button);
   cursor: pointer;
   border: 3px solid white;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
@@ -119,7 +170,7 @@
 }
 
 .hiringPoolIndicator {
-  background: linear-gradient(90deg, #28a745, #ffc107, #dc3545);
+  background: linear-gradient(90deg, var(--success), var(--warning), var(--danger));
   height: 8px;
   border-radius: 4px;
   position: relative;
@@ -151,7 +202,7 @@
 }
 
 .sectionBadge {
-  background: linear-gradient(45deg, #007bff, #0056b3);
+  background: linear-gradient(45deg, var(--primary-button), var(--primary-dark));
   color: white;
   border: none;
   animation: pulse 2s infinite;
@@ -159,34 +210,41 @@
 
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+    box-shadow: 0 0 0 0 rgba(44, 122, 123, 0.7);
   }
   70% {
-    box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+    box-shadow: 0 0 0 10px rgba(44, 122, 123, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+    box-shadow: 0 0 0 0 rgba(44, 122, 123, 0);
   }
 }
 
 .experienceCard {
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  background: linear-gradient(135deg, var(--light-gray), var(--medium-gray));
   border: none;
   transition: all 0.3s ease;
 }
 
 .experienceCard:hover {
-  background: linear-gradient(135deg, #e9ecef, #dee2e6);
+  background: linear-gradient(135deg, var(--medium-gray), var(--border-color));
   transform: translateY(-2px);
 }
 
+/* Fix slider value visibility */
+.sliderValue {
+  color: var(--primary-button) !important;
+  font-weight: 600;
+}
+
 .contextTip {
-  background: rgba(0, 123, 255, 0.1);
-  border-left: 3px solid #007bff;
+  background: var(--primary-light);
+  border-left: 3px solid var(--primary-button);
   padding: 8px 12px;
   border-radius: 0 4px 4px 0;
   margin-top: 8px;
   font-size: 0.875rem;
+  color: var(--text-dark);
 }
 
 .tooltip-custom {
@@ -239,7 +297,7 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .hiringBuilder .preset-card {
+  .hiringBuilder .presetCard {
     margin-bottom: 1rem;
   }
 
@@ -253,7 +311,8 @@
     width: 24px;
   }
 
-  .criteriaCard {
+  .criteriaCard,
+  .criteriaCardSmall {
     margin-bottom: 1rem;
   }
 }
@@ -261,13 +320,17 @@
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .experienceCard {
-    background: linear-gradient(135deg, #2c3e50, #34495e);
+    background: linear-gradient(135deg, var(--sidebar-bg), var(--sidebar-submenu-bg));
     color: white;
   }
 
   .contextTip {
-    background: rgba(52, 152, 219, 0.2);
-    border-left-color: #3498db;
+    background: rgba(95, 203, 196, 0.2);
+    border-left-color: var(--primary);
     color: white;
+  }
+
+  .sliderValue {
+    color: var(--primary) !important;
   }
 }

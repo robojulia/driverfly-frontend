@@ -305,6 +305,15 @@ export default function CompanyPreference() {
             </Card.Body>
           </Card>
 
+          {/* Driver Persona Builder - Revolutionary Hiring Criteria */}
+          <HiringCriteriaBuilder
+            form={form}
+            loading={loading}
+            filteredEmploymentTypes={FilteredEmploymentTypes}
+            onSubmit={form.handleSubmit}
+            onReset={() => form.resetForm()}
+          />
+
           {/* Refer Back Program Component */}
           <ReferBackProgram
             isEnabled={referBackEnabled}
@@ -321,15 +330,6 @@ export default function CompanyPreference() {
             onAutoVoeChange={handleAutoVoeChange}
             onAutoVoeInfoClick={() => setShowAutoVoeModal(true)}
             loading={loading}
-          />
-
-          {/* Driver Persona Builder - Revolutionary Hiring Criteria */}
-          <HiringCriteriaBuilder
-            form={form}
-            loading={loading}
-            filteredEmploymentTypes={FilteredEmploymentTypes}
-            onSubmit={form.handleSubmit}
-            onReset={() => form.resetForm()}
           />
         </Container>
 
