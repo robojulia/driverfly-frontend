@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Col, Row, Card } from 'react-bootstrap';
 import { FormikProps } from 'formik';
 import styles from '../../styles/hiring-criteria.module.css';
+import { Checkbox } from '../shared/dha/checkbox';
 
 // Import enums
 import { DriverLicenseType } from '../../enums/users/driver-license-type.enum';
@@ -52,47 +53,6 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                 </div>
               </div>
             </div>
-
-            {/* Smart Presets */}
-            <div className="mb-5">
-              <h6 className="mb-3 text-center opacity-90 text-white">
-                Quick Start with Smart Presets
-              </h6>
-              <Row className="g-3">
-                <Col md={3}>
-                  <div
-                    className={`${styles.presetCard} bg-white bg-opacity-10 rounded-3 p-3 text-center text-white`}
-                  >
-                    <div className="fw-bold mb-1">Safety First</div>
-                    <small className="opacity-75">Pristine records, high standards</small>
-                  </div>
-                </Col>
-                <Col md={3}>
-                  <div
-                    className={`${styles.presetCard} bg-white bg-opacity-10 rounded-3 p-3 text-center text-white`}
-                  >
-                    <div className="fw-bold mb-1">Growing Team</div>
-                    <small className="opacity-75">Open to newer drivers</small>
-                  </div>
-                </Col>
-                <Col md={3}>
-                  <div
-                    className={`${styles.presetCard} bg-white bg-opacity-10 rounded-3 p-3 text-center text-white`}
-                  >
-                    <div className="fw-bold mb-1">Experience Matters</div>
-                    <small className="opacity-75">Veteran drivers only</small>
-                  </div>
-                </Col>
-                <Col md={3}>
-                  <div
-                    className={`${styles.presetCard} bg-white bg-opacity-10 rounded-3 p-3 text-center text-white`}
-                  >
-                    <div className="fw-bold mb-1">Balanced Approach</div>
-                    <small className="opacity-75">Industry standard mix</small>
-                  </div>
-                </Col>
-              </Row>
-            </div>
           </Card.Body>
         </Card>
       </div>
@@ -107,6 +67,12 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                 <span className={`${styles.sectionBadge} badge rounded-pill me-2`}>1</span>
                 Driver Qualifications
               </h6>
+
+              <div className="alert alert-info mb-4">
+                Select the CDL requirements and employment types that match your hiring needs. Click
+                on the cards below to select/deselect options. You can choose multiple options in
+                each category.
+              </div>
 
               <Row className="g-4">
                 <Col md={6}>
@@ -128,18 +94,21 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                             form.setFieldValue('cdl_class.value', newValues);
                           }}
                         >
-                          <div className="card-body p-2 text-center">
-                            <div className="fw-semibold small">
+                          <div className="card-body p-3 text-center position-relative">
+                            <div className="position-absolute top-0 end-0" style={{ transform: 'scale(0.8)' }}>
+                              <Checkbox
+                                name={`cdl-${cdlType}`}
+                                checked={form.values.cdl_class.value?.includes(cdlType) || false}
+                                onChange={() => {}} // Handled by card click
+                                size="small"
+                                className="mb-0"
+                              />
+                            </div>
+                            <div className="fw-semibold">
                               {cdlType === DriverLicenseType.NO_CDL && 'No CDL'}
                               {cdlType === DriverLicenseType.CDL_CLASS_A && 'Class A CDL'}
                               {cdlType === DriverLicenseType.CDL_CLASS_B && 'Class B CDL'}
                               {cdlType === DriverLicenseType.CDL_CLASS_C && 'Class C CDL'}
-                            </div>
-                            <div className="text-muted x-small">
-                              {cdlType === DriverLicenseType.NO_CDL && 'Entry level'}
-                              {cdlType === DriverLicenseType.CDL_CLASS_A && 'Long haul'}
-                              {cdlType === DriverLicenseType.CDL_CLASS_B && 'Local delivery'}
-                              {cdlType === DriverLicenseType.CDL_CLASS_C && 'Light vehicles'}
                             </div>
                           </div>
                         </div>
@@ -167,19 +136,23 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                             form.setFieldValue('employment_type.value', newValues);
                           }}
                         >
-                          <div className="card-body p-3 d-flex align-items-center">
+                          <div className="card-body p-3 d-flex align-items-center position-relative">
+                            <div className="position-absolute top-0 end-0" style={{ transform: 'scale(0.8)' }}>
+                              <Checkbox
+                                name={`employment-${empType}`}
+                                checked={
+                                  form.values.employment_type.value?.includes(empType) || false
+                                }
+                                onChange={() => {}} // Handled by card click
+                                size="small"
+                                className="mb-0"
+                              />
+                            </div>
                             <div>
                               <div className="fw-semibold">
                                 {empType === JobEmploymentType.W2 && 'Company Driver (W2)'}
                                 {empType === JobEmploymentType.CONTRACT && 'Contractor (1099)'}
                                 {empType === JobEmploymentType.OWNER_OPERATOR && 'Owner-Operator'}
-                              </div>
-                              <div className="text-muted small">
-                                {empType === JobEmploymentType.W2 && 'Full benefits, steady pay'}
-                                {empType === JobEmploymentType.CONTRACT &&
-                                  'Flexible, higher earnings'}
-                                {empType === JobEmploymentType.OWNER_OPERATOR &&
-                                  'Own truck, maximum freedom'}
                               </div>
                             </div>
                           </div>
@@ -215,16 +188,20 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                         form.setFieldValue('job_geography.value', newValues);
                       }}
                     >
-                      <div className="card-body p-4 text-center">
+                      <div className="card-body p-4 text-center position-relative">
+                        <div className="position-absolute top-0 end-0" style={{ transform: 'scale(0.8)' }}>
+                          <Checkbox
+                            name={`geography-${geo}`}
+                            checked={form.values.job_geography.value?.includes(geo) || false}
+                            onChange={() => {}}
+                            size="small"
+                            className="mb-0"
+                          />
+                        </div>
                         <div className="fw-bold mb-2">
                           {geo === JobGeography.LOCAL && 'Local'}
                           {geo === JobGeography.REGIONAL && 'Regional'}
                           {geo === JobGeography.OTR && 'Over The Road'}
-                        </div>
-                        <div className="text-muted small">
-                          {geo === JobGeography.LOCAL && 'Home daily, city routes'}
-                          {geo === JobGeography.REGIONAL && 'Multi-state, weekend home'}
-                          {geo === JobGeography.OTR && 'Cross-country, extended trips'}
                         </div>
                       </div>
                     </div>
@@ -266,9 +243,9 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                           }
                         />
                         <div className="d-flex justify-content-between small text-muted">
-                          <span>Fresh CDL</span>
-                          <span>Seasoned</span>
-                          <span>Veteran</span>
+                          <span>0</span>
+                          <span>5</span>
+                          <span>10+</span>
                         </div>
                       </div>
 
@@ -286,9 +263,6 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                             (form.values.years_cdl_experience.value || 0) <= 7 &&
                             'Experienced professional'}
                           {(form.values.years_cdl_experience.value || 0) >= 8 && 'Industry veteran'}
-                        </div>
-                        <div className={`${styles.contextTip} x-small text-muted mt-1`}>
-                          Industry avg: 3-5 years
                         </div>
                       </div>
                     </div>
@@ -317,9 +291,9 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                           }
                         />
                         <div className="d-flex justify-content-between small text-muted">
-                          <span>Perfect</span>
-                          <span>Acceptable</span>
-                          <span>Lenient</span>
+                          <span>0</span>
+                          <span>2</span>
+                          <span>5</span>
                         </div>
                       </div>
 
@@ -334,9 +308,6 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                             'One minor incident allowed'}
                           {(form.values.maximum_accidents.value || 0) >= 2 &&
                             'Learning from experience'}
-                        </div>
-                        <div className={`${styles.contextTip} x-small text-muted mt-1`}>
-                          Most companies: 0-2 accidents
                         </div>
                       </div>
                     </div>
@@ -368,9 +339,9 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                           }
                         />
                         <div className="d-flex justify-content-between small text-muted">
-                          <span>Strict</span>
-                          <span>Standard</span>
-                          <span>Flexible</span>
+                          <span>0</span>
+                          <span>4</span>
+                          <span>8</span>
                         </div>
                       </div>
 
@@ -387,9 +358,6 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                           {(form.values.maximum_moving_violations.value || 0) >= 4 &&
                             'Room for improvement'}
                         </div>
-                        <div className={`${styles.contextTip} x-small text-muted mt-1`}>
-                          Industry standard: 2-3 violations
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -403,7 +371,7 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                 <Col className="d-flex justify-content-between align-items-center">
                   <div className="text-muted small">
                     <i className="fas fa-info-circle me-1"></i>
-                    Changes auto-save and apply immediately to new applications
+                    Changes apply immediately to all applications
                   </div>
                   <div>
                     <Button variant="outline-secondary" className="me-2" onClick={onReset}>

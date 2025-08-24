@@ -104,28 +104,66 @@
   color: var(--text-dark) !important;
 }
 
+/* Override any Bootstrap blue defaults */
+.criteriaCard.selected,
+.criteriaCardSmall.selected {
+  background: var(--primary-button-light) !important;
+  border-color: var(--primary-button) !important;
+}
+
+/* Force brand colors on all selected states */
+.brandSelected,
+.primarySelected,
+.infoSelected {
+  background-color: var(--primary-button) !important;
+  border-color: var(--primary-button) !important;
+}
+
+.form-check-input:checked {
+  background-color: var(--primary-button) !important;
+  border-color: var(--primary-button) !important;
+}
+
+/* Remove any blue backgrounds */
+.card.bg-primary,
+.card.bg-info,
+.bg-primary,
+.bg-info {
+  background: var(--primary-light) !important;
+  border-color: var(--primary-button) !important;
+}
+
+/* Override Bootstrap's default primary and info colors globally within this component */
+.hiringBuilder .bg-primary,
+.hiringBuilder .text-bg-primary,
+.hiringBuilder .btn-primary,
+.hiringBuilder .border-primary {
+  background-color: var(--primary-light) !important;
+  border-color: var(--primary-button) !important;
+  color: var(--text-dark) !important;
+}
+
+.hiringBuilder .bg-info,
+.hiringBuilder .text-bg-info,
+.hiringBuilder .btn-info,
+.hiringBuilder .border-info {
+  background-color: var(--primary-light) !important;
+  border-color: var(--primary) !important;
+  color: var(--text-dark) !important;
+}
+
+/* Force all card selected states to use brand colors */
+.hiringBuilder .card.selected,
+.hiringBuilder .card[class*='selected'] {
+  background-color: var(--primary-light) !important;
+  border-color: var(--primary-button) !important;
+  color: var(--text-dark) !important;
+}
+
 .criteriaCard.selected,
 .criteriaCardSmall.selected {
   transform: translateY(-2px);
   box-shadow: 0 4px 20px rgba(44, 122, 123, 0.3);
-}
-
-.criteriaCard.selected::after,
-.criteriaCardSmall.selected::after {
-  content: '✓';
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 20px;
-  height: 20px;
-  background: var(--success);
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: bold;
 }
 
 .smartSlider {
@@ -333,4 +371,51 @@
   .sliderValue {
     color: var(--primary) !important;
   }
+}
+
+/* Fix for range input positioning and overflow issues */
+.smartSlider .form-range:nth-child(n) {
+  position: relative !important;
+  top: auto !important;
+  overflow: visible !important;
+  z-index: 1 !important;
+}
+
+.experienceCard .form-range:nth-child(n) {
+  position: relative !important;
+  top: auto !important;
+  overflow: visible !important;
+  z-index: 1 !important;
+}
+
+/* Ensure slider tooltips are visible */
+.experienceCard .text-primary:nth-child(n) {
+  position: relative !important;
+  top: auto !important;
+  overflow: visible !important;
+  z-index: 10 !important;
+}
+
+/* Custom checkbox styles using brand colors */
+.form-check-input {
+  border-color: var(--primary-button) !important;
+}
+
+.form-check-input:checked {
+  background-color: var(--primary-button) !important;
+  border-color: var(--primary-button) !important;
+}
+
+.form-check-input:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(95, 203, 196, 0.25) !important;
+}
+
+.form-check-input:checked:focus {
+  box-shadow: 0 0 0 0.2rem rgba(44, 122, 123, 0.25) !important;
+}
+
+.form-check-input:indeterminate {
+  background-color: var(--primary-button) !important;
+  border-color: var(--primary-button) !important;
 }
