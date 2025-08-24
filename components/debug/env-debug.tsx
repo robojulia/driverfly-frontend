@@ -13,7 +13,7 @@ export const EnvDebug: React.FC<EnvDebugProps> = ({ enabled = true }) => {
       console.group('🔍 Environment Variables Debug');
       console.log('Environment:', process.env.NODE_ENV);
 
-      // Log all NEXT_PUBLIC_ variables that should be available client-side
+      // Log all NEXT_PUBLIC_ variables that should be available client-side 
       const clientEnvVars = {
         NEXT_PUBLIC_BASE_URL_API: process.env.NEXT_PUBLIC_BASE_URL_API,
         NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,

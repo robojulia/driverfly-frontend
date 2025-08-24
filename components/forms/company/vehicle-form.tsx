@@ -513,6 +513,39 @@ export function VehicleForm(props: VehicleFormProps) {
                 allowedTypesFriendlyName="PDF or image format, under 3MB"
               />
 
+              <FileInput
+                className="mb-4"
+                label="Proof of Insurance"
+                name="insurance_document"
+                accept=".pdf,image/*"
+                documentType={DocumentType.PROOF_OF_INSURANCE}
+                formik={form}
+                allowedSizeInByte={3145728}
+                allowedTypesFriendlyName="PDF or image format, under 3MB"
+              />
+
+              <FileInput
+                className="mb-4"
+                label="Vehicle Title"
+                name="title_document"
+                accept=".pdf,image/*"
+                documentType={DocumentType.VEHICLE_TITLE}
+                formik={form}
+                allowedSizeInByte={3145728}
+                allowedTypesFriendlyName="PDF or image format, under 3MB"
+              />
+
+              <FileInput
+                className="mb-4"
+                label="Equipment Lease Agreement"
+                name="lease_agreement_document"
+                accept=".pdf,image/*"
+                documentType={DocumentType.EQUIPMENT_LEASE}
+                formik={form}
+                allowedSizeInByte={3145728}
+                allowedTypesFriendlyName="PDF or image format, under 3MB"
+              />
+
               <BaseDateInput
                 className="mb-3"
                 label="Registration Expiration Date"

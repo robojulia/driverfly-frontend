@@ -21,6 +21,9 @@ export class VehicleEntity {
   year?: number;
   photo?: DocumentEntity = null;
   registration_document?: DocumentEntity = null;
+  insurance_document?: DocumentEntity = null;
+  title_document?: DocumentEntity = null;
+  lease_agreement_document?: DocumentEntity = null;
   accessories?: string[] = [];
   accessory_other?: string;
   is_governed?: boolean = false;
@@ -80,6 +83,48 @@ export class VehicleEntity {
         })
         .optional(),
       registration_document: yup
+        .mixed()
+        .when({
+          is: (v) => !!v,
+          then: DocumentEntity.yupSchema()
+            .test('supportedDocTypes', 'INVALID_DOCUMENT_TYPE', (value: any) => {
+              return (
+                !value?.mime_type ||
+                ['application/pdf', 'image/jpeg', 'image/png'].includes(value?.mime_type)
+              );
+            })
+            .nullable(),
+        })
+        .optional(),
+      insurance_document: yup
+        .mixed()
+        .when({
+          is: (v) => !!v,
+          then: DocumentEntity.yupSchema()
+            .test('supportedDocTypes', 'INVALID_DOCUMENT_TYPE', (value: any) => {
+              return (
+                !value?.mime_type ||
+                ['application/pdf', 'image/jpeg', 'image/png'].includes(value?.mime_type)
+              );
+            })
+            .nullable(),
+        })
+        .optional(),
+      title_document: yup
+        .mixed()
+        .when({
+          is: (v) => !!v,
+          then: DocumentEntity.yupSchema()
+            .test('supportedDocTypes', 'INVALID_DOCUMENT_TYPE', (value: any) => {
+              return (
+                !value?.mime_type ||
+                ['application/pdf', 'image/jpeg', 'image/png'].includes(value?.mime_type)
+              );
+            })
+            .nullable(),
+        })
+        .optional(),
+      lease_agreement_document: yup
         .mixed()
         .when({
           is: (v) => !!v,

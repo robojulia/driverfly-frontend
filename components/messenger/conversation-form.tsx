@@ -105,7 +105,7 @@ export function ConversationForm(props: ConversationFormProps) {
   const generateDocumentMessage = () => {
     if (documentTypes.length === 0 || !applicant?.uuid_token) return '';
 
-    const link = `${process.env.FRONTEND_BASE_URL}form/applicant/${
+    const link = `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}form/applicant/${
       applicant.uuid_token
     }/documents?${buildArrayQueryString('type', documentTypes)}`;
 

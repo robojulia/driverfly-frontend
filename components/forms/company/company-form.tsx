@@ -9,6 +9,7 @@ import { CompanyEntity } from '../../../models/company/company.entity';
 import CompanyApi from '../../../pages/api/company';
 import { globalAjaxExceptionHandler } from '../../../utils/ajax';
 import { formSuccess } from '../../../utils/toast';
+import { createDefaultOnboardingChecklistPreferences } from '../../../utils/company-preferences-utils';
 
 import { UncontrolledTooltip } from 'reactstrap';
 import EntityForm from '../../layouts/page/entity-form';
@@ -53,6 +54,11 @@ export function CompanyForm(props: CompanyFormProps) {
           company = await api.update(entity.id, dto);
         } else {
           company = await api.create(dto);
+          
+          // If this is a new company creation, automatically set up default onboarding checklist preferences
+          if (company?.id) {
+            await createDefaultOnboardingChecklistPreferences(company.id);
+          }
         }
         formSuccess(t, !!entity?.id ? 'update' : 'create', 'COMPANY');
         if (onSaveComplete) onSaveComplete(company);
@@ -112,13 +118,13 @@ export function CompanyForm(props: CompanyFormProps) {
               <BaseClickToCopyInput
                 label="COMPANY_JOBS_PAGE"
                 className="rounded"
-                value={`${process.env.FRONTEND_BASE_URL ?? ''}employer/${user?.company?.slug}`}
+                value={`${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL ?? ''}employer/${user?.company?.slug}`}
                 tooltipText={t('CLICK_TO_COPY')}
               />
               <BaseClickToCopyInput
                 label="COMPANY_EMEDDED_JOBS_PAGE"
                 className="rounded mt-2"
-                value={`${process.env.FRONTEND_BASE_URL ?? ''}embedded?companyId=${
+                value={`${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL ?? ''}embedded?companyId=${
                   user?.company?.id
                 }`}
                 tooltipText={t('CLICK_TO_COPY')}
