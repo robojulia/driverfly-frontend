@@ -627,20 +627,6 @@ input[type='range']::-webkit-slider-thumb {
     top: 16px;
   }
 
-  input[type='range']:nth-child(1) {
-    position: absolute;
-    top: 35px !important;
-    overflow: visible !important;
-    height: 0;
-  }
-
-  input[type='range']:nth-child(2) {
-    position: absolute;
-    top: 35px !important;
-    overflow: visible !important;
-    height: 0;
-  }
-
   input[type='range']::-moz-range-thumb {
     position: relative;
     height: 15px;

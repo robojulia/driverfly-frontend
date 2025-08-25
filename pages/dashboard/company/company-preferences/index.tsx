@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button, Col, Row, Card, Container } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
+import styles from '../../../../styles/hiring-criteria.module.css';
 
 import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
 import BaseClickToCopyInput from '../../../../components/forms/base-click-to-copy-input';
@@ -30,6 +31,7 @@ import { CompanyPreferenceVoeLabel } from '../../../../enums/company/company-pre
 import { SsnToggle } from '../../../../components/company-preferences/SsnToggle';
 import { ReferBackProgram } from '../../../../components/company-preferences/ReferBackProgram';
 import { SystemPreferences } from '../../../../components/company-preferences/SystemPreferences';
+import HiringCriteriaBuilder from '../../../../components/company-preferences/HiringCriteriaBuilder';
 
 export default function CompanyPreference() {
   const [preferences, setPreferences] = useState<CompanyPreferenceEntity[]>([]);
@@ -37,7 +39,7 @@ export default function CompanyPreference() {
   const [showAutoVoeModal, setShowAutoVoeModal] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { user, isSuperAdmin, isCompanyAdmin } = useAuth();
+  const { user, isSuperAdmin, isCompanyAdmin, company } = useAuth();
 
   const removeEmploymentTypes = [
     JobEmploymentType.SEASONAL,
@@ -281,8 +283,18 @@ export default function CompanyPreference() {
 
   return (
     <>
-      <PageLayout title="Company Hiring Preferences">
+      <PageLayout>
         <Container fluid>
+          {/* Driver Persona Builder - Revolutionary Hiring Criteria */}
+          <HiringCriteriaBuilder
+            companyId={company?.id}
+            form={form}
+            loading={loading}
+            filteredEmploymentTypes={FilteredEmploymentTypes}
+            onSubmit={form.handleSubmit}
+            onReset={() => form.resetForm()}
+          />
+
           {/* DHA Information Section */}
           <Card className="border-0 shadow-sm mb-4">
             <Card.Body className="p-4">
@@ -320,83 +332,6 @@ export default function CompanyPreference() {
             onAutoVoeInfoClick={() => setShowAutoVoeModal(true)}
             loading={loading}
           />
-
-          {/* Hiring Criteria Section */}
-          <Card className="border-0 shadow-sm mb-4">
-            <Card.Body className="p-4">
-              <h5 className="mb-3">Hiring Criteria</h5>
-              <p className="text-muted mb-4">
-                Set your hiring criteria to match the right candidates for your positions.
-              </p>
-
-              <form onSubmit={form.handleSubmit}>
-                <Row>
-                  <BaseCheckList
-                    className="col-12 mb-3"
-                    label="CDL_CLASS"
-                    name="cdl_class.value"
-                    labelPrefix="DriverLicenseType"
-                    required
-                    enumType={DriverLicenseType}
-                    formik={form}
-                  />
-                  <BaseCheckList
-                    className="col-12 mb-3"
-                    label="EMPLOYMENT_TYPE"
-                    name="employment_type.value"
-                    labelPrefix="JobEmploymentType"
-                    required
-                    enumType={FilteredEmploymentTypes}
-                    formik={form}
-                  />
-                  <BaseCheckList
-                    className="col-12 mb-3"
-                    label="DRIVER_DISTANCE"
-                    name="job_geography.value"
-                    labelPrefix="JobGeography"
-                    required
-                    enumType={JobGeography}
-                    formik={form}
-                  />
-                  <BaseInput
-                    className="col-md-4 mb-3"
-                    label="Minimum Years of CDL Experience"
-                    name="years_cdl_experience.value"
-                    type="number"
-                    displayPlaceholder
-                    formik={form}
-                  />
-                  <BaseInput
-                    className="col-md-4 mb-3"
-                    label="MAX_ACCIDENTS"
-                    name="maximum_accidents.value"
-                    type="number"
-                    displayPlaceholder
-                    formik={form}
-                  />
-                  <BaseInput
-                    className="col-md-4 mb-3"
-                    label="MAX_MOVING_VIOLATIONS"
-                    name="maximum_moving_violations.value"
-                    type="number"
-                    displayPlaceholder
-                    formik={form}
-                  />
-                </Row>
-                <Row className="mt-3">
-                  <Col className="d-flex justify-content-end">
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      disabled={form.isSubmitting || !form.isValid || !form.dirty || loading}
-                    >
-                      {form.isSubmitting || loading ? 'Updating...' : 'Update Preferences'}
-                    </Button>
-                  </Col>
-                </Row>
-              </form>
-            </Card.Body>
-          </Card>
         </Container>
 
         {/* Auto VOE Information Modal */}

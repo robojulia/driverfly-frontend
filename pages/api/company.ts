@@ -122,6 +122,35 @@ export default class CompanyApi extends BaseApi {
     remove: async (companyId: number, id: number): Promise<void> => {
       await this.delete(`${this.preferences.baseUrl(companyId)}/${id}`);
     },
+    getMatchingApplicantsPreview: async (
+      companyId: number,
+      criteria: {
+        cdlClass?: string[];
+        employmentType?: string[];
+        geography?: string[];
+        minYearsCdlExperience?: number;
+        maxAccidents?: number;
+        maxMovingViolations?: number;
+      }
+    ): Promise<{
+      totalMatches: number;
+      totalApplicants: number;
+      percentage: number;
+      matchBreakdown: {
+        cdlClassMatches: number;
+        experienceMatches: number;
+        safetyRecordMatches: number;
+        geographyMatches: number;
+      };
+      restrictiveness: 'low' | 'medium' | 'high';
+    }> => {
+      const { data } = await this.post(
+        `${this.preferences.baseUrl(companyId)}/match-preview`,
+        criteria
+      );
+
+      return data;
+    },
   };
 
   manager = {

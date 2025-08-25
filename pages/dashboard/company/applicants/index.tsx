@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import Link from 'next/link';
 import { NextRouter, useRouter } from 'next/router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Accordion, Button, ButtonGroup, Col, Row } from 'react-bootstrap';
+import { Accordion, Button, ButtonGroup, Col, Row, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { EyeFill, PencilFill, PersonFill } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
@@ -70,6 +70,7 @@ export default function Applicants() {
   const [loading, setLoading] = useState<boolean>(true);
   const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
   const [filters, setFilters] = useState<SearchApplicantDto>();
+  const [includeEligibility, setIncludeEligibility] = useState<boolean>(true);
   const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingsMetaInitialValues);
   const [filtersChanged, setFiltersChanged] = useState<boolean>(false);
 
@@ -85,6 +86,7 @@ export default function Applicants() {
           jobId: jobId as any as number,
           without: ['applicant_dac', 'applicant_extras'],
           ...filters,
+          includeEligibility: includeEligibility,
           license_type: DriverLicenseType.NO_CDL,
           is_paginated: true,
           page: filtersChanged ? 1 : pagingMeta?.currentPage,
@@ -94,6 +96,7 @@ export default function Applicants() {
           jobId: jobId as any as number,
           without: ['applicant_dac', 'applicant_extras'],
           ...filters,
+          includeEligibility: includeEligibility,
           license_type: null,
           is_paginated: true,
           page: filtersChanged ? 1 : pagingMeta?.currentPage,
@@ -129,6 +132,7 @@ export default function Applicants() {
         jobId: jobId as any as number,
         without: ['applicant_dac', 'applicant_extras'],
         ...filters,
+        includeEligibility: includeEligibility,
         is_paginated: true,
         page: filtersChanged ? 1 : pagingMeta?.currentPage,
         limit: pagingMeta?.itemsPerPage,
@@ -147,7 +151,7 @@ export default function Applicants() {
 
   useEffectAsync(
     async () => await fetchApplicant(),
-    [user, jobId, filters, pagingMeta?.currentPage, pagingMeta?.itemsPerPage]
+    [user, jobId, filters, includeEligibility, pagingMeta?.currentPage, pagingMeta?.itemsPerPage]
   );
 
   React.useMemo(() => setFiltersChanged(true), [filters]);
@@ -307,11 +311,56 @@ export default function Applicants() {
             <Col className="force-overflow p-0">
               <Accordion.Body>
                 <ApplicantFilterForm onSearch={setFilters} />
+
+                {/* Eligibility Filter Checkbox */}
+                <div
+                  className="mt-3 mb-3 p-3"
+                  style={{
+                    backgroundColor: '#f8f9fa',
+                    borderRadius: '8px',
+                    border: '1px solid #e9ecef',
+                  }}
+                >
+                  <div className="d-flex align-items-start">
+                    <div className="me-3">
+                      <PersonFill size={20} className="text-primary-brand" />
+                    </div>
+                    <div className="flex-grow-1">
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="includeEligibilityCheck"
+                          checked={includeEligibility}
+                          onChange={(e) => setIncludeEligibility(e.target.checked)}
+                        />
+                        <label className="form-check-label" htmlFor="includeEligibilityCheck">
+                          <strong>Include Company Eligibility Check</strong>
+                          <small className="d-block text-muted mt-1">
+                            Show whether each applicant meets your company&apos;s hiring criteria
+                            (CDL requirements, experience, accident history, etc.). Eligible
+                            applicants will show a green ✓, ineligible applicants will show a red ✗
+                            with details.
+                          </small>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </Accordion.Body>
 
               {loading ? (
-                <div className="spinner-border mt-3 ml-1" role="status">
-                  <span className="sr-only">Loading...</span>
+                <div className="d-flex align-items-center mt-3 ml-1">
+                  <div
+                    className="spinner-border me-2"
+                    role="status"
+                    style={{ width: '1.5rem', height: '1.5rem' }}
+                  >
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                  <span className="text-muted">
+                    Loading applicants{includeEligibility ? ' and checking eligibility' : ''}...
+                  </span>
                 </div>
               ) : (
                 <ApplicantView
@@ -323,6 +372,7 @@ export default function Applicants() {
                   onViewClick={onViewClick}
                   onEditClick={onEditClick}
                   onChangeStatus={onChangeStatus}
+                  includeEligibility={includeEligibility}
                   t={t}
                 />
               )}
@@ -498,6 +548,7 @@ interface ViewProps {
   pagingMeta?: PagingMeta;
   totalItems?: number;
   setPagingMeta?: React.Dispatch<React.SetStateAction<PagingMeta>>;
+  includeEligibility?: boolean;
 }
 
 function ApplicantView(props: ViewProps) {
@@ -511,6 +562,7 @@ function ApplicantView(props: ViewProps) {
     totalItems,
     setPagingMeta,
     pagingMeta,
+    includeEligibility,
   } = props;
   const { hasPermission } = useAuth();
   const handlePageChange = (page: number, perPage: number) => {
@@ -544,13 +596,78 @@ function ApplicantView(props: ViewProps) {
           },
           {
             id: 'name',
-            name: 'NAME',
+            name: 'Name',
             wrap: true,
             selector: (applicant) => getApplicantName(applicant),
             cell: (applicant) => (
-              <Link href={`${router.pathname}/${applicant.id}/edit`}>
-                <a>{getApplicantName(applicant)}</a>
-              </Link>
+              <div className="d-flex align-items-center justify-content-between w-100">
+                <Link href={`${router.pathname}/${applicant.id}/edit`}>
+                  <a>{getApplicantName(applicant)}</a>
+                </Link>
+                {includeEligibility && (applicant as any).eligibility && (
+                  <div className="ms-2">
+                    {(applicant as any).eligibility.isEligible ? (
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={
+                          <Tooltip id={`eligible-tooltip-${applicant.id}`}>
+                            ✓ Meets company hiring criteria
+                          </Tooltip>
+                        }
+                      >
+                        <span
+                          className="text-success fw-bold"
+                          style={{ cursor: 'help', fontSize: '1.1em' }}
+                        >
+                          ✓
+                        </span>
+                      </OverlayTrigger>
+                    ) : (
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={
+                          <Tooltip id={`ineligible-tooltip-${applicant.id}`}>
+                            <div>
+                              <strong>Does not meet criteria:</strong>
+                              <ul className="mb-0 mt-1 ps-3">
+                                {(applicant as any).eligibility.ineligibilityReasons.map(
+                                  (reason: string, index: number) => (
+                                    <li key={index} style={{ fontSize: '0.9em' }}>
+                                      {reason === 'cdl_class' && 'CDL Class requirement'}
+                                      {reason === 'years_cdl_experience' &&
+                                        'Years of CDL experience'}
+                                      {reason === 'maximum_accidents' && 'Accident history limit'}
+                                      {reason === 'maximum_moving_violations' &&
+                                        'Moving violations limit'}
+                                      {reason === 'employment_type' && 'Employment type preference'}
+                                      {reason === 'job_geography' && 'Location preference'}
+                                      {![
+                                        'cdl_class',
+                                        'years_cdl_experience',
+                                        'maximum_accidents',
+                                        'maximum_moving_violations',
+                                        'employment_type',
+                                        'job_geography',
+                                      ].includes(reason) && reason}
+                                    </li>
+                                  )
+                                )}
+                              </ul>
+                            </div>
+                          </Tooltip>
+                        }
+                      >
+                        <span
+                          className="text-danger fw-bold"
+                          style={{ cursor: 'help', fontSize: '1.1em' }}
+                        >
+                          ✗
+                        </span>
+                      </OverlayTrigger>
+                    )}
+                  </div>
+                )}
+              </div>
             ),
             hidable: false,
           },

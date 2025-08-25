@@ -1,12 +1,12 @@
-import * as yup from "yup";
-import { LicenseRestrictions } from "../../enums/applicants/applicant-license-restrictions-type.enum";
-import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
-import { ApplicantType } from "../../enums/applicants/applicant-type.enum";
-import { JobGeography } from "../../enums/jobs/job-geography.enum";
-import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum";
-import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
-import { VehicleTransmissionType } from "../../enums/vehicles/vehicle-transmission-type.enum";
-import "../../utils/yup";
+import * as yup from 'yup';
+import { LicenseRestrictions } from '../../enums/applicants/applicant-license-restrictions-type.enum';
+import { ApplicantStatus } from '../../enums/applicants/applicant-status.enum';
+import { ApplicantType } from '../../enums/applicants/applicant-type.enum';
+import { JobGeography } from '../../enums/jobs/job-geography.enum';
+import { DriverEndorsement } from '../../enums/users/driver-endorsement.enum';
+import { DriverLicenseType } from '../../enums/users/driver-license-type.enum';
+import { VehicleTransmissionType } from '../../enums/vehicles/vehicle-transmission-type.enum';
+import '../../utils/yup';
 
 export class SearchApplicantDto {
   status?: ApplicantStatus;
@@ -29,6 +29,7 @@ export class SearchApplicantDto {
   email?: string;
   withHired?: boolean;
   without?: string[];
+  includeEligibility?: boolean;
 
   static yupSchema() {
     return yup.object({
