@@ -339,8 +339,8 @@ export default function Applicants() {
                           <small className="d-block text-muted mt-1">
                             Show whether each applicant meets your company&apos;s hiring criteria
                             (CDL requirements, experience, accident history, etc.). Eligible
-                            applicants will show a green "Yes" badge, ineligible applicants will
-                            show a red "No" badge with details.
+                            applicants will show a green &quot;Yes&quot; badge, ineligible
+                            applicants will show a red &quot;No&quot; badge with details.
                           </small>
                         </label>
                       </div>
