@@ -339,8 +339,8 @@ export default function Applicants() {
                           <small className="d-block text-muted mt-1">
                             Show whether each applicant meets your company&apos;s hiring criteria
                             (CDL requirements, experience, accident history, etc.). Eligible
-                            applicants will show a green ✓, ineligible applicants will show a red ✗
-                            with details.
+                            applicants will show a green "Yes" badge, ineligible applicants will
+                            show a red "No" badge with details.
                           </small>
                         </label>
                       </div>
@@ -363,18 +363,36 @@ export default function Applicants() {
                   </span>
                 </div>
               ) : (
-                <ApplicantView
-                  totalItems={pagingMeta?.totalItems}
-                  setPagingMeta={setPagingMeta}
-                  pagingMeta={pagingMeta}
-                  router={router}
-                  applicants={applicants}
-                  onViewClick={onViewClick}
-                  onEditClick={onEditClick}
-                  onChangeStatus={onChangeStatus}
-                  includeEligibility={includeEligibility}
-                  t={t}
-                />
+                <>
+                  {/* Legend for Eligibility Badges */}
+                  {includeEligibility && (
+                    <div className="mb-3 px-3">
+                      <div className="d-flex align-items-center gap-3">
+                        <div className="d-flex align-items-center gap-1">
+                          <span className="badge bg-success">YES</span>
+                          <small className="text-muted">Meets hiring criteria</small>
+                        </div>
+                        <div className="d-flex align-items-center gap-1">
+                          <span className="badge bg-danger">NO</span>
+                          <small className="text-muted">Does not meet criteria</small>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <ApplicantView
+                    totalItems={pagingMeta?.totalItems}
+                    setPagingMeta={setPagingMeta}
+                    pagingMeta={pagingMeta}
+                    router={router}
+                    applicants={applicants}
+                    onViewClick={onViewClick}
+                    onEditClick={onEditClick}
+                    onChangeStatus={onChangeStatus}
+                    includeEligibility={includeEligibility}
+                    t={t}
+                  />
+                </>
               )}
             </Col>
           </Row>
@@ -611,15 +629,12 @@ function ApplicantView(props: ViewProps) {
                         placement="top"
                         overlay={
                           <Tooltip id={`eligible-tooltip-${applicant.id}`}>
-                            ✓ Meets company hiring criteria
+                            Meets company hiring criteria
                           </Tooltip>
                         }
                       >
-                        <span
-                          className="text-success fw-bold"
-                          style={{ cursor: 'help', fontSize: '1.1em' }}
-                        >
-                          ✓
+                        <span className="badge bg-success" style={{ cursor: 'help' }}>
+                          {t('YES')}
                         </span>
                       </OverlayTrigger>
                     ) : (
@@ -657,11 +672,8 @@ function ApplicantView(props: ViewProps) {
                           </Tooltip>
                         }
                       >
-                        <span
-                          className="text-danger fw-bold"
-                          style={{ cursor: 'help', fontSize: '1.1em' }}
-                        >
-                          ✗
+                        <span className="badge bg-danger" style={{ cursor: 'help' }}>
+                          {t('NO')}
                         </span>
                       </OverlayTrigger>
                     )}
