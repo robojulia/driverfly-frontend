@@ -70,7 +70,7 @@ export default function Applicants() {
   const [loading, setLoading] = useState<boolean>(true);
   const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
   const [filters, setFilters] = useState<SearchApplicantDto>();
-  const [includeEligibility, setIncludeEligibility] = useState<boolean>(false);
+  const [includeEligibility, setIncludeEligibility] = useState<boolean>(true);
   const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingsMetaInitialValues);
   const [filtersChanged, setFiltersChanged] = useState<boolean>(false);
 
@@ -596,13 +596,7 @@ function ApplicantView(props: ViewProps) {
           },
           {
             id: 'name',
-            name: includeEligibility ? (
-              <span>
-                NAME <small className="text-muted fw-normal">(✓/✗ = eligibility)</small>
-              </span>
-            ) : (
-              'NAME'
-            ),
+            name: 'Name',
             wrap: true,
             selector: (applicant) => getApplicantName(applicant),
             cell: (applicant) => (
