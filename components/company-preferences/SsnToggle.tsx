@@ -78,48 +78,45 @@ export const SsnToggle: React.FC<SsnToggleProps> = ({ checked, onChange, loading
           <div>
             <div className="alert alert-warning mb-4" role="alert">
               <strong>IMPORTANT: </strong>
-              Collecting Social Security Numbers is a significant privacy concern and should only be
-              used for employment verification purposes.
+              Collecting Social Security Numbers requires careful handling and should only be used
+              for candidates who are near to hire.
             </div>
 
             <div className="mb-4">
               <h5>Terms and Conditions</h5>
               <ul className="list-unstyled">
                 <li className="mb-3">
-                  <strong>1. Employment Verification Only</strong>
+                  <strong>1. Optional Collection</strong>
                   <p className="mb-0 text-muted">
-                    SSNs will only be used to verify employment eligibility and conduct background
-                    checks. No other use is permitted.
+                    SSN collection is optional for all candidates. They are not required to provide
+                    it during the application process. If you need an SSN for employment
+                    verification, you can communicate this requirement directly to the candidate or
+                    they can provide it through alternative secure methods.
                   </p>
                 </li>
                 <li className="mb-3">
-                  <strong>2. Final Stage Candidates Only</strong>
+                  <strong>2. Near-to-Hire Candidates</strong>
                   <p className="mb-0 text-muted">
-                    SSNs should only be collected from candidates who are in the final stages of the
-                    hiring process, not from all applicants.
+                    You agree that you are collecting SSN information because these candidates are
+                    at a point in the application process where they are near to hire and you may
+                    need this information for final employment verification and onboarding purposes.
                   </p>
                 </li>
                 <li className="mb-3">
-                  <strong>3. Restricted Access</strong>
+                  <strong>3. Secure Handling and Privacy</strong>
                   <p className="mb-0 text-muted">
-                    Only authorized personnel will have access to SSN information, and access will
-                    be logged and monitored.
-                  </p>
-                </li>
-                <li className="mb-3">
-                  <strong>4. Data Security</strong>
-                  <p className="mb-0 text-muted">
-                    All SSN data is encrypted at rest and in transit, with industry-standard
-                    security measures in place.
+                    You agree to handle all SSN data securely and with respect for user privacy.
+                    This includes limiting access to authorized personnel only, using secure
+                    communication methods, and following all applicable privacy regulations.
                   </p>
                 </li>
               </ul>
             </div>
 
             <div className="alert alert-info" role="alert">
-              <strong>NOTE: </strong>
-              The DHA will be disabled for phone numbers that are not already in the system to
-              prevent public collection of SSNs.
+              <strong>Remember: </strong>
+              Candidates can choose not to provide their SSN during the application process. You can
+              request this information directly when needed for final hiring decisions.
             </div>
 
             <div className="d-flex justify-content-center gap-3 mt-4">

@@ -285,16 +285,6 @@ export default function CompanyPreference() {
     <>
       <PageLayout>
         <Container fluid>
-          {/* Driver Persona Builder - Revolutionary Hiring Criteria */}
-          <HiringCriteriaBuilder
-            companyId={company?.id}
-            form={form}
-            loading={loading}
-            filteredEmploymentTypes={FilteredEmploymentTypes}
-            onSubmit={form.handleSubmit}
-            onReset={() => form.resetForm()}
-          />
-
           {/* DHA Information Section */}
           <Card className="border-0 shadow-sm mb-4">
             <Card.Body className="p-4">
@@ -314,6 +304,16 @@ export default function CompanyPreference() {
               </p>
             </Card.Body>
           </Card>
+
+          {/* Driver Persona Builder - Revolutionary Hiring Criteria */}
+          <HiringCriteriaBuilder
+            companyId={company?.id}
+            form={form}
+            loading={loading}
+            filteredEmploymentTypes={FilteredEmploymentTypes}
+            onSubmit={form.handleSubmit}
+            onReset={() => form.resetForm()}
+          />
 
           {/* Refer Back Program Component */}
           <ReferBackProgram
