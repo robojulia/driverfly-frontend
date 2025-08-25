@@ -58,102 +58,131 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                 Select the CDL requirements and employment types that match your hiring needs. Click
                 on the cards below to select/deselect options. You can choose multiple options in
                 each category.
+                <div className="mt-2">
+                  <strong>CDL Note:</strong> Higher CDL classes include lower classes (Class A
+                  drivers can operate Class B/C vehicles, Class B can operate Class C).
+                </div>
               </div>
 
-              <Row className="g-4">
-                <Col md={6}>
+              <div className="d-flex flex-wrap gap-4">
+                <div style={{ minWidth: '280px', maxWidth: '320px' }}>
                   <label className="form-label fw-semibold mb-3">CDL Requirements</label>
-                  <div className="row g-2">
+                  <div className="d-flex flex-wrap gap-2 mb-3">
                     {Object.values(DriverLicenseType).map((cdlType) => (
-                      <div key={cdlType} className="col-6">
-                        <div
-                          className={`${styles.criteriaCardSmall} card h-100 ${
-                            form.values.cdl_class.value?.includes(cdlType)
-                              ? `${styles.selected} ${styles.primarySelected}`
-                              : 'border-light'
-                          }`}
-                          onClick={() => {
-                            const currentValues = form.values.cdl_class.value || [];
-                            const newValues = currentValues.includes(cdlType)
-                              ? currentValues.filter((v) => v !== cdlType)
-                              : [...currentValues, cdlType];
-                            form.setFieldValue('cdl_class.value', newValues);
-                          }}
-                        >
-                          <div className="card-body p-3 text-center position-relative">
-                            <div
-                              className="position-absolute top-0 end-0"
-                              style={{ transform: 'scale(0.8)' }}
-                            >
-                              <Checkbox
-                                name={`cdl-${cdlType}`}
-                                checked={form.values.cdl_class.value?.includes(cdlType) || false}
-                                onChange={() => {}} // Handled by card click
-                                size="small"
-                                className="mb-0"
-                              />
-                            </div>
-                            <div className="fw-semibold">
-                              {cdlType === DriverLicenseType.NO_CDL && 'No CDL'}
-                              {cdlType === DriverLicenseType.CDL_CLASS_A && 'Class A CDL'}
-                              {cdlType === DriverLicenseType.CDL_CLASS_B && 'Class B CDL'}
-                              {cdlType === DriverLicenseType.CDL_CLASS_C && 'Class C CDL'}
-                            </div>
+                      <div
+                        key={cdlType}
+                        className={`card border ${
+                          form.values.cdl_class.value?.includes(cdlType)
+                            ? 'border-primary bg-primary text-white'
+                            : 'border-light'
+                        }`}
+                        style={{
+                          cursor: 'pointer',
+                          minWidth: '120px',
+                          maxWidth: '150px',
+                        }}
+                        onClick={() => {
+                          const currentValues = form.values.cdl_class.value || [];
+                          const newValues = currentValues.includes(cdlType)
+                            ? currentValues.filter((v) => v !== cdlType)
+                            : [...currentValues, cdlType];
+                          form.setFieldValue('cdl_class.value', newValues);
+                        }}
+                      >
+                        <div className="card-body p-2 text-center">
+                          <div className="small fw-semibold">
+                            {cdlType === DriverLicenseType.NO_CDL && 'No CDL'}
+                            {cdlType === DriverLicenseType.CDL_CLASS_A && 'Class A'}
+                            {cdlType === DriverLicenseType.CDL_CLASS_B && 'Class B'}
+                            {cdlType === DriverLicenseType.CDL_CLASS_C && 'Class C'}
                           </div>
                         </div>
                       </div>
                     ))}
                   </div>
-                </Col>
+                  {/* CDL Summary */}
+                  {form.values.cdl_class.value?.length > 0 && (
+                    <div className="alert alert-light py-2 px-3 small">
+                      <strong>Eligibility:</strong>{' '}
+                      {(() => {
+                        const selected = form.values.cdl_class.value || [];
+                        const hasNoCDL = selected.includes(DriverLicenseType.NO_CDL);
+                        const cdlTypes = selected.filter((t) => t !== DriverLicenseType.NO_CDL);
 
-                <Col md={6}>
+                        if (hasNoCDL && cdlTypes.length > 0) {
+                          return 'Candidates with or without CDL are eligible';
+                        } else if (hasNoCDL) {
+                          return 'Only non-CDL candidates are eligible';
+                        } else if (cdlTypes.length === 3) {
+                          return 'Candidates with any CDL license are eligible';
+                        } else if (cdlTypes.length > 1) {
+                          return `Candidates with Class ${cdlTypes.join(', ')} CDL are eligible`;
+                        } else if (cdlTypes.length === 1) {
+                          return `Only Class ${cdlTypes[0]} CDL holders are eligible`;
+                        }
+                        return '';
+                      })()}
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ minWidth: '280px', maxWidth: '320px' }}>
                   <label className="form-label fw-semibold mb-3">Employment Style</label>
-                  <div className="row g-2">
+                  <div className="d-flex flex-column gap-2 mb-3">
                     {filteredEmploymentTypes.map((empType) => (
-                      <div key={empType} className="col-12">
-                        <div
-                          className={`${styles.criteriaCard} card ${
-                            form.values.employment_type.value?.includes(empType)
-                              ? `${styles.selected} ${styles.brandSelected}`
-                              : 'border-light'
-                          }`}
-                          onClick={() => {
-                            const currentValues = form.values.employment_type.value || [];
-                            const newValues = currentValues.includes(empType)
-                              ? currentValues.filter((v) => v !== empType)
-                              : [...currentValues, empType];
-                            form.setFieldValue('employment_type.value', newValues);
-                          }}
-                        >
-                          <div className="card-body p-3 d-flex align-items-center position-relative">
-                            <div
-                              className="position-absolute top-0 end-0"
-                              style={{ transform: 'scale(0.8)' }}
-                            >
-                              <Checkbox
-                                name={`employment-${empType}`}
-                                checked={
-                                  form.values.employment_type.value?.includes(empType) || false
-                                }
-                                onChange={() => {}} // Handled by card click
-                                size="small"
-                                className="mb-0"
-                              />
-                            </div>
-                            <div>
-                              <div className="fw-semibold">
-                                {empType === JobEmploymentType.W2 && 'Company Driver (W2)'}
-                                {empType === JobEmploymentType.CONTRACT && 'Contractor (1099)'}
-                                {empType === JobEmploymentType.OWNER_OPERATOR && 'Owner-Operator'}
-                              </div>
-                            </div>
+                      <div
+                        key={empType}
+                        className={`card border ${
+                          form.values.employment_type.value?.includes(empType)
+                            ? 'border-success bg-success text-white'
+                            : 'border-light'
+                        }`}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => {
+                          const currentValues = form.values.employment_type.value || [];
+                          const newValues = currentValues.includes(empType)
+                            ? currentValues.filter((v) => v !== empType)
+                            : [...currentValues, empType];
+                          form.setFieldValue('employment_type.value', newValues);
+                        }}
+                      >
+                        <div className="card-body p-2">
+                          <div className="small fw-semibold">
+                            {empType === JobEmploymentType.W2 && 'Company Driver (W2)'}
+                            {empType === JobEmploymentType.CONTRACT && 'Contractor (1099)'}
+                            {empType === JobEmploymentType.OWNER_OPERATOR && 'Owner-Operator'}
                           </div>
                         </div>
                       </div>
                     ))}
                   </div>
-                </Col>
-              </Row>
+                  {/* Employment Summary */}
+                  {form.values.employment_type.value?.length > 0 && (
+                    <div className="alert alert-light py-2 px-3 small">
+                      <strong>Eligible for:</strong>{' '}
+                      {(() => {
+                        const selected = form.values.employment_type.value || [];
+                        const labels = selected.map((type) => {
+                          if (type === JobEmploymentType.W2) return 'W2 employment';
+                          if (type === JobEmploymentType.CONTRACT) return '1099 contracting';
+                          if (type === JobEmploymentType.OWNER_OPERATOR) return 'Owner-operator';
+                          return type;
+                        });
+
+                        if (labels.length === 1) {
+                          return `Candidates seeking ${labels[0]}`;
+                        } else if (labels.length === 2) {
+                          return `Candidates seeking ${labels.join(' or ')}`;
+                        } else {
+                          return `Candidates seeking ${labels.slice(0, -1).join(', ')}, or ${
+                            labels[labels.length - 1]
+                          }`;
+                        }
+                      })()}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Geographic Preferences */}
@@ -163,15 +192,21 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                 Geographic Scope
               </h6>
 
-              <div className="row g-3">
-                {Object.values(JobGeography).map((geo) => (
-                  <div key={geo} className="col-md-4">
+              <div style={{ maxWidth: '600px' }}>
+                <div className="d-flex flex-wrap gap-2 mb-3">
+                  {Object.values(JobGeography).map((geo) => (
                     <div
-                      className={`${styles.criteriaCard} card h-100 ${
+                      key={geo}
+                      className={`card border ${
                         form.values.job_geography.value?.includes(geo)
-                          ? `${styles.selected} ${styles.infoSelected}`
+                          ? 'border-info bg-info text-white'
                           : 'border-light'
                       }`}
+                      style={{
+                        cursor: 'pointer',
+                        minWidth: '140px',
+                        maxWidth: '180px',
+                      }}
                       onClick={() => {
                         const currentValues = form.values.job_geography.value || [];
                         const newValues = currentValues.includes(geo)
@@ -180,28 +215,55 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                         form.setFieldValue('job_geography.value', newValues);
                       }}
                     >
-                      <div className="card-body p-4 text-center position-relative">
-                        <div
-                          className="position-absolute top-0 end-0"
-                          style={{ transform: 'scale(0.8)' }}
-                        >
-                          <Checkbox
-                            name={`geography-${geo}`}
-                            checked={form.values.job_geography.value?.includes(geo) || false}
-                            onChange={() => {}}
-                            size="small"
-                            className="mb-0"
-                          />
-                        </div>
-                        <div className="fw-bold mb-2">
+                      <div className="card-body p-2 text-center">
+                        <div className="fw-bold small">
                           {geo === JobGeography.LOCAL && 'Local'}
                           {geo === JobGeography.REGIONAL && 'Regional'}
                           {geo === JobGeography.OTR && 'Over The Road'}
                         </div>
                       </div>
                     </div>
+                  ))}
+                </div>
+
+                {/* Geography Summary */}
+                {form.values.job_geography.value?.length > 0 && (
+                  <div className="alert alert-light py-2 px-3 small">
+                    <strong>Route Types:</strong>{' '}
+                    {(() => {
+                      const selected = form.values.job_geography.value || [];
+                      const labels = selected.map((geo) => {
+                        if (geo === JobGeography.LOCAL) return 'local routes';
+                        if (geo === JobGeography.REGIONAL) return 'regional routes';
+                        if (geo === JobGeography.OTR) return 'over-the-road routes';
+                        return geo;
+                      });
+
+                      if (labels.length === 1) {
+                        return `Candidates interested in ${labels[0]}`;
+                      } else if (labels.length === 2) {
+                        return `Candidates interested in ${labels.join(' or ')}`;
+                      } else {
+                        return `Candidates interested in ${labels.slice(0, -1).join(', ')}, or ${
+                          labels[labels.length - 1]
+                        }`;
+                      }
+                    })()}
                   </div>
-                ))}
+                )}
+
+                {/* Geography Explanation */}
+                <div className="small text-muted mt-2">
+                  <p>
+                    <strong>Local:</strong> Within 100-150 mile radius
+                  </p>
+                  <p>
+                    <strong>Regional:</strong> Multi-state region
+                  </p>
+                  <p>
+                    <strong>OTR:</strong> Long-haul, coast-to-coast routes
+                  </p>
+                </div>
               </div>
             </div>
 
