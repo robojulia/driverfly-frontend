@@ -17,6 +17,7 @@ interface HiringCriteriaBuilderProps {
   onSubmit: (e: React.FormEvent) => void;
   onReset: () => void;
   companyId: number;
+  isFirstRunExperience?: boolean;
 }
 
 const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
@@ -25,23 +26,26 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
   filteredEmploymentTypes,
   onSubmit,
   onReset,
+  isFirstRunExperience = false,
 }) => {
   return (
     <>
-      {/* Driver Persona Builder - Revolutionary Hiring Criteria */}
-      <div className={styles.hiringBuilder}>
-        <Card className={`border-0 shadow-lg mb-4 ${styles.brandGradient}`}>
-          <Card.Body className="p-5">
-            <div className="text-center mb-4">
-              <h3 className="mb-2 fw-bold text-white">Build Your Ideal Driver Profile</h3>
-              <p className="mb-4 opacity-90 text-white">
-                Craft your perfect candidate persona with our smart criteria builder. See real-time
-                feedback on your hiring pool as you adjust preferences.
-              </p>
-            </div>
-          </Card.Body>
-        </Card>
-      </div>
+      {/* Driver Persona Builder - Revolutionary Hiring Criteria - Only show during FRE */}
+      {isFirstRunExperience && (
+        <div className={styles.hiringBuilder}>
+          <Card className={`border-0 shadow-lg mb-4 ${styles.brandGradient}`}>
+            <Card.Body className="p-5">
+              <div className="text-center mb-4">
+                <h3 className="mb-2 fw-bold text-white">Build Your Ideal Driver Profile</h3>
+                <p className="mb-4 opacity-90 text-white">
+                  Craft your perfect candidate persona with our smart criteria builder. See
+                  real-time feedback on your hiring pool as you adjust preferences.
+                </p>
+              </div>
+            </Card.Body>
+          </Card>
+        </div>
+      )}
 
       {/* Interactive Criteria Builder */}
       <Card className="border-0 shadow-sm mb-4">
@@ -50,19 +54,23 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
             {/* CDL & Employment Type - Visual Selection */}
             <div className="mb-5">
               <h6 className="mb-4 d-flex align-items-center">
-                <span className={`${styles.sectionBadge} badge rounded-pill me-2`}>1</span>
+                {isFirstRunExperience && (
+                  <span className={`${styles.sectionBadge} badge rounded-pill me-2`}>1</span>
+                )}
                 Driver Qualifications
               </h6>
 
-              <div className="alert alert-info mb-4">
-                Select the CDL requirements and employment types that match your hiring needs. Click
-                on the cards below to select/deselect options. You can choose multiple options in
-                each category.
-                <div className="mt-2">
-                  <strong>CDL Note:</strong> Higher CDL classes include lower classes (Class A
-                  drivers can operate Class B/C vehicles, Class B can operate Class C).
+              {isFirstRunExperience && (
+                <div className="alert alert-info mb-4">
+                  Select the CDL requirements and employment types that match your hiring needs.
+                  Click on the cards below to select/deselect options. You can choose multiple
+                  options in each category.
+                  <div className="mt-2">
+                    <strong>CDL Note:</strong> Higher CDL classes include lower classes (Class A
+                    drivers can operate Class B/C vehicles, Class B can operate Class C).
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="d-flex flex-wrap gap-4">
                 <div style={{ minWidth: '280px', maxWidth: '320px' }}>
@@ -188,7 +196,9 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
             {/* Geographic Preferences */}
             <div className="mb-5">
               <h6 className="mb-4 d-flex align-items-center">
-                <span className={`${styles.sectionBadge} badge rounded-pill me-2`}>2</span>
+                {isFirstRunExperience && (
+                  <span className={`${styles.sectionBadge} badge rounded-pill me-2`}>2</span>
+                )}
                 Geographic Scope
               </h6>
 
@@ -270,7 +280,9 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
             {/* Smart Experience & Safety Sliders */}
             <div className="mb-5">
               <h6 className="mb-4 d-flex align-items-center">
-                <span className={`${styles.sectionBadge} badge rounded-pill me-2`}>3</span>
+                {isFirstRunExperience && (
+                  <span className={`${styles.sectionBadge} badge rounded-pill me-2`}>3</span>
+                )}
                 Experience & Safety Standards
               </h6>
 

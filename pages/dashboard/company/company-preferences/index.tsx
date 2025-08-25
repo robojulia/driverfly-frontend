@@ -281,6 +281,11 @@ export default function CompanyPreference() {
     preferences?.find((p) => p.label == CompanyPreferenceEnhancementLabel.ADD_SSN_ON_DHA)?.value
   );
 
+  // Check if this is first run experience (no hiring preferences exist)
+  const isFirstRunExperience = !preferences?.some(
+    (pref) => pref.category === CompanyPreferenceCategory.JOTFORM
+  );
+
   return (
     <>
       <PageLayout>
@@ -313,6 +318,7 @@ export default function CompanyPreference() {
             filteredEmploymentTypes={FilteredEmploymentTypes}
             onSubmit={form.handleSubmit}
             onReset={() => form.resetForm()}
+            isFirstRunExperience={isFirstRunExperience}
           />
 
           {/* Refer Back Program Component */}
