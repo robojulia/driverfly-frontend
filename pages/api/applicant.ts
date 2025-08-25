@@ -154,8 +154,9 @@ export default class ApplicantApi extends BaseApi {
 
     return data;
   }
-  async getById(id: number): Promise<ApplicantEntity> {
-    const { data } = await this.get(this.buildUrl(this.baseUrl + `/${id}`));
+  async getById(id: number, includeEligibility?: boolean): Promise<ApplicantEntity> {
+    const queryParams = includeEligibility ? { includeEligibility: 'true' } : {};
+    const { data } = await this.get(this.buildUrl(this.baseUrl + `/${id}`, queryParams));
 
     return data;
   }

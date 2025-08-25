@@ -25,53 +25,7 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
   filteredEmploymentTypes,
   onSubmit,
   onReset,
-  companyId,
 }) => {
-  const [eligibilityData, setEligibilityData] = useState<{
-    totalApplicants: number;
-    eligibleCount: number;
-    eligibilityPercentage: number;
-    summary: { healthy: boolean; message: string };
-  } | null>(null);
-  const [testingEligibility, setTestingEligibility] = useState(false);
-
-  const companyApi = new CompanyApi();
-
-  // Debounced function to test eligibility
-  const testEligibility = useCallback(
-    async (values: any) => {
-      if (!companyId) return;
-
-      setTestingEligibility(true);
-      try {
-        const draftPreferences = {
-          cdl_class: values.cdl_class,
-          employment_type: values.employment_type,
-          years_cdl_experience: values.years_cdl_experience,
-          maximum_accidents: values.maximum_accidents,
-          maximum_moving_violations: values.maximum_moving_violations,
-          job_geography: values.job_geography,
-        };
-
-        const result = await companyApi.preferences.testEligibility(companyId, draftPreferences);
-        setEligibilityData(result);
-      } catch (error) {
-        console.error('Error testing eligibility:', error);
-      } finally {
-        setTestingEligibility(false);
-      }
-    },
-    [companyId]
-  );
-
-  // Effect to test eligibility when form values change
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      testEligibility(form.values);
-    }, 500); // 500ms debounce
-
-    return () => clearTimeout(timeoutId);
-  }, [form.values, testEligibility]);
   return (
     <>
       {/* Driver Persona Builder - Revolutionary Hiring Criteria */}
@@ -84,51 +38,6 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
                 Craft your perfect candidate persona with our smart criteria builder. See real-time
                 feedback on your hiring pool as you adjust preferences.
               </p>
-
-              {/* Hiring Pool Health Indicator */}
-              <div className="d-flex justify-content-center mb-4">
-                <div className="bg-white rounded-pill px-4 py-2 text-dark d-flex align-items-center">
-                  <div className="me-3">
-                    <div className="d-flex align-items-center">
-                      <div
-                        className={`rounded-circle ${styles.healthIndicator} me-2`}
-                        style={{
-                          backgroundColor: eligibilityData?.summary.healthy
-                            ? 'var(--success)'
-                            : 'var(--warning)',
-                        }}
-                      ></div>
-                      <span className="fw-bold">
-                        Hiring Pool:{' '}
-                        {testingEligibility
-                          ? 'Calculating...'
-                          : eligibilityData?.summary.healthy
-                          ? 'Healthy'
-                          : 'Needs Attention'}
-                      </span>
-                    </div>
-                    <small className="text-muted">
-                      {testingEligibility
-                        ? 'Testing eligibility...'
-                        : eligibilityData
-                        ? `${eligibilityData.eligibleCount} of ${eligibilityData.totalApplicants} applicants qualify (${eligibilityData.eligibilityPercentage}%)`
-                        : 'Loading applicant data...'}
-                    </small>
-                  </div>
-                  <div className="ms-3 border-start ps-3">
-                    <div className={styles.hiringPoolIndicator}></div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Eligibility Message */}
-              {eligibilityData?.summary.message && !testingEligibility && (
-                <div className="mb-3">
-                  <small className="text-white opacity-75">
-                    💡 {eligibilityData.summary.message}
-                  </small>
-                </div>
-              )}
             </div>
           </Card.Body>
         </Card>
