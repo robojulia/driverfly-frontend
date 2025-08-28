@@ -33,16 +33,11 @@ export const LEGAL_DOCUMENTS = [
     component: 'VerificationOfEmployment',
     signatureField: 'SIGNATURE_VOE_AUTHORIZATION',
     dateField: null,
-    ssnRequired: true,
+    ssnRequired: false,
+    showSsn: true,
     completionCheck: (form, companyPreferences) => {
       const isSignatureComplete = !!form.values.SIGNATURE_VOE_AUTHORIZATION?.value;
-      const ssnRequired = !!companyPreferences?.find(
-        (v) => v.label === CompanyPreferenceEnhancementLabel.ADD_SSN_ON_DHA
-      )?.value;
-
-      if (ssnRequired) {
-        return isSignatureComplete && !!form.values.ssn && form.values.ssn.length === 9;
-      }
+      // SSN is now completely optional regardless of company preferences
       return isSignatureComplete;
     },
   },
@@ -58,6 +53,7 @@ export const LEGAL_DOCUMENTS = [
     signatureField: 'SIGNATURE_DISCLOSURE_AUTHORIZATION',
     dateField: 'DISCLOSURE_AND_AUTHORIZATION_DATE',
     ssnRequired: false,
+    showSsn: false,
     completionCheck: (form) =>
       !!form.values.SIGNATURE_DISCLOSURE_AUTHORIZATION?.value &&
       !!form.values.DISCLOSURE_AND_AUTHORIZATION_DATE?.value,
@@ -74,6 +70,7 @@ export const LEGAL_DOCUMENTS = [
     signatureField: 'SIGNATURE_IMPORTANT_BACKGROUND',
     dateField: 'IMPORTANT_DISCLOSURE_BACKGROUND_DATE',
     ssnRequired: false,
+    showSsn: false,
     completionCheck: (form) =>
       !!form.values.SIGNATURE_IMPORTANT_BACKGROUND?.value &&
       !!form.values.IMPORTANT_DISCLOSURE_BACKGROUND_DATE?.value,
@@ -90,6 +87,7 @@ export const LEGAL_DOCUMENTS = [
     signatureField: 'SIGNATURE_GENERAL_CONSENT',
     dateField: null,
     ssnRequired: false,
+    showSsn: false,
     completionCheck: (form) =>
       !!form.values.SIGNATURE_GENERAL_CONSENT?.value &&
       !!form.values.GENERAL_CONSENT?.value?.consentGiven,

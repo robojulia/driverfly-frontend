@@ -30,14 +30,16 @@ export const DocumentSignature = memo(function DocumentSignature({
   const [maskedValue, setMaskedValue] = useState('');
   const inputRef = useRef(null);
 
+  console.log(document, companyPreferences);
+
   // SSN handling for verification of employment - memoized
   const ssnRequired = useMemo(() => {
     return (
-      document.ssnRequired &&
+      document.showSsn === true &&
       companyPreferences?.find((v) => v.label === CompanyPreferenceEnhancementLabel.ADD_SSN_ON_DHA)
         ?.value
     );
-  }, [document.ssnRequired, companyPreferences]);
+  }, [document.showSsn, companyPreferences]);
 
   // Format SSN in XXX-XX-XXXX pattern - memoized
   const formatSSN = useCallback((value: string) => {
@@ -166,7 +168,7 @@ export const DocumentSignature = memo(function DocumentSignature({
       reqs.push({
         label: 'Social Security Number',
         met: form.values.ssn && form.values.ssn.length === 9,
-        required: true,
+        required: false, // SSN is completely optional now
       });
     }
 
@@ -256,9 +258,7 @@ export const DocumentSignature = memo(function DocumentSignature({
             {/* SSN Input (if required) */}
             {ssnRequired && (
               <div className="mb-4">
-                <label className="form-label fw-bold">
-                  Social Security Number <span className="text-danger">*</span>
-                </label>
+                <label className="form-label fw-bold">Social Security Number</label>
                 <div className="mb-2">
                   {isFocused ? (
                     <input
@@ -273,7 +273,6 @@ export const DocumentSignature = memo(function DocumentSignature({
                       }`}
                       placeholder="XXX-XX-XXXX"
                       maxLength={11}
-                      required
                     />
                   ) : (
                     <input
@@ -285,7 +284,6 @@ export const DocumentSignature = memo(function DocumentSignature({
                         form.touched.ssn && form.errors.ssn ? 'is-invalid' : ''
                       }`}
                       placeholder="XXX-XX-XXXX"
-                      required
                       readOnly
                     />
                   )}
@@ -295,7 +293,7 @@ export const DocumentSignature = memo(function DocumentSignature({
                 </div>
                 <small className="text-muted">
                   <Shield size={12} className="me-1" />
-                  Your SSN is encrypted and protected. Click to edit.
+                  Your SSN is encrypted and protected. Click to edit. This field is optional.
                 </small>
               </div>
             )}
@@ -425,9 +423,7 @@ export const DocumentSignature = memo(function DocumentSignature({
       {/* SSN Input (if required) */}
       {ssnRequired && (
         <div className="mb-4">
-          <label className="form-label fw-bold">
-            Social Security Number <span className="text-danger">*</span>
-          </label>
+          <label className="form-label fw-bold">Social Security Number</label>
           <div className="mb-2">
             {isFocused ? (
               <input
@@ -442,7 +438,6 @@ export const DocumentSignature = memo(function DocumentSignature({
                 }`}
                 placeholder="XXX-XX-XXXX"
                 maxLength={11}
-                required
               />
             ) : (
               <input
@@ -454,7 +449,6 @@ export const DocumentSignature = memo(function DocumentSignature({
                   form.touched.ssn && form.errors.ssn ? 'is-invalid' : ''
                 }`}
                 placeholder="XXX-XX-XXXX"
-                required
                 readOnly
               />
             )}
@@ -464,7 +458,7 @@ export const DocumentSignature = memo(function DocumentSignature({
           </div>
           <small className="text-muted">
             <Shield size={12} className="me-1" />
-            Your SSN is encrypted and protected. Click to edit.
+            Your SSN is encrypted and protected. Click to edit. This field is optional.
           </small>
         </div>
       )}

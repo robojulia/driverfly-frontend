@@ -172,9 +172,7 @@ export function VerificationOfEmployment({
       <Row className={styles.align__text_left}>
         <div className="col my-3">
           <Form.Group>
-            <Form.Label>
-              {t('EMPLOYEE_SSN')} <span className="text-danger">*</span>
-            </Form.Label>
+            <Form.Label>{t('EMPLOYEE_SSN')}</Form.Label>
             {isFocused ? (
               // When focused, show regular input with masked format
               <input
@@ -189,7 +187,6 @@ export function VerificationOfEmployment({
                 }`}
                 placeholder="XXX-XX-XXXX"
                 maxLength={11} // 9 digits + 2 dashes
-                required
               />
             ) : (
               // When not focused, show password field with dots
@@ -202,14 +199,13 @@ export function VerificationOfEmployment({
                   form.touched.ssn && form.errors.ssn ? 'is-invalid' : ''
                 }`}
                 placeholder="XXX-XX-XXXX"
-                required
                 readOnly
               />
             )}
             {form.touched.ssn && form.errors.ssn && (
               <Form.Control.Feedback type="invalid">{form.errors.ssn}</Form.Control.Feedback>
             )}
-            <small className="text-muted">{t('ENTER_FULL_SSN')}</small>
+            <small className="text-muted">{t('ENTER_FULL_SSN')} (Optional)</small>
           </Form.Group>
         </div>
       </Row>
