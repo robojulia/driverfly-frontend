@@ -24,11 +24,9 @@ import BaseRange from '../base-range';
 import BaseSelect from '../base-select';
 import BaseTextArea from '../base-text-area';
 import { LocationForm } from './location-form';
-import { VehicleForm } from './vehicle-form';
 
 import JobApi from '../../../pages/api/job';
 import LocationApi from '../../../pages/api/location';
-import VehicleApi from '../../../pages/api/vehicle';
 
 import { JobBenefits } from '../../../enums/jobs/job-benefits.enum';
 import { JobDeliveryType } from '../../../enums/jobs/job-delivery-type.enum';
@@ -45,10 +43,7 @@ import { DriverEndorsement } from '../../../enums/users/driver-endorsement.enum'
 import { DriverLicenseType } from '../../../enums/users/driver-license-type.enum';
 import { EducationLevel } from '../../../enums/users/education-level.enum';
 import { MvrType } from '../../../enums/users/mvr-type.enum';
-import { VehicleTransmissionType } from '../../../enums/vehicles/vehicle-transmission-type.enum';
-import { VehicleType } from '../../../enums/vehicles/vehicle-type.enum';
 import { LocationEntity } from '../../../models/company/location.entity';
-import { VehicleEntity } from '../../../models/company/vehicle.entity';
 import { JobEntity } from '../../../models/job/job.entity';
 import { buildAddress } from '../../../utils/common';
 import { focusOnErrorField } from '../../../utils/form-error';
@@ -74,7 +69,6 @@ export function JobForm(props: JobFormProps) {
 
   const [can, setCan] = useState({
     createLocation: false,
-    createVehicle: false,
   });
 
   const form = useFormik({
@@ -106,20 +100,14 @@ export function JobForm(props: JobFormProps) {
   }, [form.values, form.errors]);
 
   const [locations, setLocations] = useState<LocationEntity[]>([]);
-  const [vehicles, setVehicles] = useState<VehicleEntity[]>([]);
 
   useEffectAsync(async () => {
     {
       const locationApi = new LocationApi();
       setLocations(await locationApi.list());
     }
-    {
-      const vehicleApi = new VehicleApi();
-      setVehicles(await vehicleApi.list());
-    }
     setCan({
       createLocation: hasPermission('CanCreateLocation'),
-      createVehicle: hasPermission('CanCreateVehicle'),
     });
   }, [user]);
 
@@ -386,14 +374,6 @@ export function JobForm(props: JobFormProps) {
       geography: value as JobGeography,
       max_applicant_radius: maxRadius[value],
     });
-  };
-
-  const [createVehicle, setCreateVehicle] = useState<boolean | number>(false);
-
-  const onVehicleAdded = (vehicle: VehicleEntity) => {
-    form.setFieldValue(`vehicles.${createVehicle}.id`, vehicle.id);
-    setVehicles([...vehicles, vehicle]);
-    setCreateVehicle(false);
   };
 
   const [createLocation, setCreateLocation] = useState(false);
@@ -816,80 +796,6 @@ export function JobForm(props: JobFormProps) {
               )}
             </ViewCard>
           </Col>
-          <Col lg="12" xl="12" className="p-0 px-lg-2">
-            <ViewCard
-              title="vehicle_info"
-              actions={
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={() =>
-                    form.setFieldValue('vehicles', [
-                      ...(form.values.vehicles || []),
-                      new VehicleEntity(),
-                    ])
-                  }
-                >
-                  <PlusCircle /> {t('ADD')}
-                </Button>
-              }
-            >
-              {form.values.vehicles?.length > 0 &&
-                form.values.vehicles.map((v, i) => {
-                  v.id = Number(v?.id);
-                  return (
-                    <BaseListRowControl
-                      key={i}
-                      index={i}
-                      onRemoveClick={() =>
-                        form.setFieldValue(
-                          'vehicles',
-                          form.values.vehicles.filter((v, idx) => i != idx)
-                        )
-                      }
-                    >
-                      <BaseSelect
-                        className="mx-1"
-                        name={`vehicles.${i}.id`}
-                        placeholder={t(
-                          'SELECT_{name}',
-                          { name: 'VEHICLE' },
-                          { translateProps: true }
-                        )}
-                        options={vehicles}
-                        valueKey="id"
-                        createLabel={(veh) => {
-                          const { type, type_other, make, model, transmission_type, year } = veh;
-                          let label =
-                            type == VehicleType.OTHER ? type_other : t('VehicleType.' + type);
-
-                          if (make) label += ` / ${make}`;
-
-                          if (model) label += ` / ${model}`;
-
-                          if (transmission_type) label += ` / ${t(transmission_type)}`;
-
-                          if (year) label += ` / ${year}`;
-                          return label; //`${()} / ${veh.make} / ${veh.model} / ${t(veh.transmission_type)} / ${veh.year}`
-                        }}
-                        formik={form}
-                        append={
-                          <>
-                            <Button
-                              variant="btn create_btn"
-                              disabled={!can.createVehicle}
-                              onClick={() => setCreateVehicle(i)}
-                            >
-                              <PlusCircle /> {t('CREATE')}
-                            </Button>
-                          </>
-                        }
-                      />
-                    </BaseListRowControl>
-                  );
-                })}
-            </ViewCard>
-          </Col>
         </Row>
         <hr />
         <Row>
@@ -1075,15 +981,6 @@ export function JobForm(props: JobFormProps) {
                     cols={2}
                     labelPrefix="DriverEndorsement"
                     enumType={DriverEndorsement}
-                    formik={form}
-                  />
-                  <BaseCheckList
-                    className="col-12"
-                    label="transmission_type"
-                    name="transmission_type_experience"
-                    cols={2}
-                    labelPrefix="VehicleTransmissionType"
-                    enumType={VehicleTransmissionType}
                     formik={form}
                   />
                 </Col>
@@ -1327,13 +1224,6 @@ export function JobForm(props: JobFormProps) {
           </Col>
         </Row>
       </EntityForm>
-      <ViewModal
-        title={t('CREATE_{name}', { name: 'VEHICLE' }, { translateProps: true })}
-        show={typeof createVehicle == 'number'}
-        onCloseClick={() => setCreateVehicle(false)}
-      >
-        <VehicleForm onSaveComplete={onVehicleAdded} />
-      </ViewModal>
       <ViewModal
         title={t('CREATE_{name}', { name: 'TERMINAL' }, { translateProps: true })}
         show={createLocation}
