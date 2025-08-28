@@ -22,7 +22,7 @@ export function SourceBreakdownChart() {
         })[a.type]();
       }
     });
-    return [dha, user, company, jobApply];
+    return [dha, user, company, jobApply, autoRecruit];
   };
 
   const data = useMemo(() => {

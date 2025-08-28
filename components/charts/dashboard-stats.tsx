@@ -1,18 +1,18 @@
-import moment from "moment";
-import Image from "next/image";
-import Link from "next/link";
-import { useContext, useMemo } from "react";
+import moment from 'moment';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useContext, useMemo } from 'react';
 
-import DashboardChartContext from "../../context/dashboard-chart-context";
-import { EmployeeStatus } from "../../enums/applicants/employee-status.enum";
-import { useTranslation } from "../../hooks/use-translation";
-import { EmployeeEntity } from "../../models/employee/employee.entity";
-import newApplicantIcon from "../../public/img/new_appicants_this_week.svg";
-import totalEmployeesIcon from "../../public/img/total_employees.svg";
-import totalHiresIcon from "../../public/img/total_hires_this_month.svg";
-import { isBirthdayThisWeek } from "../../utils/date";
+import DashboardChartContext from '../../context/dashboard-chart-context';
+import { EmployeeStatus } from '../../enums/applicants/employee-status.enum';
+import { useTranslation } from '../../hooks/use-translation';
+import { EmployeeEntity } from '../../models/employee/employee.entity';
+import newApplicantIcon from '../../public/img/new_appicants_this_week.svg';
+import totalEmployeesIcon from '../../public/img/total_employees.svg';
+import totalHiresIcon from '../../public/img/total_hires_this_month.svg';
+import { isBirthdayThisWeek } from '../../utils/date';
 
-import styles from "./dashboard-stats.module.css";
+import styles from './dashboard-stats.module.css';
 
 type StatCard = {
   title: string;
@@ -42,19 +42,19 @@ export const DashboardStats = () => {
     let birthdaysThisWeek = 0;
     let birthdayEmployees: EmployeeEntity[] = [];
 
-    // Filter out duplicate applicants by email
+    // Filter out duplicate applicants by email (but include applicants without email using ID as fallback)
     const uniqueApplicants = Array.from(
       new Map(
-        applicants
-          .filter((applicant) => applicant?.email) // Ensure applicant has an email
-          .map((applicant) => [applicant.email, applicant])
+        applicants.map((applicant) => [applicant.email || `id_${applicant.id}`, applicant])
       ).values()
     );
 
     // Calculate applicant stats using unique applicants
     uniqueApplicants.forEach((a) => {
-      const isNewStatus = a?.current_application_status?.startsWith("NEW_");
-      
+      // All applicants should be counted as leads regardless of status
+      // The type field determines how they came into the system
+      const isLead = true; // Count all applicants as leads
+
       // Improved week calculation - check both week and year
       let isThisWeek = false;
       if (a?.created_at) {
@@ -64,8 +64,8 @@ export const DashboardStats = () => {
         isThisWeek = createdWeek === currentWeek && createdYear === currentYear;
       }
 
-      // Count as lead if status starts with NEW_ (regardless of hired status)
-      if (isNewStatus) {
+      // Count all applicants as leads
+      if (isLead) {
         totalLeads++;
         if (isThisWeek) {
           newLeads++;
@@ -93,16 +93,14 @@ export const DashboardStats = () => {
 
     // Calculate conversion rate: active employees / total leads
     const activeEmployees = employees.filter((v) => v?.status === EmployeeStatus.ACTIVE).length;
-    const conversionRate = totalLeads > 0
-      ? ((activeEmployees / totalLeads) * 100).toFixed(1)
-      : 0;
+    const conversionRate = totalLeads > 0 ? ((activeEmployees / totalLeads) * 100).toFixed(1) : 0;
 
     const stats: StatCard[] = [
       {
-        title: t("NEW_LEADS"),
+        title: t('NEW_LEADS'),
         value: newLeads,
         icon: newApplicantIcon,
-        link: "/dashboard/company/applicants",
+        link: '/dashboard/company/applicants',
         /*
         trend: {
           value: 0, // This should be calculated based on previous week
@@ -111,22 +109,21 @@ export const DashboardStats = () => {
         */
       },
       {
-        title: t("TOTAL_LEADS"),
+        title: t('TOTAL_LEADS'),
         value: totalLeads,
         icon: totalHiresIcon,
-        link: "/dashboard/company/applicants",
+        link: '/dashboard/company/applicants',
       },
       {
-        title: t("TOTAL_ACTIVE_EMPLOYEES"),
-        value: employees.filter((v) => v?.status === EmployeeStatus.ACTIVE)
-          .length,
+        title: t('TOTAL_ACTIVE_EMPLOYEES'),
+        value: employees.filter((v) => v?.status === EmployeeStatus.ACTIVE).length,
         icon: totalEmployeesIcon,
-        link: "/dashboard/company/compliance/employee-directory",
+        link: '/dashboard/company/compliance/employee-directory',
       },
       {
-        title: t("EMPLOYEE_BIRTHDAYS"),
+        title: t('EMPLOYEE_BIRTHDAYS'),
         value: birthdaysThisWeek,
-        link: "/dashboard/company/compliance/employee-directory",
+        link: '/dashboard/company/compliance/employee-directory',
         /*
         trend: birthdayEmployees.length
           ? {
@@ -137,14 +134,14 @@ export const DashboardStats = () => {
         */
       },
       {
-        title: t("ACTIVE_JOB_POSTS"),
+        title: t('ACTIVE_JOB_POSTS'),
         value: jobs.length,
-        link: "/dashboard/company/jobs",
+        link: '/dashboard/company/jobs',
       },
       {
-        title: t("CONVERSION_RATE"),
+        title: t('CONVERSION_RATE'),
         value: `${conversionRate}%`,
-        link: "/dashboard/company/applicants",
+        link: '/dashboard/company/applicants',
         /*
         trend: {
           value: Number(conversionRate),
@@ -168,12 +165,7 @@ export const DashboardStats = () => {
               <div className={styles.stat_card_content}>
                 {stat.icon && (
                   <div className={styles.stat_icon}>
-                    <Image
-                      src={stat.icon}
-                      alt={stat.title}
-                      width={32}
-                      height={32}
-                    />
+                    <Image src={stat.icon} alt={stat.title} width={32} height={32} />
                   </div>
                 )}
                 <div className={styles.stat_info}>
@@ -183,12 +175,10 @@ export const DashboardStats = () => {
                     {stat.trend && (
                       <span
                         className={`${styles.stat_trend} ${
-                          stat.trend.isPositive
-                            ? styles.positive
-                            : styles.negative
+                          stat.trend.isPositive ? styles.positive : styles.negative
                         }`}
                       >
-                        {stat.trend.isPositive ? "↑" : "↓"} {stat.trend.value}%
+                        {stat.trend.isPositive ? '↑' : '↓'} {stat.trend.value}%
                       </span>
                     )}
                   </div>
