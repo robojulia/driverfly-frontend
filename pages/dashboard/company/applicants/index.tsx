@@ -78,73 +78,24 @@ export default function Applicants() {
     setLoading(true);
     const api = new ApplicantApi();
 
-    // Handle special case for "No CDL" filter
-    if (filters?.license_type === DriverLicenseType.NO_CDL) {
-      // Make two API calls: one for NONE and one for null values
-      const [noneData, nullData] = await Promise.all([
-        api.list({
-          jobId: jobId as any as number,
-          without: ['applicant_dac', 'applicant_extras'],
-          ...filters,
-          includeEligibility: includeEligibility,
-          license_type: DriverLicenseType.NO_CDL,
-          is_paginated: true,
-          page: filtersChanged ? 1 : pagingMeta?.currentPage,
-          limit: pagingMeta?.itemsPerPage,
-        }),
-        api.list({
-          jobId: jobId as any as number,
-          without: ['applicant_dac', 'applicant_extras'],
-          ...filters,
-          includeEligibility: includeEligibility,
-          license_type: null,
-          is_paginated: true,
-          page: filtersChanged ? 1 : pagingMeta?.currentPage,
-          limit: pagingMeta?.itemsPerPage,
-        }),
-      ]);
+    // Single API call - backend will handle "No CDL" logic
+    const data = await api.list({
+      jobId: jobId as any as number,
+      without: ['applicant_dac', 'applicant_extras'],
+      ...filters,
+      includeEligibility: includeEligibility,
+      is_paginated: true,
+      page: filtersChanged ? 1 : pagingMeta?.currentPage,
+      limit: pagingMeta?.itemsPerPage,
+    });
 
-      // Combine the results and remove duplicates
-      const noneItems = (noneData as Pagination<ApplicantEntity>)?.items || [];
-      const nullItems = (nullData as Pagination<ApplicantEntity>)?.items || [];
-
-      // Create a map to track unique applicants by ID
-      const uniqueApplicants = new Map();
-
-      [...noneItems, ...nullItems].forEach((applicant) => {
-        if (!uniqueApplicants.has(applicant.id)) {
-          uniqueApplicants.set(applicant.id, applicant);
-        }
-      });
-
-      const combinedItems = Array.from(uniqueApplicants.values());
-
-      setApplicants(combinedItems);
-      setFiltersChanged(false);
-      setPagingMeta({
-        ...pagingMeta,
-        currentPage: filtersChanged ? 1 : pagingMeta?.currentPage,
-        totalItems: combinedItems.length, // Use combined count for now
-      });
-    } else {
-      // Normal case - single API call
-      const data = await api.list({
-        jobId: jobId as any as number,
-        without: ['applicant_dac', 'applicant_extras'],
-        ...filters,
-        includeEligibility: includeEligibility,
-        is_paginated: true,
-        page: filtersChanged ? 1 : pagingMeta?.currentPage,
-        limit: pagingMeta?.itemsPerPage,
-      });
-      setApplicants((data as Pagination<ApplicantEntity>)?.items);
-      setFiltersChanged(false);
-      setPagingMeta({
-        ...pagingMeta,
-        currentPage: filtersChanged ? 1 : pagingMeta?.currentPage,
-        totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems,
-      });
-    }
+    setApplicants((data as Pagination<ApplicantEntity>)?.items);
+    setFiltersChanged(false);
+    setPagingMeta({
+      ...pagingMeta,
+      currentPage: filtersChanged ? 1 : pagingMeta?.currentPage,
+      totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems,
+    });
 
     setTimeout(() => setLoading(false), 1000);
   };
