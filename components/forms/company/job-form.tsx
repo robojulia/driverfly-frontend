@@ -70,6 +70,7 @@ export function JobForm(props: JobFormProps) {
 
   const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const [can, setCan] = useState({
     createLocation: false,
@@ -404,6 +405,13 @@ export function JobForm(props: JobFormProps) {
   };
 
   const handleConfirmClick = async () => {
+    // Prevent multiple submissions
+    if (isSubmitting) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
       const jobApi = new JobApi();
       let job = null;
@@ -466,6 +474,8 @@ export function JobForm(props: JobFormProps) {
         ),
       });
       if (onSaveError) onSaveError(e);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -1334,14 +1344,26 @@ export function JobForm(props: JobFormProps) {
       <ViewModal
         title="CONFIRMATION"
         show={showConfirmationModal}
-        onCloseClick={() => setShowConfirmationModal(false)}
+        onCloseClick={isSubmitting ? undefined : () => setShowConfirmationModal(false)}
         footer={
           <button
             type="button"
             className="btn btn-primary w-100 p-lg-3 p-5 mx-2"
             onClick={handleConfirmClick}
+            disabled={isSubmitting}
           >
-            {t('CONFIRM')}
+            {isSubmitting ? (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                {t('PROCESSING')}...
+              </>
+            ) : (
+              t('CONFIRM')
+            )}
           </button>
         }
       >
