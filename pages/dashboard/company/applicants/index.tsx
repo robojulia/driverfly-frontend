@@ -504,7 +504,14 @@ Applicants.getLayout = function getLayout(page) {
 };
 
 function getApplicantName(applicant: ApplicantEntity) {
-  return `${applicant?.first_name} ${applicant?.last_name}`;
+  const firstName = applicant?.first_name || '';
+  const lastName = applicant?.last_name || '';
+
+  if (!firstName && !lastName) {
+    return 'No Name';
+  }
+
+  return `${firstName} ${lastName}`.trim();
 }
 
 function getApplicantStatus(applicantJob: ApplicantJobEntity, t: TranslateInterface) {

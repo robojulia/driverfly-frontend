@@ -1,82 +1,77 @@
-import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
-import { useFormik } from "formik";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { Button, Col, Row, Table } from "react-bootstrap";
-import {
-  ChevronUp,
-  DashCircle,
-  PlusCircle,
-  XCircle,
-} from "react-bootstrap-icons";
-import { toast } from "react-toastify";
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import { useFormik } from 'formik';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { Button, Col, Row, Table } from 'react-bootstrap';
+import { ChevronUp, DashCircle, PlusCircle, XCircle } from 'react-bootstrap-icons';
+import { toast } from 'react-toastify';
 
-import { useAuth } from "../../../hooks/use-auth";
-import { useTranslation } from "../../../hooks/use-translation";
-import { globalAjaxExceptionHandler } from "../../../utils/ajax";
-import { useEffectAsync } from "../../../utils/react";
-import { formFailed, formSuccess } from "../../../utils/toast";
-import EntityForm from "../../layouts/page/entity-form";
-import ViewCard from "../../view-details/view-card";
-import BaseCheck from "../base-check";
-import BaseCheckList from "../base-check-list";
-import BaseInput from "../base-input";
-import BaseInputPhone from "../base-input-phone";
-import BaseSelect from "../base-select";
-import BaseTextArea from "../base-text-area";
-import FileInput from "../file-input";
-import StateSelect from "../state-select";
-import { BaseFormProps } from "./base-form-props";
+import { useAuth } from '../../../hooks/use-auth';
+import { useTranslation } from '../../../hooks/use-translation';
+import { globalAjaxExceptionHandler } from '../../../utils/ajax';
+import { useEffectAsync } from '../../../utils/react';
+import { formFailed, formSuccess } from '../../../utils/toast';
+import EntityForm from '../../layouts/page/entity-form';
+import ViewCard from '../../view-details/view-card';
+import BaseCheck from '../base-check';
+import BaseCheckList from '../base-check-list';
+import BaseInput from '../base-input';
+import BaseInputPhone from '../base-input-phone';
+import BaseSelect from '../base-select';
+import BaseTextArea from '../base-text-area';
+import FileInput from '../file-input';
+import StateSelect from '../state-select';
+import { BaseFormProps } from './base-form-props';
 
-import ApplicantApi from "../../../pages/api/applicant";
-import JobApi from "../../../pages/api/job";
+import ApplicantApi from '../../../pages/api/applicant';
+import JobApi from '../../../pages/api/job';
 
-import { ApplicantEmployerEntity } from "../../../models/applicant/applicant-employer.entity";
-import { ApplicantEquipmentEntity } from "../../../models/applicant/applicant-equipment.entity";
-import { ApplicantExperienceEntity } from "../../../models/applicant/applicant-experience.entity";
-import { ApplicantJobEntity } from "../../../models/applicant/applicant-job.entity";
-import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
-import { DocumentEntity } from "../../../models/documents/document.entity";
-import { JobEntity } from "../../../models/job/job.entity";
-import { SearchCompanyJobsDto } from "../../../models/job/search-company-jobs.dto";
+import { ApplicantEmployerEntity } from '../../../models/applicant/applicant-employer.entity';
+import { ApplicantEquipmentEntity } from '../../../models/applicant/applicant-equipment.entity';
+import { ApplicantExperienceEntity } from '../../../models/applicant/applicant-experience.entity';
+import { ApplicantJobEntity } from '../../../models/applicant/applicant-job.entity';
+import { ApplicantEntity } from '../../../models/applicant/applicant.entity';
+import { DocumentEntity } from '../../../models/documents/document.entity';
+import { JobEntity } from '../../../models/job/job.entity';
+import { SearchCompanyJobsDto } from '../../../models/job/search-company-jobs.dto';
 
-import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
-import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
-import { LicenseRestrictions } from "../../../enums/applicants/applicant-license-restrictions-type.enum";
-import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
-import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
-import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
-import { JobGeography } from "../../../enums/jobs/job-geography.enum";
-import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
-import { Status } from "../../../enums/status.enum";
-import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
-import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
-import { EducationLevel } from "../../../enums/users/education-level.enum";
-import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
-import { ApplicantExtrasEntity } from "../../../models/applicant";
-import { ApplicantAccidentEntity } from "../../../models/applicant/applicant-accidentr.entity";
-import { ApplicantMovingViolationEntity } from "../../../models/applicant/applicant-moving-violation.entity";
-import { HireApplicantDto } from "../../../models/applicant/hire-applicant.dto";
-import { CdlExtras } from "../../../models/jot-form/long-form/cdl-object/index.dto";
-import { ReferralSourceEntity } from "../../../models/referral-source/referral-source.entity";
-import { UserEntity } from "../../../models/user/user.entity";
-import EmployeeApi from "../../../pages/api/employee";
-import { ReferralSourceApi } from "../../../pages/api/referral-source";
-import UserApi from "../../../pages/api/user";
-import { buildReferral } from "../../../utils/common";
-import { focusOnErrorField } from "../../../utils/form-error";
-import ViewSuggestedJobs from "../../applicants/view-suggested-jobs";
-import ShowFormattedDate from "../../jobs/show-formatted-date";
-import ViewModal from "../../view-details/view-modal";
-import { ReferralSourceForm } from "../admin/referral-source-form";
-import { JobForm } from "./job-form";
-import { ApplicantVehicleEntity } from "../../../models/applicant/applicant-vehicle-entity";
-import { BaseListRowControl } from "../lists/base-list-row-control";
-import { VehicleEntity } from "../../../models/company/vehicle.entity";
-import VehicleApi from "../../../pages/api/vehicle";
-import { VehicleType } from "../../../enums/vehicles/vehicle-type.enum";
-import { VehicleForm } from "./vehicle-form";
-import { ExpiryStatus } from "../../../enums/jobs/expiry-status.enum";
+import { ApplicantDocumentType } from '../../../enums/applicants/applicant-document-type.enum';
+import { ApplicantExtras } from '../../../enums/applicants/applicant-extras.enum';
+import { LicenseRestrictions } from '../../../enums/applicants/applicant-license-restrictions-type.enum';
+import { ApplicantStatus } from '../../../enums/applicants/applicant-status.enum';
+import { ApplicantType } from '../../../enums/applicants/applicant-type.enum';
+import { JobEquipmentType } from '../../../enums/jobs/job-equipment-type.enum';
+import { JobGeography } from '../../../enums/jobs/job-geography.enum';
+import { JobSchedule } from '../../../enums/jobs/job-schedule.enum';
+import { Status } from '../../../enums/status.enum';
+import { DriverEndorsement } from '../../../enums/users/driver-endorsement.enum';
+import { DriverLicenseType } from '../../../enums/users/driver-license-type.enum';
+import { EducationLevel } from '../../../enums/users/education-level.enum';
+import { VehicleTransmissionType } from '../../../enums/vehicles/vehicle-transmission-type.enum';
+import { ApplicantExtrasEntity } from '../../../models/applicant';
+import { ApplicantAccidentEntity } from '../../../models/applicant/applicant-accidentr.entity';
+import { ApplicantMovingViolationEntity } from '../../../models/applicant/applicant-moving-violation.entity';
+import { HireApplicantDto } from '../../../models/applicant/hire-applicant.dto';
+import { CdlExtras } from '../../../models/jot-form/long-form/cdl-object/index.dto';
+import { ReferralSourceEntity } from '../../../models/referral-source/referral-source.entity';
+import { UserEntity } from '../../../models/user/user.entity';
+import EmployeeApi from '../../../pages/api/employee';
+import { ReferralSourceApi } from '../../../pages/api/referral-source';
+import UserApi from '../../../pages/api/user';
+import { buildReferral } from '../../../utils/common';
+import { focusOnErrorField } from '../../../utils/form-error';
+import ViewSuggestedJobs from '../../applicants/view-suggested-jobs';
+import ShowFormattedDate from '../../jobs/show-formatted-date';
+import ViewModal from '../../view-details/view-modal';
+import { ReferralSourceForm } from '../admin/referral-source-form';
+import { JobForm } from './job-form';
+import { ApplicantVehicleEntity } from '../../../models/applicant/applicant-vehicle-entity';
+import { BaseListRowControl } from '../lists/base-list-row-control';
+import { VehicleEntity } from '../../../models/company/vehicle.entity';
+import VehicleApi from '../../../pages/api/vehicle';
+import { VehicleType } from '../../../enums/vehicles/vehicle-type.enum';
+import { VehicleForm } from './vehicle-form';
+import { ExpiryStatus } from '../../../enums/jobs/expiry-status.enum';
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> {}
 
@@ -91,11 +86,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
   const referralSourceApi = new ReferralSourceApi();
 
   const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([]);
-  const [referralSources, setReferralSources] = useState<
-    ReferralSourceEntity[]
-  >([]);
-  const [curentCompanyCheck, setCurentCompanyCheck] =
-    useState<ApplicantEmployerEntity>();
+  const [referralSources, setReferralSources] = useState<ReferralSourceEntity[]>([]);
+  const [curentCompanyCheck, setCurentCompanyCheck] = useState<ApplicantEmployerEntity>();
   const [jobs, setJobs] = useState<JobEntity[]>([]);
   const [jobHired, setJobHired] = useState<ApplicantJobEntity>(null);
   const [createJob, setCreateJob] = useState<boolean>(false);
@@ -109,25 +101,23 @@ export function ApplicantForm(props: ApplicantFormProps) {
   const [can, setCan] = useState({ createVehicle: false });
 
   const form = useFormik({
-    initialValues: new ApplicantEntity(),
+    initialValues: (() => {
+      const initialEntity = new ApplicantEntity();
+      return initialEntity;
+    })(),
     validationSchema: ApplicantEntity.yupSchemaForApplicantForm(),
     onSubmit: async (values) => {
-      console.log("submitted ", values);
-
       // Debug validation
       try {
         await ApplicantEntity.yupSchemaForApplicantForm().validate(values);
-        console.log("Form validation passed");
       } catch (validationError) {
-        console.error("Form validation failed:", validationError);
+        console.error('Form validation failed:', validationError);
         return;
       }
 
-      values.extras = values.extras?.filter(
-        (v) => v.value != undefined || v.value != null
-      );
+      values.extras = values.extras?.filter((v) => v.value != undefined || v.value != null);
       const jobs = values.jobs || [];
-      if ("jobs" in values) delete values.jobs;
+      if ('jobs' in values) delete values.jobs;
       if (values.accident_count === undefined) {
         values.accident_count = 0;
       }
@@ -140,29 +130,21 @@ export function ApplicantForm(props: ApplicantFormProps) {
         values.all_violations_count = 0;
       }
 
-      console.log("Values after processing:", values); // Added for debugging
-
       try {
         if (entity?.id) {
-          console.log("Updating existing applicant with ID:", entity.id); // Added for debugging
           values = await applicantApi.update(entity.id, {
             ...values,
             documents: [
               ...values.documents,
               ...entity.documents?.filter(
                 (v) =>
-                  !Object.values(ApplicantDocumentType).includes(
-                    v.type as ApplicantDocumentType
-                  )
+                  !Object.values(ApplicantDocumentType).includes(v.type as ApplicantDocumentType)
               ),
             ]?.filter((v) => !!v),
           } as ApplicantEntity);
         } else {
-          console.log("Creating new applicant"); // Added for debugging
           values = await applicantApi.create(values);
         }
-
-        console.log("Applicant saved successfully:", values); // Added for debugging
 
         for (let i = 0; i < entity?.jobs?.length; i++) {
           let job = entity?.jobs[i];
@@ -182,20 +164,18 @@ export function ApplicantForm(props: ApplicantFormProps) {
           }
         }
 
-        formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
+        formSuccess(t, entity?.id ? 'update' : 'create', 'APPLICANT');
         if (onSaveComplete) onSaveComplete(values);
       } catch (e) {
-        console.error("Unable to save applicant info", e);
-        console.error("Error details:", { // Added for debugging
+        console.error('Error details:', {
+          // Added for debugging
           message: e.message,
           response: e.response?.data,
           status: e.response?.status,
-          statusText: e.response?.statusText
+          statusText: e.response?.statusText,
         });
-        if (
-          !globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
-        )
-          formFailed(t, entity?.id ? "update" : "create", "APPLICANT");
+        if (!globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast }))
+          formFailed(t, entity?.id ? 'update' : 'create', 'APPLICANT');
 
         if (onSaveError) onSaveError(e);
       }
@@ -232,15 +212,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
     setCompanyVehicles(vehicles);
     setCan({
-      createVehicle: hasPermission("CanCreateVehicle"),
+      createVehicle: hasPermission('CanCreateVehicle'),
     });
   }, [user]);
 
   useEffectAsync(async () => {
     // console.log("entity", entity);
-    setCanCreateReferral(
-      !!!entity?.referralSource?.id && !!user?.company_admin
-    );
+    setCanCreateReferral(!!!entity?.referralSource?.id && !!user?.company_admin);
     let extras: ApplicantExtrasEntity[] = entity?.extras || [];
 
     extras = extras.filter(Boolean);
@@ -265,18 +243,23 @@ export function ApplicantForm(props: ApplicantFormProps) {
       form.setValues({
         ...entity,
         documents: entity?.documents?.filter((v) =>
-          Object.values(ApplicantDocumentType).includes(
-            v.type as ApplicantDocumentType
-          )
+          Object.values(ApplicantDocumentType).includes(v.type as ApplicantDocumentType)
         ),
         extras,
       });
     } else {
-      // Only set form values for new applicant if the form is empty or hasn't been initialized
+      // Only set form values for new applicant if the form is truly empty
       // This prevents overwriting user input when creating a new applicant
       const currentFormValues = form.values;
-      const isFormEmpty = !currentFormValues.first_name && !currentFormValues.last_name && !currentFormValues.email && !currentFormValues.phone;
-      
+      const isFormEmpty =
+        !currentFormValues.first_name &&
+        !currentFormValues.last_name &&
+        !currentFormValues.email &&
+        !currentFormValues.phone &&
+        !currentFormValues.city &&
+        !currentFormValues.state &&
+        !currentFormValues.address_1;
+
       if (isFormEmpty) {
         await form.setValues({
           ...new ApplicantEntity(),
@@ -284,18 +267,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
           extras,
           // extras: extras.map(({ id, type, value }) => ({ ...new ApplicantExtrasEntity(type, id), value })),
         });
+      } else {
+        console.log('Form already has data, not overwriting');
       }
     }
   }, [entity]);
 
   useEffect(() => {
-    setJobHired(
-      form.values?.jobs?.find((j) => j?.status?.startsWith("COMPLETED")) ?? null
-    );
+    setJobHired(form.values?.jobs?.find((j) => j?.status?.startsWith('COMPLETED')) ?? null);
   }, [form.values?.jobs]);
 
-  const routeToEmployees = () =>
-    router.push("/dashboard/company/compliance/employee-directory");
+  const routeToEmployees = () => router.push('/dashboard/company/compliance/employee-directory');
 
   const hireApplicantForm = useFormik({
     initialValues: new HireApplicantDto(),
@@ -306,7 +288,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
         const employeeApi = new EmployeeApi();
         await employeeApi.hire(values);
         resetForm();
-        toast.success(t("STATUS_UPDATED_SUCCESSFULLY"));
+        toast.success(t('STATUS_UPDATED_SUCCESSFULLY'));
         // formSuccess(t, "STATUS_UPDATED_SUCCESSFULLY", "STATUS");
         setTimeout(() => {
           routeToEmployees();
@@ -345,9 +327,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
   };
 
   useEffect(() => {
-    const currentCompanyExists = form.values?.employers?.find(
-      (e) => e.is_current
-    );
+    const currentCompanyExists = form.values?.employers?.find((e) => e.is_current);
     setCurentCompanyCheck(currentCompanyExists);
     form?.values?.employers?.forEach((employer) => {
       if (employer?.is_current) {
@@ -358,17 +338,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
   const today = new Date();
   const todayFormatted = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD for date input max attribute
-  const OldThan18Year = new Date(
-    today.getFullYear() - 18,
-    today.getMonth(),
-    today.getDate()
-  )
-    .toLocaleString("en-US", { timeZone: "America/New_York" })
-    .split("T")[0];
+  const OldThan18Year = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
+    .toLocaleString('en-US', { timeZone: 'America/New_York' })
+    .split('T')[0];
 
   useEffect(() => {
-    console.log("form.values", form.values);
-    console.log("form.errors", form.errors);
+    console.log('form.values', form.values);
+    console.log('form.errors', form.errors);
   }, [form.values, form.errors]);
 
   useEffect(() => focusOnErrorField(form), [form.submitCount]);
@@ -382,12 +358,11 @@ export function ApplicantForm(props: ApplicantFormProps) {
       className={className}
       actions={[
         {
-          label: "HIRE",
-          className: "btn theme-primary-btn",
+          label: 'HIRE',
+          className: 'btn theme-primary-btn',
           hide: !Boolean(form.values?.id) || Boolean(entity?.is_hired),
           disabled: form.isSubmitting,
-          onClick: () =>
-            hireApplicantForm.setValues({ applicantId: entity?.id }),
+          onClick: () => hireApplicantForm.setValues({ applicantId: entity?.id }),
         },
       ]}
     >
@@ -399,9 +374,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                 <BaseSelect
                   className="col-12 my-2"
                   readOnly={
-                    Boolean(isSuperAdmin) ||
-                    Boolean(isCompanyAdmin) ||
-                    Boolean(entity?.is_hired)
+                    Boolean(isSuperAdmin) || Boolean(isCompanyAdmin) || Boolean(entity?.is_hired)
                   }
                   label="ASSIGNED_RECRUITER"
                   name="assignedUserId"
@@ -529,19 +502,14 @@ export function ApplicantForm(props: ApplicantFormProps) {
                     options={
                       !!referralSources?.length
                         ? referralSources.filter(
-                            (v) =>
-                              v.status == Status.ACTIVE ||
-                              v.id == entity?.referralSource?.id
+                            (v) => v.status == Status.ACTIVE || v.id == entity?.referralSource?.id
                           )
                         : referralSources
                     }
                     append={
                       !entity?.is_hired && (
-                        <Button
-                          variant="btn create_btn"
-                          onClick={() => setCreateReferral(true)}
-                        >
-                          <PlusCircle /> {t("CREATE")}
+                        <Button variant="btn create_btn" onClick={() => setCreateReferral(true)}>
+                          <PlusCircle /> {t('CREATE')}
                         </Button>
                       )
                     }
@@ -570,10 +538,10 @@ export function ApplicantForm(props: ApplicantFormProps) {
                         current_date.getMonth() + 6,
                         current_date.getDate()
                       )
-                        .toLocaleString("en-US", {
-                          timeZone: "America/New_York",
+                        .toLocaleString('en-US', {
+                          timeZone: 'America/New_York',
                         })
-                        .split("T")[0]
+                        .split('T')[0]
                     }
                     type="date"
                     placeholder="expiration_date"
@@ -618,9 +586,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                                       ? {
                                           ...item,
                                           value: [
-                                            ...item?.value?.filter(
-                                              (val, index) => index !== i
-                                            ),
+                                            ...item?.value?.filter((val, index) => index !== i),
                                           ],
                                         }
                                       : item
@@ -699,17 +665,14 @@ export function ApplicantForm(props: ApplicantFormProps) {
                               item.type == ApplicantExtras.CDL_NUMBER
                                 ? {
                                     ...item,
-                                    value: [
-                                      ...(item.value || []),
-                                      new CdlExtras(),
-                                    ],
+                                    value: [...(item.value || []), new CdlExtras()],
                                   }
                                 : item
                             ),
                           });
                         }}
                       >
-                        <PlusCircle /> {t("ADD_ANOTHER_LICENSE")}
+                        <PlusCircle /> {t('ADD_ANOTHER_LICENSE')}
                       </Button>
                     </Row>
                   )}
@@ -809,7 +772,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                 )}
                 {form.values?.current_application_status && (
                   <div className="col-12 mt-2">
-                    <label>{t("REMARKS")}</label>
+                    <label>{t('REMARKS')}</label>
                     <BaseTextArea
                       readOnly={Boolean(entity?.is_hired)}
                       name="remarks"
@@ -840,9 +803,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                   formik={form}
                   cols="2"
                 />
-                {form.values?.endorsements?.includes(
-                  DriverEndorsement.OTHER
-                ) && (
+                {form.values?.endorsements?.includes(DriverEndorsement.OTHER) && (
                   <BaseInput
                     readOnly={Boolean(entity?.is_hired)}
                     className="col-12"
@@ -873,9 +834,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                   formik={form}
                   cols="2"
                 />
-                {form.values?.license_restrictions?.includes(
-                  LicenseRestrictions.OTHER
-                ) && (
+                {form.values?.license_restrictions?.includes(LicenseRestrictions.OTHER) && (
                   <BaseInput
                     readOnly={Boolean(entity?.is_hired)}
                     className="col-12"
@@ -944,7 +903,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                   })
                 }
               >
-                <PlusCircle /> {t("ADD")}
+                <PlusCircle /> {t('ADD')}
               </Button>
             }
           >
@@ -954,7 +913,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                   <Row key={i}>
                     <div className="col-md-6 mt-2">
                       <Col className="p-0  ">
-                        <strong>{t("TYPE")}</strong>
+                        <strong>{t('TYPE')}</strong>
                         <span className="p-0 text-danger">*</span>
                       </Col>
                       <BaseSelect
@@ -966,27 +925,21 @@ export function ApplicantForm(props: ApplicantFormProps) {
                         enumType={JobEquipmentType}
                         formik={form}
                         onChange={({ target: { value } }) => {
-                          form.setFieldValue(
-                            `equipment_experience[${i}].type`,
-                            value
-                          );
+                          form.setFieldValue(`equipment_experience[${i}].type`, value);
                           if (value == JobEquipmentType.OTHER) {
                             form.setFieldValue(
                               `equipment_experience[${i}].type_other`,
                               t(`JobEquipmentType.OTHER`)
                             );
                           } else {
-                            form.setFieldValue(
-                              `equipment_experience[${i}].type_other`,
-                              ``
-                            );
+                            form.setFieldValue(`equipment_experience[${i}].type_other`, ``);
                           }
                         }}
                       />
                     </div>
                     <div className="col-md-5 mt-2">
                       <Col className="p-0">
-                        <strong>{t("YEARS")}</strong>
+                        <strong>{t('YEARS')}</strong>
                       </Col>
                       <BaseInput
                         readOnly={Boolean(props?.entity?.is_hired)}
@@ -1004,10 +957,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
                         onClick={() =>
                           form.setValues({
                             ...form.values,
-                            equipment_experience:
-                              form.values?.equipment_experience?.filter(
-                                (v, idx) => i != idx
-                              ),
+                            equipment_experience: form.values?.equipment_experience?.filter(
+                              (v, idx) => i != idx
+                            ),
                           })
                         }
                       >
@@ -1044,14 +996,11 @@ export function ApplicantForm(props: ApplicantFormProps) {
                 onClick={() =>
                   form.setValues({
                     ...form.values,
-                    vehicles: [
-                      ...(form.values?.vehicles || []),
-                      new ApplicantVehicleEntity(),
-                    ],
+                    vehicles: [...(form.values?.vehicles || []), new ApplicantVehicleEntity()],
                   })
                 }
               >
-                <PlusCircle /> {t("ADD")}
+                <PlusCircle /> {t('ADD')}
               </Button>
             }
           >
@@ -1062,7 +1011,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                   index={i}
                   onRemoveClick={() =>
                     form.setFieldValue(
-                      "vehicles",
+                      'vehicles',
                       form.values.vehicles.filter((v, idx) => i != idx)
                     )
                   }
@@ -1070,33 +1019,18 @@ export function ApplicantForm(props: ApplicantFormProps) {
                   <BaseSelect
                     className="mx-1"
                     name={`vehicles.${i}.vehicle.id`}
-                    placeholder={t(
-                      "SELECT_{name}",
-                      { name: "VEHICLE" },
-                      { translateProps: true }
-                    )}
+                    placeholder={t('SELECT_{name}', { name: 'VEHICLE' }, { translateProps: true })}
                     options={companyVehicles}
                     valueKey="id"
                     createLabel={(veh) => {
-                      const {
-                        type,
-                        type_other,
-                        make,
-                        model,
-                        transmission_type,
-                        year,
-                      } = veh;
-                      let label =
-                        type == VehicleType.OTHER
-                          ? type_other
-                          : t("VehicleType." + type);
+                      const { type, type_other, make, model, transmission_type, year } = veh;
+                      let label = type == VehicleType.OTHER ? type_other : t('VehicleType.' + type);
 
                       if (make) label += ` / ${make}`;
 
                       if (model) label += ` / ${model}`;
 
-                      if (transmission_type)
-                        label += ` / ${t(transmission_type)}`;
+                      if (transmission_type) label += ` / ${t(transmission_type)}`;
 
                       if (year) label += ` / ${year}`;
                       return label; //`${()} / ${veh.make} / ${veh.model} / ${t(veh.transmission_type)} / ${veh.year}`
@@ -1109,7 +1043,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                           disabled={!can.createVehicle}
                           onClick={() => setCreateVehicle(i)}
                         >
-                          <PlusCircle /> {t("CREATE")}
+                          <PlusCircle /> {t('CREATE')}
                         </Button>
                       </>
                     }
@@ -1117,7 +1051,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                 </BaseListRowControl>
               );
             })}
-            {!form.values?.vehicles?.length && <>{t("NONE")}</>}
+            {!form.values?.vehicles?.length && <>{t('NONE')}</>}
           </ViewCard>
         </Col>
       </Row>
@@ -1132,18 +1066,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
                 onClick={() =>
                   form.setValues({
                     ...form.values,
-                    employers: [
-                      new ApplicantEmployerEntity(),
-                      ...(form.values?.employers || []),
-                    ],
+                    employers: [new ApplicantEmployerEntity(), ...(form.values?.employers || [])],
                   })
                 }
               >
-                <PlusCircle /> {t("ADD")}
+                <PlusCircle /> {t('ADD')}
               </Button>
             }
           >
-            {!form.values?.employers?.length && <>{t("NONE")}</>}
+            {!form.values?.employers?.length && <>{t('NONE')}</>}
             {form.values?.employers?.length > 0 && (
               <>
                 {form.values?.employers?.map((e, i) => {
@@ -1166,17 +1097,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
                           onClick={(v) =>
                             form.setValues({
                               ...form.values,
-                              employers: form.values?.employers?.filter(
-                                (v, idx) => idx != i
-                              ),
+                              employers: form.values?.employers?.filter((v, idx) => idx != i),
                             })
                           }
                         >
-                          <XCircle /> {t("REMOVE")}
+                          <XCircle /> {t('REMOVE')}
                         </Button>
-                        <span style={{ marginLeft: "10px" }}>
-                          {e.name || t("NEW_EMPLOYER")}
-                        </span>
+                        <span style={{ marginLeft: '10px' }}>{e.name || t('NEW_EMPLOYER')}</span>
                       </AccordionSummary>
                       <AccordionDetails>
                         <Row>
@@ -1204,11 +1131,10 @@ export function ApplicantForm(props: ApplicantFormProps) {
                             name={`employers[${i}].start_at`}
                             label="DATES_EMPLOYED"
                             type="date"
-                            max={new Date().toISOString().split("T")[0]}
+                            max={new Date().toISOString().split('T')[0]}
                             formik={form}
                           />
-                          {(curentCompanyCheck?.id !=
-                            form.values?.employers[i]?.id ||
+                          {(curentCompanyCheck?.id != form.values?.employers[i]?.id ||
                             !form.values?.employers[i]?.is_current) && (
                             <BaseInput
                               className="col-6 mt-2"
@@ -1289,9 +1215,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                             ) == i) && (
                             <BaseCheck
                               className="col-12 mt-2"
-                              disabled={currentCompanyCheckBox(
-                                form.values?.employers[i]
-                              )}
+                              disabled={currentCompanyCheckBox(form.values?.employers[i])}
                               name={`employers[${i}].is_current`}
                               label="CURRENT_COMPANY"
                               formik={form}
@@ -1391,7 +1315,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                           new Date().getDate()
                         )
                           .toISOString()
-                          .split("T")[0]
+                          .split('T')[0]
                       }
                       formik={form}
                     />
@@ -1409,7 +1333,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                           new Date().getDate()
                         )
                           .toISOString()
-                          .split("T")[0]
+                          .split('T')[0]
                       }
                       formik={form}
                     />
@@ -1450,14 +1374,11 @@ export function ApplicantForm(props: ApplicantFormProps) {
                           onClick={() =>
                             form.setValues({
                               ...form.values,
-                              dui_years: [
-                                ...(form.values?.dui_years || []),
-                                "",
-                              ],
+                              dui_years: [...(form.values?.dui_years || []), ''],
                             })
                           }
                         >
-                          <PlusCircle /> {t("ADD")}
+                          <PlusCircle /> {t('ADD')}
                         </Button>
                       }
                     >
@@ -1465,7 +1386,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                         <Table striped>
                           <thead>
                             <tr>
-                              <th colSpan={2}>{t("YEAR")}</th>
+                              <th colSpan={2}>{t('YEAR')}</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -1482,13 +1403,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
                                     max="9999"
                                     // max={new Date().getFullYear()}
                                     onChange={({ target: { value } }) => {
-                                      if (!/^\d{0,4}$/.test(value))
-                                        value = value.slice(0, 4);
+                                      if (!/^\d{0,4}$/.test(value)) value = value.slice(0, 4);
 
-                                      form.setFieldValue(
-                                        `dui_years[${i}]`,
-                                        value
-                                      );
+                                      form.setFieldValue(`dui_years[${i}]`, value);
                                     }}
                                     formik={form}
                                   />
@@ -1499,10 +1416,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
                                     onClick={() =>
                                       form.setValues({
                                         ...form.values,
-                                        dui_years:
-                                          form.values?.dui_years?.filter(
-                                            (v, idx) => i != idx
-                                          ),
+                                        dui_years: form.values?.dui_years?.filter(
+                                          (v, idx) => i != idx
+                                        ),
                                       })
                                     }
                                   >
@@ -1525,7 +1441,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                   onChange={({ target: { value } }) => {
                     setHasCriminalHistory(!!value);
                     if (!value) {
-                      form.setFieldValue("criminal_history", null);
+                      form.setFieldValue('criminal_history', null);
                     }
                   }}
                 />
@@ -1572,7 +1488,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                               });
                             }}
                           >
-                            <PlusCircle /> {t("ADD")}
+                            <PlusCircle /> {t('ADD')}
                           </Button>
                         )
                       }
@@ -1584,92 +1500,87 @@ export function ApplicantForm(props: ApplicantFormProps) {
                         name="accident_details"
                         formik={form}
                       />
-                      {form.values?.accident_history?.map(
-                        (accident_details_ex, i) => (
-                          <Row
-                            className="pl-0 single-past-employer-items my-1"
-                            key={i}
-                          >
-                            <div className="col-md-12 mt-2">
-                              <Row className={""}>
-                                <BaseInput
-                                  className="col-md-6 my-3"
-                                  name={`accident_history[${i}].date_of_accident`}
-                                  label="DATE"
-                                  type="date"
-                                  formik={form}
-                                  required
-                                  max={new Date().toISOString().split("T")[0]}
-                                />
-                                <BaseInput
-                                  className="col-md-6 my-3"
-                                  name={`accident_history[${i}].nature_of_accident`}
-                                  label="LABEL_ACCIDENT_NATURE"
-                                  formik={form}
-                                  required
-                                />
-                                <BaseInput
-                                  className="col-md-6 my-3"
-                                  name={`accident_history[${i}].location_of_accident`}
-                                  label="LABEL_ACCIDENT_LOCATION"
-                                  formik={form}
-                                  required
-                                />
-                                <BaseInput
-                                  className="col-md-6 my-3"
-                                  name={`accident_history[${i}].number_of_fatalaties`}
-                                  label="LABEL_ACCIDENT_FATALITIES"
-                                  formik={form}
-                                  required
-                                />
-                                <BaseInput
-                                  className="col-md-6 mt-2"
-                                  name={`accident_history[${i}].number_of_injured`}
-                                  label="LABEL_ACCIDENT_INJURED"
-                                  formik={form}
-                                  required
-                                />
-                                <BaseCheck
-                                  className="col-md-6 mt-5"
-                                  name={`accident_history[${i}].dot_recordable`}
-                                  label="LABEL_ACCIDENT_DOT"
-                                  formik={form}
-                                />
+                      {form.values?.accident_history?.map((accident_details_ex, i) => (
+                        <Row className="pl-0 single-past-employer-items my-1" key={i}>
+                          <div className="col-md-12 mt-2">
+                            <Row className={''}>
+                              <BaseInput
+                                className="col-md-6 my-3"
+                                name={`accident_history[${i}].date_of_accident`}
+                                label="DATE"
+                                type="date"
+                                formik={form}
+                                required
+                                max={new Date().toISOString().split('T')[0]}
+                              />
+                              <BaseInput
+                                className="col-md-6 my-3"
+                                name={`accident_history[${i}].nature_of_accident`}
+                                label="LABEL_ACCIDENT_NATURE"
+                                formik={form}
+                                required
+                              />
+                              <BaseInput
+                                className="col-md-6 my-3"
+                                name={`accident_history[${i}].location_of_accident`}
+                                label="LABEL_ACCIDENT_LOCATION"
+                                formik={form}
+                                required
+                              />
+                              <BaseInput
+                                className="col-md-6 my-3"
+                                name={`accident_history[${i}].number_of_fatalaties`}
+                                label="LABEL_ACCIDENT_FATALITIES"
+                                formik={form}
+                                required
+                              />
+                              <BaseInput
+                                className="col-md-6 mt-2"
+                                name={`accident_history[${i}].number_of_injured`}
+                                label="LABEL_ACCIDENT_INJURED"
+                                formik={form}
+                                required
+                              />
+                              <BaseCheck
+                                className="col-md-6 mt-5"
+                                name={`accident_history[${i}].dot_recordable`}
+                                label="LABEL_ACCIDENT_DOT"
+                                formik={form}
+                              />
 
-                                <BaseCheck
-                                  className="col-md-12 mt-4"
-                                  name={`accident_history[${i}].at_fault`}
-                                  label="LABEL_ACCIDENT_FAULT"
-                                  formik={form}
-                                />
-                                <Button
-                                  className="rounded-lg"
-                                  variant="outline-danger close_btn w-25 mx-auto my-2"
-                                  onClick={() =>
-                                    form.setFieldValue("accident_history", [
-                                      ...form.values?.accident_history?.filter(
-                                        (ex, indx) => indx !== i
-                                      ),
-                                    ])
-                                  }
-                                >
-                                  <DashCircle />
-                                </Button>
-                                <div
-                                  className="Row"
-                                  style={{
-                                    height: "1px",
-                                    borderBottom: "solid 1px #8d8c8c",
-                                    marginTop: "15px",
-                                    width: "80%",
-                                    marginLeft: "10%",
-                                  }}
-                                ></div>
-                              </Row>
-                            </div>
-                          </Row>
-                        )
-                      )}
+                              <BaseCheck
+                                className="col-md-12 mt-4"
+                                name={`accident_history[${i}].at_fault`}
+                                label="LABEL_ACCIDENT_FAULT"
+                                formik={form}
+                              />
+                              <Button
+                                className="rounded-lg"
+                                variant="outline-danger close_btn w-25 mx-auto my-2"
+                                onClick={() =>
+                                  form.setFieldValue('accident_history', [
+                                    ...form.values?.accident_history?.filter(
+                                      (ex, indx) => indx !== i
+                                    ),
+                                  ])
+                                }
+                              >
+                                <DashCircle />
+                              </Button>
+                              <div
+                                className="Row"
+                                style={{
+                                  height: '1px',
+                                  borderBottom: 'solid 1px #8d8c8c',
+                                  marginTop: '15px',
+                                  width: '80%',
+                                  marginLeft: '10%',
+                                }}
+                              ></div>
+                            </Row>
+                          </div>
+                        </Row>
+                      ))}
                     </ViewCard>
                   </div>
                 )}
@@ -1694,8 +1605,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                         !entity?.is_hired &&
                         form?.values?.moving_violations_count > 0 &&
                         form?.values?.moving_violations_count >
-                          (form.values.moving_violation_history || [])
-                            ?.length && (
+                          (form.values.moving_violation_history || [])?.length && (
                           <Button
                             className="w-100 py-2"
                             size="sm"
@@ -1703,14 +1613,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
                               form.setValues({
                                 ...form.values,
                                 moving_violation_history: [
-                                  ...(form.values?.moving_violation_history ||
-                                    []),
+                                  ...(form.values?.moving_violation_history || []),
                                   { ...new ApplicantMovingViolationEntity() },
                                 ],
                               });
                             }}
                           >
-                            <PlusCircle /> {t("ADD")}
+                            <PlusCircle /> {t('ADD')}
                           </Button>
                         )
                       }
@@ -1722,76 +1631,68 @@ export function ApplicantForm(props: ApplicantFormProps) {
                         name="moving_violations_details"
                         formik={form}
                       />
-                      {form.values?.moving_violation_history?.map(
-                        (entity, i) => (
-                          <Row
-                            key={i}
-                            className="single-past-employer-items my-3 "
-                          >
-                            <div className="col-md-12 mt-2">
-                              <Row className={""}>
-                                <BaseInput
-                                  className="col-md-6 mt-3"
-                                  name={`moving_violation_history[${i}].date_of_violation`}
-                                  label="VIOLATION_DATE"
-                                  type="date"
-                                  formik={form}
-                                  max={new Date().toISOString().split("T")[0]}
-                                  required
-                                />
-                                <BaseInput
-                                  className="col-md-6 mt-3"
-                                  name={`moving_violation_history[${i}].location`}
-                                  label="location"
-                                  formik={form}
-                                  required
-                                />
+                      {form.values?.moving_violation_history?.map((entity, i) => (
+                        <Row key={i} className="single-past-employer-items my-3 ">
+                          <div className="col-md-12 mt-2">
+                            <Row className={''}>
+                              <BaseInput
+                                className="col-md-6 mt-3"
+                                name={`moving_violation_history[${i}].date_of_violation`}
+                                label="VIOLATION_DATE"
+                                type="date"
+                                formik={form}
+                                max={new Date().toISOString().split('T')[0]}
+                                required
+                              />
+                              <BaseInput
+                                className="col-md-6 mt-3"
+                                name={`moving_violation_history[${i}].location`}
+                                label="location"
+                                formik={form}
+                                required
+                              />
 
-                                <BaseInput
-                                  className="col-md-6 mt-3"
-                                  name={`moving_violation_history[${i}].charge`}
-                                  label="CHARGE"
-                                  formik={form}
-                                  required
-                                />
-                                <BaseInput
-                                  className="col-md-6 mt-3"
-                                  name={`moving_violation_history[${i}].penalty`}
-                                  label="PENALTY"
-                                  formik={form}
-                                  required
-                                />
-                                <Button
-                                  className="rounded-lg"
-                                  variant="outline-danger close_btn w-25 mx-auto my-2"
-                                  onClick={() =>
-                                    form.setFieldValue(
-                                      "moving_violation_history",
-                                      [
-                                        ...form.values?.moving_violation_history?.filter(
-                                          (ex, indx) => indx !== i
-                                        ),
-                                      ]
-                                    )
-                                  }
-                                >
-                                  <DashCircle />
-                                </Button>
-                                <div
-                                  className="Row"
-                                  style={{
-                                    height: "1px",
-                                    borderBottom: "solid 1px #8d8c8c",
-                                    marginTop: "15px",
-                                    width: "80%",
-                                    marginLeft: "10%",
-                                  }}
-                                ></div>
-                              </Row>
-                            </div>
-                          </Row>
-                        )
-                      )}
+                              <BaseInput
+                                className="col-md-6 mt-3"
+                                name={`moving_violation_history[${i}].charge`}
+                                label="CHARGE"
+                                formik={form}
+                                required
+                              />
+                              <BaseInput
+                                className="col-md-6 mt-3"
+                                name={`moving_violation_history[${i}].penalty`}
+                                label="PENALTY"
+                                formik={form}
+                                required
+                              />
+                              <Button
+                                className="rounded-lg"
+                                variant="outline-danger close_btn w-25 mx-auto my-2"
+                                onClick={() =>
+                                  form.setFieldValue('moving_violation_history', [
+                                    ...form.values?.moving_violation_history?.filter(
+                                      (ex, indx) => indx !== i
+                                    ),
+                                  ])
+                                }
+                              >
+                                <DashCircle />
+                              </Button>
+                              <div
+                                className="Row"
+                                style={{
+                                  height: '1px',
+                                  borderBottom: 'solid 1px #8d8c8c',
+                                  marginTop: '15px',
+                                  width: '80%',
+                                  marginLeft: '10%',
+                                }}
+                              ></div>
+                            </Row>
+                          </div>
+                        </Row>
+                      ))}
                     </ViewCard>
                   </div>
                 )}
@@ -1904,25 +1805,22 @@ export function ApplicantForm(props: ApplicantFormProps) {
                 onClick={() =>
                   form.setValues({
                     ...form.values,
-                    documents: [
-                      ...(form.values?.documents || []),
-                      new DocumentEntity(),
-                    ],
+                    documents: [...(form.values?.documents || []), new DocumentEntity()],
                   })
                 }
               >
-                <PlusCircle /> {t("ADD")}
+                <PlusCircle /> {t('ADD')}
               </Button>
             }
           >
-            {!form.values?.documents?.length && <>{t("NONE")}</>}
+            {!form.values?.documents?.length && <>{t('NONE')}</>}
             {form.values?.documents?.length > 0 && (
               <Table striped>
                 <thead>
                   <tr>
-                    <th>{t("DOCUMENT_NAME")}</th>
-                    <th>{t("DOCUMENT")}</th>
-                    <th className="text-center">{t("upload_date")}</th>
+                    <th>{t('DOCUMENT_NAME')}</th>
+                    <th>{t('DOCUMENT')}</th>
+                    <th className="text-center">{t('upload_date')}</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -1953,13 +1851,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
                       </td>
                       <td className="text-center">
                         {form?.values?.documents[i]?.created_at ? (
-                          <ShowFormattedDate
-                            date={form?.values?.documents[i]?.created_at}
-                          />
+                          <ShowFormattedDate date={form?.values?.documents[i]?.created_at} />
                         ) : (
-                          <span className="text-danger font-italic">
-                            {t(`NOT_AVAILABLE`)}
-                          </span>
+                          <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>
                         )}
                       </td>
                       <td>
@@ -1968,9 +1862,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                           onClick={() =>
                             form.setValues({
                               ...form.values,
-                              documents: form.values?.documents?.filter(
-                                (v, idx) => i != idx
-                              ),
+                              documents: form.values?.documents?.filter((v, idx) => i != idx),
                             })
                           }
                         >
@@ -1996,24 +1888,21 @@ export function ApplicantForm(props: ApplicantFormProps) {
                 onClick={() =>
                   form.setValues({
                     ...form.values,
-                    jobs: [
-                      ...(form.values?.jobs || []),
-                      new ApplicantJobEntity(),
-                    ],
+                    jobs: [...(form.values?.jobs || []), new ApplicantJobEntity()],
                   })
                 }
               >
-                <PlusCircle /> {t("ADD")}
+                <PlusCircle /> {t('ADD')}
               </Button>
             }
           >
-            {!form.values?.jobs?.length && <>{t("NONE")}</>}
+            {!form.values?.jobs?.length && <>{t('NONE')}</>}
             {form.values?.jobs?.length > 0 && (
               <Table striped>
                 <thead>
                   <tr>
-                    <th>{t("JOB")}*</th>
-                    <th>{t("APPLICATION_STATUS")}*</th>
+                    <th>{t('JOB')}*</th>
+                    <th>{t('APPLICATION_STATUS')}*</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -2063,9 +1952,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                             onClick={() =>
                               form.setValues({
                                 ...form.values,
-                                jobs: form.values?.jobs?.filter(
-                                  (v, idx) => i != idx
-                                ),
+                                jobs: form.values?.jobs?.filter((v, idx) => i != idx),
                               })
                             }
                           >
@@ -2083,11 +1970,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
       </Row>
 
       <ViewModal
-        title={t(
-          "CREATE_{name}",
-          { name: "REFERRAL_SOURCE" },
-          { translateProps: true }
-        )}
+        title={t('CREATE_{name}', { name: 'REFERRAL_SOURCE' }, { translateProps: true })}
         show={createReferral}
         onCloseClick={() => setCreateReferral(false)}
       >
@@ -2095,7 +1978,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
       </ViewModal>
 
       <ViewModal
-        title={t("HIRE")}
+        title={t('HIRE')}
         show={Boolean(hireApplicantForm.values?.applicantId)}
         onCloseClick={() => hireApplicantForm.resetForm()}
         size="lg"
@@ -2112,11 +1995,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                 name={`jobId`}
                 readOnly={Boolean(entity?.is_hired)}
                 required
-                placeholder={t(
-                  "SELECT_{name}",
-                  { name: "JOB" },
-                  { translateProps: true }
-                )}
+                placeholder={t('SELECT_{name}', { name: 'JOB' }, { translateProps: true })}
                 options={jobs}
                 labelKey="title"
                 label="JOB"
@@ -2129,14 +2008,14 @@ export function ApplicantForm(props: ApplicantFormProps) {
                 onClick={() => setCreateJob(true)}
                 className="my-2 btn btn-link"
               >
-                {t("CREATE_{name}", { name: "JOB" }, { translateProps: true })}
+                {t('CREATE_{name}', { name: 'JOB' }, { translateProps: true })}
               </button>
             </Col>
           </Row>
         </EntityForm>
       </ViewModal>
       <ViewModal
-        title={t("CREATE_{name}", { name: "JOB" }, { translateProps: true })}
+        title={t('CREATE_{name}', { name: 'JOB' }, { translateProps: true })}
         show={createJob}
         onCloseClick={() => setCreateJob(false)}
       >
@@ -2144,12 +2023,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
       </ViewModal>
 
       <ViewModal
-        title={t(
-          "CREATE_{name}",
-          { name: "VEHICLE" },
-          { translateProps: true }
-        )}
-        show={typeof createVehicle == "number"}
+        title={t('CREATE_{name}', { name: 'VEHICLE' }, { translateProps: true })}
+        show={typeof createVehicle == 'number'}
         onCloseClick={() => setCreateVehicle(false)}
         size="xl"
       >
