@@ -21,32 +21,53 @@ import styles from '../../styles/generic-table.module.css';
 
 interface CampaignsTableProps {
   className?: string;
+  defaultJobFilter?: string;
+  onDataChange?: (campaigns: CampaignEntity[]) => void;
 }
 
-export const CampaignsTable: React.FC<CampaignsTableProps> = ({ className = '' }) => {
+export const CampaignsTable: React.FC<CampaignsTableProps> = ({
+  className = '',
+  defaultJobFilter,
+  onDataChange,
+}) => {
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
     sortBy: 'createdAt',
     sortOrder: 'DESC' as 'ASC' | 'DESC',
     status: '',
+    ...(defaultJobFilter && { jobId: defaultJobFilter }),
   });
 
   const { campaigns, loading, error, total, loadCampaigns, cancelCampaign } = useCampaigns();
 
   useEffect(() => {
     if (loadCampaigns) {
-      loadCampaigns({
+      const queryParams = {
         page: currentPage,
         limit: 50,
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder,
         ...(filters.status && { status: filters.status }),
-      }).catch((err) => {
+        ...(filters.jobId && { jobId: parseInt(filters.jobId, 10) }),
+      };
+
+      console.log('CampaignsTable loading campaigns with params:', queryParams);
+      console.log('Raw filters:', filters);
+
+      loadCampaigns(queryParams).catch((err) => {
         console.error('Failed to load campaigns:', err);
       });
     }
   }, [currentPage, filters, loadCampaigns]);
+
+  // Notify parent component when campaigns data changes
+  useEffect(() => {
+    console.log('CampaignsTable - campaigns data changed:', campaigns);
+    if (onDataChange && campaigns) {
+      onDataChange(campaigns);
+    }
+  }, [campaigns, onDataChange]);
 
   const handleFilterChange = (key: string, value: any) => {
     setFilters((prev) => ({ ...prev, [key]: value }));

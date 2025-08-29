@@ -21,9 +21,15 @@ export const useCampaigns = () => {
       setLoading(true);
       setError(null);
 
+      console.log('useCampaigns - Making API call with query:', query);
       const response: CampaignListResponse = await campaignsApi.findAll(query);
+      console.log('useCampaigns - API response:', response);
+
       setCampaigns(response.campaigns || []);
       setTotal(response.total || 0);
+
+      console.log('useCampaigns - Set campaigns to:', response.campaigns || []);
+      console.log('useCampaigns - Set total to:', response.total || 0);
 
       return response;
     } catch (err) {

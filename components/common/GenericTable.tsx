@@ -43,6 +43,8 @@ export function GenericTable<T = any>({
   loadMoreText = 'Load More',
   className = '',
 }: GenericTableProps<T>) {
+  console.log('GenericTable - data:', data, 'loading:', loading, 'data.length:', data.length);
+
   if (loading && data.length === 0) {
     return (
       <div className={`${styles.tableContainer} ${className}`}>

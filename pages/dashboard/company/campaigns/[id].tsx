@@ -31,6 +31,7 @@ import {
   ChatDotsFill,
   PencilSquare,
   CheckLg,
+  BoxArrowUpRight,
 } from 'react-bootstrap-icons';
 
 import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
@@ -477,6 +478,20 @@ const CampaignDetailPage = () => {
                     </div>
                   </div>
                   <div className="d-flex gap-2">
+                    {/* View Job Button - if this is a job reachout campaign */}
+                    {campaign.type === CampaignType.JOB_REACHOUT && campaign.config?.jobId && (
+                      <Button
+                        color="outline-primary"
+                        size="sm"
+                        onClick={() =>
+                          router.push(`/dashboard/company/jobs/${campaign.config.jobId}`)
+                        }
+                        className="me-2"
+                      >
+                        <BoxArrowUpRight size={14} className="me-1" />
+                        View Job
+                      </Button>
+                    )}
                     {(campaign.status || CampaignStatus.DRAFT) === CampaignStatus.ACTIVE && (
                       <>
                         <Button color="info" size="sm" onClick={loadCampaign}>

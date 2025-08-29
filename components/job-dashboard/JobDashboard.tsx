@@ -18,6 +18,7 @@ import {
 import { toast } from 'react-toastify';
 import { DeleteButton } from '../buttons/delete-button';
 import { ReactivateJobButton } from '../jobs/reactivate-job';
+import { JobAICampaigns } from './JobAICampaigns';
 import { EligibilityOverview } from './EligibilityOverview';
 import { JobDetailsOverview } from './JobDetailsOverview';
 import { CampaignCta } from './CampaignCta';
@@ -38,7 +39,7 @@ interface JobDashboardProps {
   onJobDelete?: () => void;
 }
 
-type TabType = 'overview' | 'details' | 'analytics';
+type TabType = 'overview' | 'details' | 'ai-campaigns' | 'analytics';
 
 export const JobDashboard: React.FC<JobDashboardProps> = ({
   job: initialJob,
@@ -264,6 +265,16 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
       badge: eligibilityStats?.totalApplicants || 0,
       icon: InfoCircleFill,
     },
+    ...(campaignsEnabled
+      ? [
+          {
+            id: 'ai-campaigns' as TabType,
+            label: 'AI Campaigns',
+            icon: TelephoneFill,
+            special: true, // Mark as special for styling
+          },
+        ]
+      : []),
     {
       id: 'details' as TabType,
       label: 'Job Details',
@@ -353,7 +364,9 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              className={`${styles.tab} ${activeTab === tab.id ? styles.tabActive : ''}`}
+              className={`${styles.tab} ${activeTab === tab.id ? styles.tabActive : ''} ${
+                tab.id === 'ai-campaigns' ? styles.tabSpecial : ''
+              }`}
               onClick={() => handleTabChange(tab.id)}
             >
               <tab.icon className="me-2" />
@@ -433,6 +446,15 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
         )}
 
         {activeTab === 'details' && <JobDetailsOverview job={job} />}
+
+        {activeTab === 'ai-campaigns' && campaignsEnabled && (
+          <JobAICampaigns
+            job={job}
+            campaigns={campaigns}
+            eligibilityStats={eligibilityStats}
+            onCampaignCreated={loadJobCampaigns}
+          />
+        )}
 
         {activeTab === 'analytics' && campaignsEnabled && <JobAnalyticsDashboard job={job} />}
       </div>

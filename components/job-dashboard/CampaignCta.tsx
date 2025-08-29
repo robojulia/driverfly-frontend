@@ -12,17 +12,13 @@ import {
   InfoCircleFill,
 } from 'react-bootstrap-icons';
 import { ExistingJobCampaigns } from '../campaigns';
+import { CampaignCreationModal } from '../campaigns/CampaignCreationModal';
 import { JobEntity } from '../../models/job/job.entity';
 import { CampaignEntity } from '../../models/campaigns/campaign.entity';
 import { CampaignStatus } from '../../enums/campaigns/campaign-status.enum';
 import { CampaignCommunicationType } from '../../enums/campaigns/campaign-communication-type.enum';
 import { useTranslation } from '../../hooks/use-translation';
-import { useFeatureFlag } from '../../context/feature-flag-context';
-import { globalAjaxExceptionHandler } from '../../utils/ajax';
-import CampaignsApi, {
-  CreateJobReachoutCampaignDto,
-  CampaignReachPreviewResponse,
-} from '../../pages/api/campaigns';
+import { useCampaignCreation } from '../../hooks/campaigns/use-campaign-creation';
 
 interface CampaignCtaProps {
   job: JobEntity;
@@ -39,129 +35,29 @@ export function CampaignCta({
   eligibilityStats,
   onCampaignCreated,
 }: CampaignCtaProps) {
-  const router = useRouter();
   const { t } = useTranslation();
-  const callCampaignsEnabled = useFeatureFlag('CallCampaignsEnabled');
 
-  const [campaignModalOpen, setCampaignModalOpen] = useState(false);
-  const [creatingCampaign, setCreatingCampaign] = useState(false);
-  const [selectedCommunicationType, setSelectedCommunicationType] =
-    useState<CampaignCommunicationType>(
-      callCampaignsEnabled ? CampaignCommunicationType.VOICE : CampaignCommunicationType.SMS
-    );
-  const [reachPreview, setReachPreview] = useState<CampaignReachPreviewResponse | null>(null);
-  const [loadingReachPreview, setLoadingReachPreview] = useState(false);
-
-  // Check if there are any existing campaigns
-  const draftCampaigns = campaigns.filter((c) => c.status === CampaignStatus.DRAFT);
-  const completedCampaigns = campaigns.filter(
-    (c) => c.status === CampaignStatus.COMPLETED || c.status === CampaignStatus.CANCELLED
-  );
-  const hasExistingCampaigns = campaigns.length > 0;
-  const hasDraftCampaign = draftCampaigns.length > 0;
-
-  const fetchReachPreview = async (communicationType: CampaignCommunicationType) => {
-    try {
-      setLoadingReachPreview(true);
-      const campaignsApi = new CampaignsApi();
-      const preview = await campaignsApi.getCampaignReachPreview({
-        jobId: job.id,
-        communicationType,
-        minScore: 50, // Match the minScore used in campaign creation
-      });
-      setReachPreview(preview);
-    } catch (error) {
-      console.error('Failed to fetch reach preview:', error);
-      // Fallback to old stats if available
-      setReachPreview(null);
-    } finally {
-      setLoadingReachPreview(false);
-    }
-  };
-
-  // Fetch reach preview when modal opens or communication type changes
-  useEffect(() => {
-    if (campaignModalOpen) {
-      fetchReachPreview(selectedCommunicationType);
-    }
-  }, [campaignModalOpen, selectedCommunicationType, job.id]);
-
-  // Update default communication type when feature flag changes
-  useEffect(() => {
-    if (!callCampaignsEnabled) {
-      setSelectedCommunicationType(CampaignCommunicationType.SMS);
-    }
-  }, [callCampaignsEnabled]);
-
-  const handleCommunicationTypeChange = (type: CampaignCommunicationType) => {
-    setSelectedCommunicationType(type);
-    if (campaignModalOpen) {
-      fetchReachPreview(type);
-    }
-  };
-
-  const handleCreateCampaign = async () => {
-    // Prevent creating duplicate draft campaigns
-    if (hasDraftCampaign) {
-      toast.warning(
-        'You already have a draft campaign for this job. Please manage the existing draft campaign.'
-      );
-      setCampaignModalOpen(false);
-      return;
-    }
-
-    try {
-      setCreatingCampaign(true);
-      const campaignsApi = new CampaignsApi();
-
-      const campaignDto: CreateJobReachoutCampaignDto = {
-        jobId: job.id,
-        name: `${
-          selectedCommunicationType === CampaignCommunicationType.SMS ? 'SMS' : 'Voice'
-        } Campaign - ${job.title}`,
-        description: `${
-          selectedCommunicationType === CampaignCommunicationType.SMS ? 'Text messaging' : 'Calling'
-        } qualified candidates for ${job.title} position`,
-        minScore: 50, // Minimum eligibility score
-        communicationType: selectedCommunicationType,
-        filters: {
-          appliedOnly: false, // Exclude those who already applied to this job
-          excludeDirectApplicants: true, // Only get candidates who applied to company but not this specific job
-        },
-      };
-
-      const campaign = await campaignsApi.createJobReachoutCampaign(campaignDto);
-
-      toast.success('Campaign created successfully! Redirecting to campaign management...');
-
-      // Navigate to the campaign page
-      setTimeout(() => {
-        router.push(`/dashboard/company/campaigns/${campaign.id}`);
-      }, 1500);
-
-      // Call the callback if provided
-      if (onCampaignCreated) {
-        onCampaignCreated();
-      }
-    } catch (error) {
-      // Handle specific ConflictException for duplicate draft campaigns
-      if (error.response?.status === 409) {
-        toast.warning(
-          'You already have a draft campaign for this job. Please manage the existing draft campaign instead.',
-          { autoClose: 8000 }
-        );
-      } else {
-        globalAjaxExceptionHandler(error, {
-          toast: toast,
-          t: t,
-          defaultMessage: 'Failed to create campaign',
-        });
-      }
-    } finally {
-      setCreatingCampaign(false);
-      setCampaignModalOpen(false);
-    }
-  };
+  // Use the shared campaign creation logic
+  const {
+    campaignModalOpen,
+    openCampaignModal,
+    closeCampaignModal,
+    creatingCampaign,
+    handleCreateCampaign,
+    selectedCommunicationType,
+    handleCommunicationTypeChange,
+    callCampaignsEnabled,
+    reachPreview,
+    loadingReachPreview,
+    hasExistingCampaigns,
+    completedCampaigns,
+    canCreateCampaign,
+  } = useCampaignCreation({
+    job,
+    campaigns,
+    eligibilityStats,
+    onCampaignCreated,
+  });
 
   if (campaignsLoading || !eligibilityStats) {
     return null;
@@ -173,7 +69,7 @@ export function CampaignCta({
         <ExistingJobCampaigns
           campaigns={campaigns}
           jobTitle={job.title}
-          onManageDraft={() => setCampaignModalOpen(true)}
+          onManageDraft={openCampaignModal}
         />
       ) : (
         <Card className="border-0 shadow-sm position-sticky" style={{ top: '20px' }}>
@@ -241,7 +137,7 @@ export function CampaignCta({
               variant="primary"
               size="lg"
               className="w-100 py-3"
-              onClick={() => setCampaignModalOpen(true)}
+              onClick={openCampaignModal}
               disabled={!eligibilityStats?.eligibleApplicants}
             >
               {selectedCommunicationType === CampaignCommunicationType.SMS ? (
@@ -277,242 +173,20 @@ export function CampaignCta({
       )}
 
       {/* Campaign Creation Modal */}
-      <Modal show={campaignModalOpen} onHide={() => setCampaignModalOpen(false)} size="lg" centered>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {selectedCommunicationType === CampaignCommunicationType.SMS ? (
-              <ChatDotsFill className="me-2" />
-            ) : (
-              <TelephoneFill className="me-2" />
-            )}
-            {completedCampaigns.length > 0
-              ? `Create New ${
-                  selectedCommunicationType === CampaignCommunicationType.SMS ? 'SMS' : 'Calling'
-                } Campaign`
-              : `Create ${
-                  selectedCommunicationType === CampaignCommunicationType.SMS ? 'SMS' : 'Calling'
-                } Campaign`}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {/* Communication Type Selection */}
-          <Card className="border-light mb-4">
-            <Card.Header className="bg-light">
-              <h6 className="mb-0">Choose Communication Method</h6>
-            </Card.Header>
-            <Card.Body>
-              <Row>
-                <Col md={6}>
-                  <Card
-                    className={`h-100 ${
-                      selectedCommunicationType === CampaignCommunicationType.VOICE
-                        ? 'border-primary'
-                        : 'border-light'
-                    } ${!callCampaignsEnabled ? 'opacity-50' : ''}`}
-                    style={{
-                      cursor: callCampaignsEnabled ? 'pointer' : 'not-allowed',
-                    }}
-                    onClick={() => {
-                      if (callCampaignsEnabled) {
-                        handleCommunicationTypeChange(CampaignCommunicationType.VOICE);
-                      }
-                    }}
-                  >
-                    <Card.Body className="text-center p-3">
-                      <TelephoneFill
-                        size={32}
-                        className={`mb-2 ${callCampaignsEnabled ? 'text-primary' : 'text-muted'}`}
-                      />
-                      <h6 className={callCampaignsEnabled ? '' : 'text-muted'}>
-                        Voice Calls
-                        {!callCampaignsEnabled && (
-                          <Badge bg="secondary" className="ms-2">
-                            Coming Soon
-                          </Badge>
-                        )}
-                      </h6>
-                      <small className="text-muted">
-                        {callCampaignsEnabled
-                          ? 'Personal phone conversations with candidates'
-                          : 'Call campaigns are coming soon!'}
-                      </small>
-                    </Card.Body>
-                  </Card>
-                </Col>
-                <Col md={6}>
-                  <Card
-                    className={`h-100 ${
-                      selectedCommunicationType === CampaignCommunicationType.SMS
-                        ? 'border-success'
-                        : 'border-light'
-                    } ${!callCampaignsEnabled ? 'border-success bg-light' : ''}`}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => handleCommunicationTypeChange(CampaignCommunicationType.SMS)}
-                  >
-                    <Card.Body className="text-center p-3">
-                      <ChatDotsFill size={32} className="text-success mb-2" />
-                      <h6>
-                        SMS Messages
-                        {!callCampaignsEnabled && (
-                          <Badge bg="success" className="ms-2">
-                            Recommended
-                          </Badge>
-                        )}
-                      </h6>
-                      <small className="text-muted">Text messages to candidates&apos; phones</small>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
-
-          {!callCampaignsEnabled && (
-            <div className="alert alert-info mb-4">
-              <InfoCircleFill className="me-2" />
-              <strong>SMS campaigns are currently available.</strong> Voice call campaigns are
-              coming soon! SMS campaigns provide effective reach and higher engagement rates with
-              qualified candidates.
-            </div>
-          )}
-
-          {completedCampaigns.length > 0 && (
-            <div className="alert alert-info mb-4">
-              <strong>Note:</strong> You&apos;ve previously run {completedCampaigns.length} campaign
-              {completedCampaigns.length !== 1 ? 's' : ''} for this job. This will create a fresh
-              campaign with updated targets.
-            </div>
-          )}
-
-          <div className="text-center mb-4">
-            <h5>
-              Ready to reach{' '}
-              {loadingReachPreview ? (
-                <span className="spinner-border spinner-border-sm mx-2" />
-              ) : reachPreview ? (
-                reachPreview.estimatedContacts
-              ) : (
-                eligibilityStats?.eligibleApplicants || 0
-              )}{' '}
-              qualified candidates?
-            </h5>
-            <p className="text-muted">
-              We&apos;ll create a targeted{' '}
-              {selectedCommunicationType === CampaignCommunicationType.SMS ? 'SMS' : 'calling'}{' '}
-              campaign to reach out to drivers who meet your job requirements but haven&apos;t
-              applied yet.
-            </p>
-
-            {/* Show SMS filtering info if applicable */}
-            {selectedCommunicationType === CampaignCommunicationType.SMS &&
-              reachPreview &&
-              reachPreview.filteringDetails.filteredForSms > 0 && (
-                <div className="alert alert-info mt-3">
-                  <InfoCircleFill className="me-2" />
-                  <strong>SMS Compliance:</strong> {reachPreview.filteringDetails.filteredForSms}{' '}
-                  candidates were filtered out because they don&apos;t authorize SMS communication.
-                  <div className="mt-2">
-                    {reachPreview.filteringDetails.reasons.noPhoneNumber > 0 && (
-                      <small className="d-block">
-                        • {reachPreview.filteringDetails.reasons.noPhoneNumber} have no phone number
-                      </small>
-                    )}
-                  </div>
-                </div>
-              )}
-          </div>
-
-          <Card className="border-primary mb-4">
-            <Card.Header className="bg-primary text-white">
-              <h6 className="mb-0">
-                <FilterCircleFill className="me-2" />
-                Campaign Targeting
-              </h6>
-            </Card.Header>
-            <Card.Body>
-              <Row>
-                <Col md={6}>
-                  <strong>Job:</strong> {job.title}
-                  <br />
-                  <strong>Location:</strong> {job.location?.city}, {job.location?.state}
-                  <br />
-                  <strong>CDL Required:</strong> {job.cdl_class || 'None'}
-                </Col>
-                <Col md={6}>
-                  <strong>Target Pool:</strong>{' '}
-                  {loadingReachPreview ? (
-                    <span className="spinner-border spinner-border-sm" />
-                  ) : (
-                    <>
-                      {reachPreview?.qualifiedPool ?? eligibilityStats?.eligibleApplicants ?? 0}{' '}
-                      candidates
-                    </>
-                  )}
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
-
-          <div className="bg-light rounded p-3 mb-4">
-            <Row className="text-center">
-              <Col xs={6}>
-                <strong> Qualified Pool</strong>
-                <br />
-                {loadingReachPreview ? (
-                  <span className="spinner-border spinner-border-sm" />
-                ) : (
-                  <span className="text-primary h5">
-                    {reachPreview?.qualifiedPool ?? eligibilityStats?.eligibleApplicants ?? 0}
-                  </span>
-                )}
-              </Col>
-              <Col xs={6}>
-                <strong>Est. Contacts</strong>
-                <br />
-                {loadingReachPreview ? (
-                  <span className="spinner-border spinner-border-sm" />
-                ) : (
-                  <span className="text-success h5">
-                    {reachPreview?.estimatedContacts ??
-                      Math.round((eligibilityStats?.eligibleApplicants || 0) * 0.7)}
-                  </span>
-                )}
-              </Col>
-            </Row>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => setCampaignModalOpen(false)}
-            disabled={creatingCampaign}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            onClick={handleCreateCampaign}
-            disabled={creatingCampaign}
-            className="px-4"
-          >
-            {creatingCampaign ? (
-              <>
-                <span className="spinner-border spinner-border-sm me-2" />
-                Creating Campaign...
-              </>
-            ) : (
-              <>
-                {selectedCommunicationType === CampaignCommunicationType.SMS ? (
-                  <ChatDotsFill className="me-2" />
-                ) : (
-                  <TelephoneFill className="me-2" />
-                )}
-                Create Campaign
-              </>
-            )}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <CampaignCreationModal
+        show={campaignModalOpen}
+        onHide={closeCampaignModal}
+        job={job}
+        selectedCommunicationType={selectedCommunicationType}
+        onCommunicationTypeChange={handleCommunicationTypeChange}
+        callCampaignsEnabled={callCampaignsEnabled}
+        reachPreview={reachPreview}
+        loadingReachPreview={loadingReachPreview}
+        eligibilityStats={eligibilityStats}
+        completedCampaigns={completedCampaigns}
+        creatingCampaign={creatingCampaign}
+        onCreateCampaign={handleCreateCampaign}
+      />
     </>
   );
 }

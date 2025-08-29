@@ -1,0 +1,390 @@
+/* Job AI Campaigns Styles - Premium design for our flagship feature */
+
+.container {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+/* Header Section */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, var(--primary-button) 0%, var(--primary) 100%);
+  color: white;
+  position: relative;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(44, 122, 123, 0.9) 0%, rgba(95, 203, 196, 0.8) 100%);
+  z-index: 1;
+}
+
+.header > * {
+  position: relative;
+  z-index: 2;
+}
+
+.headerIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.headerText {
+  flex: 1;
+}
+
+.headerTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.headerDescription {
+  font-size: 1rem;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
+}
+
+.headerActions {
+  display: flex;
+  gap: 1rem;
+}
+
+.createButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.createButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.createButton:not(:disabled):hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.manageDraftButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 193, 7, 0.9);
+  border: 1px solid rgba(255, 193, 7, 0.8);
+  border-radius: 8px;
+  color: #212529;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.manageDraftButton:hover {
+  background: rgba(255, 193, 7, 1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
+/* Empty State */
+.emptyState {
+  padding: 4rem 2rem;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.emptyStateIcon {
+  margin-bottom: 2rem;
+}
+
+.aiIconContainer {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, var(--primary-button-light) 0%, rgba(95, 203, 196, 0.1) 100%);
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+.aiIcon {
+  color: var(--primary-button);
+  filter: drop-shadow(0 2px 4px rgba(44, 122, 123, 0.2));
+}
+
+.phoneIcon {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: var(--primary-button);
+  color: white;
+  padding: 8px;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(44, 122, 123, 0.3);
+}
+
+.emptyStateContent {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.emptyStateTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.emptyStateDescription {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 3rem;
+}
+
+/* Features Section */
+.emptyStateFeatures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+  text-align: left;
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--light-gray);
+  border-radius: 12px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.feature:hover {
+  border-color: var(--primary-button);
+  background: white;
+  box-shadow: 0 4px 12px rgba(44, 122, 123, 0.1);
+  transform: translateY(-2px);
+}
+
+.featureIcon {
+  color: var(--primary-button);
+  background: var(--primary-button-light);
+  padding: 12px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.featureText {
+  flex: 1;
+}
+
+.featureTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.featureDescription {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Actions Section */
+.emptyStateActions {
+  text-align: center;
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, var(--primary-button) 0%, var(--primary) 100%);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.primaryButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.primaryButton:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(44, 122, 123, 0.3);
+}
+
+.comingSoon {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--warning);
+  color: var(--text-dark);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.emptyStateNote {
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Special tab styling for AI Campaigns tab */
+.tabSpecial {
+  background: linear-gradient(135deg, var(--primary-button) 0%, var(--primary) 100%);
+  color: white;
+  border: 2px solid var(--primary-button);
+  position: relative;
+  overflow: hidden;
+}
+
+.tabSpecial::before {
+  content: '✨';
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  font-size: 0.75rem;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.tabSpecial:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(44, 122, 123, 0.3);
+}
+
+@keyframes sparkle {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* Table Integration */
+.campaignsTable {
+  margin-top: 0;
+  border-radius: 0;
+  box-shadow: none;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .headerIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+  }
+
+  .headerTitle {
+    font-size: 1.5rem;
+  }
+
+  .headerDescription {
+    font-size: 0.9375rem;
+  }
+
+  .emptyState {
+    padding: 2rem 1rem;
+  }
+
+  .emptyStateTitle {
+    font-size: 1.75rem;
+  }
+
+  .emptyStateDescription {
+    font-size: 1rem;
+  }
+
+  .emptyStateFeatures {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .feature {
+    padding: 1rem;
+  }
+
+  .aiIconContainer {
+    width: 100px;
+    height: 100px;
+  }
+
+  .aiIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .phoneIcon {
+    width: 20px;
+    height: 20px;
+    padding: 6px;
+  }
+}
