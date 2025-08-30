@@ -14,6 +14,7 @@ interface CampaignOverviewProps {
   editingCommunicationType: boolean;
   selectedCommunicationType: CampaignCommunicationType;
   updatingCommunicationType: boolean;
+  callCampaignsEnabled: boolean;
   t: (key: string) => string;
   getStatusBadgeColor: (status: CampaignStatus) => string;
   getCampaignTypeLabel: (type: CampaignType) => string;
@@ -31,6 +32,7 @@ export const CampaignOverview: React.FC<CampaignOverviewProps> = ({
   editingCommunicationType,
   selectedCommunicationType,
   updatingCommunicationType,
+  callCampaignsEnabled,
   t,
   getStatusBadgeColor,
   getCampaignTypeLabel,
@@ -68,6 +70,7 @@ export const CampaignOverview: React.FC<CampaignOverviewProps> = ({
                             ? 'primary'
                             : 'outline-secondary'
                         }
+                        disabled={!callCampaignsEnabled}
                         onClick={() =>
                           setSelectedCommunicationType(CampaignCommunicationType.VOICE)
                         }
@@ -122,7 +125,7 @@ export const CampaignOverview: React.FC<CampaignOverviewProps> = ({
                         </>
                       )}
                     </span>
-                    {campaign.status === CampaignStatus.DRAFT && (
+                    {campaign.status === CampaignStatus.DRAFT && callCampaignsEnabled && (
                       <Button
                         size="sm"
                         color="link"

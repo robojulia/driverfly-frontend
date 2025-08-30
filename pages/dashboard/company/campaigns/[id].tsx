@@ -38,6 +38,7 @@ import FullLayout from '../../../../components/dashboard/layouts/layout/full-lay
 import PageLayout from '../../../../components/layouts/page/page-layout';
 import { ConfirmationModal } from '../../../../components/shared';
 import { useFeatureFlags } from '../../../../context/feature-flag-context';
+import { useFeatureFlag } from '../../../../context/feature-flag-context';
 import { useUserContext } from '../../../../context/user-context';
 import { useAuth } from '../../../../hooks/use-auth';
 import { useTranslation } from '../../../../hooks/use-translation';
@@ -61,6 +62,7 @@ const CampaignDetailPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const { isFeatureEnabled, isLoading: flagsLoading } = useFeatureFlags();
+  const callCampaignsEnabled = useFeatureFlag('CALL_CAMPAIGNS_ENABLED');
   const { user, isSuperAdmin } = useAuth();
 
   console.log(user, isSuperAdmin);
@@ -637,6 +639,7 @@ const CampaignDetailPage = () => {
                       editingCommunicationType={editingCommunicationType}
                       selectedCommunicationType={selectedCommunicationType}
                       updatingCommunicationType={updatingCommunicationType}
+                      callCampaignsEnabled={callCampaignsEnabled}
                       t={t}
                       getStatusBadgeColor={getStatusBadgeColor}
                       getCampaignTypeLabel={getCampaignTypeLabel}

@@ -28,7 +28,7 @@ export const useCampaignCreation = ({
 }: UseCampaignCreationProps) => {
   const router = useRouter();
   const { t } = useTranslation();
-  const callCampaignsEnabled = useFeatureFlag('CallCampaignsEnabled');
+  const callCampaignsEnabled = useFeatureFlag('CALL_CAMPAIGNS_ENABLED');
 
   const [campaignModalOpen, setCampaignModalOpen] = useState(false);
   const [creatingCampaign, setCreatingCampaign] = useState(false);
