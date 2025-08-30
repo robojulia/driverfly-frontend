@@ -1,0 +1,72 @@
+.readinessAlert {
+  border-radius: 0.5rem;
+  border: none;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 1rem 1.25rem;
+}
+
+.alertContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.alertHeader {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.alertBody {
+  margin: 0;
+}
+
+.alertMessage {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+.alertAction {
+  font-size: 0.8125rem;
+  opacity: 0.8;
+  font-style: italic;
+  margin: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .readinessAlert {
+    padding: 0.875rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .alertHeader {
+    font-size: 0.9375rem;
+  }
+
+  .alertMessage {
+    font-size: 0.875rem;
+  }
+
+  .alertAction {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .alertContent {
+    gap: 0.5rem;
+  }
+
+  .alertHeader {
+    font-size: 0.875rem;
+  }
+
+  .alertMessage {
+    font-size: 0.8125rem;
+  }
+}

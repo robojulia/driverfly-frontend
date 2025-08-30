@@ -1,0 +1,141 @@
+.campaignActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid #dee2e6;
+  color: #6c757d;
+  background: white;
+  transition: all 0.2s ease-in-out;
+}
+
+.backButton:hover {
+  background: #f8f9fa;
+  border-color: #adb5bd;
+  color: #495057;
+}
+
+.actionGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.primaryAction {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+  min-width: 160px;
+  justify-content: center;
+}
+
+.primaryAction:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.primaryAction:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.dropdownToggle {
+  border: 1px solid #dee2e6;
+  background: white;
+  color: #6c757d;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+}
+
+.dropdownToggle:hover {
+  background: #f8f9fa;
+  border-color: #adb5bd;
+  color: #495057;
+}
+
+.dropdownMenu {
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 0;
+  min-width: 200px;
+}
+
+.dropdownMenu .dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  transition: all 0.15s ease-in-out;
+  border: none;
+  background: none;
+}
+
+.dropdownMenu .dropdown-item:hover {
+  background: #f8f9fa;
+}
+
+.dropdownMenu .dropdown-item:active {
+  background: #e9ecef;
+}
+
+.dangerAction {
+  color: #dc3545 !important;
+}
+
+.dangerAction:hover {
+  background: #f8d7da !important;
+  color: #721c24 !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .campaignActions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .actionGroup {
+    justify-content: center;
+  }
+
+  .primaryAction {
+    min-width: auto;
+    flex: 1;
+  }
+
+  .backButton {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 576px) {
+  .actionGroup {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .dropdownToggle {
+    width: 100%;
+  }
+}

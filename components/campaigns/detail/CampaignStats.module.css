@@ -1,0 +1,97 @@
+.statsRow {
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  transition: all 0.2s ease-in-out;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+.statCardBody {
+  position: relative;
+  padding: 1.5rem;
+}
+
+.statIcon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  font-size: 1.25rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.statCard:hover .statIcon {
+  transform: scale(1.1);
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .statCardBody {
+    padding: 1rem;
+  }
+
+  .statIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .statValue {
+    font-size: 1.5rem;
+  }
+
+  .statLabel {
+    font-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .statsRow {
+    margin-bottom: 1.5rem;
+  }
+
+  .statCardBody {
+    padding: 0.75rem;
+  }
+
+  .statIcon {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .statValue {
+    font-size: 1.25rem;
+  }
+
+  .statLabel {
+    font-size: 0.75rem;
+  }
+}

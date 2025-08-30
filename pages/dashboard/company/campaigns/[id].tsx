@@ -55,6 +55,10 @@ import {
 } from '../../../../components/campaigns/detail';
 import { AdminCampaignTest } from '../../../../components/campaigns/detail/AdminCampaignTest';
 import { ManualTargetSelectionModal } from '../../../../components/campaigns/ManualTargetSelectionModal';
+import CampaignHeader from '../../../../components/campaigns/detail/CampaignHeader';
+import CampaignActions from '../../../../components/campaigns/detail/CampaignActions';
+import CampaignStats from '../../../../components/campaigns/detail/CampaignStats';
+import CampaignReadinessAlert from '../../../../components/campaigns/detail/CampaignReadinessAlert';
 import CampaignsApi from '../../../../pages/api/campaigns';
 
 const CampaignDetailPage = () => {
@@ -428,120 +432,31 @@ const CampaignDetailPage = () => {
   console.log(campaign, isSuperAdmin && campaign.type === CampaignType.JOB_REACHOUT);
 
   return (
-    <PageLayout
-      actions={
-        <>
-          <Button
-            color="secondary"
-            size="sm"
-            onClick={() => router.push('/dashboard/company/campaigns')}
-            className="me-2"
-          >
-            <ArrowLeft /> {t('BACK_TO_CAMPAIGNS')}
-          </Button>
-        </>
-      }
-    >
+    <PageLayout>
       <Container fluid>
-        {/* Header */}
-        <Row className="mb-4">
-          <Col>
-            <div className="d-flex align-items-center mb-3">
-              <Button
-                color="link"
-                className="p-0 me-3"
-                onClick={() => router.push('/dashboard/company/campaigns')}
-              >
-                <ChevronLeft />
-              </Button>
-              <div className="flex-grow-1">
-                <div className="d-flex justify-content-between align-items-start">
-                  <div>
-                    <h1 className="h3 mb-0">
-                      {campaign.communicationType === CampaignCommunicationType.SMS ? (
-                        <ChatDotsFill className="text-success me-2" size={24} />
-                      ) : (
-                        <TelephoneFill className="text-primary me-2" size={24} />
-                      )}
-                      {campaign.name}
-                    </h1>
-                    <div className="d-flex align-items-center gap-2 mt-1">
-                      <Badge color={getStatusBadgeColor(campaign.status || CampaignStatus.DRAFT)}>
-                        {(campaign.status || CampaignStatus.DRAFT).toUpperCase()}
-                      </Badge>
-                      <span className="text-muted">•</span>
-                      <span className="text-muted">{getCampaignTypeLabel(campaign.type)}</span>
-                      <span className="text-muted">•</span>
-                      <span className="text-muted">
-                        {campaign.communicationType === CampaignCommunicationType.SMS
-                          ? 'SMS'
-                          : 'Voice'}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="d-flex gap-2">
-                    {/* View Job Button - if this is a job reachout campaign */}
-                    {campaign.type === CampaignType.JOB_REACHOUT && campaign.config?.jobId && (
-                      <Button
-                        color="outline-primary"
-                        size="sm"
-                        onClick={() =>
-                          router.push(`/dashboard/company/jobs/${campaign.config.jobId}`)
-                        }
-                        className="me-2"
-                      >
-                        <BoxArrowUpRight size={14} className="me-1" />
-                        View Job
-                      </Button>
-                    )}
-                    {(campaign.status || CampaignStatus.DRAFT) === CampaignStatus.ACTIVE && (
-                      <>
-                        <Button color="info" size="sm" onClick={loadCampaign}>
-                          {t('REFRESH')}
-                        </Button>
-                        <Button color="danger" size="sm" onClick={handleCancelCampaign}>
-                          <Pause size={14} className="me-1" />
-                          {t('CANCEL_CAMPAIGN')}
-                        </Button>
-                      </>
-                    )}
-                    {(campaign.status || CampaignStatus.DRAFT) === CampaignStatus.DRAFT && (
-                      <>
-                        <Button color="success" size="sm" onClick={handleStartCampaign}>
-                          <Play size={14} className="me-1" />
-                          {t('START_CAMPAIGN')}
-                        </Button>
-                        <Button
-                          color="info"
-                          size="sm"
-                          onClick={() => handleCampaignAction('regenerate')}
-                          disabled={regeneratingTargets}
-                        >
-                          {regeneratingTargets ? (
-                            <>
-                              <div className="spinner-border spinner-border-sm me-1" role="status">
-                                <span className="visually-hidden">Loading...</span>
-                              </div>
-                              {t('REFRESHING_TARGETS')}
-                            </>
-                          ) : (
-                            <>{t('REFRESH_TARGETS')}</>
-                          )}
-                        </Button>
-                      </>
-                    )}
-                    {(campaign.status || CampaignStatus.DRAFT) === CampaignStatus.PAUSED && (
-                      <Button color="success" size="sm" onClick={handleStartCampaign}>
-                        <Play size={14} className="me-1" />
-                        {t('RESUME_CAMPAIGN')}
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Col>
-        </Row>
+        {/* New Campaign Header */}
+        <CampaignHeader campaign={campaign} stats={stats} />
+
+        {/* New Campaign Actions */}
+        <CampaignActions
+          campaign={campaign}
+          stats={stats}
+          onStartCampaign={handleStartCampaign}
+          onCancelCampaign={handleCancelCampaign}
+          onRefreshTargets={() => handleCampaignAction('regenerate')}
+          onAddManualTargets={() => setManualTargetModal(true)}
+          onSendTest={handleSendTest}
+          onAddTestTarget={handleAddTestTarget}
+          onViewJob={
+            campaign.type === CampaignType.JOB_REACHOUT && campaign.config?.jobId
+              ? () => router.push(`/dashboard/company/jobs/${campaign.config.jobId}`)
+              : undefined
+          }
+          onBackToCampaigns={() => router.push('/dashboard/company/campaigns')}
+          loading={loading}
+          canSendTest={hasPhoneNumber()}
+          hasTestTarget={isCurrentUserTestTarget()}
+        />
 
         {error && (
           <Row className="mb-3">
@@ -551,43 +466,11 @@ const CampaignDetailPage = () => {
           </Row>
         )}
 
-        {/* Stats Cards */}
-        {stats && (
-          <Row className="mb-4">
-            <Col md={3}>
-              <Card className="border-0 shadow-sm h-100">
-                <CardBody className="text-center py-4">
-                  <h2 className="mb-2 fw-bold text-dark">{stats.totalTargets}</h2>
-                  <small className="text-muted fw-semibold">{t('TOTAL_TARGETS')}</small>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col md={3}>
-              <Card className="border-0 shadow-sm h-100">
-                <CardBody className="text-center py-4">
-                  <h2 className="mb-2 fw-bold text-primary">{stats.sentCount}</h2>
-                  <small className="text-muted fw-semibold">{t('SENT')}</small>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col md={3}>
-              <Card className="border-0 shadow-sm h-100">
-                <CardBody className="text-center py-4">
-                  <h2 className="mb-2 fw-bold text-success">{stats.deliveredCount}</h2>
-                  <small className="text-muted fw-semibold">{t('DELIVERED')}</small>
-                </CardBody>
-              </Card>
-            </Col>
-            <Col md={3}>
-              <Card className="border-0 shadow-sm h-100">
-                <CardBody className="text-center py-4">
-                  <h2 className="mb-2 fw-bold text-danger">{stats.failedCount}</h2>
-                  <small className="text-muted fw-semibold">{t('FAILED')}</small>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        )}
+        {/* Campaign Readiness Alert */}
+        <CampaignReadinessAlert campaign={campaign} stats={stats} />
+
+        {/* Campaign Stats */}
+        {stats && <CampaignStats stats={stats} />}
 
         {/* Tabs */}
         <Row>
