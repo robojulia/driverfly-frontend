@@ -8,6 +8,7 @@ import EligibilityApi, {
   EligibilityQueryParams,
 } from '../../pages/api/eligibility';
 import AutoRecruitIndicator from './AutoRecruitIndicator';
+import HiredIndicator from './HiredIndicator';
 import styles from '../../styles/eligibility.module.css';
 
 interface EligibilityTableProps {
@@ -231,6 +232,7 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
                     <div className={styles.applicantName}>
                       <PersonFill />
                       {applicant.applicant.firstName} {applicant.applicant.lastName}
+                      {applicant.applicant.isHired && <HiredIndicator />}
                       {shouldShowEngagementBadge(applicant.applicant) ? (
                         <span className={styles.recentEngagementBadge}>
                           <StarFill size={12} />

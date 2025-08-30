@@ -30,6 +30,7 @@ export interface ApplicantBasicInfo {
   type: 'USER' | 'COMPANY' | 'DHA' | 'DIRECT_JOB_APPLY' | 'AUTO_RECRUIT';
   hasApplied: boolean;
   isInterested: boolean;
+  isHired: boolean;
   interestTier?: 'HIGH' | 'MEDIUM' | 'LOW' | 'NONE';
   engagementCount?: number;
   daysSinceLastEngagement?: number | null;

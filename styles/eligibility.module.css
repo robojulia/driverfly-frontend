@@ -919,6 +919,21 @@
   }
 }
 
+/* Hired Badge */
+.hiredBadge {
+  background: linear-gradient(135deg, #4a90e2, #357abd);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: var(--eligibility-font-weight-bold);
+  margin-left: var(--eligibility-spacing-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  box-shadow: 0 2px 4px rgba(74, 144, 226, 0.3);
+}
+
 /* Applicant Info */
 .applicantInfo {
   display: flex;
