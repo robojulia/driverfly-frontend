@@ -151,13 +151,12 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <Button
                     size="sm"
-                    variant="outline-primary"
                     onClick={handleVoeSummaryClick}
                     disabled={!entity?.uuid_token}
                     title={t('GENERATE_VOE_SUMMARY_PDF')}
                   >
                     <FileEarmarkText className="me-1" />
-                    {t('VOE_SUMMARY')}
+                    VOE Summary
                   </Button>
                   <Button
                     disabled={Boolean(entity?.is_hired)}

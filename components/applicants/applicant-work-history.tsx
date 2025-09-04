@@ -30,13 +30,12 @@ export default function ApplicantWorkHistory({ applicant }: ApplicantWorkHistory
             actions={
                 <Button
                     size="sm"
-                    variant="outline-primary"
                     onClick={handleVoeSummaryClick}
                     disabled={!applicant?.uuid_token}
                     title={t('GENERATE_VOE_SUMMARY_PDF')}
                 >
                     <FileEarmarkText className="me-1" />
-                    {t('VOE_SUMMARY')}
+                    VOE Summary
                 </Button>
             }
         >
