@@ -2,7 +2,7 @@ import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
-import { ChevronUp, PlusCircle, XCircle } from 'react-bootstrap-icons';
+import { ChevronUp, PlusCircle, XCircle, FileEarmarkText } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 
 import { ApplicantType } from '../../../enums/applicants/applicant-type.enum';
@@ -118,6 +118,14 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
     }
   };
 
+  const handleVoeSummaryClick = () => {
+    if (entity?.uuid_token) {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_API || process.env.BASE_URL_API;
+      const voeUrl = `${baseUrl}/applicants/voe/summary/pdf?uuid_token=${entity.uuid_token}`;
+      window.open(voeUrl, '_blank');
+    }
+  };
+
   useEffect(() => {
     const currentCompanyExists = form.values?.employers?.find((e) => e.is_current);
     setWorkHistoryMetaData((prev) => ({ ...prev, curentCompanyCheck: currentCompanyExists }));
@@ -140,18 +148,30 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
             <ViewCard
               title="WORK_HISTORY"
               actions={
-                <Button
-                  disabled={Boolean(entity?.is_hired)}
-                  size="sm"
-                  onClick={() =>
-                    form.setValues({
-                      ...form.values,
-                      employers: [new ApplicantEmployerEntity(), ...(form.values?.employers || [])],
-                    })
-                  }
-                >
-                  <PlusCircle /> {t('ADD')}
-                </Button>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <Button
+                    size="sm"
+                    variant="outline-primary"
+                    onClick={handleVoeSummaryClick}
+                    disabled={!entity?.uuid_token}
+                    title={t('GENERATE_VOE_SUMMARY_PDF')}
+                  >
+                    <FileEarmarkText className="me-1" />
+                    {t('VOE_SUMMARY')}
+                  </Button>
+                  <Button
+                    disabled={Boolean(entity?.is_hired)}
+                    size="sm"
+                    onClick={() =>
+                      form.setValues({
+                        ...form.values,
+                        employers: [new ApplicantEmployerEntity(), ...(form.values?.employers || [])],
+                      })
+                    }
+                  >
+                    <PlusCircle /> {t('ADD')}
+                  </Button>
+                </div>
               }
             >
               {form.values?.employers?.length > 0 && (
