@@ -4,10 +4,11 @@ import ViewCard from '../view-details/view-card';
 import { buildAddress } from '../../utils/common';
 import { AccordionSummary, AccordionDetails } from '@mui/material';
 import React from 'react';
-import { ArrowsExpand } from 'react-bootstrap-icons';
+import { ArrowsExpand, FileEarmarkText } from 'react-bootstrap-icons';
 import { dateRange } from '../../utils/date';
 import ViewDetails from '../view-details/view-details';
 import { ViewApplicantDetailProps } from '../../types/applicant/view-application-detail-props.type';
+import { Button } from 'react-bootstrap';
 
 interface ApplicantWorkHistoryProps extends ViewApplicantDetailProps { }
 
@@ -15,8 +16,29 @@ export default function ApplicantWorkHistory({ applicant }: ApplicantWorkHistory
 
     const { t } = useTranslation();
 
+    const handleVoeSummaryClick = () => {
+        if (applicant?.uuid_token) {
+            const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_API || process.env.BASE_URL_API;
+            const voeUrl = `${baseUrl}/applicants/voe/summary/pdf?uuid_token=${applicant.uuid_token}`;
+            window.open(voeUrl, '_blank');
+        }
+    };
+
     return (
-        <ViewCard title="WORK_HISTORY">
+        <ViewCard 
+            title="WORK_HISTORY"
+            actions={
+                <Button
+                    size="sm"
+                    onClick={handleVoeSummaryClick}
+                    disabled={!applicant?.uuid_token}
+                    title={t('GENERATE_VOE_SUMMARY_PDF')}
+                >
+                    <FileEarmarkText className="me-1" />
+                    VOE Summary
+                </Button>
+            }
+        >
             {!applicant.employers?.length &&
                 <>{t("NONE")}</>
             }
