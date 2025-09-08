@@ -19,6 +19,7 @@ export interface CampaignReachPreviewQuery {
   communicationType: CampaignCommunicationType;
   minScore?: number;
   states?: string[];
+  excludeApplied?: boolean;
 }
 
 export interface CampaignReachPreviewResponse {

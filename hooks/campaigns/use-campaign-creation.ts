@@ -57,6 +57,7 @@ export const useCampaignCreation = ({
           jobId: job.id,
           communicationType,
           minScore: 50, // Match the minScore used in campaign creation
+          excludeApplied: true,
         });
         setReachPreview(preview);
       } catch (error) {
