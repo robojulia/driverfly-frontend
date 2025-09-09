@@ -109,6 +109,10 @@ export class ApplicantExtrasEntity {
 					then: yup.string().optional().nullable(),
 				})
 				.when("type", {
+					is: ApplicantExtras.DOT_VERIFICATION_RESULTS,
+					then: yup.array(yup.string()).optional().nullable(),
+				})
+				.when("type", {
 					is: ApplicantExtras.DOT_NUMBER,
 					then: yup.string().optional().nullable(),
 				})

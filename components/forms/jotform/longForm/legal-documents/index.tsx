@@ -19,6 +19,8 @@ import { DocumentSignature } from './document-signature';
 import { LegalDocumentProvider, useLegalDocuments } from './legal-documents-context';
 import { FormActions, SecondaryButton, PrimaryButton } from '../../form-buttons';
 import { Banner } from '../../../../shared/dha';
+import CompanyApi from '../../../../../pages/api/company';
+import { ApplicantExtras as ApplicantExtrasEnum } from '../../../../../enums/applicants/applicant-extras.enum';
 
 // Document definitions with metadata and summaries
 export const LEGAL_DOCUMENTS = [
@@ -118,6 +120,7 @@ function LegalDocumentsContent() {
     validationSchema: AccordianDto.yupSchema(),
     onSubmit: async (values) => {
       const applicantApi = new ApplicantApi();
+      const companyApi = new CompanyApi();
 
       applicant.ssn = values.ssn;
       console.log('Submitting legal documents with SSN:', values.ssn);
@@ -126,6 +129,34 @@ function LegalDocumentsContent() {
         const filtered_extras = applicantExtras?.filter(
           (v) => v?.value != null || v?.value != undefined
         );
+
+        // DOT verification: call backend and append tokens as DOT_VERIFICATION_RESULTS
+        try {
+          const dot_number = applicantExtras?.find((e) => e.type === ApplicantExtrasEnum.DOT_NUMBER)?.value;
+          const business_name = applicantExtras?.find((e) => e.type === ApplicantExtrasEnum.BUSINESS_NAME)?.value;
+          if (dot_number) {
+            const tokens = await companyApi.dotVerify({
+              dot_number,
+              email: applicant?.email,
+              phone: applicant?.phone,
+              address_1: applicant?.address_1 || applicant?.street,
+              city: applicant?.city,
+              state: applicant?.state,
+              zip_code: applicant?.zip_code,
+              business_name,
+            });
+            filtered_extras.push({
+              type: ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS,
+              value: Array.isArray(tokens) && tokens.length ? tokens[0] : [],
+            } as any);
+          }
+        } catch (e) {
+          console.warn('DOT verification failed; proceeding without tokens', e);
+          filtered_extras.push({
+            type: ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS,
+            value: [],
+          } as any);
+        }
 
         let response: ApplicantEntity;
         if (applicant?.id) {

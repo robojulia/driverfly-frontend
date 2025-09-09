@@ -186,4 +186,18 @@ export default class CompanyApi extends BaseApi {
       return data;
     },
   };
+
+  dotVerify = async (payload: {
+    dot_number: string;
+    email?: string;
+    phone?: string;
+    address_1?: string;
+    city?: string;
+    state?: string;
+    zip_code?: string;
+    business_name?: string;
+  }): Promise<string[][]> => {
+    const { data } = await this.post(`${this.baseUrl}/dot-verify`, payload);
+    return data;
+  };
 }
