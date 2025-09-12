@@ -104,7 +104,17 @@ export default function EditApplicant({ id }) {
                           value: newTokens,
                         } as any;
                         const newExtras = [...others, updated];
-                        const saved = await applicantApi.update(applicant.id, { extras: newExtras } as any);
+                        const saved = await applicantApi.update(
+                          applicant.id,
+                          {
+                            first_name: applicant?.first_name,
+                            last_name: applicant?.last_name,
+                            // Preserve histories to avoid backend clearing them when absent
+                            accident_history: applicant?.accident_history,
+                            moving_violation_history: applicant?.moving_violation_history,
+                            extras: newExtras,
+                          } as any,
+                        );
                         setApplicant({ ...saved });
                         toast.success('DOT verification refreshed');
                       } catch (e) {

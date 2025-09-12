@@ -306,7 +306,14 @@ export default function ViewApplicant({ id }) {
                             } as any;
                             const newExtras = [...others, updated];
                             // Persist to backend so results are saved and summary stays updated
-                            const saved = await applicantApi.update(applicant.id, { extras: newExtras } as any);
+                            const saved = await applicantApi.update(
+                              applicant.id,
+                              {
+                                first_name: applicant?.first_name,
+                                last_name: applicant?.last_name,
+                                extras: newExtras,
+                              } as any,
+                            );
                             setApplicant({ ...saved });
                             toast.success('DOT verification refreshed');
                           } catch (e) {
