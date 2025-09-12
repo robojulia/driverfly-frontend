@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Badge, Button, Card, Modal, Spinner } from 'react-bootstrap';
+import { Alert, Badge, Button, Card, Modal, Spinner, Dropdown, Form } from 'react-bootstrap';
 import {
   PersonFill,
   Building,
@@ -7,9 +7,12 @@ import {
   ShieldFill,
   CheckCircleFill,
   XCircleFill,
+  ThreeDotsVertical,
+  TrashFill,
+  ExclamationTriangleFill,
 } from 'react-bootstrap-icons';
 import ViewDataTable, { ViewTableColumn } from '../view-details/view-data-table';
-import AdminUsersApi from '../../pages/api/admin-users';
+import AdminUsersApi, { GdprDeleteUserResponse } from '../../pages/api/admin-users';
 import { UserWithCompany } from '../../models/user/user-with-company.entity';
 import { Status } from '../../enums/status.enum';
 
@@ -26,6 +29,12 @@ const UserManager: React.FC = () => {
     type: 'grant' | 'revoke';
     user: UserWithCompany;
   } | null>(null);
+
+  // GDPR deletion states
+  const [showGdprModal, setShowGdprModal] = useState(false);
+  const [gdprSelectedUser, setGdprSelectedUser] = useState<UserWithCompany | null>(null);
+  const [gdprConfirmed, setGdprConfirmed] = useState(false);
+  const [gdprLoading, setGdprLoading] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -51,6 +60,12 @@ const UserManager: React.FC = () => {
     setPendingAction({ type: action, user });
     setSelectedUser(user);
     setShowConfirmModal(true);
+  };
+
+  const handleGdprDelete = (user: UserWithCompany) => {
+    setGdprSelectedUser(user);
+    setGdprConfirmed(false);
+    setShowGdprModal(true);
   };
 
   const confirmSuperAdminAction = async () => {
@@ -79,6 +94,37 @@ const UserManager: React.FC = () => {
       setError(err.response?.data?.message || 'Failed to update super admin status');
     } finally {
       setActionLoading(null);
+    }
+  };
+
+  const confirmGdprDelete = async () => {
+    if (!gdprSelectedUser || !gdprConfirmed) return;
+
+    try {
+      setGdprLoading(true);
+      const api = new AdminUsersApi();
+
+      const result: GdprDeleteUserResponse = await api.gdprDeleteUser(gdprSelectedUser.id);
+
+      if (result.success) {
+        // Show success message
+        setError(null);
+
+        // Close modal and reset state
+        setShowGdprModal(false);
+        setGdprSelectedUser(null);
+        setGdprConfirmed(false);
+
+        // Refresh the user list
+        await loadData();
+      } else {
+        throw new Error(result.message || 'GDPR deletion failed');
+      }
+    } catch (err: any) {
+      console.error('Failed to perform GDPR deletion:', err);
+      setError(err.response?.data?.message || 'Failed to perform GDPR deletion');
+    } finally {
+      setGdprLoading(false);
     }
   };
 
@@ -162,11 +208,28 @@ const UserManager: React.FC = () => {
     );
   };
 
+  const isUserDeprecated = (user: UserWithCompany) => {
+    return (
+      user.status === Status.DELETED &&
+      user.email.startsWith('deleted_user_') &&
+      user.email.endsWith('@deleted.local')
+    );
+  };
+
   const renderActions = (user: UserWithCompany) => {
     const isLoading = actionLoading === user.id;
 
+    // Don't show any actions for deprecated/GDPR deleted users
+    if (isUserDeprecated(user)) {
+      return (
+        <div className="text-muted small">
+          <em>No actions available</em>
+        </div>
+      );
+    }
+
     return (
-      <div className="d-flex gap-1">
+      <div className="d-flex gap-1 align-items-center">
         {user.super_admin ? (
           <Button
             variant="outline-danger"
@@ -200,6 +263,23 @@ const UserManager: React.FC = () => {
             )}
           </Button>
         )}
+
+        <Dropdown>
+          <Dropdown.Toggle variant="outline-secondary" size="sm" id={`dropdown-${user.id}`}>
+            <ThreeDotsVertical size={14} />
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            <Dropdown.Item
+              onClick={() => handleGdprDelete(user)}
+              className="text-danger"
+              disabled={user.status === Status.DELETED}
+            >
+              <TrashFill size={14} className="me-2" />
+              GDPR Delete User
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
       </div>
     );
   };
@@ -350,6 +430,123 @@ const UserManager: React.FC = () => {
               <Spinner size="sm" animation="border" className="me-2" />
             ) : null}
             {pendingAction?.type === 'grant' ? 'Grant Access' : 'Revoke Access'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* GDPR Deletion Modal */}
+      <Modal
+        show={showGdprModal}
+        onHide={() => setShowGdprModal(false)}
+        centered
+        size="lg"
+        backdrop="static"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title className="text-danger">
+            <ExclamationTriangleFill className="me-2" />
+            GDPR User Account Deletion
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {gdprSelectedUser && (
+            <div>
+              <Alert variant="danger" className="mb-4">
+                <Alert.Heading className="h6">
+                  <ExclamationTriangleFill className="me-2" />
+                  WARNING: This action is IRREVERSIBLE
+                </Alert.Heading>
+                <p className="mb-0">
+                  You are about to permanently delete all personal data for user{' '}
+                  <strong>
+                    {gdprSelectedUser.first_name && gdprSelectedUser.last_name
+                      ? `${gdprSelectedUser.first_name} ${gdprSelectedUser.last_name}`
+                      : gdprSelectedUser.email}
+                  </strong>
+                  . This operation cannot be undone.
+                </p>
+              </Alert>
+
+              <div className="mb-4">
+                <h6 className="text-danger mb-3">The following actions will be performed:</h6>
+                <ul className="list-unstyled">
+                  <li className="mb-2">
+                    <span className="badge bg-warning text-dark me-2">USER</span>
+                    All personal information will be scrubbed (name, email, phone numbers)
+                  </li>
+                  <li className="mb-2">
+                    <span className="badge bg-warning text-dark me-2">USER</span>
+                    Account will be marked as DELETED and cannot be used for login
+                  </li>
+                  {gdprSelectedUser.company && (
+                    <>
+                      <li className="mb-2">
+                        <span className="badge bg-danger me-2">COMPANY</span>
+                        Company &quot;{gdprSelectedUser.company.name}&quot; will be deprecated and
+                        disabled
+                      </li>
+                      <li className="mb-2">
+                        <span className="badge bg-danger me-2">APPLICANTS</span>
+                        All applicant records linked to this user will be permanently deleted
+                      </li>
+                    </>
+                  )}
+                </ul>
+              </div>
+
+              <Alert variant="info" className="mb-4">
+                <Alert.Heading className="h6">Data Retention Policy</Alert.Heading>
+                <p className="mb-0">
+                  This action complies with GDPR &quot;Right to Erasure&quot; requirements. Some
+                  audit logs may be retained for legal compliance purposes but will not contain
+                  personally identifiable information.
+                </p>
+              </Alert>
+
+              <div className="border p-3 bg-light rounded">
+                <Form.Check
+                  type="checkbox"
+                  id="gdpr-confirm-checkbox"
+                  checked={gdprConfirmed}
+                  onChange={(e) => setGdprConfirmed(e.target.checked)}
+                  label={
+                    <span>
+                      I understand that this action is <strong>irreversible</strong> and will
+                      permanently delete all user data, deprecate their company, and remove all
+                      associated applicant records. I confirm that I have the authority to perform
+                      this GDPR deletion.
+                    </span>
+                  }
+                  className="user-select-none"
+                />
+              </div>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setShowGdprModal(false)}
+            disabled={gdprLoading}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            onClick={confirmGdprDelete}
+            disabled={!gdprConfirmed || gdprLoading}
+          >
+            {gdprLoading ? (
+              <>
+                <Spinner size="sm" animation="border" className="me-2" />
+                Deleting...
+              </>
+            ) : (
+              <>
+                <TrashFill className="me-2" />
+                Permanently Delete User Data
+              </>
+            )}
           </Button>
         </Modal.Footer>
       </Modal>
