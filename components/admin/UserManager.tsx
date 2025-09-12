@@ -286,6 +286,14 @@ const UserManager: React.FC = () => {
 
   const columns: ViewTableColumn<UserWithCompany>[] = [
     {
+      id: 'id',
+      name: 'ID',
+      selector: (row) => row.id.toString(),
+      sortable: true,
+      minWidth: '80px',
+      cell: (user) => <span className="text-muted small font-monospace">{user.id}</span>,
+    },
+    {
       id: 'user',
       name: 'User',
       selector: (row) => row.email,
