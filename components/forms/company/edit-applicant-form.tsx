@@ -16,6 +16,11 @@ import { ApplicantWorkHistoryForm } from "./applicant-work-history-form";
 import { BaseFormProps } from "./base-form-props";
 import { HireApplicantForm } from "./hire-applicant-form";
 import SSNDisplay from "../../shared/SSNDisplay";
+import ViewCard from "../../view-details/view-card";
+import CompanyApi from "../../../pages/api/company";
+import ApplicantApi from "../../../pages/api/applicant";
+import { toast } from "react-toastify";
+import { ApplicantExtras as ApplicantExtrasEnum } from "../../../enums/applicants/applicant-extras.enum";
 
 export interface EditApplicantFormProps extends BaseFormProps<ApplicantEntity> {
   isSubmitting: boolean;
@@ -52,6 +57,111 @@ export function EditApplicantForm(props: EditApplicantFormProps) {
           setEntity={props?.setEntity}
         />
       </Row>
+      {/* DOT Verification Results (Owner Operator only) */}
+      {props?.entity?.is_owner_operator && (
+        <Row className="px-2 mt-2">
+          <Col md="12">
+            <ViewCard title="DOT Verification Results">
+              <div className="d-flex justify-content-between align-items-start flex-wrap">
+                <div className="mb-2" style={{ minWidth: 240 }}>
+                  {(() => {
+                    const tokens: string[] =
+                      (props?.entity?.extras?.find((e: any) => e.type === ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS)?.value as string[]) || [];
+
+                    const checks = [
+                      { key: "EMAIL", label: "Email" },
+                      { key: "PHONE", label: "Phone" },
+                      { key: "STREET_ADDRESS", label: "Street address" },
+                      { key: "CITY", label: "City" },
+                      { key: "STATE", label: "State" },
+                      { key: "ZIP_CODE", label: "ZIP code" },
+                    ];
+
+                    const getStatus = (k: string): boolean | null => {
+                      if (tokens.includes(`${k}_SUCCESS`)) return true;
+                      if (tokens.includes(`${k}_FAIL`)) return false;
+                      return null;
+                    };
+
+                    if (!tokens.length) {
+                      return <div className="text-muted">No results yet</div>;
+                    }
+
+                    return (
+                      <div>
+                        {checks.map(({ key, label }) => {
+                          const status = getStatus(key);
+                          return (
+                            <div key={key} className="d-flex align-items-center mb-1">
+                              <div style={{ width: 140 }}>{label}</div>
+                              {status === true && (
+                                <span className="badge bg-success">Match</span>
+                              )}
+                              {status === false && (
+                                <span className="badge bg-danger">No match</span>
+                              )}
+                              {status === null && (
+                                <span className="badge bg-secondary">Unknown</span>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
+                </div>
+                <div>
+                  <Button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        const companyApi = new CompanyApi();
+                        const applicantApi = new ApplicantApi();
+                        const dot_number = props?.entity?.extras?.find((e: any) => e.type === ApplicantExtrasEnum.DOT_NUMBER)?.value;
+                        const business_name = props?.entity?.extras?.find((e: any) => e.type === ApplicantExtrasEnum.BUSINESS_NAME)?.value;
+                        if (!dot_number) return toast.error("DOT number not found");
+                        const tokens = await companyApi.dotVerify({
+                          dot_number,
+                          email: props?.entity?.email,
+                          phone: props?.entity?.phone,
+                          address_1: (props?.entity as any)?.address_1 || (props?.entity as any)?.street,
+                          city: props?.entity?.city,
+                          state: props?.entity?.state,
+                          zip_code: props?.entity?.zip_code,
+                          business_name,
+                        });
+                        const newTokens = Array.isArray(tokens) && tokens.length ? tokens[0] : [];
+                        const others = (props?.entity?.extras || []).filter((e: any) => e.type !== ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS);
+                        const updated = {
+                          type: ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS,
+                          value: newTokens,
+                        } as any;
+                        const newExtras = [...others, updated];
+                        const saved = await applicantApi.update(
+                          props?.entity?.id,
+                          {
+                            first_name: props?.entity?.first_name,
+                            last_name: props?.entity?.last_name,
+                            accident_history: (props?.entity as any)?.accident_history,
+                            moving_violation_history: (props?.entity as any)?.moving_violation_history,
+                            extras: newExtras,
+                          } as any,
+                        );
+                        props?.setEntity?.({ ...saved });
+                        toast.success("DOT verification refreshed");
+                      } catch (e) {
+                        toast.error("Failed to refresh DOT verification");
+                      }
+                    }}
+                  >
+                    Refresh
+                  </Button>
+                </div>
+              </div>
+            </ViewCard>
+          </Col>
+        </Row>
+      )}
       <Row className="px-2">
         <Col md="6">
           <ApplicantEquipmentExperienceForm
