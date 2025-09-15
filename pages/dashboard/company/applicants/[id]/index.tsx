@@ -36,6 +36,8 @@ import { ApplicantDocumentType } from '../../../../../enums/applicants/applicant
 import CompanyApi from '../../../../api/company';
 import { ApplicantExtras as ApplicantExtrasEnum } from '../../../../../enums/applicants/applicant-extras.enum';
 
+const SHOW_DOT_VERIFICATION = false; //MANUALLY DISABLED DOT VERIFICATION RESULTS BOX
+
 export default function ViewApplicant({ id }) {
   const router = useRouter();
 
@@ -263,7 +265,7 @@ export default function ViewApplicant({ id }) {
             </Col>
           </Row>
           {/* DOT Verification Results (Owner Operator only) */}
-          {applicant?.is_owner_operator && (
+          {applicant?.is_owner_operator && SHOW_DOT_VERIFICATION && (
             <Row className="mt-3">
               <Col>
                 <ViewCard title="DOT Verification Results">

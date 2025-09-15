@@ -22,6 +22,8 @@ import ApplicantApi from "../../../pages/api/applicant";
 import { toast } from "react-toastify";
 import { ApplicantExtras as ApplicantExtrasEnum } from "../../../enums/applicants/applicant-extras.enum";
 
+const SHOW_DOT_VERIFICATION = false; //MANUALLY DISABLED DOT VERIFICATION RESULTS BOX
+
 export interface EditApplicantFormProps extends BaseFormProps<ApplicantEntity> {
   isSubmitting: boolean;
   setIsSubmitting(value: boolean): void;
@@ -58,7 +60,7 @@ export function EditApplicantForm(props: EditApplicantFormProps) {
         />
       </Row>
       {/* DOT Verification Results (Owner Operator only) */}
-      {props?.entity?.is_owner_operator && (
+      {props?.entity?.is_owner_operator && SHOW_DOT_VERIFICATION && (
         <Row className="px-2 mt-2">
           <Col md="12">
             <ViewCard title="DOT Verification Results">
