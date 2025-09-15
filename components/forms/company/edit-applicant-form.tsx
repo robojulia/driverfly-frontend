@@ -21,8 +21,7 @@ import CompanyApi from "../../../pages/api/company";
 import ApplicantApi from "../../../pages/api/applicant";
 import { toast } from "react-toastify";
 import { ApplicantExtras as ApplicantExtrasEnum } from "../../../enums/applicants/applicant-extras.enum";
-
-const SHOW_DOT_VERIFICATION = false; //MANUALLY DISABLED DOT VERIFICATION RESULTS BOX
+import { useFeatureFlag } from "../../../context/feature-flag-context";
 
 export interface EditApplicantFormProps extends BaseFormProps<ApplicantEntity> {
   isSubmitting: boolean;
@@ -32,6 +31,7 @@ export interface EditApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 export function EditApplicantForm(props: EditApplicantFormProps) {
   const { t } = useTranslation();
   const router = useRouter();
+  const showDotVerification = useFeatureFlag('dotVerificationResults');
   const routeToApplicants = () => router.push("/dashboard/company/applicants");
   return (
     <>
@@ -60,7 +60,7 @@ export function EditApplicantForm(props: EditApplicantFormProps) {
         />
       </Row>
       {/* DOT Verification Results (Owner Operator only) */}
-      {props?.entity?.is_owner_operator && SHOW_DOT_VERIFICATION && (
+      {props?.entity?.is_owner_operator && showDotVerification && (
         <Row className="px-2 mt-2">
           <Col md="12">
             <ViewCard title="DOT Verification Results">

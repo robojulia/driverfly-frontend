@@ -35,8 +35,7 @@ import ApplicantWorkHistory from '../../../../../components/applicants/applicant
 import { ApplicantDocumentType } from '../../../../../enums/applicants/applicant-document-type.enum';
 import CompanyApi from '../../../../api/company';
 import { ApplicantExtras as ApplicantExtrasEnum } from '../../../../../enums/applicants/applicant-extras.enum';
-
-const SHOW_DOT_VERIFICATION = false; //MANUALLY DISABLED DOT VERIFICATION RESULTS BOX
+import { useFeatureFlag } from '../../../../../context/feature-flag-context';
 
 export default function ViewApplicant({ id }) {
   const router = useRouter();
@@ -44,6 +43,7 @@ export default function ViewApplicant({ id }) {
   const { t } = useTranslation();
 
   const { hasPermission } = useAuth();
+  const showDotVerification = useFeatureFlag('dotVerificationResults');
 
   const protectedFields = {
     license_number: hasPermission('CanViewApplicant.license_number'),
@@ -265,7 +265,7 @@ export default function ViewApplicant({ id }) {
             </Col>
           </Row>
           {/* DOT Verification Results (Owner Operator only) */}
-          {applicant?.is_owner_operator && SHOW_DOT_VERIFICATION && (
+          {applicant?.is_owner_operator && showDotVerification && (
             <Row className="mt-3">
               <Col>
                 <ViewCard title="DOT Verification Results">
