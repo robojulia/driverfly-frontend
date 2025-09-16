@@ -138,6 +138,9 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
 
   useEffect(() => focusOnErrorField(form), [form.submitCount]);
 
+  const showVoeSummary = Array.isArray(form.values?.employers)
+    && form.values.employers.some((e) => Boolean(e?.can_contact));
+
   return (
     <Form onSubmit={form.handleSubmit} className={className}>
       {form?.isSubmitting ? (
@@ -149,15 +152,17 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
               title="WORK_HISTORY"
               actions={
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <Button
-                    size="sm"
-                    onClick={handleVoeSummaryClick}
-                    disabled={!entity?.uuid_token}
-                    title={t('GENERATE_VOE_SUMMARY_PDF')}
-                  >
-                    <FileEarmarkText className="me-1" />
-                    VOE Summary
-                  </Button>
+                  {showVoeSummary && (
+                    <Button
+                      size="sm"
+                      onClick={handleVoeSummaryClick}
+                      disabled={!entity?.uuid_token}
+                      title={t('GENERATE_VOE_SUMMARY_PDF')}
+                    >
+                      <FileEarmarkText className="me-1" />
+                      VOE Summary
+                    </Button>
+                  )}
                   <Button
                     disabled={Boolean(entity?.is_hired)}
                     size="sm"

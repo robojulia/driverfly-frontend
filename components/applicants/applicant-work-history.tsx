@@ -15,6 +15,8 @@ interface ApplicantWorkHistoryProps extends ViewApplicantDetailProps { }
 export default function ApplicantWorkHistory({ applicant }: ApplicantWorkHistoryProps) {
 
     const { t } = useTranslation();
+    const showVoeSummary = Array.isArray(applicant?.employers)
+        && applicant.employers.some((e) => Boolean(e?.can_contact));
 
     const handleVoeSummaryClick = () => {
         if (applicant?.uuid_token) {
@@ -28,15 +30,19 @@ export default function ApplicantWorkHistory({ applicant }: ApplicantWorkHistory
         <ViewCard 
             title="WORK_HISTORY"
             actions={
-                <Button
-                    size="sm"
-                    onClick={handleVoeSummaryClick}
-                    disabled={!applicant?.uuid_token}
-                    title={t('GENERATE_VOE_SUMMARY_PDF')}
-                >
-                    <FileEarmarkText className="me-1" />
-                    VOE Summary
-                </Button>
+                <>
+                    {showVoeSummary && (
+                        <Button
+                            size="sm"
+                            onClick={handleVoeSummaryClick}
+                            disabled={!applicant?.uuid_token}
+                            title={t('GENERATE_VOE_SUMMARY_PDF')}
+                        >
+                            <FileEarmarkText className="me-1" />
+                            VOE Summary
+                        </Button>
+                    )}
+                </>
             }
         >
             {!applicant.employers?.length &&

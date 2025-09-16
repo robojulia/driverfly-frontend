@@ -217,7 +217,6 @@ export default function SafetyPerformanceHistory({
               )}
               {Boolean(showResendButton) &&
                 Boolean(employer?.email) &&
-                // Boolean(employer?.can_contact) ? (
                 Boolean(employer?.is_subject_to_fmcsrs) && (
                   <OverlyPopover
                     str={
