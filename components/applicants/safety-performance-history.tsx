@@ -81,11 +81,11 @@ export default function SafetyPerformanceHistory({
   });
 
   useEffectAsync(async () => {
-    if (!!applicant.id) {
+    if (!!applicant?.id) {
       const data = await applicantApi.employer.list(applicant.id);
       setEmployers(data);
     }
-  }, [applicant?.employers]);
+  }, [applicant?.id]);
 
   useEffect(() => {
     return () => {
