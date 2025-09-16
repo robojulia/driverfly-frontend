@@ -100,6 +100,115 @@ function DacItemEditor({ dacForm, companyDacItemType }) {
   );
 }
 
+function ChecklistItems({
+  showCompleted,
+  companyOnboardingChecklist,
+  vehicleDocumentTypes,
+  renderDocumentTable,
+  companyDaclist,
+  applicant,
+  dacForm,
+  handleDacChangeClick,
+  pdf,
+  setPdf,
+}) {
+  const { t } = useTranslation();
+
+  // Separate vehicle documents from other documents
+  const otherDocumentTypes =
+    companyOnboardingChecklist?.value?.filter(
+      (type: ApplicantOnBoardingChecklist) => !vehicleDocumentTypes.includes(type)
+    ) || [];
+
+  return (
+    <>
+      <h6 className="mt-2">{t("COMPLETED")}</h6>
+
+      {renderDocumentTable(otherDocumentTypes, true)}
+      {renderDocumentTable(vehicleDocumentTypes, true, t("VEHICLE_DOCUMENTS"))}
+
+      <h6 className="mt-5">{t("UPLOAD_FILES")}</h6>
+
+      {renderDocumentTable(otherDocumentTypes, false)}
+      {renderDocumentTable(vehicleDocumentTypes, false, t("VEHICLE_DOCUMENTS"))}
+
+      <h6 className="mt-5">{t("CHECKLIST_ITEMS")}</h6>
+      <Table striped>
+        <thead>
+          <tr>
+            <th colSpan={2}>{t("TYPE")}</th>
+            {Boolean(showCompleted) && <th colSpan={1} className="text-center"></th>}
+            <th colSpan={1} className="text-center">{t("DATE")}</th>
+            <th colSpan={1} className="text-center">{t("DETAILS")}</th>
+            <th colSpan={1}></th>
+          </tr>
+        </thead>
+        <tbody>
+          {companyDaclist?.value?.map((companyDacItemType: string) => {
+            const applicatDacItem: ApplicantDacEntity = applicant?.dac?.find(
+              (v) => v.type == companyDacItemType
+            );
+            return (
+              <tr key={companyDacItemType}>
+                <td colSpan={2}> {companyDacItemType}</td>
+                {Boolean(showCompleted) && (
+                  <td colSpan={1} className="text-center">
+                    <BaseCheck
+                      className=""
+                      disabled
+                      checked={
+                        applicatDacItem?.type &&
+                        applicatDacItem?.type == companyDacItemType &&
+                        applicatDacItem?.value
+                      }
+                    />
+                  </td>
+                )}
+                <td colSpan={1} className="text-center">
+                  {applicatDacItem?.last_updated_at ? (
+                    <ShowFormattedDate date={applicatDacItem?.last_updated_at} />
+                  ) : (
+                    <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>
+                  )}
+                </td>
+                <td colSpan={1} className="text-center">
+                  {applicatDacItem?.details ? (
+                    applicatDacItem?.details
+                  ) : (
+                    <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>
+                  )}
+                </td>
+                <td colSpan={1}>
+                  <div className="w-100">
+                    {dacForm?.values?.type != companyDacItemType ? (
+                      <div className="d-flex justify-content-between">
+                        <Button
+                          className="ml- w-100"
+                          disabled={
+                            dacForm.isSubmitting || !dacForm.isValid || dacForm.isValidating
+                          }
+                          onClick={() => {
+                            handleDacChangeClick(companyDacItemType, applicatDacItem);
+                          }}
+                        >
+                          {t("CHANGE")}
+                        </Button>
+                      </div>
+                    ) : (
+                      <DacItemEditor dacForm={dacForm} companyDacItemType={companyDacItemType} />
+                    )}
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
+      <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
+    </>
+  );
+}
+
 export default function OnboardingChecklist(
   props: ViewApplicantOnboardingChecklistProps
 ) {
@@ -411,122 +520,7 @@ export default function OnboardingChecklist(
     );
   };
 
-  function ChecklistItems() {
-    // Separate vehicle documents from other documents
-    const otherDocumentTypes = companyOnboardingChecklist?.value?.filter((type: ApplicantOnBoardingChecklist) => 
-      !vehicleDocumentTypes.includes(type)
-    ) || [];
-
-    return (
-      <>
-        <h6 className="mt-2">{t("COMPLETED")}</h6>
-        
-        {/* Regular Documents */}
-        {renderDocumentTable(otherDocumentTypes, true)}
-        
-        {/* Vehicle Documents Section */}
-        {renderDocumentTable(vehicleDocumentTypes, true, t("VEHICLE_DOCUMENTS"))}
-
-        <h6 className="mt-5">{t("UPLOAD_FILES")}</h6>
-        
-        {/* Regular Documents Upload */}
-        {renderDocumentTable(otherDocumentTypes, false)}
-        
-        {/* Vehicle Documents Upload Section */}
-        {renderDocumentTable(vehicleDocumentTypes, false, t("VEHICLE_DOCUMENTS"))}
-        <h6 className="mt-5">{t("CHECKLIST_ITEMS")}</h6>
-        <Table striped>
-          <thead>
-            <tr>
-              <th colSpan={2}>{t("TYPE")}</th>
-              {Boolean(props.showCompleted) && (
-                <th colSpan={1} className="text-center"></th>
-              )}
-              <th colSpan={1} className="text-center">
-                {t("DATE")}
-              </th>
-              <th colSpan={1} className="text-center">
-                {t("DETAILS")}
-              </th>
-              <th colSpan={1}></th>
-            </tr>
-          </thead>
-          <tbody>
-            {companyDaclist?.value?.map((companyDacItemType: string, i) => {
-              const applicatDacItem: ApplicantDacEntity = applicant?.dac?.find(
-                (v) => v.type == companyDacItemType
-              );
-              return (
-                <tr key={companyDacItemType}>
-                  <td colSpan={2}> {companyDacItemType}</td>
-                  {Boolean(props.showCompleted) && (
-                    <td colSpan={1} className="text-center">
-                      <BaseCheck
-                        className=""
-                        disabled
-                        checked={
-                          applicatDacItem?.type &&
-                          applicatDacItem?.type == companyDacItemType &&
-                          applicatDacItem?.value
-                        }
-                      />
-                    </td>
-                  )}
-                  <td colSpan={1} className="text-center">
-                    {applicatDacItem?.last_updated_at ? (
-                      <ShowFormattedDate
-                        date={applicatDacItem?.last_updated_at}
-                      />
-                    ) : (
-                      <span className="text-danger font-italic">
-                        {t(`NOT_AVAILABLE`)}
-                      </span>
-                    )}
-                  </td>
-                  <td colSpan={1} className="text-center">
-                    {applicatDacItem?.details ? (
-                      applicatDacItem?.details
-                    ) : (
-                      <span className="text-danger font-italic">
-                        {t(`NOT_AVAILABLE`)}
-                      </span>
-                    )}
-                  </td>
-                  <td colSpan={1}>
-                    <div className="w-100">
-                      {dacForm?.values?.type != companyDacItemType ? (
-                        <div className="d-flex justify-content-between">
-                          <Button
-                            className="ml- w-100"
-                            disabled={
-                              form.isSubmitting ||
-                              !form.isValid ||
-                              form.isValidating
-                            }
-                            onClick={() => {
-                              handleDacChangeClick(
-                                companyDacItemType,
-                                applicatDacItem
-                              );
-                            }}
-                          >
-                            {t("CHANGE")}
-                          </Button>
-                        </div>
-                      ) : (
-                        <DacItemEditor dacForm={dacForm} companyDacItemType={companyDacItemType} />
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-        <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
-      </>
-    );
-  }
+  // removed nested ChecklistItems definition to prevent remounting and focus loss
 
   // useEffect(() => {
   //   console.log("dacForm.values", dacForm.values);
@@ -598,7 +592,18 @@ export default function OnboardingChecklist(
           />
         </>
       ) : (
-        <ChecklistItems />
+        <ChecklistItems
+          showCompleted={props.showCompleted}
+          companyOnboardingChecklist={companyOnboardingChecklist}
+          vehicleDocumentTypes={vehicleDocumentTypes}
+          renderDocumentTable={renderDocumentTable}
+          companyDaclist={companyDaclist}
+          applicant={applicant}
+          dacForm={dacForm}
+          handleDacChangeClick={handleDacChangeClick}
+          pdf={pdf}
+          setPdf={setPdf}
+        />
       )}
     </ViewCard>
   );
