@@ -45,6 +45,61 @@ import { CompanyPreferencesOnboardingChecklistForm } from "../../forms/company/c
 import { LoaderIcon } from "../../loading/loader-icon";
 import SafetyPerformanceHistory from "../safety-performance-history";
 
+function DacItemEditor({ dacForm, companyDacItemType }) {
+  const { t } = useTranslation();
+  return (
+    <Form onSubmit={dacForm.handleSubmit}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
+        <BaseRadio
+          name={`value`}
+          className="float-left ml-2 my-2 w-40"
+          label={companyDacItemType}
+          labelPrefix="BooleanType"
+          enumType={BooleanType}
+          required
+          value={dacForm.values.value ? BooleanType.YES : BooleanType.NO}
+          onChange={({ target: { value } }) => {
+            dacForm.setFieldValue("value", value == BooleanType.YES ? true : false);
+          }}
+        />
+        <BaseInput
+          name={"details"}
+          className=" d-flex justify-content-center align-items-end float-left ml-2 my-1 w-40"
+          label={"DETAILS"}
+          placeholder=""
+          formik={dacForm}
+        />
+      </div>
+      <div className="d-flex justify-content-end w-100 mt-2">
+        <Button
+          disabled={
+            dacForm.isSubmitting || !dacForm.isValid || dacForm.isValidating
+          }
+          className=" theme-primary-btn w-50"
+          type="submit"
+        >
+          {t(`SAVE`)} <LoaderIcon isLoading={dacForm.isSubmitting} />
+        </Button>
+        <Button
+          type="button"
+          className="ml-2 bg-danger w-50"
+          onClick={() => {
+            dacForm.resetForm();
+          }}
+        >
+          {t(`CANCEL`)}
+        </Button>
+      </div>
+    </Form>
+  );
+}
+
 export default function OnboardingChecklist(
   props: ViewApplicantOnboardingChecklistProps
 ) {
@@ -303,7 +358,7 @@ export default function OnboardingChecklist(
               if (isCompleted ? !document : document) return null;
 
               return (
-                <tr key={i}>
+                <tr key={type}>
                   <td colSpan={2}>
                     {t(`ApplicantOnBoardingChecklist.${type}`)}
                   </td>
@@ -402,7 +457,7 @@ export default function OnboardingChecklist(
                 (v) => v.type == companyDacItemType
               );
               return (
-                <tr key={i}>
+                <tr key={companyDacItemType}>
                   <td colSpan={2}> {companyDacItemType}</td>
                   {Boolean(props.showCompleted) && (
                     <td colSpan={1} className="text-center">
@@ -459,64 +514,7 @@ export default function OnboardingChecklist(
                           </Button>
                         </div>
                       ) : (
-                        <Form onSubmit={dacForm.handleSubmit}>
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <BaseRadio
-                              name={`value`}
-                              className="float-left ml-2 my-2 w-40"
-                              label={companyDacItemType}
-                              labelPrefix="BooleanType"
-                              enumType={BooleanType}
-                              required
-                              value={
-                                dacForm.values.value
-                                  ? BooleanType.YES
-                                  : BooleanType.NO
-                              }
-                              onChange={({ target: { value } }) => {
-                                dacForm.setFieldValue(
-                                  "value",
-                                  value == BooleanType.YES ? true : false
-                                );
-                              }}
-                            />
-                            <BaseInput
-                              name={"details"}
-                              className=" d-flex justify-content-center align-items-end float-left ml-2 my-1 w-40"
-                              label={"DETAILS"}
-                              placeholder=""
-                              formik={dacForm}
-                            />
-                          </div>
-                          <div className="d-flex justify-content-end w-100 mt-2">
-                            <Button
-                              disabled={
-                                dacForm.isSubmitting ||
-                                !dacForm.isValid ||
-                                dacForm.isValidating
-                              }
-                              className=" theme-primary-btn w-50"
-                              type="submit"
-                            >
-                              {t(`SAVE`)} <LoaderIcon isLoading={dacForm.isSubmitting} />
-                            </Button>
-                            <Button
-                              type="button"
-                              className="ml-2 bg-danger w-50"
-                              onClick={() => {
-                                dacForm.resetForm();
-                              }}
-                            >
-                              {t(`CANCEL`)}
-                            </Button>
-                          </div>
-                        </Form>
+                        <DacItemEditor dacForm={dacForm} companyDacItemType={companyDacItemType} />
                       )}
                     </div>
                   </td>
