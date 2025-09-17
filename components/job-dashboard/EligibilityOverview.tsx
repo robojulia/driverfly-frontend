@@ -18,66 +18,50 @@ export const EligibilityOverview: React.FC<EligibilityOverviewProps> = ({
   loadingStats,
 }) => {
   return (
-    <div className={`${styles.eligibilityOverviewContainer} ${className}`}>
+    <div className={className}>
       {/* Stats Cards Section */}
-      <div className={styles.statsSection}>
-        {loadingStats ? (
-          <div className="text-center p-4">
-            <div className="spinner-border text-primary" />
-            <p className="mt-2 text-muted">Loading eligibility data...</p>
-          </div>
-        ) : (
-          <div className={styles.statsCards}>
-            <div className={`${styles.statCard} ${styles.primaryStat}`}>
-              <div className={styles.statNumber}>{eligibilityStats?.totalApplicants || 0}</div>
-              <div className={styles.statLabel}>Total Applications</div>
-              <div className={styles.statSubtext}>
-                {eligibilityStats?.recentApplications || 0} submitted this week
-                {eligibilityStats?.totalApplicants > 0 && (
-                  <>
-                    <br />
-                    <span style={{ fontWeight: 500 }}>
-                      {((eligibilityStats?.recentApplications || 0) / 7).toFixed(1)} per day avg
-                    </span>
-                  </>
-                )}
-              </div>
-            </div>
-
-            <div className={`${styles.statCard} ${styles.successStat}`}>
-              <div className={styles.statNumber}>{eligibilityStats?.eligibleApplicants || 0}</div>
-              <div className={styles.statLabel}>Qualified Candidates</div>
-              <div className={styles.statSubtext}>
-                {(eligibilityStats?.eligibilityRate || 0).toFixed(1)}% meet requirements
-                {eligibilityStats?.averageScore > 0 && (
-                  <>
-                    <br />
-                    <span style={{ fontWeight: 500 }}>
-                      {eligibilityStats.averageScore.toFixed(1)} avg score
-                    </span>
-                  </>
-                )}
-              </div>
-            </div>
-
-            <div className={`${styles.statCard} ${styles.dangerStat}`}>
-              <div className={styles.statNumber}>{eligibilityStats?.ineligibleApplicants || 0}</div>
-              <div className={styles.statLabel}>Needs Review</div>
-              <div className={styles.statSubtext}>
-                Missing key requirements
-                {eligibilityStats?.totalApplicants > 0 && (
-                  <>
-                    <br />
-                    <span style={{ fontWeight: 500 }}>
-                      {(100 - (eligibilityStats?.eligibilityRate || 0)).toFixed(1)}% rejection rate
-                    </span>
-                  </>
-                )}
+      {loadingStats ? (
+        <div className="text-center p-4">
+          <div className="spinner-border text-primary" />
+          <p className="mt-2 text-muted">Loading eligibility data...</p>
+        </div>
+      ) : (
+        <div className="row g-3 mb-0 d-none d-lg-flex">
+          <div className="col-md-6">
+            <div className="card">
+              <div className="card-body text-center py-3">
+                <div className="d-flex align-items-center justify-content-center mb-2">
+                  <i
+                    className="bi bi-person-fill text-primary me-2"
+                    style={{ fontSize: '1.5rem' }}
+                  ></i>
+                  <div className="h3 mb-0 text-primary">
+                    {eligibilityStats?.totalApplicants || 0}
+                  </div>
+                </div>
+                <div className="text-muted">Total Applicants</div>
               </div>
             </div>
           </div>
-        )}
-      </div>
+
+          <div className="col-md-6">
+            <div className="card">
+              <div className="card-body text-center py-3">
+                <div className="d-flex align-items-center justify-content-center mb-2">
+                  <i
+                    className="bi bi-check-circle-fill text-success me-2"
+                    style={{ fontSize: '1.5rem' }}
+                  ></i>
+                  <div className="h3 mb-0 text-success">
+                    {eligibilityStats?.eligibleApplicants || 0}
+                  </div>
+                </div>
+                <div className="text-muted">Eligible Applicants</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Eligibility Table Section */}
       <div className={styles.eligibilitySection}>
