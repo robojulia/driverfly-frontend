@@ -417,7 +417,13 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
               </div>
             )}
 
-            <div className={styles.overviewMainLayout}>
+            <div
+              className={
+                false && campaignsEnabled
+                  ? styles.overviewMainLayout
+                  : styles.overviewMainLayoutFullWidth
+              }
+            >
               {/* Main Content: Eligibility Overview with Stats + Table */}
               <div className={styles.overviewMainContent}>
                 <EligibilityOverview
@@ -429,7 +435,8 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
               </div>
 
               {/* Right Sidebar: Campaign CTA (Desktop) - Only if campaigns enabled */}
-              {campaignsEnabled && (
+              {/* NOTE: CAMPAIGN SIDEBAR HIDDEN FOR NOW */}
+              {false && campaignsEnabled && (
                 <div className={styles.overviewSidebar}>
                   <CampaignCta
                     job={job}
