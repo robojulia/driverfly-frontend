@@ -30,9 +30,9 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
     // Experience
     if (job.min_years_experience) {
       if (job.min_years_experience === 1) {
-        requirements.push(`${job.min_years_experience}+ year OTR experience`);
+        requirements.push(`${job.min_years_experience}+ year CDL experience`);
       } else {
-        requirements.push(`${job.min_years_experience}+ years OTR experience`);
+        requirements.push(`${job.min_years_experience}+ years CDL experience`);
       }
     }
 
