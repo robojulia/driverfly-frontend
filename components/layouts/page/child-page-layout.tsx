@@ -9,11 +9,13 @@ import { PageLayoutProps } from './page-layout';
 
 export interface ChildPageLayoutProps extends PageLayoutProps {
   backPath?: string;
+  backPathTitle?: string;
 }
 
 export default function ChildPageLayout({
   title,
   backPath,
+  backPathTitle,
   actions,
   children,
 }: ChildPageLayoutProps) {
@@ -32,21 +34,30 @@ export default function ChildPageLayout({
   return (
     <>
       <ToastContainer />
+
       <Row className="align-items-center mb-4">
         <Col>
           <div className="d-flex align-items-center">
+            {/* Back Button */}
             <button
               onClick={handleBack}
-              className="btn btn-link text-dark p-0 me-2"
+              className="btn btn-outline-secondary btn-sm d-flex align-items-center me-3"
               style={{
-                textDecoration: 'none',
-                fontSize: '1.75rem',
-                lineHeight: 1,
+                fontSize: '0.875rem',
+                padding: '0.375rem 0.75rem',
+                borderRadius: '0.375rem',
               }}
             >
-              <ChevronLeft />
+              <ChevronLeft className="me-1" style={{ fontSize: '1rem' }} />
+              {backPathTitle || t('Back')}
             </button>
-            <h2 className="mb-0">{t(title || 'GO_BACK')}</h2>
+
+            {/* Page Title */}
+            {title && (
+              <h2 className="mb-0" style={{ fontSize: '1.75rem', fontWeight: '600' }}>
+                {t(title)}
+              </h2>
+            )}
           </div>
         </Col>
         {actions && <Col xs="auto">{actions}</Col>}
