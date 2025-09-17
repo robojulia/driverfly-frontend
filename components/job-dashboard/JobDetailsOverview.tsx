@@ -76,19 +76,21 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
             <div className={styles.detailItem}>
               <div className={styles.detailLabel}>{t('EMPLOYMENT_TYPE')}</div>
               <div className={styles.detailValue}>
-                {job.employment_type ? t(job.employment_type.toUpperCase()) : t('NOT_SPECIFIED')}
+                {job.employment_type
+                  ? t(`JobEmploymentType.${job.employment_type}`)
+                  : t('NOT_SPECIFIED')}
               </div>
             </div>
             <div className={styles.detailItem}>
               <div className={styles.detailLabel}>{t('GEOGRAPHY')}</div>
               <div className={styles.detailValue}>
-                {job.geography ? t(job.geography.toUpperCase()) : t('NOT_SPECIFIED')}
+                {job.geography ? t(`JobGeography.${job.geography}`) : t('NOT_SPECIFIED')}
               </div>
             </div>
             <div className={styles.detailItem}>
               <div className={styles.detailLabel}>{t('CDL_REQUIRED')}</div>
               <div className={styles.detailValue}>
-                {job.cdl_class ? t(`CDL_CLASS_${job.cdl_class}`) : t('NONE')}
+                {job.cdl_class ? t(`CDLClass.${job.cdl_class}`) : t(`CDLClass.NONE`)}
               </div>
             </div>
           </div>
@@ -110,7 +112,7 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
             <div className={styles.detailItem}>
               <div className={styles.detailLabel}>{t('SCHEDULE')}</div>
               <div className={styles.detailValue}>
-                {job.schedule ? t(job.schedule.toUpperCase()) : t('NOT_SPECIFIED')}
+                {job.schedule ? t(`JobSchedule.${job.schedule}`) : t('NOT_SPECIFIED')}
               </div>
             </div>
             <div className={styles.detailItem}>
@@ -233,7 +235,7 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
             <div className="d-flex flex-wrap gap-2">
               {job.benefits.map((benefit, index) => (
                 <span key={index} className="badge bg-primary" style={{ fontSize: '0.875rem' }}>
-                  {t(benefit.toUpperCase().replace(/[^A-Z0-9]/g, '_'))}
+                  {t(`JobBenefits.${benefit}`)}
                 </span>
               ))}
             </div>
@@ -250,19 +252,9 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
             <div className={styles.detailValue}>
               {Array.isArray(job.equipment_type)
                 ? job.equipment_type
-                    .map((equipment) =>
-                      t(
-                        String(equipment)
-                          .toUpperCase()
-                          .replace(/[^A-Z0-9]/g, '_')
-                      )
-                    )
+                    .map((equipment) => t(`JobEquipmentType.${equipment}`))
                     .join(', ')
-                : t(
-                    String(job.equipment_type)
-                      .toUpperCase()
-                      .replace(/[^A-Z0-9]/g, '_')
-                  )}
+                : t(`JobEquipmentType.${job.equipment_type}`)}
             </div>
           </div>
         )}

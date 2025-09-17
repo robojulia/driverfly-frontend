@@ -33,16 +33,14 @@ const MetricCard: React.FC<MetricCardProps> = ({
   return (
     <Card className="h-100 border-0 shadow-sm">
       <Card.Body className="p-4">
-        <div className="d-flex align-items-center justify-content-between">
-          <div className="flex-grow-1">
-            <div className="text-muted small mb-1">{title}</div>
-            <div className="h3 mb-1 fw-bold text-primary">{formatValue(value, format)}</div>
-            {subtitle && <div className="text-muted small">{subtitle}</div>}
+        <div className="d-flex align-items-center mb-2">
+          <div className="text-primary me-3">
+            <Icon size={24} />
           </div>
-          <div className="text-primary opacity-75 ms-3">
-            <Icon size={32} />
-          </div>
+          <div className="h3 mb-0 fw-bold text-dark">{formatValue(value, format)}</div>
         </div>
+        <div className="text-muted small">{title}</div>
+        {subtitle && <div className="text-muted small">{subtitle}</div>}
       </Card.Body>
     </Card>
   );

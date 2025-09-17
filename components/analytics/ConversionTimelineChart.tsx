@@ -7,13 +7,17 @@ interface ConversionTimelineChartProps {
   period: '7d' | '30d' | '90d';
 }
 
-interface SimpleBarChartProps {
-  data: { label: string; value: number; color: string }[];
+interface GroupedBarChartProps {
+  data: {
+    label: string;
+    views: number;
+    applications: number;
+  }[];
   height?: number;
 }
 
-const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ data, height = 200 }) => {
-  const maxValue = Math.max(...data.map((d) => d.value));
+const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ data, height = 200 }) => {
+  const maxValue = Math.max(...data.flatMap((d) => [d.views, d.applications]));
 
   if (maxValue === 0) {
     return (
@@ -25,33 +29,54 @@ const SimpleBarChart: React.FC<SimpleBarChartProps> = ({ data, height = 200 }) =
 
   return (
     <div>
-      <div className="d-flex align-items-end" style={{ height: `${height}px`, gap: '4px' }}>
+      <div className="d-flex align-items-end" style={{ height: `${height}px`, gap: '8px' }}>
         {data.map((item, index) => {
-          const barHeight = (item.value / maxValue) * (height - 40);
+          const viewsHeight = (item.views / maxValue) * (height - 40);
+          const applicationsHeight = (item.applications / maxValue) * (height - 40);
+
           return (
-            <div key={index} className="flex-fill d-flex flex-column justify-content-end">
-              <div
-                className="rounded-top"
-                style={{
-                  height: `${Math.max(barHeight, 2)}px`,
-                  backgroundColor: item.color,
-                  minWidth: '8px',
-                }}
-                title={`${item.label}: ${item.value.toLocaleString()}`}
-              />
+            <div
+              key={index}
+              className="flex-fill d-flex justify-content-center align-items-end"
+              style={{ gap: '2px' }}
+            >
+              {/* Views bar */}
+              <div className="d-flex flex-column justify-content-end" style={{ flex: 1 }}>
+                <div
+                  className="rounded-top"
+                  style={{
+                    height: `${Math.max(viewsHeight, 2)}px`,
+                    backgroundColor: '#17a2b8', // Teal color like screenshot
+                    minWidth: '12px',
+                  }}
+                  title={`${item.label} Views: ${item.views.toLocaleString()}`}
+                />
+              </div>
+              {/* Applications bar */}
+              <div className="d-flex flex-column justify-content-end" style={{ flex: 1 }}>
+                <div
+                  className="rounded-top"
+                  style={{
+                    height: `${Math.max(applicationsHeight, 2)}px`,
+                    backgroundColor: '#28a745', // Green color like screenshot
+                    minWidth: '12px',
+                  }}
+                  title={`${item.label} Applications: ${item.applications.toLocaleString()}`}
+                />
+              </div>
             </div>
           );
         })}
       </div>
 
-      {/* X-axis labels - show every nth label to avoid crowding */}
-      <div className="d-flex mt-2" style={{ gap: '4px' }}>
+      {/* X-axis labels */}
+      <div className="d-flex mt-2" style={{ gap: '8px' }}>
         {data.map((item, index) => {
           const shouldShow = data.length <= 7 || index % Math.ceil(data.length / 7) === 0;
           return (
             <div key={index} className="flex-fill text-center">
               {shouldShow && (
-                <small className="text-muted" style={{ fontSize: '10px' }}>
+                <small className="text-muted" style={{ fontSize: '11px' }}>
                   {item.label}
                 </small>
               )}
@@ -96,69 +121,37 @@ export const ConversionTimelineChart: React.FC<ConversionTimelineChartProps> = (
     );
   }
 
-  // Prepare chart data for views
-  const viewsData = timeline.map((item) => ({
+  // Prepare grouped chart data
+  const groupedData = timeline.map((item) => ({
     label: formatDate(item.date, groupBy),
-    value: item.views,
-    color: '#0d6efd', // Bootstrap primary blue
+    views: item.views,
+    applications: item.totalApplications,
   }));
-
-  // Prepare chart data for applications
-  const applicationsData = timeline.map((item) => ({
-    label: formatDate(item.date, groupBy),
-    value: item.totalApplications,
-    color: '#198754', // Bootstrap green
-  }));
-
-  const totalViews = timeline.reduce((sum, item) => sum + item.views, 0);
-  const totalApplications = timeline.reduce((sum, item) => sum + item.totalApplications, 0);
-  const avgConversionRate = totalViews > 0 ? (totalApplications / totalViews) * 100 : 0;
 
   return (
     <div>
-      {/* Summary Stats */}
-      <div className="row mb-4">
-        <div className="col-md-4 text-center">
-          <div className="h4 text-primary mb-1">{totalViews.toLocaleString()}</div>
-          <div className="small text-muted">Total Views</div>
-        </div>
-        <div className="col-md-4 text-center">
-          <div className="h4 text-success mb-1">{totalApplications.toLocaleString()}</div>
-          <div className="small text-muted">Total Applications</div>
-        </div>
-        <div className="col-md-4 text-center">
-          <div className="h4 text-warning mb-1">{avgConversionRate.toFixed(1)}%</div>
-          <div className="small text-muted">Avg Conversion Rate</div>
-        </div>
-      </div>
-
-      {/* Charts */}
-      <div className="row">
-        <div className="col-md-6">
-          <div className="mb-3">
-            <div className="d-flex align-items-center mb-2">
-              <div
-                className="rounded me-2"
-                style={{ width: '12px', height: '12px', backgroundColor: '#0d6efd' }}
-              />
-              <span className="fw-medium">Job Views</span>
-            </div>
-            <SimpleBarChart data={viewsData} height={150} />
+      {/* Grouped Chart */}
+      <div className="mb-3">
+        <div
+          className="d-flex align-items-center justify-content-center mb-3"
+          style={{ gap: '20px' }}
+        >
+          <div className="d-flex align-items-center">
+            <div
+              className="rounded me-2"
+              style={{ width: '12px', height: '12px', backgroundColor: '#17a2b8' }}
+            />
+            <span className="fw-medium">Views</span>
+          </div>
+          <div className="d-flex align-items-center">
+            <div
+              className="rounded me-2"
+              style={{ width: '12px', height: '12px', backgroundColor: '#28a745' }}
+            />
+            <span className="fw-medium">Applications</span>
           </div>
         </div>
-
-        <div className="col-md-6">
-          <div className="mb-3">
-            <div className="d-flex align-items-center mb-2">
-              <div
-                className="rounded me-2"
-                style={{ width: '12px', height: '12px', backgroundColor: '#198754' }}
-              />
-              <span className="fw-medium">Applications</span>
-            </div>
-            <SimpleBarChart data={applicationsData} height={150} />
-          </div>
-        </div>
+        <GroupedBarChart data={groupedData} height={200} />
       </div>
 
       {/* Timeline Summary */}

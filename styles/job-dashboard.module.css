@@ -420,6 +420,7 @@
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: var(--spacing-lg);
+  margin-top: 20px;
 }
 
 .detailSection {
@@ -472,6 +473,7 @@
   flex-direction: column;
   height: calc(100vh - 200px); /* Adjust based on header height */
   min-height: 600px;
+  margin-top: 10px;
 }
 
 .statsAndTableContainer {
