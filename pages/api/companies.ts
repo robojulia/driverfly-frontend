@@ -146,6 +146,17 @@ class CompaniesApi extends BaseApi {
   }
 
   /**
+   * Admin edit a company (can edit any field except id)
+   */
+  async adminEditCompany(
+    companyId: number,
+    data: Partial<CompanyWithPhoneNumber>
+  ): Promise<CompanyWithPhoneNumber> {
+    const response = await this.put(`${this.baseUrl}/${companyId}`, data);
+    return response.data;
+  }
+
+  /**
    * Release a company's phone number
    */
   async releasePhoneNumber(

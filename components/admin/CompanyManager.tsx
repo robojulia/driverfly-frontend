@@ -58,6 +58,7 @@ const CompanyManager: React.FC = () => {
   const [showCreateSubCompanyModal, setShowCreateSubCompanyModal] = useState(false);
   const [showActionsModal, setShowActionsModal] = useState(false);
   const [showUsageModal, setShowUsageModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<CompanyWithPhoneNumber | null>(null);
   const [potentialParents, setPotentialParents] = useState<PotentialParent[]>([]);
   const [parentSearchTerm, setParentSearchTerm] = useState('');
@@ -79,6 +80,8 @@ const CompanyManager: React.FC = () => {
   const [parentForm, setParentForm] = useState({
     parentId: 0,
   });
+
+  const [editForm, setEditForm] = useState<Partial<CompanyWithPhoneNumber>>({});
 
   useEffect(() => {
     loadData();
@@ -350,6 +353,14 @@ const CompanyManager: React.FC = () => {
     setShowCreateSubCompanyModal(true);
   };
 
+  const openEditModal = (company: CompanyWithPhoneNumber) => {
+    setSelectedCompany(company);
+    // Initialize edit form with current company data (excluding sensitive fields)
+    const { id, ...editableFields } = company;
+    setEditForm(editableFields);
+    setShowEditModal(true);
+  };
+
   const handleCreateSubCompany = async (companyData: CompanyEntity) => {
     if (!selectedCompany) return;
 
@@ -392,6 +403,30 @@ const CompanyManager: React.FC = () => {
     } catch (err: any) {
       console.error('Failed to create sub-company:', err);
       setError(err.response?.data?.message || 'Failed to create sub-company');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleEditCompany = async () => {
+    if (!selectedCompany || !editForm) return;
+
+    try {
+      setActionLoading(selectedCompany.id);
+      const api = new CompaniesApi();
+
+      await api.adminEditCompany(selectedCompany.id, editForm);
+
+      // Reload data to see the changes
+      await loadData();
+
+      // Close modal and reset state
+      setShowEditModal(false);
+      setSelectedCompany(null);
+      setEditForm({});
+    } catch (err: any) {
+      console.error('Failed to edit company:', err);
+      setError(err.response?.data?.message || 'Failed to edit company');
     } finally {
       setActionLoading(null);
     }
@@ -730,6 +765,26 @@ const CompanyManager: React.FC = () => {
               </div>
             </div>
 
+            {/* Admin Edit Actions */}
+            <div>
+              <h6 className="mb-3">
+                <Gear className="me-2" />
+                Admin Actions
+              </h6>
+              <div className="d-grid">
+                <Button
+                  variant="outline-primary"
+                  onClick={() => {
+                    setShowActionsModal(false);
+                    openEditModal(selectedCompany!);
+                  }}
+                >
+                  <Gear className="me-2" />
+                  Edit Company
+                </Button>
+              </div>
+            </div>
+
             {/* Company Status Actions */}
             <div>
               <h6 className="mb-3">
@@ -1047,6 +1102,228 @@ const CompanyManager: React.FC = () => {
             skipApiCall={true}
           />
         </Modal.Body>
+      </Modal>
+
+      {/* Edit Company Modal */}
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <Gear className="me-2" />
+            Edit Company - {selectedCompany?.name}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Company Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editForm.name || ''}
+                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Website</Form.Label>
+                  <Form.Control
+                    type="url"
+                    value={editForm.website || ''}
+                    onChange={(e) => setEditForm({ ...editForm, website: e.target.value })}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Phone</Form.Label>
+                  <Form.Control
+                    type="tel"
+                    value={editForm.phone || ''}
+                    onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Location</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editForm.location || ''}
+                    onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={12}>
+                <Form.Group className="mb-3">
+                  <Form.Label>About</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    value={editForm.about || ''}
+                    onChange={(e) => setEditForm({ ...editForm, about: e.target.value })}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Fleet Size</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={editForm.fleet_size || ''}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        fleet_size: parseInt(e.target.value) || undefined,
+                      })
+                    }
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Founded Year</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={editForm.founded_year || ''}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        founded_year: parseInt(e.target.value) || undefined,
+                      })
+                    }
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Safety Rating</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editForm.safety_rating || ''}
+                    onChange={(e) => setEditForm({ ...editForm, safety_rating: e.target.value })}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Facebook</Form.Label>
+                  <Form.Control
+                    type="url"
+                    value={editForm.facebook || ''}
+                    onChange={(e) => setEditForm({ ...editForm, facebook: e.target.value })}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Instagram</Form.Label>
+                  <Form.Control
+                    type="url"
+                    value={editForm.instagram || ''}
+                    onChange={(e) => setEditForm({ ...editForm, instagram: e.target.value })}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>LinkedIn</Form.Label>
+                  <Form.Control
+                    type="url"
+                    value={editForm.linkedin || ''}
+                    onChange={(e) => setEditForm({ ...editForm, linkedin: e.target.value })}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Twitter</Form.Label>
+                  <Form.Control
+                    type="url"
+                    value={editForm.twitter || ''}
+                    onChange={(e) => setEditForm({ ...editForm, twitter: e.target.value })}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Company Culture</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editForm.company_culture || ''}
+                    onChange={(e) => setEditForm({ ...editForm, company_culture: e.target.value })}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Company Benefits</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editForm.company_benefits || ''}
+                    onChange={(e) => setEditForm({ ...editForm, company_benefits: e.target.value })}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Specialties</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editForm.specialties || ''}
+                    onChange={(e) => setEditForm({ ...editForm, specialties: e.target.value })}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={12}>
+                <Form.Group className="mb-3">
+                  <Form.Check
+                    type="checkbox"
+                    label="Company Disabled"
+                    checked={editForm.disabled || false}
+                    onChange={(e) => setEditForm({ ...editForm, disabled: e.target.checked })}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={handleEditCompany}
+            disabled={actionLoading === selectedCompany?.id}
+          >
+            {actionLoading === selectedCompany?.id ? (
+              <>
+                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                <span className="ms-2">Saving...</span>
+              </>
+            ) : (
+              'Save Changes'
+            )}
+          </Button>
+        </Modal.Footer>
       </Modal>
 
       {/* Company Usage Modal */}
