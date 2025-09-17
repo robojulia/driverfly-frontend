@@ -1,17 +1,6 @@
 import React from 'react';
-import {
-  GeoAltFill,
-  CurrencyDollar,
-  TruckFrontFill,
-  CalendarEventFill,
-  ClockFill,
-  FileTextFill,
-  CheckSquareFill,
-  StarFill,
-} from 'react-bootstrap-icons';
 import { JobEntity } from '../../models/job/job.entity';
 import { useTranslation } from '../../hooks/use-translation';
-import styles from '../../styles/job-dashboard.module.css';
 
 interface JobDetailsOverviewProps {
   job: JobEntity;
@@ -29,235 +18,154 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
     return t('NOT_SPECIFIED');
   };
 
-  const formatDate = (date?: string | Date) => {
-    if (!date) return t('NOT_SPECIFIED');
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return dateObj.toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
+  // Build requirements dynamically
+  const buildRequirements = () => {
+    const requirements = [];
 
-  const getStatusDisplay = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case 'active':
-        return { label: t('ACTIVE'), class: styles.statusActive };
-      case 'inactive':
-        return { label: t('INACTIVE'), class: styles.statusInactive };
-      default:
-        return {
-          label: status ? t(status.toUpperCase()) : t('UNKNOWN'),
-          class: styles.statusInactive,
-        };
+    // CDL Requirements
+    if (job.cdl_class && job.cdl_class !== 'NONE') {
+      requirements.push(t(`CDLClass.${job.cdl_class}`));
     }
+
+    // Experience
+    if (job.min_years_experience) {
+      if (job.min_years_experience === 1) {
+        requirements.push(`${job.min_years_experience}+ year OTR experience`);
+      } else {
+        requirements.push(`${job.min_years_experience}+ years OTR experience`);
+      }
+    }
+
+    // Clean MVR
+    if (job.must_have_clean_mvr) {
+      requirements.push('Clean driving record');
+    }
+
+    // Drug test
+    if (job.must_pass_drug_test) {
+      requirements.push('DOT physical current');
+    }
+
+    // Team drivers
+    if (job.team_drivers && job.team_drivers !== 'NO_TEAM_DRIVER') {
+      requirements.push(t(`JobTeamDriver.${job.team_drivers}`));
+    }
+
+    // Required endorsements
+    if (job.required_endorsement && job.required_endorsement.length > 0) {
+      job.required_endorsement.forEach((endorsement) => {
+        requirements.push(`${endorsement} endorsement`);
+      });
+    }
+
+    // Minimum degree
+    if (job.min_degree) {
+      requirements.push(t(`EducationLevel.${job.min_degree}`));
+    }
+
+    // Accept SAP graduates
+    if (job.accept_sap_graduates) {
+      requirements.push('SAP graduates accepted');
+    }
+
+    return requirements;
   };
 
-  const statusDisplay = getStatusDisplay(job.status);
+  // Build benefits dynamically
+  const buildBenefits = () => {
+    const benefits = [];
+
+    // Map benefits from the job benefits array
+    if (job.benefits && job.benefits.length > 0) {
+      job.benefits.forEach((benefit) => {
+        benefits.push(t(`JobBenefits.${benefit}`));
+      });
+    }
+
+    // Benefits other
+    if (job.benefits_other) {
+      benefits.push(job.benefits_other);
+    }
+
+    // Pay method information as a benefit
+    if (job.pay_method) {
+      benefits.push(t(`JobPayMethod.${job.pay_method}`));
+    }
+
+    // Pay frequency
+    if (job.pay_frequency) {
+      benefits.push(t(`JobPayFrequency.${job.pay_frequency}`));
+    }
+
+    return benefits;
+  };
+
+  const requirements = buildRequirements();
+  const benefits = buildBenefits();
 
   return (
-    <div className={`${styles.jobDetails} ${className}`}>
-      <div>
-        {/* Basic Information */}
-        <div className={styles.detailSection}>
-          <h3 className={styles.detailSectionTitle}>
-            <FileTextFill />
-            {t('JOB_INFORMATION')}
-          </h3>
-          <div className={styles.detailGrid}>
-            <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>{t('STATUS')}</div>
-              <div className={`${styles.detailValue}`}>
-                <span className={`${styles.statusBadge} ${statusDisplay.class}`}>
-                  {statusDisplay.label}
-                </span>
-              </div>
-            </div>
-            <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>{t('EMPLOYMENT_TYPE')}</div>
-              <div className={styles.detailValue}>
-                {job.employment_type
-                  ? t(`JobEmploymentType.${job.employment_type}`)
-                  : t('NOT_SPECIFIED')}
-              </div>
-            </div>
-            <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>{t('GEOGRAPHY')}</div>
-              <div className={styles.detailValue}>
-                {job.geography ? t(`JobGeography.${job.geography}`) : t('NOT_SPECIFIED')}
-              </div>
-            </div>
-            <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>{t('CDL_REQUIRED')}</div>
-              <div className={styles.detailValue}>
-                {job.cdl_class ? t(`CDLClass.${job.cdl_class}`) : t(`CDLClass.NONE`)}
-              </div>
-            </div>
+    <div className={`${className}`}>
+      {/* Job Description Card */}
+      <div className="card mb-4 mt-4">
+        <div className="card-body">
+          <h3 className="h4 mb-3">Job Description</h3>
+          <div className="text-muted" style={{ lineHeight: '1.6' }}>
+            {job.description ? (
+              <div dangerouslySetInnerHTML={{ __html: job.description }} />
+            ) : (
+              'No description provided for this position.'
+            )}
           </div>
         </div>
-
-        {/* Location & Schedule */}
-        <div className={styles.detailSection}>
-          <h3 className={styles.detailSectionTitle}>
-            <GeoAltFill />
-            {t('LOCATION_AND_SCHEDULE')}
-          </h3>
-          <div className={styles.detailGrid}>
-            <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>{t('LOCATION')}</div>
-              <div className={styles.detailValue}>
-                {job.location ? `${job.location.city}, ${job.location.state}` : t('NOT_SPECIFIED')}
-              </div>
-            </div>
-            <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>{t('SCHEDULE')}</div>
-              <div className={styles.detailValue}>
-                {job.schedule ? t(`JobSchedule.${job.schedule}`) : t('NOT_SPECIFIED')}
-              </div>
-            </div>
-            <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>{t('HOME_TIME')}</div>
-              <div className={styles.detailValue}>
-                {(job as any).home_time || t('NOT_SPECIFIED')}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Compensation */}
-        <div className={styles.detailSection}>
-          <h3 className={styles.detailSectionTitle}>
-            <CurrencyDollar />
-            {t('COMPENSATION')}
-          </h3>
-          <div className={styles.detailGrid}>
-            <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>{t('WEEKLY_PAY')}</div>
-              <div className={styles.detailValue}>
-                {formatSalary(job.min_weekly_pay, job.max_weekly_pay)}
-              </div>
-            </div>
-            <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>{t('PER_MILE')}</div>
-              <div className={styles.detailValue}>
-                {(job as any).per_mile_pay
-                  ? `$${(job as any).per_mile_pay.toFixed(2)}/${t('MILE').toLowerCase()}`
-                  : t('NOT_SPECIFIED')}
-              </div>
-            </div>
-            <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>{t('SIGN_ON_BONUS')}</div>
-              <div className={styles.detailValue}>
-                {(job as any).sign_on_bonus
-                  ? `$${(job as any).sign_on_bonus.toLocaleString()}`
-                  : t('NONE')}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Experience Requirements */}
-        <div className={styles.detailSection}>
-          <h3 className={styles.detailSectionTitle}>
-            <StarFill />
-            {t('REQUIREMENTS')}
-          </h3>
-          <div className={styles.detailGrid}>
-            <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>{t('MIN_EXPERIENCE')}</div>
-              <div className={styles.detailValue}>
-                {job.min_years_experience
-                  ? `${job.min_years_experience} ${t('YEARS')}`
-                  : t('NO_MINIMUM')}
-              </div>
-            </div>
-            <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>{t('CLEAN_MVR')}</div>
-              <div className={styles.detailValue}>
-                {job.must_have_clean_mvr ? t('REQUIRED') : t('NOT_REQUIRED')}
-              </div>
-            </div>
-            <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>{t('DRUG_TEST')}</div>
-              <div className={styles.detailValue}>
-                {job.must_pass_drug_test ? t('REQUIRED') : t('NOT_REQUIRED')}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Job Description */}
-        {job.description && (
-          <div className={styles.detailSection}>
-            <h3 className={styles.detailSectionTitle}>
-              <FileTextFill />
-              {t('DESCRIPTION')}
-            </h3>
-            <div
-              className={styles.detailValue}
-              style={{ lineHeight: '1.6' }}
-              dangerouslySetInnerHTML={{ __html: job.description }}
-            />
-          </div>
-        )}
       </div>
 
-      {/* Sidebar - Dates & Metrics */}
-      <div>
-        <div className={styles.detailSection}>
-          <h3 className={styles.detailSectionTitle}>
-            <CalendarEventFill />
-            {t('TIMELINE')}
-          </h3>
-          <div className={styles.detailGrid}>
-            <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>{t('POSTED')}</div>
-              <div className={styles.detailValue}>{formatDate(job.created_at)}</div>
-            </div>
-            <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>{t('EXPIRES')}</div>
-              <div className={styles.detailValue}>{formatDate(job.expiry_date)}</div>
-            </div>
-            <div className={styles.detailItem}>
-              <div className={styles.detailLabel}>{t('LAST_UPDATED')}</div>
-              <div className={styles.detailValue}>{formatDate((job as any).updated_at)}</div>
+      {/* Requirements and Benefits Cards Grid */}
+      <div className="row">
+        {/* Requirements Card */}
+        <div className="col-md-6">
+          <div className="card mb-4">
+            <div className="card-body">
+              <h3 className="h4 mb-3">Requirements</h3>
+              {requirements.length > 0 ? (
+                <ul className="list-unstyled">
+                  {requirements.map((requirement, index) => (
+                    <li key={index} className="d-flex align-items-start mb-2">
+                      <span className="text-success me-2" style={{ marginTop: '2px' }}>
+                        •
+                      </span>
+                      <span className="text-muted">{requirement}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-muted">No specific requirements listed.</p>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Benefits */}
-        {job.benefits && job.benefits.length > 0 && (
-          <div className={styles.detailSection}>
-            <h3 className={styles.detailSectionTitle}>
-              <CheckSquareFill />
-              {t('BENEFITS')}
-            </h3>
-            <div className="d-flex flex-wrap gap-2">
-              {job.benefits.map((benefit, index) => (
-                <span key={index} className="badge bg-primary" style={{ fontSize: '0.875rem' }}>
-                  {t(`JobBenefits.${benefit}`)}
-                </span>
-              ))}
+        {/* Benefits Card */}
+        <div className="col-md-6">
+          <div className="card mb-4">
+            <div className="card-body">
+              <h3 className="h4 mb-3">Benefits</h3>
+              {benefits.length > 0 ? (
+                <ul className="list-unstyled">
+                  {benefits.map((benefit, index) => (
+                    <li key={index} className="d-flex align-items-start mb-2">
+                      <span className="text-success me-2" style={{ marginTop: '2px' }}>
+                        •
+                      </span>
+                      <span className="text-muted">{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-muted">No benefits information provided.</p>
+              )}
             </div>
           </div>
-        )}
-
-        {/* Equipment */}
-        {job.equipment_type && (
-          <div className={styles.detailSection}>
-            <h3 className={styles.detailSectionTitle}>
-              <TruckFrontFill />
-              {t('EQUIPMENT')}
-            </h3>
-            <div className={styles.detailValue}>
-              {Array.isArray(job.equipment_type)
-                ? job.equipment_type
-                    .map((equipment) => t(`JobEquipmentType.${equipment}`))
-                    .join(', ')
-                : t(`JobEquipmentType.${job.equipment_type}`)}
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
