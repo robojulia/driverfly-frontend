@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
 
 import { Files, PenFill, Plus, Recycle, CheckCircleFill, ClockFill } from 'react-bootstrap-icons';
@@ -21,10 +21,6 @@ import BaseInput from '../../../../components/forms/base-input';
 import BaseSelect from '../../../../components/forms/base-select';
 import CustomPagination from '../../../../components/pagination/custom-pagination';
 import OverlyPopover from '../../../../components/popover/overly-popover';
-import ViewDataTable, {
-  getDataTableColumnKey,
-  ViewTableColumn,
-} from '../../../../components/view-details/view-data-table';
 import ViewModal from '../../../../components/view-details/view-modal';
 import { ExpiryStatus } from '../../../../enums/jobs/expiry-status.enum';
 import { useAuth } from '../../../../hooks/use-auth';
@@ -33,6 +29,8 @@ import { buildAddress } from '../../../../utils/common';
 import { isExpired } from '../../../../utils/date';
 import { useEffectAsync } from '../../../../utils/react';
 import DataViewToggle from '../../../../components/shared/DataViewToggle';
+import { GenericTable, TableColumn } from '../../../../components/common/GenericTable';
+import { getDataTableColumnKey } from '../../../../utils/table-migration';
 
 enum ViewModeType {
   ACTIVE = 'ACTIVE',
@@ -53,9 +51,16 @@ export default function JobListing() {
   const [expiryDate, setExpiryDate] = React.useState<string | Date>();
   const [pagingMeta, setPagingMeta] = React.useState<PagingMeta>(pagingsMetaInitialValues);
   const [loading, setLoading] = React.useState<boolean>(true);
+  const [refreshing, setRefreshing] = React.useState<boolean>(false);
   const [viewMode, setViewMode] = React.useState<ViewModeType>();
   const [showCloneModal, setShowCloneModal] = React.useState<boolean>(false);
   const [jobOptions, setJobOptions] = React.useState<JobEntity[]>([]);
+  // Add sorting state
+  const [sortBy, setSortBy] = React.useState<string>('');
+  const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>('asc');
+
+  // Track if this is the initial load
+  const isInitialLoadRef = useRef(true);
 
   const { user, hasPermission } = useAuth();
   const { t } = useTranslation();
@@ -65,22 +70,117 @@ export default function JobListing() {
   const columnSettingKey = getDataTableColumnKey('company', user, 'jobs');
   const resetPagingMeta = () => setPagingMeta(pagingsMetaInitialValues);
 
-  const fetchJobs = async (expiry_status: ExpiryStatus): Promise<void> => {
-    setLoading(true);
+  const fetchJobs = async (
+    expiry_status: ExpiryStatus,
+    isInitialLoad: boolean = false
+  ): Promise<void> => {
+    // Only show full loading spinner on initial load
+    if (isInitialLoad) {
+      setLoading(true);
+    } else {
+      setRefreshing(true);
+    }
+
     const data = await jobApi.list({
       is_paginated: true,
       limit: pagingMeta?.itemsPerPage,
       page: pagingMeta.currentPage,
       expiry_status,
       companyId: user?.company?.id, // Add company filter to only show jobs from current company
+      // Include sorting parameters for future API support
+      sortBy: sortBy || undefined,
+      sortOrder: (sortDirection?.toUpperCase() as 'ASC' | 'DESC') || undefined,
     });
-    setJobs((data as Pagination<JobEntity>)?.items);
+    let jobsList = (data as Pagination<JobEntity>)?.items || [];
+
+    // Client-side sorting until API supports it
+    if (sortBy && jobsList.length > 0) {
+      jobsList = [...jobsList].sort((a, b) => {
+        let aValue: any;
+        let bValue: any;
+
+        // Get values based on sort column
+        switch (sortBy) {
+          case 'id':
+            aValue = a.id;
+            bValue = b.id;
+            break;
+          case 'company_id':
+            aValue = a.company?.id || 0;
+            bValue = b.company?.id || 0;
+            break;
+          case 'job_title':
+            aValue = a.title?.toLowerCase() || '';
+            bValue = b.title?.toLowerCase() || '';
+            break;
+          case 'location':
+            aValue = buildAddress(a.location || {}).toLowerCase();
+            bValue = buildAddress(b.location || {}).toLowerCase();
+            break;
+          case 'drivers_needed':
+            aValue = a.drivers_needed || 0;
+            bValue = b.drivers_needed || 0;
+            break;
+          case 'applicantsCount':
+            aValue = a.applicantsCount || 0;
+            bValue = b.applicantsCount || 0;
+            break;
+          case 'created_at':
+            aValue = new Date(a.created_at || 0).getTime();
+            bValue = new Date(b.created_at || 0).getTime();
+            break;
+          case 'expiration_date':
+            aValue = a.expiry_date ? new Date(a.expiry_date).getTime() : 0;
+            bValue = b.expiry_date ? new Date(b.expiry_date).getTime() : 0;
+            break;
+          case 'geography':
+            aValue = a.geography || '';
+            bValue = b.geography || '';
+            break;
+          case 'schedule':
+            aValue = a.schedule || '';
+            bValue = b.schedule || '';
+            break;
+          case 'employment_type':
+            aValue = a.employment_type || '';
+            bValue = b.employment_type || '';
+            break;
+          case 'delivery_type':
+            aValue = a.delivery_type || '';
+            bValue = b.delivery_type || '';
+            break;
+          case 'team_drivers':
+            aValue = a.team_drivers || '';
+            bValue = b.team_drivers || '';
+            break;
+          default:
+            aValue = '';
+            bValue = '';
+        }
+
+        // Handle different data types
+        if (typeof aValue === 'number' && typeof bValue === 'number') {
+          return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+        } else {
+          const comparison = String(aValue).localeCompare(String(bValue));
+          return sortDirection === 'asc' ? comparison : -comparison;
+        }
+      });
+    }
+
+    setJobs(jobsList);
     setPagingMeta({
       ...pagingMeta,
       currentPage: pagingMeta?.currentPage || 1,
       totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems,
     });
-    setTimeout(() => setLoading(false), 1000);
+
+    // Clear appropriate loading state
+    if (isInitialLoad) {
+      setTimeout(() => setLoading(false), 1000);
+    } else {
+      setRefreshing(false);
+    }
   };
 
   useEffectAsync(
@@ -99,15 +199,23 @@ export default function JobListing() {
 
   useEffectAsync(async () => {
     if (viewMode) {
+      // Only consider it initial load if we have no jobs yet and it's the first time
+      const isInitialLoad = isInitialLoadRef.current && jobs.length === 0;
+      if (isInitialLoadRef.current) {
+        isInitialLoadRef.current = false;
+      }
+
       viewMode === ViewModeType.ACTIVE
-        ? fetchJobs(ExpiryStatus.ACTIVE)
-        : fetchJobs(ExpiryStatus.EXPIRED);
+        ? fetchJobs(ExpiryStatus.ACTIVE, isInitialLoad)
+        : fetchJobs(ExpiryStatus.EXPIRED, isInitialLoad);
     }
-  }, [user, viewMode, pagingMeta?.currentPage, pagingMeta?.itemsPerPage]);
+  }, [user, viewMode, pagingMeta?.currentPage, pagingMeta?.itemsPerPage, sortBy, sortDirection]);
 
   const onViewModeChange = async ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
     value = viewMode == ViewModeType.ACTIVE ? ViewModeType.EXPIRED : ViewModeType.ACTIVE;
     resetPagingMeta();
+    // Reset initial load flag when switching view modes
+    isInitialLoadRef.current = true;
     router.query.viewMode = value;
     await router.push(router);
   };
@@ -117,6 +225,17 @@ export default function JobListing() {
       ...prevPagingMeta,
       currentPage: page,
       itemsPerPage: perPage,
+    }));
+  };
+
+  // Handle sorting
+  const handleSort = (column: string, direction: 'asc' | 'desc') => {
+    setSortBy(column);
+    setSortDirection(direction);
+    // Reset to first page when sorting changes
+    setPagingMeta((prevPagingMeta: PagingMeta) => ({
+      ...prevPagingMeta,
+      currentPage: 1,
     }));
   };
 
@@ -195,33 +314,36 @@ export default function JobListing() {
     setShowCloneModal(false);
   };
 
-  const tableColumns = (): ViewTableColumn<JobEntity>[] => {
-    const data: ViewTableColumn<JobEntity>[] = [
+  const tableColumns = (): TableColumn<JobEntity>[] => {
+    const data: TableColumn<JobEntity>[] = [
       {
-        id: 'id',
-        name: 'ID',
+        key: 'id',
+        label: 'ID',
         selector: (j) => j.id,
+        sortable: true,
       },
       {
-        id: 'company_id',
-        name: 'COMPANY_ID',
+        key: 'company_id',
+        label: 'COMPANY_ID',
         selector: (j) => j.company?.id || 'N/A',
+        sortable: true,
       },
       {
-        id: 'job_title',
-        name: 'job_title',
-        cell: (j) => (
+        key: 'job_title',
+        label: 'job_title',
+        render: (j) => (
           <Link href={`/dashboard/company/jobs/${j.id}`}>
             <a>{j.title}</a>
           </Link>
         ),
         selector: (job) => job.title,
         hidable: false,
+        sortable: true,
       },
       {
-        id: 'location',
-        name: 'location',
-        cell: (job) => (
+        key: 'location',
+        label: 'location',
+        render: (job) => (
           <OverlyPopover
             skipTranslate={true}
             header={t('location')}
@@ -229,16 +351,18 @@ export default function JobListing() {
           />
         ),
         selector: (job) => buildAddress(job.location || {}),
+        sortable: true,
       },
       {
-        id: 'drivers_needed',
-        name: 'drivers_needed',
+        key: 'drivers_needed',
+        label: 'drivers_needed',
         selector: (j) => j.drivers_needed,
+        sortable: true,
       },
       {
-        id: 'applicantsCount',
-        name: 'APPLICANTS',
-        cell: (j) => (
+        key: 'applicantsCount',
+        label: 'APPLICANTS',
+        render: (j) => (
           <Link href={`/dashboard/company/jobs/${j.id}`}>
             <a className="btn btn-link">
               <span className="badge badge-pill badge-primary">{j.applicantsCount}</span>
@@ -246,27 +370,31 @@ export default function JobListing() {
           </Link>
         ),
         selector: (j) => j.applicantsCount,
+        sortable: true,
       },
       {
-        id: 'created_at',
-        name: 'CREATED_AT',
-        cell: (job) => (job?.created_at ? moment(job?.created_at).format('DD MMM YYYY') : null),
+        key: 'created_at',
+        label: 'CREATED_AT',
+        render: (job) => (job?.created_at ? moment(job?.created_at).format('DD MMM YYYY') : null),
+        sortable: true,
       },
       {
-        id: 'expiration_date',
-        name: 'expiration_date',
-        cell: (j) => (j.expiry_date ? moment(j.expiry_date).format('DD MMM YYYY') : null),
+        key: 'expiration_date',
+        label: 'expiration_date',
+        render: (j) => (j.expiry_date ? moment(j.expiry_date).format('DD MMM YYYY') : null),
         selector: (j) => (j.expiry_date ? new Date(j.expiry_date).toDateString() : null),
+        sortable: true,
       },
       {
-        id: 'geography',
-        name: 'GEOGRAPHY',
+        key: 'geography',
+        label: 'GEOGRAPHY',
         selector: (j) => (j.geography ? t('JobGeography.' + j.geography) : null),
+        sortable: true,
       },
       {
-        id: 'schedule',
-        name: 'SCHEDULE',
-        cell: (job) => (
+        key: 'schedule',
+        label: 'SCHEDULE',
+        render: (job) => (
           <OverlyPopover
             labelPrefix="JobSchedule"
             skipTranslate={false}
@@ -275,11 +403,12 @@ export default function JobListing() {
           />
         ),
         selector: (job) => t(`JobSchedule.${job.schedule}`),
+        sortable: true,
       },
       {
-        id: 'employment_type',
-        name: 'EMPLOYMENT_TYPE',
-        cell: (job) => (
+        key: 'employment_type',
+        label: 'EMPLOYMENT_TYPE',
+        render: (job) => (
           <OverlyPopover
             labelPrefix="JobEmploymentType"
             skipTranslate={false}
@@ -288,11 +417,12 @@ export default function JobListing() {
           />
         ),
         selector: (job) => t(`JobEmploymentType.${job.employment_type}`),
+        sortable: true,
       },
       {
-        id: 'delivery_type',
-        name: 'DELIVERY_TYPE',
-        cell: (j) => (
+        key: 'delivery_type',
+        label: 'DELIVERY_TYPE',
+        render: (j) => (
           <ShowEnumFromString
             popover_header={t('DELIVERY_TYPE')}
             labelPrefix="JobDeliveryType"
@@ -302,11 +432,12 @@ export default function JobListing() {
           />
         ),
         selector: (job) => t(`JobDeliveryType.${job.delivery_type}`),
+        sortable: true,
       },
       {
-        id: 'team_drivers',
-        name: 'TEAM_DRIVERS',
-        cell: (job) => (
+        key: 'team_drivers',
+        label: 'TEAM_DRIVERS',
+        render: (job) => (
           <OverlyPopover
             labelPrefix="JobTeamDriver"
             skipTranslate={false}
@@ -315,6 +446,8 @@ export default function JobListing() {
           />
         ),
         selector: (job) => t(`JobTeamDriver.${job.team_drivers}`),
+        hide: true, // Hidden by default
+        sortable: true,
       },
     ];
     if (viewMode == ViewModeType.EXPIRED) {
@@ -416,11 +549,19 @@ export default function JobListing() {
         </div>
       ) : (
         <>
-          <ViewDataTable<JobEntity>
-            columnSettingKey={columnSettingKey}
+          <GenericTable<JobEntity>
+            data={jobs}
             columns={tableColumns()}
             actions={(job) => getActions(job)}
-            items={jobs}
+            enableSearch={true}
+            enableColumnHiding={true}
+            columnSettingKey={columnSettingKey}
+            refreshing={refreshing}
+            emptyTitle="No Jobs Found"
+            emptyText="No jobs match the current criteria."
+            onSort={handleSort}
+            sortBy={sortBy}
+            sortDirection={sortDirection}
           />
           <div style={{ marginRight: '7%' }}>
             <CustomPagination

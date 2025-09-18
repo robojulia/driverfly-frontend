@@ -186,7 +186,7 @@
 
 .statsCards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-sm);
   flex: 1;
   height: 100%;
@@ -420,6 +420,7 @@
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: var(--spacing-lg);
+  margin-top: 20px;
 }
 
 .detailSection {
@@ -472,6 +473,7 @@
   flex-direction: column;
   height: calc(100vh - 200px); /* Adjust based on header height */
   min-height: 600px;
+  margin-top: 10px;
 }
 
 .statsAndTableContainer {
@@ -536,6 +538,13 @@
   align-items: start;
 }
 
+/* Full Width Layout (when campaigns disabled) */
+.overviewMainLayoutFullWidth {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .overviewMainContent {
   display: flex;
   flex-direction: column;
@@ -566,10 +575,6 @@
   animation-delay: 0.2s;
 }
 
-.statsCards .statCard:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
 /* Responsive Design */
 @media (max-width: 1400px) {
   .overviewContainer .overviewSidebar {
@@ -583,10 +588,6 @@
 }
 
 @media (max-width: 1200px) {
-  .statsCards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .overviewGrid {
     grid-template-columns: 1fr;
   }

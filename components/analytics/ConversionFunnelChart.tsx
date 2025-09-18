@@ -119,23 +119,8 @@ export const ConversionFunnelChart: React.FC<ConversionFunnelChartProps> = ({ me
       </div>
 
       <div className="mt-4 p-3 bg-light rounded">
-        <div className="row text-center g-2">
-          <div className="col-6 col-md-3">
-            <div className="h6 mb-1">{metrics.views}</div>
-            <div className="small text-muted">Views</div>
-          </div>
-          <div className="col-6 col-md-3">
-            <div className="h6 mb-1">{metrics.clickToApply}</div>
-            <div className="small text-muted">Apply Clicks</div>
-          </div>
-          <div className="col-6 col-md-3">
-            <div className="h6 mb-1">{metrics.totalApplications}</div>
-            <div className="small text-muted">Applications</div>
-          </div>
-          <div className="col-6 col-md-3">
-            <div className="h6 mb-1">{metrics.overallConversionRate.toFixed(1)}%</div>
-            <div className="small text-muted">Conversion Rate</div>
-          </div>
+        <div className="small text-muted">
+          <strong>Period:</strong> Conversion rates calculated from total funnel data
         </div>
       </div>
     </div>

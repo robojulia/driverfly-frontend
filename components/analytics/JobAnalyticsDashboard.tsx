@@ -210,21 +210,6 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
       <ConversionMetricsCards metrics={metrics} period={selectedPeriod} />
 
       <Row className="mb-4">
-        {/* Conversion Funnel */}
-        <Col lg={6} className="mb-4">
-          <Card className="h-100">
-            <Card.Header>
-              <Card.Title className="mb-0">
-                <GraphUpArrow className="me-2" />
-                Conversion Funnel
-              </Card.Title>
-            </Card.Header>
-            <Card.Body>
-              <ConversionFunnelChart metrics={metrics} />
-            </Card.Body>
-          </Card>
-        </Col>
-
         {/* Timeline Chart */}
         <Col lg={6} className="mb-4">
           <Card className="h-100">
@@ -244,6 +229,21 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
               ) : (
                 <div className="text-center text-muted py-4">No timeline data available</div>
               )}
+            </Card.Body>
+          </Card>
+        </Col>
+
+        {/* Conversion Funnel */}
+        <Col lg={6} className="mb-4">
+          <Card className="h-100">
+            <Card.Header>
+              <Card.Title className="mb-0">
+                <GraphUpArrow className="me-2" />
+                Conversion Funnel
+              </Card.Title>
+            </Card.Header>
+            <Card.Body>
+              <ConversionFunnelChart metrics={metrics} />
             </Card.Body>
           </Card>
         </Col>

@@ -87,7 +87,7 @@ export default function ViewJob({ id }) {
   }
 
   return (
-    <ChildPageLayout backPath={backPath} title={`Job Dashboard: ${job.title || 'Loading...'}`}>
+    <ChildPageLayout backPathTitle="Back to jobs">
       {job.id && <JobDashboard job={job} onJobUpdate={onJobUpdate} onJobDelete={onJobDelete} />}
     </ChildPageLayout>
   );
