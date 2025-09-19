@@ -204,21 +204,22 @@ export function ApplicantJobsAppliedForm(props: ApplicantJobsAppliedFormProps) {
 														formik={form}
 													/>
 												</td>
-												<td>
-													<a
-														href="#"
-														onClick={() =>
-															form.setValues({
-																...form.values,
-																jobs: form.values?.jobs?.filter(
-																	(v, idx) => i != idx
-																),
-															})
-														}
-													>
-														<DashCircle color="red" />
-													</a>
-												</td>
+									<td>
+										<a
+											href="#"
+											onClick={(e) => {
+												e.preventDefault();
+												form.setValues({
+													...form.values,
+													jobs: form.values?.jobs?.filter(
+														(v, idx) => i != idx
+													),
+												});
+											}}
+										>
+											<DashCircle color="red" />
+										</a>
+									</td>
 											</tr>
 										);
 									})}

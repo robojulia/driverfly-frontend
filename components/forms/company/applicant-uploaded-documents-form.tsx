@@ -176,14 +176,15 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
                                             <td>
                                                 <a
                                                     href="#"
-                                                    onClick={() =>
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
                                                         form.setValues({
                                                             ...form.values,
                                                             documents: form.values?.documents?.filter(
                                                                 (v, idx) => i != idx
                                                             ),
                                                         })
-                                                    }
+                                                    }}
                                                 >
                                                     <DashCircle color="red" />
                                                 </a>

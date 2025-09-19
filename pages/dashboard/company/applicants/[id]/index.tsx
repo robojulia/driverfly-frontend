@@ -385,7 +385,13 @@ export default function ViewApplicant({ id }) {
                           ? t(`ApplicantDocumentType.${document.type}`)
                           : document.type,
                         document: (
-                          <a onClick={() => viewDocumentClick(document.id, document.name)} href="#">
+                          <a
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              viewDocumentClick(document.id, document.name);
+                            }}
+                          >
                             {document.name}
                           </a>
                         ),
