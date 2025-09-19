@@ -40,7 +40,7 @@ const navItems: NavItem[] = [
   { label: 'Blogs', href: 'http://blog.driverfly.co', external: true },
 ];
 
-export default function Header() {
+export default function Header({ hideAuthButtons = false }: { hideAuthButtons?: boolean }) {
   const { user } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [visibleItems, setVisibleItems] = useState<NavItem[]>(navItems);
@@ -49,6 +49,7 @@ export default function Header() {
   const [isDesktop, setIsDesktop] = useState(true);
   const navRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isJobsHost, setIsJobsHost] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -101,6 +102,15 @@ export default function Header() {
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Compute if current hostname starts with jobs.
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsJobsHost(window.location.hostname.startsWith('jobs.'));
+    }
+  }, []);
+
+  const shouldShowAuthButtons = !hideAuthButtons && !isJobsHost;
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -269,7 +279,7 @@ export default function Header() {
         )}
 
         {/* Action Buttons */}
-        {isDesktop && (
+        {isDesktop && shouldShowAuthButtons && (
           <div className="action-buttons">
             {user ? (
               <>
@@ -299,7 +309,7 @@ export default function Header() {
       </div>
 
       {/* Mobile Navigation */}
-      {!isDesktop && (
+      {!isDesktop && shouldShowAuthButtons && (
         <div className={`mobile-nav ${isMobileMenuOpen ? 'open' : ''}`}>
           <ul className="mobile-nav-list">{navItems.map((item) => renderNavItem(item, true))}</ul>
 
