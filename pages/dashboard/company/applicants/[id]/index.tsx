@@ -33,6 +33,7 @@ import ApplicantSafetyBackground from '../../../../../components/applicants/appl
 import ViewApplicantDetail from '../../../../../components/applicants/applicant-view-details';
 import ApplicantWorkHistory from '../../../../../components/applicants/applicant-work-history';
 import { ApplicantDocumentType } from '../../../../../enums/applicants/applicant-document-type.enum';
+import { ApplicantOnBoardingChecklist } from '../../../../../enums/applicants/applicant-onboarding-checklist.enum';
 import CompanyApi from '../../../../api/company';
 import { ApplicantExtras as ApplicantExtrasEnum } from '../../../../../enums/applicants/applicant-extras.enum';
 import { useFeatureFlag } from '../../../../../context/feature-flag-context';
@@ -369,18 +370,28 @@ export default function ViewApplicant({ id }) {
                     date_added: 'DATE_ADDED',
                   }}
                   items={applicant?.documents
-                    ?.filter((v) =>
-                      Object.values(ApplicantDocumentType).includes(v.type as ApplicantDocumentType)
+                    ?.filter(
+                      (v) =>
+                        !Object.values(ApplicantOnBoardingChecklist).includes(
+                          v.type as ApplicantOnBoardingChecklist
+                        )
                     )
-                    ?.map((document) => ({
-                      type: t(`ApplicantDocumentType.${document.type}`),
-                      document: (
-                        <a onClick={() => viewDocumentClick(document.id, document.name)} href="#">
-                          {document.name}
-                        </a>
-                      ),
-                      date_added: new Date(document.created_at).toDateString(),
-                    }))}
+                    ?.map((document) => {
+                      const isEnumType = Object.values(ApplicantDocumentType).includes(
+                        document.type as ApplicantDocumentType
+                      );
+                      return {
+                        type: isEnumType
+                          ? t(`ApplicantDocumentType.${document.type}`)
+                          : document.type,
+                        document: (
+                          <a onClick={() => viewDocumentClick(document.id, document.name)} href="#">
+                            {document.name}
+                          </a>
+                        ),
+                        date_added: new Date(document.created_at).toDateString(),
+                      };
+                    })}
                 />
               </ViewCard>
             </Col>
