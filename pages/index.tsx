@@ -43,6 +43,10 @@ export default function Index() {
     };
   }, [router.events]);
 
+  useEffect(() => {
+    console.log('welcome to driverfly');
+  }, []);
+
   return (
     <>
       <Head>
