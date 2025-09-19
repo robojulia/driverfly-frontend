@@ -53,6 +53,7 @@ export interface GenericTableProps<T = any> {
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
   onSort?: (column: string, direction: 'asc' | 'desc') => void;
+  onSearch?: (searchTerm: string) => void;
 }
 
 export function GenericTable<T = any>({
@@ -80,6 +81,7 @@ export function GenericTable<T = any>({
   sortBy,
   sortDirection = 'asc',
   onSort,
+  onSearch,
 }: GenericTableProps<T>) {
   const { t } = useTranslation();
 
@@ -135,6 +137,17 @@ export function GenericTable<T = any>({
 
   // Search functionality
   useEffect(() => {
+    // If onSearch callback is provided, use API-level search
+    if (onSearch) {
+      // Debounce the search to avoid too many API calls
+      const debounceTimer = setTimeout(() => {
+        onSearch(search);
+      }, 300);
+
+      return () => clearTimeout(debounceTimer);
+    }
+
+    // Otherwise, use client-side search
     if (!enableSearch || !search) {
       setFilteredData(data);
       return;
@@ -160,7 +173,14 @@ export function GenericTable<T = any>({
     );
 
     setFilteredData(filtered);
-  }, [data, search, visibleColumns, enableSearch]);
+  }, [data, search, visibleColumns, enableSearch, onSearch]);
+
+  // When using API search, always show all data (filtering is done server-side)
+  useEffect(() => {
+    if (onSearch) {
+      setFilteredData(data);
+    }
+  }, [data, onSearch]);
 
   // Handle column visibility toggle
   const onColumnToggle = (columnKey: string) => {

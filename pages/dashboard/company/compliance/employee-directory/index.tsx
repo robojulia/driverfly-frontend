@@ -1,7 +1,7 @@
 import { FormControlLabel, Switch } from '@mui/material';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button, Col, FormGroup, Row } from 'react-bootstrap';
 import { EyeFill, PenFill, TrashFill, PersonFill, PersonX } from 'react-bootstrap-icons';
 import 'react-tabs/style/react-tabs.css';
@@ -22,10 +22,8 @@ import { TabbedLayout } from '../../../../../components/layouts/page/tabbed-layo
 import { ListActionOptions } from '../../../../../components/list-actions/list-actions';
 import CustomPagination from '../../../../../components/pagination/custom-pagination';
 import OverlyPopover from '../../../../../components/popover/overly-popover';
-import ViewDataTable, {
-  ViewTableColumn,
-  getDataTableColumnKey,
-} from '../../../../../components/view-details/view-data-table';
+import { GenericTable, TableColumn } from '../../../../../components/common/GenericTable';
+import { getDataTableColumnKey } from '../../../../../utils/table-migration';
 import ViewModal from '../../../../../components/view-details/view-modal';
 import { EmployeeStatus } from '../../../../../enums/applicants/employee-status.enum';
 import {
@@ -64,12 +62,21 @@ export default function EmployeeDirectory() {
 
   const [viewMode, setViewMode] = useState<ViewModeType>(ViewModeType.EMPLOYEE);
   const [loading, setLoading] = useState<boolean>(true);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [employees, setEmployees] = useState<EmployeeEntity[]>([]);
   const [modalAction, setModalAction] = useState<{
     entity: EmployeeEntity;
     type: 'VIEW' | 'DELETE' | 'MOVE_TO_PAST_EMPLOYEE';
   }>(null);
   const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingsMetaInitialValues);
+
+  // Add search and sorting state
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [sortBy, setSortBy] = useState<string>('');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+
+  // Track if this is the initial load
+  const isInitialLoadRef = useRef(true);
 
   const tabs = {
     BACKGROUND: <Background employee={modalAction?.entity} />,
@@ -109,24 +116,50 @@ export default function EmployeeDirectory() {
   }, [router]);
 
   useEffectAsync(async () => {
-    viewMode == ViewModeType.EMPLOYEE ? fetchEmployee() : fetchPastEmployee();
-  }, [user, viewMode, pagingMeta?.currentPage, pagingMeta?.itemsPerPage]);
+    if (viewMode) {
+      const isInitialLoad = isInitialLoadRef.current;
+      isInitialLoadRef.current = false;
+
+      viewMode == ViewModeType.EMPLOYEE
+        ? fetchEmployee(isInitialLoad)
+        : fetchPastEmployee(isInitialLoad);
+    }
+  }, [
+    user,
+    viewMode,
+    pagingMeta?.currentPage,
+    pagingMeta?.itemsPerPage,
+    searchTerm,
+    sortBy,
+    sortDirection,
+  ]);
 
   const onViewModeChange = async ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
     value = viewMode == ViewModeType.EMPLOYEE ? ViewModeType.PAST_EMPLOYEE : ViewModeType.EMPLOYEE;
     resetEmployees();
     resetPagingMeta();
+    // Reset initial load flag when switching view modes
+    isInitialLoadRef.current = true;
     router.query.viewMode = value;
     await router.push(router);
   };
 
-  const fetchEmployee = async (): Promise<void> => {
-    setLoading(true);
+  const fetchEmployee = async (isInitialLoad: boolean = false): Promise<void> => {
+    // Only show full loading spinner on initial load
+    if (isInitialLoad) {
+      setLoading(true);
+    } else {
+      setRefreshing(true);
+    }
+
     const data = await employeeApi.list({
       status: [EmployeeStatus.ACTIVE],
       is_paginated: true,
       limit: pagingMeta?.itemsPerPage,
       page: pagingMeta.currentPage,
+      search: searchTerm || undefined,
+      sortBy: sortBy || undefined,
+      sortOrder: (sortDirection?.toUpperCase() as 'ASC' | 'DESC') || undefined,
     });
     setEmployees((data as Pagination<EmployeeEntity>)?.items);
     setPagingMeta({
@@ -134,16 +167,31 @@ export default function EmployeeDirectory() {
       currentPage: pagingMeta?.currentPage || 1,
       totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems,
     });
-    setTimeout(() => setLoading(false), 1000);
+
+    // Clear appropriate loading state
+    if (isInitialLoad) {
+      setTimeout(() => setLoading(false), 1000);
+    } else {
+      setRefreshing(false);
+    }
   };
 
-  const fetchPastEmployee = async (): Promise<void> => {
-    setLoading(true);
+  const fetchPastEmployee = async (isInitialLoad: boolean = false): Promise<void> => {
+    // Only show full loading spinner on initial load
+    if (isInitialLoad) {
+      setLoading(true);
+    } else {
+      setRefreshing(true);
+    }
+
     const data = await employeeApi.list({
       status: [EmployeeStatus.QUIT, EmployeeStatus.FIRED],
       is_paginated: true,
       limit: pagingMeta?.itemsPerPage,
       page: pagingMeta.currentPage,
+      search: searchTerm || undefined,
+      sortBy: sortBy || undefined,
+      sortOrder: (sortDirection?.toUpperCase() as 'ASC' | 'DESC') || undefined,
     });
     setEmployees((data as Pagination<EmployeeEntity>)?.items);
     setPagingMeta({
@@ -151,7 +199,13 @@ export default function EmployeeDirectory() {
       currentPage: pagingMeta?.currentPage || 1,
       totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems,
     });
-    setTimeout(() => setLoading(false), 1000);
+
+    // Clear appropriate loading state
+    if (isInitialLoad) {
+      setTimeout(() => setLoading(false), 1000);
+    } else {
+      setRefreshing(false);
+    }
   };
 
   const handlePageChange = (page: number, perPage: number) => {
@@ -160,6 +214,29 @@ export default function EmployeeDirectory() {
       currentPage: page,
       itemsPerPage: perPage,
     }));
+  };
+
+  // Handle sorting
+  const handleSort = (column: string, direction: 'asc' | 'desc') => {
+    setSortBy(column);
+    setSortDirection(direction);
+    // Reset to first page when sorting changes
+    setPagingMeta((prevPagingMeta: PagingMeta) => ({
+      ...prevPagingMeta,
+      currentPage: 1,
+    }));
+  };
+
+  // Handle search with debouncing
+  const handleSearch = (searchTerm: string) => {
+    setSearchTerm(searchTerm);
+    // Reset to first page when search changes
+    setPagingMeta((prevPagingMeta: PagingMeta) => ({
+      ...prevPagingMeta,
+      currentPage: 1,
+    }));
+    // Don't treat search as initial load
+    isInitialLoadRef.current = false;
   };
 
   const moveToPastForm = useFormik({
@@ -216,20 +293,22 @@ export default function EmployeeDirectory() {
     moveToPastForm.setFieldValue('hire_date', modalAction?.entity?.hire_date);
   };
 
-  const tableColumns = (): ViewTableColumn<EmployeeEntity>[] => {
-    const data: ViewTableColumn<EmployeeEntity>[] = [
+  const tableColumns = (): TableColumn<EmployeeEntity>[] => {
+    const data: TableColumn<EmployeeEntity>[] = [
       {
-        id: 'id',
+        key: 'id',
+        label: 'ID',
         width: '8%',
-        name: 'ID',
         selector: (data) => data?.id,
+        sortable: true,
       },
       {
-        id: 'name',
+        key: 'name',
+        label: 'NAME',
         width: '15%',
-        name: 'NAME',
         selector: (data) => `${data?.first_name} ${data?.last_name}`,
-        cell: (data) => (
+        sortable: true,
+        render: (data) => (
           <span
             role="button"
             className="bg-priamry cursor-pointer"
@@ -240,11 +319,12 @@ export default function EmployeeDirectory() {
         ),
       },
       {
-        id: 'phone',
-        name: 'PHONE',
+        key: 'phone',
+        label: 'PHONE',
         width: '15%',
         selector: (data) => data?.phone,
-        cell: (data) => (
+        sortable: true,
+        render: (data) => (
           <OverlyPopover
             skipTranslate
             // slice_at={10}
@@ -253,30 +333,34 @@ export default function EmployeeDirectory() {
         ),
       },
       {
-        id: 'email',
-        name: 'EMAIL',
+        key: 'email',
+        label: 'EMAIL',
         width: '15%',
         selector: (data) => data?.email,
-        cell: (data) => <OverlyPopover skipTranslate slice_at={40} str={data?.email} />,
+        sortable: true,
+        render: (data) => <OverlyPopover skipTranslate slice_at={40} str={data?.email} />,
       },
       {
+        key: 'jobTitle',
+        label: 'job_title',
         width: '15%',
-        id: 'jobTitle',
-        name: 'job_title',
         selector: (data) => data?.job?.title,
-        cell: (data) => <OverlyPopover skipTranslate slice_at={40} str={data?.job?.title} />,
+        sortable: true,
+        render: (data) => <OverlyPopover skipTranslate slice_at={40} str={data?.job?.title} />,
       },
       {
-        id: 'dateHired',
-        name: 'DATE_HIRED',
-        cell: (data) => <ShowFormattedDate date={data?.hire_date} />,
+        key: 'dateHired',
+        label: 'DATE_HIRED',
+        sortable: true,
+        render: (data) => <ShowFormattedDate date={data?.hire_date} />,
       },
       {
-        id: 'status',
+        key: 'status',
+        label: 'STATUS',
         width: '8%',
-        name: 'STATUS',
         selector: (data) => data?.status,
-        cell: (data) => (
+        sortable: true,
+        render: (data) => (
           <ShowEnumFromString
             labelPrefix="EmployeeStatus"
             value={data?.status}
@@ -287,14 +371,16 @@ export default function EmployeeDirectory() {
     ];
     if (viewMode == ViewModeType.PAST_EMPLOYEE) {
       data.push({
-        id: 'end_of_employment',
-        name: 'END_OF_EMPLOYMENT',
-        cell: (data) => <ShowFormattedDate date={data?.termination_date} />,
+        key: 'end_of_employment',
+        label: 'END_OF_EMPLOYMENT',
+        sortable: true,
+        render: (data) => <ShowFormattedDate date={data?.termination_date} />,
       });
       data.push({
-        id: 'reason_codes',
-        name: 'REASON_CODES',
-        cell: (data) =>
+        key: 'reason_codes',
+        label: 'REASON_CODES',
+        sortable: true,
+        render: (data) =>
           data?.reason_codes && (
             <ShowEnumFromString
               popover
@@ -313,9 +399,10 @@ export default function EmployeeDirectory() {
           ),
       });
       data.push({
-        id: 'reason_codes_other',
-        name: 'OTHER',
-        cell: (data) => (
+        key: 'reason_codes_other',
+        label: 'OTHER',
+        sortable: true,
+        render: (data) => (
           <OverlyPopover skipTranslate slice_at={10} str={data?.reason_codes_other} />
         ),
       });
@@ -404,11 +491,20 @@ export default function EmployeeDirectory() {
         </div>
       ) : (
         <>
-          <ViewDataTable<EmployeeEntity>
-            columnSettingKey={columnSettingKey}
+          <GenericTable<EmployeeEntity>
+            data={employees}
             columns={tableColumns()}
-            actions={(data) => (viewMode != ViewModeType.EMPLOYEE ? null : tableActions(data))}
-            items={employees}
+            actions={(data) => (viewMode != ViewModeType.EMPLOYEE ? undefined : tableActions(data))}
+            enableSearch={true}
+            enableColumnHiding={true}
+            columnSettingKey={columnSettingKey}
+            refreshing={refreshing}
+            emptyTitle="No Employees Found"
+            emptyText="No employees match the current criteria."
+            onSort={handleSort}
+            sortBy={sortBy}
+            sortDirection={sortDirection}
+            onSearch={handleSearch}
           />
           <div style={{ marginRight: '7%' }}>
             <CustomPagination
@@ -446,7 +542,9 @@ export default function EmployeeDirectory() {
         <>
           <Row>
             <Col className="d-flex justify-content-center align-items-center">
-              <h4 className="mt-4 mb-4 text-center">{t('ARE_YOU_SURE_TO_DELETE_OR_MOVE_TO_PAST_EMPLOYEE')}</h4>
+              <h4 className="mt-4 mb-4 text-center">
+                {t('ARE_YOU_SURE_TO_DELETE_OR_MOVE_TO_PAST_EMPLOYEE')}
+              </h4>
             </Col>
           </Row>
           <Row className="mt-4">
