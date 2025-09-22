@@ -31,7 +31,7 @@ export interface EditApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 export function EditApplicantForm(props: EditApplicantFormProps) {
   const { t } = useTranslation();
   const router = useRouter();
-  const showDotVerification = useFeatureFlag('dotVerificationResults');
+  const showDotVerification = useFeatureFlag('DOT_VERIFICATION_RESULTS');
   const routeToApplicants = () => router.push("/dashboard/company/applicants");
   return (
     <>

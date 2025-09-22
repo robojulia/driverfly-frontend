@@ -44,7 +44,7 @@ export default function ViewApplicant({ id }) {
   const { t } = useTranslation();
 
   const { hasPermission } = useAuth();
-  const showDotVerification = useFeatureFlag('dotVerificationResults');
+  const showDotVerification = useFeatureFlag('DOT_VERIFICATION_RESULTS');
 
   const protectedFields = {
     license_number: hasPermission('CanViewApplicant.license_number'),
