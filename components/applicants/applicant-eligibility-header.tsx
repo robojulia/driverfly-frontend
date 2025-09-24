@@ -4,6 +4,7 @@ import { Accordion, Alert, Button, Card, Col, Row } from 'react-bootstrap';
 import {
   CheckCircleFill,
   ExclamationTriangleFill,
+  QuestionCircleFill,
   Sliders,
   ChevronDown,
   ChevronUp,
@@ -13,6 +14,8 @@ interface ApplicantEligibilityHeaderProps {
   eligibility: {
     isEligible: boolean;
     ineligibilityReasons?: string[];
+    isProvisional?: boolean;
+    unconfiguredPreferences?: string[];
   } | null;
 }
 
@@ -34,6 +37,50 @@ export const ApplicantEligibilityHeader: React.FC<ApplicantEligibilityHeaderProp
     setIsExpanded(!isExpanded);
   };
 
+  // Determine the status and icon to show
+  const getEligibilityStatus = () => {
+    if (eligibility.isProvisional) {
+      return {
+        status: 'provisional',
+        icon: <QuestionCircleFill className="ms-2 text-warning" size={16} />,
+        variant: 'warning',
+      };
+    } else if (eligibility.isEligible) {
+      return {
+        status: 'eligible',
+        icon: <CheckCircleFill className="ms-2 text-success" size={16} />,
+        variant: 'success',
+      };
+    } else {
+      return {
+        status: 'not-eligible',
+        icon: <ExclamationTriangleFill className="ms-2 text-danger" size={16} />,
+        variant: 'danger',
+      };
+    }
+  };
+
+  const statusInfo = getEligibilityStatus();
+
+  const formatPreferenceName = (preference: string): string => {
+    switch (preference) {
+      case 'cdl_class':
+        return 'CDL Class Requirements';
+      case 'employment_type':
+        return 'Employment Type Preferences';
+      case 'years_cdl_experience':
+        return 'CDL Experience Requirements';
+      case 'maximum_accidents':
+        return 'Maximum Accident History';
+      case 'maximum_moving_violations':
+        return 'Maximum Moving Violations';
+      case 'job_geography':
+        return 'Job Geography Preferences';
+      default:
+        return preference.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+    }
+  };
+
   return (
     <Row className="mb-4">
       <Col>
@@ -46,11 +93,7 @@ export const ApplicantEligibilityHeader: React.FC<ApplicantEligibilityHeaderProp
             <div className="d-flex align-items-center">
               <Sliders className="me-2 text-primary" size={20} />
               <h5 className="mb-0 fw-semibold">Eligibility</h5>
-              {eligibility.isEligible ? (
-                <CheckCircleFill className="ms-2 text-success" size={16} />
-              ) : (
-                <ExclamationTriangleFill className="ms-2 text-danger" size={16} />
-              )}
+              {statusInfo.icon}
             </div>
             <div className="d-flex align-items-center">
               <Button
@@ -74,7 +117,41 @@ export const ApplicantEligibilityHeader: React.FC<ApplicantEligibilityHeaderProp
           </Card.Header>
           {isExpanded && (
             <Card.Body>
-              {eligibility.isEligible ? (
+              {eligibility.isProvisional ? (
+                <Alert variant="warning" className="d-flex align-items-center mb-0">
+                  <QuestionCircleFill className="me-2" size={20} />
+                  <div>
+                    <strong>Provisional</strong>
+                    <div className="small text-warning-emphasis mt-1 mb-2">
+                      {eligibility.unconfiguredPreferences?.includes('all_preferences') ? (
+                        <>
+                          Complete eligibility cannot be determined because your company has not
+                          configured any hiring preferences yet.
+                        </>
+                      ) : (
+                        <>
+                          Complete eligibility cannot be determined because some company preferences
+                          are not configured:
+                          <ul className="mb-2 small mt-2">
+                            {eligibility.unconfiguredPreferences?.map(
+                              (preference: string, index: number) => (
+                                <li key={index} className="mb-1">
+                                  {formatPreferenceName(preference)}
+                                </li>
+                              )
+                            )}
+                          </ul>
+                        </>
+                      )}
+                    </div>
+                    <div className="small text-warning-emphasis">
+                      {eligibility.unconfiguredPreferences?.includes('all_preferences')
+                        ? 'Set up your hiring preferences to get accurate eligibility assessments.'
+                        : 'Configure these preferences to get a complete eligibility assessment.'}
+                    </div>
+                  </div>
+                </Alert>
+              ) : eligibility.isEligible ? (
                 <Alert variant="success" className="d-flex align-items-center mb-0">
                   <CheckCircleFill className="me-2" size={20} />
                   <div>

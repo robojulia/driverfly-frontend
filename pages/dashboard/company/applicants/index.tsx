@@ -73,6 +73,7 @@ export default function Applicants() {
   const [includeEligibility, setIncludeEligibility] = useState<boolean>(true);
   const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingsMetaInitialValues);
   const [filtersChanged, setFiltersChanged] = useState<boolean>(false);
+  const [hasProvisionalApplicants, setHasProvisionalApplicants] = useState<boolean>(false);
 
   const fetchApplicant = async () => {
     setLoading(true);
@@ -91,6 +92,13 @@ export default function Applicants() {
 
     setApplicants((data as Pagination<ApplicantEntity>)?.items);
     setFiltersChanged(false);
+
+    // Check if any applicants have provisional status
+    const hasProvisional = (data as Pagination<ApplicantEntity>)?.items?.some(
+      (applicant: any) => applicant.eligibility?.isProvisional
+    );
+    setHasProvisionalApplicants(hasProvisional || false);
+
     setPagingMeta({
       ...pagingMeta,
       currentPage: filtersChanged ? 1 : pagingMeta?.currentPage,
@@ -258,6 +266,49 @@ export default function Applicants() {
             </div>
           </div>
 
+          {/* Provisional Status Warning Banner */}
+          {includeEligibility && hasProvisionalApplicants && (
+            <div
+              className="mb-4 p-3"
+              style={{
+                backgroundColor: '#fff3cd',
+                borderRadius: '8px',
+                border: '1px solid #ffeaa7',
+                borderLeft: '4px solid #fdcb6e',
+              }}
+            >
+              <div className="d-flex align-items-start">
+                <div className="me-3">
+                  <svg
+                    width="24"
+                    height="24"
+                    fill="#856404"
+                    className="bi bi-exclamation-triangle"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z" />
+                    <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995z" />
+                  </svg>
+                </div>
+                <div className="flex-grow-1">
+                  <h6 className="mb-2" style={{ color: '#856404' }}>
+                    <strong>Company Hiring Preferences Not Configured</strong>
+                  </h6>
+                  <p className="mb-2" style={{ color: '#856404', fontSize: '0.95rem' }}>
+                    Eligibility cannot be determined for your applicants because your company has
+                    not configured hiring preferences yet. Configure your preferences to see which
+                    applicants meet your hiring criteria.
+                  </p>
+                  <Link href="/dashboard/company/company-preferences">
+                    <a className="btn btn-warning btn-sm">
+                      <strong>Configure Hiring Preferences</strong>
+                    </a>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+
           <Row>
             <Col className="force-overflow p-0">
               <Accordion.Body>
@@ -290,8 +341,10 @@ export default function Applicants() {
                           <small className="d-block text-muted mt-1">
                             Show whether each applicant meets your company&apos;s hiring criteria
                             (CDL requirements, experience, accident history, etc.). Eligible
-                            applicants will show a green &quot;Yes&quot; badge, ineligible
-                            applicants will show a red &quot;No&quot; badge with details.
+                            applicants will show a green &quot;YES&quot; badge and ineligible
+                            applicants will show a red &quot;NO&quot; badge with details. If hiring
+                            preferences are not configured, a warning will be shown instead of
+                            eligibility badges.
                           </small>
                         </label>
                       </div>
@@ -315,10 +368,10 @@ export default function Applicants() {
                 </div>
               ) : (
                 <>
-                  {/* Legend for Eligibility Badges */}
-                  {includeEligibility && (
+                  {/* Legend for Eligibility Badges - only show when not provisional */}
+                  {includeEligibility && !hasProvisionalApplicants && (
                     <div className="mb-3 px-3">
-                      <div className="d-flex align-items-center gap-3">
+                      <div className="d-flex align-items-center gap-3 flex-wrap">
                         <div className="d-flex align-items-center gap-1">
                           <span className="badge bg-success">YES</span>
                           <small className="text-muted">Meets hiring criteria</small>
@@ -341,6 +394,7 @@ export default function Applicants() {
                     onEditClick={onEditClick}
                     onChangeStatus={onChangeStatus}
                     includeEligibility={includeEligibility}
+                    hasProvisionalApplicants={hasProvisionalApplicants}
                     t={t}
                   />
                 </>
@@ -525,6 +579,7 @@ interface ViewProps {
   totalItems?: number;
   setPagingMeta?: React.Dispatch<React.SetStateAction<PagingMeta>>;
   includeEligibility?: boolean;
+  hasProvisionalApplicants?: boolean;
 }
 
 function ApplicantView(props: ViewProps) {
@@ -539,6 +594,7 @@ function ApplicantView(props: ViewProps) {
     setPagingMeta,
     pagingMeta,
     includeEligibility,
+    hasProvisionalApplicants,
   } = props;
   const { hasPermission } = useAuth();
   const handlePageChange = (page: number, perPage: number) => {
@@ -580,63 +636,66 @@ function ApplicantView(props: ViewProps) {
                 <Link href={`${router.pathname}/${applicant.id}/edit`}>
                   <a>{getApplicantName(applicant)}</a>
                 </Link>
-                {includeEligibility && (applicant as any).eligibility && (
-                  <div className="ms-2">
-                    {(applicant as any).eligibility.isEligible ? (
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={
-                          <Tooltip id={`eligible-tooltip-${applicant.id}`}>
-                            Meets company hiring criteria
-                          </Tooltip>
-                        }
-                      >
-                        <span className="badge bg-success" style={{ cursor: 'help' }}>
-                          {t('YES')}
-                        </span>
-                      </OverlayTrigger>
-                    ) : (
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={
-                          <Tooltip id={`ineligible-tooltip-${applicant.id}`}>
-                            <div>
-                              <strong>Does not meet criteria:</strong>
-                              <ul className="mb-0 mt-1 ps-3">
-                                {(applicant as any).eligibility.ineligibilityReasons.map(
-                                  (reason: string, index: number) => (
-                                    <li key={index} style={{ fontSize: '0.9em' }}>
-                                      {reason === 'cdl_class' && 'CDL Class requirement'}
-                                      {reason === 'years_cdl_experience' &&
-                                        'Years of CDL experience'}
-                                      {reason === 'maximum_accidents' && 'Accident history limit'}
-                                      {reason === 'maximum_moving_violations' &&
-                                        'Moving violations limit'}
-                                      {reason === 'employment_type' && 'Employment type preference'}
-                                      {reason === 'job_geography' && 'Location preference'}
-                                      {![
-                                        'cdl_class',
-                                        'years_cdl_experience',
-                                        'maximum_accidents',
-                                        'maximum_moving_violations',
-                                        'employment_type',
-                                        'job_geography',
-                                      ].includes(reason) && reason}
-                                    </li>
-                                  )
-                                )}
-                              </ul>
-                            </div>
-                          </Tooltip>
-                        }
-                      >
-                        <span className="badge bg-danger" style={{ cursor: 'help' }}>
-                          {t('NO')}
-                        </span>
-                      </OverlayTrigger>
-                    )}
-                  </div>
-                )}
+                {includeEligibility &&
+                  !hasProvisionalApplicants &&
+                  (applicant as any).eligibility && (
+                    <div className="ms-2">
+                      {(applicant as any).eligibility.isEligible ? (
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip id={`eligible-tooltip-${applicant.id}`}>
+                              Meets company hiring criteria
+                            </Tooltip>
+                          }
+                        >
+                          <span className="badge bg-success" style={{ cursor: 'help' }}>
+                            {t('YES')}
+                          </span>
+                        </OverlayTrigger>
+                      ) : (
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip id={`ineligible-tooltip-${applicant.id}`}>
+                              <div>
+                                <strong>Does not meet criteria:</strong>
+                                <ul className="mb-0 mt-1 ps-3">
+                                  {(applicant as any).eligibility.ineligibilityReasons.map(
+                                    (reason: string, index: number) => (
+                                      <li key={index} style={{ fontSize: '0.9em' }}>
+                                        {reason === 'cdl_class' && 'CDL Class requirement'}
+                                        {reason === 'years_cdl_experience' &&
+                                          'Years of CDL experience'}
+                                        {reason === 'maximum_accidents' && 'Accident history limit'}
+                                        {reason === 'maximum_moving_violations' &&
+                                          'Moving violations limit'}
+                                        {reason === 'employment_type' &&
+                                          'Employment type preference'}
+                                        {reason === 'job_geography' && 'Location preference'}
+                                        {![
+                                          'cdl_class',
+                                          'years_cdl_experience',
+                                          'maximum_accidents',
+                                          'maximum_moving_violations',
+                                          'employment_type',
+                                          'job_geography',
+                                        ].includes(reason) && reason}
+                                      </li>
+                                    )
+                                  )}
+                                </ul>
+                              </div>
+                            </Tooltip>
+                          }
+                        >
+                          <span className="badge bg-danger" style={{ cursor: 'help' }}>
+                            {t('NO')}
+                          </span>
+                        </OverlayTrigger>
+                      )}
+                    </div>
+                  )}
               </div>
             ),
             hidable: false,
