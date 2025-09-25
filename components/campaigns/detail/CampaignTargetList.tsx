@@ -1,6 +1,7 @@
 import React from 'react';
 import { Row, Col, Button, Table, Badge } from 'reactstrap';
-import { People } from 'react-bootstrap-icons';
+import { People, ExclamationTriangle } from 'react-bootstrap-icons';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import { CampaignEntity } from '../../../models/campaigns/campaign.entity';
 import { CampaignTargetEntity } from '../../../models/campaigns/campaign-target.entity';
@@ -18,6 +19,7 @@ interface CampaignTargetListProps {
   handleCampaignAction: (action: 'regenerate') => void;
   handleDeleteTarget: (targetId: number) => void;
   setManualTargetModal: (open: boolean) => void;
+  isSuperAdmin?: boolean;
 }
 
 export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
@@ -32,6 +34,7 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
   handleCampaignAction,
   handleDeleteTarget,
   setManualTargetModal,
+  isSuperAdmin = false,
 }) => {
   return (
     <>
@@ -72,6 +75,22 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
         <Table hover className="align-middle">
           <thead className="table-light">
             <tr>
+              {isSuperAdmin && (
+                <th className="fw-semibold" style={{ width: '80px' }}>
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={
+                      <Tooltip id="superadmin-tooltip">
+                        Superadmin visible only
+                      </Tooltip>
+                    }
+                  >
+                    <span style={{ cursor: 'help' }}>
+                      ID <ExclamationTriangle size={14} className="text-warning ms-1" />
+                    </span>
+                  </OverlayTrigger>
+                </th>
+              )}
               <th className="fw-semibold">{t('NAME')}</th>
               <th className="fw-semibold">{t('EMAIL')}</th>
               <th className="fw-semibold">{t('PHONE')}</th>
@@ -89,6 +108,11 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
               const targetStatus = getTargetStatus(target);
               return (
                 <tr key={target.id}>
+                  {isSuperAdmin && (
+                    <td>
+                      <code className="text-muted small">{target.id}</code>
+                    </td>
+                  )}
                   <td>{target.name || '-'}</td>
                   <td>{target.email || '-'}</td>
                   <td>{target.phone || '-'}</td>

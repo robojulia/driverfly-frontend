@@ -571,6 +571,7 @@ const CampaignDetailPage = () => {
                       handleCampaignAction={handleCampaignAction}
                       handleDeleteTarget={handleDeleteTarget}
                       setManualTargetModal={setManualTargetModal}
+                      isSuperAdmin={isSuperAdmin}
                     />
                   </TabPane>
                 </TabContent>
