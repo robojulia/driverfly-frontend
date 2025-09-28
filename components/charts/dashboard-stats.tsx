@@ -2,14 +2,13 @@ import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useContext, useMemo } from 'react';
+import { Row, Col, Card, CardBody } from 'reactstrap';
+import { People, BriefcaseFill, PersonFill } from 'react-bootstrap-icons';
 
 import DashboardChartContext from '../../context/dashboard-chart-context';
 import { EmployeeStatus } from '../../enums/applicants/employee-status.enum';
 import { useTranslation } from '../../hooks/use-translation';
 import { EmployeeEntity } from '../../models/employee/employee.entity';
-import newApplicantIcon from '../../public/img/new_appicants_this_week.svg';
-import totalEmployeesIcon from '../../public/img/total_employees.svg';
-import totalHiresIcon from '../../public/img/total_hires_this_month.svg';
 import { isBirthdayThisWeek } from '../../utils/date';
 
 import styles from './dashboard-stats.module.css';
@@ -19,10 +18,13 @@ type StatCard = {
   value: string | number;
   icon?: any;
   link: string;
+  linkText?: string;
   trend?: {
     value: number;
+    label: string;
     isPositive: boolean;
   };
+  isMainCard?: boolean; // Determines if it's a main stat card or plain text stat
 };
 
 export const DashboardStats = () => {
@@ -96,58 +98,49 @@ export const DashboardStats = () => {
     const conversionRate = totalLeads > 0 ? ((activeEmployees / totalLeads) * 100).toFixed(1) : 0;
 
     const stats: StatCard[] = [
+      // Main stat cards (3 columns)
       {
-        title: t('NEW_LEADS'),
+        title: 'New Applicants This Week',
         value: newLeads,
-        icon: newApplicantIcon,
+        icon: <PersonFill size={96} className="text-warning" />,
         link: '/dashboard/company/applicants',
-        /*
-        trend: {
-          value: 0, // This should be calculated based on previous week
-          isPositive: true,
-        },
-        */
+        linkText: 'Go to Applicants',
+        isMainCard: true,
       },
       {
-        title: t('TOTAL_LEADS'),
-        value: totalLeads,
-        icon: totalHiresIcon,
-        link: '/dashboard/company/applicants',
+        title: 'Total Hires This Month',
+        value: activeEmployees,
+        icon: <People size={96} className="text-success" />,
+        link: '/dashboard/company/compliance/employee-directory',
+        linkText: 'Go to Applicants',
+        isMainCard: true,
       },
       {
-        title: t('TOTAL_ACTIVE_EMPLOYEES'),
+        title: 'Total Employees',
         value: employees.filter((v) => v?.status === EmployeeStatus.ACTIVE).length,
-        icon: totalEmployeesIcon,
+        icon: <BriefcaseFill size={96} className="text-info" />,
         link: '/dashboard/company/compliance/employee-directory',
+        linkText: 'Go to Employees',
+        isMainCard: true,
       },
+      // Plain text stats (no cards)
       {
-        title: t('EMPLOYEE_BIRTHDAYS'),
-        value: birthdaysThisWeek,
-        link: '/dashboard/company/compliance/employee-directory',
-        /*
-        trend: birthdayEmployees.length
-          ? {
-              value: birthdayEmployees.length,
-              isPositive: true,
-            }
-          : undefined,
-        */
-      },
-      {
-        title: t('ACTIVE_JOB_POSTS'),
-        value: jobs.length,
-        link: '/dashboard/company/jobs',
-      },
-      {
-        title: t('CONVERSION_RATE'),
+        title: 'Conversion Rate (Lead To Hire)',
         value: `${conversionRate}%`,
         link: '/dashboard/company/applicants',
-        /*
-        trend: {
-          value: Number(conversionRate),
-          isPositive: Number(conversionRate) > 50,
-        },
-        */
+        isMainCard: false,
+      },
+      {
+        title: 'Active Job Posts',
+        value: jobs.length,
+        link: '/dashboard/company/jobs',
+        isMainCard: false,
+      },
+      {
+        title: 'Employee Birthdays This Week',
+        value: birthdaysThisWeek,
+        link: '/dashboard/company/compliance/employee-directory',
+        isMainCard: false,
       },
     ];
 
@@ -155,39 +148,54 @@ export const DashboardStats = () => {
   };
 
   const stats = useMemo(() => calculateStats(), [state]);
+  const mainCards = stats.filter((stat) => stat.isMainCard);
+  const plainStats = stats.filter((stat) => !stat.isMainCard);
 
   return (
     <div className={styles.dashboard_stats}>
-      <div className={styles.stats_grid}>
-        {stats.map((stat, index) => (
-          <Link href={stat.link} key={index}>
-            <div className={styles.stat_card}>
-              <div className={styles.stat_card_content}>
-                {stat.icon && (
-                  <div className={styles.stat_icon}>
-                    <Image src={stat.icon} alt={stat.title} width={32} height={32} />
+      {/* Main stat cards - 3 columns */}
+      <Row className="mb-4">
+        {mainCards.map((stat, index) => (
+          <Col md={4} key={index} className="mb-3">
+            <Link href={stat.link}>
+              <Card className={`${styles.stat_card} h-100`} style={{ cursor: 'pointer' }}>
+                <CardBody className="p-4 position-relative">
+                  <div className="d-flex align-items-center">
+                    <div className="me-3">{stat.icon}</div>
+                    <div className="flex-grow-1">
+                      <div className={`${styles.stat_title} text-muted mb-2`}>{stat.title}</div>
+                      <div className={`${styles.stat_value} display-4 fw-bold`}>{stat.value}</div>
+                    </div>
                   </div>
-                )}
-                <div className={styles.stat_info}>
-                  <h3 className={styles.stat_title}>{stat.title}</h3>
-                  <div className={styles.stat_value_container}>
-                    <span className={styles.stat_value}>{stat.value}</span>
-                    {stat.trend && (
-                      <span
-                        className={`${styles.stat_trend} ${
-                          stat.trend.isPositive ? styles.positive : styles.negative
-                        }`}
-                      >
-                        {stat.trend.isPositive ? '↑' : '↓'} {stat.trend.value}%
-                      </span>
-                    )}
-                  </div>
+                  {stat.linkText && (
+                    <div className="position-absolute bottom-0 end-0 p-3">
+                      <small className="text-muted" style={{ fontSize: '0.75rem' }}>
+                        {stat.linkText} →
+                      </small>
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+            </Link>
+          </Col>
+        ))}
+      </Row>
+
+      {/* Plain stats - 3 columns, no cards */}
+      <Row className="mb-4">
+        {plainStats.map((stat, index) => (
+          <Col md={4} key={index} className="mb-3">
+            <Link href={stat.link}>
+              <div className={styles.plain_stat} style={{ cursor: 'pointer' }}>
+                <div className={`${styles.plain_stat_title} text-muted small`}>{stat.title}</div>
+                <div className={`${styles.plain_stat_value} h2 fw-bold text-dark`}>
+                  {stat.value}
                 </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+          </Col>
         ))}
-      </div>
+      </Row>
     </div>
   );
 };

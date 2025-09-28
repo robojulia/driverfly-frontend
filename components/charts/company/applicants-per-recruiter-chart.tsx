@@ -1,7 +1,7 @@
-import { useContext, useMemo, useState } from "react";
-import DashboardChartContext from "../../../context/dashboard-chart-context";
-import { useTranslation } from "../../../hooks/use-translation";
-import { PieChart } from "../pie-chart";
+import { useContext, useMemo, useState } from 'react';
+import DashboardChartContext from '../../../context/dashboard-chart-context';
+import { useTranslation } from '../../../hooks/use-translation';
+import { PieChart } from '../pie-chart';
 
 export function ApplicantsPerRecruiterChart() {
   const { t } = useTranslation();
@@ -18,7 +18,7 @@ export function ApplicantsPerRecruiterChart() {
         : unassigned++;
     });
 
-    applicantsPerRecruiter[t("UNASSIGNED")] = unassigned;
+    applicantsPerRecruiter[t('UNASSIGNED')] = unassigned;
 
     setRecruiterLabels(Object.keys(applicantsPerRecruiter));
 
@@ -27,11 +27,18 @@ export function ApplicantsPerRecruiterChart() {
   const data = useMemo(() => {
     return fetchData();
   }, [state]);
+
+  const unassignedCount = useMemo(() => {
+    return state?.applicants?.filter((a) => !a?.assignedUser)?.length || 0;
+  }, [state]);
+
   return (
     <PieChart
       title="APPLICANTS_PER_RECRUITER"
       labels={recruiterLabels}
       data={data}
+      centerValue={unassignedCount}
+      centerLabel="Unassigned Leads"
       emptyStateTitle="NO_LEAD_ASSIGNMENTS"
       emptyStateMessage="LEAD_ASSIGNMENT_EMPTY_STATE_MESSAGE"
     />

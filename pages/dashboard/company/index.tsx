@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Button, Col } from 'react-bootstrap';
 import { Row } from 'reactstrap';
-import { ChartInerWrapper, ChartWrapper } from '../../../components/charts/chart-wrapper';
 import { ApplicantPieChart } from '../../../components/charts/company/applicant-pipeline-chart';
 import { ApplicantsPerRecruiterChart } from '../../../components/charts/company/applicants-per-recruiter-chart';
 import { SourceBreakdownChart } from '../../../components/charts/company/source-breakdown-chart';
@@ -166,7 +165,9 @@ export default function Dashboard() {
           </>
         </ViewModal>
       )}
-      <Row>
+
+      {/* Main Dashboard Container with Max Width */}
+      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
         {hasPermission('CanViewApplicant') && (
           <DashboardChartContext.Provider
             value={{
@@ -177,56 +178,54 @@ export default function Dashboard() {
               },
             }}
           >
-            <div className="my_chart px-4">
+            <div className="px-4 py-3">
               {isNewUser && <WelcomeBanner userName={user?.first_name} />}
 
-              <ChartWrapper title={null} sm="12" md="12" lg="12" className="">
-                <DashboardStats />
-              </ChartWrapper>
+              {/* Dashboard Stats - No wrapper needed */}
+              <DashboardStats />
 
-              <Row className="px-3 my-3 innerChart-parent">
+              {/* Chart Section */}
+              <Row className="g-4 mb-4">
                 <Col md="4">
-                  <ChartInerWrapper
-                    title="APPLICANT_SOURCE"
-                    className=" py-1 ChartWrapper innerChart stat-items"
-                    subHeading="APPLICANT_SOURCE_HELP_TEXT"
-                  >
+                  <div className="bg-white rounded-3 shadow-sm p-4 h-100">
+                    <div className="mb-3">
+                      <h5 className="fw-semibold mb-1">{t('APPLICANT_SOURCE')}</h5>
+                      <small className="text-muted">{t('APPLICANT_SOURCE_HELP_TEXT')}</small>
+                    </div>
                     <SourceBreakdownChart />
-                  </ChartInerWrapper>
+                  </div>
                 </Col>
 
                 <Col md="4">
-                  <ChartInerWrapper
-                    title="APPLICATION_STATUS"
-                    className=" py-1 ChartWrapper innerChart stat-items"
-                    subHeading="APPLICATION_STATUS_HELP_TEXT"
-                  >
+                  <div className="bg-white rounded-3 shadow-sm p-4 h-100">
+                    <div className="mb-3">
+                      <h5 className="fw-semibold mb-1">{t('APPLICATION_STATUS')}</h5>
+                      <small className="text-muted">{t('APPLICATION_STATUS_HELP_TEXT')}</small>
+                    </div>
                     <ApplicantPieChart />
-                  </ChartInerWrapper>
+                  </div>
                 </Col>
 
                 <Col md="4">
-                  <ChartInerWrapper
-                    title="LEAD_ASSIGNMENT"
-                    className=" py-1 ChartWrapper innerChart stat-items"
-                    subHeading="LEAD_ASSIGNMENT_HELP_TEXT"
-                  >
+                  <div className="bg-white rounded-3 shadow-sm p-4 h-100">
+                    <div className="mb-3">
+                      <h5 className="fw-semibold mb-1">{t('LEAD_ASSIGNMENT')}</h5>
+                      <small className="text-muted">{t('LEAD_ASSIGNMENT_HELP_TEXT')}</small>
+                    </div>
                     <ApplicantsPerRecruiterChart />
-                  </ChartInerWrapper>
+                  </div>
                 </Col>
               </Row>
 
-              <Row className="my-2 px-2 mr-2">
-                <Col lg={9} md={8} sm={12}>
-                  <ChartWrapper
-                    title="HISTORICAL_RANGE"
-                    md="12"
-                    lg="12"
-                    sm="12"
-                    className="py-4 ChartWrapper stat-items"
-                  >
+              {/* Historical Chart Section */}
+              <Row className="g-4">
+                <Col lg={isFeatureEnabled('AUTORECRUITING_ENABLED') ? 9 : 12} md={8} sm={12}>
+                  <div className="bg-white rounded-3 shadow-sm p-4">
+                    <div className="mb-3">
+                      <h5 className="fw-semibold mb-1">{t('HISTORICAL_RANGE')}</h5>
+                    </div>
                     <TotalApplicantBarChart />
-                  </ChartWrapper>
+                  </div>
                 </Col>
 
                 {isFeatureEnabled('AUTORECRUITING_ENABLED') && (
@@ -242,7 +241,7 @@ export default function Dashboard() {
             </div>
           </DashboardChartContext.Provider>
         )}
-      </Row>
+      </div>
     </PageLayout>
   );
 }

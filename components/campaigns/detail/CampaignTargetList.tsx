@@ -79,11 +79,7 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
                 <th className="fw-semibold" style={{ width: '80px' }}>
                   <OverlayTrigger
                     placement="top"
-                    overlay={
-                      <Tooltip id="superadmin-tooltip">
-                        Superadmin visible only
-                      </Tooltip>
-                    }
+                    overlay={<Tooltip id="superadmin-tooltip">Superadmin visible only</Tooltip>}
                   >
                     <span style={{ cursor: 'help' }}>
                       ID <ExclamationTriangle size={14} className="text-warning ms-1" />

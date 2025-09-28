@@ -26,6 +26,13 @@ export function ApplicantPieChart() {
     return fetchData();
   }, [state]);
 
+  const inProgressCount = useMemo(() => {
+    return (
+      state?.applicants?.filter((v) => v?.current_application_status?.startsWith('IN_PROCESS_'))
+        ?.length || 0
+    );
+  }, [state]);
+
   const labels: string[] = ['LEADS', 'IN_PROCESS', 'HIRED'].map(
     (v) => `ApplicantPipelineChartLabel.${v}`
   );
@@ -35,6 +42,12 @@ export function ApplicantPieChart() {
       title="APPLICANTS"
       labels={labels}
       data={data}
+      centerValue={inProgressCount}
+      centerLabel={
+        <div>
+          Applications in <br /> process
+        </div>
+      }
       emptyStateTitle="NO_APPLICATION_STATUS"
       emptyStateMessage="APPLICATION_STATUS_EMPTY_STATE_MESSAGE"
     />

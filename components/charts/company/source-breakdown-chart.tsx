@@ -29,6 +29,10 @@ export function SourceBreakdownChart() {
     return fetchData();
   }, [state]);
 
+  const totalApplicants = useMemo(() => {
+    return state?.applicants?.filter((a) => !a?.is_hired)?.length || 0;
+  }, [state]);
+
   const labels = [
     'DIGITAL_HIRING_APP',
     'DRIVERFLY',
@@ -42,6 +46,8 @@ export function SourceBreakdownChart() {
       title="APPLICANTS"
       labels={labels}
       data={data}
+      centerValue={totalApplicants}
+      centerLabel="Total Applicants"
       emptyStateTitle="NO_APPLICANT_SOURCES"
       emptyStateMessage="APPLICANT_SOURCE_EMPTY_STATE_MESSAGE"
     />
