@@ -39,8 +39,47 @@ export function PieChart(props: PieChartProps): JSX.Element {
   const { t } = useTranslation();
   const [chartKey, setChartKey] = useState(0);
 
+  // Gradient colors for the chart
+  const gradientColors = [
+    { start: '#4ade80', end: '#16a34a' }, // Green gradient
+    { start: '#60a5fa', end: '#2563eb' }, // Blue gradient  
+    { start: '#fbbf24', end: '#d97706' }, // Yellow/Orange gradient
+    { start: '#f87171', end: '#dc2626' }, // Red gradient
+    { start: '#a78bfa', end: '#7c3aed' }, // Purple gradient
+    { start: '#22d3ee', end: '#0891b2' }, // Cyan gradient
+  ];
+
+  // Solid colors for legend (using gradient start colors)
+  const legendColors = [
+    '#4ade80', // Green
+    '#60a5fa', // Blue
+    '#fbbf24', // Yellow/Orange
+    '#f87171', // Red
+    '#a78bfa', // Purple
+    '#22d3ee', // Cyan
+  ];
+
+  // Create a function to generate gradients
+  const createGradients = (ctx: CanvasRenderingContext2D, chartArea: any) => {
+    return gradientColors.map(({ start, end }) => {
+      const gradient = ctx.createRadialGradient(
+        chartArea.left + (chartArea.right - chartArea.left) / 2,
+        chartArea.top + (chartArea.bottom - chartArea.top) / 2,
+        0,
+        chartArea.left + (chartArea.right - chartArea.left) / 2,
+        chartArea.top + (chartArea.bottom - chartArea.top) / 2,
+        Math.min(chartArea.right - chartArea.left, chartArea.bottom - chartArea.top) / 2
+      );
+      gradient.addColorStop(0, start);
+      gradient.addColorStop(1, end);
+      return gradient;
+    });
+  };
+
   useEffect(() => {
-    if (!props?.disableRerender) setChartKey((prevKey) => prevKey + 1);
+    if (!props?.disableRerender) {
+      setChartKey((prevKey) => prevKey + 1);
+    }
   }, [data]);
 
   const hasData = data.length > 0 && data.some((value) => value > 0);
@@ -76,6 +115,16 @@ export function PieChart(props: PieChartProps): JSX.Element {
       >
         <Doughnut
           key={chartKey}
+          plugins={[{
+            id: 'gradientPlugin',
+            beforeRender: (chart: any) => {
+              const { ctx, chartArea } = chart;
+              if (chartArea) {
+                const gradientBackgrounds = createGradients(ctx, chartArea);
+                chart.data.datasets[0].backgroundColor = gradientBackgrounds;
+              }
+            }
+          }]}
           options={{
             maintainAspectRatio: false,
             responsive: true,
@@ -88,6 +137,9 @@ export function PieChart(props: PieChartProps): JSX.Element {
                 display: false, // Hide data labels for cleaner look
               },
             },
+            onHover: (event, activeElements) => {
+              // Optional: Add hover effects if needed
+            },
           }}
           data={{
             labels: labels.map((v) => t(v)),
@@ -95,14 +147,7 @@ export function PieChart(props: PieChartProps): JSX.Element {
               {
                 label: t(title),
                 data,
-                backgroundColor: [
-                  '#22c55e', // Green
-                  '#3b82f6', // Blue
-                  '#f59e0b', // Yellow/Orange
-                  '#ef4444', // Red
-                  '#8b5cf6', // Purple
-                  '#06b6d4', // Cyan
-                ],
+                backgroundColor: legendColors, // Use solid colors initially, will be replaced with gradients
                 borderWidth: 0,
                 hoverBorderWidth: 2,
                 hoverBorderColor: '#ffffff',
@@ -173,14 +218,7 @@ export function PieChart(props: PieChartProps): JSX.Element {
                 width: '12px',
                 height: '12px',
                 borderRadius: '50%',
-                backgroundColor: [
-                  '#22c55e', // Green
-                  '#3b82f6', // Blue
-                  '#f59e0b', // Yellow/Orange
-                  '#ef4444', // Red
-                  '#8b5cf6', // Purple
-                  '#06b6d4', // Cyan
-                ][index % 6],
+                backgroundColor: legendColors[index % legendColors.length],
                 flexShrink: 0,
               }}
             />
