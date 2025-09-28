@@ -7,7 +7,6 @@ import { SourceBreakdownChart } from '../../../components/charts/company/source-
 import { TotalApplicantBarChart } from '../../../components/charts/company/total-applicants-bar-chart';
 import FullLayout from '../../../components/dashboard/layouts/layout/full-layout';
 import PageLayout from '../../../components/layouts/page/page-layout';
-import PromotionalCTA from '../../../components/shared/PromotionalCTA';
 
 import { useRouter } from 'next/router';
 import ViewModal from '../../../components/view-details/view-modal';
@@ -102,10 +101,6 @@ export default function Dashboard() {
     }
     if (!!pref) setModalAction(null);
     setPreferences([...(preferences?.filter((p) => p?.id != pref?.id) ?? []), { ...pref }]);
-  };
-
-  const handleAutoRecruiting = () => {
-    router.push('/dashboard/company/auto-recruiting');
   };
 
   useEffectAsync(async () => {
@@ -219,7 +214,7 @@ export default function Dashboard() {
 
               {/* Historical Chart Section */}
               <Row className="g-4">
-                <Col lg={isFeatureEnabled('AUTORECRUITING_ENABLED') ? 9 : 12} md={8} sm={12}>
+                <Col lg={12} md={12} sm={12}>
                   <div className="bg-white rounded-3 shadow-sm p-4">
                     <div className="mb-3">
                       <h5 className="fw-semibold mb-1">{t('HISTORICAL_RANGE')}</h5>
@@ -227,16 +222,6 @@ export default function Dashboard() {
                     <TotalApplicantBarChart />
                   </div>
                 </Col>
-
-                {isFeatureEnabled('AUTORECRUITING_ENABLED') && (
-                  <Col lg={3} md={4} sm={12}>
-                    <PromotionalCTA
-                      title="Sign Up For Auto Recruiting"
-                      buttonText="Get Drivers Now!"
-                      onClick={handleAutoRecruiting}
-                    />
-                  </Col>
-                )}
               </Row>
             </div>
           </DashboardChartContext.Provider>

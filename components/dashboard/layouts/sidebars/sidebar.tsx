@@ -7,6 +7,9 @@ import { useMediaQuery } from 'react-responsive';
 import { useAuth } from '../../../../hooks/use-auth';
 import { TranslateInterface, useTranslation } from '../../../../hooks/use-translation';
 import { useEffect, useState } from 'react';
+import { useFeatureFlags } from '../../../../context/feature-flag-context';
+import CompanyApi from '../../../../pages/api/company';
+import PromotionalCTA from '../../../shared/PromotionalCTA';
 
 export interface SidebarProps {
   open?: boolean;
@@ -39,7 +42,34 @@ export default function Sidebar(props: SidebarProps) {
   const isMobile = useMediaQuery({ query: `(max-width: 991.98px)` });
   const router = useRouter();
   const { t } = useTranslation();
-  const { hasPermission } = useAuth();
+  const { hasPermission, company } = useAuth();
+  const { isFeatureEnabled } = useFeatureFlags();
+
+  // Auto recruiting state
+  const [isAutoRecruitingEnabled, setIsAutoRecruitingEnabled] = useState<boolean | null>(null);
+  const companyApi = new CompanyApi();
+
+  // Check auto recruiting status
+  useEffect(() => {
+    const checkAutoRecruitingStatus = async () => {
+      try {
+        if (company?.id) {
+          const preferences = await companyApi.preferences.list(company.id, {
+            label: 'ENROLL_IN_AUTO_RECRUITING',
+          });
+          const autoRecruitingPref = preferences.find(
+            (pref) => pref.label === 'ENROLL_IN_AUTO_RECRUITING'
+          );
+          setIsAutoRecruitingEnabled(autoRecruitingPref?.value === true);
+        }
+      } catch (error) {
+        console.error('Error fetching auto-recruiting status:', error);
+        setIsAutoRecruitingEnabled(false);
+      }
+    };
+
+    checkAutoRecruitingStatus();
+  }, [company?.id]);
 
   const filteredItems = filterItems(items, hasPermission);
 
@@ -73,6 +103,10 @@ export default function Sidebar(props: SidebarProps) {
         if (onToggle) onToggle(false);
       }
     }
+  };
+
+  const handleAutoRecruiting = () => {
+    router.push('/dashboard/company/auto-recruiting');
   };
 
   useEffect(() => {
@@ -127,6 +161,19 @@ export default function Sidebar(props: SidebarProps) {
             </div>
           ))}
         </SidebarArea>
+
+        {/* Auto Recruiting Promotional CTA - Only show if auto recruiting is not enabled and feature is enabled */}
+        {!isSubmenu &&
+          isFeatureEnabled('AUTORECRUITING_ENABLED') &&
+          isAutoRecruitingEnabled === false && (
+            <div style={{ padding: '1rem', marginTop: 'auto' }}>
+              <PromotionalCTA
+                title="Sign Up For Auto Recruiting"
+                buttonText="Get Drivers Now!"
+                onClick={handleAutoRecruiting}
+              />
+            </div>
+          )}
       </aside>
       {hasVisibleSubmenu && (
         <Sidebar

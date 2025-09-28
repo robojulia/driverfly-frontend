@@ -9,24 +9,26 @@ interface PromotionalCTAProps {
 }
 
 const CTAContainer = styled.div`
-  background: linear-gradient(135deg, #5fcbc4 0%, #1c4353 100%);
-  border-radius: var(--border-radius);
-  padding: var(--spacing-lg);
-  color: var(--text-light);
+  background: linear-gradient(135deg, #4fd1c7 0%, #22c55e 100%);
+  border-radius: 12px;
+  padding: 1rem;
+  color: white;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: var(--box-shadow);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
+  min-height: 120px;
+  max-width: 280px;
 
   &::before {
     content: "";
     position: absolute;
-    top: -50px;
-    right: -50px;
-    width: 100px;
-    height: 100px;
+    top: -30px;
+    right: -30px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.1);
     z-index: 0;
@@ -35,10 +37,10 @@ const CTAContainer = styled.div`
   &::after {
     content: "";
     position: absolute;
-    bottom: -30px;
-    left: -30px;
-    width: 80px;
-    height: 80px;
+    bottom: -20px;
+    left: -20px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.1);
     z-index: 0;
@@ -47,29 +49,32 @@ const CTAContainer = styled.div`
 
 const CTATitle = styled.h4`
   font-weight: bold;
-  margin-bottom: var(--spacing-md);
-  color: var(--text-light);
+  margin-bottom: 0.5rem;
+  color: white;
   position: relative;
   z-index: 1;
+  font-size: 1rem;
+  line-height: 1.3;
 `;
 
 const CTAButton = styled.button`
-  background-color: #1c4353;
-  color: white;
+  background-color: white;
+  color: #1f2937;
   border: none;
-  border-radius: calc(var(--border-radius) / 2);
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-weight: bold;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: transform var(--transition-speed),
-    box-shadow var(--transition-speed);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   width: 100%;
   position: relative;
   z-index: 1;
+  font-size: 0.875rem;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background-color: #f9fafb;
   }
 
   &:active {
@@ -78,7 +83,7 @@ const CTAButton = styled.button`
 `;
 
 const ButtonWrapper = styled.div`
-  margin-top: var(--spacing-md);
+  margin-top: 0.75rem;
 `;
 
 const PromotionalCTA: React.FC<PromotionalCTAProps> = ({
