@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { useTranslation } from '../../hooks/use-translation';
 import { EmptyState } from './empty-state';
+
+import styles from './pie-chart.module.css';
 Chart.register(ArcElement);
 Chart.register(ChartDataLabels);
 
@@ -39,40 +41,15 @@ export function PieChart(props: PieChartProps): JSX.Element {
   const { t } = useTranslation();
   const [chartKey, setChartKey] = useState(0);
 
-  // Gradient colors for the chart - Using brand colors only
-  const gradientColors = [
-    { start: '#5fcbc4', end: '#2c7a7b' }, // Primary teal gradient
-    { start: '#87f934', end: '#27ae60' }, // Success green gradient
-    { start: '#f5bf19', end: '#e67e22' }, // Warning yellow/orange gradient
-    { start: '#2c7a7b', end: '#1c4353' }, // Primary button color gradient
-    { start: '#1c4353', end: '#163544' }, // Dark teal gradient
-    { start: '#cdf4ff', end: '#5fcbc4' }, // Light teal gradient
-  ];
-
-  // Solid colors for legend (using gradient start colors)
-  const legendColors = [
+  // Solid brand colors for the chart
+  const chartColors = [
     '#5fcbc4', // Primary teal
     '#87f934', // Success green
     '#f5bf19', // Warning yellow
     '#2c7a7b', // Primary button color
     '#1c4353', // Dark teal
     '#cdf4ff', // Light teal
-  ]; // Create a function to generate gradients
-  const createGradients = (ctx: CanvasRenderingContext2D, chartArea: any) => {
-    return gradientColors.map(({ start, end }) => {
-      const gradient = ctx.createRadialGradient(
-        chartArea.left + (chartArea.right - chartArea.left) / 2,
-        chartArea.top + (chartArea.bottom - chartArea.top) / 2,
-        0,
-        chartArea.left + (chartArea.right - chartArea.left) / 2,
-        chartArea.top + (chartArea.bottom - chartArea.top) / 2,
-        Math.min(chartArea.right - chartArea.left, chartArea.bottom - chartArea.top) / 2
-      );
-      gradient.addColorStop(0, start);
-      gradient.addColorStop(1, end);
-      return gradient;
-    });
-  };
+  ];
 
   useEffect(() => {
     if (!props?.disableRerender) {
@@ -92,39 +69,11 @@ export function PieChart(props: PieChartProps): JSX.Element {
   }
 
   return (
-    <div
-      className="chart-container"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        height: '250px',
-        maxHeight: '250px',
-        gap: '20px',
-      }}
-    >
-      {/* Left column - Donut chart */}
-      <div
-        style={{
-          position: 'relative',
-          width: '200px',
-          height: '200px',
-          flexShrink: 0,
-        }}
-      >
+    <div className={styles.chart_container}>
+      {/* Chart */}
+      <div className={styles.chart_wrapper}>
         <Doughnut
           key={chartKey}
-          plugins={[
-            {
-              id: 'gradientPlugin',
-              beforeRender: (chart: any) => {
-                const { ctx, chartArea } = chart;
-                if (chartArea) {
-                  const gradientBackgrounds = createGradients(ctx, chartArea);
-                  chart.data.datasets[0].backgroundColor = gradientBackgrounds;
-                }
-              },
-            },
-          ]}
           options={{
             maintainAspectRatio: false,
             responsive: true,
@@ -147,7 +96,7 @@ export function PieChart(props: PieChartProps): JSX.Element {
               {
                 label: t(title),
                 data,
-                backgroundColor: legendColors, // Use solid colors initially, will be replaced with gradients
+                backgroundColor: chartColors, // Use solid brand colors
                 borderWidth: 0,
                 hoverBorderWidth: 2,
                 hoverBorderColor: '#ffffff',
@@ -156,35 +105,11 @@ export function PieChart(props: PieChartProps): JSX.Element {
           }}
         />
         {/* Center label showing custom value */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            textAlign: 'center',
-            pointerEvents: 'none',
-          }}
-        >
-          <div
-            style={{
-              fontSize: '1.5rem',
-              fontWeight: 'bold',
-              color: '#2c3e50',
-              lineHeight: 1,
-              marginBottom: '2px',
-            }}
-          >
+        <div className={styles.center_label}>
+          <div className={styles.center_value}>
             {centerValue !== undefined ? centerValue : data.reduce((a, b) => a + b, 0)}
           </div>
-          <div
-            style={{
-              fontSize: '0.75rem',
-              color: '#6c757d',
-              lineHeight: 1.2,
-              whiteSpace: 'pre-line',
-            }}
-          >
+          <div className={styles.center_text}>
             {centerLabel
               ? typeof centerLabel === 'string'
                 ? t(centerLabel)
@@ -194,43 +119,17 @@ export function PieChart(props: PieChartProps): JSX.Element {
         </div>
       </div>
 
-      {/* Right column - Legend */}
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          gap: '12px',
-        }}
-      >
+      {/* Legend */}
+      <div className={styles.legend_container}>
         {labels.map((label, index) => (
-          <div
-            key={index}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
+          <div key={index} className={styles.legend_item}>
             <div
+              className={styles.legend_dot}
               style={{
-                width: '12px',
-                height: '12px',
-                borderRadius: '50%',
-                backgroundColor: legendColors[index % legendColors.length],
-                flexShrink: 0,
+                backgroundColor: chartColors[index % chartColors.length],
               }}
             />
-            <span
-              style={{
-                fontSize: '0.875rem',
-                color: '#374151',
-                fontWeight: '500',
-              }}
-            >
-              {t(label)}
-            </span>
+            <span className={styles.legend_text}>{t(label)}</span>
           </div>
         ))}
       </div>
