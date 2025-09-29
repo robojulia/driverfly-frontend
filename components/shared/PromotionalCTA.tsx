@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 interface PromotionalCTAProps {
   title: string;
@@ -23,7 +23,7 @@ const CTAContainer = styled.div`
   max-width: 280px;
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     top: -30px;
     right: -30px;
@@ -35,7 +35,7 @@ const CTAContainer = styled.div`
   }
 
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     bottom: -20px;
     left: -20px;

@@ -39,27 +39,25 @@ export function PieChart(props: PieChartProps): JSX.Element {
   const { t } = useTranslation();
   const [chartKey, setChartKey] = useState(0);
 
-  // Gradient colors for the chart
+  // Gradient colors for the chart - Using brand colors only
   const gradientColors = [
-    { start: '#4ade80', end: '#16a34a' }, // Green gradient
-    { start: '#60a5fa', end: '#2563eb' }, // Blue gradient  
-    { start: '#fbbf24', end: '#d97706' }, // Yellow/Orange gradient
-    { start: '#f87171', end: '#dc2626' }, // Red gradient
-    { start: '#a78bfa', end: '#7c3aed' }, // Purple gradient
-    { start: '#22d3ee', end: '#0891b2' }, // Cyan gradient
+    { start: '#5fcbc4', end: '#2c7a7b' }, // Primary teal gradient
+    { start: '#87f934', end: '#27ae60' }, // Success green gradient
+    { start: '#f5bf19', end: '#e67e22' }, // Warning yellow/orange gradient
+    { start: '#2c7a7b', end: '#1c4353' }, // Primary button color gradient
+    { start: '#1c4353', end: '#163544' }, // Dark teal gradient
+    { start: '#cdf4ff', end: '#5fcbc4' }, // Light teal gradient
   ];
 
   // Solid colors for legend (using gradient start colors)
   const legendColors = [
-    '#4ade80', // Green
-    '#60a5fa', // Blue
-    '#fbbf24', // Yellow/Orange
-    '#f87171', // Red
-    '#a78bfa', // Purple
-    '#22d3ee', // Cyan
-  ];
-
-  // Create a function to generate gradients
+    '#5fcbc4', // Primary teal
+    '#87f934', // Success green
+    '#f5bf19', // Warning yellow
+    '#2c7a7b', // Primary button color
+    '#1c4353', // Dark teal
+    '#cdf4ff', // Light teal
+  ]; // Create a function to generate gradients
   const createGradients = (ctx: CanvasRenderingContext2D, chartArea: any) => {
     return gradientColors.map(({ start, end }) => {
       const gradient = ctx.createRadialGradient(
@@ -115,16 +113,18 @@ export function PieChart(props: PieChartProps): JSX.Element {
       >
         <Doughnut
           key={chartKey}
-          plugins={[{
-            id: 'gradientPlugin',
-            beforeRender: (chart: any) => {
-              const { ctx, chartArea } = chart;
-              if (chartArea) {
-                const gradientBackgrounds = createGradients(ctx, chartArea);
-                chart.data.datasets[0].backgroundColor = gradientBackgrounds;
-              }
-            }
-          }]}
+          plugins={[
+            {
+              id: 'gradientPlugin',
+              beforeRender: (chart: any) => {
+                const { ctx, chartArea } = chart;
+                if (chartArea) {
+                  const gradientBackgrounds = createGradients(ctx, chartArea);
+                  chart.data.datasets[0].backgroundColor = gradientBackgrounds;
+                }
+              },
+            },
+          ]}
           options={{
             maintainAspectRatio: false,
             responsive: true,

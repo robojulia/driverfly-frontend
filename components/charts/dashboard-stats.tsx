@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useContext, useMemo } from 'react';
 import { Row, Col, Card, CardBody } from 'reactstrap';
-import { People, BriefcaseFill, PersonFill } from 'react-bootstrap-icons';
+import { People, BriefcaseFill, PersonFill, PersonPlus, Search } from 'react-bootstrap-icons';
 
 import DashboardChartContext from '../../context/dashboard-chart-context';
 import { EmployeeStatus } from '../../enums/applicants/employee-status.enum';
@@ -102,7 +102,11 @@ export const DashboardStats = () => {
       {
         title: 'New Applicants This Week',
         value: newLeads,
-        icon: <PersonFill size={96} className="text-warning" />,
+        icon: (
+          <div className={styles.icon_circle} style={{ backgroundColor: '#f5bf19' }}>
+            <PersonPlus size={38} className="text-white" />
+          </div>
+        ),
         link: '/dashboard/company/applicants',
         linkText: 'Go to Applicants',
         isMainCard: true,
@@ -110,7 +114,11 @@ export const DashboardStats = () => {
       {
         title: 'Total Hires This Month',
         value: activeEmployees,
-        icon: <People size={96} className="text-success" />,
+        icon: (
+          <div className={styles.icon_circle} style={{ backgroundColor: '#87f934' }}>
+            <Search size={38} className="text-white" />
+          </div>
+        ),
         link: '/dashboard/company/compliance/employee-directory',
         linkText: 'Go to Applicants',
         isMainCard: true,
@@ -118,7 +126,11 @@ export const DashboardStats = () => {
       {
         title: 'Total Employees',
         value: employees.filter((v) => v?.status === EmployeeStatus.ACTIVE).length,
-        icon: <BriefcaseFill size={96} className="text-info" />,
+        icon: (
+          <div className={styles.icon_circle} style={{ backgroundColor: '#5fcbc4' }}>
+            <People size={38} className="text-white" />
+          </div>
+        ),
         link: '/dashboard/company/compliance/employee-directory',
         linkText: 'Go to Employees',
         isMainCard: true,

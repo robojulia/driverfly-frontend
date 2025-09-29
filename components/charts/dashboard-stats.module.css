@@ -49,3 +49,14 @@
   line-height: 1.2 !important;
   text-align: center !important;
 }
+
+/* Icon circle backgrounds */
+.icon_circle {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
