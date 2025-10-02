@@ -12,15 +12,14 @@ export function SourceBreakdownChart() {
     let jobApply = 0;
     let autoRecruit = 0;
     state.applicants.forEach((a) => {
-      if (!a?.is_hired) {
-        ({
-          [ApplicantType.DHA]: () => dha++,
-          [ApplicantType.USER]: () => user++,
-          [ApplicantType.COMPANY]: () => company++,
-          [ApplicantType.DIRECT_JOB_APPLY]: () => jobApply++,
-          [ApplicantType.AUTO_RECRUIT]: () => autoRecruit++,
-        })[a.type]();
-      }
+      // DRIV-144 - Count all applicants regardless of hired status
+      ({
+        [ApplicantType.DHA]: () => dha++,
+        [ApplicantType.USER]: () => user++,
+        [ApplicantType.COMPANY]: () => company++,
+        [ApplicantType.DIRECT_JOB_APPLY]: () => jobApply++,
+        [ApplicantType.AUTO_RECRUIT]: () => autoRecruit++,
+      })[a.type]();
     });
     return [dha, user, company, jobApply, autoRecruit];
   };
@@ -30,7 +29,8 @@ export function SourceBreakdownChart() {
   }, [state]);
 
   const totalApplicants = useMemo(() => {
-    return state?.applicants?.filter((a) => !a?.is_hired)?.length || 0;
+    // DRIV-144 - Count all applicants without filtering hired ones
+    return state?.applicants?.length || 0;
   }, [state]);
 
   const labels = [

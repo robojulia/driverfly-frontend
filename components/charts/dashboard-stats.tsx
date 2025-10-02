@@ -44,14 +44,10 @@ export const DashboardStats = () => {
     let birthdaysThisWeek = 0;
     let birthdayEmployees: EmployeeEntity[] = [];
 
-    // Filter out duplicate applicants by email (but include applicants without email using ID as fallback)
-    const uniqueApplicants = Array.from(
-      new Map(
-        applicants.map((applicant) => [applicant.email || `id_${applicant.id}`, applicant])
-      ).values()
-    );
+    // DRIV-144 - Use all applicants without deduplication
+    const uniqueApplicants = applicants;
 
-    // Calculate applicant stats using unique applicants
+    // Calculate applicant stats using all applicants
     uniqueApplicants.forEach((a) => {
       // All applicants should be counted as leads regardless of status
       // The type field determines how they came into the system

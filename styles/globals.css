@@ -22,7 +22,7 @@ a {
   --primary-light: #cdd7fc;
   --secondary: #5fcbc4;
   --secondary-dark: #1d4354;
-  --accent: #FED100;
+  --accent: #fed100;
   --dark: #1a2b3c;
   --dark-alt: #2c3e50;
   --light: #ffffff;
@@ -30,9 +30,9 @@ a {
   --medium-gray: #e0e5eb;
   --text-primary: #1a2b3c;
   --text-secondary: #667788;
-  --success: #B4FD55;
+  --success: #b4fd55;
   --error: #e74c3c;
-  --warning: #FED100;
+  --warning: #fed100;
   --info: #0dcaf0;
   --border-radius: 8px;
   --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
