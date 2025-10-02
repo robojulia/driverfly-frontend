@@ -6,8 +6,8 @@
 :root {
   --nav-height: 80px;
   --nav-padding: 1rem 2rem;
-  --nav-bg: linear-gradient(135deg, #1c4353 0%, #163544 100%);
-  --nav-border: 3px solid #2c7a7b;
+  --nav-bg: linear-gradient(135deg, #1d4354 0%, #163544 100%);
+  --nav-border: 3px solid #006078;
   --nav-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 
   /* Logo */
@@ -18,7 +18,7 @@
 
   /* Navigation items */
   --nav-link-color: #ffffff;
-  --nav-link-hover: #2c7a7b;
+  --nav-link-hover: #006078;
   --nav-link-bg-hover: rgba(255, 255, 255, 0.1);
   --nav-link-padding: 0.75rem 1rem;
   --nav-link-radius: 6px;
@@ -28,11 +28,11 @@
   --dropdown-border: 1px solid #e0e5eb;
   --dropdown-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   --dropdown-radius: 8px;
-  --dropdown-item-hover: #2c7a7b;
+  --dropdown-item-hover: #006078;
 
   /* Buttons */
-  --btn-primary: linear-gradient(135deg, #2c7a7b 0%, #1c4353 100%);
-  --btn-secondary: linear-gradient(135deg, #5fcbc4 0%, #2c7a7b 100%);
+  --btn-primary: linear-gradient(135deg, #006078 0%, #2ec8c4 100%);
+  --btn-secondary: linear-gradient(135deg, #5fcbc4 0%, #006078 100%);
   --btn-hover-lift: -2px;
   --btn-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
@@ -348,7 +348,7 @@
   justify-content: center;
   font-size: 0.75rem;
   font-weight: bold;
-  border: 2px solid #1c4353;
+  border: 2px solid #1d4354;
 }
 
 /* ============================================
@@ -431,7 +431,7 @@
 
 .mobile-nav-list .nav-link:hover {
   background: #f0f0f0;
-  color: #1c4353;
+  color: #1d4354;
   transform: none;
 }
 
@@ -465,7 +465,7 @@
 
 .mobile-nav-list .dropdown-item:hover {
   background: #e9ecef;
-  color: #1c4353;
+  color: #1d4354;
 }
 
 /* Mobile actions */

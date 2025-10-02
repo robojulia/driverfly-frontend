@@ -2,16 +2,16 @@
   /* Brand Colors */
   --primary: #5fcbc4;
   --primary-brand: #5fcbc4;
-  --primary-light: #cdf4ff;
-  --primary-dark: #1c4353;
-  --primary-button: #2c7a7b;
-  --primary-button-light: #eafeff;
+  --primary-light: #cdd7fc;
+  --primary-dark: #1d4354;
+  --primary-button: #006078;
+  --primary-button-light: #f0f5fd;
   --secondary: #5fcbc4;
 
   /* UI Colors */
   --content-bg: #f7f9fc;
   --header-bg: #ffffff;
-  --sidebar-bg: #1c4353;
+  --sidebar-bg: #1d4354;
   --sidebar-submenu-bg: #163544;
   --sidebar-logo-bg: #f7f9fc;
 
@@ -32,8 +32,8 @@
   --dark: #1a2b3c;
 
   /* Functional Colors */
-  --success: #87f934;
-  --warning: #f5bf19;
+  --success: #B4FD55;
+  --warning: #FED100;
   --warning-light: #fef2f2;
   --danger: #e74c3c;
   --danger-dark: #d32f2f;
@@ -69,8 +69,8 @@
   --bs-danger: #c82333;
 
   /* Eligibility Feature Variables */
-  --eligibility-primary: #2c7a7b;
-  --eligibility-primary-dark: #1c4353;
+  --eligibility-primary: #006078;
+  --eligibility-primary-dark: #1d4354;
   --eligibility-primary-darker: #163544;
   --eligibility-primary-light: #eafeff;
   --eligibility-secondary: #2c3e50;

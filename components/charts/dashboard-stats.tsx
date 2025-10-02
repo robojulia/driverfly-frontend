@@ -103,7 +103,7 @@ export const DashboardStats = () => {
         title: 'New Applicants This Week',
         value: newLeads,
         icon: (
-          <div className={styles.icon_circle} style={{ backgroundColor: '#f5bf19' }}>
+          <div className={styles.icon_circle} style={{ backgroundColor: '#FED100' }}>
             <PersonPlus size={38} className="text-white" />
           </div>
         ),
@@ -115,7 +115,7 @@ export const DashboardStats = () => {
         title: 'Total Hires This Month',
         value: activeEmployees,
         icon: (
-          <div className={styles.icon_circle} style={{ backgroundColor: '#87f934' }}>
+          <div className={styles.icon_circle} style={{ backgroundColor: '#B4FD55' }}>
             <Search size={38} className="text-white" />
           </div>
         ),

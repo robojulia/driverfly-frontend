@@ -270,7 +270,7 @@ export function DevPageNavigator({ formType, currentStep, totalSteps }: DevPageN
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'current':
-        return '#2c7a7b';
+        return '#006078';
       case 'completed':
         return '#28a745';
       default:
@@ -315,7 +315,7 @@ export function DevPageNavigator({ formType, currentStep, totalSteps }: DevPageN
         right: '20px',
         zIndex: 9999,
         background: 'white',
-        border: '2px solid #2c7a7b',
+        border: '2px solid #006078',
         borderRadius: '8px',
         padding: '16px',
         minWidth: '320px',
@@ -327,7 +327,7 @@ export function DevPageNavigator({ formType, currentStep, totalSteps }: DevPageN
       {/* Header */}
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div>
-          <h6 className="mb-0" style={{ color: '#2c7a7b', fontWeight: 'bold' }}>
+          <h6 className="mb-0" style={{ color: '#006078', fontWeight: 'bold' }}>
             <Code size={16} className="me-2" />
             Dev Navigator
           </h6>

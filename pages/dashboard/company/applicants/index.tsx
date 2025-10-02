@@ -874,7 +874,7 @@ function ApplicantView(props: ViewProps) {
         expandableRowsComponent={({ data }) => (
           <div
             className="p-3"
-            style={{ backgroundColor: '#f8f9fa', borderLeft: '4px solid #2c7a7b' }}
+            style={{ backgroundColor: '#f8f9fa', borderLeft: '4px solid #006078' }}
           >
             <div className="mb-3">
               <h6 className="text-primary-brand mb-2">

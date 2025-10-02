@@ -32,7 +32,7 @@ export const Banner: React.FC<BannerProps> = ({
         };
       case 'info':
         return {
-          backgroundColor: '#d1ecf1',
+          backgroundColor: '#f0f5fd',
           borderColor: '#bee5eb',
           color: '#055160',
           iconColor: '#055160',

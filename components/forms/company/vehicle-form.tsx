@@ -464,7 +464,7 @@ export function VehicleForm(props: VehicleFormProps) {
                           ? '500'
                           : '400',
                         color: (form.values.accessories || []).includes(accessory)
-                          ? '#2c7a7b'
+                          ? '#006078'
                           : '#333',
                       }}
                     >
@@ -693,7 +693,7 @@ const addStyles = () => {
         }
 
         .vehicle-form .accessory-item.selected span {
-          color: #2c7a7b;
+          color: #006078;
           font-weight: 500;
         }
 

@@ -56,7 +56,7 @@ const DocumentStepperComponent = memo(function DocumentStepper({
         case 'completed':
           return '#28a745';
         case 'current':
-          return '#2c7a7b';
+          return '#006078';
         case 'visited':
           return '#6c757d';
         default:
@@ -203,7 +203,7 @@ const DocumentStepperComponent = memo(function DocumentStepper({
                       style={{
                         color:
                           status === 'current'
-                            ? '#2c7a7b'
+                            ? '#006078'
                             : status === 'completed'
                             ? '#28a745'
                             : '#6c757d',
