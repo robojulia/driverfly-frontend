@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 import { EyeFill, EyeSlashFill } from "react-bootstrap-icons";
+import ApplicantApi from "../../pages/api/applicant";
 
 interface SSNDisplayProps {
   applicantId: number;
@@ -74,12 +75,60 @@ const SSNDisplay: React.FC<SSNDisplayProps> = ({ applicantId, last4, className }
   const toggleSSNVisibility = async () => {
     if (!showFullSSN && !fullSSN && applicantId) {
       try {
-        const res = await fetch(`/api/applicants/fetch-applicant-ssn/${applicantId}`);
-        if (!res.ok) throw new Error('Failed to fetch SSN');
-        const data = await res.json();
+        // Use authenticated API client so Authorization header is included
+        const api = new ApplicantApi();
+        const data = await api.getSecureSsn(applicantId);
         setFullSSN(data?.ssn || null);
       } catch (e) {
-        // Silently fail to avoid leaking info in UI
+        // Detailed debug logging to investigate failures (kept out of UI)
+        try {
+          const url = `/api/applicants/fetch-applicant-ssn/${applicantId}`;
+          const storedUserJson = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
+          let hasToken = false;
+          let tokenExp: number | null = null;
+          try {
+            if (storedUserJson) {
+              const storedUser = JSON.parse(storedUserJson);
+              hasToken = Boolean(storedUser?.token);
+              tokenExp = storedUser?.jwt?.exp || null;
+            }
+          } catch {}
+
+          // Axios-style error shape
+          const ax: any = e as any;
+          const status = ax?.response?.status;
+          const statusText = ax?.response?.statusText;
+          const data = ax?.response?.data;
+          const baseURL = ax?.config?.baseURL;
+          const requestUrl = ax?.config?.url;
+          const hasAuthHeader = Boolean(ax?.config?.headers?.Authorization);
+
+          // Only log in non-production to avoid noisy logs
+          if (typeof process !== 'undefined' && process.env.NODE_ENV !== 'production') {
+            // eslint-disable-next-line no-console
+            console.groupCollapsed('SSN fetch failed');
+            // eslint-disable-next-line no-console
+            console.log('Frontend request URL (debug):', url);
+            // eslint-disable-next-line no-console
+            console.log('Axios baseURL:', baseURL);
+            // eslint-disable-next-line no-console
+            console.log('Axios request URL:', requestUrl);
+            // eslint-disable-next-line no-console
+            console.log('Has Authorization header:', hasAuthHeader);
+            // eslint-disable-next-line no-console
+            console.log('Has stored token:', hasToken);
+            // eslint-disable-next-line no-console
+            console.log('JWT exp (unix seconds):', tokenExp);
+            // eslint-disable-next-line no-console
+            console.log('Response status:', status, statusText);
+            // eslint-disable-next-line no-console
+            console.log('Response data:', data);
+            // eslint-disable-next-line no-console
+            console.groupEnd();
+          }
+        } catch {}
+
+        // Silently fail in UI to avoid leaking info
         setFullSSN(null);
       }
     }
