@@ -98,37 +98,23 @@ export default class ApplicantApi extends BaseApi {
   }
   // new api to fetch applicant Profile
   async searchApplicantProfile(params: ApplicantEntity): Promise<ApplicantEntity> {
-    // This is a public endpoint, so we make the call directly with axios to avoid authentication
-    const baseURL = process.env.NEXT_PUBLIC_BASE_URL_API;
-    const url = this.buildUrl(this.baseUrl + '/search-applicant', params);
-    const { data } = await axios.get(
-      `${baseURL}/${this.baseUrl}/search-applicant${this.buildQueryString(params)}`
-    );
-
+    const { data } = await this.get(this.buildUrl(this.baseUrl + '/search-applicant', params));
     return data;
   }
 
   // new api to fetch all applicants by phone number
   async searchApplicantsByPhone(params: ApplicantEntity): Promise<ApplicantEntity[]> {
-    // This is a public endpoint, so we make the call directly with axios to avoid authentication
-    const baseURL = process.env.NEXT_PUBLIC_BASE_URL_API;
-    const { data } = await axios.get(
-      `${baseURL}/${this.baseUrl}/search-applicants-by-phone${this.buildQueryString(params)}`
+    const { data } = await this.get(
+      this.buildUrl(this.baseUrl + '/search-applicants-by-phone', params)
     );
-
     return data;
   }
 
   // new api to get most recent applicant for prefill functionality
   async getMostRecentApplicantForPrefill(params: ApplicantEntity): Promise<ApplicantEntity> {
-    // This is a public endpoint, so we make the call directly with axios to avoid authentication
-    const baseURL = process.env.NEXT_PUBLIC_BASE_URL_API;
-    const { data } = await axios.get(
-      `${baseURL}/${this.baseUrl}/get-recent-applicant-for-phone-number${this.buildQueryString(
-        params
-      )}`
+    const { data } = await this.get(
+      this.buildUrl(this.baseUrl + '/get-recent-applicant-for-phone-number', params)
     );
-
     return data;
   }
 
@@ -158,6 +144,11 @@ export default class ApplicantApi extends BaseApi {
     const queryParams = includeEligibility ? { includeEligibility: 'true' } : {};
     const { data } = await this.get(this.buildUrl(this.baseUrl + `/${id}`, queryParams));
 
+    return data;
+  }
+
+  async getSecureSsn(applicantId: number): Promise<{ ssn: string | null }> {
+    const { data } = await this.get(`${this.baseUrl}/fetch-applicant-ssn/${applicantId}`);
     return data;
   }
 
@@ -480,10 +471,8 @@ export default class ApplicantApi extends BaseApi {
 
   // Get all jobs that an applicant has applied for by phone number
   async getAppliedJobsByPhone(phone: string): Promise<ApplicantJobEntity[]> {
-    // This is a public endpoint, so we make the call directly with axios to avoid authentication
-    const baseURL = process.env.NEXT_PUBLIC_BASE_URL_API;
-    const { data } = await axios.get(
-      `${baseURL}/${this.baseUrl}/applied-jobs-by-phone?phone=${encodeURIComponent(phone)}`
+    const { data } = await this.get(
+      `${this.baseUrl}/applied-jobs-by-phone?phone=${encodeURIComponent(phone)}`
     );
     return data;
   }

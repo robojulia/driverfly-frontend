@@ -12,7 +12,7 @@ export interface Section1Props {
 }
 export function VerificationOfEmploymentSection1({ applicant, employer }: Section1Props) {
   const { t } = useTranslation();
-  const social_security_number = applicant?.ssn;
+  const social_security_number = applicant?.ssn_last4 ? `XXX-XX-${String((applicant as any)?.ssn_last4).slice(-4)}` : undefined;
   const signature = applicant?.extras?.find(
     (sign) => sign?.type == ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION
   );
@@ -270,63 +270,63 @@ export function VerificationOfEmploymentSection1({ applicant, employer }: Sectio
         </Row>
         {/* <Row className={styles.align__text_left}>
                     <Col>
-                        <h4>{t("II_B")}</h4>
+                        <h4>{t('II_B')}</h4>
                     </Col>
                 </Row>
                 <Row className={styles.align__text_left}>
                     <p
                         className={`${styles.paragraph} ${styles.align__text_left}`}
                     >
-                        {t("DOT_REGULATED_TESTING")}
+                        {t('DOT_REGULATED_TESTING')}
                     </p>
                 </Row>
                 <Row className={styles.align__text_left}>
                     <p
                         className={`${styles.paragraph} ${styles.align__text_left}`}
                     >
-                        {t("QUESTION_ALCOHOL_TEST")}
+                        {t('QUESTION_ALCOHOL_TEST')}
                     </p>
                 </Row>
                 <Row className={styles.align__text_left}>
                     <p
                         className={`${styles.paragraph} ${styles.align__text_left}`}
                     >
-                        {t("QUESTION_VERIFIED_DRUG_TEST")}
+                        {t('QUESTION_VERIFIED_DRUG_TEST')}
                     </p>
                 </Row>
                 <Row className={styles.align__text_left}>
                     <p
                         className={`${styles.paragraph} ${styles.align__text_left}`}
                     >
-                        {t("QUESTION_REFUSE_TESTED")}
+                        {t('QUESTION_REFUSE_TESTED')}
                     </p>
                 </Row>
                 <Row className={styles.align__text_left}>
                     <p
                         className={`${styles.paragraph} ${styles.align__text_left}`}
                     >
-                        {t("QUESTION_OTHER_VIOLATIONS_DOT_AGENCY")}
+                        {t('QUESTION_OTHER_VIOLATIONS_DOT_AGENCY')}
                     </p>
                 </Row>
                 <Row className={styles.align__text_left}>
                     <p
                         className={`${styles.paragraph} ${styles.align__text_left}`}
                     >
-                        {t("QUESTION_PREVIOUS_OWNER_REPORT_VIOLATION")}
+                        {t('QUESTION_PREVIOUS_OWNER_REPORT_VIOLATION')}
                     </p>
                 </Row>
                 <Row className={styles.align__text_left}>
                     <p
                         className={`${styles.paragraph} ${styles.align__text_left}`}
                     >
-                        {t("QUESTION_RETURN_TO_DUTY")}
+                        {t('QUESTION_RETURN_TO_DUTY')}
                     </p>
                 </Row>
                 <Row className={styles.align__text_left}>
                     <p
                         className={`${styles.paragraph} ${styles.align__text_left}`}
                     >
-                        {t("NOTE_PREVIOUS_EMPLOYER_REPORT")}
+                        {t('NOTE_PREVIOUS_EMPLOYER_REPORT')}
                     </p>
                 </Row> */}
         <Row className={styles.align__text_left}>

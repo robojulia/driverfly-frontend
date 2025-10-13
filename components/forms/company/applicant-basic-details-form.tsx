@@ -450,7 +450,7 @@ export function ApplicantBasicDetailsForm(
                 </Row>
                 <div className="col-12 my-3">
                   <label>{t("SOCIAL_SECURITY_NUMBER")}</label>
-                  <SSNDisplay ssn={entity?.ssn} className="mt-1" />
+                  <SSNDisplay applicantId={entity?.id} last4={(entity as any)?.ssn_last4} className="mt-1" />
                 </div>
                 <Row className="">
                   {form.values?.extras

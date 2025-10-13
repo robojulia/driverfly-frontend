@@ -3,14 +3,16 @@ import { Button } from "react-bootstrap";
 import { EyeFill, EyeSlashFill } from "react-bootstrap-icons";
 
 interface SSNDisplayProps {
-  ssn: string;
+  applicantId: number;
+  last4?: string | null;
   className?: string;
 }
 
-const SSNDisplay: React.FC<SSNDisplayProps> = ({ ssn, className }) => {
+const SSNDisplay: React.FC<SSNDisplayProps> = ({ applicantId, last4, className }) => {
   const [showFullSSN, setShowFullSSN] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(20);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [fullSSN, setFullSSN] = useState<string | null>(null);
 
   // Function to format SSN as XXX-XX-XXXX
   const formatSSN = (ssn: string): string => {
@@ -31,13 +33,10 @@ const SSNDisplay: React.FC<SSNDisplayProps> = ({ ssn, className }) => {
 
   // Function to mask SSN, showing only last 4 digits
   const getMaskedSSN = () => {
-    if (!ssn) return "";
-    const cleanSSN = ssn.replace(/\D/g, "");
-    if (cleanSSN.length >= 9) {
-      const lastFour = cleanSSN.slice(-4);
-      return `XXX-XX-${lastFour}`;
-    }
-    return "XXX-XX-XXXX"; // Return placeholder if SSN not valid
+    if (!last4) return "XXX-XX-XXXX";
+    const digits = String(last4).replace(/\D/g, "").slice(-4);
+    if (!digits) return "XXX-XX-XXXX";
+    return `XXX-XX-${digits}`;
   };
 
   // Effect to handle timer countdown and auto-hide SSN
@@ -71,12 +70,23 @@ const SSNDisplay: React.FC<SSNDisplayProps> = ({ ssn, className }) => {
     };
   }, [showFullSSN]);
 
-  // Toggle SSN visibility
-  const toggleSSNVisibility = () => {
+  // Toggle SSN visibility (fetch securely on first reveal)
+  const toggleSSNVisibility = async () => {
+    if (!showFullSSN && !fullSSN && applicantId) {
+      try {
+        const res = await fetch(`/api/applicants/fetch-applicant-ssn/${applicantId}`);
+        if (!res.ok) throw new Error('Failed to fetch SSN');
+        const data = await res.json();
+        setFullSSN(data?.ssn || null);
+      } catch (e) {
+        // Silently fail to avoid leaking info in UI
+        setFullSSN(null);
+      }
+    }
     setShowFullSSN((prev) => !prev);
   };
 
-  if (!ssn) {
+  if (!last4) {
     return <div className={className}>SSN not provided</div>;
   }
 
@@ -84,7 +94,7 @@ const SSNDisplay: React.FC<SSNDisplayProps> = ({ ssn, className }) => {
     <div className={`ssn-display-container ${className}`}>
       <div className="d-flex align-items-center">
         <div className="ssn-value mr-2" style={{ fontFamily: "monospace" }}>
-          {showFullSSN ? formatSSN(ssn) : getMaskedSSN()}
+          {showFullSSN ? formatSSN(fullSSN || '') : getMaskedSSN()}
         </div>
         <Button
           variant="outline-secondary"
