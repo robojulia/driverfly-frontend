@@ -126,6 +126,7 @@ export class ApplicantEntity {
   is_automated_recruiting_lead?: boolean;
   authorize_to_communicate?: BooleanTypeExtra;
   routes?: JobSchedule[];
+  ssn?: string;
   ssn_last4?: string;
   employment_gap_details?: string;
   vehicles?: ApplicantVehicleEntity[];
