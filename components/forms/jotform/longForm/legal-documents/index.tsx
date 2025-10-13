@@ -123,7 +123,6 @@ function LegalDocumentsContent() {
       const companyApi = new CompanyApi();
 
       applicant.ssn = values.ssn;
-      console.log('Submitting legal documents with SSN:', values.ssn);
 
       try {
         const filtered_extras = applicantExtras?.filter(
