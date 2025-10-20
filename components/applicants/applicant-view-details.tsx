@@ -39,8 +39,8 @@ export default function ViewApplicantDetail({
 							default={t("NOT_ANSWERED")}
 							obj={{
 								...assignTo,
-								APPLICANT_CURRENT_STATUS: applicant?.current_application_status ? t(`ApplicantStatus.${applicant?.current_application_status}`) : t("GENERAL_INTAKE"),
-								REMARKS: Boolean(applicant?.current_application_status && applicant?.remarks) ? `${applicant?.remarks}` : t("N/A"),
+							APPLICANT_CURRENT_STATUS: applicant?.current_application_status ? t(`ApplicantStatus.${applicant?.current_application_status}`) : t("GENERAL_INTAKE"),
+							REMARKS: applicant?.remarks ? `${applicant?.remarks}` : t("N/A"),
 								PHONE: applicant.phone,
 								EMAIL: applicant.email,
 								STREET: applicant.street,

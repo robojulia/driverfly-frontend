@@ -655,17 +655,15 @@ export function ApplicantBasicDetailsForm(
                     formik={form}
                   />
                 )}
-                {form.values?.current_application_status && (
-                  <div className="col-12 mt-2">
-                    <label>{t("REMARKS")}</label>
-                    <BaseTextArea
-                      readOnly={Boolean(entity?.is_hired)}
-                      name="remarks"
-                      placeholder="Add a remark"
-                      formik={form}
-                    />
-                  </div>
-                )}
+                <div className="col-12 mt-2">
+                  <label>{t("REMARKS")}</label>
+                  <BaseTextArea
+                    readOnly={Boolean(entity?.is_hired)}
+                    name="remarks"
+                    placeholder="Add a remark"
+                    formik={form}
+                  />
+                </div>
               </Col>
               <Col md="4" className="px-2">
                 <BaseCheckList
