@@ -55,6 +55,7 @@ export default function ViewApplicant({ id }) {
   const [applicantSuggestedJobs, setApplicantSuggestedJobs] = useState<
     ApplicantSuggestedJobEntity[]
   >([]);
+  const [dotVerifyRaw, setDotVerifyRaw] = useState<any>(null);
 
   const backPath = '/dashboard/company/applicants';
 
@@ -265,20 +266,147 @@ export default function ViewApplicant({ id }) {
               <ViewApplicantDetail applicant={applicant} protectedFields={protectedFields} />
             </Col>
           </Row>
-          {/* DOT Verification Results (Owner Operator only) */}
+          {/* DOT Lookup Results (Owner Operator only) */}
           {applicant?.is_owner_operator && showDotVerification && (
             <Row className="mt-3">
               <Col>
-                <ViewCard title="DOT Verification Results">
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <div>
-                      {(applicant?.extras?.find((e) => e.type === ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS)?.value || [])
-                        .map((token: string, idx: number) => (
-                          <div key={idx} className="text-monospace">{token}</div>
-                        ))}
-                      {!(applicant?.extras?.find((e) => e.type === ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS)?.value || []).length && (
-                        <div className="text-muted">No results found</div>
-                      )}
+                <ViewCard title="DOT Lookup Results">
+                  <div className="d-flex justify-content-between align-items-start flex-wrap">
+                    {(() => {
+                      const tokens = (applicant?.extras?.find((e) => e.type === ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS)?.value as string[]) || [];
+                      if (!tokens.length) return null;
+                      const checks = [
+                        { key: 'EMAIL', label: 'Email' },
+                        { key: 'PHONE', label: 'Phone' },
+                        { key: 'STREET_ADDRESS', label: 'Street address' },
+                        { key: 'CITY', label: 'City' },
+                        { key: 'STATE', label: 'State' },
+                        { key: 'ZIP_CODE', label: 'ZIP code' },
+                      ];
+                      const getStatus = (k: string): boolean | null => {
+                        if (tokens.includes(`${k}_SUCCESS`)) return true;
+                        if (tokens.includes(`${k}_FAIL`)) return false;
+                        return null;
+                      };
+                      return (
+                        <div className="mb-2" style={{ minWidth: 240 }}>
+                          {checks.map(({ key, label }) => {
+                            const status = getStatus(key);
+                            return (
+                              <div key={key} className="d-flex align-items-center mb-1">
+                                <div style={{ width: 140 }}>{label}</div>
+                                {status === true && <span className="badge bg-success">Match</span>}
+                                {status === false && <span className="badge bg-danger">No match</span>}
+                                {status === null && <span className="badge bg-secondary">Unknown</span>}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    })()}
+                    <div style={{ flex: 1, minWidth: 280 }} className="text-start">
+                      <div>
+                        {(() => {
+                          if (!dotVerifyRaw) return null;
+                          const data: any = (dotVerifyRaw as any)?.records ?? dotVerifyRaw;
+                          const records: any[] = Array.isArray(data) ? data : [data];
+                          const join = (parts: Array<string | undefined | null>, sep: string) =>
+                            parts.filter((p) => Boolean(p && String(p).trim().length)).map((p) => String(p)).join(sep);
+                          const toTitleCase = (value?: string) => {
+                            if (!value) return value;
+                            const cased = String(value)
+                              .toLowerCase()
+                              .replace(/\b([a-z])(\w*)/g, (_: any, a: string, b: string) => a.toUpperCase() + b);
+                            return cased.replace(/ Llc\b/g, ' LLC');
+                          };
+                          const formatCountry = (value?: string) => {
+                            if (!value) return value;
+                            const raw = String(value).trim();
+                            const normalized = raw.toUpperCase().replace(/\./g, '');
+                            if (
+                              normalized === 'US' ||
+                              normalized === 'USA' ||
+                              normalized === 'UNITED STATES' ||
+                              normalized === 'UNITED STATES OF AMERICA'
+                            ) {
+                              return 'United States of America';
+                            }
+                            return raw.toUpperCase();
+                          };
+                          const formatPhone = (value?: string) => {
+                            if (!value) return value;
+                            const raw = String(value);
+                            const digitsOnly = raw.replace(/\D/g, '');
+                            const normalized = digitsOnly.length === 11 && digitsOnly.startsWith('1') ? digitsOnly.slice(1) : digitsOnly;
+                            if (normalized.length === 10) {
+                              const area = normalized.slice(0, 3);
+                              const exchange = normalized.slice(3, 6);
+                              const line = normalized.slice(6);
+                              return `(${area}) ${exchange}-${line}`;
+                            }
+                            if (normalized.length === 7) {
+                              return `${normalized.slice(0, 3)}-${normalized.slice(3)}`;
+                            }
+                            return raw;
+                          };
+                          return (
+                            <div>
+                              {records.map((rec: any, idx: number) => {
+                                const phyCityStateZip = join([
+                                  toTitleCase(rec?.phy_city),
+                                  join([String(rec?.phy_state || '').toUpperCase(), rec?.phy_zip], ' '),
+                                ], ', ');
+                                const mailingCityStateZip = join([
+                                  toTitleCase(rec?.carrier_mailing_city),
+                                  join([String(rec?.carrier_mailing_state || '').toUpperCase(), rec?.carrier_mailing_zip], ' '),
+                                ], ', ');
+                                const phyStreet = toTitleCase(rec?.phy_street);
+                                const phyCountryDisplay = formatCountry(rec?.phy_country);
+                                const addressString = join([
+                                  phyStreet,
+                                  phyCityStateZip,
+                                  phyCountryDisplay,
+                                ], ', ');
+                                const mailingStreet = toTitleCase(rec?.carrier_mailing_street);
+                                const mailingCountryDisplay = formatCountry(rec?.carrier_mailing_country);
+                                const mailingAddressString = join([
+                                  mailingStreet,
+                                  mailingCityStateZip,
+                                  mailingCountryDisplay,
+                                ], ', ');
+                                const areAddressesIdentical = Boolean(addressString) && Boolean(mailingAddressString) && addressString === mailingAddressString;
+                                return (
+                                  <div key={idx} className="mb-2">
+                                    <div className="fw-semibold">Company Name</div>
+                                    <div className="mb-1">{toTitleCase(rec?.legal_name) ?? ''}</div>
+                                    <div className="fw-semibold">Address</div>
+                                    <div className="mb-1">
+                                      {phyStreet && <div>{phyStreet}</div>}
+                                      {phyCityStateZip && <div>{phyCityStateZip}</div>}
+                                      {phyCountryDisplay && <div>{phyCountryDisplay}</div>}
+                                    </div>
+                                    {!areAddressesIdentical && mailingAddressString && (
+                                      <>
+                                        <div className="fw-semibold">Mailing Address</div>
+                                        <div className="mb-1">
+                                          {mailingStreet && <div>{mailingStreet}</div>}
+                                          {mailingCityStateZip && <div>{mailingCityStateZip}</div>}
+                                          {mailingCountryDisplay && <div>{mailingCountryDisplay}</div>}
+                                        </div>
+                                      </>
+                                    )}
+                                    <div className="fw-semibold">Phone</div>
+                                    <div className="mb-1">{formatPhone(rec?.phone) ?? ''}</div>
+                                    <div className="fw-semibold">Email Address</div>
+                                    <div>{rec?.email_address ?? ''}</div>
+                                    {idx < records.length - 1 && <hr className="my-2" />}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          );
+                        })()}
+                      </div>
                     </div>
                     <div>
                       <Button
@@ -300,15 +428,14 @@ export default function ViewApplicant({ id }) {
                               zip_code: applicant?.zip_code,
                               business_name,
                             });
+                            setDotVerifyRaw(tokens);
                             const newTokens = Array.isArray(tokens) && tokens.length ? tokens[0] : [];
-                            // Update in-place so UI reflects immediately; persistence happens when editing applicant
                             const others = (applicant?.extras || []).filter((e) => e.type !== ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS);
                             const updated = {
                               type: ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS,
                               value: newTokens,
                             } as any;
                             const newExtras = [...others, updated];
-                            // Persist to backend so results are saved and summary stays updated
                             const saved = await applicantApi.update(
                               applicant.id,
                               {
