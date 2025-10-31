@@ -230,11 +230,9 @@ export default function ViewApplicant({ id }) {
             <Row>
               <Col>
                 {!!!Object.values(applicant?.jobs).length && (
-                  <strong>
-                    <em>
-                      <p className="text-danger">{t('NO_JOB_TIED_WITH_APPLICANT')}</p>
-                    </em>
-                  </strong>
+                  <div className="alert alert-warning rounded text-dark py-2 px-3 mb-2">
+                    {t('NO_JOB_TIED_WITH_APPLICANT')}
+                  </div>
                 )}
               </Col>
               <Col>
