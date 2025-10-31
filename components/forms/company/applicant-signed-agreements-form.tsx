@@ -4,7 +4,7 @@ import { FileText, ChevronDown, ChevronUp } from 'react-bootstrap-icons';
 import { useTranslation } from '../../../hooks/use-translation';
 import { ApplicantEntity } from '../../../models/applicant/applicant.entity';
 import { BaseFormProps } from './base-form-props';
-import ViewCard from '../../view-details/view-card';
+import Section from '../../view-details/section';
 import { ApplicantExtras } from '../../../enums/applicants/applicant-extras.enum';
 import styles from '../../../styles/digitalhiringapp.module.css';
 
@@ -117,7 +117,7 @@ export function ApplicantSignedAgreementsForm(props: ApplicantSignedAgreementsFo
       <Form className={className}>
         <Row>
           <Col md="12" className="p-0 px-lg-2">
-            <ViewCard title="SIGNED_AGREEMENTS">
+            <Section title="SIGNED_AGREEMENTS">
               {agreements.length > 0 ? (
                 <div className="mt-3">
                   {agreements.map((agreement, index) => (
@@ -246,7 +246,7 @@ export function ApplicantSignedAgreementsForm(props: ApplicantSignedAgreementsFo
                   <small>No legal documents have been configured for this applicant.</small>
                 </div>
               )}
-            </ViewCard>
+            </Section>
           </Col>
         </Row>
       </Form>

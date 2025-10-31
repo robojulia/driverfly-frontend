@@ -1,0 +1,204 @@
+import { Col, Row, Form as BsForm } from "react-bootstrap";
+import { useTranslation } from "../../../hooks/use-translation";
+import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
+import { BaseFormProps } from "./base-form-props";
+import Section from "../../view-details/section";
+import BaseSelect from "../base-select";
+import BaseInput from "../base-input";
+import BaseCheck from "../base-check";
+import BaseCheckList from "../base-check-list";
+import StateSelect from "../state-select";
+import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
+import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
+import { EducationLevel } from "../../../enums/users/education-level.enum";
+import { LicenseRestrictions } from "../../../enums/applicants/applicant-license-restrictions-type.enum";
+import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
+import { useFormik } from "formik";
+import { ApplicantExtrasEntity } from "../../../models/applicant";
+import { useEffect } from "react";
+import ApplicantApi from "../../../pages/api/applicant";
+
+export interface ApplicantLicensingFormProps extends BaseFormProps<ApplicantEntity> {}
+
+export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
+  const { t } = useTranslation();
+  const { entity, setEntity, className } = props;
+  const applicantApi = new ApplicantApi();
+
+  const form = useFormik<ApplicantEntity>({
+    initialValues: entity || ({} as ApplicantEntity),
+    onSubmit: async (values) => {
+      if (!entity?.id) return;
+      const payload: any = {
+        license_type: values.license_type,
+        years_cdl_experience: values.years_cdl_experience,
+        license_number: values.license_number,
+        license_expiry: values.license_expiry,
+        license_state: values.license_state,
+        is_owner_operator: values.is_owner_operator,
+      };
+      const saved = await applicantApi.update(entity.id, payload);
+      setEntity?.(saved);
+    },
+    enableReinitialize: true,
+  });
+
+  useEffect(() => {
+    if (entity) form.setValues({ ...entity });
+  }, [entity]);
+
+  const handleLicenseNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const uppercaseValue = e.target.value.toUpperCase();
+    form.setFieldValue(e.target.name, uppercaseValue);
+  };
+
+  return (
+    <Row className="px-2">
+      <Section title="Licensing & Certification">
+        <BsForm onSubmit={form.handleSubmit} data-applicant-edit-form>
+        <Row className="px-3">
+          <BaseSelect
+            className="col-6"
+            readOnly={Boolean(entity?.is_hired)}
+            required={Boolean(form.values?.license_number)}
+            label="CDL_TYPE"
+            name="license_type"
+            displayPlaceholder
+            placeholder="SELECT_CDL_TYPE"
+            labelPrefix="DriverLicenseType"
+            enumType={DriverLicenseType}
+            formik={form}
+          />
+          <BaseInput
+            className="col-6"
+            readOnly={Boolean(entity?.is_hired)}
+            label="years_cdl_experience"
+            name="years_cdl_experience"
+            type="number"
+            placeholder="ENTER_YEARS_OF_CDL"
+            formik={form}
+          />
+        </Row>
+        <Row className="px-3">
+          <BaseInput
+            className="col-12 mt-2"
+            readOnly={Boolean(entity?.is_hired)}
+            label="driver's_license_number"
+            name="license_number"
+            placeholder="ENTER_DRIVER_LICENSE"
+            formik={form}
+            onChange={handleLicenseNumberChange}
+          />
+          <BaseInput
+            className="col-6 mt-2"
+            readOnly={Boolean(entity?.is_hired)}
+            label="expiration_date"
+            name="license_expiry"
+            type="date"
+            placeholder="expiration_date"
+            formik={form}
+          />
+          <StateSelect
+            className="col-6 mt-2"
+            readOnly={Boolean(entity?.is_hired)}
+            label="state_issued"
+            name="license_state"
+            placeholder="SELECT_ISSUE_STATE"
+            formik={form}
+          />
+        </Row>
+        <Row className="px-3">
+          <BaseCheck
+            className="col-12 mt-2"
+            disabled={Boolean(entity?.is_hired)}
+            label="OWNER_OPERATOR"
+            name="is_owner_operator"
+            formik={form}
+          />
+        </Row>
+        {Boolean(form.values.is_owner_operator) && (
+          <Row className="px-3">
+            <BaseInput
+              readOnly={Boolean(entity?.is_hired)}
+              className="col-6"
+              label="BUSINESS_NAME"
+              name={`extras[${form.values?.extras?.findIndex((v) => v.type == ApplicantExtras.BUSINESS_NAME)}].value`}
+              formik={form}
+            />
+            <BaseInput
+              readOnly={Boolean(entity?.is_hired)}
+              className="col-6"
+              name={`extras[${form.values?.extras?.findIndex((v) => v.type == ApplicantExtras.DOT_NUMBER)}].value`}
+              label="DOT_NUMBER"
+              formik={form}
+            />
+          </Row>
+        )}
+
+        <Row className="px-3">
+          <BaseCheckList
+            className="col-12"
+            disabled={Boolean(entity?.is_hired)}
+            label="ENDORSEMENTS"
+            name="endorsements"
+            labelPrefix="DriverEndorsement"
+            enumType={DriverEndorsement}
+            formik={form}
+            cols="2"
+          />
+          {form.values?.endorsements?.includes(DriverEndorsement.OTHER) && (
+            <BaseInput
+              readOnly={Boolean(entity?.is_hired)}
+              className="col-12"
+              label="OTHER_ENDORSEMENTS"
+              required
+              name="endorsements_other"
+              displayPlaceholder
+              formik={form}
+            />
+          )}
+        </Row>
+
+        <Row className="px-3">
+          <BaseSelect
+            className="col-12"
+            readOnly={Boolean(entity?.is_hired)}
+            label="HIGHEST_DEGREE"
+            name="highest_degree"
+            placeholder="SELECT_HIGHEST_DEGREE"
+            formik={form}
+            labelPrefix="EducationLevel"
+            enumType={EducationLevel}
+          />
+        </Row>
+
+        <Row className="px-3">
+          <BaseCheckList
+            disabled={Boolean(entity?.is_hired)}
+            className="col-12 p-1 "
+            label="License_Restrictions"
+            name="license_restrictions"
+            labelPrefix="LicenseRestrictions"
+            enumType={LicenseRestrictions}
+            formik={form}
+            cols="2"
+          />
+          {form.values?.license_restrictions?.includes(LicenseRestrictions.OTHER) && (
+            <BaseInput
+              readOnly={Boolean(entity?.is_hired)}
+              className="col-12"
+              label="OTHER_LICENSE_RESTRICTIONS"
+              required
+              name="license_restrictions_other"
+              displayPlaceholder
+              formik={form}
+            />
+          )}
+        </Row>
+        </BsForm>
+      </Section>
+    </Row>
+  );
+}
+
+

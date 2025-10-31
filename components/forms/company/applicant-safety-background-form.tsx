@@ -17,7 +17,7 @@ import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { focusOnErrorField } from "../../../utils/form-error";
 import { useEffectAsync } from "../../../utils/react";
 import { formFailed, formSuccess } from "../../../utils/toast";
-import ViewCard from "../../view-details/view-card";
+import Section from "../../view-details/section";
 import BaseCheck from "../base-check";
 import BaseInput from "../base-input";
 import BaseTextArea from "../base-text-area";
@@ -93,10 +93,11 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
         <Form
             onSubmit={form.handleSubmit}
             className={className}
+            data-applicant-edit-form
         >
             <Row>
                 <Col md="12" className="p-0 px-lg-2">
-                    <ViewCard title="SAFETY_BACKGROUND">
+                    <Section title="SAFETY_BACKGROUND">
                         <Row>
                             <Col md="6">
                                 <BaseCheck
@@ -115,7 +116,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                 />
                                 {form.values?.has_past_dui && (
                                     <Col xs="12" className="mt-2">
-                                        <ViewCard
+                                        <Section
                                             title="PAST_DUIS"
                                             actions={
                                                 !props?.hideActions && (
@@ -182,7 +183,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                                     </tbody>
                                                 </Table>
                                             )}
-                                        </ViewCard>
+                                        </Section>
                                     </Col>
                                 )}
                                 <BaseCheck
@@ -220,7 +221,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                 />
                                 {form.values.accident_count > 0 && (
                                     <div className="col-12 mt-2">
-                                        <ViewCard
+                                        <Section
                                             title="ACCIDENT_DEAILS"
                                             actions={
                                                 !props?.hideActions && !entity?.is_hired &&
@@ -332,7 +333,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                                     </div>
                                                 </Row>
                                             ))}
-                                        </ViewCard>
+                                        </Section>
                                     </div>
                                 )}
 
@@ -460,14 +461,14 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                 />
                                 {form.values.all_violations_count > 0 && (
                                     <div className="col-12 mt-2">
-                                        <ViewCard title="VIOLATION_DETAILS">
+                                        <Section title="VIOLATION_DETAILS">
                                             <BaseTextArea
                                                 readOnly={Boolean(entity?.is_hired)}
                                                 label="VIOLATION_DETAILS"
                                                 name="all_violations_details"
                                                 formik={form}
                                             />
-                                        </ViewCard>
+                                        </Section>
                                     </div>
                                 )}
                             </Col>
@@ -547,7 +548,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                 </Button>
                             </div>
                         )}
-                    </ViewCard>
+                    </Section>
                 </Col>
             </Row>
 

@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
 import {
     DashCircle,
@@ -17,12 +17,15 @@ import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { focusOnErrorField } from "../../../utils/form-error";
 import { useEffectAsync } from "../../../utils/react";
 import { formFailed, formSuccess } from "../../../utils/toast";
-import ViewCard from "../../view-details/view-card";
+import Section from "../../view-details/section";
 import BaseInput from "../base-input";
 import FileInput from "../file-input";
 import { BaseFormProps } from "./base-form-props";
 import { ApplicantOnBoardingChecklist } from "../../../enums/applicants/applicant-onboarding-checklist.enum";
+import { getBase64 } from "../../../utils/file";
 import ShowFormattedDate from "../../jobs/show-formatted-date";
+import ViewPdf from "../../view-details/view-pdf";
+import { handleViewDocument } from "../../../utils/documents/button-actions";
 
 export interface ApplicantUploadedDocumentsFormProps extends BaseFormProps<ApplicantEntity> {
     isSubmitting: boolean;
@@ -35,6 +38,7 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
     const { t } = useTranslation();
 
     const applicantApi = new ApplicantApi();
+    const [pdf, setPdf] = useState<{ name?: string; url?: string } | any>(null as any);
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
@@ -107,91 +111,129 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
         <Form
             onSubmit={form.handleSubmit}
             className={className}
+            data-applicant-edit-form
         >
             <Row>
                 <Col md="12" className="p-0 px-lg-2">
-                    <ViewCard
+                    <Section
                         title="UPLOADED_DOCUMENTS"
-                        actions={
-                            !props?.hideActions && (
-                                <Button
-                                    size="sm"
-                                    disabled={Boolean(entity?.is_hired)}
-                                    onClick={() =>
-                                        form.setValues({
-                                            ...form.values,
-                                            documents: [
-                                                ...(form.values?.documents || []),
-                                                new DocumentEntity(),
-                                            ],
-                                        })
-                                    }
-                                >
-                                    <PlusCircle /> {t("ADD")}
-                                </Button>
-                            )
-                        }
                     >
-                        {form.values?.documents?.length > 0 && (
-                            <Table striped>
-                                <thead>
-                                    <tr>
-                                        <th>{t("DOCUMENT_NAME")}</th>
-                                        <th>{t("DOCUMENT")}</th>
-                                        <th className="text-center">{t("upload_date")}</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {form.values?.documents?.map((entity, i) => (
-                                        <tr key={i}>
-                                            <td>
-                                                <BaseInput
-                                                    name={`documents[${i}].type`}
-                                                    required
-                                                    placeholder="DOCUMENT_NAME"
-                                                    readOnly={
-                                                        // Boolean(!!entity?.id && !entity?.file_base64) ||
-                                                        Boolean(props?.entity?.is_hired)
+                        {!props?.hideActions && !Boolean(entity?.is_hired) && (
+                            <div
+                                onDragOver={(e) => e.preventDefault()}
+                                onDrop={async (e) => {
+                                    e.preventDefault();
+                                    const files = Array.from(e.dataTransfer.files || []);
+                                    if (!files.length) return;
+                                    const newDocs = [] as any[];
+                                    for (const file of files) {
+                                        const doc = new DocumentEntity();
+                                        doc.type = file.name; // use filename as unique key
+                                        doc.name = file.name;
+                                        doc.mime_type = file.type;
+                                        const b64 = await getBase64(file as any);
+                                        doc.file_base64 = b64;
+                                        doc.path = `data:${file.type};base64,${b64}`;
+                                        newDocs.push(doc);
+                                    }
+                                    form.setValues({
+                                        ...form.values,
+                                        documents: [
+                                            ...(form.values?.documents || []),
+                                            ...newDocs,
+                                        ],
+                                    });
+                                }}
+                                style={{
+                                    border: "2px dashed #d9dee3",
+                                    borderRadius: 6,
+                                    padding: 32,
+                                    textAlign: "center",
+                                    color: "#6c757d",
+                                }}
+                                className="mb-3"
+                            >
+                                <div className="mb-2" style={{ fontSize: 14 }}>{t("Drag and drop files or click to browse")}</div>
+                                <label className="btn btn-light border" style={{ cursor: "pointer" }}>
+                                    {t("Select Files")}
+                                    <input
+                                        type="file"
+                                        multiple
+                                        accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
+                                        style={{ display: "none" }}
+                                        onChange={async (e) => {
+                                            const files = Array.from(e.target.files || []);
+                                            if (!files.length) return;
+                                            const newDocs = [] as any[];
+                                            for (const file of files) {
+                                                const doc = new DocumentEntity();
+                                                doc.type = file.name;
+                                                doc.name = file.name;
+                                                doc.mime_type = file.type;
+                                                const b64 = await getBase64(file as any);
+                                                doc.file_base64 = b64;
+                                                doc.path = `data:${file.type};base64,${b64}`;
+                                                newDocs.push(doc);
+                                            }
+                                            form.setValues({
+                                                ...form.values,
+                                                documents: [
+                                                    ...(form.values?.documents || []),
+                                                    ...newDocs,
+                                                ],
+                                            });
+                                        }}
+                                    />
+                                </label>
+                            </div>
+                        )}
+
+                        {form.values?.documents?.length > 0 ? (
+                            <div>
+                                {form.values?.documents?.map((doc, i) => (
+                                    <div key={i} className="d-flex align-items-center justify-content-between bg-light rounded mb-2 px-3 py-2">
+                                        <div className="d-flex align-items-center">
+                                            <span className="me-2 bi bi-file-earmark" />
+                                            <span>{doc?.name || doc?.type}</span>
+                                        </div>
+                                        <div>
+                                            <Button
+                                                variant="link"
+                                                className="p-0 me-3"
+                                                onClick={async (e) => {
+                                                    e.preventDefault();
+                                                    if (doc?.id) {
+                                                        await handleViewDocument(doc.id, setPdf, doc?.name);
+                                                    } else if (doc?.path || doc?.file_base64) {
+                                                        setPdf({ name: doc?.name, url: doc?.path || `data:${doc?.mime_type};base64,${doc?.file_base64}` });
                                                     }
-                                                    formik={form}
-                                                />
-                                            </td>
-                                            <td>
-                                                <FileInput
-                                                    name={`documents[${i}]`}
-                                                    readOnly={Boolean(props?.entity?.is_hired)}
-                                                    required
-                                                    accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
-                                                    allowedSizeInByte={3145728}
-                                                    formik={form}
-                                                />
-                                            </td>
-                                            <td className="text-center">
-                                                {form?.values?.documents[i]?.created_at ? <ShowFormattedDate date={form?.values?.documents[i]?.created_at} /> : (<span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>)}
-                                            </td>
-                                            <td>
-                                                <a
-                                                    href="#"
+                                                }}
+                                            >
+                                                {t("View")}
+                                            </Button>
+                                            {!props?.hideActions && !Boolean(entity?.is_hired) && (
+                                                <Button
+                                                    variant="link"
+                                                    className="p-0"
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         form.setValues({
                                                             ...form.values,
-                                                            documents: form.values?.documents?.filter(
-                                                                (v, idx) => i != idx
-                                                            ),
-                                                        })
+                                                            documents: form.values?.documents?.filter((_, idx) => idx !== i),
+                                                        });
                                                     }}
                                                 >
-                                                    <DashCircle color="red" />
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </Table>
+                                                    {t("Remove")}
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-muted">{t("NONE")}</div>
                         )}
-                        {!form.values?.documents?.length && <>{t("NONE")}</>}
+
                         {!props?.hideActions && (
                             <div style={{ display: "flex", justifyContent: "right" }}>
                                 <Button disabled={form.isSubmitting || isSubmitting} style={{ marginTop: "2%" }} type="submit" className="theme-secondary-btn">
@@ -199,10 +241,11 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
                                 </Button>
                             </div>
                         )}
-                    </ViewCard>
+                    </Section>
                 </Col>
             </Row>
 
+            <ViewPdf name={pdf?.name} url={pdf?.url} onCloseClick={() => setPdf(null)} />
         </Form>
     );
 }

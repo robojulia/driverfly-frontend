@@ -14,6 +14,7 @@ import { enableAllDocumentsManually } from "../../../utils/company-preferences-u
 import FileInput from "../../forms/file-input";
 import ShowFormattedDate from "../../jobs/show-formatted-date";
 import ViewCard from "../../view-details/view-card";
+import Section from "../../view-details/section";
 import ViewPdf from "../../view-details/view-pdf";
 
 import { ApplicantOnBoardingChecklist } from "../../../enums/applicants/applicant-onboarding-checklist.enum";
@@ -383,42 +384,29 @@ export default function OnboardingChecklist(
   const ButtonList = ({ document, type }) => (
     <>
       {(!form.values.document?.type || form.values.document?.type != type) && (
-        <div className="d-flex">
-          {!document?.name?.includes(".doc") && (
-            <ViewDocumentButton
-              document={document}
-              onClick={() => handleViewDocument(document.id, setPdf)}
-            />
+        <div className="d-flex align-items-center justify-content-end w-100">
+          {document && !document?.name?.includes('.doc') && (
+            <Button variant="link" className="p-0 me-3"
+              onClick={() => handleViewDocument(document.id, setPdf)}>
+              {t('View')}
+            </Button>
+          )}
+          {document && (
+            <Button variant="link" className="p-0 me-3"
+              onClick={() => handleDownloadDocument(document.id)}>
+              {t('Download')}
+            </Button>
           )}
           {Boolean(props.canEdit) && (
-            <AddDocumentButton
-              document={document}
-              type={type}
-              t={t}
-              onClick={() => handleUpdateDocument(type, document?.id)}
-            />
+            <Button variant="link" className="p-0 me-3"
+              onClick={() => handleUpdateDocument(type, document?.id)}>
+              {document ? t('Replace') : t('Upload')}
+            </Button>
           )}
-          <DownloadDocumentButton
-            document={document}
-            onClick={() => handleDownloadDocument(document.id)}
-          />
-          {Boolean(props.canEdit) && (
-            <DeleteDocumentButton
-              document={document}
-              onClick={() => handleDeleteDocument(type)}
-            />
-          )}
-          {type == ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY && (
-            <SafetyPerformanceHistory
-              buttonClass="mr-2 w-100"
-              applicant={applicant}
-              canEditSafetyPerformance={props.canEditSafetyPerformance}
-              showHistory={props.showHistory}
-              showResendButton={props.showResendButton}
-            />
-          )}
+          {/* VOE list button removed per styling request */}
           {Boolean(props.showHistory) && (
             <ViewDocumentHistory
+              buttonClass="btn btn-link p-0 me-3"
               canDelete={!applicant.is_hired}
               typePrefix="ApplicantOnBoardingChecklist"
               document={document}
@@ -426,6 +414,12 @@ export default function OnboardingChecklist(
               documentable_id={applicant.id}
               documentable_type={DocumentableType.APPLICANTS}
             />
+          )}
+          {Boolean(props.canEdit) && document && (
+            <Button variant="link" className="p-0 text-danger"
+              onClick={() => handleDeleteDocument(type)}>
+              {t('Remove')}
+            </Button>
           )}
         </div>
       )}
@@ -476,7 +470,7 @@ export default function OnboardingChecklist(
                       <UpdatedAt document={document} t={t} />
                     </td>
                   )}
-                  <td colSpan={1} className="border border-2 w-50">
+                  <td colSpan={1}>
                     <ButtonList document={document} type={type} />
                     {form.values?.document?.type == type && (
                       <Form onSubmit={form.handleSubmit}>
@@ -493,14 +487,14 @@ export default function OnboardingChecklist(
                               !form.isValid ||
                               form.isValidating
                             }
-                            className="mr-2 w-50 theme-primary-btn"
+                            className="mr-2 w-50 theme-secondary-btn"
                             type="submit"
                           >
                             {t(`SAVE`)}
                           </Button>
                           <Button
                             type="button"
-                            className="mr-2 w-50 bg-danger"
+                            className="mr-2 w-50 btn-outline-danger"
                             onClick={() => {
                               form.resetForm();
                             }}
@@ -540,71 +534,80 @@ export default function OnboardingChecklist(
       </div>
     );
 
+  const title = props.title ?? "DOCUMENTS";
+  const actions = (
+    <>
+      <Button variant="link" className="p-0 me-3"
+        size="sm"
+        disabled={isEnablingAllDocuments}
+        onClick={handleEnableAllDocuments}
+      >
+        {isEnablingAllDocuments ? t("ENABLING...") : t("ENABLE_ALL_DOCUMENTS")}
+      </Button>
+      <Button variant="link" className="p-0" size="sm" onClick={() => setEditList(!editList)}>
+        {editList ? t("CANCEL") : t("EDIT_LIST")}
+      </Button>
+    </>
+  );
+
+  const body = editList ? (
+    <>
+      <CompanyPreferencesOnboardingChecklistForm
+        className="m-5"
+        companyOnboardingChecklist={companyOnboardingChecklist}
+        onSaveComplete={(newChecklist: CompanyPreferenceEntity) => {
+          setCompanyOnboardingPreferences([
+            ...companyOnboardingPreferences?.filter(
+              (v) =>
+                v.label !==
+                CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DOCUMETS
+            ),
+            newChecklist,
+          ]);
+        }}
+      />
+      <hr/>
+      <CompanyPreferencesDacForm
+        className="m-5"
+        companyDaclist={companyDaclist}
+        onSaveComplete={(newDac: CompanyPreferenceEntity) => {
+          setCompanyOnboardingPreferences([
+            ...companyOnboardingPreferences?.filter(
+              (v) =>
+                v.label !==
+                CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DAC
+            ),
+            newDac,
+          ]);
+        }}
+      />
+    </>
+  ) : (
+    <ChecklistItems
+      showCompleted={props.showCompleted}
+      companyOnboardingChecklist={companyOnboardingChecklist}
+      vehicleDocumentTypes={vehicleDocumentTypes}
+      renderDocumentTable={renderDocumentTable}
+      companyDaclist={companyDaclist}
+      applicant={applicant}
+      dacForm={dacForm}
+      handleDacChangeClick={handleDacChangeClick}
+      pdf={pdf}
+      setPdf={setPdf}
+    />
+  );
+
+  if (props.useSectionContainer) {
+    return (
+      <Section title={title} actions={actions}>
+        {body}
+      </Section>
+    );
+  }
+
   return (
-    <ViewCard
-      title={props.title ?? "DOCUMENTS"}
-      actions={
-        <>
-                     <Button 
-             size="sm" 
-             className="me-2"
-             disabled={isEnablingAllDocuments}
-             onClick={handleEnableAllDocuments}
-           >
-             {isEnablingAllDocuments ? t("ENABLING...") : t("ENABLE_ALL_DOCUMENTS")}
-           </Button>
-          <Button size="sm" onClick={() => setEditList(!editList)}>
-            {editList ? t("CANCEL") : t("EDIT_LIST")}
-          </Button>
-        </>
-      }
-    >
-      {editList ? (
-        <>
-          <CompanyPreferencesOnboardingChecklistForm
-            className="m-5"
-            companyOnboardingChecklist={companyOnboardingChecklist}
-            onSaveComplete={(newChecklist: CompanyPreferenceEntity) => {
-              setCompanyOnboardingPreferences([
-                ...companyOnboardingPreferences?.filter(
-                  (v) =>
-                    v.label !==
-                    CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DOCUMETS
-                ),
-                newChecklist,
-              ]);
-            }}
-          />
-          <hr/>
-          <CompanyPreferencesDacForm
-            className="m-5"
-            companyDaclist={companyDaclist}
-            onSaveComplete={(newDac: CompanyPreferenceEntity) => {
-              setCompanyOnboardingPreferences([
-                ...companyOnboardingPreferences?.filter(
-                  (v) =>
-                    v.label !==
-                    CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DAC
-                ),
-                newDac,
-              ]);
-            }}
-          />
-        </>
-      ) : (
-        <ChecklistItems
-          showCompleted={props.showCompleted}
-          companyOnboardingChecklist={companyOnboardingChecklist}
-          vehicleDocumentTypes={vehicleDocumentTypes}
-          renderDocumentTable={renderDocumentTable}
-          companyDaclist={companyDaclist}
-          applicant={applicant}
-          dacForm={dacForm}
-          handleDacChangeClick={handleDacChangeClick}
-          pdf={pdf}
-          setPdf={setPdf}
-        />
-      )}
+    <ViewCard title={title} actions={actions}>
+      {body}
     </ViewCard>
   );
 }

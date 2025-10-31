@@ -4,6 +4,7 @@ import { DocumentEntity } from "../../models/documents/document.entity";
 export type ViewApplicantOnboardingChecklistProps = {
     applicant: ApplicantEntity;
     title?: string;
+    useSectionContainer?: boolean;
     showCompleted?: boolean | (() => boolean);
     showHistory?: boolean | (() => boolean);
     canEdit?: boolean | (() => boolean);

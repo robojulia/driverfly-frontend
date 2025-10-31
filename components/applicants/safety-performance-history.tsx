@@ -170,7 +170,7 @@ export default function SafetyPerformanceHistory({
   const ButtonList = ({ employer, document, type }) => (
     <>
       {form?.values?.employer?.id != employer?.id && (
-        <div className="d-flex w-100 mt-2  ">
+        <div className="d-flex w-100 mt-2 justify-content-end">
           {!document?.name?.includes(".doc") && (
             <ViewDocumentButton
               document={document}
@@ -201,6 +201,16 @@ export default function SafetyPerformanceHistory({
             document={document}
             onClick={() => handleDownloadDocument(document.id)}
           />
+          {Boolean(showHistory) && (
+            <ViewDocumentHistory
+              buttonClass="btn btn-link p-0 me-3"
+              typePrefix="ApplicantOnBoardingChecklist"
+              document={document}
+              type={type}
+              documentable_id={applicant.id}
+              documentable_type={DocumentableType.APPLICANT_EMPLOYERS}
+            />
+          )}
           {!applicant?.is_hired && (
             <>
               {Boolean(canEditSafetyPerformance) && (
@@ -249,15 +259,7 @@ export default function SafetyPerformanceHistory({
                 )}
             </>
           )}
-          {Boolean(showHistory) && (
-            <ViewDocumentHistory
-              typePrefix="ApplicantOnBoardingChecklist"
-              document={document}
-              type={type}
-              documentable_id={applicant.id}
-              documentable_type={DocumentableType.APPLICANT_EMPLOYERS}
-            />
-          )}
+          
         </div>
       )}
     </>

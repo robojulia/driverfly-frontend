@@ -119,7 +119,8 @@ export default function ViewDocumentHistory({
   return (
     <>
       <Button
-        className={buttonClass}
+        variant="link"
+        className={buttonClass || "p-0"}
         title={t("HISTORY")}
         onClick={() => {
           viewHistory();

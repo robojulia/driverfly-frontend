@@ -17,7 +17,7 @@ import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { focusOnErrorField } from "../../../utils/form-error";
 import { useEffectAsync } from "../../../utils/react";
 import { formFailed, formSuccess } from "../../../utils/toast";
-import ViewCard from "../../view-details/view-card";
+import Section from "../../view-details/section";
 import BaseInput from "../base-input";
 import BaseSelect from "../base-select";
 import { BaseFormProps } from "./base-form-props";
@@ -85,10 +85,11 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
         <Form
             onSubmit={form.handleSubmit}
             className={className}
+            data-applicant-edit-form
         >
             <Row>
                 <Col md="12" className="p-2 mt-2">
-                    <ViewCard
+                    <Section
                         title="equipment_experience"
                         actions={
                             !props?.hideActions && (
@@ -192,7 +193,7 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
                                 </Button>
                             </div>
                         )}
-                    </ViewCard>
+                    </Section>
                 </Col>
             </Row>
         </Form>

@@ -10,6 +10,7 @@ export class ApplicantEmployerEntity {
   start_at?: string;
   end_at?: string;
   title?: string;
+  job_duties?: string;
   street?: string;
   city?: string;
   state?: string;
@@ -39,6 +40,7 @@ export class ApplicantEmployerEntity {
   static yupSchema() {
     return yup.object({
       name: yup.string().required().trim().nullable(),
+      job_duties: yup.string().optional().nullable(),
       manager_name: yup.string().optional().trim().nullable(),
       email: yup.string().email().optional().nullable(),
       address: yup.string().optional().trim().nullable(),
@@ -84,6 +86,7 @@ export class ApplicantEmployerEntity {
   static yupEditApplicantSchema() {
     return yup.object({
       name: yup.string().required().trim().nullable(),
+      job_duties: yup.string().optional().nullable(),
       manager_name: yup.string().optional().trim().nullable(),
       email: yup.string().email().optional().nullable(),
       address: yup.string().optional().trim().nullable(),

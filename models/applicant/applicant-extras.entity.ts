@@ -21,6 +21,10 @@ export class ApplicantExtrasEntity {
 			value: yup
 				.mixed()
 				.when("type", {
+					is: ApplicantExtras.JOB_DUTIES,
+					then: yup.array(yup.string().nullable()).optional().nullable(),
+				})
+				.when("type", {
 					is: ApplicantExtras.ACCIDENT_DETAILS,
 					then: yup.array(ApplicantAccidentEntity.yupSchema()),
 				})

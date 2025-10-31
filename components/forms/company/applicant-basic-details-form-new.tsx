@@ -27,7 +27,7 @@ import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { focusOnErrorField } from "../../../utils/form-error";
 import { useEffectAsync } from "../../../utils/react";
 import { formFailed, formSuccess } from "../../../utils/toast";
-import ViewCard from "../../view-details/view-card";
+import Section from "../../view-details/section";
 import BaseCheck from "../base-check";
 import BaseCheckList from "../base-check-list";
 import BaseInput from "../base-input";
@@ -44,6 +44,8 @@ export interface ApplicantBasicDetailsFormNewProps extends BaseFormProps<Applica
   setIsSubmitting(value: boolean): void;
   afterLicensing?: React.ReactNode;
   hideActions?: boolean;
+  showLicensing?: boolean;
+  showPreferences?: boolean;
 }
 
 export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNewProps) {
@@ -66,11 +68,13 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
       setIsSubmitting(true);
       values.extras = values.extras?.filter((v) => v.value != undefined || v.value != null);
       if ("jobs" in values) delete values.jobs;
+      // Strip non-persisted presentation-only fields
+      const { meta, ...restValues } = (values as any) || {};
       try {
         if (entity?.id) {
-          values = await applicantApi.update(entity.id, { ...values } as ApplicantEntity);
+          values = await applicantApi.update(entity.id, { ...restValues } as ApplicantEntity);
         } else {
-          values = await applicantApi.create(values);
+          values = await applicantApi.create(restValues as ApplicantEntity);
         }
         formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
         setEntity(values);
@@ -158,71 +162,120 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
   }, [form.values?.extras]);
 
   return (
-    <Form onSubmit={form.handleSubmit} className={className} onReset={form.handleReset}>
+    <Form onSubmit={form.handleSubmit} className={className} onReset={form.handleReset} data-applicant-edit-form>
       {/* Basic Information */}
       <Row>
         <Col md="12" className="p-2 mt-2">
-          <ViewCard title="Basic Information">
+          <Section title="Basic Information">
             <Row className="mb-2">
-              <Col md="6" className="px-2">
-                <BaseSelect
-                  className="col-12 my-2"
-                  readOnly={Boolean(isSuperAdmin) || Boolean(isCompanyAdmin) || Boolean(entity?.is_hired)}
-                  label="ASSIGNED_RECRUITER"
-                  name="assignedUserId"
-                  displayPlaceholder
-                  options={companyUsers}
-                  valueKey="id"
-                  createLabel={(c) => `${c.name} (#${c.id}) `}
-                  formik={form}
-                />
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="FIRST_NAME" required name="first_name" placeholder="ENTER_FIRST_NAME" formik={form} />
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="LAST_NAME" required name="last_name" placeholder="ENTER_LAST_NAME" formik={form} />
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="BIRTHDATE" type="date" name="birthdate" placeholder="MM/DD/YYYY" formik={form} max={OldThan18Year} />
-                <BaseInputPhone className="col-12" readOnly={Boolean(entity?.is_hired)} label="PHONE" name="phone" required placeholder="ENTER_PHONE" formik={form} />
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="EMAIL" type="email" name="email" placeholder="ENTER_EMAIL" formik={form} />
+              <Col md="3" className="px-2">
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="First Name" required name="first_name" placeholder="First Name" formik={form} />
               </Col>
-              <Col md="6" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="driver's_license_number" name="license_number" placeholder="ENTER_DRIVER_LICENSE" formik={form} onChange={handleLicenseNumberChange} />
-                <Row className="px-3">
-                  <BaseInput className="col-6" readOnly={Boolean(entity?.is_hired)} label="expiration_date" name="license_expiry" min={new Date(current_date.getFullYear(), current_date.getMonth() + 6, current_date.getDate()).toLocaleString("en-US", { timeZone: "America/New_York" }).split("T")[0]} type="date" placeholder="expiration_date" formik={form} />
-                  <StateSelect className="col-6" readOnly={Boolean(entity?.is_hired)} label="state_issued" name="license_state" placeholder="SELECT_ISSUE_STATE" formik={form} />
-                </Row>
-                <div className="col-12 my-3">
-                  <label>{t("SOCIAL_SECURITY_NUMBER")}</label>
-                  <SSNDisplay applicantId={entity?.id} last4={(entity as any)?.ssn_last4} className="mt-1" />
-                </div>
+              <Col md="3" className="px-2">
+                <BaseInput className="col-12" label="Middle Name" name="meta.middle_name" placeholder="Middle Name" />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Last Name" required name="last_name" placeholder="Last Name" formik={form} />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseInput className="col-12" label="Suffix" name="meta.suffix" placeholder="Suffix" />
               </Col>
             </Row>
-          </ViewCard>
+            <Row className="mb-2">
+              <Col md="3" className="px-2">
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Date of Birth" type="date" name="birthdate" placeholder="mm / dd / yyyy" formik={form} max={OldThan18Year} />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseInput className="col-12" label="Age" type="number" name="meta.age" value={(function(){
+                  const v:any = form?.values as any; const d = v?.birthdate ? new Date(v.birthdate as any) : null; if(!d||isNaN(d as any)) return ""; const today = new Date(); let age = today.getFullYear()-d.getFullYear(); const m=today.getMonth()-d.getMonth(); if(m<0 || (m===0 && today.getDate()<d.getDate())) age--; return String(age);
+                })()} readOnly />
+              </Col>
+              <Col md="3" className="px-2">
+                <label>{t("Social Security Number")}</label>
+                <SSNDisplay applicantId={entity?.id} last4={(entity as any)?.ssn_last4} className="mt-1" />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseSelect className="col-12" label="Gender" name="meta.gender" placeholder="Select" options={["Male","Female","Non-binary","Prefer not to say"]} />
+              </Col>
+            </Row>
+            <Row className="mb-2">
+              <Col md="3" className="px-2">
+                <BaseSelect className="col-12" label="Marital Status" name="meta.marital_status" placeholder="Select" options={["Single","Married","Divorced","Widowed"]} />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseSelect className="col-12" label="Ethnicity" name="meta.ethnicity" placeholder="Select" options={["Hispanic or Latino","Not Hispanic or Latino"]} />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseSelect className="col-12" label="Race" name="meta.race" placeholder="Select" options={["White","Black or African American","Asian","American Indian or Alaska Native","Native Hawaiian or Other Pacific Islander","Other"]} />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseSelect className="col-12" label="Citizenship Status" name="meta.citizenship_status" placeholder="Select" options={["U.S. Citizen","Permanent Resident","Work Visa","Other"]} />
+              </Col>
+            </Row>
+            <Row className="mb-2">
+              <Col md="3" className="px-2">
+                <BaseSelect className="col-12" label="Veteran Status" name="meta.veteran_status" placeholder="Select" options={["Yes","No","Prefer not to say"]} />
+              </Col>
+            </Row>
+          </Section>
+        </Col>
+      </Row>
+
+      {/* Contact Information */}
+      <Row>
+        <Col md="12" className="p-2">
+          <Section title="Contact Information">
+            <Row>
+              <Col md="6" className="px-2">
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Email Address" type="email" name="email" placeholder="john.doe@example.com" formik={form} />
+              </Col>
+              <Col md="6" className="px-2">
+                <BaseInputPhone className="col-12" readOnly={Boolean(entity?.is_hired)} label="Phone Number" name="phone" placeholder="(555) 123-4567" formik={form} />
+              </Col>
+            </Row>
+            <Row>
+              <Col md="6" className="px-2">
+                <BaseInputPhone className="col-12" label="Alternative Phone" name="meta.alternative_phone" placeholder="(555) 987-6543" />
+              </Col>
+            </Row>
+          </Section>
         </Col>
       </Row>
 
       {/* Current Address */}
       <Row>
         <Col md="12" className="p-2">
-          <ViewCard title="Current Address">
+          <Section title="Current Address">
             <Row>
-              <Col md="6" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="ADDRESS_LINE_1" name="address_1" placeholder="ENTER_ADDRESS_LINE1" formik={form} />
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="ADDRESS_LINE_2" name="address_2" placeholder="ENTER_ADDRESS_LINE2" formik={form} />
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="CITY" name="city" placeholder="ENTER_CITY" formik={form} />
-              </Col>
-              <Col md="6" className="px-2">
-                <Row className="px-3">
-                  <StateSelect className="col-6" readOnly={Boolean(entity?.is_hired)} label="STATE" name="state" placeholder="SELECT_STATE" formik={form} />
-                  <BaseInput className="col-6" readOnly={Boolean(entity?.is_hired)} label="ZIP_CODE" name="zip_code" placeholder="ENTER_ZIP_CODE" formik={form} />
-                </Row>
+              <Col md="12" className="px-2">
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Street Address" name="address_1" placeholder="123 Main Street" formik={form} />
               </Col>
             </Row>
-          </ViewCard>
+            <Row>
+              <Col md="6" className="px-2">
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="City" name="city" placeholder="New York" formik={form} />
+              </Col>
+              <Col md="6" className="px-2">
+                <StateSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="State" name="state" placeholder="Select state" formik={form} />
+              </Col>
+            </Row>
+            <Row>
+              <Col md="6" className="px-2">
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="ZIP Code" name="zip_code" placeholder="10001" formik={form} />
+              </Col>
+              <Col md="6" className="px-2">
+                <BaseSelect className="col-12" label="Country" name="meta.country" placeholder="Select country" options={["United States","Canada","Mexico"]} />
+              </Col>
+            </Row>
+          </Section>
         </Col>
       </Row>
 
-      {/* Licensing & Certification */}
+      {/* Licensing & Certification (optional) */}
+      {props?.showLicensing !== false && (
       <Row>
         <Col md="12" className="p-2">
-          <ViewCard title="Licensing & Certification">
+          <Section title="Licensing & Certification">
             <Row className="px-3">
               <BaseSelect className="col-6" readOnly={Boolean(entity?.is_hired)} required={Boolean(form.values?.license_number)} label="CDL_TYPE" name="license_type" displayPlaceholder placeholder="SELECT_CDL_TYPE" labelPrefix="DriverLicenseType" enumType={DriverLicenseType} formik={form} />
               <BaseInput className="col-6" readOnly={Boolean(entity?.is_hired)} label="years_cdl_experience" name="years_cdl_experience" type="number" placeholder="ENTER_YEARS_OF_CDL" formik={form} />
@@ -316,9 +369,10 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
                 </Row>
               )}
             </Row>
-          </ViewCard>
+          </Section>
         </Col>
       </Row>
+      )}
 
       {/* Optional custom content inserted immediately after Licensing & Certification */}
       {props?.afterLicensing && (
@@ -329,54 +383,34 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
         </Row>
       )}
 
-      {/* Preferences */}
-      <Row>
-        <Col md="12" className="p-2">
-          <ViewCard title="Preferences">
-            <Row className="px-3">
-              <BaseCheck className="col-12 mt-2" disabled={Boolean(entity?.is_hired)} label="AUTHORIZED_TO_WORK_IN_THE_US" name="authorized_to_work_in_us" formik={form} />
-              <BaseCheckList className="col-12 mt-2" disabled={Boolean(entity?.is_hired)} label="PREFERRED_LOCATION" name="preferred_location" formik={form} labelPrefix="JobGeography" enumType={JobGeography} />
-              <BaseCheckList className="col-12 mt-2" disabled={Boolean(entity?.is_hired)} label="ROUTE_TYPE" name={`routes`} formik={form} labelPrefix="JobSchedule" enumType={JobSchedule} />
-              {form.values?.id && (
-                <BaseSelect className="col-12 mt-2" readOnly={Boolean(entity?.is_hired)} name={`current_application_status`} required placeholder="APPLICANT_CURRENT_STATUS" label="APPLICANT_CURRENT_STATUS" labelPrefix="ApplicantStatus" enumType={ApplicantStatus} formik={form} />
-              )}
-            </Row>
+      {/* Preferences (optional) */}
+      {props?.showPreferences !== false && (
+        <Row>
+          <Col md="12" className="p-2">
+            <Section title="Preferences">
+              <Row className="px-3">
+                <BaseCheck className="col-12 mt-2" disabled={Boolean(entity?.is_hired)} label="AUTHORIZED_TO_WORK_IN_THE_US" name="authorized_to_work_in_us" formik={form} />
+                <BaseCheckList className="col-12 mt-2" disabled={Boolean(entity?.is_hired)} label="PREFERRED_LOCATION" name="preferred_location" formik={form} labelPrefix="JobGeography" enumType={JobGeography} />
+                <BaseCheckList className="col-12 mt-2" disabled={Boolean(entity?.is_hired)} label="ROUTE_TYPE" name={`routes`} formik={form} labelPrefix="JobSchedule" enumType={JobSchedule} />
+                {form.values?.id && (
+                  <BaseSelect className="col-12 mt-2" readOnly={Boolean(entity?.is_hired)} name={`current_application_status`} required placeholder="APPLICANT_CURRENT_STATUS" label="APPLICANT_CURRENT_STATUS" labelPrefix="ApplicantStatus" enumType={ApplicantStatus} formik={form} />
+                )}
+              </Row>
 
-            {/* Job Capability Component */}
-            <Row className="px-3">
-              <JobCapability
-                canPerformJob={canPerformJob}
-                onCanPerformJobChange={handleCanPerformJobChange}
-                reasonIndex={jobLimitationIndex}
-                formik={form}
-                disabled={Boolean(entity?.is_hired)}
-              />
-            </Row>
-          </ViewCard>
-        </Col>
-      </Row>
-
-      {/* Emergency Contact */}
-      <Row>
-        <Col md="12" className="p-2">
-          <ViewCard title="Emergency Contact Information">
-            <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} name={`emergency_contact_name`} label="NAME" placeholder="ENTER_EMERGENCY_CONTACT" formik={form} />
-            <BaseInputPhone className="col-12" readOnly={Boolean(entity?.is_hired)} name={`emergency_contact_number`} label="PHONE" placeholder="PHONE" formik={form} />
-            <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} name={`emergency_contact_relationship`} label="RELATIONSHIP" placeholder="ENTER_EMERGENCY_CONTACT_RELATIONSHIP" formik={form} />
-          </ViewCard>
-        </Col>
-      </Row>
-
-      {/* Notes */}
-      <Row>
-        <Col md="12" className="p-2">
-          <ViewCard title="Notes">
-            <div className="col-12 mt-2">
-              <BaseTextArea readOnly={Boolean(entity?.is_hired)} name="remarks" placeholder="Add a remark" formik={form} />
-            </div>
-          </ViewCard>
-        </Col>
-      </Row>
+              {/* Job Capability Component */}
+              <Row className="px-3">
+                <JobCapability
+                  canPerformJob={canPerformJob}
+                  onCanPerformJobChange={handleCanPerformJobChange}
+                  reasonIndex={jobLimitationIndex}
+                  formik={form}
+                  disabled={Boolean(entity?.is_hired)}
+                />
+              </Row>
+            </Section>
+          </Col>
+        </Row>
+      )}
 
       <Row>
         <Col md="12" className="p-2">
