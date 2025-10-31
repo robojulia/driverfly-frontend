@@ -106,8 +106,33 @@ function BaseSelect({
 		} else onChange(e);
 	}
 
-	return (
-		<BaseControl
+    // When readOnly, render plaintext instead of a disabled select to avoid showing a dropdown chevron
+    if (readOnly) {
+        const selected = (options || []).find((o: any) => o[valueKey] === value);
+        const display = selected
+            ? t(labelPrefix ? `${labelPrefix}.${selected[labelKey]}` : selected[labelKey])
+            : '';
+        return (
+            <BaseControl
+                className={className}
+                name={name}
+                label={label}
+                required={required}
+                formik={formik}
+                touched={touched}
+                error={error}
+                prepend={prepend}
+                append={append}
+            >
+                <div className="form-control" style={{ backgroundColor: '#f8f9fa', opacity: 1 }}>
+                    {display}
+                </div>
+            </BaseControl>
+        );
+    }
+
+    return (
+        <BaseControl
 			className={className}
 			name={name}
 			label={label}

@@ -53,7 +53,7 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
   };
 
   return (
-    <Row className="px-2">
+    <>
       <Section title="Licensing & Certification">
         <BsForm onSubmit={form.handleSubmit} data-applicant-edit-form>
         <Row className="px-3">
@@ -197,7 +197,7 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
         </Row>
         </BsForm>
       </Section>
-    </Row>
+    </>
   );
 }
 

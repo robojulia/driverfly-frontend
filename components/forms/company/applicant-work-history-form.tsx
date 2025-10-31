@@ -257,8 +257,8 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
               {!props?.hideActions && (
                 <div style={{ display: 'flex', justifyContent: 'left' }}>
                   <Button
-                    variant="light"
-                    className="mt-2"
+                    variant="link"
+                    className="p-0 mt-2 me-3"
                     onClick={() =>
                       form.setValues({
                         ...form.values,

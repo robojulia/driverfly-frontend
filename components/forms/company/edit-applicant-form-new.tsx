@@ -1,4 +1,5 @@
 import { Button, Col, Row } from "react-bootstrap";
+import { toast } from "react-toastify";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { useTranslation } from "../../../hooks/use-translation";
@@ -15,7 +16,6 @@ import { ApplicantLicensingForm } from "./applicant-licensing-form";
 import Section from "../../view-details/section";
 import CompanyApi from "../../../pages/api/company";
 import ApplicantApi from "../../../pages/api/applicant";
-import { toast } from "react-toastify";
 import { ApplicantExtras as ApplicantExtrasEnum } from "../../../enums/applicants/applicant-extras.enum";
 import ApplicantConsiderFor from "../../applicants/applicant-consider-for";
 import { ApplicantSuggestedJobEntity } from "../../../models/applicant/applicant-suggested-job.entity";
@@ -311,9 +311,7 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
       </Row>
 
       {/* Consider Applicant For */}
-      <Row className="px-2">
-        <ApplicantConsiderFor applicant={props?.entity} applicantSuggestedJobs={props?.applicantSuggestedJobs || []} />
-      </Row>
+      <ApplicantConsiderFor applicant={props?.entity} applicantSuggestedJobs={props?.applicantSuggestedJobs || []} />
 
       {/* Uploaded documents */}
       <Row className="px-2">
@@ -355,23 +353,34 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
       <ApplicantEmergencyContactForm entity={props?.entity} setEntity={props?.setEntity} />
 
       {/* Global Save */}
-      <Row className="px-2">
-        <Col xs="12" className="text-end">
-          <Button
-            type="button"
-            className={`btn theme-general-btn mr-2`}
-            onClick={() => {
-              const forms = Array.from(document.querySelectorAll('form[data-applicant-edit-form]')) as HTMLFormElement[];
-              forms.forEach((f) => {
-                if (typeof (f as any).requestSubmit === 'function') (f as any).requestSubmit();
-                else f.submit();
-              });
-            }}
-          >
-            {t("SAVE")}
-          </Button>
-        </Col>
-      </Row>
+      <div className="px-2 py-3" style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+        <Button
+          type="button"
+          className={`btn btn-light`}
+          onClick={() => routeToApplicants()}
+        >
+          {t('BACK')}
+        </Button>
+        <Button
+          type="button"
+          className={`btn theme-general-btn`}
+          onClick={() => {
+            (window as any).__SUPPRESS_CHILD_TOASTS__ = true;
+            const forms = Array.from(document.querySelectorAll('form[data-applicant-edit-form]')) as HTMLFormElement[];
+            forms.forEach((f) => {
+              if (typeof (f as any).requestSubmit === 'function') (f as any).requestSubmit();
+              else f.submit();
+            });
+            // Show a single consolidated success toast and re-enable child toasts
+            setTimeout(() => {
+              toast.success(t('Applicant Updated Successfully') || 'Changes saved');
+              (window as any).__SUPPRESS_CHILD_TOASTS__ = false;
+            }, 300);
+          }}
+        >
+          {t('SAVE')}
+        </Button>
+      </div>
 
     </>
   );

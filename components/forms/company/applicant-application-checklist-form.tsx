@@ -69,10 +69,9 @@ export function ApplicantApplicationChecklistForm(
   };
 
   return (
-    <Row className="px-2">
-      <Col md="12" className="p-0 px-lg-2">
+    <>
         <Section title="Application Checklist">
-          <Form data-applicant-edit-form>
+          <Form data-applicant-edit-form onSubmit={(e) => e.preventDefault()}>
             <div className="d-flex flex-column">
               <Form.Check
                 id="chk-bg"
@@ -131,8 +130,7 @@ export function ApplicantApplicationChecklistForm(
             </div>
           </Form>
         </Section>
-      </Col>
-    </Row>
+    </>
   );
 }
 

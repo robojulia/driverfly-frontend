@@ -50,9 +50,7 @@ export default function EditApplicant({ id }) {
     }
   }, [id, refetchApplicant]);
 
-  const onSaveComplete = () => {
-    setRefetchApplicant(!refetchApplicant);
-  };
+  // No page refresh after save; forms show their own success/failure notifications
 
   return (
     <ChildPageLayout
@@ -77,7 +75,6 @@ export default function EditApplicant({ id }) {
         setEntity={setApplicant}
         isSubmitting={isSubmitting}
         setIsSubmitting={setIsSubmitting}
-        onSaveComplete={onSaveComplete}
         applicantSuggestedJobs={applicantSuggestedJobs}
       />
     </ChildPageLayout>

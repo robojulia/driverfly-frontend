@@ -31,8 +31,7 @@ export function ApplicantEmergencyContactForm(props: ApplicantEmergencyContactFo
   });
 
   return (
-    <Row className="px-2">
-      <Col md="12" className="p-2">
+    <>
         <Section title="Emergency Contact Information">
           <form onSubmit={form.handleSubmit} data-applicant-edit-form>
             <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} name={`emergency_contact_name`} label="NAME" placeholder="ENTER_EMERGENCY_CONTACT" formik={form} />
@@ -40,8 +39,7 @@ export function ApplicantEmergencyContactForm(props: ApplicantEmergencyContactFo
             <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} name={`emergency_contact_relationship`} label="RELATIONSHIP" placeholder="ENTER_EMERGENCY_CONTACT_RELATIONSHIP" formik={form} />
           </form>
         </Section>
-      </Col>
-    </Row>
+    </>
   );
 }
 

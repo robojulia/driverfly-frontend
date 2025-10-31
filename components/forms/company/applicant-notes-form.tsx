@@ -26,8 +26,7 @@ export function ApplicantNotesForm(props: ApplicantNotesFormProps) {
   });
 
   return (
-    <Row className="px-2">
-      <Col md="12" className="p-2">
+    <>
         <Section title="Notes">
           <form onSubmit={form.handleSubmit} data-applicant-edit-form>
             <div className="col-12 mt-2">
@@ -35,8 +34,7 @@ export function ApplicantNotesForm(props: ApplicantNotesFormProps) {
             </div>
           </form>
         </Section>
-      </Col>
-    </Row>
+    </>
   );
 }
 
