@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import OnboardingChecklist from '../../../../../components/applicants/onboarding-checklist';
 import { ApplicantEligibilityHeader } from '../../../../../components/applicants/applicant-eligibility-header';
 import FullLayout from '../../../../../components/dashboard/layouts/layout/full-layout';
-import { EditApplicantForm } from '../../../../../components/forms/company/edit-applicant-form';
+import { EditApplicantFormNew } from '../../../../../components/forms/company/edit-applicant-form-new';
 import ChildPageLayout from '../../../../../components/layouts/page/child-page-layout';
 import { useTranslation } from '../../../../../hooks/use-translation';
 import { ApplicantEntity } from '../../../../../models/applicant/applicant.entity';
@@ -62,7 +62,7 @@ export default function EditApplicant({ id }) {
 
       {/* DOT Verification panel moved inside EditApplicantForm */}
 
-      <EditApplicantForm
+      <EditApplicantFormNew
         entity={applicant}
         setEntity={setApplicant}
         isSubmitting={isSubmitting}

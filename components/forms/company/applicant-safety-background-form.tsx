@@ -26,6 +26,7 @@ import { BaseFormProps } from "./base-form-props";
 export interface ApplicantSafetyBackgroundFormProps extends BaseFormProps<ApplicantEntity> {
     isSubmitting: boolean;
     setIsSubmitting(value: boolean): void;
+    hideActions?: boolean;
 }
 
 export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFormProps) {
@@ -117,18 +118,20 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                         <ViewCard
                                             title="PAST_DUIS"
                                             actions={
-                                                <Button
-                                                    disabled={Boolean(entity?.is_hired)}
-                                                    size="sm"
-                                                    onClick={() =>
-                                                        form.setValues({
-                                                            ...form.values,
-                                                            dui_years: [...(form.values?.dui_years || []), ""],
-                                                        })
-                                                    }
-                                                >
-                                                    <PlusCircle /> {t("ADD")}
-                                                </Button>
+                                                !props?.hideActions && (
+                                                    <Button
+                                                        disabled={Boolean(entity?.is_hired)}
+                                                        size="sm"
+                                                        onClick={() =>
+                                                            form.setValues({
+                                                                ...form.values,
+                                                                dui_years: [...(form.values?.dui_years || []), ""],
+                                                            })
+                                                        }
+                                                    >
+                                                        <PlusCircle /> {t("ADD")}
+                                                    </Button>
+                                                )
                                             }
                                         >
                                             {form.values?.dui_years?.length > 0 && (
@@ -220,7 +223,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                         <ViewCard
                                             title="ACCIDENT_DEAILS"
                                             actions={
-                                                !entity?.is_hired &&
+                                                !props?.hideActions && !entity?.is_hired &&
                                                 form?.values?.accident_count > 0 &&
                                                 form?.values?.accident_count >
                                                 (
@@ -350,7 +353,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                         <ViewCard
                                             title="VIOLATION_DETAILS"
                                             actions={
-                                                !entity?.is_hired &&
+                                                !props?.hideActions && !entity?.is_hired &&
                                                 form?.values?.moving_violations_count > 0 &&
                                                 form?.values?.moving_violations_count >
                                                 (
@@ -537,11 +540,13 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                 </Row>
                             </Col>
                         </Row>
-                        <div style={{ display: "flex", justifyContent: "right" }}>
-                            <Button disabled={form.isSubmitting || isSubmitting} type="submit" className="theme-secondary-btn">
-                                {t("UPDATE")}
-                            </Button>
-                        </div>
+                        {!props?.hideActions && (
+                            <div style={{ display: "flex", justifyContent: "right" }}>
+                                <Button disabled={form.isSubmitting || isSubmitting} type="submit" className="theme-secondary-btn">
+                                    {t("UPDATE")}
+                                </Button>
+                            </div>
+                        )}
                     </ViewCard>
                 </Col>
             </Row>

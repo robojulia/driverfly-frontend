@@ -28,6 +28,7 @@ import BaseTextArea from '../base-text-area';
 export interface ApplicantWorkHistoryFormProps extends BaseFormProps<ApplicantEntity> {
   isSubmitting: boolean;
   setIsSubmitting(value: boolean): void;
+  hideActions?: boolean;
 }
 interface WorkHistoryMetaData {
   curentCompanyCheck: CurrentEmploymentHistoryDto;
@@ -151,31 +152,33 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
             <ViewCard
               title="WORK_HISTORY"
               actions={
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  {showVoeSummary && (
+                !props?.hideActions && (
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    {showVoeSummary && (
+                      <Button
+                        size="sm"
+                        onClick={handleVoeSummaryClick}
+                        disabled={!entity?.uuid_token}
+                        title={t('GENERATE_VOE_SUMMARY_PDF')}
+                      >
+                        <FileEarmarkText className="me-1" />
+                        VOE Summary
+                      </Button>
+                    )}
                     <Button
+                      disabled={Boolean(entity?.is_hired)}
                       size="sm"
-                      onClick={handleVoeSummaryClick}
-                      disabled={!entity?.uuid_token}
-                      title={t('GENERATE_VOE_SUMMARY_PDF')}
+                      onClick={() =>
+                        form.setValues({
+                          ...form.values,
+                          employers: [new ApplicantEmployerEntity(), ...(form.values?.employers || [])],
+                        })
+                      }
                     >
-                      <FileEarmarkText className="me-1" />
-                      VOE Summary
+                      <PlusCircle /> {t('ADD')}
                     </Button>
-                  )}
-                  <Button
-                    disabled={Boolean(entity?.is_hired)}
-                    size="sm"
-                    onClick={() =>
-                      form.setValues({
-                        ...form.values,
-                        employers: [new ApplicantEmployerEntity(), ...(form.values?.employers || [])],
-                      })
-                    }
-                  >
-                    <PlusCircle /> {t('ADD')}
-                  </Button>
-                </div>
+                  </div>
+                )
               }
             >
               {form.values?.employers?.length > 0 && (
@@ -400,16 +403,18 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                 formik={form}
                 name="employment_gap_details"
               />
-              <div style={{ display: 'flex', justifyContent: 'right' }}>
-                <Button
-                  disabled={form.isSubmitting || isSubmitting}
-                  style={{ marginTop: '3%' }}
-                  type="submit"
-                  className="theme-secondary-btn"
-                >
-                  {t('UPDATE')}
-                </Button>
-              </div>
+              {!props?.hideActions && (
+                <div style={{ display: 'flex', justifyContent: 'right' }}>
+                  <Button
+                    disabled={form.isSubmitting || isSubmitting}
+                    style={{ marginTop: '3%' }}
+                    type="submit"
+                    className="theme-secondary-btn"
+                  >
+                    {t('UPDATE')}
+                  </Button>
+                </div>
+              )}
             </ViewCard>
           </Col>
         </Row>

@@ -27,6 +27,7 @@ import ShowFormattedDate from "../../jobs/show-formatted-date";
 export interface ApplicantUploadedDocumentsFormProps extends BaseFormProps<ApplicantEntity> {
     isSubmitting: boolean;
     setIsSubmitting(value: boolean): void;
+    hideActions?: boolean;
 }
 
 export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocumentsFormProps) {
@@ -112,27 +113,23 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
                     <ViewCard
                         title="UPLOADED_DOCUMENTS"
                         actions={
-                            <Button
-                                size="sm"
-                                disabled={
-                                    // Boolean(
-                                    //     form.values?.documents?.length ===
-                                    //     Object.keys(ApplicantDocumentType).length
-                                    // ) ||
-                                    Boolean(entity?.is_hired)
-                                }
-                                onClick={() =>
-                                    form.setValues({
-                                        ...form.values,
-                                        documents: [
-                                            ...(form.values?.documents || []),
-                                            new DocumentEntity(),
-                                        ],
-                                    })
-                                }
-                            >
-                                <PlusCircle /> {t("ADD")}
-                            </Button>
+                            !props?.hideActions && (
+                                <Button
+                                    size="sm"
+                                    disabled={Boolean(entity?.is_hired)}
+                                    onClick={() =>
+                                        form.setValues({
+                                            ...form.values,
+                                            documents: [
+                                                ...(form.values?.documents || []),
+                                                new DocumentEntity(),
+                                            ],
+                                        })
+                                    }
+                                >
+                                    <PlusCircle /> {t("ADD")}
+                                </Button>
+                            )
                         }
                     >
                         {form.values?.documents?.length > 0 && (
@@ -195,11 +192,13 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
                             </Table>
                         )}
                         {!form.values?.documents?.length && <>{t("NONE")}</>}
-                        <div style={{ display: "flex", justifyContent: "right" }}>
-                            <Button disabled={form.isSubmitting || isSubmitting} style={{ marginTop: "2%" }} type="submit" className="theme-secondary-btn">
-                                {t("UPDATE")}
-                            </Button>
-                        </div>
+                        {!props?.hideActions && (
+                            <div style={{ display: "flex", justifyContent: "right" }}>
+                                <Button disabled={form.isSubmitting || isSubmitting} style={{ marginTop: "2%" }} type="submit" className="theme-secondary-btn">
+                                    {t("UPDATE")}
+                                </Button>
+                            </div>
+                        )}
                     </ViewCard>
                 </Col>
             </Row>

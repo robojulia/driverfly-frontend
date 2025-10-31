@@ -25,6 +25,7 @@ import { BaseFormProps } from "./base-form-props";
 export interface ApplicantEquipmentExperienceFormProps extends BaseFormProps<ApplicantEntity> {
     isSubmitting: boolean;
     setIsSubmitting(value: boolean): void;
+    hideActions?: boolean;
 }
 
 export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperienceFormProps) {
@@ -90,21 +91,23 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
                     <ViewCard
                         title="equipment_experience"
                         actions={
-                            <Button
-                                disabled={Boolean(entity?.is_hired)}
-                                size="sm"
-                                onClick={() =>
-                                    form.setValues({
-                                        ...form.values,
-                                        equipment_experience: [
-                                            ...(form.values?.equipment_experience || []),
-                                            new ApplicantExperienceEntity(),
-                                        ],
-                                    })
-                                }
-                            >
-                                <PlusCircle /> {t("ADD")}
-                            </Button>
+                            !props?.hideActions && (
+                                <Button
+                                    disabled={Boolean(entity?.is_hired)}
+                                    size="sm"
+                                    onClick={() =>
+                                        form.setValues({
+                                            ...form.values,
+                                            equipment_experience: [
+                                                ...(form.values?.equipment_experience || []),
+                                                new ApplicantExperienceEntity(),
+                                            ],
+                                        })
+                                    }
+                                >
+                                    <PlusCircle /> {t("ADD")}
+                                </Button>
+                            )
                         }
                     >
                         {form.values?.equipment_experience?.length > 0 && (
@@ -182,11 +185,13 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
                                 ))}
                             </>
                         )}
-                        <div style={{ display: "flex", justifyContent: "right" }}>
-                            <Button disabled={form.isSubmitting || isSubmitting} type="submit" className="theme-secondary-btn">
-                                {t("UPDATE")}
-                            </Button>
-                        </div>
+                        {!props?.hideActions && (
+                            <div style={{ display: "flex", justifyContent: "right" }}>
+                                <Button disabled={form.isSubmitting || isSubmitting} type="submit" className="theme-secondary-btn">
+                                    {t("UPDATE")}
+                                </Button>
+                            </div>
+                        )}
                     </ViewCard>
                 </Col>
             </Row>
