@@ -7,20 +7,24 @@ export interface ViewCardProps {
   actions?: JSX.Element | JSX.Element[];
   children?: React.ReactNode;
   noTitle?: boolean;
+  titleAs?: React.ElementType | string; // backward compatibility
+  variant?: string; // backward compatibility with previous ViewCard API
 }
 
 // Clone of Section component, exposed as ViewCard for compatibility
 export default function ViewCard(props: ViewCardProps) {
-  const { title, actions, children, noTitle } = props;
+  const { title, actions, children, noTitle, titleAs, variant } = props;
   const { t } = useTranslation();
 
+  const TitleTag: any = titleAs || 'h5';
+
   return (
-    <Card className="w-100">
+    <Card className={`w-100 ${variant ? `card-${variant}` : ''}`}>
       {!noTitle && (title || actions) && (
         <Card.Header>
           {title && (
             <div style={{ float: 'left' }}>
-              <h5 className="m-0">{typeof title === 'string' ? t(title) : title}</h5>
+              <TitleTag className="m-0">{typeof title === 'string' ? t(title) : title}</TitleTag>
             </div>
           )}
           {actions && <div style={{ float: 'right' }}>{actions}</div>}

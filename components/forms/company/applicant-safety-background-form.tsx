@@ -18,6 +18,7 @@ import { focusOnErrorField } from "../../../utils/form-error";
 import { useEffectAsync } from "../../../utils/react";
 import { formFailed, formSuccess } from "../../../utils/toast";
 import Section from "../../view-details/section";
+import ViewCard from "../../view-details/view-card";
 import BaseCheck from "../base-check";
 import BaseInput from "../base-input";
 import BaseTextArea from "../base-text-area";
