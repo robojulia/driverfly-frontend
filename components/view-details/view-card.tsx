@@ -1,35 +1,32 @@
-import { useTranslation } from "../../hooks/use-translation";
-import { Card } from "react-bootstrap";
+import React from 'react';
+import { Card } from 'react-bootstrap';
+import { useTranslation } from '../../hooks/use-translation';
 
 export interface ViewCardProps {
-	title?: string;
-	titleAs?: React.ElementType;
-	variant?: "primary" | "secondary";
-	readonly children?: any;
-	actions?: JSX.Element | JSX.Element[];
-	noTitle?: boolean;
+  title?: React.ReactNode;
+  actions?: JSX.Element | JSX.Element[];
+  children?: React.ReactNode;
+  noTitle?: boolean;
 }
 
+// Clone of Section component, exposed as ViewCard for compatibility
 export default function ViewCard(props: ViewCardProps) {
-	const { t } = useTranslation();
+  const { title, actions, children, noTitle } = props;
+  const { t } = useTranslation();
 
-	let { title, actions, children, variant, titleAs: TitleAsCmp, noTitle } = props;
-
-	function renderTitleCmp() {
-		if (TitleAsCmp) return <TitleAsCmp>{t(title)}</TitleAsCmp>;
-
-		return <h5>{t(title)}</h5>;
-	}
-
-	return (
-		<Card className={`card-${variant || "primary"} `}>
-			{!noTitle && (title || actions) && (
-				<Card.Header>
-					{title && <div style={{ float: "left" }}>{renderTitleCmp()}</div>}
-					{actions && <div style={{ float: "right" }}>{actions}</div>}
-				</Card.Header>
-			)}
-			{children && <Card.Body className="my_card_body">{children}</Card.Body>}
-		</Card>
-	);
+  return (
+    <Card className="w-100">
+      {!noTitle && (title || actions) && (
+        <Card.Header>
+          {title && (
+            <div style={{ float: 'left' }}>
+              <h5 className="m-0">{typeof title === 'string' ? t(title) : title}</h5>
+            </div>
+          )}
+          {actions && <div style={{ float: 'right' }}>{actions}</div>}
+        </Card.Header>
+      )}
+      {children && <Card.Body className="my_card_body">{children}</Card.Body>}
+    </Card>
+  );
 }
