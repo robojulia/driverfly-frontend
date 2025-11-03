@@ -11,6 +11,7 @@ import StateSelect from "../state-select";
 import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
 import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
 import { EducationLevel } from "../../../enums/users/education-level.enum";
+import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
 import { LicenseRestrictions } from "../../../enums/applicants/applicant-license-restrictions-type.enum";
 import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
 import { useFormik } from "formik";
@@ -54,7 +55,20 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
 
   return (
     <>
-      <Section title="Licensing & Certification">
+      <Section title="CDL Information">
+        {/* Transmission Experience */}
+        <Row className="px-3">
+          <BaseCheckList
+            className="col-12"
+            disabled={Boolean(entity?.is_hired)}
+            label="Transmission Experience"
+            name="transmission_type"
+            labelPrefix="VehicleTransmissionType"
+            enumType={VehicleTransmissionType}
+            formik={form}
+            cols="2"
+          />
+        </Row>
         <BsForm onSubmit={form.handleSubmit} data-applicant-edit-form>
         <Row className="px-3">
           <BaseSelect

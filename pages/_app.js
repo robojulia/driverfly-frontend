@@ -6,6 +6,7 @@ import '../public/css/owl.theme.default.min.css';
 import '../public/css/responsive.css';
 import '../public/css/style.css';
 import '../styles/main.css';
+import '../styles/modern-forms.css';
 
 // init bootstrap
 import 'bootstrap-icons/font/bootstrap-icons.css';

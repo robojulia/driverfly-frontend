@@ -26,6 +26,7 @@ export interface ApplicantEquipmentExperienceFormProps extends BaseFormProps<App
     isSubmitting: boolean;
     setIsSubmitting(value: boolean): void;
     hideActions?: boolean;
+    hideAddButton?: boolean;
 }
 
 export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperienceFormProps) {
@@ -92,7 +93,7 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
                     <Section
                         title="equipment_experience"
                         actions={
-                            !props?.hideActions && (
+                            !props?.hideAddButton && (
                                 <Button
                                     disabled={Boolean(entity?.is_hired)}
                                     size="sm"
@@ -106,7 +107,7 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
                                         })
                                     }
                                 >
-                                    <PlusCircle /> {t("ADD")}
+                                    <PlusCircle /> {t("ADD_MORE_EXPERIENCE")}
                                 </Button>
                             )
                         }

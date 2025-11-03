@@ -9,7 +9,6 @@ import { ApplicantBasicDetailsFormNew } from "./applicant-basic-details-form-new
 import { ApplicantWorkHistoryForm } from "./applicant-work-history-form";
 import { ApplicantEquipmentExperienceForm } from "./applicant-equipment-experience-form";
 import { ApplicantSafetyBackgroundForm } from "./applicant-safety-background-form";
-import { ApplicantUploadedDocumentsForm } from "./applicant-uploaded-documents-form";
 import { ApplicantSignedAgreementsForm } from "./applicant-signed-agreements-form";
 import { HireApplicantForm } from "./hire-applicant-form";
 import { ApplicantLicensingForm } from "./applicant-licensing-form";
@@ -17,17 +16,20 @@ import Section from "../../view-details/section";
 import CompanyApi from "../../../pages/api/company";
 import ApplicantApi from "../../../pages/api/applicant";
 import { ApplicantExtras as ApplicantExtrasEnum } from "../../../enums/applicants/applicant-extras.enum";
-import ApplicantConsiderFor from "../../applicants/applicant-consider-for";
+import ApplicantJobsAppliedTo from "../../applicants/applicant-jobs-applied-to";
 import { ApplicantSuggestedJobEntity } from "../../../models/applicant/applicant-suggested-job.entity";
 import OnboardingChecklist from "../../applicants/onboarding-checklist";
 import { ApplicantApplicationChecklistForm } from "./applicant-application-checklist-form";
 import { ApplicantNotesForm } from "./applicant-notes-form";
 import { ApplicantEmergencyContactForm } from "./applicant-emergency-contact-form";
+import { ApplicantPreferencesForm } from "./applicant-preferences-form";
 
 export interface EditApplicantFormNewProps extends BaseFormProps<ApplicantEntity> {
   isSubmitting: boolean;
   setIsSubmitting(value: boolean): void;
   applicantSuggestedJobs?: ApplicantSuggestedJobEntity[];
+  hideHeaderActions?: boolean;
+  hideGlobalSave?: boolean;
 }
 
 export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
@@ -38,20 +40,23 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
 
   return (
     <>
-      {/* Header actions */}
-      <Row className="px-2">
-        <Col xs="12" className="text-end">
-          <HireApplicantForm entity={props?.entity} className={props?.className} />
-          <Button
-            type="button"
-            className={`btn theme-general-btn mr-2`}
-            onClick={() => routeToApplicants()}
-          >
-            {t("BACK")}
-          </Button>
-        </Col>
-      </Row>
+      {/* Header actions (optional) */}
+      {!props?.hideHeaderActions && (
+        <Row className="px-2">
+          <Col xs="12" className="text-end">
+            <HireApplicantForm entity={props?.entity} className={props?.className} />
+            <Button
+              type="button"
+              className={`btn theme-general-btn mr-2`}
+              onClick={() => routeToApplicants()}
+            >
+              {t("BACK")}
+            </Button>
+          </Col>
+        </Row>
+      )}
       {/* Basic information, contact, address */}
+      <div id="basic-info" />
       <Row className="px-2">
         <ApplicantBasicDetailsFormNew
           entity={props?.entity}
@@ -65,22 +70,12 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
         />
       </Row>
 
-      {/* Previous employment */}
-      <Row className="px-2">
-        <ApplicantWorkHistoryForm
-          entity={props?.entity}
-          isSubmitting={props?.isSubmitting}
-          setIsSubmitting={props?.setIsSubmitting}
-          className={props?.className}
-          setEntity={props?.setEntity}
-          hideActions
-        />
-      </Row>
-
-      {/* Licensing & Certification */}
+      {/* CDL Information */}
+      <div id="licensing" />
       <ApplicantLicensingForm entity={props?.entity} setEntity={props?.setEntity} />
 
       {/* DOT Verification (shown only if DOT number is saved) */}
+      <div id="dot-verification" />
       {(() => {
         const dot_number = props?.entity?.extras?.find((e: any) => e.type === ApplicantExtrasEnum.DOT_NUMBER)?.value;
         if (!dot_number) return null;
@@ -287,6 +282,7 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
       })()}
 
       {/* Equipment experience */}
+      <div id="equipment" />
       <Row className="px-2">
         <ApplicantEquipmentExperienceForm
           isSubmitting={props?.isSubmitting}
@@ -295,10 +291,25 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
           className={props?.className}
           setEntity={props?.setEntity}
           hideActions
+          hideAddButton={false}
+        />
+      </Row>
+
+      {/* Previous employment */}
+      <div id="work-history" />
+      <Row className="px-2">
+        <ApplicantWorkHistoryForm
+          entity={props?.entity}
+          isSubmitting={props?.isSubmitting}
+          setIsSubmitting={props?.setIsSubmitting}
+          className={props?.className}
+          setEntity={props?.setEntity}
+          hideActions
         />
       </Row>
 
       {/* Safety background */}
+      <div id="safety" />
       <Row className="px-2">
         <ApplicantSafetyBackgroundForm
           entity={props?.entity}
@@ -310,22 +321,17 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
         />
       </Row>
 
-      {/* Consider Applicant For */}
-      <ApplicantConsiderFor applicant={props?.entity} applicantSuggestedJobs={props?.applicantSuggestedJobs || []} />
+      {/* Preferences */}
+      <div id="preferences" />
+      <ApplicantPreferencesForm entity={props?.entity} setEntity={props?.setEntity} hideActions />
 
-      {/* Uploaded documents */}
-      <Row className="px-2">
-        <ApplicantUploadedDocumentsForm
-          entity={props?.entity}
-          isSubmitting={props?.isSubmitting}
-          setIsSubmitting={props?.setIsSubmitting}
-          className={props?.className}
-          setEntity={props?.setEntity}
-          hideActions
-        />
-      </Row>
+      {/* Job(s) Applied To */}
+      <div id="jobs-applied-to" />
+      <ApplicantJobsAppliedTo applicant={props?.entity} applicantSuggestedJobs={props?.applicantSuggestedJobs || []} />
+
 
       {/* Onboarding Documents */}
+      <div id="onboarding-documents" />
       {props?.entity?.id && (
         <Row>
           <Col>
@@ -344,43 +350,49 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
       )}
 
       {/* Application Checklist */}
+      <div id="application-checklist" />
       <ApplicantApplicationChecklistForm entity={props?.entity} setEntity={props?.setEntity} />
 
       {/* Notes */}
+      <div id="notes" />
       <ApplicantNotesForm entity={props?.entity} setEntity={props?.setEntity} />
 
       {/* Emergency Contact Information */}
+      <div id="emergency-contact" />
       <ApplicantEmergencyContactForm entity={props?.entity} setEntity={props?.setEntity} />
 
-      {/* Global Save */}
-      <div className="px-2 py-3" style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
-        <Button
-          type="button"
-          className={`btn btn-light`}
-          onClick={() => routeToApplicants()}
-        >
-          {t('BACK')}
-        </Button>
-        <Button
-          type="button"
-          className={`btn theme-general-btn`}
-          onClick={() => {
-            (window as any).__SUPPRESS_CHILD_TOASTS__ = true;
-            const forms = Array.from(document.querySelectorAll('form[data-applicant-edit-form]')) as HTMLFormElement[];
-            forms.forEach((f) => {
-              if (typeof (f as any).requestSubmit === 'function') (f as any).requestSubmit();
-              else f.submit();
-            });
-            // Show a single consolidated success toast and re-enable child toasts
-            setTimeout(() => {
-              toast.success(t('Applicant Updated Successfully') || 'Changes saved');
-              (window as any).__SUPPRESS_CHILD_TOASTS__ = false;
-            }, 300);
-          }}
-        >
-          {t('SAVE')}
-        </Button>
-      </div>
+      {/* Global Save (optional) */}
+      {!props?.hideGlobalSave && (
+        <div className="px-2 py-3" style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+          <Button
+            type="button"
+            className={`btn btn-light`}
+            onClick={() => routeToApplicants()}
+          >
+            {t('BACK')}
+          </Button>
+          <Button
+            type="button"
+            className={`btn theme-general-btn`}
+            onClick={() => {
+              (window as any).__SUPPRESS_CHILD_TOASTS__ = true;
+              (window as any).__SUPPRESS_CHILD_TOASTS_UNTIL = Date.now() + 6000;
+              const forms = Array.from(document.querySelectorAll('form[data-applicant-edit-form]')) as HTMLFormElement[];
+              forms.forEach((f) => {
+                if (typeof (f as any).requestSubmit === 'function') (f as any).requestSubmit();
+                else f.submit();
+              });
+              setTimeout(() => {
+                toast.dismiss();
+                toast.success(t('Applicant Updated Successfully') || 'Changes saved');
+                (window as any).__SUPPRESS_CHILD_TOASTS__ = false;
+              }, 1200);
+            }}
+          >
+            {t('SAVE')}
+          </Button>
+        </div>
+      )}
 
     </>
   );

@@ -1,6 +1,7 @@
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
+import { Eye, Trash, CloudDownload } from 'react-bootstrap-icons';
 import {
     DashCircle,
     PlusCircle
@@ -31,6 +32,7 @@ export interface ApplicantUploadedDocumentsFormProps extends BaseFormProps<Appli
     isSubmitting: boolean;
     setIsSubmitting(value: boolean): void;
     hideActions?: boolean;
+    wrapInSection?: boolean; // when false, render as a subsection without outer Section/Card
 }
 
 export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocumentsFormProps) {
@@ -107,144 +109,164 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
 
     useEffect(() => focusOnErrorField(form), [form.submitCount])
 
-    return (
-        <Form
-            onSubmit={form.handleSubmit}
-            className={className}
-            data-applicant-edit-form
-        >
-            <Row>
-                <Col md="12" className="p-0 px-lg-2">
-                    <Section
-                        title="UPLOADED_DOCUMENTS"
-                    >
-                        {!props?.hideActions && !Boolean(entity?.is_hired) && (
-                            <div
-                                onDragOver={(e) => e.preventDefault()}
-                                onDrop={async (e) => {
-                                    e.preventDefault();
-                                    const files = Array.from(e.dataTransfer.files || []);
-                                    if (!files.length) return;
-                                    const newDocs = [] as any[];
-                                    for (const file of files) {
-                                        const doc = new DocumentEntity();
-                                        doc.type = file.name; // use filename as unique key
-                                        doc.name = file.name;
-                                        doc.mime_type = file.type;
-                                        const b64 = await getBase64(file as any);
-                                        doc.file_base64 = b64;
-                                        doc.path = `data:${file.type};base64,${b64}`;
-                                        newDocs.push(doc);
-                                    }
-                                    form.setValues({
-                                        ...form.values,
-                                        documents: [
-                                            ...(form.values?.documents || []),
-                                            ...newDocs,
-                                        ],
-                                    });
-                                }}
-                                style={{
-                                    border: "2px dashed #d9dee3",
-                                    borderRadius: 6,
-                                    padding: 32,
-                                    textAlign: "center",
-                                    color: "#6c757d",
-                                }}
-                                className="mb-3"
-                            >
-                                <div className="mb-2" style={{ fontSize: 14 }}>{t("Drag and drop files or click to browse")}</div>
-                                <label className="btn btn-light border" style={{ cursor: "pointer" }}>
-                                    {t("Select Files")}
-                                    <input
-                                        type="file"
-                                        multiple
-                                        accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
-                                        style={{ display: "none" }}
-                                        onChange={async (e) => {
-                                            const files = Array.from(e.target.files || []);
-                                            if (!files.length) return;
-                                            const newDocs = [] as any[];
-                                            for (const file of files) {
-                                                const doc = new DocumentEntity();
-                                                doc.type = file.name;
-                                                doc.name = file.name;
-                                                doc.mime_type = file.type;
-                                                const b64 = await getBase64(file as any);
-                                                doc.file_base64 = b64;
-                                                doc.path = `data:${file.type};base64,${b64}`;
-                                                newDocs.push(doc);
-                                            }
+    const handleLocalDownload = (doc: any) => {
+        try {
+            const url = doc?.path || (doc?.file_base64 ? `data:${doc?.mime_type};base64,${doc?.file_base64}` : undefined);
+            if (!url) return;
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = doc?.name || 'document';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        } catch {}
+    };
+
+    const content = (
+        <>
+            {!Boolean(entity?.is_hired) && (
+                <div
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={async (e) => {
+                        e.preventDefault();
+                        const files = Array.from(e.dataTransfer.files || []);
+                        if (!files.length) return;
+                        const newDocs = [] as any[];
+                        for (const file of files) {
+                            const doc = new DocumentEntity();
+                            doc.type = file.name; // use filename as unique key
+                            doc.name = file.name;
+                            doc.mime_type = file.type;
+                            const b64 = await getBase64(file as any);
+                            doc.file_base64 = b64;
+                            doc.path = `data:${file.type};base64,${b64}`;
+                            newDocs.push(doc);
+                        }
+                        form.setValues({
+                            ...form.values,
+                            documents: [
+                                ...(form.values?.documents || []),
+                                ...newDocs,
+                            ],
+                        });
+                    }}
+                    style={{
+                        border: "2px dashed #d9dee3",
+                        borderRadius: 6,
+                        padding: 32,
+                        textAlign: "center",
+                        color: "#6c757d",
+                    }}
+                    className="mb-3"
+                >
+                    <div className="mb-2" style={{ fontSize: 14 }}>{t("Drag and drop files or click to browse")}</div>
+                    <label className="btn btn-light border" style={{ cursor: "pointer" }}>
+                        {t("Select Files")}
+                        <input
+                            type="file"
+                            multiple
+                            accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
+                            style={{ display: "none" }}
+                            onChange={async (e) => {
+                                const files = Array.from(e.target.files || []);
+                                if (!files.length) return;
+                                const newDocs = [] as any[];
+                                for (const file of files) {
+                                    const doc = new DocumentEntity();
+                                    doc.type = file.name;
+                                    doc.name = file.name;
+                                    doc.mime_type = file.type;
+                                    const b64 = await getBase64(file as any);
+                                    doc.file_base64 = b64;
+                                    doc.path = `data:${file.type};base64,${b64}`;
+                                    newDocs.push(doc);
+                                }
+                                form.setValues({
+                                    ...form.values,
+                                    documents: [
+                                        ...(form.values?.documents || []),
+                                        ...newDocs,
+                                    ],
+                                });
+                            }}
+                        />
+                    </label>
+                </div>
+            )}
+
+            {form.values?.documents?.length > 0 ? (
+                <div>
+                    {form.values?.documents?.map((doc, i) => (
+                        <div key={i} className="d-flex align-items-center justify-content-between bg-light rounded mb-2 px-3 py-2">
+                            <div className="d-flex align-items-center">
+                                <span className="me-2 bi bi-file-earmark" />
+                                <span>{doc?.name || doc?.type}</span>
+                            </div>
+                            <div className="d-flex align-items-center" style={{ gap: 8 }}>
+                                <Button
+                                    variant="success"
+                                    size="sm"
+                                    title={t('View')}
+                                    onClick={async (e) => {
+                                        e.preventDefault();
+                                        if (doc?.id) {
+                                            await handleViewDocument(doc.id, setPdf, doc?.name);
+                                        } else if (doc?.path || doc?.file_base64) {
+                                            setPdf({ name: doc?.name, url: doc?.path || `data:${doc?.mime_type};base64,${doc?.file_base64}` });
+                                        }
+                                    }}
+                                >
+                                    <Eye />
+                                </Button>
+                                <Button
+                                    variant="dark"
+                                    size="sm"
+                                    title={t('Download')}
+                                    onClick={(e) => { e.preventDefault(); handleLocalDownload(doc); }}
+                                >
+                                    <CloudDownload />
+                                </Button>
+                                {!props?.hideActions && !Boolean(entity?.is_hired) && (
+                                    <Button
+                                        variant="danger"
+                                        size="sm"
+                                        title={t('Remove')}
+                                        onClick={(e) => {
+                                            e.preventDefault();
                                             form.setValues({
                                                 ...form.values,
-                                                documents: [
-                                                    ...(form.values?.documents || []),
-                                                    ...newDocs,
-                                                ],
+                                                documents: form.values?.documents?.filter((_, idx) => idx !== i),
                                             });
                                         }}
-                                    />
-                                </label>
+                                    >
+                                        <Trash />
+                                    </Button>
+                                )}
                             </div>
-                        )}
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="text-muted">{t("NONE")}</div>
+            )}
 
-                        {form.values?.documents?.length > 0 ? (
-                            <div>
-                                {form.values?.documents?.map((doc, i) => (
-                                    <div key={i} className="d-flex align-items-center justify-content-between bg-light rounded mb-2 px-3 py-2">
-                                        <div className="d-flex align-items-center">
-                                            <span className="me-2 bi bi-file-earmark" />
-                                            <span>{doc?.name || doc?.type}</span>
-                                        </div>
-                                        <div>
-                                            <Button
-                                                variant="link"
-                                                className="p-0 me-3"
-                                                onClick={async (e) => {
-                                                    e.preventDefault();
-                                                    if (doc?.id) {
-                                                        await handleViewDocument(doc.id, setPdf, doc?.name);
-                                                    } else if (doc?.path || doc?.file_base64) {
-                                                        setPdf({ name: doc?.name, url: doc?.path || `data:${doc?.mime_type};base64,${doc?.file_base64}` });
-                                                    }
-                                                }}
-                                            >
-                                                {t("View")}
-                                            </Button>
-                                            {!props?.hideActions && !Boolean(entity?.is_hired) && (
-                                                <Button
-                                                    variant="link"
-                                                    className="p-0"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        form.setValues({
-                                                            ...form.values,
-                                                            documents: form.values?.documents?.filter((_, idx) => idx !== i),
-                                                        });
-                                                    }}
-                                                >
-                                                    {t("Remove")}
-                                                </Button>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="text-muted">{t("NONE")}</div>
-                        )}
+            {/* Update button intentionally removed; global Save handles submission */}
+        </>
+    );
 
-                        {!props?.hideActions && (
-                            <div style={{ display: "flex", justifyContent: "right" }}>
-                                <Button disabled={form.isSubmitting || isSubmitting} style={{ marginTop: "2%" }} type="submit" className="theme-secondary-btn">
-                                    {t("UPDATE")}
-                                </Button>
-                            </div>
-                        )}
-                    </Section>
-                </Col>
-            </Row>
-
+    return (
+        <Form onSubmit={form.handleSubmit} className={className} data-applicant-edit-form>
+            {props?.wrapInSection === false ? (
+                <>{content}</>
+            ) : (
+                <Row>
+                    <Col md="12" className="p-0 px-lg-2">
+                        <Section title="UPLOADED_DOCUMENTS">
+                            {content}
+                        </Section>
+                    </Col>
+                </Row>
+            )}
             <ViewPdf name={pdf?.name} url={pdf?.url} onCloseClick={() => setPdf(null)} />
         </Form>
     );

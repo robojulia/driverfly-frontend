@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import FullLayout from '../../../../../components/dashboard/layouts/layout/full-layout';
 import { EditApplicantFormNew } from '../../../../../components/forms/company/edit-applicant-form-new';
@@ -10,6 +11,7 @@ import { ApplicantEntity } from '../../../../../models/applicant/applicant.entit
 import { ApplicantSuggestedJobEntity } from '../../../../../models/applicant/applicant-suggested-job.entity';
 import { useEffectAsync } from '../../../../../utils/react';
 import ApplicantApi from '../../../../api/applicant';
+import { HireApplicantForm } from '../../../../../components/forms/company/hire-applicant-form';
 // DOT verification panel is now rendered inside EditApplicantForm
 
 export default function EditApplicant({ id }) {
@@ -56,6 +58,18 @@ export default function EditApplicant({ id }) {
     <ChildPageLayout
       title={t('EDIT_{name}', { name: 'APPLICANT' }, { translateProps: true })}
       backPath={backPath}
+      actions={(
+        <div className="d-flex align-items-center" style={{ gap: 8 }}>
+          <HireApplicantForm entity={applicant} />
+          <Button
+            type="button"
+            className={`btn btn-light`}
+            onClick={() => router.push(backPath)}
+          >
+            {t('BACK')}
+          </Button>
+        </div>
+      )}
     >
       <nav aria-label="breadcrumb" className="px-2 mb-2">
         <div className="d-flex align-items-center small text-muted">
@@ -66,9 +80,7 @@ export default function EditApplicant({ id }) {
           <strong className="text-dark">Edit Applicant</strong>
         </div>
       </nav>
-      
-
-      {/* DOT Verification panel moved inside EditApplicantForm */}
+      {/* Identity summary and sticky sub-nav removed per design direction */}
 
       <EditApplicantFormNew
         entity={applicant}
@@ -76,6 +88,7 @@ export default function EditApplicant({ id }) {
         isSubmitting={isSubmitting}
         setIsSubmitting={setIsSubmitting}
         applicantSuggestedJobs={applicantSuggestedJobs}
+        hideHeaderActions
       />
     </ChildPageLayout>
   );

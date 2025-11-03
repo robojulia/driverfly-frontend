@@ -1,6 +1,7 @@
 import { useFormik } from "formik";
 import { useMemo, useState } from "react";
 import { Button, Form, Table } from "react-bootstrap";
+import { Eye, Pencil, CloudDownload, Trash, ClockHistory } from 'react-bootstrap-icons';
 import { ThreeCircles } from "react-loader-spinner";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../hooks/use-auth";
@@ -45,6 +46,7 @@ import { CompanyPreferencesDacForm } from "../../forms/company/company-preferenc
 import { CompanyPreferencesOnboardingChecklistForm } from "../../forms/company/company-preferences-onboarding-checklist-form";
 import { LoaderIcon } from "../../loading/loader-icon";
 import SafetyPerformanceHistory from "../safety-performance-history";
+import { ApplicantUploadedDocumentsForm } from "../../forms/company/applicant-uploaded-documents-form";
 
 function DacItemEditor({ dacForm, companyDacItemType }) {
   const { t } = useTranslation();
@@ -454,11 +456,18 @@ export default function OnboardingChecklist(
           </thead>
           <tbody>
             {filteredTypes.map((type: ApplicantOnBoardingChecklist, i) => {
-              const document: DocumentEntity = applicant?.documents?.find(
-                (v) => v.type == type && (isCompleted ? !!v.path : !v.path)
-              );
-              
-              if (isCompleted ? !document : document) return null;
+              const completedDoc: DocumentEntity | undefined = applicant?.documents?.find((v) => v.type === type && !!v.path);
+              const pendingDoc: DocumentEntity | undefined = applicant?.documents?.find((v) => v.type === type && !v.path);
+
+              // For the Completed table, only render when a completed document exists
+              if (isCompleted) {
+                if (!completedDoc) return null;
+              } else {
+                // For the Upload Files table, hide rows when a completed document already exists
+                if (completedDoc) return null;
+              }
+
+              const document: DocumentEntity | undefined = isCompleted ? completedDoc : pendingDoc;
 
               return (
                 <tr key={type}>
@@ -583,18 +592,123 @@ export default function OnboardingChecklist(
       />
     </>
   ) : (
-    <ChecklistItems
-      showCompleted={props.showCompleted}
-      companyOnboardingChecklist={companyOnboardingChecklist}
-      vehicleDocumentTypes={vehicleDocumentTypes}
-      renderDocumentTable={renderDocumentTable}
-      companyDaclist={companyDaclist}
-      applicant={applicant}
-      dacForm={dacForm}
-      handleDacChangeClick={handleDacChangeClick}
-      pdf={pdf}
-      setPdf={setPdf}
-    />
+    <>
+      {/* Unified checklist view */}
+      <div className="d-flex flex-column" style={{ gap: 12 }}>
+        {(companyOnboardingChecklist?.value || []).map((type: ApplicantOnBoardingChecklist) => {
+          const completedDoc: DocumentEntity | undefined = applicant?.documents?.find((v) => v.type === type && !!v.path);
+          const pendingDoc: DocumentEntity | undefined = applicant?.documents?.find((v) => v.type === type && !v.path);
+          const document = completedDoc || pendingDoc;
+          const isCompleted = Boolean(completedDoc);
+          return (
+            <div key={type} className="p-3 border rounded" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              {/* Left: status + name */}
+              <div className="d-flex align-items-center" style={{ gap: 10 }}>
+                <div style={{ width: 16, height: 16, borderRadius: 4, border: '1px solid #0f5257', background: isCompleted ? '#0f5257' : 'transparent' }} />
+                <div style={{ fontWeight: 600 }}>{t(`ApplicantOnBoardingChecklist.${type}`)}</div>
+              </div>
+              {/* Right: uploaded at + actions */}
+              <div className="d-flex align-items-center" style={{ gap: 12 }}>
+                <div className="text-muted small" style={{ minWidth: 160, textAlign: 'right' }}>
+                  {isCompleted ? (
+                    <>
+                      {t('Uploaded')} <UpdatedAt document={document} t={t} />
+                    </>
+                  ) : null}
+                </div>
+                {/* Actions */}
+                <div className="d-flex align-items-center" style={{ gap: 8 }}>
+                  {/* View */}
+                  {document && completedDoc && !document?.name?.includes('.doc') && (
+                    <Button variant="success" size="sm" title={t('View')} onClick={() => handleViewDocument(document.id, setPdf)}>
+                      <Eye />
+                    </Button>
+                  )}
+                  {/* Replace / Upload */}
+                  {Boolean(props.canEdit) && (
+                    <Button
+                      variant="info"
+                      size="sm"
+                      title={completedDoc ? t('Replace') : t('Upload')}
+                      onClick={() => handleUpdateDocument(type, document?.id)}
+                    >
+                      <Pencil />
+                    </Button>
+                  )}
+                  {/* Download */}
+                  {document && completedDoc && (
+                    <Button variant="dark" size="sm" title={t('Download')} onClick={() => handleDownloadDocument(document.id)}>
+                      <CloudDownload />
+                    </Button>
+                  )}
+                  {/* History */}
+                  {Boolean(props.showHistory) && (
+                    <ViewDocumentHistory
+                      buttonClass="btn btn-outline-info btn-sm d-inline-flex align-items-center"
+                      canDelete={!applicant.is_hired}
+                      typePrefix="ApplicantOnBoardingChecklist"
+                      document={document}
+                      type={type}
+                      documentable_id={applicant.id}
+                      documentable_type={DocumentableType.APPLICANTS}
+                      icon={<ClockHistory /> as any}
+                    />
+                  )}
+                  {/* Remove */}
+                  {Boolean(props.canEdit) && completedDoc && (
+                    <Button variant="danger" size="sm" title={t('Remove')} onClick={() => handleDeleteDocument(type)}>
+                      <Trash />
+                    </Button>
+                  )}
+                </div>
+              </div>
+              {/* Inline uploader */}
+              {form.values?.document?.type == type && (
+                <div className="w-100 mt-3">
+                  <Form onSubmit={form.handleSubmit}>
+                    <FileInput
+                      name={`document`}
+                      accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
+                      formik={form}
+                      allowedSizeInByte={3145728}
+                    />
+                    <div className="mt-2 d-flex" style={{ gap: 8 }}>
+                      <Button
+                        disabled={form.isSubmitting || !form.isValid || form.isValidating}
+                        className="theme-secondary-btn"
+                        type="submit"
+                      >
+                        {t('SAVE')}
+                      </Button>
+                      <Button
+                        type="button"
+                        className="btn-outline-danger"
+                        onClick={() => form.resetForm()}
+                      >
+                        {t('CANCEL')}
+                      </Button>
+                    </div>
+                  </Form>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Uploaded Documents as a subsection inside the Onboarding Documents card (bottom) */}
+      <div className="mt-4">
+        <h6 className="mb-3" style={{ color: '#666', fontSize: '0.95rem', fontWeight: 600 }}>{t('UPLOADED_DOCUMENTS')}</h6>
+        <ApplicantUploadedDocumentsForm
+          entity={applicant as any}
+          setEntity={setApplicant as any}
+          isSubmitting={false}
+          setIsSubmitting={() => {}}
+          hideActions={!props.canEdit}
+          wrapInSection={false}
+        />
+      </div>
+    </>
   );
 
   if (props.useSectionContainer) {

@@ -163,24 +163,70 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
 
   return (
     <Form onSubmit={form.handleSubmit} className={className} onReset={form.handleReset} data-applicant-edit-form>
-      {/* Basic Information */}
+      {/* Basic Information - Combined Section */}
       <Row>
         <Col md="12" className="p-2 mt-2">
+          <div className="df-modern-section">
           <Section title="Basic Information">
+            {/* Name fields */}
             <Row className="mb-2">
               <Col md="3" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="First Name" required name="first_name" placeholder="First Name" formik={form} />
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="First Name" required name="first_name" placeholder="John" formik={form} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseInput className="col-12" label="Middle Name" name="meta.middle_name" placeholder="Middle Name" />
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Middle Name" name="meta.middle_name" />
               </Col>
               <Col md="3" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Last Name" required name="last_name" placeholder="Last Name" formik={form} />
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Last Name" required name="last_name" placeholder="Doe" formik={form} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseInput className="col-12" label="Suffix" name="meta.suffix" placeholder="Suffix" />
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Suffix" name="meta.suffix" />
               </Col>
             </Row>
+            
+            {/* SSN, Phone, Alternative Phone, Email */}
+            <Row className="mb-2">
+              <Col md="3" className="px-2">
+                <div className="col-12">
+                  <label>
+                    {t("Social Security Number")}:
+                  </label>
+                  <br />
+                  <SSNDisplay applicantId={entity?.id} last4={(entity as any)?.ssn_last4} />
+                </div>
+              </Col>
+              <Col md="3" className="px-2">
+                <div style={{ maxWidth: '100%' }}>
+                  <BaseInputPhone className="col-12" readOnly={Boolean(entity?.is_hired)} label="Phone Number" name="phone" placeholder="(555) 987-6543" formik={form} />
+                </div>
+              </Col>
+              <Col md="3" className="px-2">
+                <div style={{ maxWidth: '100%' }}>
+                  <BaseInputPhone className="col-12" readOnly={Boolean(entity?.is_hired)} label="Alternative Phone Number" name="meta.alternative_phone" placeholder="(555) 987-6543" />
+                </div>
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Email" type="email" name="email" placeholder="john.doe@example.com" formik={form} />
+              </Col>
+            </Row>
+
+            {/* Street Address, City, State, Zip */}
+            <Row className="mb-2">
+              <Col md="3" className="px-2">
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Street Address" name="address_1" placeholder="120 Folsom St." formik={form} />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="City" name="city" placeholder="Atlanta" formik={form} />
+              </Col>
+              <Col md="3" className="px-2">
+                <StateSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="State" name="state" placeholder="Select state" formik={form} />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Zip Code" name="zip_code" placeholder="83202" formik={form} />
+              </Col>
+            </Row>
+
+            {/* Date of Birth, Age, Authorized to work */}
             <Row className="mb-2">
               <Col md="3" className="px-2">
                 <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Date of Birth" type="date" name="birthdate" placeholder="mm / dd / yyyy" formik={form} max={OldThan18Year} />
@@ -191,85 +237,53 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
                 })()} readOnly />
               </Col>
               <Col md="3" className="px-2">
-                <label>{t("Social Security Number")}</label>
-                <SSNDisplay applicantId={entity?.id} last4={(entity as any)?.ssn_last4} className="mt-1" />
-              </Col>
-              <Col md="3" className="px-2">
-                <BaseSelect className="col-12" label="Gender" name="meta.gender" placeholder="Select" options={["Male","Female","Non-binary","Prefer not to say"]} />
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Authorized to work in the US?" name="meta.authorized_to_work" placeholder="Select" options={["Yes","No"]} />
               </Col>
             </Row>
+
+            {/* Fourth row - Additional fields */}
             <Row className="mb-2">
               <Col md="3" className="px-2">
-                <BaseSelect className="col-12" label="Marital Status" name="meta.marital_status" placeholder="Select" options={["Single","Married","Divorced","Widowed"]} />
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Marital Status" name="meta.marital_status" placeholder="Select" options={["Single","Married","Divorced","Widowed"]} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseSelect className="col-12" label="Ethnicity" name="meta.ethnicity" placeholder="Select" options={["Hispanic or Latino","Not Hispanic or Latino"]} />
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Race" name="meta.race" placeholder="Select" options={["White","Black or African American","Asian","American Indian or Alaska Native","Native Hawaiian or Other Pacific Islander","Other"]} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseSelect className="col-12" label="Race" name="meta.race" placeholder="Select" options={["White","Black or African American","Asian","American Indian or Alaska Native","Native Hawaiian or Other Pacific Islander","Other"]} />
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Citizenship Status" name="meta.citizenship_status" placeholder="Select" options={["U.S. Citizen","Permanent Resident","Work Visa","Other"]} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseSelect className="col-12" label="Citizenship Status" name="meta.citizenship_status" placeholder="Select" options={["U.S. Citizen","Permanent Resident","Work Visa","Other"]} />
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Country" name="meta.country" placeholder="Select country" options={["United States","Canada","Mexico"]} />
               </Col>
             </Row>
-            <Row className="mb-2">
+          </Section>
+          </div>
+        </Col>
+      </Row>
+
+      {/* Demographic Information */}
+      <Row>
+        <Col md="12" className="p-2">
+          <Section title="Demographic Information">
+            <Row>
               <Col md="3" className="px-2">
-                <BaseSelect className="col-12" label="Veteran Status" name="meta.veteran_status" placeholder="Select" options={["Yes","No","Prefer not to say"]} />
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Ethnicity" name="meta.ethnicity" placeholder="Select" options={["Hispanic or Latino","Not Hispanic or Latino"]} />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Gender" name="meta.gender" placeholder="Select" options={["Male","Female","Non-binary","Prefer not to say"]} />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Veteran Status" name="meta.veteran_status" placeholder="Select" options={["Yes","No","Prefer not to say"]} />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="HIGHEST_DEGREE" name="highest_degree" placeholder="SELECT_HIGHEST_DEGREE" formik={form} labelPrefix="EducationLevel" enumType={EducationLevel} />
               </Col>
             </Row>
           </Section>
         </Col>
       </Row>
 
-      {/* Contact Information */}
-      <Row>
-        <Col md="12" className="p-2">
-          <Section title="Contact Information">
-            <Row>
-              <Col md="6" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Email Address" type="email" name="email" placeholder="john.doe@example.com" formik={form} />
-              </Col>
-              <Col md="6" className="px-2">
-                <BaseInputPhone className="col-12" readOnly={Boolean(entity?.is_hired)} label="Phone Number" name="phone" placeholder="(555) 123-4567" formik={form} />
-              </Col>
-            </Row>
-            <Row>
-              <Col md="6" className="px-2">
-                <BaseInputPhone className="col-12" label="Alternative Phone" name="meta.alternative_phone" placeholder="(555) 987-6543" />
-              </Col>
-            </Row>
-          </Section>
-        </Col>
-      </Row>
-
-      {/* Current Address */}
-      <Row>
-        <Col md="12" className="p-2">
-          <Section title="Current Address">
-            <Row>
-              <Col md="12" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Street Address" name="address_1" placeholder="123 Main Street" formik={form} />
-              </Col>
-            </Row>
-            <Row>
-              <Col md="6" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="City" name="city" placeholder="New York" formik={form} />
-              </Col>
-              <Col md="6" className="px-2">
-                <StateSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="State" name="state" placeholder="Select state" formik={form} />
-              </Col>
-            </Row>
-            <Row>
-              <Col md="6" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="ZIP Code" name="zip_code" placeholder="10001" formik={form} />
-              </Col>
-              <Col md="6" className="px-2">
-                <BaseSelect className="col-12" label="Country" name="meta.country" placeholder="Select country" options={["United States","Canada","Mexico"]} />
-              </Col>
-            </Row>
-          </Section>
-        </Col>
-      </Row>
+      
 
       {/* Licensing & Certification (optional) */}
       {props?.showLicensing !== false && (
@@ -297,9 +311,7 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
               )}
             </Row>
 
-            <Row className="px-3">
-              <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="HIGHEST_DEGREE" name="highest_degree" placeholder="SELECT_HIGHEST_DEGREE" formik={form} labelPrefix="EducationLevel" enumType={EducationLevel} />
-            </Row>
+            {/* Highest degree moved to Demographic Information */}
 
             <Row className="px-3">
               <BaseCheckList disabled={Boolean(entity?.is_hired)} className="col-12 p-1 " label="License_Restrictions" name="license_restrictions" labelPrefix="LicenseRestrictions" enumType={LicenseRestrictions} formik={form} cols="2" />

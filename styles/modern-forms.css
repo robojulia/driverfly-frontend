@@ -1,0 +1,48 @@
+.df-modern-section .card {
+  border-radius: 12px;
+}
+
+.df-modern-section .card-header {
+  background-color: #f8fafc; /* light header */
+  border-bottom: 1px solid #eef2f7;
+}
+
+.df-modern-section .card-header h5,
+.df-modern-section .card-header .h5,
+.df-modern-section .card-header [class*="h5"] {
+  font-weight: 700;
+}
+
+.df-modern-section label {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+}
+
+.df-modern-section .form-control,
+.df-modern-section .form-select {
+  border-radius: 10px !important;
+  background-color: #f7f9fb;
+  border-color: #e5e7eb;
+  height: 44px;
+}
+
+.df-modern-section .form-control[readonly],
+.df-modern-section .form-control[disabled] {
+  background-color: #f3f4f6;
+}
+
+.df-modern-section .btn {
+  border-radius: 10px;
+}
+
+/* Fix phone input width to match other inputs */
+.df-modern-section .react-tel-input {
+  width: 100% !important;
+}
+
+.df-modern-section .react-tel-input .form-control {
+  width: 100% !important;
+}
+

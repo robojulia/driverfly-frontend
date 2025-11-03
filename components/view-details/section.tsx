@@ -19,7 +19,7 @@ export default function Section(props: SectionProps) {
                 <Card.Header>
                     {title && (
                         <div style={{ float: 'left' }}>
-                            <h5 className="m-0">{typeof title === 'string' ? t(title) : title}</h5>
+                            <h5 className="m-0" style={{ fontWeight: 700 }}>{typeof title === 'string' ? t(title) : title}</h5>
                         </div>
                     )}
                     {actions && <div style={{ float: 'right' }}>{actions}</div>}

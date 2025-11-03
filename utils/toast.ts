@@ -32,7 +32,11 @@ function formSuccess(t: TranslateInterface, action: "create" | "update" | "delet
     }
 
     // Allow parent pages to temporarily suppress child success toasts during batch saves
-    if (typeof window !== 'undefined' && (window as any).__SUPPRESS_CHILD_TOASTS__) return;
+    if (typeof window !== 'undefined') {
+        const w: any = window as any;
+        if (w.__SUPPRESS_CHILD_TOASTS__) return;
+        if (typeof w.__SUPPRESS_CHILD_TOASTS_UNTIL === 'number' && Date.now() < w.__SUPPRESS_CHILD_TOASTS_UNTIL) return;
+    }
     toast.success(t("Forms.SUCCESS_{action}_{name}", { action: `Forms.${formAction}`, name: name }, { translateProps: true }));
 }
 

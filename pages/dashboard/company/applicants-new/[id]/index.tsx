@@ -28,7 +28,7 @@ import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
 import ApplicantApi from '../../../../api/applicant';
 import DocumentApi from '../../../../api/document';
 
-import ApplicantConsiderFor from '../../../../../components/applicants/applicant-consider-for';
+import ApplicantJobsAppliedTo from '../../../../../components/applicants/applicant-jobs-applied-to';
 import ApplicantJobsApplied from '../../../../../components/applicants/applicant-jobs-applied';
 import ApplicantSafetyBackground from '../../../../../components/applicants/applicant-safety-background';
 import ViewApplicantDetail from '../../../../../components/applicants/applicant-view-details';
@@ -43,7 +43,6 @@ import { ApplicantLicensingForm } from '../../../../../components/forms/company/
 import { ApplicantWorkHistoryForm } from '../../../../../components/forms/company/applicant-work-history-form';
 import { ApplicantEquipmentExperienceForm } from '../../../../../components/forms/company/applicant-equipment-experience-form';
 import { ApplicantSafetyBackgroundForm } from '../../../../../components/forms/company/applicant-safety-background-form';
-import { ApplicantUploadedDocumentsForm } from '../../../../../components/forms/company/applicant-uploaded-documents-form';
 import { ApplicantSignedAgreementsForm } from '../../../../../components/forms/company/applicant-signed-agreements-form';
 import OnboardingChecklist from '../../../../../components/applicants/onboarding-checklist';
 import { ApplicantApplicationChecklistForm } from '../../../../../components/forms/company/applicant-application-checklist-form';
@@ -214,7 +213,23 @@ export default function ViewApplicant({ id }) {
   const tooltip = <Tooltip id="my-tooltip">{t('APPLICANT_ALREADY_HIRED')}</Tooltip>;
   const canEditTooltip = <Tooltip id="my-tooltip">{t('EDIT_APPLICANT_PROFILE')}</Tooltip>;
   return (
-    <ChildPageLayout backPath={backPath} title={title}>
+    <ChildPageLayout
+      backPath={backPath}
+      title={title}
+      actions={canEdit ? (
+        <OverlayTrigger
+          trigger={["hover", "focus"]}
+          delay={{ show: 0, hide: 0 }}
+          overlay={Boolean(applicant?.is_hired) ? tooltip : canEditTooltip}
+        >
+          <div>
+            <Button type="button" onClick={onEditClick} disabled={Boolean(applicant?.is_hired)}>
+              <Pencil /> {t('EDIT')}
+            </Button>
+          </div>
+        </OverlayTrigger>
+      ) : undefined}
+    >
       <nav aria-label="breadcrumb" className="px-2 mb-2">
         <div className="d-flex align-items-center small text-muted">
           <Link href="/dashboard"><a className="text-muted text-decoration-none">Dashboard</a></Link>
@@ -226,61 +241,9 @@ export default function ViewApplicant({ id }) {
       </nav>
       {Boolean(applicant.id) && (
         <>
-          {canEdit && (
-            <Row>
-              <Col>
-                {!!!Object.values(applicant?.jobs).length && (
-                  <div className="alert alert-warning rounded text-dark py-2 px-3 mb-2">
-                    {t('NO_JOB_TIED_WITH_APPLICANT')}
-                  </div>
-                )}
-              </Col>
-              <Col>
-                <div style={{ float: 'right', marginBottom: '10px' }} className="assign_unassign">
-                  <OverlayTrigger
-                    trigger={['hover', 'focus']}
-                    delay={{ show: 0, hide: 0 }}
-                    overlay={Boolean(applicant?.is_hired) ? tooltip : canEditTooltip}
-                  >
-                    <div className="float-right mr-2">
-                      <Button
-                        type="button"
-                        onClick={onEditClick}
-                        disabled={Boolean(applicant?.is_hired)}
-                      >
-                        <Pencil /> {t('EDIT')}
-                      </Button>
-                    </div>
-                  </OverlayTrigger>
-
-                  {/* <ButtonGroup size="sm"> */}
-                  {/* {applicant?.assignedUser ? (
-                    <Button
-                      type="button"
-                      variant="danger"
-                      onClick={onUnassignClick}
-                    >
-                      <BookmarkDash /> {t("UNASSIGN")}
-                    </Button>
-                  ) : (
-                    <Button
-                      type="button"
-                      className="theme-general-btn"
-                      variant=""
-                      onClick={onAssignClick}
-                    >
-                      <BookmarkCheck /> {t("ASSIGN_TO_ME")}
-                    </Button>
-                  )} */}
-                  {/* <Button type="button" onClick={onEditClick}>
-                    <Pencil /> {t("EDIT")}
-                  </Button> */}
-                  {/* </ButtonGroup> */}
-                </div>
-              </Col>
-            </Row>
-          )}
+          {/* Identity summary and sticky sub-nav removed per design direction */}
           {/* New read-only layout mirroring the edit page */}
+          <div id="basic-info" />
           <Row className="px-2">
             <ApplicantBasicDetailsFormNew
               entity={{ ...applicant, is_hired: true }}
@@ -292,25 +255,16 @@ export default function ViewApplicant({ id }) {
               showPreferences={false}
             />
           </Row>
-          {/* Previous Employment */}
-          <Row className="px-2">
-            <ApplicantWorkHistoryForm
-              entity={{ ...applicant, is_hired: true }}
-              setEntity={() => {}}
-              isSubmitting={true}
-              setIsSubmitting={() => {}}
-              hideActions
-            />
-          </Row>
           
-          
-          {/* Licensing & Certification */}
+          {/* CDL Information */}
+          <div id="licensing" />
           <ApplicantLicensingForm
             entity={{ ...applicant, is_hired: true }}
             setEntity={() => {}}
           />
 
           {/* DOT Verification (shown only if DOT number is saved) */}
+          <div id="dot-verification" />
           {(() => {
             const dot_number = applicant?.extras?.find((e: any) => e.type === ApplicantExtrasEnum.DOT_NUMBER)?.value;
             if (!dot_number) return null;
@@ -473,18 +427,8 @@ export default function ViewApplicant({ id }) {
             );
           })()}
 
-          {/* Equipment Experience */}
-          <Row className="px-2">
-            <ApplicantEquipmentExperienceForm
-              entity={{ ...applicant, is_hired: true }}
-              setEntity={() => {}}
-              isSubmitting={true}
-              setIsSubmitting={() => {}}
-              hideActions
-            />
-          </Row>
-
           {/* Safety Background */}
+          <div id="safety" />
           <Row className="px-2">
             <ApplicantSafetyBackgroundForm
               entity={{ ...applicant, is_hired: true }}
@@ -495,15 +439,23 @@ export default function ViewApplicant({ id }) {
             />
           </Row>
 
-          {/* Consider Applicant For */}
-              <ApplicantConsiderFor
-                applicant={applicant}
-                applicantSuggestedJobs={applicantSuggestedJobs || []}
-              />
-
-          {/* Uploaded Documents */}
+          {/* Equipment experience */}
+          <div id="equipment" />
           <Row className="px-2">
-            <ApplicantUploadedDocumentsForm
+            <ApplicantEquipmentExperienceForm
+              entity={{ ...applicant, is_hired: true }}
+              setEntity={() => {}}
+              isSubmitting={true}
+              setIsSubmitting={() => {}}
+              hideActions
+              hideAddButton={true}
+            />
+          </Row>
+
+          {/* Previous Employment */}
+          <div id="work-history" />
+          <Row className="px-2">
+            <ApplicantWorkHistoryForm
               entity={{ ...applicant, is_hired: true }}
               setEntity={() => {}}
               isSubmitting={true}
@@ -512,8 +464,36 @@ export default function ViewApplicant({ id }) {
             />
           </Row>
 
+          {/* Safety Background */}
+          <div id="safety" />
+          <Row className="px-2">
+            <ApplicantSafetyBackgroundForm
+              entity={{ ...applicant, is_hired: true }}
+              setEntity={() => {}}
+              isSubmitting={true}
+              setIsSubmitting={() => {}}
+              hideActions
+            />
+          </Row>
+
+          {/* Preferences */}
+          <div id="preferences" />
+          <ApplicantPreferencesForm entity={{ ...applicant, is_hired: true }} setEntity={() => {}} hideActions />
+
+          {/* Job(s) Applied To */}
+          <div id="jobs-applied-to" />
+          <ApplicantJobsAppliedTo
+            applicant={applicant}
+            applicantSuggestedJobs={applicantSuggestedJobs || []}
+          />
+
+          {/* Uploaded Documents now shown inside Onboarding Documents card */}
+          <div id="uploaded-documents" />
+
           {/* Onboarding Documents */}
           {applicant?.id && (
+            <>
+            <div id="onboarding-documents" />
             <Row className="px-2">
               <Col md="12" className="p-0 px-lg-2">
                 <OnboardingChecklist
@@ -528,18 +508,22 @@ export default function ViewApplicant({ id }) {
                 />
               </Col>
             </Row>
+            </>
           )}
 
           {/* Application Checklist */}
+          <div id="application-checklist" />
           <ApplicantApplicationChecklistForm
               entity={{ ...applicant, is_hired: true }}
               setEntity={() => {}}
             />
 
           {/* Notes */}
+          <div id="notes" />
           <ApplicantNotesForm entity={{ ...applicant, is_hired: true }} setEntity={() => {}} />
 
           {/* Emergency Contact Information */}
+          <div id="emergency-contact" />
           <ApplicantEmergencyContactForm entity={{ ...applicant, is_hired: true }} setEntity={() => {}} />
 
         </>

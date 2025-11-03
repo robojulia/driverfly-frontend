@@ -24,7 +24,7 @@ export default function ViewCard(props: ViewCardProps) {
         <Card.Header>
           {title && (
             <div style={{ float: 'left' }}>
-              <TitleTag className="m-0">{typeof title === 'string' ? t(title) : title}</TitleTag>
+              <TitleTag className="m-0" style={{ fontWeight: 700 }}>{typeof title === 'string' ? t(title) : title}</TitleTag>
             </div>
           )}
           {actions && <div style={{ float: 'right' }}>{actions}</div>}
