@@ -168,6 +168,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
       ) : (
         <Row>
           <Col md="12" className="p-0 px-lg-2">
+            <div className="df-modern-section">
             <Section
               title="Previous Employment"
               actions={
@@ -273,6 +274,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
 
               {/* Update button removed for global Save */}
             </Section>
+            </div>
           </Col>
         </Row>
       )}

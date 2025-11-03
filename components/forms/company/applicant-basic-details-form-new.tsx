@@ -264,6 +264,7 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
       {/* Demographic Information */}
       <Row>
         <Col md="12" className="p-2">
+          <div className="df-modern-section">
           <Section title="Demographic Information">
             <Row>
               <Col md="3" className="px-2">
@@ -280,6 +281,7 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
               </Col>
             </Row>
           </Section>
+          </div>
         </Col>
       </Row>
 

@@ -39,6 +39,7 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
   return (
     <Row className="px-2">
       <Col md="12" className="p-2">
+        <div className="df-modern-section">
         <Section title="Preferences">
           <Row className="px-3">
             <BaseCheck className="col-12 mt-2" disabled={Boolean(entity?.is_hired)} label="AUTHORIZED_TO_WORK_IN_THE_US" name="authorized_to_work_in_us" formik={form} />
@@ -52,6 +53,7 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
             <JobCapability canPerformJob={true} onCanPerformJobChange={() => {}} reasonIndex={-1} formik={form} disabled={Boolean(entity?.is_hired)} />
           </Row>
         </Section>
+        </div>
       </Col>
     </Row>
   );

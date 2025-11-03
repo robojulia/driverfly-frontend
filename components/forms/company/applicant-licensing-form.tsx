@@ -55,6 +55,9 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
 
   return (
     <>
+      <Row>
+        <Col md="12" className="p-2">
+          <div className="df-modern-section">
       <Section title="CDL Information">
         {/* Transmission Experience */}
         <Row className="px-3">
@@ -211,6 +214,9 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
         </Row>
         </BsForm>
       </Section>
+          </div>
+        </Col>
+      </Row>
     </>
   );
 }

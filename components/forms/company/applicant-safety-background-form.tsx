@@ -98,6 +98,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
         >
             <Row>
                 <Col md="12" className="p-0 px-lg-2">
+                    <div className="df-modern-section">
                     <Section title="SAFETY_BACKGROUND">
                         <Row>
                             <Col md="6">
@@ -550,6 +551,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                             </div>
                         )}
                     </Section>
+                    </div>
                 </Col>
             </Row>
 

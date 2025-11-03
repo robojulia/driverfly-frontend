@@ -90,6 +90,7 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
         >
             <Row>
                 <Col md="12" className="p-2 mt-2">
+                    <div className="df-modern-section">
                     <Section
                         title="equipment_experience"
                         actions={
@@ -195,6 +196,7 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
                             </div>
                         )}
                     </Section>
+                    </div>
                 </Col>
             </Row>
         </Form>
