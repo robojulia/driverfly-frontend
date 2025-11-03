@@ -642,16 +642,15 @@ export default function OnboardingChecklist(
                     </Button>
                   )}
                   {/* History */}
-                  {Boolean(props.showHistory) && (
+                  {Boolean(props.showHistory) && document && (
                     <ViewDocumentHistory
-                      buttonClass="btn btn-outline-info btn-sm d-inline-flex align-items-center"
+                      buttonClass="btn btn-sm btn-history-teal"
                       canDelete={!applicant.is_hired}
                       typePrefix="ApplicantOnBoardingChecklist"
                       document={document}
                       type={type}
                       documentable_id={applicant.id}
                       documentable_type={DocumentableType.APPLICANTS}
-                      icon={<ClockHistory /> as any}
                     />
                   )}
                   {/* Remove */}
