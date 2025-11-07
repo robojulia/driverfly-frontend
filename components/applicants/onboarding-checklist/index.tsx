@@ -230,7 +230,7 @@ export default function OnboardingChecklist(
   useEffectAsync(async () => {
     try {
       if (props.applicant?.id) {
-        const v = await applicantApi.getById(props.applicant?.id);
+        const v = await applicantApi.getById(props.applicant?.id, false, ['documents', 'dac', 'extras']);
         setApplicant(v);
       }
       if (user?.company) {

@@ -77,7 +77,7 @@ export default function ViewApplicant({ id }) {
     if (id) {
       const api = new ApplicantApi();
 
-      const data = await api.getById(+id);
+      const data = await api.getById(+id, false, ['documents', 'notes', 'jobs', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned']);
 
       const suggestedJobs = await api.suggestedJobs.get(id);
       setApplicantSuggestedJobs(suggestedJobs);

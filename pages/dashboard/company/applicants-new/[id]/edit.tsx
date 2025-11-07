@@ -32,7 +32,7 @@ export default function EditApplicant({ id }) {
     if (id) {
       const api = new ApplicantApi();
 
-      const entity = await api.getById(+id, true);
+      const entity = await api.getById(+id, true, ['documents', 'notes', 'jobs', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned']);
       const suggestedJobs = await api.suggestedJobs.get(id);
       setApplicantSuggestedJobs(suggestedJobs || []);
 
