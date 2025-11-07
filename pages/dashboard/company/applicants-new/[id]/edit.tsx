@@ -31,8 +31,8 @@ export default function EditApplicant({ id }) {
   useEffectAsync(async () => {
     if (id) {
       const api = new ApplicantApi();
-
       const entity = await api.getById(+id, true, ['documents', 'notes', 'jobs', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned']);
+
       const suggestedJobs = await api.suggestedJobs.get(id);
       setApplicantSuggestedJobs(suggestedJobs || []);
 
@@ -89,6 +89,10 @@ export default function EditApplicant({ id }) {
         setIsSubmitting={setIsSubmitting}
         applicantSuggestedJobs={applicantSuggestedJobs}
         hideHeaderActions
+        onSaveComplete={() => {
+          // Trigger refetch to reload fresh data from database
+          setRefetchApplicant(!refetchApplicant);
+        }}
       />
     </ChildPageLayout>
   );

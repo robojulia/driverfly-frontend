@@ -30,7 +30,6 @@ export function UnableForJob() {
     try {
       const applicantApi = new ApplicantApi();
       await applicantApi.jotform.update(applicant.id, formData);
-      console.log(`Saved step ${steps} for applicant ${applicant.id}`);
     } catch (error) {
       console.error('Save failed:', error);
     }

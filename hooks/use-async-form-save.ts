@@ -48,7 +48,6 @@ export const useAsyncFormSave = (
           signal: controller.signal,
         });
         setLastSaved(new Date());
-        console.log(`Auto-saved step ${stepNumber} for applicant ${applicantId}`);
       } catch (error) {
         if (error.name === 'AbortError') {
           console.log('Save request was cancelled');

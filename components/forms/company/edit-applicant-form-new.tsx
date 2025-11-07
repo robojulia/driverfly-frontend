@@ -30,6 +30,7 @@ export interface EditApplicantFormNewProps extends BaseFormProps<ApplicantEntity
   applicantSuggestedJobs?: ApplicantSuggestedJobEntity[];
   hideHeaderActions?: boolean;
   hideGlobalSave?: boolean;
+  onSaveComplete?: () => void;
 }
 
 export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
@@ -378,7 +379,7 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
               (window as any).__SUPPRESS_CHILD_TOASTS__ = true;
               (window as any).__SUPPRESS_CHILD_TOASTS_UNTIL = Date.now() + 6000;
               const forms = Array.from(document.querySelectorAll('form[data-applicant-edit-form]')) as HTMLFormElement[];
-              forms.forEach((f) => {
+              forms.forEach((f, index) => {
                 if (typeof (f as any).requestSubmit === 'function') (f as any).requestSubmit();
                 else f.submit();
               });
@@ -386,6 +387,11 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
                 toast.dismiss();
                 toast.success(t('Applicant Updated Successfully') || 'Changes saved');
                 (window as any).__SUPPRESS_CHILD_TOASTS__ = false;
+                // Refetch to get updated extras (job_duties, etc) which ARE returned via withRelations
+                // Note: backend bug - doesn't return base fields like routes/preferred_location with withRelations
+                if (props.onSaveComplete) {
+                  props.onSaveComplete();
+                }
               }, 1200);
             }}
           >

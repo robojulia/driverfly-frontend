@@ -140,7 +140,6 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
 
       return false;
     } catch (error) {
-      console.log('Phone check error:', error);
       return false;
     } finally {
       setIsCheckingPhone(false);

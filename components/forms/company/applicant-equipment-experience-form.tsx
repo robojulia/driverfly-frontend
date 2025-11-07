@@ -42,16 +42,22 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
         onSubmit: async (values) => {
             setIsSubmitting(true)
             try {
+                // Strip preference fields (handled by preferences form)
+                const { routes, preferred_location, current_application_status, ...payload } = values as any;
+                const timestamp = new Date().toISOString();
                 if (entity?.id) {
-                    values = await applicantApi.update(entity.id, {
-                        ...values
-                    })
+                    values = await applicantApi.update(entity.id, payload);
                 } else {
-                    values = await applicantApi.create(values);
+                    values = await applicantApi.create(payload);
                 }
 
-                formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
-                setEntity(values);
+                // Check if child toasts are suppressed by global save
+                if (!(window as any).__SUPPRESS_CHILD_TOASTS__) {
+                    formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
+                }
+                
+                // MERGE saved response with existing entity to preserve fields backend didn't return
+                setEntity({ ...entity, ...values });
                 setIsSubmitting(false)
             } catch (e) {
                 setIsSubmitting(false)
@@ -78,7 +84,6 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
                 });
         }
     }, [entity]);
-
 
     useEffect(() => focusOnErrorField(form), [form.submitCount])
 

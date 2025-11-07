@@ -18,6 +18,9 @@ import { useFormik } from "formik";
 import { ApplicantExtrasEntity } from "../../../models/applicant";
 import { useEffect } from "react";
 import ApplicantApi from "../../../pages/api/applicant";
+import { formSuccess, formFailed } from "../../../utils/toast";
+import { globalAjaxExceptionHandler } from "../../../utils/ajax";
+import { toast } from "react-toastify";
 
 export interface ApplicantLicensingFormProps extends BaseFormProps<ApplicantEntity> {}
 
@@ -30,22 +33,36 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
     initialValues: entity || ({} as ApplicantEntity),
     onSubmit: async (values) => {
       if (!entity?.id) return;
-      const payload: any = {
-        license_type: values.license_type,
-        years_cdl_experience: values.years_cdl_experience,
-        license_number: values.license_number,
-        license_expiry: values.license_expiry,
-        license_state: values.license_state,
-        is_owner_operator: values.is_owner_operator,
-      };
-      const saved = await applicantApi.update(entity.id, payload);
-      setEntity?.(saved);
+      try {
+        // Send all base fields, but strip out relations AND preference fields
+        const { jobs, documents, notes, employers, dac, extras, voeData, accident_history, moving_violation_history, equipment_experience, equipment_owned, vehicles, meta, routes, preferred_location, current_application_status, ...payload } = values as any;
+        const timestamp = new Date().toISOString();
+        
+        const saved = await applicantApi.update(entity.id, payload);
+        
+        // Check if child toasts are suppressed by global save
+        if (!(window as any).__SUPPRESS_CHILD_TOASTS__) {
+          formSuccess(t, 'update', 'APPLICANT');
+        }
+        
+        // MERGE saved response with existing entity to preserve fields backend didn't return
+        setEntity?.({ ...entity, ...saved });
+        form.setValues({ ...form.values });
+      } catch (e) {
+        console.error('Licensing form save error:', e);
+        if (!globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })) {
+          formFailed(t, 'update', 'APPLICANT');
+        }
+      }
     },
-    enableReinitialize: true,
+    enableReinitialize: false,
   });
 
+  // Load form values properly like the old working form does
   useEffect(() => {
-    if (entity) form.setValues({ ...entity });
+    if (!!entity?.id) {
+      form.setValues({ ...entity });
+    }
   }, [entity]);
 
   const handleLicenseNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -68,16 +68,23 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
       setIsSubmitting(true);
       values.extras = values.extras?.filter((v) => v.value != undefined || v.value != null);
       if ("jobs" in values) delete values.jobs;
-      // Strip non-persisted presentation-only fields
-      const { meta, ...restValues } = (values as any) || {};
+      // Strip non-persisted presentation-only fields AND preference fields (handled by preferences form)
+      const { meta, routes, preferred_location, current_application_status, ...restValues } = (values as any) || {};
+      const timestamp = new Date().toISOString();
       try {
         if (entity?.id) {
           values = await applicantApi.update(entity.id, { ...restValues } as ApplicantEntity);
         } else {
           values = await applicantApi.create(restValues as ApplicantEntity);
         }
-        formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
-        setEntity(values);
+        
+        // Check if child toasts are suppressed by global save
+        if (!(window as any).__SUPPRESS_CHILD_TOASTS__) {
+          formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
+        }
+        
+        // MERGE saved response with existing entity to preserve fields backend didn't return
+        setEntity({ ...entity, ...values });
         setIsSubmitting(false);
       } catch (e) {
         setIsSubmitting(false);

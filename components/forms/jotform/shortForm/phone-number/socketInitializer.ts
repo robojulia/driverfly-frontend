@@ -71,7 +71,6 @@ export const socketInitializer = async (
 
         tries++;
         setTimeout(() => {
-            console.log(`🔄 Reconnecting attempt ${tries}/${MAX_TRIES}...`);
             tries++;
             socket.connect();
         }, 2000);

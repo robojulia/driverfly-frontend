@@ -50,6 +50,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
   const applicantApi = new ApplicantApi();
 
   const [workHistoryMetaData, setWorkHistoryMetaData] = useState(workHistoryMetaDataInitialState);
+  const [lastSavedEntityId, setLastSavedEntityId] = useState<number | null>(null);
 
   const form = useFormik({
     initialValues: new ApplicantEntity(),
@@ -72,15 +73,27 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
           return rest;
         });
 
-        const payload: any = { ...values, employers: sanitizedEmployers, extras: updatedExtras };
+        // Strip preference fields (handled by preferences form)
+        const { routes, preferred_location, current_application_status, ...baseValues } = values as any;
+        const payload: any = { ...baseValues, employers: sanitizedEmployers, extras: updatedExtras };
 
         if (entity?.id) {
           values = await applicantApi.update(entity.id, payload);
         } else {
           values = await applicantApi.create(payload);
         }
-        formSuccess(t, entity?.id ? 'update' : 'create', 'APPLICANT');
-        setEntity(values);
+        
+        // Check if child toasts are suppressed by global save
+        if (!(window as any).__SUPPRESS_CHILD_TOASTS__) {
+          formSuccess(t, entity?.id ? 'update' : 'create', 'APPLICANT');
+        }
+        
+        // MERGE saved response with existing entity to preserve fields backend didn't return
+        setEntity({ ...entity, ...values });
+        
+        // Mark that we just saved this entity
+        setLastSavedEntityId(values?.id);
+        
         setIsSubmitting(false);
         setWorkHistoryMetaData((prev) => ({ ...prev, isSubmittingVoe: false }));
         if (onSaveComplete) onSaveComplete(form?.values);
@@ -93,22 +106,31 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
     },
   });
 
+  // Load form values on mount, or when we just saved and entity was refetched
   useEffectAsync(async () => {
-    if (!!entity?.id) {
+    const shouldLoad = !form.values?.id || (entity?.id && entity?.id === lastSavedEntityId);
+    
+    if (!!entity?.id && shouldLoad) {
       const dutiesExtra = (entity?.extras || []).find((e: any) => e.type === ApplicantExtrasEnum.JOB_DUTIES);
       const dutiesArray: Array<string | null> = Array.isArray(dutiesExtra?.value) ? dutiesExtra.value : [];
       const employersWithDuties = (entity?.employers || []).map((e, idx) => ({ ...e, job_duties: dutiesArray[idx] || '' }));
+      
       form.setValues({
         ...entity,
         employers: employersWithDuties,
       });
-    } else {
+      
+      // Clear the flag after loading
+      if (lastSavedEntityId) {
+        setLastSavedEntityId(null);
+      }
+    } else if (!entity?.id) {
       await form.setValues({
         ...new ApplicantEntity(),
         type: ApplicantType.COMPANY,
       });
     }
-  }, [entity]);
+  }, [entity, lastSavedEntityId]);
 
   const currentCompanyCheckBox = (employerId) => {
     return workHistoryMetaData?.curentCompanyCheck?.is_current
@@ -185,94 +207,129 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                         VOE Summary
                       </Button>
                     )}
-                    <Button
-                      disabled={Boolean(entity?.is_hired)}
-                      size="sm"
-                      onClick={() =>
-                        form.setValues({
-                          ...form.values,
-                          employers: [new ApplicantEmployerEntity(), ...(form.values?.employers || [])],
-                        })
-                      }
-                    >
-                      <PlusCircle /> {t('ADD')}
-                    </Button>
+                     <Button
+                       disabled={Boolean(entity?.is_hired)}
+                       size="sm"
+                       onClick={() => {
+                         const newEmployer = new ApplicantEmployerEntity();
+                         // Initialize with empty job_duties field for proper tracking
+                         (newEmployer as any).job_duties = '';
+                         form.setValues({
+                           ...form.values,
+                           employers: [newEmployer, ...(form.values?.employers || [])],
+                         });
+                       }}
+                     >
+                       <PlusCircle /> {t('ADD')}
+                     </Button>
                   </div>
                 )
               }
             >
-              {form.values?.employers?.length > 0 ? (
+              {form.values?.employers?.length > 0 && (
                 <>
-                  {form.values?.employers?.map((_, i) => (
-                    <Row key={i} className="mb-3">
-                      <BaseInput
-                        className="col-12"
-                        readOnly={Boolean(entity?.is_hired)}
-                        name={`employers[${i}].name`}
-                        label="Employer Name"
-                        placeholder="ABC Transport Co."
-                        required
-                        formik={form}
-                      />
-                      <BaseInput
-                        className="col-12 mt-2"
-                        readOnly={Boolean(entity?.is_hired)}
-                        name={`employers[${i}].title`}
-                        label="Position"
-                        placeholder="Truck Driver"
-                        formik={form}
-                      />
-                      <BaseInput
-                        className="col-6 mt-2"
-                        readOnly={Boolean(entity?.is_hired)}
-                        name={`employers[${i}].start_at`}
-                        label="Start Date"
-                        type="date"
-                        max={new Date().toISOString().split('T')[0]}
-                        formik={form}
-                      />
-                      <BaseInput
-                        className="col-6 mt-2"
-                        readOnly={Boolean(entity?.is_hired)}
-                        name={`employers[${i}].end_at`}
-                        label="End Date"
-                        type="date"
-                        formik={form}
-                      />
-                      <BaseTextArea
-                        className="col-12 mt-2"
-                        name={`employers[${i}].job_duties`}
-                        label="Job Duties"
-                        placeholder="Describe responsibilities..."
-                        rows={3}
-                        formik={form}
-                        readOnly={Boolean(entity?.is_hired)}
-                      />
+                  {form.values?.employers?.map((employer, i) => (
+                    <Row key={i}>
+                      <div className="col-md-6 mt-2">
+                        <Col className="p-0">
+                          <strong>Employer Name</strong>
+                          <span className="p-0 text-danger">*</span>
+                        </Col>
+                        <BaseInput
+                          readOnly={Boolean(entity?.is_hired)}
+                          name={`employers[${i}].name`}
+                          placeholder="ABC Transport Co."
+                          required
+                          formik={form}
+                        />
+                      </div>
+                      <div className="col-md-5 mt-2">
+                        <Col className="p-0">
+                          <strong>Position</strong>
+                        </Col>
+                        <BaseInput
+                          readOnly={Boolean(entity?.is_hired)}
+                          name={`employers[${i}].title`}
+                          placeholder="Truck Driver"
+                          formik={form}
+                        />
+                      </div>
+                      <div className="pl-sm-1 pt-lg-2 col-lg-1 col-md-12">
+                        <Col className="mt-4"></Col>
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            form.setValues({
+                              ...form.values,
+                              employers: form.values?.employers?.filter((v, idx) => i !== idx),
+                            });
+                          }}
+                        >
+                          <XCircle color="red" size={20} />
+                        </a>
+                      </div>
+                      <div className="col-md-6 mt-2">
+                        <Col className="p-0">
+                          <strong>Start Date</strong>
+                        </Col>
+                        <BaseInput
+                          readOnly={Boolean(entity?.is_hired)}
+                          name={`employers[${i}].start_at`}
+                          type="date"
+                          max={new Date().toISOString().split('T')[0]}
+                          formik={form}
+                        />
+                      </div>
+                      <div className="col-md-6 mt-2">
+                        <Col className="p-0">
+                          <strong>End Date</strong>
+                        </Col>
+                        <BaseInput
+                          readOnly={Boolean(entity?.is_hired)}
+                          name={`employers[${i}].end_at`}
+                          type="date"
+                          formik={form}
+                        />
+                      </div>
+                      <div className="col-12 mt-2">
+                        <Col className="p-0">
+                          <strong>Job Duties</strong>
+                        </Col>
+                        <BaseTextArea
+                          name={`employers[${i}].job_duties`}
+                          placeholder="Describe responsibilities..."
+                          rows={3}
+                          formik={form}
+                          readOnly={Boolean(entity?.is_hired)}
+                        />
+                      </div>
+                      <div className="col-12">
+                        <hr />
+                      </div>
                     </Row>
                   ))}
                 </>
-              ) : (
-                <>{t('NONE')}</>
               )}
-
-              {!props?.hideActions && (
-                <div style={{ display: 'flex', justifyContent: 'left' }}>
-                  <Button
-                    variant="link"
-                    className="p-0 mt-2 me-3"
-                    onClick={() =>
-                      form.setValues({
-                        ...form.values,
-                        employers: [...(form.values?.employers || []), new ApplicantEmployerEntity()],
-                      })
-                    }
-                  >
-                    + Add Another Position
-                  </Button>
-                </div>
-              )}
-
-              {/* Update button removed for global Save */}
+              <div style={{ display: "flex", justifyContent: "flex-start" }}>
+                <Button
+                  disabled={Boolean(entity?.is_hired)}
+                  size="sm"
+                  variant="link"
+                  className="p-0"
+                  onClick={() => {
+                    const newEmployer = new ApplicantEmployerEntity();
+                    // Initialize with empty job_duties field for proper tracking
+                    (newEmployer as any).job_duties = '';
+                    form.setValues({
+                      ...form.values,
+                      employers: [...(form.values?.employers || []), newEmployer],
+                    });
+                  }}
+                >
+                  <PlusCircle /> Add Another Position
+                </Button>
+              </div>
             </Section>
             </div>
           </Col>

@@ -138,7 +138,6 @@ export default function SafetyPerformanceHistory({
     documentId?: number,
     employer?: ApplicantEmployerEntity
   ): Promise<void> => {
-    console.log("type", type, documentId, employer);
 
     form?.setFieldValue("employer", employer);
     form?.setFieldValue("document", { type, id: documentId ?? null });
@@ -357,7 +356,6 @@ export default function SafetyPerformanceHistory({
           items={employers}
           expandableRowsComponent={({ data }) => (
             <>
-              {console.log({ data })}
               <Row className="mt-2">
                 <Col>
                   <ViewDetails

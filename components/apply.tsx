@@ -166,8 +166,6 @@ export default function JobApply({ job, setEncourageModal }) {
   };
 
   useEffect(() => {
-    console.log('values', apply_form.values);
-    console.log('errors', apply_form.errors);
   }, [apply_form.values, apply_form.errors]);
 
   return (
