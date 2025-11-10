@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import { useEffect, useRef } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
@@ -29,6 +30,25 @@ export function ApplicantEmergencyContactForm(props: ApplicantEmergencyContactFo
       setEntity?.(saved);
     },
   });
+
+  // Keep a ref to always have the latest form instance
+  const formRef = useRef(form);
+  formRef.current = form;
+
+  // Register getter function that returns CURRENT emergency contact fields when called
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
+      (window as any).__applicantFormRegistry['emergency-contact'] = () => {
+        console.log('EmergencyContactForm getter called');
+        return {
+          emergency_contact_name: formRef.current.values.emergency_contact_name,
+          emergency_contact_number: formRef.current.values.emergency_contact_number,
+          emergency_contact_relationship: formRef.current.values.emergency_contact_relationship,
+        };
+      };
+    }
+  }, []);
 
   return (
     <>

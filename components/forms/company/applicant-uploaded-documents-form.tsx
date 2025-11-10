@@ -49,8 +49,8 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
             setIsSubmitting(true)
             try {
                 if (entity?.id) {
+                    // Send ONLY documents to avoid overwriting other forms' changes
                     values = await applicantApi.update(entity.id, {
-                        ...values,
                         documents: [
                             ...values.documents,
                             ...entity.documents?.filter(

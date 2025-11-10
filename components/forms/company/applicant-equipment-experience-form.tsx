@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import {
     DashCircle,
@@ -33,11 +33,13 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
     let { className, entity, setEntity, isSubmitting, setIsSubmitting } = props;
 
     const { t } = useTranslation();
+    const [initialized, setInitialized] = useState(false);
 
     const applicantApi = new ApplicantApi();
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
+        enableReinitialize: false,
         validationSchema: ApplicantEntity.yupSchemaApplicantExperienceForm(),
         onSubmit: async (values) => {
             setIsSubmitting(true)
@@ -71,11 +73,15 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
     });
 
     useEffectAsync(async () => {
+        // Only initialize form once to prevent overwriting user changes
+        if (initialized && entity?.id) return;
+        
         if (!!entity?.id) {
             form.setValues(
                 {
                     ...entity,
                 });
+            setInitialized(true);
         } else {
             await form.setValues(
                 {
@@ -83,7 +89,26 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
                     type: ApplicantType.COMPANY,
                 });
         }
-    }, [entity]);
+    }, [entity?.id, initialized]);
+
+    // Keep a ref to always have the latest form instance
+    const formRef = useRef(form);
+    formRef.current = form;
+
+    // Register getter function that returns CURRENT form values when called
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
+            (window as any).__applicantFormRegistry['equipment'] = () => {
+                console.log('EquipmentForm getter called');
+                // Return ONLY equipment-related fields
+                return {
+                    equipment_experience: formRef.current.values.equipment_experience,
+                    equipment_owned: formRef.current.values.equipment_owned,
+                };
+            };
+        }
+    }, []);
 
     useEffect(() => focusOnErrorField(form), [form.submitCount])
 

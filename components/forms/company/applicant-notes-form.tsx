@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import { useEffect, useRef } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
@@ -24,6 +25,23 @@ export function ApplicantNotesForm(props: ApplicantNotesFormProps) {
       setEntity?.(saved);
     },
   });
+
+  // Keep a ref to always have the latest form instance
+  const formRef = useRef(form);
+  formRef.current = form;
+
+  // Register getter function that returns CURRENT notes field when called
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
+      (window as any).__applicantFormRegistry['notes'] = () => {
+        console.log('NotesForm getter called, current remarks:', formRef.current.values.remarks);
+        return {
+          remarks: formRef.current.values.remarks,
+        };
+      };
+    }
+  }, []);
 
   return (
     <>

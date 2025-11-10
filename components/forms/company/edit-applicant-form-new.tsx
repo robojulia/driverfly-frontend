@@ -33,11 +33,15 @@ export interface EditApplicantFormNewProps extends BaseFormProps<ApplicantEntity
   onSaveComplete?: () => void;
 }
 
+// Global registry for form values
+if (typeof window !== 'undefined') {
+  (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
+}
+
 export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
   const { t } = useTranslation();
   const router = useRouter();
   const routeToApplicants = () => router.push("/dashboard/company/applicants");
-  const [dotVerifyRaw, setDotVerifyRaw] = useState<any>(null);
 
   return (
     <>
@@ -75,212 +79,6 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
       <div id="licensing" />
       <ApplicantLicensingForm entity={props?.entity} setEntity={props?.setEntity} />
 
-      {/* DOT Verification (shown only if DOT number is saved) */}
-      <div id="dot-verification" />
-      {(() => {
-        const dot_number = props?.entity?.extras?.find((e: any) => e.type === ApplicantExtrasEnum.DOT_NUMBER)?.value;
-        if (!dot_number) return null;
-        return (
-          <Row className="px-2 mt-2">
-            <Col md="12" className="p-0 px-lg-2">
-              <Section title="DOT Lookup Results">
-                <div className="d-flex justify-content-between align-items-start flex-wrap">
-                  {(() => {
-                    const tokens: string[] =
-                      (props?.entity?.extras?.find((e: any) => e.type === ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS)?.value as string[]) || [];
-                    if (!tokens.length) return null;
-                    const checks = [
-                      { key: "EMAIL", label: "Email" },
-                      { key: "PHONE", label: "Phone" },
-                      { key: "STREET_ADDRESS", label: "Street address" },
-                      { key: "CITY", label: "City" },
-                      { key: "STATE", label: "State" },
-                      { key: "ZIP_CODE", label: "ZIP code" },
-                    ];
-                    const getStatus = (k: string): boolean | null => {
-                      if (tokens.includes(`${k}_SUCCESS`)) return true;
-                      if (tokens.includes(`${k}_FAIL`)) return false;
-                      return null;
-                    };
-                    return (
-                      <div className="mb-2" style={{ minWidth: 240 }}>
-                        {checks.map(({ key, label }) => {
-                          const status = getStatus(key);
-                          return (
-                            <div key={key} className="d-flex align-items-center mb-1">
-                              <div style={{ width: 140 }}>{label}</div>
-                              {status === true && (
-                                <span className="badge bg-success">Match</span>
-                              )}
-                              {status === false && (
-                                <span className="badge bg-danger">No match</span>
-                              )}
-                              {status === null && (
-                                <span className="badge bg-secondary">Unknown</span>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    );
-                  })()}
-                  <div style={{ flex: 1, minWidth: 280 }} className="text-start">
-                    <div>
-                      {(() => {
-                        if (!dotVerifyRaw) return null;
-                        const data: any = (dotVerifyRaw as any)?.records ?? dotVerifyRaw;
-                        const records: any[] = Array.isArray(data) ? data : [data];
-                        const join = (parts: Array<string | undefined | null>, sep: string) =>
-                          parts.filter((p) => Boolean(p && String(p).trim().length)).map((p) => String(p)).join(sep);
-                        const toTitleCase = (value?: string) => {
-                          if (!value) return value;
-                          const cased = String(value)
-                            .toLowerCase()
-                            .replace(/\b([a-z])(\w*)/g, (_: any, a: string, b: string) => a.toUpperCase() + b);
-                          return cased.replace(/ Llc\b/g, ' LLC');
-                        };
-                        const formatCountry = (value?: string) => {
-                          if (!value) return value;
-                          const raw = String(value).trim();
-                          const normalized = raw.toUpperCase().replace(/\./g, '');
-                          if (normalized === 'US' || normalized === 'USA' || normalized === 'UNITED STATES' || normalized === 'UNITED STATES OF AMERICA') {
-                            return 'United States of America';
-                          }
-                          return raw.toUpperCase();
-                        };
-                        const formatPhone = (value?: string) => {
-                          if (!value) return value;
-                          const raw = String(value);
-                          const digitsOnly = raw.replace(/\D/g, '');
-                          const normalized = digitsOnly.length === 11 && digitsOnly.startsWith('1') ? digitsOnly.slice(1) : digitsOnly;
-                          if (normalized.length === 10) {
-                            const area = normalized.slice(0, 3);
-                            const exchange = normalized.slice(3, 6);
-                            const line = normalized.slice(6);
-                            return `(${area}) ${exchange}-${line}`;
-                          }
-                          if (normalized.length === 7) {
-                            return `${normalized.slice(0, 3)}-${normalized.slice(3)}`;
-                          }
-                          return raw;
-                        };
-                        return (
-                          <div>
-                            {records.map((rec: any, idx: number) => {
-                              const join = (parts: Array<string | undefined | null>, sep: string) =>
-                                parts.filter((p) => Boolean(p && String(p).trim().length)).map((p) => String(p)).join(sep);
-                              const toTitleCase = (value?: string) => {
-                                if (!value) return value;
-                                const cased = String(value)
-                                  .toLowerCase()
-                                  .replace(/\b([a-z])(\w*)/g, (_: any, a: string, b: string) => a.toUpperCase() + b);
-                                return cased.replace(/ Llc\b/g, ' LLC');
-                              };
-                              const phyCityStateZip = join([
-                                toTitleCase(rec?.phy_city),
-                                join([String(rec?.phy_state || '').toUpperCase(), rec?.phy_zip], ' '),
-                              ], ', ');
-                              const mailingCityStateZip = join([
-                                toTitleCase(rec?.carrier_mailing_city),
-                                join([String(rec?.carrier_mailing_state || '').toUpperCase(), rec?.carrier_mailing_zip], ' '),
-                              ], ', ');
-                              const phyStreet = toTitleCase(rec?.phy_street);
-                              const phyCountryDisplay = formatCountry(rec?.phy_country);
-                              const addressString = join([
-                                phyStreet,
-                                phyCityStateZip,
-                                phyCountryDisplay,
-                              ], ', ');
-                              const mailingStreet = toTitleCase(rec?.carrier_mailing_street);
-                              const mailingCountryDisplay = formatCountry(rec?.carrier_mailing_country);
-                              const mailingAddressString = join([
-                                mailingStreet,
-                                mailingCityStateZip,
-                                mailingCountryDisplay,
-                              ], ', ');
-                              const areAddressesIdentical = Boolean(addressString) && Boolean(mailingAddressString) && addressString === mailingAddressString;
-                              return (
-                                <div key={idx} className="mb-2">
-                                  <div className="fw-semibold">Company Name</div>
-                                  <div className="mb-1">{toTitleCase(rec?.legal_name) ?? ''}</div>
-                                  <div className="fw-semibold">Address</div>
-                                  <div className="mb-1">
-                                    {phyStreet && <div>{phyStreet}</div>}
-                                    {phyCityStateZip && <div>{phyCityStateZip}</div>}
-                                    {phyCountryDisplay && <div>{phyCountryDisplay}</div>}
-                                  </div>
-                                  {!areAddressesIdentical && mailingAddressString && (
-                                    <>
-                                      <div className="fw-semibold">Mailing Address</div>
-                                      <div className="mb-1">
-                                        {mailingStreet && <div>{mailingStreet}</div>}
-                                        {mailingCityStateZip && <div>{mailingCityStateZip}</div>}
-                                        {mailingCountryDisplay && <div>{mailingCountryDisplay}</div>}
-                                      </div>
-                                    </>
-                                  )}
-                                  <div className="fw-semibold">Phone</div>
-                                  <div className="mb-1">{formatPhone(rec?.phone) ?? ''}</div>
-                                  <div className="fw-semibold">Email Address</div>
-                                  <div>{rec?.email_address ?? ''}</div>
-                                  {idx < records.length - 1 && <hr className="my-2" />}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        );
-                      })()}
-                    </div>
-                  </div>
-                  <div>
-                    <Button
-                      type="button"
-                      onClick={async () => {
-                        try {
-                          const companyApi = new CompanyApi();
-                          const applicantApi = new ApplicantApi();
-                          const business_name = props?.entity?.extras?.find((e: any) => e.type === ApplicantExtrasEnum.BUSINESS_NAME)?.value;
-                          const tokens = await companyApi.dotVerify({
-                            dot_number,
-                            email: props?.entity?.email,
-                            phone: props?.entity?.phone,
-                            address_1: (props?.entity as any)?.address_1 || (props?.entity as any)?.street,
-                            city: props?.entity?.city,
-                            state: props?.entity?.state,
-                            zip_code: props?.entity?.zip_code,
-                            business_name,
-                          });
-                          setDotVerifyRaw(tokens);
-                          const newTokens = Array.isArray(tokens) && tokens.length ? tokens[0] : [];
-                          const others = (props?.entity?.extras || []).filter((e: any) => e.type !== ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS);
-                          const updated = { type: ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS, value: newTokens } as any;
-                          const newExtras = [...others, updated];
-                          const saved = await applicantApi.update(
-                            props?.entity?.id,
-                            {
-                              first_name: props?.entity?.first_name,
-                              last_name: props?.entity?.last_name,
-                              accident_history: (props?.entity as any)?.accident_history,
-                              moving_violation_history: (props?.entity as any)?.moving_violation_history,
-                              extras: newExtras,
-                            } as any,
-                          );
-                          props?.setEntity?.({ ...saved });
-                          toast.success("DOT Number Lookup Successful");
-                        } catch (e) {
-                          toast.error("Failed to refresh DOT verification");
-                        }
-                      }}
-                    >
-                      Lookup
-                    </Button>
-                  </div>
-                </div>
-              </Section>
-            </Col>
-          </Row>
-        );
-      })()}
 
       {/* Equipment experience */}
       <div id="equipment" />
@@ -375,24 +173,124 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
           <Button
             type="button"
             className={`btn theme-general-btn`}
-            onClick={() => {
-              (window as any).__SUPPRESS_CHILD_TOASTS__ = true;
-              (window as any).__SUPPRESS_CHILD_TOASTS_UNTIL = Date.now() + 6000;
-              const forms = Array.from(document.querySelectorAll('form[data-applicant-edit-form]')) as HTMLFormElement[];
-              forms.forEach((f, index) => {
-                if (typeof (f as any).requestSubmit === 'function') (f as any).requestSubmit();
-                else f.submit();
-              });
-              setTimeout(() => {
+            onClick={async () => {
+              try {
+                // Call all registered getter functions to get CURRENT form values
+                const registry = (window as any).__applicantFormRegistry || {};
+                const allValues: any = { ...props?.entity };
+                
+                console.log('Registry keys:', Object.keys(registry));
+                console.log('Initial entity extras DOT_NUMBER:', 
+                  (props?.entity?.extras || []).find((e: any) => e.type === ApplicantExtrasEnum.DOT_NUMBER)?.value);
+                
+                // Collect all extras arrays from forms to merge them
+                const extrasArrays: any[] = [];
+                const formExtrasMap = new Map(); // Track which form provided which extras
+                
+                // Call each getter function to get current values
+                Object.keys(registry).forEach((formId) => {
+                  const getter = registry[formId];
+                  if (getter && typeof getter === 'function') {
+                    const formValues = getter();
+                    console.log(`${formId} values:`, formValues);
+                    if (formValues && typeof formValues === 'object') {
+                      // Collect extras arrays separately for intelligent merging
+                      if (formValues.extras && Array.isArray(formValues.extras)) {
+                        extrasArrays.push({ formId, extras: formValues.extras });
+                        // Track which extras come from which form
+                        formValues.extras.forEach((extra: any) => {
+                          if (extra?.type) {
+                            formExtrasMap.set(extra.type, { formId, extra });
+                          }
+                        });
+                      }
+                      // Assign all other fields (will overwrite, but that's OK for scalar fields)
+                      const { extras, ...otherFields } = formValues;
+                      Object.assign(allValues, otherFields);
+                    }
+                  }
+                });
+                
+                console.log('Form extras map DOT_NUMBER:', formExtrasMap.get(ApplicantExtrasEnum.DOT_NUMBER));
+                
+                // Intelligently merge extras: keep all unique types, last one wins for duplicates
+                const extrasMap = new Map();
+                
+                // Start with existing extras from entity, but filter out DOT_NUMBER and BUSINESS_NAME
+                // (these are managed by licensing form and should come from there)
+                (props?.entity?.extras || []).forEach((extra: any) => {
+                  if (extra?.type && 
+                      extra.type !== ApplicantExtrasEnum.DOT_NUMBER &&
+                      extra.type !== ApplicantExtrasEnum.BUSINESS_NAME) {
+                    extrasMap.set(extra.type, extra);
+                  }
+                });
+                
+                // Merge in extras from all forms (later forms overwrite earlier ones)
+                // Process licensing form last to ensure its DOT_NUMBER and BUSINESS_NAME win
+                if (extrasArrays.length > 0) {
+                  const sortedExtrasArrays = extrasArrays.sort((a, b) => {
+                    if (a.formId === 'licensing') return 1; // Process licensing last
+                    if (b.formId === 'licensing') return -1;
+                    return 0;
+                  });
+                  
+                  sortedExtrasArrays.forEach(({ formId, extras: extrasArray }) => {
+                    console.log(`Processing extras from ${formId}:`, extrasArray);
+                    extrasArray.forEach((extra: any) => {
+                      if (extra?.type) {
+                        const oldValue = extrasMap.get(extra.type)?.value;
+                        extrasMap.set(extra.type, extra);
+                        console.log(`  Set ${extra.type} = ${extra.value} from ${formId} (was: ${oldValue})`);
+                      }
+                    });
+                  });
+                }
+                
+                // Completely replace allValues.extras with merged extras
+                allValues.extras = Array.from(extrasMap.values());
+                console.log('Final merged extras DOT_NUMBER:', 
+                  allValues.extras.find((e: any) => e.type === ApplicantExtrasEnum.DOT_NUMBER)?.value);
+                console.log('Final merged extras count:', allValues.extras.length);
+                
+                console.log('Merged values:', allValues);
+                
+                // Strip out fields that shouldn't be sent to backend (relations handled separately)
+                const { 
+                  jobs, documents, notes, dac, voeData,
+                  ...payload 
+                } = allValues;
+                
+                // Keep certain relations and objects that should be sent
+                if (allValues.employers) payload.employers = allValues.employers;
+                if (allValues.extras) payload.extras = allValues.extras;
+                if (allValues.accident_history) payload.accident_history = allValues.accident_history;
+                if (allValues.moving_violation_history) payload.moving_violation_history = allValues.moving_violation_history;
+                if (allValues.equipment_experience) payload.equipment_experience = allValues.equipment_experience;
+                if (allValues.equipment_owned) payload.equipment_owned = allValues.equipment_owned;
+                if (allValues.vehicles) payload.vehicles = allValues.vehicles;
+                if (allValues.meta) payload.meta = allValues.meta;
+                
+                console.log('Final payload:', payload);
+                
+                // Send ONE consolidated PUT request
+                const applicantApi = new ApplicantApi();
+                const saved = await applicantApi.update(props?.entity?.id, payload);
+                
+                // Update the entity
+                props?.setEntity?.({ ...props?.entity, ...saved });
+                
                 toast.dismiss();
                 toast.success(t('Applicant Updated Successfully') || 'Changes saved');
-                (window as any).__SUPPRESS_CHILD_TOASTS__ = false;
-                // Refetch to get updated extras (job_duties, etc) which ARE returned via withRelations
-                // Note: backend bug - doesn't return base fields like routes/preferred_location with withRelations
+                
+                // Refetch to get updated data
                 if (props.onSaveComplete) {
                   props.onSaveComplete();
                 }
-              }, 1200);
+              } catch (error) {
+                console.error('Save error:', error);
+                toast.error(t('Failed to save changes'));
+              }
             }}
           >
             {t('SAVE')}

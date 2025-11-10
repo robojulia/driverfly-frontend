@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
@@ -60,9 +60,11 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
   // Referral source UI intentionally omitted in the new layout
   const [canPerformJob, setCanPerformJob] = useState<boolean>(true);
   const [jobLimitationIndex, setJobLimitationIndex] = useState<number>(-1);
+  const [initialized, setInitialized] = useState(false);
 
   const form = useFormik({
     initialValues: new ApplicantEntity(),
+    enableReinitialize: false,
     validationSchema: ApplicantEntity.yupSchemaForApplicantBasicDetailsForm(),
     onSubmit: async (values) => {
       setIsSubmitting(true);
@@ -97,6 +99,9 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
   // No referral creation modal in the new layout
 
   useEffectAsync(async () => {
+    // Only initialize form once to prevent overwriting user changes
+    if (initialized && entity?.id) return;
+    
     // No referral creation modal in the new layout
     let extras: ApplicantExtrasEntity[] = entity?.extras || [];
 
@@ -113,12 +118,29 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
       extras.push(jobCapabilityExtra);
     }
 
+    // Extract meta fields from extras into a meta object for easier form handling
+    const meta = {
+      middle_name: extras?.find((e) => e.type === ApplicantExtras.MIDDLE_NAME)?.value || '',
+      suffix: extras?.find((e) => e.type === ApplicantExtras.SUFFIX)?.value || '',
+      alternative_phone: extras?.find((e) => e.type === ApplicantExtras.ALTERNATIVE_PHONE)?.value || '',
+      authorized_to_work: extras?.find((e) => e.type === ApplicantExtras.AUTHORIZED_TO_WORK)?.value || '',
+      marital_status: extras?.find((e) => e.type === ApplicantExtras.MARITAL_STATUS)?.value || '',
+      race: extras?.find((e) => e.type === ApplicantExtras.RACE)?.value || '',
+      citizenship_status: extras?.find((e) => e.type === ApplicantExtras.CITIZENSHIP_STATUS)?.value || '',
+      country: extras?.find((e) => e.type === ApplicantExtras.COUNTRY)?.value || '',
+      ethnicity: extras?.find((e) => e.type === ApplicantExtras.ETHNICITY)?.value || '',
+      gender: extras?.find((e) => e.type === ApplicantExtras.GENDER)?.value || '',
+      veteran_status: extras?.find((e) => e.type === ApplicantExtras.VETERAN_STATUS)?.value || '',
+      age: '', // Calculated field, not saved
+    };
+
     if (!!entity?.id) {
-      form.setValues({ ...entity, extras });
+      form.setValues({ ...entity, extras, meta } as any);
+      setInitialized(true);
     } else {
-      await form.setValues({ ...new ApplicantEntity(), type: ApplicantType.COMPANY, extras });
+      await form.setValues({ ...new ApplicantEntity(), type: ApplicantType.COMPANY, extras, meta } as any);
     }
-  }, [entity]);
+  }, [entity?.id, initialized]);
 
   useEffectAsync(async () => {
     const userApi = new UserApi();
@@ -132,6 +154,69 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
     .split("T")[0];
 
   useEffect(() => focusOnErrorField(form), [form.submitCount]);
+
+  // Keep a ref to always have the latest form instance
+  const formRef = useRef(form);
+  formRef.current = form;
+
+  // Register getter function that returns CURRENT form values when called
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
+      (window as any).__applicantFormRegistry['basic-details'] = () => {
+        console.log('BasicDetailsForm getter called, current city:', formRef.current.values.city);
+        
+        // Convert meta fields back into extras format
+        const currentExtras = (formRef.current.values.extras || []).filter((e: any) => 
+          // Remove old meta field entries so we can add fresh ones
+          // Also remove DOT_NUMBER and BUSINESS_NAME (handled by licensing form)
+          ![
+            ApplicantExtras.MIDDLE_NAME,
+            ApplicantExtras.SUFFIX,
+            ApplicantExtras.ALTERNATIVE_PHONE,
+            ApplicantExtras.AUTHORIZED_TO_WORK,
+            ApplicantExtras.MARITAL_STATUS,
+            ApplicantExtras.RACE,
+            ApplicantExtras.CITIZENSHIP_STATUS,
+            ApplicantExtras.COUNTRY,
+            ApplicantExtras.ETHNICITY,
+            ApplicantExtras.GENDER,
+            ApplicantExtras.VETERAN_STATUS,
+            ApplicantExtras.DOT_NUMBER,
+            ApplicantExtras.BUSINESS_NAME,
+          ].includes(e.type)
+        );
+        
+        // Add meta fields to extras
+        const meta = (formRef.current.values as any).meta || {};
+        if (meta.middle_name) currentExtras.push({ type: ApplicantExtras.MIDDLE_NAME, value: meta.middle_name } as any);
+        if (meta.suffix) currentExtras.push({ type: ApplicantExtras.SUFFIX, value: meta.suffix } as any);
+        if (meta.alternative_phone) currentExtras.push({ type: ApplicantExtras.ALTERNATIVE_PHONE, value: meta.alternative_phone } as any);
+        if (meta.authorized_to_work) currentExtras.push({ type: ApplicantExtras.AUTHORIZED_TO_WORK, value: meta.authorized_to_work } as any);
+        if (meta.marital_status) currentExtras.push({ type: ApplicantExtras.MARITAL_STATUS, value: meta.marital_status } as any);
+        if (meta.race) currentExtras.push({ type: ApplicantExtras.RACE, value: meta.race } as any);
+        if (meta.citizenship_status) currentExtras.push({ type: ApplicantExtras.CITIZENSHIP_STATUS, value: meta.citizenship_status } as any);
+        if (meta.country) currentExtras.push({ type: ApplicantExtras.COUNTRY, value: meta.country } as any);
+        if (meta.ethnicity) currentExtras.push({ type: ApplicantExtras.ETHNICITY, value: meta.ethnicity } as any);
+        if (meta.gender) currentExtras.push({ type: ApplicantExtras.GENDER, value: meta.gender } as any);
+        if (meta.veteran_status) currentExtras.push({ type: ApplicantExtras.VETERAN_STATUS, value: meta.veteran_status } as any);
+        
+        // Return ONLY fields managed by this form (CDL fields are handled by licensing form)
+        return {
+          first_name: formRef.current.values.first_name,
+          last_name: formRef.current.values.last_name,
+          phone: formRef.current.values.phone,
+          email: formRef.current.values.email,
+          address_1: formRef.current.values.address_1,
+          city: formRef.current.values.city,
+          state: formRef.current.values.state,
+          zip_code: formRef.current.values.zip_code,
+          birthdate: formRef.current.values.birthdate,
+          extras: currentExtras,
+        };
+      };
+    }
+  }, []);
 
   const handleLicenseNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const uppercaseValue = e.target.value.toUpperCase();
@@ -244,23 +329,23 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
                 })()} readOnly />
               </Col>
               <Col md="3" className="px-2">
-                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Authorized to work in the US?" name="meta.authorized_to_work" placeholder="Select" options={["Yes","No"]} />
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Authorized to work in the US?" name="meta.authorized_to_work" placeholder="Select" options={["Yes","No"]} formik={form} />
               </Col>
             </Row>
 
             {/* Fourth row - Additional fields */}
             <Row className="mb-2">
               <Col md="3" className="px-2">
-                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Marital Status" name="meta.marital_status" placeholder="Select" options={["Single","Married","Divorced","Widowed"]} />
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Marital Status" name="meta.marital_status" placeholder="Select" options={["Single","Married","Divorced","Widowed"]} formik={form} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Race" name="meta.race" placeholder="Select" options={["White","Black or African American","Asian","American Indian or Alaska Native","Native Hawaiian or Other Pacific Islander","Other"]} />
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Race" name="meta.race" placeholder="Select" options={["White","Black or African American","Asian","American Indian or Alaska Native","Native Hawaiian or Other Pacific Islander","Other"]} formik={form} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Citizenship Status" name="meta.citizenship_status" placeholder="Select" options={["U.S. Citizen","Permanent Resident","Work Visa","Other"]} />
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Citizenship Status" name="meta.citizenship_status" placeholder="Select" options={["U.S. Citizen","Permanent Resident","Work Visa","Other"]} formik={form} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Country" name="meta.country" placeholder="Select country" options={["United States","Canada","Mexico"]} />
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Country" name="meta.country" placeholder="Select country" options={["United States","Canada","Mexico"]} formik={form} />
               </Col>
             </Row>
           </Section>
@@ -275,13 +360,13 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
           <Section title="Demographic Information">
             <Row>
               <Col md="3" className="px-2">
-                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Ethnicity" name="meta.ethnicity" placeholder="Select" options={["Hispanic or Latino","Not Hispanic or Latino"]} />
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Ethnicity" name="meta.ethnicity" placeholder="Select" options={["Hispanic or Latino","Not Hispanic or Latino"]} formik={form} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Gender" name="meta.gender" placeholder="Select" options={["Male","Female","Non-binary","Prefer not to say"]} />
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Gender" name="meta.gender" placeholder="Select" options={["Male","Female","Non-binary","Prefer not to say"]} formik={form} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Veteran Status" name="meta.veteran_status" placeholder="Select" options={["Yes","No","Prefer not to say"]} />
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Veteran Status" name="meta.veteran_status" placeholder="Select" options={["Yes","No","Prefer not to say"]} formik={form} />
               </Col>
               <Col md="3" className="px-2">
                 <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="HIGHEST_DEGREE" name="highest_degree" placeholder="SELECT_HIGHEST_DEGREE" formik={form} labelPrefix="EducationLevel" enumType={EducationLevel} />

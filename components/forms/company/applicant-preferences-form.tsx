@@ -14,7 +14,7 @@ import { JobCapability } from "./job-capability";
 import { formSuccess, formFailed } from "../../../utils/toast";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { toast } from "react-toastify";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export interface ApplicantPreferencesFormProps extends BaseFormProps<ApplicantEntity> {
   hideActions?: boolean;
@@ -36,9 +36,13 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
     onSubmit: async (values) => {
       
       try {
-        // Send ALL applicant fields like the old form does - backend might need full entity
-        // But strip out relations that are updated separately
-        const { jobs, documents, notes, employers, dac, extras, voeData, accident_history, moving_violation_history, equipment_experience, equipment_owned, vehicles, meta, ...payload } = values as any;
+        // Send ONLY preference fields to avoid overwriting other forms' changes
+        const payload = {
+          routes: values.routes,
+          preferred_location: values.preferred_location,
+          authorized_to_work_in_us: values.authorized_to_work_in_us,
+          current_application_status: values.current_application_status,
+        };
         
         const saved = await applicantApi.update(values.id, payload as any);
         
@@ -72,6 +76,26 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
       setInitialized(true);
     }
   }, [entity?.id, initialized]);
+
+  // Keep a ref to always have the latest form instance
+  const formRef = useRef(form);
+  formRef.current = form;
+
+  // Register getter function that returns CURRENT preference fields when called
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
+      (window as any).__applicantFormRegistry['preferences'] = () => {
+        console.log('PreferencesForm getter called, current routes:', formRef.current.values.routes);
+        return {
+          routes: formRef.current.values.routes,
+          preferred_location: formRef.current.values.preferred_location,
+          authorized_to_work_in_us: formRef.current.values.authorized_to_work_in_us,
+          current_application_status: formRef.current.values.current_application_status,
+        };
+      };
+    }
+  }, []);
 
   return (
     <Form onSubmit={form.handleSubmit} className={className} data-applicant-edit-form>

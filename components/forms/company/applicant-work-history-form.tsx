@@ -1,6 +1,6 @@
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import { useFormik } from 'formik';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { ChevronUp, PlusCircle, XCircle, FileEarmarkText } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
@@ -73,9 +73,11 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
           return rest;
         });
 
-        // Strip preference fields (handled by preferences form)
-        const { routes, preferred_location, current_application_status, ...baseValues } = values as any;
-        const payload: any = { ...baseValues, employers: sanitizedEmployers, extras: updatedExtras };
+        // Send ONLY work history fields to avoid overwriting other forms' changes
+        const payload: any = { 
+          employers: sanitizedEmployers, 
+          extras: updatedExtras 
+        };
 
         if (entity?.id) {
           values = await applicantApi.update(entity.id, payload);
@@ -131,6 +133,35 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
       });
     }
   }, [entity, lastSavedEntityId]);
+
+  // Keep a ref to always have the latest form instance
+  const formRef = useRef(form);
+  formRef.current = form;
+
+  // Register getter function that returns CURRENT work history fields when called
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
+      (window as any).__applicantFormRegistry['work-history'] = () => {
+        // Prepare job duties in extras
+        const jobDutiesArray = (formRef.current.values?.employers || []).map((e: any) => e?.job_duties ?? null);
+        const updatedExtras = [
+          ...(formRef.current.values?.extras || []).filter((e: any) => e.type !== ApplicantExtrasEnum.JOB_DUTIES),
+          { type: ApplicantExtrasEnum.JOB_DUTIES, value: jobDutiesArray } as any,
+        ];
+        // Strip presentation-only field from employers
+        const sanitizedEmployers = (formRef.current.values?.employers || []).map((e: any) => {
+          const { job_duties, ...rest } = e || {};
+          return rest;
+        });
+        console.log('WorkHistoryForm getter called, employers count:', sanitizedEmployers.length);
+        return {
+          employers: sanitizedEmployers,
+          extras: updatedExtras,
+        };
+      };
+    }
+  }, []);
 
   const currentCompanyCheckBox = (employerId) => {
     return workHistoryMetaData?.curentCompanyCheck?.is_current

@@ -36,8 +36,6 @@ import ApplicantWorkHistory from '../../../../../components/applicants/applicant
 import { ApplicantDocumentType } from '../../../../../enums/applicants/applicant-document-type.enum';
 import { ApplicantOnBoardingChecklist } from '../../../../../enums/applicants/applicant-onboarding-checklist.enum';
 import CompanyApi from '../../../../api/company';
-import { ApplicantExtras as ApplicantExtrasEnum } from '../../../../../enums/applicants/applicant-extras.enum';
-import { useFeatureFlag } from '../../../../../context/feature-flag-context';
 import { ApplicantBasicDetailsFormNew } from '../../../../../components/forms/company/applicant-basic-details-form-new';
 import { ApplicantLicensingForm } from '../../../../../components/forms/company/applicant-licensing-form';
 import { ApplicantWorkHistoryForm } from '../../../../../components/forms/company/applicant-work-history-form';
@@ -56,7 +54,6 @@ export default function ViewApplicant({ id }) {
   const { t } = useTranslation();
 
   const { hasPermission } = useAuth();
-  const showDotVerification = useFeatureFlag('DOT_VERIFICATION_RESULTS');
 
   const protectedFields = {
     license_number: hasPermission('CanViewApplicant.license_number'),
@@ -67,7 +64,6 @@ export default function ViewApplicant({ id }) {
   const [applicantSuggestedJobs, setApplicantSuggestedJobs] = useState<
     ApplicantSuggestedJobEntity[]
   >([]);
-  const [dotVerifyRaw, setDotVerifyRaw] = useState<any>(null);
 
   const backPath = '/dashboard/company/applicants';
 
@@ -262,182 +258,6 @@ export default function ViewApplicant({ id }) {
             entity={{ ...applicant, is_hired: true }}
             setEntity={() => {}}
           />
-
-          {/* DOT Verification (shown only if DOT number is saved) */}
-          <div id="dot-verification" />
-          {(() => {
-            const dot_number = applicant?.extras?.find((e: any) => e.type === ApplicantExtrasEnum.DOT_NUMBER)?.value;
-            if (!dot_number) return null;
-            return (
-              <Row className="px-2 mt-2">
-                <Col md="12" className="p-0 px-lg-2">
-                    <Section title="DOT Lookup Results">
-                      <div className="d-flex justify-content-between align-items-start flex-wrap">
-                        {(() => {
-                          const tokens: string[] =
-                            (applicant?.extras?.find((e: any) => e.type === ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS)?.value as string[]) || [];
-                          if (!tokens.length) return null;
-                          const checks = [
-                            { key: 'EMAIL', label: 'Email' },
-                            { key: 'PHONE', label: 'Phone' },
-                            { key: 'STREET_ADDRESS', label: 'Street address' },
-                            { key: 'CITY', label: 'City' },
-                            { key: 'STATE', label: 'State' },
-                            { key: 'ZIP_CODE', label: 'ZIP code' },
-                          ];
-                          const getStatus = (k: string): boolean | null => {
-                            if (tokens.includes(`${k}_SUCCESS`)) return true;
-                            if (tokens.includes(`${k}_FAIL`)) return false;
-                            return null;
-                          };
-                          return (
-                            <div className="mb-2" style={{ minWidth: 240 }}>
-                              {checks.map(({ key, label }) => {
-                                const status = getStatus(key);
-                                return (
-                                  <div key={key} className="d-flex align-items-center mb-1">
-                                    <div style={{ width: 140 }}>{label}</div>
-                                    {status === true && <span className="badge bg-success">Match</span>}
-                                    {status === false && <span className="badge bg-danger">No match</span>}
-                                    {status === null && <span className="badge bg-secondary">Unknown</span>}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          );
-                        })()}
-                        <div style={{ flex: 1, minWidth: 280 }} className="text-start">
-                          <div>
-                            {(() => {
-                              if (!dotVerifyRaw) return null;
-                              const data: any = (dotVerifyRaw as any)?.records ?? dotVerifyRaw;
-                              const records: any[] = Array.isArray(data) ? data : [data];
-                              const join = (parts: Array<string | undefined | null>, sep: string) =>
-                                parts.filter((p) => Boolean(p && String(p).trim().length)).map((p) => String(p)).join(sep);
-                              const toTitleCase = (value?: string) => {
-                                if (!value) return value;
-                                const cased = String(value)
-                                  .toLowerCase()
-                                  .replace(/\b([a-z])(\w*)/g, (_: any, a: string, b: string) => a.toUpperCase() + b);
-                                return cased.replace(/ Llc\b/g, ' LLC');
-                              };
-                              const formatCountry = (value?: string) => {
-                                if (!value) return value;
-                                const raw = String(value).trim();
-                                const normalized = raw.toUpperCase().replace(/\./g, '');
-                                if (
-                                  normalized === 'US' ||
-                                  normalized === 'USA' ||
-                                  normalized === 'UNITED STATES' ||
-                                  normalized === 'UNITED STATES OF AMERICA'
-                                ) {
-                                  return 'United States of America';
-                                }
-                                return raw.toUpperCase();
-                              };
-                              const formatPhone = (value?: string) => {
-                                if (!value) return value;
-                                const raw = String(value);
-                                const digitsOnly = raw.replace(/\D/g, '');
-                                const normalized = digitsOnly.length === 11 && digitsOnly.startsWith('1') ? digitsOnly.slice(1) : digitsOnly;
-                                if (normalized.length === 10) {
-                                  const area = normalized.slice(0, 3);
-                                  const exchange = normalized.slice(3, 6);
-                                  const line = normalized.slice(6);
-                                  return `(${area}) ${exchange}-${line}`;
-                                }
-                                if (normalized.length === 7) {
-                                  return `${normalized.slice(0, 3)}-${normalized.slice(3)}`;
-                                }
-                                return raw;
-                              };
-                              return (
-                                <div>
-                                  {records.map((rec: any, idx: number) => {
-                                  const join = (parts: Array<string | undefined | null>, sep: string) =>
-                                    parts.filter((p) => Boolean(p && String(p).trim().length)).map((p) => String(p)).join(sep);
-                                  const toTitleCase = (value?: string) => {
-                                    if (!value) return value;
-                                    const cased = String(value)
-                                      .toLowerCase()
-                                      .replace(/\b([a-z])(\w*)/g, (_: any, a: string, b: string) => a.toUpperCase() + b);
-                                    return cased.replace(/ Llc\b/g, ' LLC');
-                                  };
-                                    const phyCityStateZip = join([
-                                      toTitleCase(rec?.phy_city),
-                                      join([String(rec?.phy_state || '').toUpperCase(), rec?.phy_zip], ' '),
-                                    ], ', ');
-                                    const mailingCityStateZip = join([
-                                      toTitleCase(rec?.carrier_mailing_city),
-                                      join([String(rec?.carrier_mailing_state || '').toUpperCase(), rec?.carrier_mailing_zip], ' '),
-                                    ], ', ');
-                                    const phyStreet = toTitleCase(rec?.phy_street);
-                                    const phyCountryDisplay = formatCountry(rec?.phy_country);
-                                    const addressString = join([
-                                      phyStreet,
-                                      phyCityStateZip,
-                                      phyCountryDisplay,
-                                    ], ', ');
-                                    const mailingStreet = toTitleCase(rec?.carrier_mailing_street);
-                                    const mailingCountryDisplay = formatCountry(rec?.carrier_mailing_country);
-                                    const mailingAddressString = join([
-                                      mailingStreet,
-                                      mailingCityStateZip,
-                                      mailingCountryDisplay,
-                                    ], ', ');
-                                    const areAddressesIdentical = Boolean(addressString) && Boolean(mailingAddressString) && addressString === mailingAddressString;
-                                    return (
-                                      <div key={idx} className="mb-2">
-                                        <div className="fw-semibold">Company Name</div>
-                                        <div className="mb-1">{toTitleCase(rec?.legal_name) ?? ''}</div>
-                                        <div className="fw-semibold">Address</div>
-                                        <div className="mb-1">
-                                          {phyStreet && <div>{phyStreet}</div>}
-                                          {phyCityStateZip && <div>{phyCityStateZip}</div>}
-                                          {phyCountryDisplay && <div>{phyCountryDisplay}</div>}
-                                        </div>
-                                        {!areAddressesIdentical && mailingAddressString && (
-                                          <>
-                                            <div className="fw-semibold">Mailing Address</div>
-                                            <div className="mb-1">
-                                              {mailingStreet && <div>{mailingStreet}</div>}
-                                              {mailingCityStateZip && <div>{mailingCityStateZip}</div>}
-                                              {mailingCountryDisplay && <div>{mailingCountryDisplay}</div>}
-                                            </div>
-                                          </>
-                                        )}
-                                        <div className="fw-semibold">Phone</div>
-                                        <div className="mb-1">{formatPhone(rec?.phone) ?? ''}</div>
-                                        <div className="fw-semibold">Email Address</div>
-                                        <div>{rec?.email_address ?? ''}</div>
-                                        {idx < records.length - 1 && <hr className="my-2" />}
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              );
-                            })()}
-                          </div>
-                        </div>
-                      {/* Lookup button intentionally hidden on view page */}
-                      </div>
-                    </Section>
-                </Col>
-          </Row>
-            );
-          })()}
-
-          {/* Safety Background */}
-          <div id="safety" />
-          <Row className="px-2">
-            <ApplicantSafetyBackgroundForm
-              entity={{ ...applicant, is_hired: true }}
-              setEntity={() => {}}
-              isSubmitting={true}
-              setIsSubmitting={() => {}}
-              hideActions
-            />
-          </Row>
 
           {/* Equipment experience */}
           <div id="equipment" />

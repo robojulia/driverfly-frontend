@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
 import {
     DashCircle,
@@ -36,9 +36,11 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
 
     const applicantApi = new ApplicantApi();
     const [hasCriminalHistory, setHasCriminalHistory] = useState<boolean>();
+    const [initialized, setInitialized] = useState(false);
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
+        enableReinitialize: false,
         validationSchema: ApplicantEntity.yupSchemaForApplicantSafetyBackgroundForm(),
         onSubmit: async (values) => {
             setIsSubmitting(true)
@@ -72,6 +74,8 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
     });
 
     useEffectAsync(async () => {
+        // Only initialize form once to prevent overwriting user changes
+        if (initialized && entity?.id) return;
 
         if (!!entity?.id) {
             setHasCriminalHistory(!!entity.criminal_history)
@@ -79,6 +83,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                 {
                     ...entity,
                 });
+            setInitialized(true);
         } else {
             await form.setValues(
                 {
@@ -87,7 +92,30 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                 });
         }
 
-    }, [entity]);
+    }, [entity?.id, initialized]);
+
+    // Keep a ref to always have the latest form instance
+    const formRef = useRef(form);
+    formRef.current = form;
+
+    // Register getter function that returns CURRENT form values when called
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
+            (window as any).__applicantFormRegistry['safety'] = () => {
+                console.log('SafetyForm getter called');
+                // Return ONLY safety-related fields
+                return {
+                    can_pass_drug_test: formRef.current.values.can_pass_drug_test,
+                    has_past_dui: formRef.current.values.has_past_dui,
+                    criminal_history: formRef.current.values.criminal_history,
+                    accident_history: formRef.current.values.accident_history,
+                    moving_violation_history: formRef.current.values.moving_violation_history,
+                    vehicles: formRef.current.values.vehicles,
+                };
+            };
+        }
+    }, []);
 
     useEffect(() => focusOnErrorField(form), [form.submitCount])
 
