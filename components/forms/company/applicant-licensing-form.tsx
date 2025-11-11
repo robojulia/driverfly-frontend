@@ -284,25 +284,24 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
               </div>
               {/* Row 1, Cell 2: DOT Number + Results */}
               <div>
-                <div className="d-flex align-items-start gap-2">
-                  <BaseInput
-                    readOnly={Boolean(entity?.is_hired)}
-                    className="flex-grow-1"
-                    name={`extras[${form.values?.extras?.findIndex((v) => v.type == ApplicantExtras.DOT_NUMBER)}].value`}
-                    label="DOT_NUMBER"
-                    formik={form}
-                  />
-                  <div style={{ 
-                    marginTop: 'calc(1.5rem + 0.375rem)', 
-                    flexShrink: 0,
-                    height: 'calc(1.5em + 0.75rem + 2px)',
-                    display: 'flex',
-                    alignItems: 'center'
-                  }}>
+                <div>
+                  <label>
+                    {t('DOT_NUMBER')}:
+                  </label>
+                  <br />
+                  <div className="d-flex align-items-center gap-2" style={{ marginTop: '0.5rem' }}>
+                    <div className="flex-grow-1">
+                      <BaseInput
+                        readOnly={Boolean(entity?.is_hired)}
+                        className=""
+                        name={`extras[${form.values?.extras?.findIndex((v) => v.type == ApplicantExtras.DOT_NUMBER)}].value`}
+                        formik={form}
+                      />
+                    </div>
                     <Button
                       type="button"
                       className="btn theme-general-btn"
-                      style={{ height: '100%', whiteSpace: 'nowrap', padding: '0.375rem 0.75rem' }}
+                      style={{ whiteSpace: 'nowrap', height: '44px' }}
                       onClick={async () => {
                         try {
                           const companyApi = new CompanyApi();
