@@ -106,7 +106,7 @@ function BaseSelect({
 		} else onChange(e);
 	}
 
-    // When readOnly, render plaintext instead of a disabled select to avoid showing a dropdown chevron
+    // When read Only, render plaintext instead of a disabled select to avoid showing a dropdown chevron
     if (readOnly) {
         const selected = (options || []).find((o: any) => o[valueKey] === value);
         const display = selected
