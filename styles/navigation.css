@@ -152,7 +152,7 @@
 
 .nav-link:hover,
 .nav-link:focus {
-  color: var(--nav-link-hover) !important;
+  color: var(--nav-link-color) !important;
   background: var(--nav-link-bg-hover);
   transform: translateY(-1px);
   text-decoration: none;
