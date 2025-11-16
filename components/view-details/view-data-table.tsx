@@ -188,13 +188,12 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
                               key={i}
                               onClick={() => onColumnHide(v)}
                             >
-                              {v.hide == 1 ? (
-                                <del>{typeof v.name == 'string' ? t(v.name) : v.name}</del>
-                              ) : !hideable.has(v.id) ? (
-                                <>{t(v.name as any)}</>
-                              ) : (
-                                t(v.name as any)
-                              )}
+                              <span className="d-flex align-items-center">
+                                {v.hide != 1 && (
+                                  <span className="me-2">✓</span>
+                                )}
+                                {typeof v.name == 'string' ? t(v.name) : v.name}
+                              </span>
                             </Dropdown.Item>
                           ))}
                       </Dropdown.Menu>

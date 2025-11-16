@@ -296,13 +296,12 @@ export function GenericTable<T = any>({
                           disabled={!hideable.has(col.key)}
                           onClick={() => onColumnToggle(col.key)}
                         >
-                          {col.hide ? (
-                            <del>{t(col.label)}</del>
-                          ) : !hideable.has(col.key) ? (
-                            <>{t(col.label)}</>
-                          ) : (
-                            t(col.label)
-                          )}
+                          <span className="d-flex align-items-center">
+                            {!col.hide && (
+                              <span className="me-2">✓</span>
+                            )}
+                            {t(col.label)}
+                          </span>
                         </Dropdown.Item>
                       ))}
                   </Dropdown.Menu>

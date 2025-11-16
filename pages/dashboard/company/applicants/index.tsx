@@ -768,6 +768,7 @@ function ApplicantView(props: ViewProps) {
             selector: (applicant) => applicant.created_at,
             cell: (applicant) => <ShowFormattedDate date={applicant.created_at} />,
             hidable: false,
+            hide: 0,
           },
           {
             id: 'source',

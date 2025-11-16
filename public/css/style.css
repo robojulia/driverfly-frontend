@@ -118,11 +118,18 @@ a:hover {
 
 .dropdown-item.active,
 .dropdown-item:active,
-.dropdown-item:focus,
-.dropdown-item:hover {
+.dropdown-item:focus {
   color: black !important;
   text-decoration: none;
   background-color: unset;
+}
+
+/* Data table dropdown items should have white text on hover */
+.data_table_dropdown .dropdown-item:hover,
+.select_dropdown .dropdown-item:hover {
+  color: #ffffff !important;
+  text-decoration: none;
+  background-color: var(--dropdown-item-hover, #006078) !important;
 }
 
 strong {
@@ -1954,7 +1961,7 @@ li.link-wrapper > a.active {
 }
 
 .select_dropdown .dropdown-item:hover {
-  color: #5c636a !important;
+  color: #ffffff !important;
 }
 
 /* new css code */

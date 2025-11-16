@@ -34,7 +34,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
     <Card className="h-100 border-0 shadow-sm">
       <Card.Body className="p-4">
         <div className="d-flex align-items-center mb-2">
-          <div className="text-primary me-3">
+          <div className="me-3" style={{ color: '#5fcbc4' }}>
             <Icon size={24} />
           </div>
           <div className="h3 mb-0 fw-bold text-dark">{formatValue(value, format)}</div>

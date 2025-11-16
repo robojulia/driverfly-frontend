@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
 
-import { Files, PenFill, Plus, Recycle, CheckCircleFill, ClockFill } from 'react-bootstrap-icons';
+import { Files, PenFill, Plus, Recycle, CheckCircleFill, ClockFill, BriefcaseFill } from 'react-bootstrap-icons';
 
 import PageLayout from '../../../../components/layouts/page/page-layout';
 
@@ -543,6 +543,30 @@ export default function JobListing() {
         </>
       }
     >
+      {/* Explanatory Section */}
+      <div
+        className="mb-4 p-3"
+        style={{ backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef' }}
+      >
+        <div className="d-flex align-items-start">
+          <div className="me-3">
+            <BriefcaseFill size={24} className="text-primary-brand" />
+          </div>
+          <div>
+            <h6 className="mb-2 text-primary-brand">
+              {viewMode == ViewModeType.EXPIRED ? t('EXPIRED_JOBS') : t('YOUR_JOB_POSTINGS')}
+            </h6>
+            <p className="mb-2 text-muted" style={{ fontSize: '0.95rem' }}>
+              {viewMode == ViewModeType.EXPIRED
+                ? t('EXPIRED_JOBS_EXPLANATION') ||
+                  'View and manage your expired job postings. You can reactivate jobs to repost them.'
+                : t('JOB_POSTINGS_EXPLANATION') ||
+                  'Manage your active job postings. Create new jobs, track applicants, and view analytics for each position.'}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {loading ? (
         <div className="spinner-border mt-3 ml-1" role="status">
           <span className="sr-only">Loading...</span>

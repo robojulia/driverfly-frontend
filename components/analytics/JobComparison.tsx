@@ -184,7 +184,7 @@ export const JobComparison: React.FC<JobComparisonProps> = ({
               </thead>
               <tbody>
                 {/* Current job row */}
-                <tr className="table-primary">
+                <tr style={{ backgroundColor: '#eafeff' }}>
                   <td>
                     <strong>{currentJob.title}</strong>
                     <br />

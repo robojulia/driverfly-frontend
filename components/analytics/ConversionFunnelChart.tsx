@@ -67,19 +67,19 @@ export const ConversionFunnelChart: React.FC<ConversionFunnelChartProps> = ({ me
       label: 'Job Views',
       count: metrics.views,
       percentage: 100,
-      color: '#0d6efd', // Bootstrap primary blue
+      color: '#5fcbc4', // Dashboard primary teal
     },
     {
       label: 'Apply Clicks',
       count: metrics.clickToApply,
       percentage: (metrics.clickToApply / maxValue) * 100,
-      color: '#6f42c1', // Bootstrap purple
+      color: '#006078', // Dashboard primary button color
     },
     {
       label: 'Applications Completed',
       count: metrics.totalApplications,
       percentage: (metrics.totalApplications / maxValue) * 100,
-      color: '#198754', // Bootstrap green
+      color: '#B4FD55', // Dashboard success green
     },
   ];
 

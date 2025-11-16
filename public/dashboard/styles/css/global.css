@@ -769,6 +769,14 @@ textarea {
   color: #000 !important;
 }
 
+.data_table_dropdown .dropdown-item:hover {
+  color: #ffffff !important;
+}
+
+.select_dropdown .dropdown-item:hover {
+  color: #ffffff !important;
+}
+
 .assign_unassign .btn-danger:focus {
   background-color: #dc3545 !important;
   border: solid 1px #dc3545 !important;

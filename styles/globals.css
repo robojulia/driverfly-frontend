@@ -22,7 +22,7 @@ a {
   --primary-light: #cdd7fc;
   --secondary: #5fcbc4;
   --secondary-dark: #1d4354;
-  --accent: #fed100;
+  --accent: #006078;
   --dark: #1a2b3c;
   --dark-alt: #2c3e50;
   --light: #ffffff;
@@ -32,7 +32,7 @@ a {
   --text-secondary: #667788;
   --success: #b4fd55;
   --error: #e74c3c;
-  --warning: #fed100;
+  --warning: #006078;
   --info: #0dcaf0;
   --border-radius: 8px;
   --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -189,6 +189,38 @@ html {
   border-color: var(--primary-dark);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 115, 177, 0.3);
+}
+
+/* Bootstrap Warning Color Overrides - Replace yellow with dark teal for better contrast */
+.bg-warning {
+  background-color: var(--warning) !important;
+  color: var(--text-light) !important;
+}
+
+.text-warning {
+  color: var(--warning) !important;
+}
+
+.border-warning {
+  border-color: var(--warning) !important;
+}
+
+.badge.bg-warning {
+  background-color: var(--warning) !important;
+  color: var(--text-light) !important;
+}
+
+.btn-warning {
+  background-color: var(--warning);
+  border-color: var(--warning);
+  color: var(--text-light);
+}
+
+.btn-warning:hover,
+.btn-warning:focus {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+  color: var(--text-light);
 }
 
 .btn-primary:active {

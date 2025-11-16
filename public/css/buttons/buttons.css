@@ -97,6 +97,12 @@
   color: #fff;
 }
 
+.theme-filter-btn.accordion-button::after {
+  width: 0.8rem !important;
+  height: 0.8rem !important;
+  background-size: 0.8rem !important;
+}
+
 .theme-general-btn:hover {
   color: #fff;
 }

@@ -493,6 +493,11 @@
   background-color: transparent;
 }
 
+.data_table_dropdown .dropdown-item:hover:not(:disabled) {
+  color: #ffffff !important;
+  background-color: var(--dropdown-item-hover, #006078) !important;
+}
+
 /* Responsive adjustments for new features */
 @media (max-width: 768px) {
   .subHeader {

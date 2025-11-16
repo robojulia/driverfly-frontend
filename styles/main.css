@@ -262,6 +262,7 @@ body {
 
 .table.custom-table tr.warningRow {
   background-color: var(--warning) !important;
+  color: var(--text-light) !important;
 }
 
 .table.custom-table tr.dangerRow {

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Col, FormGroup, Row } from 'react-bootstrap';
 import { EyeFill, PenFill, TrashFill, PersonFill, PersonX } from 'react-bootstrap-icons';
+import { Accordion } from 'react-bootstrap';
 import 'react-tabs/style/react-tabs.css';
 import { toast } from 'react-toastify';
 import AdditionalFiles from '../../../../../components/dashboard/employee-directory/additional-files';
@@ -485,6 +486,30 @@ export default function EmployeeDirectory() {
         </Row>
       }
     >
+      {/* Explanatory Section */}
+      <div
+        className="mb-4 p-3"
+        style={{ backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef' }}
+      >
+        <div className="d-flex align-items-start">
+          <div className="me-3">
+            <PersonFill size={24} className="text-primary-brand" />
+          </div>
+          <div>
+            <h6 className="mb-2 text-primary-brand">
+              {viewMode == ViewModeType.EMPLOYEE ? t('YOUR_EMPLOYEE_DIRECTORY') : t('PAST_EMPLOYEES')}
+            </h6>
+            <p className="mb-2 text-muted" style={{ fontSize: '0.95rem' }}>
+              {viewMode == ViewModeType.EMPLOYEE
+                ? t('EMPLOYEE_DIRECTORY_EXPLANATION') ||
+                  'Manage your active employees. View details, update information, and track employment history.'
+                : t('PAST_EMPLOYEES_EXPLANATION') ||
+                  'View employees who have left your company. Review termination dates and reason codes.'}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {loading ? (
         <div className="spinner-border mt-3 ml-1" role="status">
           <span className="sr-only">Loading...</span>
