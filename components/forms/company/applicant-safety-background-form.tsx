@@ -74,7 +74,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
     });
 
     useEffectAsync(async () => {
-        // Only initialize form once to prevent overwriting user changes
+        //Only initialize form once to prevent overwriting user changes
         if (initialized && entity?.id) return;
 
         if (!!entity?.id) {
