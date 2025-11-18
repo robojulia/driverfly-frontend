@@ -7,6 +7,7 @@ import { EyeFill, PenFill, TrashFill, PersonFill, PersonX } from 'react-bootstra
 import { Accordion } from 'react-bootstrap';
 import 'react-tabs/style/react-tabs.css';
 import { toast } from 'react-toastify';
+import EmployeeFilterForm, { EmployeeFilterDto } from '../../../../../components/forms/company/employee-filter-form';
 import AdditionalFiles from '../../../../../components/dashboard/employee-directory/additional-files';
 import Background from '../../../../../components/dashboard/employee-directory/background';
 import DQF from '../../../../../components/dashboard/employee-directory/dqf';
@@ -75,6 +76,8 @@ export default function EmployeeDirectory() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [filters, setFilters] = useState<EmployeeFilterDto>();
+  const [filtersChanged, setFiltersChanged] = useState<boolean>(false);
 
   // Track if this is the initial load
   const isInitialLoadRef = useRef(true);
@@ -133,7 +136,14 @@ export default function EmployeeDirectory() {
     searchTerm,
     sortBy,
     sortDirection,
+    filters,
   ]);
+
+  React.useMemo(() => setFiltersChanged(true), [filters]);
+
+  useEffect(() => {
+    setFilters({});
+  }, []);
 
   const onViewModeChange = async ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
     value = viewMode == ViewModeType.EMPLOYEE ? ViewModeType.PAST_EMPLOYEE : ViewModeType.EMPLOYEE;
@@ -157,15 +167,17 @@ export default function EmployeeDirectory() {
       status: [EmployeeStatus.ACTIVE],
       is_paginated: true,
       limit: pagingMeta?.itemsPerPage,
-      page: pagingMeta.currentPage,
+      page: filtersChanged ? 1 : pagingMeta.currentPage,
       search: searchTerm || undefined,
       sortBy: sortBy || undefined,
       sortOrder: (sortDirection?.toUpperCase() as 'ASC' | 'DESC') || undefined,
+      ...filters,
     });
     setEmployees((data as Pagination<EmployeeEntity>)?.items);
+    setFiltersChanged(false);
     setPagingMeta({
       ...pagingMeta,
-      currentPage: pagingMeta?.currentPage || 1,
+      currentPage: filtersChanged ? 1 : pagingMeta?.currentPage || 1,
       totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems,
     });
 
@@ -189,15 +201,17 @@ export default function EmployeeDirectory() {
       status: [EmployeeStatus.QUIT, EmployeeStatus.FIRED],
       is_paginated: true,
       limit: pagingMeta?.itemsPerPage,
-      page: pagingMeta.currentPage,
+      page: filtersChanged ? 1 : pagingMeta.currentPage,
       search: searchTerm || undefined,
       sortBy: sortBy || undefined,
       sortOrder: (sortDirection?.toUpperCase() as 'ASC' | 'DESC') || undefined,
+      ...filters,
     });
     setEmployees((data as Pagination<EmployeeEntity>)?.items);
+    setFiltersChanged(false);
     setPagingMeta({
       ...pagingMeta,
-      currentPage: pagingMeta?.currentPage || 1,
+      currentPage: filtersChanged ? 1 : pagingMeta?.currentPage || 1,
       totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems,
     });
 
@@ -302,6 +316,7 @@ export default function EmployeeDirectory() {
         width: '8%',
         selector: (data) => data?.id,
         sortable: true,
+        hidable: false,
       },
       {
         key: 'name',
@@ -309,6 +324,7 @@ export default function EmployeeDirectory() {
         width: '15%',
         selector: (data) => `${data?.first_name} ${data?.last_name}`,
         sortable: true,
+        hidable: false,
         render: (data) => (
           <span
             role="button"
@@ -318,6 +334,22 @@ export default function EmployeeDirectory() {
             {data?.first_name + ' ' + data?.last_name}
           </span>
         ),
+      },
+      {
+        key: 'city',
+        label: 'CITY',
+        selector: (data) => data?.city,
+        sortable: true,
+        hide: true,
+        render: (data) => <OverlyPopover skipTranslate str={data?.city} />,
+      },
+      {
+        key: 'state',
+        label: 'STATE',
+        selector: (data) => data?.state,
+        sortable: true,
+        hide: true,
+        render: (data) => <OverlyPopover skipTranslate str={data?.state} />,
       },
       {
         key: 'phone',
@@ -342,6 +374,51 @@ export default function EmployeeDirectory() {
         render: (data) => <OverlyPopover skipTranslate slice_at={40} str={data?.email} />,
       },
       {
+        key: 'license_type',
+        label: 'CDL_TYPE',
+        selector: (data) =>
+          data?.license_type === 'NO_CDL' || data?.license_type === null
+            ? t('DriverLicenseType.NONE')
+            : t(`DriverLicenseType.${data.license_type}`) || t('DriverLicenseType.NONE'),
+        sortable: true,
+        hide: true,
+      },
+      {
+        key: 'years_cdl_experience',
+        label: 'years_cdl_experience',
+        selector: (data) => data?.years_cdl_experience || t('ZERO'),
+        sortable: true,
+        hide: true,
+      },
+      {
+        key: 'transmission_type',
+        label: 'TRANSMISSION_EXPERIENCE',
+        selector: (data) =>
+          data.transmission_type
+            ? data?.transmission_type
+                ?.map((v) =>
+                  v == 'OTHER'
+                    ? t('VehicleTransmissionType.OTHER')
+                    : t(`VehicleTransmissionType.${v}`)
+                )
+                ?.join(', ')
+            : t('NONE'),
+        sortable: true,
+        hide: true,
+      },
+      {
+        key: 'endorsements',
+        label: 'ENDORSEMENTS',
+        selector: (data) =>
+          data.endorsements
+            ? data?.endorsements
+                ?.map((v) => (v == 'OTHER' ? t('DriverEndorsement.OTHER') : t(`DriverEndorsement.${v}`)))
+                ?.join(', ')
+            : t('NONE'),
+        sortable: true,
+        hide: true,
+      },
+      {
         key: 'jobTitle',
         label: 'job_title',
         width: '15%',
@@ -356,11 +433,32 @@ export default function EmployeeDirectory() {
         render: (data) => <ShowFormattedDate date={data?.hire_date} />,
       },
       {
+        key: 'is_owner_operator',
+        label: 'OWNER_OP_COMPANY_DRIVER',
+        selector: (data) =>
+          data.is_owner_operator ? t('OWNER_OPERATOR') : t('COMPANY_DRIVER') || t('NONE'),
+        sortable: true,
+        hide: true,
+      },
+      {
+        key: 'preferred_location',
+        label: 'PREFERRED_LOCATION',
+        selector: (data) =>
+          data.preferred_location
+            ? data?.preferred_location
+                ?.map((v) => (v == 'OTHER' ? t('JobGeography.OTHER') : t(`JobGeography.${v}`)))
+                ?.join(', ')
+            : t('NONE'),
+        sortable: true,
+        hide: true,
+      },
+      {
         key: 'status',
         label: 'STATUS',
         width: '8%',
         selector: (data) => data?.status,
         sortable: true,
+        hide: true,
         render: (data) => (
           <ShowEnumFromString
             labelPrefix="EmployeeStatus"
@@ -435,88 +533,83 @@ export default function EmployeeDirectory() {
   ];
 
   return (
-    <PageLayout
-      title={viewMode == ViewModeType.EMPLOYEE ? 'EMPLOYEE_DIRECTORY' : 'PAST_EMPLOYEE'}
-      actions={
-        <Row>
-          <Col>
-            {viewMode == ViewModeType.EMPLOYEE && (
-              <p className="mt-2 mb-2">
-                <u className="ml-1">
-                  <Button
-                    variant=""
-                    className="theme-general-btn"
-                    onClick={() =>
-                      router.push('/dashboard/company/compliance/employee-directory/import')
-                    }
-                  >
-                    + {t('IMPORT_EMPLOYEES')}
-                  </Button>
-                </u>
-              </p>
-            )}
+    <Accordion defaultActiveKey="0" flush>
+      <PageLayout
+        title={viewMode == ViewModeType.EMPLOYEE ? 'EMPLOYEE_DIRECTORY' : 'PAST_EMPLOYEE'}
+        actions={
+          <Row>
+            <Col>
+              {viewMode == ViewModeType.EMPLOYEE && (
+                <p className="mt-2 mb-2">
+                  <u className="ml-1">
+                    <Button
+                      variant=""
+                      className="theme-general-btn"
+                      onClick={() =>
+                        router.push('/dashboard/company/compliance/employee-directory/import')
+                      }
+                    >
+                      + {t('IMPORT_EMPLOYEES')}
+                    </Button>
+                  </u>
+                </p>
+              )}
 
-            <div style={{ float: 'right', display: 'flex', alignItems: 'center' }}>
-              <DataViewToggle
-                primaryLabel={t('ACTIVE_EMPLOYEES')}
-                secondaryLabel={t('PAST_EMPLOYEES')}
-                activeView={viewMode}
-                onViewChange={async (newView) => {
-                  resetEmployees();
-                  resetPagingMeta();
-                  router.query.viewMode = newView;
-                  await router.push(router);
-                }}
-                primaryValue={ViewModeType.EMPLOYEE}
-                secondaryValue={ViewModeType.PAST_EMPLOYEE}
-                primaryIcon={<PersonFill />}
-                secondaryIcon={<PersonX />}
-                showCounts={true}
-                primaryCount={
-                  viewMode === ViewModeType.EMPLOYEE ? pagingMeta?.totalItems || 0 : undefined
-                }
-                secondaryCount={
-                  viewMode === ViewModeType.PAST_EMPLOYEE ? pagingMeta?.totalItems || 0 : undefined
-                }
-                variant="pills"
-                size="lg"
-              />
-            </div>
-          </Col>
-        </Row>
-      }
-    >
-      {/* Explanatory Section */}
-      <div
-        className="mb-4 p-3"
-        style={{ backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef' }}
+              <div style={{ float: 'right', display: 'flex', alignItems: 'center' }}>
+                <Accordion.Button
+                  className="mr-3 text-black theme-filter-btn"
+                  style={{
+                    width: 'auto',
+                    fontSize: '.95rem',
+                    lineHeight: '1.5',
+                    padding: '.25rem 1.5rem',
+                    borderRadius: '.2rem',
+                  }}
+                >
+                  <div className="mr-2">{t('FILTERS')}</div>
+                </Accordion.Button>
+                <DataViewToggle
+                  primaryLabel={t('ACTIVE_EMPLOYEES')}
+                  secondaryLabel={t('PAST_EMPLOYEES')}
+                  activeView={viewMode}
+                  onViewChange={async (newView) => {
+                    resetEmployees();
+                    resetPagingMeta();
+                    router.query.viewMode = newView;
+                    await router.push(router);
+                  }}
+                  primaryValue={ViewModeType.EMPLOYEE}
+                  secondaryValue={ViewModeType.PAST_EMPLOYEE}
+                  primaryIcon={<PersonFill />}
+                  secondaryIcon={<PersonX />}
+                  showCounts={true}
+                  primaryCount={
+                    viewMode === ViewModeType.EMPLOYEE ? pagingMeta?.totalItems || 0 : undefined
+                  }
+                  secondaryCount={
+                    viewMode === ViewModeType.PAST_EMPLOYEE ? pagingMeta?.totalItems || 0 : undefined
+                  }
+                  variant="pills"
+                  size="lg"
+                />
+              </div>
+            </Col>
+          </Row>
+        }
       >
-        <div className="d-flex align-items-start">
-          <div className="me-3">
-            <PersonFill size={24} className="text-primary-brand" />
-          </div>
-          <div>
-            <h6 className="mb-2 text-primary-brand">
-              {viewMode == ViewModeType.EMPLOYEE ? t('YOUR_EMPLOYEE_DIRECTORY') : t('PAST_EMPLOYEES')}
-            </h6>
-            <p className="mb-2 text-muted" style={{ fontSize: '0.95rem' }}>
-              {viewMode == ViewModeType.EMPLOYEE
-                ? t('EMPLOYEE_DIRECTORY_EXPLANATION') ||
-                  'Manage your active employees. View details, update information, and track employment history.'
-                : t('PAST_EMPLOYEES_EXPLANATION') ||
-                  'View employees who have left your company. Review termination dates and reason codes.'}
-            </p>
-          </div>
-        </div>
-      </div>
+        <Row>
+          <Col className="force-overflow p-0">
+            <Accordion.Body>
+              <EmployeeFilterForm onSearch={setFilters} />
+            </Accordion.Body>
 
-      {loading ? (
-        <div className="spinner-border mt-3 ml-1" role="status">
-          <span className="sr-only">Loading...</span>
-        </div>
-      ) : (
-        <>
-          <GenericTable<EmployeeEntity>
+            {loading ? (
+              <div className="spinner-border mt-3 ml-1" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            ) : (
+              <>
+                <GenericTable<EmployeeEntity>
             data={employees}
             columns={tableColumns()}
             actions={(data) => (viewMode != ViewModeType.EMPLOYEE ? undefined : tableActions(data))}
@@ -531,18 +624,20 @@ export default function EmployeeDirectory() {
             sortDirection={sortDirection}
             onSearch={handleSearch}
           />
-          <div style={{ marginRight: '7%' }}>
-            <CustomPagination
-              recordsPerPageOptions={[20, 50, 100]}
-              onPageChange={handlePageChange}
-              pagingMeta={pagingMeta}
-              setPagingMeta={setPagingMeta}
-            />
-          </div>
-        </>
-      )}
+                <div style={{ marginRight: '7%' }}>
+                  <CustomPagination
+                    recordsPerPageOptions={[20, 50, 100]}
+                    onPageChange={handlePageChange}
+                    pagingMeta={pagingMeta}
+                    setPagingMeta={setPagingMeta}
+                  />
+                </div>
+              </>
+            )}
+          </Col>
+        </Row>
 
-      {/* TabbedLayout modal component with items passed as a prop `tabs` */}
+        {/* TabbedLayout modal component with items passed as a prop `tabs` */}
       <ViewModal
         title="VIEW_DETAILS"
         show={!!(modalAction?.type == 'VIEW')}
@@ -669,7 +764,8 @@ export default function EmployeeDirectory() {
           </Row>
         </EntityForm>
       </ViewModal>
-    </PageLayout>
+      </PageLayout>
+    </Accordion>
   );
 }
 

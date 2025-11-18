@@ -712,16 +712,22 @@ export default function OnboardingChecklist(
 
   if (props.useSectionContainer) {
     return (
-      <Section title={title} actions={actions}>
-        {body}
-      </Section>
+      <>
+        <Section title={title} actions={actions}>
+          {body}
+        </Section>
+        <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
+      </>
     );
   }
 
   return (
-    <ViewCard title={title} actions={actions}>
-      {body}
-    </ViewCard>
+    <>
+      <ViewCard title={title} actions={actions}>
+        {body}
+      </ViewCard>
+      <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
+    </>
   );
 }
 

@@ -795,6 +795,7 @@
   "ENTER_NO_OF_ACCIDENTS": "Enter number of accidents",
   "ENTER_NO_OF_VIOLATIONS": "Enter number of violations",
   "ENTER_APPLICANT_NAME": "Enter applicant name",
+  "ENTER_EMPLOYEE_NAME": "Enter employee name",
   "SELECT_DOCUMENT_TYPE": "Select document type",
   "DOCUMENT_TYPE_UNIQUE": "Document type must not be duplicated in list",
   "DAC_UNIQUE": "Checklist Item must not be duplicated",
@@ -2951,7 +2952,7 @@
   "JobEmploymentType.SEASONAL": "Seasonal",
   "JobEmploymentType.ONE_TIME_GIG": "One Time Gig",
 
-  "JobGeography.OTR": "Over The Road (OTR)",
+  "JobGeography.OTR": "OTR",
   "JobGeography.REGIONAL": "Regional",
   "JobGeography.LOCAL": "Local",
 
