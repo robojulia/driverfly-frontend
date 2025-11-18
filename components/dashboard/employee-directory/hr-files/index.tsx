@@ -17,7 +17,7 @@ import ViewCard from "../../../view-details/view-card";
 import ViewPdf from "../../../view-details/view-pdf";
 
 import { DocumentableType } from "../../../../enums/documents/documentable-type.enum";
-import { EmployeeAdditionalFilesEnum } from "../../../../enums/employee/employee-additional-files.enum";
+import { EmployeeDqf } from "../../../../enums/employee/employee-dqf.enum";
 import {
     handleDownloadDocument,
     handleViewDocument,
@@ -32,10 +32,24 @@ import ViewDocumentHistory from "../../../documents/view-history";
 import { LoaderIcon } from "../../../loading/loader-icon";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { DocumentEntity } from "../../../../models/documents/document.entity";
-import { EmployeeDqf } from "../../../../enums/employee/employee-dqf.enum";
 import BaseInput from "../../../forms/base-input";
 
-export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
+// Define HR document types
+enum EmployeeHRFiles {
+    RESUME = 'RESUME',
+    OFFER_LETTER = 'OFFER_LETTER',
+    W9_FORM = 'W9_FORM',
+    W4_FORM = 'W4_FORM',
+    I9_FORM = 'I9_FORM',
+    SECOND_ID = 'SECOND_ID',
+    COMPANY_POLICIES_RECEIPT = 'COMPANY_POLICIES_RECEIPT',
+    CONTROLLED_SUBSTANCE_POLICY_RECEIPT = 'CONTROLLED_SUBSTANCE_POLICY_RECEIPT',
+    BANK_DEPOSIT_INFO = 'BANK_DEPOSIT_INFO',
+    EMERGENCY_CONTACT_LIST = 'EMERGENCY_CONTACT_LIST',
+    TRUCK_PROVIDED = 'TRUCK_PROVIDED',
+}
+
+export default function HRFiles(props: EmployeeAdditionalFilesProps) {
     const { t } = useTranslation();
     const { user } = useAuth();
     const employeeApi = new EmployeeApi();
@@ -46,7 +60,12 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
     useEffectAsync(async () => {
         const data = await employeeApi.getById(props?.employee?.id);
         setEmployee(data);
-        setDocuments(data.documents?.filter(v => !Object.values(EmployeeDqf).includes(v.type as EmployeeDqf)))
+        // Filter to only show HR documents
+        const hrDocTypes = Object.values(EmployeeHRFiles);
+        setDocuments(data.documents?.filter(v =>
+            hrDocTypes.includes(v.type as EmployeeHRFiles) &&
+            !Object.values(EmployeeDqf).includes(v.type as EmployeeDqf)
+        ) || []);
     }, [user]);
 
     const [pdf, setPdf] = useState({});
@@ -86,33 +105,20 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
         },
     });
 
-    /**
-     * It deletes a document from the employee's profile.
-     * @param {EmployeeAdditionalFilesEnum | string} docType - The type of document you want to
-     * delete.
-     */
     const handleDeleteDocument = async (
-        docType: EmployeeAdditionalFilesEnum | string
+        docType: EmployeeHRFiles | string
     ): Promise<void> => {
         await employeeApi.documents.delete(employee?.id, docType);
         setDocuments(documents?.filter((v) => v.type != docType));
     };
 
-    /**
-     * It takes a type and an optional documentId, and sets the form's document field to an object with the
-     * type and id
-     * @param {EmployeeAdditionalFilesEnum} type - EmployeeAdditionalFilesEnum - this is the type of document that is being uploaded.
-     * @param {number} [documentId] - The id of the document to be updated.
-     */
     const handleUpdateDocument = (
-        type: EmployeeAdditionalFilesEnum,
+        type: EmployeeHRFiles,
         documentId?: number
     ): Promise<void> | Promise<FormikErrors<EmployeeDocumentDto>> =>
         form.setFieldValue("document", documents?.find(v => v.type == type) || { type });
 
-    const ButtonList = ({ document, type }): JSX.Element =>
-    // (!form.values.document?.type || form.values.document?.type != type) &&
-    (
+    const ButtonList = ({ document, type }): JSX.Element => (
         <div className="d-flex">
             <ViewDocumentButton
                 document={document}
@@ -155,10 +161,6 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
         </>
     );
 
-    useEffect(() => {
-        console.log("forrm.values", form.values)
-        console.log("forrm.errors", form.errors)
-    }, [form.values, form.errors])
     return (
         <div className="employee_directory_tabs">
             <Row>
@@ -177,31 +179,32 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                             }}>
                                 <div>
                                     <h5 style={{ color: '#fff', margin: 0, fontWeight: 600, fontSize: '1.125rem' }}>
-                                        {t("Additional Files - Eric Frost")}
+                                        {t("HR Files - Eric Frost")}
                                     </h5>
                                     <p style={{ color: 'rgba(255, 255, 255, 0.9)', margin: '0.25rem 0 0 0', fontSize: '0.875rem' }}>
                                         {t("Manage and track employee documents and compliance requirements")}
                                     </p>
                                 </div>
-                                <Button
-                                    size="sm"
-                                    onClick={() =>
-                                        form.setValues({ document: { ...(new DocumentEntity()), documentable_id: employee.id } })
-                                    }
-                                    style={{
-                                        backgroundColor: 'transparent',
-                                        border: '1px solid rgba(255, 255, 255, 0.5)',
-                                        color: '#fff'
-                                    }}
-                                >
-                                    + {t("Add Document")}
-                                </Button>
+                                {props.canEdit && (
+                                    <Button
+                                        size="sm"
+                                        onClick={() =>
+                                            form.setValues({ document: { ...(new DocumentEntity()), documentable_id: employee.id } })
+                                        }
+                                        style={{
+                                            backgroundColor: 'transparent',
+                                            border: '1px solid rgba(255, 255, 255, 0.5)',
+                                            color: '#fff'
+                                        }}
+                                    >
+                                        + {t("Add Document")}
+                                    </Button>
+                                )}
                             </div>
                         <ViewCard
                             title=""
                             noTitle={true}
                         >
-                            {/* {documents?.length && <>{t("NONE")}</>} */}
                             {form.values?.document?.documentable_id && !form.values?.document?.id && (
                                 <form onSubmit={form.handleSubmit} onReset={() => form.resetForm()}>
                                     <Table style={{ backgroundColor: '#fff' }}>
@@ -253,69 +256,92 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                 <thead style={{ backgroundColor: '#fff' }}>
                                     <tr>
                                         <th colSpan={2}>{t("Document Name")}</th>
+                                        <th colSpan={2}>{t("Frequency")}</th>
                                         <th colSpan={2}>{t("Updated At")}</th>
                                         <th colSpan={2}></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {documents?.map(
-                                        (document, i) => {
-                                            return (
-                                                <tr key={i}>
-                                                    <td colSpan={2}>
-                                                        {t(`${document.type}`)}
-                                                    </td>
-                                                    <td colSpan={2} className="w-25">
-                                                        <UpdatedAt document={document} type={document.type} />
-                                                    </td>
-                                                    <td colSpan={2} className="border border-2 w-50">
-                                                        {form.values?.document?.id != document.id
-                                                            ? <ButtonList document={document} type={document.type} />
-                                                            : <Form
-                                                                onSubmit={form.handleSubmit}
-                                                                onReset={() => form.resetForm()}
-                                                            >
-                                                                <BaseInput
-                                                                    label="DOCUMENT_NAME"
-                                                                    name={`document.type`}
-                                                                    required
-                                                                    placeholder="DOCUMENT_NAME"
-                                                                    formik={form}
-                                                                    className="mb-2"
-                                                                />
-                                                                <FileInput
-                                                                    name={`document`}
-                                                                    accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
-                                                                    formik={form}
-                                                                    allowedSizeInByte={3145728}
-                                                                />
-                                                                <div className="mt-2 d-flex w-100 ">
-                                                                    <Button
-                                                                        disabled={
-                                                                            form.isSubmitting ||
-                                                                            !form.isValid ||
-                                                                            form.isValidating
-                                                                        }
-                                                                        className="mr-2 w-50 theme-primary-btn"
-                                                                        type="submit"
-                                                                    >
-                                                                        {t(`SAVE`)}
-                                                                        <LoaderIcon isLoading={!!form.values?.document?.id && form.isSubmitting} />
-                                                                    </Button>
-                                                                    <Button
-                                                                        type="reset"
-                                                                        className="mr-2 w-50 bg-danger"
-                                                                    >
-                                                                        {t(`CANCEL`)}
-                                                                    </Button>
-                                                                </div>
-                                                            </Form>
-                                                        }
-                                                    </td>
-                                                </tr>
-                                            );
-                                        }
-                                    )}
+                                    {Object.values(EmployeeHRFiles).map((type: EmployeeHRFiles, i) => {
+                                        const document: DocumentEntity = documents?.find(v => v.type == type);
+                                        return (
+                                            <tr key={i}>
+                                                <td colSpan={2}>
+                                                    {type === EmployeeHRFiles.RESUME && t('RESUME_OPTIONAL')}
+                                                    {type === EmployeeHRFiles.OFFER_LETTER && t('OFFER_LETTER_AND_ACCEPTANCE')}
+                                                    {type === EmployeeHRFiles.W9_FORM && t('W9_FORM_OWNER_OPERATORS')}
+                                                    {type === EmployeeHRFiles.W4_FORM && t('W4_FORM_COMPANY_DRIVERS')}
+                                                    {type === EmployeeHRFiles.I9_FORM && t('I9_FORM')}
+                                                    {type === EmployeeHRFiles.SECOND_ID && t('SECOND_FORM_OF_ID')}
+                                                    {type === EmployeeHRFiles.COMPANY_POLICIES_RECEIPT && t('RECEIPT_FOR_COMPANY_POLICIES')}
+                                                    {type === EmployeeHRFiles.CONTROLLED_SUBSTANCE_POLICY_RECEIPT && t('RECEIPT_FOR_CONTROLLED_SUBSTANCE_POLICY')}
+                                                    {type === EmployeeHRFiles.BANK_DEPOSIT_INFO && t('BANK_DEPOSIT_INFORMATION')}
+                                                    {type === EmployeeHRFiles.EMERGENCY_CONTACT_LIST && t('EMERGENCY_CONTACT_LIST')}
+                                                    {type === EmployeeHRFiles.TRUCK_PROVIDED && t('TRUCK_PROVIDED')}
+                                                </td>
+                                                <td colSpan={2} className="w-25">
+                                                    {type === EmployeeHRFiles.RESUME && t('ONE_TIME_AT_HIRE')}
+                                                    {type === EmployeeHRFiles.OFFER_LETTER && t('ONE_TIME_AT_HIRE')}
+                                                    {type === EmployeeHRFiles.W9_FORM && t('ONE_TIME_AT_HIRE')}
+                                                    {type === EmployeeHRFiles.W4_FORM && t('ONE_TIME_AT_HIRE')}
+                                                    {type === EmployeeHRFiles.I9_FORM && t('AT_HIRE_SUPPORTING_IDS')}
+                                                    {type === EmployeeHRFiles.SECOND_ID && t('AT_HIRE_I9_VERIFICATION')}
+                                                    {type === EmployeeHRFiles.COMPANY_POLICIES_RECEIPT && t('ONE_TIME_AT_HIRE_ACKNOWLEDGMENT')}
+                                                    {type === EmployeeHRFiles.CONTROLLED_SUBSTANCE_POLICY_RECEIPT && t('ONE_TIME_AT_HIRE_ACKNOWLEDGMENT')}
+                                                    {type === EmployeeHRFiles.BANK_DEPOSIT_INFO && t('AT_HIRE_UPDATE_IF_CHANGED')}
+                                                    {type === EmployeeHRFiles.EMERGENCY_CONTACT_LIST && t('AT_HIRE_UPDATE_IF_CHANGED')}
+                                                    {type === EmployeeHRFiles.TRUCK_PROVIDED && t('ONE_TIME_AT_HIRE_INTERNAL')}
+                                                </td>
+                                                <td colSpan={2} className="w-25">
+                                                    <UpdatedAt document={document} type={type} />
+                                                </td>
+                                                <td colSpan={2} className="border border-2 w-50">
+                                                    {form.values?.document?.id != document?.id
+                                                        ? <ButtonList document={document} type={type} />
+                                                        : <Form
+                                                            onSubmit={form.handleSubmit}
+                                                            onReset={() => form.resetForm()}
+                                                        >
+                                                            <BaseInput
+                                                                label="DOCUMENT_NAME"
+                                                                name={`document.type`}
+                                                                required
+                                                                placeholder="DOCUMENT_NAME"
+                                                                formik={form}
+                                                                className="mb-2"
+                                                            />
+                                                            <FileInput
+                                                                name={`document`}
+                                                                accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
+                                                                formik={form}
+                                                                allowedSizeInByte={3145728}
+                                                            />
+                                                            <div className="mt-2 d-flex w-100 ">
+                                                                <Button
+                                                                    disabled={
+                                                                        form.isSubmitting ||
+                                                                        !form.isValid ||
+                                                                        form.isValidating
+                                                                    }
+                                                                    className="mr-2 w-50 theme-primary-btn"
+                                                                    type="submit"
+                                                                >
+                                                                    {t(`SAVE`)}
+                                                                    <LoaderIcon isLoading={!!form.values?.document?.id && form.isSubmitting} />
+                                                                </Button>
+                                                                <Button
+                                                                    type="reset"
+                                                                    className="mr-2 w-50 bg-danger"
+                                                                >
+                                                                    {t(`CANCEL`)}
+                                                                </Button>
+                                                            </div>
+                                                        </Form>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
                                 </tbody>
                             </Table>
                             <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />

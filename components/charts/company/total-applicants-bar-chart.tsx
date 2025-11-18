@@ -80,7 +80,7 @@ export function TotalApplicantBarChart() {
     return [
       {
         label: t("Applicants"),
-        backgroundColor: "rgb(56, 171, 172)",
+        backgroundColor: "#30c6c2",
         borderColor: "transparent",
         data: applicantData,
         borderWidth: 1,
@@ -88,7 +88,7 @@ export function TotalApplicantBarChart() {
       },
       {
         label: t("EMPLOYEE"),
-        backgroundColor: "rgb(245, 191, 25)",
+        backgroundColor: "#1d4355",
         borderColor: "transparent",
         data: hiredData,
         borderWidth: 1,

@@ -5,12 +5,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Button, Col, FormGroup, Row } from 'react-bootstrap';
 import { EyeFill, PenFill, TrashFill, PersonFill, PersonX } from 'react-bootstrap-icons';
 import { Accordion } from 'react-bootstrap';
-import 'react-tabs/style/react-tabs.css';
 import { toast } from 'react-toastify';
 import EmployeeFilterForm, { EmployeeFilterDto } from '../../../../../components/forms/company/employee-filter-form';
-import AdditionalFiles from '../../../../../components/dashboard/employee-directory/additional-files';
-import Background from '../../../../../components/dashboard/employee-directory/background';
-import DQF from '../../../../../components/dashboard/employee-directory/dqf';
 import FullLayout from '../../../../../components/dashboard/layouts/layout/full-layout';
 import ShowEnumFromString from '../../../../../components/enum-filters/show-enum-from-string';
 import BaseCheckList from '../../../../../components/forms/base-check-list';
@@ -20,7 +16,6 @@ import BaseTextArea from '../../../../../components/forms/base-text-area';
 import ShowFormattedDate from '../../../../../components/jobs/show-formatted-date';
 import EntityForm from '../../../../../components/layouts/page/entity-form';
 import PageLayout from '../../../../../components/layouts/page/page-layout';
-import { TabbedLayout } from '../../../../../components/layouts/page/tabbed-layout';
 import { ListActionOptions } from '../../../../../components/list-actions/list-actions';
 import CustomPagination from '../../../../../components/pagination/custom-pagination';
 import OverlyPopover from '../../../../../components/popover/overly-popover';
@@ -82,26 +77,6 @@ export default function EmployeeDirectory() {
   // Track if this is the initial load
   const isInitialLoadRef = useRef(true);
 
-  const tabs = {
-    BACKGROUND: <Background employee={modalAction?.entity} />,
-    DQF: (
-      <DQF
-        employee={modalAction?.entity}
-        canEdit={modalAction?.entity.status == EmployeeStatus.ACTIVE}
-        canEditSafetyPerformance
-        showHistory={true}
-      />
-    ),
-    // DRIVER_ONBOARDING_CHECKLIST: < DAC applicant={modalAction?.entity.applicant} />,
-    ADDITIONAL_FILES: (
-      <AdditionalFiles
-        employee={modalAction?.entity}
-        canEdit={modalAction?.entity.status == EmployeeStatus.ACTIVE}
-      />
-    ),
-
-    // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
-  };
 
   const can = {
     viewUser: hasPermission('CanViewEmployee'),
@@ -276,8 +251,7 @@ export default function EmployeeDirectory() {
   });
 
   const onViewClick = async (entity: EmployeeEntity): Promise<void> => {
-    const v = await employeeApi.getById(entity?.id);
-    setModalAction({ entity: v, type: 'VIEW' });
+    router.push(`/dashboard/company/compliance/employee-directory/${entity?.id}`);
   };
 
   const onEditClick = (data) =>
@@ -637,18 +611,6 @@ export default function EmployeeDirectory() {
           </Col>
         </Row>
 
-        {/* TabbedLayout modal component with items passed as a prop `tabs` */}
-      <ViewModal
-        title="VIEW_DETAILS"
-        show={!!(modalAction?.type == 'VIEW')}
-        onCloseClick={resetModalAction}
-        size="xl"
-      >
-        <>
-          {<h2>{modalAction?.entity?.first_name + ' ' + modalAction?.entity?.last_name}</h2>}
-          <TabbedLayout items={tabs} className=""></TabbedLayout>
-        </>
-      </ViewModal>
 
       {/* modal that displays a table for confirming trash action */}
       <ViewModal

@@ -28,55 +28,34 @@ export const ReferBackProgram: React.FC<ReferBackProgramProps> = ({
 
   return (
     <>
-      <Card className={`border-0 shadow-sm mb-4 ${isEnabled ? 'border-success' : ''}`}>
+      <Card className="border-0 shadow-sm mb-4" style={{ background: 'white' }}>
         <Card.Body className="p-4">
-          <div className="d-flex justify-content-between align-items-start">
-            <div className="flex-grow-1">
-              <div className="d-flex align-items-center mb-2">
-                {isEnabled && <CheckCircleFill className="me-2 text-success" size={20} />}
-                <h5 className="mb-0">Refer Back Program</h5>
-                {isEnabled && (
-                  <Badge bg="success" className="ms-2">
-                    Active
-                  </Badge>
-                )}
-              </div>
+          <div className="d-flex justify-content-between align-items-center">
+            <div>
+              <h5 className="mb-1" style={{ color: '#1a202c', fontWeight: '600', fontSize: '14px' }}>
+                Refer Back Program
+              </h5>
+              <p className="mb-0 small" style={{ color: '#718096' }}>
+                Enable automatic referral tracking and rewards.{' '}
+                <a
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); handleInfoClick(); }}
+                  style={{ color: '#006078' }}
+                >
+                  Learn more
+                </a>
+              </p>
+            </div>
 
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <p className="mb-1 text-muted">
-                    Refer drivers who don&apos;t qualify for your positions to other organizations
-                  </p>
-                  <button
-                    type="button"
-                    className="btn btn-link p-0 text-primary small"
-                    onClick={handleInfoClick}
-                  >
-                    <InfoCircleFill className="me-1" size={14} />
-                    Learn More
-                  </button>
-                </div>
-
-                {/* Make toggle more subtle when enabled */}
-                <div className={`${isEnabled ? 'opacity-75' : ''}`}>
-                  <BaseCheck
-                    className="ms-3"
-                    checked={isEnabled}
-                    onChange={(e) => handleToggleChange(e.target.checked)}
-                    disabled={loading}
-                  />
-                </div>
-              </div>
-
-              {isEnabled && (
-                <div className="mt-3 p-3 bg-light rounded">
-                  <small className="text-muted">
-                    Your company is participating in the Refer Back Program. Drivers who apply but
-                    don&apos;t qualify for your positions will be referred to other organizations
-                    that may be a better fit.
-                  </small>
-                </div>
-              )}
+            <div className="d-flex align-items-center gap-3">
+              <span className="small" style={{ color: isEnabled ? '#1a202c' : '#718096', fontWeight: '500' }}>
+                {isEnabled ? 'Active' : 'Disabled'}
+              </span>
+              <BaseCheck
+                checked={isEnabled}
+                onChange={(e) => handleToggleChange(e.target.checked)}
+                disabled={loading}
+              />
             </div>
           </div>
         </Card.Body>

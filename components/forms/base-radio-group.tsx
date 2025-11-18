@@ -84,8 +84,8 @@ export default function BaseRadioGroup({
 
         .radio-group-container .radio-button.active {
           background-color: #f0f9ff;
-          border-color: #0d6efd;
-          color: #0d6efd;
+          border-color: #212529;
+          color: #212529;
         }
 
         .radio-group-compact .radio-button {

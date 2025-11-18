@@ -1,12 +1,12 @@
 :root {
   /* Brand Colors */
-  --primary: #5fcbc4;
-  --primary-brand: #5fcbc4;
+  --primary: #30c6c2;
+  --primary-brand: #30c6c2;
   --primary-light: #cdd7fc;
   --primary-dark: #1d4354;
   --primary-button: #006078;
   --primary-button-light: #f0f5fd;
-  --secondary: #5fcbc4;
+  --secondary: #30c6c2;
 
   /* UI Colors */
   --content-bg: #f7f9fc;

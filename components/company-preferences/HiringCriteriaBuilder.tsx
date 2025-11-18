@@ -47,435 +47,249 @@ const HiringCriteriaBuilder: React.FC<HiringCriteriaBuilderProps> = ({
         </div>
       )}
 
-      {/* Interactive Criteria Builder */}
-      <Card className="border-0 shadow-sm mb-4">
+      {/* Driver Qualifications Section */}
+      <Card className="border-0 shadow-sm mb-4" style={{ background: 'white' }}>
         <Card.Body className="p-4">
           <form onSubmit={onSubmit}>
-            {/* CDL & Employment Type - Visual Selection */}
-            <div className="mb-5">
-              <h6 className="mb-4 d-flex align-items-center">
-                {isFirstRunExperience && (
-                  <span className={`${styles.sectionBadge} badge rounded-pill me-2`}>1</span>
-                )}
-                Driver Qualifications
-              </h6>
+            <h5 className="mb-1" style={{ color: '#1a202c', fontWeight: '600' }}>Driver Qualifications</h5>
 
-              {isFirstRunExperience && (
-                <div className="alert alert-info mb-4">
-                  Select the CDL requirements and employment types that match your hiring needs.
-                  Click on the cards below to select/deselect options. You can choose multiple
-                  options in each category.
-                  <div className="mt-2">
-                    <strong>CDL Note:</strong> Higher CDL classes include lower classes (Class A
-                    drivers can operate Class B/C vehicles, Class B can operate Class C).
-                  </div>
-                </div>
-              )}
-
-              <div className="d-flex flex-wrap gap-4">
-                <div style={{ minWidth: '280px', maxWidth: '320px' }}>
-                  <label className="form-label fw-semibold mb-3">CDL Requirements</label>
-                  <div className="d-flex flex-wrap gap-2 mb-3">
-                    {Object.values(DriverLicenseType).map((cdlType) => (
-                      <div
-                        key={cdlType}
-                        className={`card border ${
-                          form.values.cdl_class.value?.includes(cdlType)
-                            ? 'border-primary bg-primary text-white'
-                            : 'border-light'
-                        }`}
-                        style={{
-                          cursor: 'pointer',
-                          minWidth: '120px',
-                          maxWidth: '150px',
-                        }}
-                        onClick={() => {
-                          const currentValues = form.values.cdl_class.value || [];
-                          const newValues = currentValues.includes(cdlType)
-                            ? currentValues.filter((v) => v !== cdlType)
-                            : [...currentValues, cdlType];
-                          form.setFieldValue('cdl_class.value', newValues);
-                        }}
-                      >
-                        <div className="card-body p-2 text-center">
-                          <div className="small fw-semibold">
-                            {cdlType === DriverLicenseType.NO_CDL && 'No CDL'}
-                            {cdlType === DriverLicenseType.CDL_CLASS_A && 'Class A'}
-                            {cdlType === DriverLicenseType.CDL_CLASS_B && 'Class B'}
-                            {cdlType === DriverLicenseType.CDL_CLASS_C && 'Class C'}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  {/* CDL Summary */}
-                  {form.values.cdl_class.value?.length > 0 && (
-                    <div className="alert alert-light py-2 px-3 small">
-                      <strong>Eligibility:</strong>{' '}
-                      {(() => {
-                        const selected = form.values.cdl_class.value || [];
-                        const hasNoCDL = selected.includes(DriverLicenseType.NO_CDL);
-                        const cdlTypes = selected.filter((t) => t !== DriverLicenseType.NO_CDL);
-
-                        if (hasNoCDL && cdlTypes.length > 0) {
-                          return 'Candidates with or without CDL are eligible';
-                        } else if (hasNoCDL) {
-                          return 'Only non-CDL candidates are eligible';
-                        } else if (cdlTypes.length === 3) {
-                          return 'Candidates with any CDL license are eligible';
-                        } else if (cdlTypes.length > 1) {
-                          return `Candidates with Class ${cdlTypes.join(', ')} CDL are eligible`;
-                        } else if (cdlTypes.length === 1) {
-                          return `Only Class ${cdlTypes[0]} CDL holders are eligible`;
-                        }
-                        return '';
-                      })()}
-                    </div>
-                  )}
-                </div>
-
-                <div style={{ minWidth: '280px', maxWidth: '320px' }}>
-                  <label className="form-label fw-semibold mb-3">Employment Style</label>
-                  <div className="d-flex flex-column gap-2 mb-3">
-                    {filteredEmploymentTypes.map((empType) => (
-                      <div
-                        key={empType}
-                        className={`card border ${
-                          form.values.employment_type.value?.includes(empType)
-                            ? 'border-success bg-success text-white'
-                            : 'border-light'
-                        }`}
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => {
-                          const currentValues = form.values.employment_type.value || [];
-                          const newValues = currentValues.includes(empType)
-                            ? currentValues.filter((v) => v !== empType)
-                            : [...currentValues, empType];
-                          form.setFieldValue('employment_type.value', newValues);
-                        }}
-                      >
-                        <div className="card-body p-2">
-                          <div className="small fw-semibold">
-                            {empType === JobEmploymentType.W2 && 'Company Driver (W2)'}
-                            {empType === JobEmploymentType.CONTRACT && 'Contractor (1099)'}
-                            {empType === JobEmploymentType.OWNER_OPERATOR && 'Owner-Operator'}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  {/* Employment Summary */}
-                  {form.values.employment_type.value?.length > 0 && (
-                    <div className="alert alert-light py-2 px-3 small">
-                      <strong>Eligible for:</strong>{' '}
-                      {(() => {
-                        const selected = form.values.employment_type.value || [];
-                        const labels = selected.map((type) => {
-                          if (type === JobEmploymentType.W2) return 'W2 employment';
-                          if (type === JobEmploymentType.CONTRACT) return '1099 contracting';
-                          if (type === JobEmploymentType.OWNER_OPERATOR) return 'Owner-operator';
-                          return type;
-                        });
-
-                        if (labels.length === 1) {
-                          return `Candidates seeking ${labels[0]}`;
-                        } else if (labels.length === 2) {
-                          return `Candidates seeking ${labels.join(' or ')}`;
-                        } else {
-                          return `Candidates seeking ${labels.slice(0, -1).join(', ')}, or ${
-                            labels[labels.length - 1]
-                          }`;
-                        }
-                      })()}
-                    </div>
-                  )}
-                </div>
+            {/* CDL Requirements */}
+            <div className="mb-4">
+              <label className="form-label fw-semibold mb-2" style={{ fontSize: '14px', color: '#1a202c' }}>
+                CDL Requirements
+              </label>
+              <div className="d-flex gap-2 mb-2">
+                {Object.values(DriverLicenseType).map((cdlType) => (
+                  <button
+                    key={cdlType}
+                    type="button"
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '6px',
+                      border: '1px solid #e2e8f0',
+                      background: form.values.cdl_class.value?.includes(cdlType)
+                        ? '#2d3748'
+                        : 'white',
+                      color: form.values.cdl_class.value?.includes(cdlType)
+                        ? 'white'
+                        : '#2d3748',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onClick={() => {
+                      const currentValues = form.values.cdl_class.value || [];
+                      const newValues = currentValues.includes(cdlType)
+                        ? currentValues.filter((v) => v !== cdlType)
+                        : [...currentValues, cdlType];
+                      form.setFieldValue('cdl_class.value', newValues);
+                    }}
+                  >
+                    {cdlType === DriverLicenseType.NO_CDL && 'No CDL'}
+                    {cdlType === DriverLicenseType.CDL_CLASS_A && 'Class A'}
+                    {cdlType === DriverLicenseType.CDL_CLASS_B && 'Class B'}
+                    {cdlType === DriverLicenseType.CDL_CLASS_C && 'Class C'}
+                  </button>
+                ))}
+              </div>
+              <div className="small" style={{ color: '#718096' }}>
+                Only Class A holders are eligible.
               </div>
             </div>
 
-            {/* Geographic Preferences */}
-            <div className="mb-5">
-              <h6 className="mb-4 d-flex align-items-center">
-                {isFirstRunExperience && (
-                  <span className={`${styles.sectionBadge} badge rounded-pill me-2`}>2</span>
-                )}
-                Geographic Scope
-              </h6>
-
-              <div style={{ maxWidth: '600px' }}>
-                <div className="d-flex flex-wrap gap-2 mb-3">
-                  {Object.values(JobGeography).map((geo) => (
-                    <div
-                      key={geo}
-                      className={`card border ${
-                        form.values.job_geography.value?.includes(geo)
-                          ? 'border-info bg-info text-white'
-                          : 'border-light'
-                      }`}
-                      style={{
-                        cursor: 'pointer',
-                        minWidth: '140px',
-                        maxWidth: '180px',
-                      }}
-                      onClick={() => {
-                        const currentValues = form.values.job_geography.value || [];
-                        const newValues = currentValues.includes(geo)
-                          ? currentValues.filter((v) => v !== geo)
-                          : [...currentValues, geo];
-                        form.setFieldValue('job_geography.value', newValues);
-                      }}
-                    >
-                      <div className="card-body p-2 text-center">
-                        <div className="fw-bold small">
-                          {geo === JobGeography.LOCAL && 'Local'}
-                          {geo === JobGeography.REGIONAL && 'Regional'}
-                          {geo === JobGeography.OTR && 'Over The Road'}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Geography Summary */}
-                {form.values.job_geography.value?.length > 0 && (
-                  <div className="alert alert-light py-2 px-3 small">
-                    <strong>Route Types:</strong>{' '}
-                    {(() => {
-                      const selected = form.values.job_geography.value || [];
-                      const labels = selected.map((geo) => {
-                        if (geo === JobGeography.LOCAL) return 'local routes';
-                        if (geo === JobGeography.REGIONAL) return 'regional routes';
-                        if (geo === JobGeography.OTR) return 'over-the-road routes';
-                        return geo;
-                      });
-
-                      if (labels.length === 1) {
-                        return `Candidates interested in ${labels[0]}`;
-                      } else if (labels.length === 2) {
-                        return `Candidates interested in ${labels.join(' or ')}`;
-                      } else {
-                        return `Candidates interested in ${labels.slice(0, -1).join(', ')}, or ${
-                          labels[labels.length - 1]
-                        }`;
-                      }
-                    })()}
-                  </div>
-                )}
-
-                {/* Geography Explanation */}
-                <div className="small text-muted mt-2">
-                  <p>
-                    <strong>Local:</strong> Within 100-150 mile radius
-                  </p>
-                  <p>
-                    <strong>Regional:</strong> Multi-state region
-                  </p>
-                  <p>
-                    <strong>OTR:</strong> Long-haul, coast-to-coast routes
-                  </p>
-                </div>
+            {/* Employment Style */}
+            <div className="mb-4">
+              <label className="form-label fw-semibold mb-2" style={{ fontSize: '14px', color: '#1a202c' }}>
+                Employment Style
+              </label>
+              <div className="d-flex gap-2">
+                {filteredEmploymentTypes.map((empType) => (
+                  <button
+                    key={empType}
+                    type="button"
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '6px',
+                      border: '1px solid #e2e8f0',
+                      background: form.values.employment_type.value?.includes(empType)
+                        ? '#2d3748'
+                        : 'white',
+                      color: form.values.employment_type.value?.includes(empType)
+                        ? 'white'
+                        : '#2d3748',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onClick={() => {
+                      const currentValues = form.values.employment_type.value || [];
+                      const newValues = currentValues.includes(empType)
+                        ? currentValues.filter((v) => v !== empType)
+                        : [...currentValues, empType];
+                      form.setFieldValue('employment_type.value', newValues);
+                    }}
+                  >
+                    {empType === JobEmploymentType.W2 && 'Company Driver (W2)'}
+                    {empType === JobEmploymentType.CONTRACT && 'Contractor (1099)'}
+                    {empType === JobEmploymentType.OWNER_OPERATOR && 'Owner-Operator'}
+                  </button>
+                ))}
               </div>
-            </div>
-
-            {/* Smart Experience & Safety Sliders */}
-            <div className="mb-5">
-              <h6 className="mb-4 d-flex align-items-center">
-                {isFirstRunExperience && (
-                  <span className={`${styles.sectionBadge} badge rounded-pill me-2`}>3</span>
-                )}
-                Experience & Safety Standards
-              </h6>
-
-              <Row className="g-4">
-                <Col md={4}>
-                  <div className={`${styles.experienceCard} card border-0 h-100`}>
-                    <div className="card-body p-4">
-                      <div className="d-flex align-items-center mb-3">
-                        <div>
-                          <div className="fw-semibold">CDL Experience</div>
-                          <div className="text-muted small">Minimum years required</div>
-                        </div>
-                      </div>
-
-                      <div className={`${styles.smartSlider} mb-3`}>
-                        <input
-                          type="range"
-                          className="form-range"
-                          min="0"
-                          max="10"
-                          value={form.values.years_cdl_experience.value || 0}
-                          onChange={(e) =>
-                            form.setFieldValue(
-                              'years_cdl_experience.value',
-                              parseInt(e.target.value)
-                            )
-                          }
-                        />
-                        <div className="d-flex justify-content-between small text-muted">
-                          <span>0</span>
-                          <span>5</span>
-                          <span>10+</span>
-                        </div>
-                      </div>
-
-                      <div className="text-center">
-                        <div className={`h4 mb-1 ${styles.sliderValue}`}>
-                          {form.values.years_cdl_experience.value || 0} years
-                        </div>
-                        <div className="small text-muted">
-                          {(form.values.years_cdl_experience.value || 0) === 0 &&
-                            'Open to new drivers'}
-                          {(form.values.years_cdl_experience.value || 0) >= 1 &&
-                            (form.values.years_cdl_experience.value || 0) <= 3 &&
-                            'Building experience'}
-                          {(form.values.years_cdl_experience.value || 0) >= 4 &&
-                            (form.values.years_cdl_experience.value || 0) <= 7 &&
-                            'Experienced professional'}
-                          {(form.values.years_cdl_experience.value || 0) >= 8 && 'Industry veteran'}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Col>
-
-                <Col md={4}>
-                  <div className={`${styles.experienceCard} card border-0 h-100`}>
-                    <div className="card-body p-4">
-                      <div className="d-flex align-items-center mb-3">
-                        <div>
-                          <div className="fw-semibold">Maximum Accidents</div>
-                          <div className="text-muted small">In past 3 years</div>
-                        </div>
-                      </div>
-
-                      <div className={`${styles.smartSlider} mb-3`}>
-                        <input
-                          type="range"
-                          className="form-range"
-                          min="0"
-                          max="5"
-                          value={form.values.maximum_accidents.value || 0}
-                          onChange={(e) =>
-                            form.setFieldValue('maximum_accidents.value', parseInt(e.target.value))
-                          }
-                        />
-                        <div className="d-flex justify-content-between small text-muted">
-                          <span>0</span>
-                          <span>2</span>
-                          <span>5</span>
-                        </div>
-                      </div>
-
-                      <div className="text-center">
-                        <div className={`h4 mb-1 ${styles.sliderValue}`}>
-                          {form.values.maximum_accidents.value || 0} max
-                        </div>
-                        <div className="small text-muted">
-                          {(form.values.maximum_accidents.value || 0) === 0 &&
-                            'Perfect safety record only'}
-                          {(form.values.maximum_accidents.value || 0) === 1 &&
-                            'One minor incident allowed'}
-                          {(form.values.maximum_accidents.value || 0) >= 2 &&
-                            'Learning from experience'}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Col>
-
-                <Col md={4}>
-                  <div className={`${styles.experienceCard} card border-0 h-100`}>
-                    <div className="card-body p-4">
-                      <div className="d-flex align-items-center mb-3">
-                        <div>
-                          <div className="fw-semibold">Maximum Violations</div>
-                          <div className="text-muted small">Moving violations, 3 years</div>
-                        </div>
-                      </div>
-
-                      <div className={`${styles.smartSlider} mb-3`}>
-                        <input
-                          type="range"
-                          className="form-range"
-                          min="0"
-                          max="8"
-                          value={form.values.maximum_moving_violations.value || 0}
-                          onChange={(e) =>
-                            form.setFieldValue(
-                              'maximum_moving_violations.value',
-                              parseInt(e.target.value)
-                            )
-                          }
-                        />
-                        <div className="d-flex justify-content-between small text-muted">
-                          <span>0</span>
-                          <span>4</span>
-                          <span>8</span>
-                        </div>
-                      </div>
-
-                      <div className="text-center">
-                        <div className={`h4 mb-1 ${styles.sliderValue}`}>
-                          {form.values.maximum_moving_violations.value || 0} max
-                        </div>
-                        <div className="small text-muted">
-                          {(form.values.maximum_moving_violations.value || 0) === 0 &&
-                            'Spotless driving record'}
-                          {(form.values.maximum_moving_violations.value || 0) >= 1 &&
-                            (form.values.maximum_moving_violations.value || 0) <= 3 &&
-                            'Minor infractions OK'}
-                          {(form.values.maximum_moving_violations.value || 0) >= 4 &&
-                            'Room for improvement'}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-            </div>
-
-            {/* Action Buttons */}
-            <div className={styles.floatingAction}>
-              <Row>
-                <Col className="d-flex justify-content-between align-items-center">
-                  <div className="text-muted small">
-                    <i className="fas fa-info-circle me-1"></i>
-                    Changes apply immediately to all applications
-                  </div>
-                  <div>
-                    <Button variant="outline-secondary" className="me-2" onClick={onReset}>
-                      Reset to Defaults
-                    </Button>
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      size="lg"
-                      disabled={form.isSubmitting || !form.isValid || loading}
-                      className="px-4"
-                    >
-                      {form.isSubmitting || loading ? (
-                        <>
-                          <span
-                            className="spinner-border spinner-border-sm me-2"
-                            role="status"
-                            aria-hidden="true"
-                          ></span>
-                          Updating Profile...
-                        </>
-                      ) : (
-                        <>
-                          <i className="fas fa-save me-2"></i>
-                          Save Driver Profile
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </Col>
-              </Row>
             </div>
           </form>
         </Card.Body>
       </Card>
+
+      {/* Geographic Scope Section */}
+      <Card className="border-0 shadow-sm mb-4" style={{ background: 'white' }}>
+        <Card.Body className="p-4">
+          <h5 className="mb-1" style={{ color: '#1a202c', fontWeight: '600' }}>Geographic Scope</h5>
+
+          <div className="mb-3">
+            <div className="d-flex gap-2 mb-2">
+              {Object.values(JobGeography).map((geo) => (
+                <button
+                  key={geo}
+                  type="button"
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '6px',
+                    border: '1px solid #e2e8f0',
+                    background: form.values.job_geography.value?.includes(geo)
+                      ? '#2d3748'
+                      : 'white',
+                    color: form.values.job_geography.value?.includes(geo)
+                      ? 'white'
+                      : '#2d3748',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onClick={() => {
+                    const currentValues = form.values.job_geography.value || [];
+                    const newValues = currentValues.includes(geo)
+                      ? currentValues.filter((v) => v !== geo)
+                      : [...currentValues, geo];
+                    form.setFieldValue('job_geography.value', newValues);
+                  }}
+                >
+                  {geo === JobGeography.LOCAL && 'Local'}
+                  {geo === JobGeography.REGIONAL && 'Regional'}
+                  {geo === JobGeography.OTR && 'Over the Road'}
+                </button>
+              ))}
+            </div>
+            <div className="small" style={{ color: '#718096' }}>
+              Drivers operate across multiple states and regions, covering long distances.
+            </div>
+          </div>
+        </Card.Body>
+      </Card>
+
+      {/* Experience & Safety Metrics - Three Column Layout */}
+      <Row className="g-3 mb-4">
+        <Col md={4}>
+          <Card className="border-0 shadow-sm h-100" style={{ background: 'white' }}>
+            <Card.Body className="p-4">
+              <div className="mb-3">
+                <div style={{ color: '#1a202c', fontWeight: '600', fontSize: '14px' }}>CDL Experience</div>
+                <div style={{ color: '#718096', fontSize: '13px' }}>Minimum years required</div>
+              </div>
+
+              <div className="text-center mb-3">
+                <div style={{ fontSize: '36px', fontWeight: '600', color: '#2d3748' }}>
+                  {form.values.years_cdl_experience.value || 0}
+                  <span style={{ fontSize: '18px', color: '#718096' }}> years</span>
+                </div>
+              </div>
+
+              <div className="mb-2">
+                <input
+                  type="range"
+                  className="form-range"
+                  min="0"
+                  max="10"
+                  value={form.values.years_cdl_experience.value || 0}
+                  onChange={(e) =>
+                    form.setFieldValue(
+                      'years_cdl_experience.value',
+                      parseInt(e.target.value)
+                    )
+                  }
+                />
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col md={4}>
+          <Card className="border-0 shadow-sm h-100" style={{ background: 'white' }}>
+            <Card.Body className="p-4">
+              <div className="mb-3">
+                <div style={{ color: '#1a202c', fontWeight: '600', fontSize: '14px' }}>Maximum Accidents</div>
+                <div style={{ color: '#718096', fontSize: '13px' }}>Past 3 years</div>
+              </div>
+
+              <div className="text-center mb-3">
+                <div style={{ fontSize: '36px', fontWeight: '600', color: '#2d3748' }}>
+                  {form.values.maximum_accidents.value || 0}
+                  <span style={{ fontSize: '18px', color: '#718096' }}> max</span>
+                </div>
+              </div>
+
+              <div className="mb-2">
+                <input
+                  type="range"
+                  className="form-range"
+                  min="0"
+                  max="5"
+                  value={form.values.maximum_accidents.value || 0}
+                  onChange={(e) =>
+                    form.setFieldValue('maximum_accidents.value', parseInt(e.target.value))
+                  }
+                />
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col md={4}>
+          <Card className="border-0 shadow-sm h-100" style={{ background: 'white' }}>
+            <Card.Body className="p-4">
+              <div className="mb-3">
+                <div style={{ color: '#1a202c', fontWeight: '600', fontSize: '14px' }}>Maximum Violations</div>
+                <div style={{ color: '#718096', fontSize: '13px' }}>Moving violations, 3 years</div>
+              </div>
+
+              <div className="text-center mb-3">
+                <div style={{ fontSize: '36px', fontWeight: '600', color: '#2d3748' }}>
+                  {form.values.maximum_moving_violations.value || 0}
+                  <span style={{ fontSize: '18px', color: '#718096' }}> max</span>
+                </div>
+              </div>
+
+              <div className="mb-2">
+                <input
+                  type="range"
+                  className="form-range"
+                  min="0"
+                  max="8"
+                  value={form.values.maximum_moving_violations.value || 0}
+                  onChange={(e) =>
+                    form.setFieldValue(
+                      'maximum_moving_violations.value',
+                      parseInt(e.target.value)
+                    )
+                  }
+                />
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
     </>
   );
 };

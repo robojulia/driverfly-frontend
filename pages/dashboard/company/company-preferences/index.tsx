@@ -288,25 +288,61 @@ export default function CompanyPreference() {
 
   return (
     <>
-      <PageLayout>
-        <Container fluid>
+      <PageLayout hideTitle={true}>
+        {/* Header Section with Teal Background */}
+        <div style={{
+          background: 'linear-gradient(135deg, #006078 0%, #1d4354 100%)',
+          padding: '2rem 3rem',
+          marginBottom: '2rem',
+          borderRadius: '0.5rem'
+        }}>
+          <div className="d-flex justify-content-between align-items-center">
+            <div>
+              <h3 className="text-white mb-2 fw-bold">Company Preferences</h3>
+              <p className="text-white mb-0" style={{ opacity: 0.9 }}>
+                Manage your company's recruiting and qualification preferences.
+              </p>
+            </div>
+            <div className="d-flex gap-2">
+              <Button
+                variant="outline-light"
+                onClick={() => form.resetForm()}
+                disabled={loading}
+              >
+                Reset to Defaults
+              </Button>
+              <Button
+                style={{
+                  background: '#006078',
+                  border: 'none',
+                  color: 'white'
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  form.handleSubmit();
+                }}
+                disabled={loading}
+              >
+                Save Preferences
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <Container fluid style={{ background: '#f7fafc', minHeight: '100vh', padding: '0 2rem 2rem' }}>
           {/* DHA Information Section */}
           <Card className="border-0 shadow-sm mb-4">
             <Card.Body className="p-4">
               <h5 className="mb-3">Digital Hiring Application</h5>
-              <p className="mb-3">
-                Share your unique application URL with potential applicants to streamline your
-                hiring process.
+              <p className="mb-3 text-muted">
+                Share your unique hiring application link with potential applicants.
               </p>
               <BaseClickToCopyInput
-                label="DIGITAL_HIRING_APP_URL"
+                label=""
                 className="my-2 border p-3 rounded link-background"
                 value={`${process.env.FRONTEND_BASE_URL ?? ''}apply/${user?.company?.slug}`}
                 tooltipText="Click to copy"
               />
-              <p className="text-muted small mt-2">
-                Share this URL on job boards, social media, or anywhere you recruit candidates.
-              </p>
             </Card.Body>
           </Card>
 

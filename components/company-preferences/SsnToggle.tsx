@@ -40,28 +40,27 @@ export const SsnToggle: React.FC<SsnToggleProps> = ({ checked, onChange, loading
 
   return (
     <>
-      <Card className="border-0 shadow-sm mb-4">
+      <Card className="border-0 shadow-sm mb-4" style={{ background: 'white' }}>
         <Card.Body className="p-4">
-          <div className="d-flex justify-content-between align-items-start">
-            <div className="flex-grow-1">
-              <h5 className="mb-2 d-flex align-items-center">
-                <InfoCircleFill className="me-2 text-primary" size={20} />
+          <div className="d-flex justify-content-between align-items-center">
+            <div>
+              <h5 className="mb-1" style={{ color: '#1a202c', fontWeight: '600', fontSize: '14px' }}>
                 Privacy Settings
               </h5>
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <p className="mb-1 fw-medium">Add SSN on Digital Hiring Application</p>
-                  <p className="text-muted small mb-0">
-                    Collect Social Security Numbers during the application process
-                  </p>
-                </div>
-                <BaseCheck
-                  className="ms-3"
-                  checked={checked}
-                  onChange={(e) => handleToggleClick(e.target.checked)}
-                  disabled={loading}
-                />
-              </div>
+              <p className="mb-0 small" style={{ color: '#718096' }}>
+                Add SSN field on Digital Hiring Application
+              </p>
+            </div>
+
+            <div className="d-flex align-items-center gap-3">
+              <span className="small" style={{ color: checked ? '#1a202c' : '#718096', fontWeight: '500' }}>
+                {checked ? 'Active' : 'Disabled'}
+              </span>
+              <BaseCheck
+                checked={checked}
+                onChange={(e) => handleToggleClick(e.target.checked)}
+                disabled={loading}
+              />
             </div>
           </div>
         </Card.Body>

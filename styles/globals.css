@@ -17,10 +17,10 @@ a {
 
 /* DriverFly Application Form Variables */
 :root {
-  --primary: #5fcbc4;
+  --primary: #30c6c2;
   --primary-dark: #1d4354;
   --primary-light: #cdd7fc;
-  --secondary: #5fcbc4;
+  --secondary: #30c6c2;
   --secondary-dark: #1d4354;
   --accent: #006078;
   --dark: #1a2b3c;
@@ -37,6 +37,13 @@ a {
   --border-radius: 8px;
   --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Page Title Styling - Override Bootstrap defaults */
+h2,
+.h2 {
+  font-size: 19px !important;
+  font-weight: 700 !important;
 }
 
 /* Navigation Link Improvements - Override Bootstrap defaults */
@@ -674,7 +681,8 @@ html {
 
   h2,
   .h2 {
-    font-size: 1.5rem;
+    font-size: 19px !important;
+    font-weight: 700 !important;
   }
 
   h3,

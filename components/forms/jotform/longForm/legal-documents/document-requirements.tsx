@@ -172,7 +172,7 @@ export const DocumentRequirements = memo(function DocumentRequirements({
           type="button"
           onClick={onSignClick}
           style={{
-            backgroundColor: isComplete ? '#198754' : '#0d6efd',
+            backgroundColor: isComplete ? '#198754' : '#212529',
             color: 'white',
             border: 'none',
             borderRadius: '8px',
@@ -187,10 +187,10 @@ export const DocumentRequirements = memo(function DocumentRequirements({
             transition: 'background-color 0.2s',
           }}
           onMouseOver={(e) => {
-            e.currentTarget.style.backgroundColor = isComplete ? '#157347' : '#0b5ed7';
+            e.currentTarget.style.backgroundColor = isComplete ? '#157347' : '#1a1e21';
           }}
           onMouseOut={(e) => {
-            e.currentTarget.style.backgroundColor = isComplete ? '#198754' : '#0d6efd';
+            e.currentTarget.style.backgroundColor = isComplete ? '#198754' : '#212529';
           }}
         >
           <PenFill size={16} />

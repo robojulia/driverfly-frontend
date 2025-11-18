@@ -12,7 +12,7 @@
     0.1
   ); /* Using --primary with 10% opacity */
   color: var(--text-dark) !important;
-  background-color: #5fcbc4 !important;
+  background-color: #30c6c2 !important;
 }
 
 /* Ensure icons maintain their color on hover */

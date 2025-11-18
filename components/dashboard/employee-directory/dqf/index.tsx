@@ -156,15 +156,30 @@ export default function DQF(props: ViewEmployeeDqfProps) {
             <Row>
                 <Col>
                     {!!employee ? (
-                        <ViewCard title={props.title ?? "DOCUMENTS"}>
-                            <Table striped>
-                                <thead>
+                        <>
+                            {/* Teal Header */}
+                            <div style={{
+                                background: 'linear-gradient(135deg, rgb(0, 96, 120) 0%, rgb(29, 67, 84) 100%)',
+                                borderRadius: '0.5rem',
+                                padding: '1.25rem 1.5rem',
+                                marginBottom: '1.5rem'
+                            }}>
+                                <h5 style={{ color: '#fff', margin: 0, fontWeight: 600, fontSize: '1.125rem' }}>
+                                    {t(props.title ?? "DQF Documents - DQF Files")}
+                                </h5>
+                                <p style={{ color: 'rgba(255, 255, 255, 0.9)', margin: '0.25rem 0 0 0', fontSize: '0.875rem' }}>
+                                    {t("Manage and track essential documents and compliance requirements")}
+                                </p>
+                            </div>
+                        <ViewCard title="" noTitle={true}>
+                            <Table style={{ backgroundColor: '#fff' }}>
+                                <thead style={{ backgroundColor: '#fff' }}>
                                     <tr>
-                                        <th colSpan={2}>{t("DOCUMENT_NAME")}</th>
+                                        <th colSpan={2}>{t("Document Name")}</th>
                                         {
-                                            Boolean(props.showCompleted) && <th colSpan={2}>{t("COMPLETED?")}</th>
+                                            Boolean(props.showCompleted) && <th colSpan={2}>{t("Completed?")}</th>
                                         }
-                                        <th colSpan={2}>{t("UPDATED_AT")}</th>
+                                        <th colSpan={2}>{t("Updated At")}</th>
                                         <th colSpan={1}></th>
                                     </tr>
                                 </thead>
@@ -217,6 +232,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                             </Table>
                             <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
                         </ViewCard>
+                        </>
                     ) : (
                         <div className="d-flex justify-content-center align-items-center">
                             <ThreeCircles

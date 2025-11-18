@@ -6,8 +6,6 @@ import {
   ExclamationTriangleFill,
   QuestionCircleFill,
   Sliders,
-  ChevronDown,
-  ChevronUp,
 } from 'react-bootstrap-icons';
 
 interface ApplicantEligibilityHeaderProps {
@@ -23,7 +21,7 @@ export const ApplicantEligibilityHeader: React.FC<ApplicantEligibilityHeaderProp
   eligibility,
 }) => {
   const router = useRouter();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   if (!eligibility) {
     return null;
@@ -31,10 +29,6 @@ export const ApplicantEligibilityHeader: React.FC<ApplicantEligibilityHeaderProp
 
   const handleViewPreferences = () => {
     router.push('/dashboard/company/company-preferences');
-  };
-
-  const toggleExpanded = () => {
-    setIsExpanded(!isExpanded);
   };
 
   // Determine the status and icon to show
@@ -87,8 +81,6 @@ export const ApplicantEligibilityHeader: React.FC<ApplicantEligibilityHeaderProp
         <Card className="border-0 shadow-sm">
           <Card.Header
             className="bg-light border-0 d-flex align-items-center justify-content-between"
-            style={{ cursor: 'pointer' }}
-            onClick={toggleExpanded}
           >
             <div className="d-flex align-items-center">
               <Sliders className="me-2 text-primary" size={20} />
@@ -99,20 +91,12 @@ export const ApplicantEligibilityHeader: React.FC<ApplicantEligibilityHeaderProp
               <Button
                 variant="outline-primary"
                 size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleViewPreferences();
-                }}
-                className="d-flex align-items-center me-2"
+                onClick={handleViewPreferences}
+                className="d-flex align-items-center"
               >
                 <Sliders className="me-1" size={14} />
                 View Preferences
               </Button>
-              {isExpanded ? (
-                <ChevronUp className="text-muted" size={20} />
-              ) : (
-                <ChevronDown className="text-muted" size={20} />
-              )}
             </div>
           </Card.Header>
           {isExpanded && (

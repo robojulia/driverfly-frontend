@@ -387,7 +387,7 @@ export function ApplicationSummary() {
               <div className="d-flex align-items-center justify-content-center mb-2">
                 <i
                   className="fa fa-user-circle me-2"
-                  style={{ fontSize: '1.5rem', color: '#0d6efd' }}
+                  style={{ fontSize: '1.5rem', color: '#212529' }}
                 />
                 <h4 className="mb-0 text-dark">
                   {applicant?.first_name || applicant?.last_name

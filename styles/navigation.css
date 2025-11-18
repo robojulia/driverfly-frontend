@@ -32,7 +32,7 @@
 
   /* Buttons */
   --btn-primary: linear-gradient(135deg, #006078 0%, #2ec8c4 100%);
-  --btn-secondary: linear-gradient(135deg, #5fcbc4 0%, #006078 100%);
+  --btn-secondary: linear-gradient(135deg, #30c6c2 0%, #006078 100%);
   --btn-hover-lift: -2px;
   --btn-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
@@ -309,7 +309,7 @@
 }
 
 .action-btn:focus {
-  outline: 2px solid #5fcbc4;
+  outline: 2px solid #30c6c2;
   outline-offset: 2px;
 }
 
@@ -375,7 +375,7 @@
 }
 
 .mobile-menu-toggle:focus {
-  outline: 2px solid #5fcbc4;
+  outline: 2px solid #30c6c2;
   outline-offset: 2px;
 }
 
@@ -643,7 +643,7 @@
 .dropdown-item:focus-visible,
 .action-btn:focus-visible,
 .mobile-menu-toggle:focus-visible {
-  outline: 2px solid #5fcbc4;
+  outline: 2px solid #30c6c2;
   outline-offset: 2px;
 }
 

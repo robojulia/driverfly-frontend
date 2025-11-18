@@ -253,7 +253,7 @@
 
 /* Active state */
 .sidebarArea li.active {
-  background-color: #5fcbc4;
+  background-color: #30c6c2;
   color: var(--sidebar-bg);
 }
 
