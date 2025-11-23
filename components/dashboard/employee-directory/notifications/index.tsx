@@ -378,7 +378,7 @@ export default function Notifications({ employee, canEdit = true }: Notification
                                                 ))}
                                             </div>
                                             <div style={{ fontStyle: 'italic', fontSize: '0.825rem' }}>
-                                                "{rule.messageTemplate}"
+                                                &quot;{rule.messageTemplate}&quot;
                                             </div>
                                         </div>
 
@@ -443,7 +443,7 @@ export default function Notifications({ employee, canEdit = true }: Notification
                                 onChange={(e) => setModalFormData({ ...modalFormData, documentType: e.target.value })}
                             >
                                 <option value="Other">Other</option>
-                                <option value="Commercial Driver's License">Commercial Driver's License</option>
+                                <option value="Commercial Driver's License">Commercial Driver&apos;s License</option>
                                 <option value="Medical Certificate">Medical Certificate</option>
                                 <option value="Motor Vehicle Record">Motor Vehicle Record</option>
                             </Form.Select>
