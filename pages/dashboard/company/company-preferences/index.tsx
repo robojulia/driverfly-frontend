@@ -300,7 +300,7 @@ export default function CompanyPreference() {
             <div>
               <h3 className="text-white mb-2 fw-bold">Company Preferences</h3>
               <p className="text-white mb-0" style={{ opacity: 0.9 }}>
-                Manage your company's recruiting and qualification preferences.
+                Manage your company&apos;s recruiting and qualification preferences.
               </p>
             </div>
             <div className="d-flex gap-2">

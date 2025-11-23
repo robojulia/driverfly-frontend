@@ -8,11 +8,12 @@ export interface PageLayoutProps {
     title?: string;
     desciption?: string;
     actions?: JSX.Element | JSX.Element[];
+    hideTitle?: boolean;
     readonly children?: JSX.Element | JSX.Element[];
 }
 
 export default function PageLayout(props: PageLayoutProps) {
-    const { title, actions, children, desciption } = props;
+    const { title, actions, children, desciption, hideTitle } = props;
 
     const { t } = useTranslation();
 
@@ -21,7 +22,7 @@ export default function PageLayout(props: PageLayoutProps) {
             <ToastContainer />
             <Row>
                 {
-                    title &&
+                    title && !hideTitle &&
                         <Col>
                             <h2>
                                 {t(title)}

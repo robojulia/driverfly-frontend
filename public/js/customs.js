@@ -1,5 +1,5 @@
 // document.addEventListener("DOMContentLoaded", function(){
-//     // makes it as accordion for smaller screens
+//     // makeith it as accordion for smaller screens
 //     if (window.innerWidth > 992) {
     
 //         document.querySelectorAll('.navbar .nav-item').forEach(function(everyitem){

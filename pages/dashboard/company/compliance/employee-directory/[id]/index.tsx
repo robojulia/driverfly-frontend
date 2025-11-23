@@ -100,7 +100,7 @@ export default function EmployeeDetailPage() {
             <PersonFill size={20} className="mr-2" />
             <h4 className="mb-0 font-weight-bold">Driver Management</h4>
             {totalPending > 0 && (
-              <Badge variant="danger" className="ml-3" style={{ fontSize: '0.75rem' }}>
+              <Badge bg="danger" className="ml-3" style={{ fontSize: '0.75rem' }}>
                 {totalPending} Pending
               </Badge>
             )}
@@ -176,16 +176,16 @@ export default function EmployeeDetailPage() {
                     {emp.job?.title || 'No Position'}
                   </div>
                   <div className="d-flex flex-wrap" style={{ gap: '0.25rem' }}>
-                    <Badge variant="success" style={{ fontSize: '0.65rem', padding: '0.15rem 0.4rem' }}>
+                    <Badge bg="success" style={{ fontSize: '0.65rem', padding: '0.15rem 0.4rem' }}>
                       {stats.complete} Done
                     </Badge>
                     {stats.pending > 0 && (
-                      <Badge variant="warning" style={{ fontSize: '0.65rem', padding: '0.15rem 0.4rem' }}>
+                      <Badge bg="warning" style={{ fontSize: '0.65rem', padding: '0.15rem 0.4rem' }}>
                         {stats.pending} Pending
                       </Badge>
                     )}
                     {stats.overdue > 0 && (
-                      <Badge variant="danger" style={{ fontSize: '0.65rem', padding: '0.15rem 0.4rem' }}>
+                      <Badge bg="danger" style={{ fontSize: '0.65rem', padding: '0.15rem 0.4rem' }}>
                         {stats.overdue} Overdue
                       </Badge>
                     )}
@@ -287,7 +287,7 @@ export default function EmployeeDetailPage() {
         </div>
       </div>
 
-      <style jsx global>{`
+      <style>{`
         .employee-detail-tabs {
           height: 100%;
           display: flex;
