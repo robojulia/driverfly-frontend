@@ -245,17 +245,6 @@ export default function Applicants() {
             </div>
           }
         >
-          {/* Breadcrumb Navigation */}
-          <nav aria-label="breadcrumb" className="px-2 mb-3">
-            <div className="d-flex align-items-center small text-muted">
-              <Link href="/dashboard">
-                <a className="text-muted text-decoration-none">Dashboard</a>
-              </Link>
-              <span className="mx-2">&gt;</span>
-              <strong className="text-dark">Applicants</strong>
-            </div>
-          </nav>
-
           {/* Explanatory Section */}
           <div
             className="mb-4 p-3"
@@ -1009,4 +998,3 @@ function ApplicantView(props: ViewProps) {
     </div>
   );
 }
-

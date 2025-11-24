@@ -1,16 +1,17 @@
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { Button, Col, Row } from 'react-bootstrap';
+import Link from 'next/link';
+import { useCallback, useMemo, useState } from 'react';
+import { Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import OnboardingChecklist from '../../../../../components/applicants/onboarding-checklist';
-import { ApplicantEligibilityHeader } from '../../../../../components/applicants/applicant-eligibility-header';
 import FullLayout from '../../../../../components/dashboard/layouts/layout/full-layout';
-import { EditApplicantForm } from '../../../../../components/forms/company/edit-applicant-form';
+import { EditApplicantFormNew } from '../../../../../components/forms/company/edit-applicant-form-new';
 import ChildPageLayout from '../../../../../components/layouts/page/child-page-layout';
 import { useTranslation } from '../../../../../hooks/use-translation';
 import { ApplicantEntity } from '../../../../../models/applicant/applicant.entity';
+import { ApplicantSuggestedJobEntity } from '../../../../../models/applicant/applicant-suggested-job.entity';
 import { useEffectAsync } from '../../../../../utils/react';
 import ApplicantApi from '../../../../api/applicant';
+import { HireApplicantForm } from '../../../../../components/forms/company/hire-applicant-form';
 // DOT verification panel is now rendered inside EditApplicantForm
 
 export default function EditApplicant({ id }) {
@@ -25,12 +26,15 @@ export default function EditApplicant({ id }) {
   const [eligibility, setEligibility] = useState<any>(null);
   const [refetchApplicant, setRefetchApplicant] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [applicantSuggestedJobs, setApplicantSuggestedJobs] = useState<ApplicantSuggestedJobEntity[]>([]);
 
   useEffectAsync(async () => {
     if (id) {
       const api = new ApplicantApi();
+      const entity = await api.getById(+id, true, ['documents', 'notes', 'jobs', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned']);
 
-      const entity = await api.getById(+id, true);
+      const suggestedJobs = await api.suggestedJobs.get(id);
+      setApplicantSuggestedJobs(suggestedJobs || []);
 
       if (entity) {
         setApplicant(entity);
@@ -48,56 +52,48 @@ export default function EditApplicant({ id }) {
     }
   }, [id, refetchApplicant]);
 
-  const onSaveComplete = () => {
-    setRefetchApplicant(!refetchApplicant);
-  };
+  // No page refresh after save; forms show their own success/failure notifications
 
   return (
     <ChildPageLayout
       title={t('EDIT_{name}', { name: 'APPLICANT' }, { translateProps: true })}
       backPath={backPath}
+      actions={(
+        <div className="d-flex align-items-center" style={{ gap: 8 }}>
+          <HireApplicantForm entity={applicant} />
+          <Button
+            type="button"
+            className={`btn btn-light`}
+            onClick={() => router.push(backPath)}
+          >
+            {t('BACK')}
+          </Button>
+        </div>
+      )}
     >
-      {/* Company Eligibility Section */}
-      <ApplicantEligibilityHeader eligibility={eligibility} />
+      <nav aria-label="breadcrumb" className="px-2 mb-2">
+        <div className="d-flex align-items-center small text-muted">
+          <Link href="/dashboard"><a className="text-muted text-decoration-none">Dashboard</a></Link>
+          <span className="mx-2">&gt;</span>
+          <Link href="/dashboard/company/applicants"><a className="text-muted text-decoration-none">Applicants</a></Link>
+          <span className="mx-2">&gt;</span>
+          <strong className="text-dark">Edit Applicant</strong>
+        </div>
+      </nav>
+      {/* Identity summary and sticky sub-nav removed per design direction */}
 
-      {/* DOT Verification panel moved inside EditApplicantForm */}
-
-      <EditApplicantForm
+      <EditApplicantFormNew
         entity={applicant}
         setEntity={setApplicant}
         isSubmitting={isSubmitting}
         setIsSubmitting={setIsSubmitting}
-        onSaveComplete={onSaveComplete}
+        applicantSuggestedJobs={applicantSuggestedJobs}
+        hideHeaderActions
+        onSaveComplete={() => {
+          // Trigger refetch to reload fresh data from database
+          setRefetchApplicant(!refetchApplicant);
+        }}
       />
-      {applicant?.id && (
-        <Row>
-          <Col>
-            <OnboardingChecklist
-              showHistory
-              title="ONBOARDING_DOCUMENTS"
-              applicant={applicant}
-              canEdit={!Boolean(applicant?.is_hired)}
-              showCompleted={true}
-              canEditSafetyPerformance={true}
-              showResendButton={true}
-              onUpdateDocument={(doc) => {
-                setApplicant({
-                  ...applicant,
-                  documents: [...applicant.documents, { ...doc }],
-                });
-              }}
-              onDeleteDocument={(doc) => {
-                const updatedDocuments = applicant.documents?.filter((v) => v.id != doc.id);
-                setApplicant({
-                  ...applicant,
-                  documents: [...updatedDocuments],
-                });
-              }}
-            />
-            {/* <ViewApplicantDqf canEdit={true} applicant={applicant} /> */}
-          </Col>
-        </Row>
-      )}
     </ChildPageLayout>
   );
 }
@@ -119,3 +115,5 @@ export async function getServerSideProps(context) {
     return { props: { id: null } };
   }
 }
+
+

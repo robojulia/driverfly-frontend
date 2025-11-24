@@ -7,9 +7,10 @@ import FullLayout from '../../../../../components/dashboard/layouts/layout/full-
 
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useState } from 'react';
 import BaseTextArea from '../../../../../components/forms/base-text-area';
-import ViewCard from '../../../../../components/view-details/view-card';
+import Section from '../../../../../components/view-details/section';
 import ViewModal from '../../../../../components/view-details/view-modal';
 import ViewPdf from '../../../../../components/view-details/view-pdf';
 import ViewTable from '../../../../../components/view-details/view-table';
@@ -27,7 +28,7 @@ import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
 import ApplicantApi from '../../../../api/applicant';
 import DocumentApi from '../../../../api/document';
 
-import ApplicantConsiderFor from '../../../../../components/applicants/applicant-consider-for';
+import ApplicantJobsAppliedTo from '../../../../../components/applicants/applicant-jobs-applied-to';
 import ApplicantJobsApplied from '../../../../../components/applicants/applicant-jobs-applied';
 import ApplicantSafetyBackground from '../../../../../components/applicants/applicant-safety-background';
 import ViewApplicantDetail from '../../../../../components/applicants/applicant-view-details';
@@ -35,8 +36,17 @@ import ApplicantWorkHistory from '../../../../../components/applicants/applicant
 import { ApplicantDocumentType } from '../../../../../enums/applicants/applicant-document-type.enum';
 import { ApplicantOnBoardingChecklist } from '../../../../../enums/applicants/applicant-onboarding-checklist.enum';
 import CompanyApi from '../../../../api/company';
-import { ApplicantExtras as ApplicantExtrasEnum } from '../../../../../enums/applicants/applicant-extras.enum';
-import { useFeatureFlag } from '../../../../../context/feature-flag-context';
+import { ApplicantBasicDetailsFormNew } from '../../../../../components/forms/company/applicant-basic-details-form-new';
+import { ApplicantLicensingForm } from '../../../../../components/forms/company/applicant-licensing-form';
+import { ApplicantWorkHistoryForm } from '../../../../../components/forms/company/applicant-work-history-form';
+import { ApplicantEquipmentExperienceForm } from '../../../../../components/forms/company/applicant-equipment-experience-form';
+import { ApplicantSafetyBackgroundForm } from '../../../../../components/forms/company/applicant-safety-background-form';
+import { ApplicantSignedAgreementsForm } from '../../../../../components/forms/company/applicant-signed-agreements-form';
+import OnboardingChecklist from '../../../../../components/applicants/onboarding-checklist';
+import { ApplicantApplicationChecklistForm } from '../../../../../components/forms/company/applicant-application-checklist-form';
+import { ApplicantNotesForm } from '../../../../../components/forms/company/applicant-notes-form';
+import { ApplicantEmergencyContactForm } from '../../../../../components/forms/company/applicant-emergency-contact-form';
+import { ApplicantPreferencesForm } from '../../../../../components/forms/company/applicant-preferences-form';
 
 export default function ViewApplicant({ id }) {
   const router = useRouter();
@@ -44,7 +54,6 @@ export default function ViewApplicant({ id }) {
   const { t } = useTranslation();
 
   const { hasPermission } = useAuth();
-  const showDotVerification = useFeatureFlag('DOT_VERIFICATION_RESULTS');
 
   const protectedFields = {
     license_number: hasPermission('CanViewApplicant.license_number'),
@@ -55,7 +64,6 @@ export default function ViewApplicant({ id }) {
   const [applicantSuggestedJobs, setApplicantSuggestedJobs] = useState<
     ApplicantSuggestedJobEntity[]
   >([]);
-  const [dotVerifyRaw, setDotVerifyRaw] = useState<any>(null);
 
   const backPath = '/dashboard/company/applicants';
 
@@ -65,7 +73,7 @@ export default function ViewApplicant({ id }) {
     if (id) {
       const api = new ApplicantApi();
 
-      const data = await api.getById(+id);
+      const data = await api.getById(+id, false, ['documents', 'notes', 'jobs', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned']);
 
       const suggestedJobs = await api.suggestedJobs.get(id);
       setApplicantSuggestedJobs(suggestedJobs);
@@ -201,426 +209,143 @@ export default function ViewApplicant({ id }) {
   const tooltip = <Tooltip id="my-tooltip">{t('APPLICANT_ALREADY_HIRED')}</Tooltip>;
   const canEditTooltip = <Tooltip id="my-tooltip">{t('EDIT_APPLICANT_PROFILE')}</Tooltip>;
   return (
-    <ChildPageLayout backPath={backPath} title={title}>
+    <ChildPageLayout
+      backPath={backPath}
+      title={title}
+      actions={canEdit ? (
+        <OverlayTrigger
+          trigger={["hover", "focus"]}
+          delay={{ show: 0, hide: 0 }}
+          overlay={Boolean(applicant?.is_hired) ? tooltip : canEditTooltip}
+        >
+          <div>
+            <Button type="button" onClick={onEditClick} disabled={Boolean(applicant?.is_hired)}>
+              <Pencil /> {t('EDIT')}
+            </Button>
+          </div>
+        </OverlayTrigger>
+      ) : undefined}
+    >
+      <nav aria-label="breadcrumb" className="px-2 mb-2">
+        <div className="d-flex align-items-center small text-muted">
+          <Link href="/dashboard"><a className="text-muted text-decoration-none">Dashboard</a></Link>
+          <span className="mx-2">&gt;</span>
+          <Link href="/dashboard/company/applicants"><a className="text-muted text-decoration-none">Applicants</a></Link>
+          <span className="mx-2">&gt;</span>
+          <strong className="text-dark">View Applicant</strong>
+        </div>
+      </nav>
       {Boolean(applicant.id) && (
         <>
-          {canEdit && (
-            <Row>
-              <Col>
-                {!!!Object.values(applicant?.jobs).length && (
-                  <strong>
-                    <em>
-                      <p className="text-danger">{t('NO_JOB_TIED_WITH_APPLICANT')}</p>
-                    </em>
-                  </strong>
-                )}
-              </Col>
-              <Col>
-                <div style={{ float: 'right', marginBottom: '10px' }} className="assign_unassign">
-                  <OverlayTrigger
-                    trigger={['hover', 'focus']}
-                    delay={{ show: 0, hide: 0 }}
-                    overlay={Boolean(applicant?.is_hired) ? tooltip : canEditTooltip}
-                  >
-                    <div className="float-right mr-2">
-                      <Button
-                        type="button"
-                        onClick={onEditClick}
-                        disabled={Boolean(applicant?.is_hired)}
-                      >
-                        <Pencil /> {t('EDIT')}
-                      </Button>
-                    </div>
-                  </OverlayTrigger>
+          {/* Identity summary and sticky sub-nav removed per design direction */}
+          {/* New read-only layout mirroring the edit page */}
+          <div id="basic-info" />
+          <Row className="px-2">
+            <ApplicantBasicDetailsFormNew
+              entity={{ ...applicant, is_hired: true }}
+              setEntity={() => {}}
+              isSubmitting={true}
+              setIsSubmitting={() => {}}
+              hideActions
+              showLicensing={false}
+              showPreferences={false}
+            />
+          </Row>
+          
+          {/* CDL Information */}
+          <div id="licensing" />
+          <ApplicantLicensingForm
+            entity={{ ...applicant, is_hired: true }}
+            setEntity={() => {}}
+          />
 
-                  {/* <ButtonGroup size="sm"> */}
-                  {/* {applicant?.assignedUser ? (
-                    <Button
-                      type="button"
-                      variant="danger"
-                      onClick={onUnassignClick}
-                    >
-                      <BookmarkDash /> {t("UNASSIGN")}
-                    </Button>
-                  ) : (
-                    <Button
-                      type="button"
-                      className="theme-general-btn"
-                      variant=""
-                      onClick={onAssignClick}
-                    >
-                      <BookmarkCheck /> {t("ASSIGN_TO_ME")}
-                    </Button>
-                  )} */}
-                  {/* <Button type="button" onClick={onEditClick}>
-                    <Pencil /> {t("EDIT")}
-                  </Button> */}
-                  {/* </ButtonGroup> */}
-                </div>
-              </Col>
-            </Row>
-          )}
-          <FlagApplicant applicantId={id} />
-          <Row>
-            <Col>
-              <ViewApplicantDetail applicant={applicant} protectedFields={protectedFields} />
-            </Col>
+          {/* Equipment experience */}
+          <div id="equipment" />
+          <Row className="px-2">
+            <ApplicantEquipmentExperienceForm
+              entity={{ ...applicant, is_hired: true }}
+              setEntity={() => {}}
+              isSubmitting={true}
+              setIsSubmitting={() => {}}
+              hideActions
+              hideAddButton={true}
+            />
           </Row>
-          {/* DOT Lookup Results (Owner Operator only) */}
-          {applicant?.is_owner_operator && showDotVerification && (
-            <Row className="mt-3">
-              <Col>
-                <ViewCard title="DOT Lookup Results">
-                  <div className="d-flex justify-content-between align-items-start flex-wrap">
-                    {(() => {
-                      const tokens = (applicant?.extras?.find((e) => e.type === ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS)?.value as string[]) || [];
-                      if (!tokens.length) return null;
-                      const checks = [
-                        { key: 'EMAIL', label: 'Email' },
-                        { key: 'PHONE', label: 'Phone' },
-                        { key: 'STREET_ADDRESS', label: 'Street address' },
-                        { key: 'CITY', label: 'City' },
-                        { key: 'STATE', label: 'State' },
-                        { key: 'ZIP_CODE', label: 'ZIP code' },
-                      ];
-                      const getStatus = (k: string): boolean | null => {
-                        if (tokens.includes(`${k}_SUCCESS`)) return true;
-                        if (tokens.includes(`${k}_FAIL`)) return false;
-                        return null;
-                      };
-                      return (
-                        <div className="mb-2" style={{ minWidth: 240 }}>
-                          {checks.map(({ key, label }) => {
-                            const status = getStatus(key);
-                            return (
-                              <div key={key} className="d-flex align-items-center mb-1">
-                                <div style={{ width: 140 }}>{label}</div>
-                                {status === true && <span className="badge bg-success">Match</span>}
-                                {status === false && <span className="badge bg-danger">No match</span>}
-                                {status === null && <span className="badge bg-secondary">Unknown</span>}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      );
-                    })()}
-                    <div style={{ flex: 1, minWidth: 280 }} className="text-start">
-                      <div>
-                        {(() => {
-                          if (!dotVerifyRaw) return null;
-                          const data: any = (dotVerifyRaw as any)?.records ?? dotVerifyRaw;
-                          const records: any[] = Array.isArray(data) ? data : [data];
-                          const join = (parts: Array<string | undefined | null>, sep: string) =>
-                            parts.filter((p) => Boolean(p && String(p).trim().length)).map((p) => String(p)).join(sep);
-                          const toTitleCase = (value?: string) => {
-                            if (!value) return value;
-                            const cased = String(value)
-                              .toLowerCase()
-                              .replace(/\b([a-z])(\w*)/g, (_: any, a: string, b: string) => a.toUpperCase() + b);
-                            return cased.replace(/ Llc\b/g, ' LLC');
-                          };
-                          const formatCountry = (value?: string) => {
-                            if (!value) return value;
-                            const raw = String(value).trim();
-                            const normalized = raw.toUpperCase().replace(/\./g, '');
-                            if (
-                              normalized === 'US' ||
-                              normalized === 'USA' ||
-                              normalized === 'UNITED STATES' ||
-                              normalized === 'UNITED STATES OF AMERICA'
-                            ) {
-                              return 'United States of America';
-                            }
-                            return raw.toUpperCase();
-                          };
-                          const formatPhone = (value?: string) => {
-                            if (!value) return value;
-                            const raw = String(value);
-                            const digitsOnly = raw.replace(/\D/g, '');
-                            const normalized = digitsOnly.length === 11 && digitsOnly.startsWith('1') ? digitsOnly.slice(1) : digitsOnly;
-                            if (normalized.length === 10) {
-                              const area = normalized.slice(0, 3);
-                              const exchange = normalized.slice(3, 6);
-                              const line = normalized.slice(6);
-                              return `(${area}) ${exchange}-${line}`;
-                            }
-                            if (normalized.length === 7) {
-                              return `${normalized.slice(0, 3)}-${normalized.slice(3)}`;
-                            }
-                            return raw;
-                          };
-                          return (
-                            <div>
-                              {records.map((rec: any, idx: number) => {
-                                const phyCityStateZip = join([
-                                  toTitleCase(rec?.phy_city),
-                                  join([String(rec?.phy_state || '').toUpperCase(), rec?.phy_zip], ' '),
-                                ], ', ');
-                                const mailingCityStateZip = join([
-                                  toTitleCase(rec?.carrier_mailing_city),
-                                  join([String(rec?.carrier_mailing_state || '').toUpperCase(), rec?.carrier_mailing_zip], ' '),
-                                ], ', ');
-                                const phyStreet = toTitleCase(rec?.phy_street);
-                                const phyCountryDisplay = formatCountry(rec?.phy_country);
-                                const addressString = join([
-                                  phyStreet,
-                                  phyCityStateZip,
-                                  phyCountryDisplay,
-                                ], ', ');
-                                const mailingStreet = toTitleCase(rec?.carrier_mailing_street);
-                                const mailingCountryDisplay = formatCountry(rec?.carrier_mailing_country);
-                                const mailingAddressString = join([
-                                  mailingStreet,
-                                  mailingCityStateZip,
-                                  mailingCountryDisplay,
-                                ], ', ');
-                                const areAddressesIdentical = Boolean(addressString) && Boolean(mailingAddressString) && addressString === mailingAddressString;
-                                return (
-                                  <div key={idx} className="mb-2">
-                                    <div className="fw-semibold">Company Name</div>
-                                    <div className="mb-1">{toTitleCase(rec?.legal_name) ?? ''}</div>
-                                    <div className="fw-semibold">Address</div>
-                                    <div className="mb-1">
-                                      {phyStreet && <div>{phyStreet}</div>}
-                                      {phyCityStateZip && <div>{phyCityStateZip}</div>}
-                                      {phyCountryDisplay && <div>{phyCountryDisplay}</div>}
-                                    </div>
-                                    {!areAddressesIdentical && mailingAddressString && (
-                                      <>
-                                        <div className="fw-semibold">Mailing Address</div>
-                                        <div className="mb-1">
-                                          {mailingStreet && <div>{mailingStreet}</div>}
-                                          {mailingCityStateZip && <div>{mailingCityStateZip}</div>}
-                                          {mailingCountryDisplay && <div>{mailingCountryDisplay}</div>}
-                                        </div>
-                                      </>
-                                    )}
-                                    <div className="fw-semibold">Phone</div>
-                                    <div className="mb-1">{formatPhone(rec?.phone) ?? ''}</div>
-                                    <div className="fw-semibold">Email Address</div>
-                                    <div>{rec?.email_address ?? ''}</div>
-                                    {idx < records.length - 1 && <hr className="my-2" />}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          );
-                        })()}
-                      </div>
-                    </div>
-                    <div>
-                      <Button
-                        type="button"
-                        onClick={async () => {
-                          try {
-                            const companyApi = new CompanyApi();
-                            const applicantApi = new ApplicantApi();
-                            const dot_number = applicant?.extras?.find((e) => e.type === ApplicantExtrasEnum.DOT_NUMBER)?.value;
-                            const business_name = applicant?.extras?.find((e) => e.type === ApplicantExtrasEnum.BUSINESS_NAME)?.value;
-                            if (!dot_number) return toast.error('DOT number not found');
-                            const tokens = await companyApi.dotVerify({
-                              dot_number,
-                              email: applicant?.email,
-                              phone: applicant?.phone,
-                              address_1: applicant?.address_1 || applicant?.street,
-                              city: applicant?.city,
-                              state: applicant?.state,
-                              zip_code: applicant?.zip_code,
-                              business_name,
-                            });
-                            setDotVerifyRaw(tokens);
-                            const newTokens = Array.isArray(tokens) && tokens.length ? tokens[0] : [];
-                            const others = (applicant?.extras || []).filter((e) => e.type !== ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS);
-                            const updated = {
-                              type: ApplicantExtrasEnum.DOT_VERIFICATION_RESULTS,
-                              value: newTokens,
-                            } as any;
-                            const newExtras = [...others, updated];
-                            const saved = await applicantApi.update(
-                              applicant.id,
-                              {
-                                first_name: applicant?.first_name,
-                                last_name: applicant?.last_name,
-                                extras: newExtras,
-                              } as any,
-                            );
-                            setApplicant({ ...saved });
-                            toast.success('DOT verification refreshed');
-                          } catch (e) {
-                            toast.error('Failed to refresh DOT verification');
-                          }
-                        }}
-                      >
-                        Refresh
-                      </Button>
-                    </div>
-                  </div>
-                </ViewCard>
-              </Col>
-            </Row>
-          )}
-          <Row>
-            <Col lg={6}>
-              <ApplicantWorkHistory applicant={applicant} />
-            </Col>
-            <Col lg={6}>
-              {/* < ViewApplicantDAC applicant={applicant} /> */}
-              {/* <ViewApplicantDqf applicant={applicant} /> */}
-            </Col>
+
+          {/* Previous Employment */}
+          <div id="work-history" />
+          <Row className="px-2">
+            <ApplicantWorkHistoryForm
+              entity={{ ...applicant, is_hired: true }}
+              setEntity={() => {}}
+              isSubmitting={true}
+              setIsSubmitting={() => {}}
+              hideActions
+            />
           </Row>
-          <Row>
-            <Col>
-              <ApplicantSafetyBackground applicant={applicant} />
-            </Col>
+
+          {/* Safety Background */}
+          <div id="safety" />
+          <Row className="px-2">
+            <ApplicantSafetyBackgroundForm
+              entity={{ ...applicant, is_hired: true }}
+              setEntity={() => {}}
+              isSubmitting={true}
+              setIsSubmitting={() => {}}
+              hideActions
+            />
           </Row>
-          <Row>
-            <Col md="6">
-              <ApplicantJobsApplied applicant={applicant} />
-            </Col>
-            {applicantSuggestedJobs && (
-              <Col md="6">
-                <ApplicantConsiderFor
+
+          {/* Preferences */}
+          <div id="preferences" />
+          <ApplicantPreferencesForm entity={{ ...applicant, is_hired: true }} setEntity={() => {}} hideActions />
+
+          {/* Job(s) Applied To */}
+          <div id="jobs-applied-to" />
+          <ApplicantJobsAppliedTo
+            applicant={applicant}
+            applicantSuggestedJobs={applicantSuggestedJobs || []}
+          />
+
+          {/* Uploaded Documents now shown inside Onboarding Documents card */}
+          <div id="uploaded-documents" />
+
+          {/* Onboarding Documents */}
+          {applicant?.id && (
+            <>
+            <div id="onboarding-documents" />
+            <Row className="px-2">
+              <Col md="12" className="p-0 px-lg-2">
+                <OnboardingChecklist
+                  showHistory
+                  title="ONBOARDING_DOCUMENTS"
+                  useSectionContainer
                   applicant={applicant}
-                  applicantSuggestedJobs={applicantSuggestedJobs}
+                  canEdit={false}
+                  showCompleted={true}
+                  canEditSafetyPerformance={false}
+                  showResendButton={false}
                 />
               </Col>
-            )}
-          </Row>
-          <Row>
-            <Col md="12">
-              <ViewCard title="UPLOADED_DOCUMENTS">
-                <ViewTable
-                  type="DOCUMENTS"
-                  headers={{
-                    type: 'TYPE',
-                    document: 'DOCUMENT',
-                    date_added: 'DATE_ADDED',
-                  }}
-                  items={applicant?.documents
-                    ?.filter(
-                      (v) =>
-                        !Object.values(ApplicantOnBoardingChecklist).includes(
-                          v.type as ApplicantOnBoardingChecklist
-                        )
-                    )
-                    ?.map((document) => {
-                      const isEnumType = Object.values(ApplicantDocumentType).includes(
-                        document.type as ApplicantDocumentType
-                      );
-                      return {
-                        type: isEnumType
-                          ? t(`ApplicantDocumentType.${document.type}`)
-                          : document.type,
-                        document: (
-                          <a
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              viewDocumentClick(document.id, document.name);
-                            }}
-                          >
-                            {document.name}
-                          </a>
-                        ),
-                        date_added: new Date(document.created_at).toDateString(),
-                      };
-                    })}
-                />
-              </ViewCard>
-            </Col>
-            <Col md="12">
-              <ViewCard title="NOTES">
-                <ViewTable
-                  type="NOTES"
-                  headers={{
-                    notes: 'NOTES',
-                    user: 'USER',
-                    date: 'DATE',
-                    action: (
-                      <a
-                        className="font-weight-bold"
-                        role="button"
-                        onClick={handleNoteModalShow}
-                        hidden={Boolean(applicant?.is_hired)}
-                      >
-                        <PlusLg />
-                      </a>
-                    ),
-                  }}
-                  items={applicant?.notes?.map((v) => ({
-                    notes: v.text,
-                    user: `${v.user.first_name} ${v.user.last_name}`,
-                    date: new Date(v.created_at).toDateString(),
-                    action: (
-                      <>
-                        <a
-                          className="mr-2 font-weight-bold"
-                          role="button"
-                          onClick={() => {
-                            editNoteClick(v.id);
-                          }}
-                        >
-                          <Pencil />
-                        </a>
-                        <a
-                          className="mr-2font-weight-bold"
-                          role="button"
-                          onClick={() => {
-                            deleteNoteClick(v.id);
-                          }}
-                        >
-                          <Trash />
-                        </a>
-                      </>
-                    ),
-                  }))}
-                />
-              </ViewCard>
-            </Col>
-          </Row>
-          <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
-          <ViewModal
-            title={t(addNoteForm.values?.id ? 'EDIT_{name}' : 'ADD_{name}', {
-              name: t('NOTE'),
-            })}
-            show={addNoteVisible}
-            onCloseClick={handleNoteModalClose}
-          >
-            <form onSubmit={addNoteForm.handleSubmit}>
-              <Row>
-                <Col>
-                  <BaseTextArea
-                    label={t('NOTE')}
-                    name="text"
-                    placeholder={t('NOTES')}
-                    required
-                    formik={addNoteForm}
-                  />
-                </Col>
-              </Row>
-              <Row className="mt-1">
-                <Col xs="2" className="">
-                  <Button type="submit">{t('SAVE')}</Button>
-                </Col>
-              </Row>
-            </form>
-          </ViewModal>
-          <ViewModal
-            title="CONFIRMATION"
-            show={showConfirmationModal}
-            onCloseClick={() => setShowConfirmationModal(false)}
-            footer={
-              <button
-                type="button"
-                className="btn btn-primary w-100 p-lg-3 p-5 mx-2"
-                onClick={handleConfirmClick}
-              >
-                {t('CONFIRM')}
-              </button>
-            }
-          >
-            <p className="m-3">{t('NOTE_DELETION_CONFIRMATION')}</p>
-          </ViewModal>
+            </Row>
+            </>
+          )}
+
+          {/* Application Checklist */}
+          <div id="application-checklist" />
+          <ApplicantApplicationChecklistForm
+              entity={{ ...applicant, is_hired: true }}
+              setEntity={() => {}}
+            />
+
+          {/* Notes */}
+          <div id="notes" />
+          <ApplicantNotesForm entity={{ ...applicant, is_hired: true }} setEntity={() => {}} />
+
+          {/* Emergency Contact Information */}
+          <div id="emergency-contact" />
+          <ApplicantEmergencyContactForm entity={{ ...applicant, is_hired: true }} setEntity={() => {}} />
+
         </>
       )}
     </ChildPageLayout>
@@ -644,3 +369,5 @@ export async function getServerSideProps(context) {
     return { notFound: true };
   }
 }
+
+
