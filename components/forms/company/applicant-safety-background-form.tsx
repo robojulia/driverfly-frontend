@@ -104,7 +104,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
             (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
             (window as any).__applicantFormRegistry['safety'] = () => {
                 console.log('SafetyForm getter called');
-                // Return ONLY safety-related fields
+                // Return ONLY safety-related fields 
                 return {
                     can_pass_drug_test: formRef.current.values.can_pass_drug_test,
                     has_past_dui: formRef.current.values.has_past_dui,
