@@ -107,7 +107,7 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 									}}
 									className="hover-white-btn"
 								>
-									✏️ {t("EDIT")}
+									{t("EDIT")}
 								</Button>
 							)}
 						</div>

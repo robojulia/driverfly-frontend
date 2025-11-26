@@ -4,7 +4,7 @@ import { Container, Navbar } from 'react-bootstrap';
 import { Icon } from 'react-bootstrap-icons';
 import { ChevronDown, ChevronRight, X } from 'react-bootstrap-icons';
 import { useMediaQuery } from 'react-responsive';
-import { useAuth } from '../../../../hooks/use-auth';
+import { useAuth, useToken } from '../../../../hooks/use-auth';
 import { TranslateInterface, useTranslation } from '../../../../hooks/use-translation';
 import { useEffect, useState } from 'react';
 import { useFeatureFlags } from '../../../../context/feature-flag-context';
@@ -30,6 +30,8 @@ export interface SidebarItem {
   items?: SidebarItem[];
   isSelected?: boolean;
   group?: string;
+  external?: boolean;
+  gradient?: boolean;
 }
 
 /**
@@ -281,8 +283,9 @@ interface SidebarLinkProps {
 
 function SidebarLink(props: SidebarLinkProps) {
   const { isMobile, t, currentPath, onNavigate } = props;
-  let { icon: Cmp, pathname, items, text } = props.item;
+  let { icon: Cmp, pathname, items, text, external, gradient } = props.item;
   const [expanded, setExpanded] = useState(false);
+  const { getToken } = useToken();
 
   if (!pathname && items) pathname = items[0]?.pathname;
 
@@ -310,16 +313,45 @@ function SidebarLink(props: SidebarLinkProps) {
       e.preventDefault();
       setExpanded(!expanded);
     }
+
+    // Handle external links with SSO token
+    if (external) {
+      e.preventDefault();
+      const token = getToken();
+      if (token) {
+        const separator = pathname.includes('?') ? '&' : '?';
+        window.open(`${pathname}${separator}sso_token=${encodeURIComponent(token)}`, '_blank');
+      } else {
+        window.open(pathname, '_blank');
+      }
+    }
+
     if (onNavigate) {
       onNavigate();
     }
   };
 
+  // For external links, render without Link wrapper
+  if (external) {
+    return (
+      <li
+        className={`${isActive ? 'active' : ''} ${hasSubItems ? 'has-subitems' : ''} ${
+          expanded ? 'expanded' : ''
+        } ${gradient ? 'gradient-link' : ''}`}
+      >
+        <a href={pathname} onClick={handleClick} target="_blank" rel="noopener noreferrer">
+          {Cmp && <Cmp className="icon_left" />}
+          <span>{t(text)}</span>
+        </a>
+      </li>
+    );
+  }
+
   return (
     <li
       className={`${isActive ? 'active' : ''} ${hasSubItems ? 'has-subitems' : ''} ${
         expanded ? 'expanded' : ''
-      }`}
+      } ${gradient ? 'gradient-link' : ''}`}
     >
       <Link href={pathname} scroll={true}>
         <a onClick={handleClick}>

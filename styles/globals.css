@@ -42,8 +42,8 @@ a {
 /* Page Title Styling - Override Bootstrap defaults */
 h2,
 .h2 {
-  font-size: 19px !important;
-  font-weight: 700 !important;
+  font-size: 32px !important;
+  font-weight: 600 !important;
 }
 
 /* Main Page Title Headers ONLY - Top headers like "Applicants", "Jobs", "Dashboard" */
@@ -688,8 +688,8 @@ html {
 
   h2,
   .h2 {
-    font-size: 19px !important;
-    font-weight: 700 !important;
+    font-size: 32px !important;
+    font-weight: 600 !important;
   }
 
   h3,

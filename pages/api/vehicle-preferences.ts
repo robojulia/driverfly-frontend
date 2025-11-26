@@ -31,4 +31,24 @@ export default class VehiclePreferencesApi extends BaseApi {
     const { data } = await this.put(`${this.baseUrl}/${vehicleId}/preferences`, entity);
     return data;
   }
+
+  // Global notification settings (company-wide)
+  async getGlobalSettings(): Promise<VehiclePreferencesEntity> {
+    try {
+      const { data } = await this.get(`${this.baseUrl}/global-notification-settings`);
+      return data;
+    } catch (error) {
+      if (error.response?.status === 404) {
+        return null;
+      }
+      throw error;
+    }
+  }
+
+  async updateGlobalSettings(
+    entity: Partial<VehiclePreferencesEntity>
+  ): Promise<VehiclePreferencesEntity> {
+    const { data } = await this.put(`${this.baseUrl}/global-notification-settings`, entity);
+    return data;
+  }
 }

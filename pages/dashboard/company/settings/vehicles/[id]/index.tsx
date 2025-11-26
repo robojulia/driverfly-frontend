@@ -19,6 +19,10 @@ import { InspectionCompletionModal } from '../../../../../../components/vehicle/
 import { RepairRecordsTable } from '../../../../../../components/vehicle/repairs/RepairRecordsTable';
 import { VehicleRepairRecordEntity } from '../../../../../../models/company/vehicle-repair-record.entity';
 import VehicleRepairRecordApi from '../../../../../api/vehicle-repair-record';
+import VehicleNotificationRecipients from '../../../../../../components/vehicles/VehicleNotificationRecipients';
+import { MaintenanceReportsTable } from '../../../../../../components/vehicle/maintenance/MaintenanceReportsTable';
+import { VehicleMaintenanceReportEntity } from '../../../../../../models/company/vehicle-maintenance-report.entity';
+import VehicleMaintenanceReportApi from '../../../../../api/vehicle-maintenance-report';
 
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
@@ -54,6 +58,8 @@ export default function ViewVehicle({ id }) {
   const [repairs, setRepairs] = useState<VehicleRepairRecordEntity[]>([]);
   const [repairToDelete, setRepairToDelete] = useState<VehicleRepairRecordEntity | null>(null);
   const [activeTab, setActiveTab] = useState('inspections');
+  const [maintenanceReports, setMaintenanceReports] = useState<VehicleMaintenanceReportEntity[]>([]);
+  const [maintenanceReportToDelete, setMaintenanceReportToDelete] = useState<VehicleMaintenanceReportEntity | null>(null);
 
   const backPath = '/dashboard/company/settings/vehicles';
 
@@ -254,8 +260,58 @@ export default function ViewVehicle({ id }) {
     }
   };
 
+  // Fetch maintenance reports
+  useEffectAsync(async () => {
+    if (id) {
+      try {
+        const api = new VehicleMaintenanceReportApi();
+        const data = await api.list(+id);
+        setMaintenanceReports(data);
+      } catch (error) {
+        console.error('Error fetching maintenance reports:', error);
+        toast.error(t('Error loading maintenance reports'));
+      }
+    }
+  }, [id]);
+
+  const onCreateMaintenanceReportClick = async () => {
+    await router.push(`${router.asPath}/maintenance-reports/create`);
+  };
+
+  const onEditMaintenanceReportClick = async (reportId: number) => {
+    await router.push(`${router.asPath}/maintenance-reports/${reportId}/edit`);
+  };
+
+  const onDeleteMaintenanceReportClick = (report: VehicleMaintenanceReportEntity) => {
+    setMaintenanceReportToDelete(report);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteMaintenanceReportConfirm = async () => {
+    if (!maintenanceReportToDelete) return;
+
+    try {
+      const api = new VehicleMaintenanceReportApi();
+      await api.remove(+id, maintenanceReportToDelete.id!);
+      setMaintenanceReports(maintenanceReports.filter((r) => r.id !== maintenanceReportToDelete.id));
+      toast.success(t('Maintenance report deleted successfully'));
+    } catch (error) {
+      console.error('Error deleting maintenance report:', error);
+      toast.error(t('Error deleting maintenance report'));
+    } finally {
+      setShowDeleteModal(false);
+      setMaintenanceReportToDelete(null);
+    }
+  };
+
   const onPreferencesClick = async () => {
     await router.push(`${router.asPath}/preferences`);
+  };
+
+  const handleSaveNotificationRecipients = (recipients: any) => {
+    // TODO: Implement API call to save notification recipients
+    console.log('Saving notification recipients:', recipients);
+    toast.success(t('Notification recipients saved successfully'));
   };
 
   // If vehicle is not loaded, don't render the page
@@ -360,6 +416,11 @@ export default function ViewVehicle({ id }) {
               vehicle={vehicle}
               onRegistrationUpdated={(updatedVehicle) => setVehicle(updatedVehicle)}
             />
+            <VehicleNotificationRecipients
+              assignedDriver={assignedEmployee}
+              canEdit={canEdit}
+              onSave={handleSaveNotificationRecipients}
+            />
           </Col>
         </Row>
         <Row>
@@ -378,6 +439,18 @@ export default function ViewVehicle({ id }) {
                     className={activeTab === 'inspections' ? 'tab-button active' : 'tab-button'}
                   >
                     {t('Inspections')}
+                  </ToggleButton>
+                  <ToggleButton
+                    id="maintenance-tab"
+                    type="radio"
+                    variant="outline-primary"
+                    name="tab"
+                    value="maintenance"
+                    checked={activeTab === 'maintenance'}
+                    onChange={(e) => setActiveTab(e.currentTarget.value)}
+                    className={activeTab === 'maintenance' ? 'tab-button active' : 'tab-button'}
+                  >
+                    {t('Maintenance Reports')}
                   </ToggleButton>
                   <ToggleButton
                     id="repairs-tab"
@@ -408,6 +481,22 @@ export default function ViewVehicle({ id }) {
                       onEditInspection={onEditInspectionClick}
                       onDeleteInspection={onDeleteInspectionClick}
                       onCompleteInspection={setCompletionInspection}
+                    />
+                  </ViewSection>
+                </>
+              ) : activeTab === 'maintenance' ? (
+                <>
+                  <ViewSection title={t('Maintenance Reports')}>
+                    <p className="text-muted mb-4">
+                      {t(
+                        'Upload and manage maintenance reports for this vehicle, including service records, maintenance schedules, and work orders.'
+                      )}
+                    </p>
+                    <MaintenanceReportsTable
+                      maintenanceReports={maintenanceReports}
+                      onCreateReport={onCreateMaintenanceReportClick}
+                      onEditReport={onEditMaintenanceReportClick}
+                      onDeleteReport={onDeleteMaintenanceReportClick}
                     />
                   </ViewSection>
                 </>
@@ -451,6 +540,14 @@ export default function ViewVehicle({ id }) {
                 {t(`RepairType.${repairToDelete.repair_type}`)} - {repairToDelete.description}
               </strong>
             </p>
+          ) : maintenanceReportToDelete ? (
+            <p>
+              {t('Are you sure you want to delete this maintenance report?')}
+              <br />
+              <strong>
+                {t(`MaintenanceType.${maintenanceReportToDelete.maintenance_type}`)} - {maintenanceReportToDelete.description}
+              </strong>
+            </p>
           ) : inspectionToDelete ? (
             <p>
               {t('Are you sure you want to delete this inspection?')}
@@ -462,10 +559,17 @@ export default function ViewVehicle({ id }) {
             </p>
           ) : null
         }
-        onConfirm={repairToDelete ? handleDeleteRepairConfirm : handleDeleteInspectionConfirm}
+        onConfirm={
+          repairToDelete
+            ? handleDeleteRepairConfirm
+            : maintenanceReportToDelete
+            ? handleDeleteMaintenanceReportConfirm
+            : handleDeleteInspectionConfirm
+        }
         onCancel={() => {
           setShowDeleteModal(false);
           setRepairToDelete(null);
+          setMaintenanceReportToDelete(null);
           setInspectionToDelete(null);
         }}
       />

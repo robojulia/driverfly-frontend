@@ -31,6 +31,7 @@ import {
   CarFront,
   MegaphoneFill,
   Lightning,
+  BookFill,
 } from 'react-bootstrap-icons';
 import CompanyProfileNav from '../header/company-profile-nav';
 import { useAuth } from '../../../../hooks/use-auth';
@@ -116,6 +117,14 @@ const FullLayout = ({ children }) => {
       startsWith: true,
       group: 'COMPANY',
       visible: isFeatureEnabled('AUTORECRUITING_ENABLED'),
+    },
+    {
+      pathname: 'https://learning.driverfly.co',
+      icon: BookFill,
+      text: 'TRAINING_ACADEMY',
+      external: true,
+      gradient: true,
+      group: 'COMPANY',
     },
     {
       icon: FileEarmarkImage,

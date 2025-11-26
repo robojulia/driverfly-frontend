@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Form, Modal, Badge, InputGroup, FormControl } from "react-bootstrap";
-import { PlusCircle, Trash, PersonCircle, Envelope, ChatDots } from "react-bootstrap-icons";
+import { PlusCircle, Trash, PersonCircle, Envelope, PencilSquare } from "react-bootstrap-icons";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { EmployeeEntity } from "../../../../models/employee/employee.entity";
 
@@ -16,11 +16,17 @@ interface NotificationRule {
     documentType: string;
     frequency: number;
     frequencyUnit: string;
-    notificationMethods: ('email' | 'sms')[];
+    startDateType: 'hire_date' | 'custom' | 'expiration_based';
+    customStartDate?: string;
+    daysBeforeExpiration?: number;
+    notifyDriver: boolean;
+    driverNotificationMethods: ('email' | 'sms')[];
+    notifyCompany: boolean;
     recipients: string[];
     messageTemplate: string;
     followUpEnabled: boolean;
     followUpDays: number;
+    followUpMessageTemplate: string;
     notifyIfIncomplete: boolean;
     enabled: boolean;
 }
@@ -44,13 +50,18 @@ export default function Notifications({ employee, canEdit = true }: Notification
             name: "License Expiration Warning",
             document: "Commercial Driver's License",
             documentType: "Commercial Driver's License",
-            frequency: 30,
+            frequency: 60,
             frequencyUnit: "days",
-            notificationMethods: ['email'],
+            startDateType: 'expiration_based',
+            daysBeforeExpiration: 60,
+            notifyDriver: true,
+            driverNotificationMethods: ['email', 'sms'],
+            notifyCompany: true,
             recipients: ["hr@company.com", "manager@company.com"],
-            messageTemplate: "Driver license for {employee_name} expires in {days_remaining} days.",
-            followUpEnabled: false,
+            messageTemplate: "Your driver's license expires in {days_remaining} days. Please renew it as soon as possible.",
+            followUpEnabled: true,
             followUpDays: 7,
+            followUpMessageTemplate: "Reminder: Your driver's license expires in {days_remaining} days and we have not received your updated information.",
             notifyIfIncomplete: true,
             enabled: true,
         },
@@ -61,12 +72,16 @@ export default function Notifications({ employee, canEdit = true }: Notification
             documentType: "Medical Certificate",
             frequency: 2,
             frequencyUnit: "months",
-            notificationMethods: ['email', 'sms'],
+            startDateType: 'hire_date',
+            notifyDriver: true,
+            driverNotificationMethods: ['email', 'sms'],
+            notifyCompany: true,
             recipients: ["hr@company.com"],
-            messageTemplate: "Medical certificate renewal due for {employee_name}.",
-            followUpEnabled: false,
-            followUpDays: 0,
-            notifyIfIncomplete: false,
+            messageTemplate: "Your medical certificate renewal is due. Please upload your updated certificate.",
+            followUpEnabled: true,
+            followUpDays: 7,
+            followUpMessageTemplate: "Follow-up: We have not received your updated medical certificate. Please submit it immediately.",
+            notifyIfIncomplete: true,
             enabled: true,
         },
         {
@@ -76,11 +91,15 @@ export default function Notifications({ employee, canEdit = true }: Notification
             documentType: "Motor Vehicle Record",
             frequency: 1,
             frequencyUnit: "years",
-            notificationMethods: ['email'],
+            startDateType: 'hire_date',
+            notifyDriver: false,
+            driverNotificationMethods: [],
+            notifyCompany: true,
             recipients: ["hr@company.com"],
             messageTemplate: "Annual MVR review due for {employee_name}.",
             followUpEnabled: false,
             followUpDays: 0,
+            followUpMessageTemplate: "",
             notifyIfIncomplete: false,
             enabled: true,
         },
@@ -98,11 +117,17 @@ export default function Notifications({ employee, canEdit = true }: Notification
         documentType: "Other",
         frequency: 30,
         frequencyUnit: "days",
-        notificationMethods: ['email'],
+        startDateType: "hire_date",
+        customStartDate: "",
+        daysBeforeExpiration: 60,
+        notifyDriver: true,
+        driverNotificationMethods: ['email'],
+        notifyCompany: true,
         recipients: [],
         messageTemplate: "",
         followUpEnabled: false,
-        followUpDays: 1,
+        followUpDays: 7,
+        followUpMessageTemplate: "",
         notifyIfIncomplete: false,
         enabled: true,
     });
@@ -116,11 +141,17 @@ export default function Notifications({ employee, canEdit = true }: Notification
             documentType: "Other",
             frequency: 30,
             frequencyUnit: "days",
-            notificationMethods: ['email'],
+            startDateType: "hire_date",
+            customStartDate: "",
+            daysBeforeExpiration: 60,
+            notifyDriver: true,
+            driverNotificationMethods: ['email'],
+            notifyCompany: true,
             recipients: [],
             messageTemplate: "",
             followUpEnabled: false,
-            followUpDays: 1,
+            followUpDays: 7,
+            followUpMessageTemplate: "",
             notifyIfIncomplete: false,
             enabled: true,
         });
@@ -356,6 +387,22 @@ export default function Notifications({ employee, canEdit = true }: Notification
                                     padding: '1rem',
                                     backgroundColor: rule.enabled ? '#fff' : '#f8f9fa',
                                     opacity: rule.enabled ? 1 : 0.7,
+                                    cursor: canEdit ? 'pointer' : 'default',
+                                    transition: 'all 0.2s',
+                                    position: 'relative' as const,
+                                }}
+                                onClick={() => canEdit && handleEditRule(rule)}
+                                onMouseEnter={(e) => {
+                                    if (canEdit) {
+                                        e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,96,120,0.15)';
+                                        e.currentTarget.style.borderColor = 'rgb(0, 96, 120)';
+                                    }
+                                }}
+                                onMouseLeave={(e) => {
+                                    if (canEdit) {
+                                        e.currentTarget.style.boxShadow = 'none';
+                                        e.currentTarget.style.borderColor = '#dee2e6';
+                                    }
                                 }}
                             >
                                 <div className="d-flex justify-content-between align-items-start">
@@ -372,20 +419,49 @@ export default function Notifications({ employee, canEdit = true }: Notification
                                             >
                                                 {rule.documentType}
                                             </Badge>
+                                            {canEdit && (
+                                                <span
+                                                    style={{
+                                                        marginLeft: '0.5rem',
+                                                        color: '#6c757d',
+                                                        fontSize: '0.75rem',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.25rem'
+                                                    }}
+                                                >
+                                                    <PencilSquare size={12} />
+                                                    <span style={{ fontSize: '0.7rem' }}>Click to edit</span>
+                                                </span>
+                                            )}
                                         </div>
 
                                         <div style={{ fontSize: '0.875rem', color: '#6c757d', marginBottom: '0.75rem' }}>
                                             <div className="mb-1">
-                                                <strong>Every {rule.frequency} {rule.frequencyUnit}</strong>
-                                                {" "}
-                                                <span style={{ margin: '0 0.5rem' }}>•</span>
-                                                {rule.notificationMethods.map((method, idx) => (
-                                                    <span key={idx}>
-                                                        {method === 'email' ? <Envelope size={14} className="mr-1" /> : <ChatDots size={14} className="mr-1" />}
-                                                        {method.toUpperCase()}
-                                                        {idx < rule.notificationMethods.length - 1 ? ', ' : ''}
+                                                {rule.startDateType === 'expiration_based' ? (
+                                                    <strong>{rule.daysBeforeExpiration} days before expiration</strong>
+                                                ) : (
+                                                    <>
+                                                        <strong>Every {rule.frequency} {rule.frequencyUnit}</strong>
+                                                        {rule.startDateType === 'custom' && rule.customStartDate && (
+                                                            <span> (starts {new Date(rule.customStartDate).toLocaleDateString()})</span>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </div>
+                                            <div className="mb-1" style={{ fontSize: '0.825rem' }}>
+                                                {rule.notifyDriver && (
+                                                    <span className="mr-3">
+                                                        <PersonCircle size={14} className="mr-1" style={{ color: '#0d6efd' }} />
+                                                        <strong>Driver:</strong> {rule.driverNotificationMethods.map(m => m.toUpperCase()).join(', ')}
                                                     </span>
-                                                ))}
+                                                )}
+                                                {rule.notifyCompany && (
+                                                    <span>
+                                                        <Envelope size={14} className="mr-1" style={{ color: '#198754' }} />
+                                                        <strong>Company:</strong> Email
+                                                    </span>
+                                                )}
                                             </div>
                                             <div style={{ fontStyle: 'italic', fontSize: '0.825rem' }}>
                                                 &quot;{rule.messageTemplate}&quot;
@@ -393,7 +469,14 @@ export default function Notifications({ employee, canEdit = true }: Notification
                                         </div>
 
                                         <div style={{ fontSize: '0.8rem', color: '#495057' }}>
-                                            <strong>Recipients:</strong> {rule.recipients.join(", ")}
+                                            <div>
+                                                <strong>Company Recipients:</strong> {rule.recipients.join(", ")}
+                                            </div>
+                                            {rule.followUpEnabled && (
+                                                <div className="mt-1" style={{ color: '#856404' }}>
+                                                    <strong>Follow-up:</strong> After {rule.followUpDays} days if not completed
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 
@@ -402,14 +485,21 @@ export default function Notifications({ employee, canEdit = true }: Notification
                                             type="switch"
                                             id={`rule-toggle-${rule.id}`}
                                             checked={rule.enabled}
-                                            onChange={() => handleToggleRule(rule.id)}
+                                            onChange={(e) => {
+                                                e.stopPropagation();
+                                                handleToggleRule(rule.id);
+                                            }}
+                                            onClick={(e) => e.stopPropagation()}
                                             disabled={!canEdit}
                                         />
                                         {canEdit && (
                                             <Button
                                                 variant="link"
                                                 size="sm"
-                                                onClick={() => handleDeleteRule(rule.id)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDeleteRule(rule.id);
+                                                }}
                                                 style={{ color: '#dc3545', padding: '0.25rem' }}
                                             >
                                                 <Trash size={16} />
@@ -439,8 +529,15 @@ export default function Notifications({ employee, canEdit = true }: Notification
 
             {/* Add/Edit Notification Rule Modal */}
             <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
-                <Modal.Header closeButton style={{ backgroundColor: '#f8f9fa', borderBottom: '2px solid rgb(0, 96, 120)' }}>
-                    <Modal.Title style={{ fontSize: '1.125rem', fontWeight: 600 }}>
+                <Modal.Header
+                    closeButton
+                    closeVariant="white"
+                    style={{
+                        backgroundColor: 'rgb(0, 96, 120)',
+                        borderBottom: '2px solid rgb(0, 96, 120)'
+                    }}
+                >
+                    <Modal.Title style={{ fontSize: '1.125rem', fontWeight: 600, color: '#fff' }}>
                         {isNewRule ? "Add Notification Rule" : "Edit Notification Rule"}
                     </Modal.Title>
                 </Modal.Header>
@@ -470,159 +567,346 @@ export default function Notifications({ employee, canEdit = true }: Notification
                         </Form.Group>
 
                         <Form.Group className="mb-3">
-                            <Form.Label style={{ fontWeight: 500 }}>Start Date</Form.Label>
-                            <Form.Select>
-                                <option>Hire Date</option>
-                                <option>Custom Date</option>
+                            <Form.Label style={{ fontWeight: 500 }}>Start Date / Trigger</Form.Label>
+                            <Form.Select
+                                value={modalFormData.startDateType}
+                                onChange={(e) => {
+                                    const newType = e.target.value as 'hire_date' | 'custom' | 'expiration_based';
+                                    setModalFormData({
+                                        ...modalFormData,
+                                        startDateType: newType,
+                                        // Set default for driver license expiration
+                                        daysBeforeExpiration: newType === 'expiration_based' &&
+                                            modalFormData.documentType === "Commercial Driver's License" ? 60 : modalFormData.daysBeforeExpiration
+                                    });
+                                }}
+                            >
+                                <option value="hire_date">Hire Date</option>
+                                <option value="custom">Custom Date</option>
+                                {modalFormData.documentType === "Commercial Driver's License" && (
+                                    <option value="expiration_based">Expiration Based (Driver License)</option>
+                                )}
                             </Form.Select>
                         </Form.Group>
 
-                        <Form.Group className="mb-3">
-                            <Form.Label style={{ fontWeight: 500 }}>Frequency</Form.Label>
-                            <div className="d-flex" style={{ gap: '0.5rem' }}>
+                        {modalFormData.startDateType === 'custom' && (
+                            <Form.Group className="mb-3">
+                                <Form.Label style={{ fontWeight: 500 }}>Custom Start Date</Form.Label>
+                                <Form.Control
+                                    type="date"
+                                    value={modalFormData.customStartDate}
+                                    onChange={(e) => setModalFormData({ ...modalFormData, customStartDate: e.target.value })}
+                                />
+                            </Form.Group>
+                        )}
+
+                        {modalFormData.startDateType === 'expiration_based' && (
+                            <Form.Group className="mb-3">
+                                <Form.Label style={{ fontWeight: 500 }}>Days Before Expiration</Form.Label>
                                 <Form.Control
                                     type="number"
-                                    placeholder="30"
-                                    value={modalFormData.frequency}
-                                    onChange={(e) => setModalFormData({ ...modalFormData, frequency: parseInt(e.target.value) || 0 })}
-                                    style={{ width: '100px' }}
+                                    placeholder="60"
+                                    value={modalFormData.daysBeforeExpiration}
+                                    onChange={(e) => setModalFormData({ ...modalFormData, daysBeforeExpiration: parseInt(e.target.value) || 60 })}
                                 />
-                                <Form.Select
-                                    value={modalFormData.frequencyUnit}
-                                    onChange={(e) => setModalFormData({ ...modalFormData, frequencyUnit: e.target.value })}
-                                    style={{ flex: 1 }}
-                                >
-                                    <option value="days">Days</option>
-                                    <option value="weeks">Weeks</option>
-                                    <option value="months">Months</option>
-                                    <option value="years">Years</option>
-                                </Form.Select>
-                            </div>
-                        </Form.Group>
+                                <Form.Text className="text-muted">
+                                    For driver&apos;s license, the system will remind 60 days before expiration by default
+                                </Form.Text>
+                            </Form.Group>
+                        )}
 
-                        <Form.Group className="mb-3">
-                            <Form.Label style={{ fontWeight: 500 }}>Notification Methods</Form.Label>
-                            <div>
-                                <Form.Check
-                                    type="checkbox"
-                                    id="method-email"
-                                    label="Email"
-                                    checked={modalFormData.notificationMethods?.includes('email')}
-                                    onChange={(e) => {
-                                        const methods = modalFormData.notificationMethods || [];
-                                        setModalFormData({
-                                            ...modalFormData,
-                                            notificationMethods: e.target.checked
-                                                ? [...methods, 'email']
-                                                : methods.filter(m => m !== 'email')
-                                        });
-                                    }}
-                                />
-                                <Form.Check
-                                    type="checkbox"
-                                    id="method-sms"
-                                    label="SMS"
-                                    checked={modalFormData.notificationMethods?.includes('sms')}
-                                    onChange={(e) => {
-                                        const methods = modalFormData.notificationMethods || [];
-                                        setModalFormData({
-                                            ...modalFormData,
-                                            notificationMethods: e.target.checked
-                                                ? [...methods, 'sms']
-                                                : methods.filter(m => m !== 'sms')
-                                        });
-                                    }}
-                                />
-                            </div>
-                        </Form.Group>
-
-                        <Form.Group className="mb-3">
-                            <Form.Label style={{ fontWeight: 500 }}>Recipients</Form.Label>
-                            <InputGroup size="sm" className="mb-2">
-                                <FormControl
-                                    placeholder="Enter email or phone number"
-                                    value={recipientInput}
-                                    onChange={(e) => setRecipientInput(e.target.value)}
-                                    onKeyPress={(e) => {
-                                        if (e.key === 'Enter') {
-                                            e.preventDefault();
-                                            handleAddRecipient(recipientInput);
-                                            setRecipientInput("");
-                                        }
-                                    }}
-                                />
-                                <Button
-                                    variant="outline-secondary"
-                                    size="sm"
-                                    onClick={() => {
-                                        handleAddRecipient(recipientInput);
-                                        setRecipientInput("");
-                                    }}
-                                >
-                                    <PlusCircle size={16} />
-                                </Button>
-                            </InputGroup>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                                {modalFormData.recipients?.map((recipient, idx) => (
-                                    <Badge
-                                        key={idx}
-                                        bg="secondary"
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '0.5rem',
-                                            padding: '0.4rem 0.6rem',
-                                            fontSize: '0.85rem'
-                                        }}
+                        {modalFormData.startDateType !== 'expiration_based' && (
+                            <Form.Group className="mb-3">
+                                <Form.Label style={{ fontWeight: 500 }}>Frequency</Form.Label>
+                                <div className="d-flex" style={{ gap: '0.5rem' }}>
+                                    <Form.Control
+                                        type="number"
+                                        placeholder="30"
+                                        value={modalFormData.frequency}
+                                        onChange={(e) => setModalFormData({ ...modalFormData, frequency: parseInt(e.target.value) || 0 })}
+                                        style={{ width: '100px' }}
+                                    />
+                                    <Form.Select
+                                        value={modalFormData.frequencyUnit}
+                                        onChange={(e) => setModalFormData({ ...modalFormData, frequencyUnit: e.target.value })}
+                                        style={{ flex: 1 }}
                                     >
-                                        {recipient}
-                                        <span
-                                            onClick={() => handleRemoveRecipient(recipient)}
-                                            style={{ cursor: 'pointer', fontWeight: 'bold' }}
-                                        >
-                                            ×
-                                        </span>
-                                    </Badge>
-                                ))}
-                            </div>
-                        </Form.Group>
+                                        <option value="days">Days</option>
+                                        <option value="weeks">Weeks</option>
+                                        <option value="months">Months</option>
+                                        <option value="years">Years</option>
+                                    </Form.Select>
+                                </div>
+                            </Form.Group>
+                        )}
 
-                        <Form.Group className="mb-3">
-                            <Form.Label style={{ fontWeight: 500, display: 'flex', justifyContent: 'space-between' }}>
-                                <span>Message Template</span>
-                                <Button variant="link" size="sm" style={{ fontSize: '0.8rem', padding: 0 }}>
-                                    Insert Fields
-                                </Button>
-                            </Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows={3}
-                                placeholder="Enter notification message..."
-                                value={modalFormData.messageTemplate}
-                                onChange={(e) => setModalFormData({ ...modalFormData, messageTemplate: e.target.value })}
-                            />
-                        </Form.Group>
+                        <div style={{ borderTop: '1px solid #dee2e6', paddingTop: '1rem', marginTop: '1rem' }}>
+                            <h6 style={{ fontWeight: 600, marginBottom: '1rem' }}>Notification Recipients</h6>
 
-                        <div style={{ borderTop: '1px solid #dee2e6', paddingTop: '1rem' }}>
+                            <Form.Group className="mb-4">
+                                <div className="d-flex align-items-center mb-2">
+                                    <Form.Check
+                                        type="checkbox"
+                                        id="notify-driver"
+                                        label={<strong>Notify Driver</strong>}
+                                        checked={modalFormData.notifyDriver}
+                                        onChange={(e) => setModalFormData({ ...modalFormData, notifyDriver: e.target.checked })}
+                                    />
+                                </div>
+                                {modalFormData.notifyDriver && (
+                                    <div style={{
+                                        marginLeft: '1.5rem',
+                                        paddingLeft: '1rem',
+                                        borderLeft: '3px solid rgb(0, 96, 120)',
+                                        backgroundColor: '#f0f8ff',
+                                        padding: '1rem',
+                                        borderRadius: '0.25rem'
+                                    }}>
+                                        <Form.Label style={{ fontSize: '0.9rem', fontWeight: 500, color: '#495057', marginBottom: '0.75rem' }}>
+                                            <PersonCircle size={16} className="mr-2" style={{ color: '#0d6efd' }} />
+                                            Notification Method
+                                        </Form.Label>
+                                        <div style={{ display: 'flex', gap: '1.5rem' }}>
+                                            <Form.Check
+                                                type="checkbox"
+                                                id="driver-method-email"
+                                                label={
+                                                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                        <Envelope size={14} />
+                                                        Email
+                                                    </span>
+                                                }
+                                                checked={modalFormData.driverNotificationMethods?.includes('email')}
+                                                onChange={(e) => {
+                                                    const methods = modalFormData.driverNotificationMethods || [];
+                                                    setModalFormData({
+                                                        ...modalFormData,
+                                                        driverNotificationMethods: e.target.checked
+                                                            ? [...methods, 'email']
+                                                            : methods.filter((m: string) => m !== 'email')
+                                                    });
+                                                }}
+                                            />
+                                            <Form.Check
+                                                type="checkbox"
+                                                id="driver-method-sms"
+                                                label="SMS"
+                                                checked={modalFormData.driverNotificationMethods?.includes('sms')}
+                                                onChange={(e) => {
+                                                    const methods = modalFormData.driverNotificationMethods || [];
+                                                    setModalFormData({
+                                                        ...modalFormData,
+                                                        driverNotificationMethods: e.target.checked
+                                                            ? [...methods, 'sms']
+                                                            : methods.filter((m: string) => m !== 'sms')
+                                                    });
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                            </Form.Group>
+
+                            <Form.Group className="mb-3">
+                                <div className="d-flex align-items-center mb-2">
+                                    <Form.Check
+                                        type="checkbox"
+                                        id="notify-company"
+                                        label={<strong>Notify Company Users (Email)</strong>}
+                                        checked={modalFormData.notifyCompany}
+                                        onChange={(e) => setModalFormData({ ...modalFormData, notifyCompany: e.target.checked })}
+                                    />
+                                </div>
+                                {modalFormData.notifyCompany && (
+                                    <div style={{
+                                        marginLeft: '1.5rem',
+                                        paddingLeft: '1rem',
+                                        borderLeft: '3px solid rgb(0, 96, 120)',
+                                        backgroundColor: '#f8f9fa',
+                                        padding: '1rem',
+                                        borderRadius: '0.25rem'
+                                    }}>
+                                        <Form.Label style={{ fontSize: '0.9rem', fontWeight: 500, color: '#495057' }}>
+                                            <Envelope size={16} className="mr-2" style={{ color: '#198754' }} />
+                                            Email Recipients
+                                        </Form.Label>
+                                        <InputGroup className="mb-2">
+                                            <FormControl
+                                                placeholder="Enter email address (e.g., hr@company.com)"
+                                                value={recipientInput}
+                                                onChange={(e) => setRecipientInput(e.target.value)}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') {
+                                                        e.preventDefault();
+                                                        handleAddRecipient(recipientInput);
+                                                        setRecipientInput("");
+                                                    }
+                                                }}
+                                            />
+                                            <Button
+                                                style={{
+                                                    backgroundColor: 'rgb(0, 96, 120)',
+                                                    border: 'none'
+                                                }}
+                                                onClick={() => {
+                                                    handleAddRecipient(recipientInput);
+                                                    setRecipientInput("");
+                                                }}
+                                            >
+                                                <PlusCircle size={16} className="mr-1" />
+                                                Add
+                                            </Button>
+                                        </InputGroup>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                                            {modalFormData.recipients?.map((recipient, idx) => (
+                                                <Badge
+                                                    key={idx}
+                                                    bg="secondary"
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '0.5rem',
+                                                        padding: '0.4rem 0.6rem',
+                                                        fontSize: '0.85rem'
+                                                    }}
+                                                >
+                                                    {recipient}
+                                                    <span
+                                                        onClick={() => handleRemoveRecipient(recipient)}
+                                                        style={{ cursor: 'pointer', fontWeight: 'bold' }}
+                                                    >
+                                                        ×
+                                                    </span>
+                                                </Badge>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </Form.Group>
+                        </div>
+
+                        <div style={{
+                            borderTop: '2px solid #dee2e6',
+                            paddingTop: '1.5rem',
+                            marginTop: '1.5rem',
+                            backgroundColor: '#fafbfc',
+                            padding: '1.5rem',
+                            borderRadius: '0.375rem',
+                            marginLeft: '-1rem',
+                            marginRight: '-1rem'
+                        }}>
+                            <h6 style={{ fontWeight: 600, marginBottom: '1rem', color: 'rgb(0, 96, 120)' }}>
+                                📧 Message Templates
+                            </h6>
+
+                            <Form.Group className="mb-3">
+                                <Form.Label style={{ fontWeight: 500, fontSize: '0.95rem', marginBottom: '0.5rem' }}>
+                                    Initial Notification Message
+                                </Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    rows={4}
+                                    placeholder="Enter the message that will be sent to drivers when a form is due..."
+                                    value={modalFormData.messageTemplate}
+                                    onChange={(e) => setModalFormData({ ...modalFormData, messageTemplate: e.target.value })}
+                                    style={{ fontSize: '0.9rem' }}
+                                />
+                                <Form.Text className="text-muted" style={{ fontSize: '0.85rem' }}>
+                                    💡 Available fields: <code>{'{employee_name}'}</code>, <code>{'{days_remaining}'}</code>, <code>{'{due_date}'}</code>
+                                </Form.Text>
+                            </Form.Group>
+                        </div>
+
+                        <div style={{
+                            borderTop: '2px solid #dee2e6',
+                            paddingTop: '1.5rem',
+                            marginTop: '1.5rem',
+                            backgroundColor: '#fff8e6',
+                            padding: '1.5rem',
+                            borderRadius: '0.375rem',
+                            marginLeft: '-1rem',
+                            marginRight: '-1rem'
+                        }}>
+                            <h6 style={{ fontWeight: 600, marginBottom: '1rem', color: '#856404' }}>
+                                🔄 Follow-up Protocol
+                            </h6>
+
                             <Form.Group className="mb-3">
                                 <Form.Check
                                     type="checkbox"
                                     id="follow-up-enabled"
-                                    label="Follow up after 1 week if not completed"
+                                    label={<strong style={{ fontSize: '1rem' }}>Enable follow-up notifications if driver doesn't respond</strong>}
                                     checked={modalFormData.followUpEnabled}
                                     onChange={(e) => setModalFormData({ ...modalFormData, followUpEnabled: e.target.checked })}
                                 />
                             </Form.Group>
 
-                            <Form.Group className="mb-3">
-                                <Form.Check
-                                    type="checkbox"
-                                    id="notify-incomplete"
-                                    label="Notify me if recipient does not complete by due date"
-                                    checked={modalFormData.notifyIfIncomplete}
-                                    onChange={(e) => setModalFormData({ ...modalFormData, notifyIfIncomplete: e.target.checked })}
-                                />
-                            </Form.Group>
+                            {modalFormData.followUpEnabled && (
+                                <div style={{
+                                    marginLeft: '1.5rem',
+                                    paddingLeft: '1.5rem',
+                                    borderLeft: '3px solid #ffc107',
+                                    backgroundColor: '#fffbf0',
+                                    padding: '1.25rem',
+                                    borderRadius: '0.25rem'
+                                }}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label style={{ fontSize: '0.9rem', fontWeight: 500 }}>
+                                            ⏱️ Follow-up After (Days)
+                                        </Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            placeholder="7"
+                                            value={modalFormData.followUpDays}
+                                            onChange={(e) => setModalFormData({ ...modalFormData, followUpDays: parseInt(e.target.value) || 7 })}
+                                            style={{ width: '180px' }}
+                                        />
+                                        <Form.Text className="text-muted" style={{ fontSize: '0.85rem' }}>
+                                            Send follow-up notification if driver hasn't completed the form
+                                        </Form.Text>
+                                    </Form.Group>
+
+                                    <Form.Group className="mb-0">
+                                        <Form.Label style={{ fontSize: '0.9rem', fontWeight: 500 }}>
+                                            📝 Follow-up Message Template
+                                        </Form.Label>
+                                        <Form.Control
+                                            as="textarea"
+                                            rows={3}
+                                            placeholder="Enter the reminder message to send if driver hasn't responded..."
+                                            value={modalFormData.followUpMessageTemplate}
+                                            onChange={(e) => setModalFormData({ ...modalFormData, followUpMessageTemplate: e.target.value })}
+                                            style={{ fontSize: '0.9rem' }}
+                                        />
+                                        <Form.Text className="text-muted" style={{ fontSize: '0.85rem' }}>
+                                            This message will be sent to the driver if they haven&apos;t completed the form
+                                        </Form.Text>
+                                    </Form.Group>
+                                </div>
+                            )}
+
+                            <div style={{
+                                marginTop: '1rem',
+                                paddingTop: '1rem',
+                                borderTop: '1px dashed #ffc107'
+                            }}>
+                                <Form.Group className="mb-0">
+                                    <Form.Check
+                                        type="checkbox"
+                                        id="notify-incomplete"
+                                        label={
+                                            <span>
+                                                <strong>Notify company users</strong> if driver does not complete by due date
+                                            </span>
+                                        }
+                                        checked={modalFormData.notifyIfIncomplete}
+                                        onChange={(e) => setModalFormData({ ...modalFormData, notifyIfIncomplete: e.target.checked })}
+                                    />
+                                    <Form.Text className="text-muted" style={{ fontSize: '0.85rem', marginLeft: '1.5rem', display: 'block', marginTop: '0.25rem' }}>
+                                        Company recipients will receive an alert if the driver fails to complete the required form
+                                    </Form.Text>
+                                </Form.Group>
+                            </div>
                         </div>
                     </Form>
                 </Modal.Body>
