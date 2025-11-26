@@ -46,7 +46,7 @@ const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ data, height = 200 })
                   className="rounded-top"
                   style={{
                     height: `${Math.max(viewsHeight, 2)}px`,
-                    backgroundColor: '#30c6c2', // Dashboard primary teal
+                    backgroundColor: '#1d4355',
                     minWidth: '12px',
                   }}
                   title={`${item.label} Views: ${item.views.toLocaleString()}`}
@@ -58,7 +58,7 @@ const GroupedBarChart: React.FC<GroupedBarChartProps> = ({ data, height = 200 })
                   className="rounded-top"
                   style={{
                     height: `${Math.max(applicationsHeight, 2)}px`,
-                    backgroundColor: '#B4FD55', // Dashboard success green
+                    backgroundColor: '#2ec8c4',
                     minWidth: '12px',
                   }}
                   title={`${item.label} Applications: ${item.applications.toLocaleString()}`}
@@ -139,14 +139,14 @@ export const ConversionTimelineChart: React.FC<ConversionTimelineChartProps> = (
           <div className="d-flex align-items-center">
             <div
               className="rounded me-2"
-              style={{ width: '12px', height: '12px', backgroundColor: '#30c6c2' }}
+              style={{ width: '12px', height: '12px', backgroundColor: '#1d4355' }}
             />
             <span className="fw-medium">Views</span>
           </div>
           <div className="d-flex align-items-center">
             <div
               className="rounded me-2"
-              style={{ width: '12px', height: '12px', backgroundColor: '#B4FD55' }}
+              style={{ width: '12px', height: '12px', backgroundColor: '#2ec8c4' }}
             />
             <span className="fw-medium">Applications</span>
           </div>

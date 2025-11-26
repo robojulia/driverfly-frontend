@@ -28,6 +28,9 @@ interface NotificationRule {
 export default function Notifications({ employee, canEdit = true }: NotificationsProps) {
     const { t } = useTranslation();
 
+    // Determine if this is global settings mode (employee is null)
+    const isGlobalMode = !employee;
+
     // Global Settings State
     const [emailNotificationsEnabled, setEmailNotificationsEnabled] = useState(true);
     const [smsNotificationsEnabled, setSmsNotificationsEnabled] = useState(false);
@@ -191,8 +194,15 @@ export default function Notifications({ employee, canEdit = true }: Notification
             }}>
                 <div>
                     <h5 style={{ color: '#fff', margin: 0, fontWeight: 600, fontSize: '1.125rem' }}>
-                        Compliance Notification Settings
+                        {isGlobalMode
+                            ? 'Global Employee Notification Settings'
+                            : `Notification Settings for ${employee.first_name} ${employee.last_name}`}
                     </h5>
+                    {isGlobalMode && (
+                        <p style={{ color: '#fff', margin: '0.5rem 0 0 0', fontSize: '0.875rem', opacity: 0.9 }}>
+                            Configure default notification rules that apply to all employees
+                        </p>
+                    )}
                 </div>
             </div>
 

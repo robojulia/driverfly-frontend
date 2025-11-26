@@ -3,8 +3,8 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Col, FormGroup, Row } from 'react-bootstrap';
-import { EyeFill, PenFill, TrashFill, PersonFill, PersonX } from 'react-bootstrap-icons';
-import { Accordion } from 'react-bootstrap';
+import { EyeFill, PenFill, TrashFill, PersonFill, PersonX, Bell, GearFill } from 'react-bootstrap-icons';
+import { Accordion, Tabs, Tab } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import EmployeeFilterForm, { EmployeeFilterDto } from '../../../../../components/forms/company/employee-filter-form';
 import FullLayout from '../../../../../components/dashboard/layouts/layout/full-layout';
@@ -36,6 +36,7 @@ import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
 import { useEffectAsync } from '../../../../../utils/react';
 import EmployeeApi from '../../../../api/employee';
 import DataViewToggle from '../../../../../components/shared/DataViewToggle';
+import Notifications from '../../../../../components/dashboard/employee-directory/notifications';
 
 enum ViewModeType {
   EMPLOYEE = 'EMPLOYEE',
@@ -66,6 +67,7 @@ export default function EmployeeDirectory() {
     type: 'VIEW' | 'DELETE' | 'MOVE_TO_PAST_EMPLOYEE';
   }>(null);
   const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingsMetaInitialValues);
+  const [activeTab, setActiveTab] = useState<string>('directory');
 
   // Add search and sorting state
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -507,113 +509,174 @@ export default function EmployeeDirectory() {
   ];
 
   return (
-    <Accordion defaultActiveKey="0" flush>
-      <PageLayout
-        title={viewMode == ViewModeType.EMPLOYEE ? 'EMPLOYEE_DIRECTORY' : 'PAST_EMPLOYEE'}
-        actions={
-          <Row>
-            <Col>
-              {viewMode == ViewModeType.EMPLOYEE && (
-                <p className="mt-2 mb-2">
-                  <u className="ml-1">
-                    <Button
-                      variant=""
-                      className="theme-general-btn"
-                      onClick={() =>
-                        router.push('/dashboard/company/compliance/employee-directory/import')
-                      }
-                    >
-                      + {t('IMPORT_EMPLOYEES')}
-                    </Button>
-                  </u>
-                </p>
-              )}
+    <>
+      <style>{`
+        .employee-main-tabs {
+          background: #fff;
+          border-bottom: 2px solid #dee2e6;
+          margin: -1.5rem -1.5rem 0 -1.5rem;
+          padding: 0 1.5rem;
+        }
+        .employee-main-tab {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 1rem 1.5rem;
+          border: none;
+          background: transparent;
+          color: #6c757d;
+          font-weight: 500;
+          font-size: 0.95rem;
+          cursor: pointer;
+          border-bottom: 3px solid transparent;
+          margin-bottom: -2px;
+          transition: all 0.2s ease;
+          position: relative;
+        }
+        .employee-main-tab:hover {
+          color: #495057;
+          background: #f8f9fa;
+        }
+        .employee-main-tab.active {
+          color: rgb(0, 96, 120);
+          border-bottom-color: rgb(0, 96, 120);
+          background: transparent;
+        }
+        .employee-main-tab svg {
+          opacity: 0.7;
+        }
+        .employee-main-tab.active svg {
+          opacity: 1;
+        }
+      `}</style>
 
-              <div style={{ float: 'right', display: 'flex', alignItems: 'center' }}>
-                <Accordion.Button
-                  className="mr-3 text-black theme-filter-btn"
-                  style={{
-                    width: 'auto',
-                    fontSize: '.95rem',
-                    lineHeight: '1.5',
-                    padding: '.25rem 1.5rem',
-                    borderRadius: '.2rem',
-                  }}
+      <PageLayout
+        title=""
+        actions={<div style={{ height: '1px' }}></div>}
+      >
+        {/* Custom Tab Navigation */}
+        <div className="employee-main-tabs">
+          <button
+            className={`employee-main-tab ${activeTab === 'directory' ? 'active' : ''}`}
+            onClick={() => setActiveTab('directory')}
+          >
+            <PersonFill size={18} />
+            {t('EMPLOYEE_DIRECTORY')}
+          </button>
+          <button
+            className={`employee-main-tab ${activeTab === 'notifications' ? 'active' : ''}`}
+            onClick={() => setActiveTab('notifications')}
+          >
+            <GearFill size={18} />
+            {t('NOTIFICATION_SETTINGS')}
+          </button>
+        </div>
+      {activeTab === 'directory' ? (
+        <Accordion defaultActiveKey="0" flush>
+          {/* Action Bar */}
+          <div style={{
+            padding: '1.5rem 0 1rem 0',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '1rem'
+          }}>
+            <div>
+              {viewMode == ViewModeType.EMPLOYEE && (
+                <Button
+                  variant=""
+                  className="theme-general-btn"
+                  onClick={() =>
+                    router.push('/dashboard/company/compliance/employee-directory/import')
+                  }
                 >
-                  <div className="mr-2">{t('FILTERS')}</div>
-                </Accordion.Button>
-                <DataViewToggle
-                  primaryLabel={t('ACTIVE_EMPLOYEES')}
-                  secondaryLabel={t('PAST_EMPLOYEES')}
-                  activeView={viewMode}
-                  onViewChange={async (newView) => {
-                    resetEmployees();
-                    resetPagingMeta();
-                    router.query.viewMode = newView;
-                    await router.push(router);
-                  }}
-                  primaryValue={ViewModeType.EMPLOYEE}
-                  secondaryValue={ViewModeType.PAST_EMPLOYEE}
-                  primaryIcon={<PersonFill />}
-                  secondaryIcon={<PersonX />}
-                  showCounts={true}
-                  primaryCount={
-                    viewMode === ViewModeType.EMPLOYEE ? pagingMeta?.totalItems || 0 : undefined
-                  }
-                  secondaryCount={
-                    viewMode === ViewModeType.PAST_EMPLOYEE ? pagingMeta?.totalItems || 0 : undefined
-                  }
-                  variant="pills"
-                  size="lg"
-                />
-              </div>
+                  + {t('IMPORT_EMPLOYEES')}
+                </Button>
+              )}
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <Accordion.Button
+                className="text-black theme-filter-btn"
+                style={{
+                  width: 'auto',
+                  fontSize: '.95rem',
+                  lineHeight: '1.5',
+                  padding: '.25rem 1.5rem',
+                  borderRadius: '.2rem',
+                }}
+              >
+                <div className="mr-2">{t('FILTERS')}</div>
+              </Accordion.Button>
+              <DataViewToggle
+                primaryLabel={t('ACTIVE_EMPLOYEES')}
+                secondaryLabel={t('PAST_EMPLOYEES')}
+                activeView={viewMode}
+                onViewChange={async (newView) => {
+                  resetEmployees();
+                  resetPagingMeta();
+                  router.query.viewMode = newView;
+                  await router.push(router);
+                }}
+                primaryValue={ViewModeType.EMPLOYEE}
+                secondaryValue={ViewModeType.PAST_EMPLOYEE}
+                primaryIcon={<PersonFill />}
+                secondaryIcon={<PersonX />}
+                showCounts={true}
+                primaryCount={
+                  viewMode === ViewModeType.EMPLOYEE ? pagingMeta?.totalItems || 0 : undefined
+                }
+                secondaryCount={
+                  viewMode === ViewModeType.PAST_EMPLOYEE ? pagingMeta?.totalItems || 0 : undefined
+                }
+                variant="pills"
+                size="lg"
+              />
+            </div>
+          </div>
+          <Row>
+            <Col className="force-overflow p-0">
+              <Accordion.Body>
+                <EmployeeFilterForm onSearch={setFilters} />
+              </Accordion.Body>
+
+              {loading ? (
+                <div className="spinner-border mt-3 ml-1" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              ) : (
+                <>
+                  <GenericTable<EmployeeEntity>
+                    data={employees}
+                    columns={tableColumns()}
+                    actions={(data) => (viewMode != ViewModeType.EMPLOYEE ? undefined : tableActions(data))}
+                    enableSearch={true}
+                    enableColumnHiding={true}
+                    columnSettingKey={columnSettingKey}
+                    refreshing={refreshing}
+                    emptyTitle="No Employees Found"
+                    emptyText="No employees match the current criteria."
+                    onSort={handleSort}
+                    sortBy={sortBy}
+                    sortDirection={sortDirection}
+                    onSearch={handleSearch}
+                  />
+                  <div style={{ marginRight: '7%' }}>
+                    <CustomPagination
+                      recordsPerPageOptions={[20, 50, 100]}
+                      onPageChange={handlePageChange}
+                      pagingMeta={pagingMeta}
+                      setPagingMeta={setPagingMeta}
+                    />
+                  </div>
+                </>
+              )}
             </Col>
           </Row>
-        }
-      >
-        <Row>
-          <Col className="force-overflow p-0">
-            <Accordion.Body>
-              <EmployeeFilterForm onSearch={setFilters} />
-            </Accordion.Body>
 
-            {loading ? (
-              <div className="spinner-border mt-3 ml-1" role="status">
-                <span className="sr-only">Loading...</span>
-              </div>
-            ) : (
-              <>
-                <GenericTable<EmployeeEntity>
-            data={employees}
-            columns={tableColumns()}
-            actions={(data) => (viewMode != ViewModeType.EMPLOYEE ? undefined : tableActions(data))}
-            enableSearch={true}
-            enableColumnHiding={true}
-            columnSettingKey={columnSettingKey}
-            refreshing={refreshing}
-            emptyTitle="No Employees Found"
-            emptyText="No employees match the current criteria."
-            onSort={handleSort}
-            sortBy={sortBy}
-            sortDirection={sortDirection}
-            onSearch={handleSearch}
-          />
-                <div style={{ marginRight: '7%' }}>
-                  <CustomPagination
-                    recordsPerPageOptions={[20, 50, 100]}
-                    onPageChange={handlePageChange}
-                    pagingMeta={pagingMeta}
-                    setPagingMeta={setPagingMeta}
-                  />
-                </div>
-              </>
-            )}
-          </Col>
-        </Row>
-
-
-      {/* modal that displays a table for confirming trash action */}
-      <ViewModal
+          {/* modal that displays a table for confirming trash action */}
+          <ViewModal
         title="CONFIRMATION"
         show={modalAction?.type == 'DELETE'}
         onCloseClick={resetModalAction}
@@ -652,10 +715,10 @@ export default function EmployeeDirectory() {
             </Col>
           </Row>
         </>
-      </ViewModal>
+          </ViewModal>
 
-      {/* modal that displays a table for moving employee to past employee list */}
-      <ViewModal
+          {/* modal that displays a table for moving employee to past employee list */}
+          <ViewModal
         title={t('MOVE_TO_PAST_EMPLOYEE')}
         show={!!moveToPastForm.values?.id}
         onCloseClick={moveToPastForm.resetForm}
@@ -725,9 +788,15 @@ export default function EmployeeDirectory() {
             </Col>
           </Row>
         </EntityForm>
-      </ViewModal>
+          </ViewModal>
+        </Accordion>
+      ) : (
+        <div style={{ padding: '1.5rem 0' }}>
+          <Notifications employee={null} canEdit={can.editUser} />
+        </div>
+      )}
       </PageLayout>
-    </Accordion>
+    </>
   );
 }
 

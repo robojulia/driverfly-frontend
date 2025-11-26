@@ -43,12 +43,11 @@ export function PieChart(props: PieChartProps): JSX.Element {
 
   // Solid brand colors for the chart
   const chartColors = [
-    '#30c6c2', // Primary teal
-    '#1d4355', // Dark blue
-    '#1d4355', // Dark blue
-    '#006078', // Primary button color
-    '#1d4354', // Dark teal
-    '#cdd7fc', // Light teal
+    '#1d4355',
+    '#2ec8c4',
+    '#B4FD55',
+    '#006078',
+    '#83e0de',
   ];
 
   useEffect(() => {

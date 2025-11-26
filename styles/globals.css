@@ -46,6 +46,13 @@ h2,
   font-weight: 700 !important;
 }
 
+/* Main Page Title Headers ONLY - Top headers like "Applicants", "Jobs", "Dashboard" */
+.row > .col > h2 {
+  font-family: "Arial, Helvetica, sans-serif", sans-serif !important;
+  font-size: 32px !important;
+  font-weight: 600 !important;
+}
+
 /* Navigation Link Improvements - Override Bootstrap defaults */
 .navbar-nav .nav-link {
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;

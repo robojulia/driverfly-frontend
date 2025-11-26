@@ -3025,6 +3025,7 @@
   "LICENSE": "License",
   "FREQUENCY": "Frequency",
   "NOTIFICATIONS": "Notifications",
+  "NOTIFICATION_SETTINGS": "Notification Settings",
   "NOTIFICATIONS_DESCRIPTION": "Configure notification settings for this employee",
   "DQF_DOCUMENTS": "DQF Documents",
 

@@ -61,7 +61,7 @@ export function FelonyConviction() {
 
   const form = useFormik({
     initialValues: {
-      is_convicted_felony: null as boolean | null,
+      is_convicted_felony: false as boolean | null,
       criminal_history: '',
     },
     validationSchema,

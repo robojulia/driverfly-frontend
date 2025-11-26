@@ -44,6 +44,7 @@ export function PhoneNumber() {
     state: { applicant, companyJobs, steps, company, directJob, isDirectJobApplication },
     method: {
       setApplicant,
+      setJobs,
       setSteps,
       stepNext,
       stepBack,
@@ -295,6 +296,20 @@ export function PhoneNumber() {
         directJob
       ) {
         await createJobApplicationImmediately(applicantProfile);
+      }
+
+      // Ensure jobs are properly set in context for returning drivers
+      // This is critical for the final submission to work correctly
+      if (isDirectJobApplication && directJob) {
+        // For direct job applications, ensure the direct job is in the jobs array
+        setJobs([directJob]);
+      } else if (applicantProfile?.jobs && applicantProfile.jobs.length > 0) {
+        // For general applications, use the jobs from the applicant's profile
+        // Extract just the job entities from the applicant-job relationships
+        const jobEntities = applicantProfile.jobs.map((applicantJob: any) => applicantJob.job).filter((job: any) => job != null);
+        if (jobEntities.length > 0) {
+          setJobs(jobEntities);
+        }
       }
 
       // Add a slight delay before proceeding to next step for better UX

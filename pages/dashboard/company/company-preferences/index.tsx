@@ -313,7 +313,7 @@ export default function CompanyPreference() {
               </Button>
               <Button
                 style={{
-                  background: '#006078',
+                  background: '#1d4355',
                   border: 'none',
                   color: 'white'
                 }}
@@ -333,7 +333,7 @@ export default function CompanyPreference() {
           {/* DHA Information Section */}
           <Card className="border-0 shadow-sm mb-4">
             <Card.Body className="p-4">
-              <h5 className="mb-3">Digital Hiring Application</h5>
+              <h5 className="mb-3 fw-bold">Digital Hiring Application</h5>
               <p className="mb-3 text-muted">
                 Share your unique hiring application link with potential applicants.
               </p>

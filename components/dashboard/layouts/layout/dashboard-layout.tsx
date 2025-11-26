@@ -126,11 +126,11 @@ export default function DashboardLayout({ children, sidebarItems }: DashboardLay
           )}
 
           <div className="container-fluid">
-            <div className="d-flex align-items-center justify-content-between">
+            <div className="d-flex align-items-center justify-content-between w-100">
               {/* Company Profile Component - only for company switching */}
               <CompanyProfileNav />
 
-              <div className="profile d-flex align-items-center">
+              <div className="profile d-flex align-items-center ms-auto">
                 {/* User Profile Dropdown */}
                 <Dropdown align="end">
                   <Dropdown.Toggle variant="link" id="dropdown-profile">
