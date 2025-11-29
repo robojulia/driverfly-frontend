@@ -8,8 +8,10 @@ import { BaseFormProps } from "./base-form-props";
 import { ApplicantBasicDetailsFormNew } from "./applicant-basic-details-form-new";
 import { ApplicantWorkHistoryForm } from "./applicant-work-history-form";
 import { ApplicantEquipmentExperienceForm } from "./applicant-equipment-experience-form";
+import { ApplicantEquipmentOwnForm } from "./applicant-equipment-own-form";
 import { ApplicantSafetyBackgroundForm } from "./applicant-safety-background-form";
 import { ApplicantSignedAgreementsForm } from "./applicant-signed-agreements-form";
+import { ApplicantAlreadyWorkedForm } from "./applicant-already-worked-form";
 import { HireApplicantForm } from "./hire-applicant-form";
 import { ApplicantLicensingForm } from "./applicant-licensing-form";
 import Section from "../../view-details/section";
@@ -94,6 +96,18 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
         />
       </Row>
 
+      {/* Equipment owned (for owner-operators) */}
+      <div id="equipment-owned" />
+      <Row className="px-2">
+        <ApplicantEquipmentOwnForm
+          isSubmitting={props?.isSubmitting}
+          setIsSubmitting={props?.setIsSubmitting}
+          entity={props?.entity}
+          className={props?.className}
+          setEntity={props?.setEntity}
+        />
+      </Row>
+
       {/* Previous employment */}
       <div id="work-history" />
       <Row className="px-2">
@@ -117,6 +131,18 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
           className={props?.className}
           setEntity={props?.setEntity}
           hideActions
+        />
+      </Row>
+
+      {/* Already worked/applied at company */}
+      <div id="already-worked" />
+      <Row className="px-2">
+        <ApplicantAlreadyWorkedForm
+          entity={props?.entity}
+          isSubmitting={props?.isSubmitting}
+          setIsSubmitting={props?.setIsSubmitting}
+          className={props?.className}
+          setEntity={props?.setEntity}
         />
       </Row>
 

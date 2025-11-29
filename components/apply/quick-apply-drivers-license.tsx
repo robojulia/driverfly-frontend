@@ -255,6 +255,7 @@ export function QuickApplyDriversLicense({
               <FileInput
                 name="document"
                 accept="application/pdf,image/*"
+                allowedTypesFriendlyName="PDF or Image files"
                 allowedSizeInByte={DRIVER_LICENSE_SIZE_LIMIT}
                 formik={form}
               />

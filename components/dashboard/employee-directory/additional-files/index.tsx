@@ -149,9 +149,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
         <>
             {document ? (
                 <ShowFormattedDate date={document.last_updated_at} />
-            ) : (
-                <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>
-            )}
+            ) : null}
         </>
     );
 
@@ -226,6 +224,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                                         name={`document`}
                                                         required
                                                         accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
+                                                        allowedTypesFriendlyName="PDF, Word, or Image files"
                                                         allowedSizeInByte={3145728}
                                                         formik={form}
                                                     />
@@ -286,6 +285,7 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                                                                 <FileInput
                                                                     name={`document`}
                                                                     accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
+                                                                    allowedTypesFriendlyName="PDF, Word, or Image files"
                                                                     formik={form}
                                                                     allowedSizeInByte={3145728}
                                                                 />

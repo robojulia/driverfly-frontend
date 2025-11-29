@@ -4,4 +4,5 @@ export enum CompanyPreferenceCategory {
     ENHANCEMENT = "ENHANCEMENT",
     VOE = "VOE",
     ONBOARDING_CHECKLIST = "ONBOARDING_CHECKLIST",
+    DQF = "DQF",
 }

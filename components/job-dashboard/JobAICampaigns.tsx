@@ -208,7 +208,6 @@ export const JobAICampaigns: React.FC<JobAICampaignsProps> = ({
         reachPreview={reachPreview}
         loadingReachPreview={loadingReachPreview}
         eligibilityStats={eligibilityStats}
-        completedCampaigns={completedCampaigns}
         creatingCampaign={creatingCampaign}
         onCreateCampaign={handleCreateCampaign}
       />

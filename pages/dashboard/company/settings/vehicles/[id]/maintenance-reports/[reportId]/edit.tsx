@@ -38,7 +38,7 @@ export default function EditMaintenanceReport({ id, reportId }) {
   return (
     <ChildPageLayout
       backPath={`/dashboard/company/settings/vehicles/${id}`}
-      title={t('EDIT_{name}', { name: 'MAINTENANCE_REPORT' }, { translateProps: true })}
+      title={t('Upload Maintenance Report')}
     >
       <VehicleMaintenanceReportForm entity={report} onSaveComplete={onSaveComplete} vehicleId={id} />
     </ChildPageLayout>

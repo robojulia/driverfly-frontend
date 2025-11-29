@@ -68,6 +68,7 @@ export class EmployeeEntity {
   manager?: CompanyManagerEntity;
   documents?: DocumentEntity[] = [];
   termination_date?: Date;
+  hr_notes?: string;
 
   static employeeFormYupSchema() {
     return yup.object({
@@ -123,6 +124,7 @@ export class EmployeeEntity {
       }),
       managerId: yup.number().required().nullable(),
       hire_date: yup.date().nullable(),
+      hr_notes: yup.string().nullable(),
     });
   }
 

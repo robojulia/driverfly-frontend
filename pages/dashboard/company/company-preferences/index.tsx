@@ -340,7 +340,7 @@ export default function CompanyPreference() {
               <BaseClickToCopyInput
                 label=""
                 className="my-2 border p-3 rounded link-background"
-                value={`${process.env.FRONTEND_BASE_URL ?? ''}apply/${user?.company?.slug}`}
+                value={`${typeof window !== 'undefined' ? window.location.origin : ''}/apply/${user?.company?.slug}`}
                 tooltipText="Click to copy"
               />
             </Card.Body>

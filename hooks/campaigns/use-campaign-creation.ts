@@ -57,7 +57,8 @@ export const useCampaignCreation = ({
           jobId: job.id,
           communicationType,
           minScore: 50, // Match the minScore used in campaign creation
-          excludeApplied: true,
+          excludeApplied: false, // Include direct applicants within the date limit
+          directApplicantDaysLimit: 30, // Only include applicants who applied to this job within last 30 days
         });
         setReachPreview(preview);
       } catch (error) {
@@ -126,8 +127,9 @@ export const useCampaignCreation = ({
         minScore: 50, // Minimum eligibility score
         communicationType: selectedCommunicationType,
         filters: {
-          appliedOnly: false, // Exclude those who already applied to this job
-          excludeDirectApplicants: true, // Only get candidates who applied to company but not this specific job
+          appliedOnly: false,
+          excludeDirectApplicants: false, // Include direct applicants, but with date filtering
+          directApplicantDaysLimit: 30, // Only include applicants who applied to this job within last 30 days
         },
       };
 

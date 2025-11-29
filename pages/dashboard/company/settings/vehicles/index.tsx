@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from '../../../../../hooks/use-translation';
 
-import { EyeFill, PenFill, TrashFill, BellFill } from 'react-bootstrap-icons';
+import { EyeFill, PenFill, TrashFill } from 'react-bootstrap-icons';
 
 import VehicleApi from '../../../../api/vehicle';
 import EmployeeApi from '../../../../api/employee';
@@ -27,7 +27,6 @@ import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
 import OverlyPopover from '../../../../../components/popover/overly-popover';
 import Link from 'next/link';
 import DueInspectionsAlert from '../../../../../components/vehicles/DueInspectionsAlert';
-import VehicleNotificationSettings from '../../../../../components/vehicles/VehicleNotificationSettings';
 
 export default function VehicleList() {
   const router = useRouter();
@@ -39,7 +38,6 @@ export default function VehicleList() {
   const [employees, setEmployees] = useState<Record<number, EmployeeEntity>>({});
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [vehicleToDelete, setVehicleToDelete] = useState<VehicleEntity | null>(null);
-  const [showNotificationSettingsModal, setShowNotificationSettingsModal] = useState(false);
 
   const columnSettingKey = getDataTableColumnKey('company', user, 'vehicles');
 
@@ -124,18 +122,6 @@ export default function VehicleList() {
 
   const canCreate = hasPermission('CanCreateVehicle');
 
-  const handleSaveNotificationSettings = (settings: any) => {
-    console.log('Notification settings saved:', settings);
-  };
-
-  const handleSaveNotificationSuccess = () => {
-    toast.success(t('Notification settings saved successfully'));
-  };
-
-  const onNotificationSettingsClick = () => {
-    setShowNotificationSettingsModal(true);
-  };
-
   function getVehicleAccessories(v: VehicleEntity) {
     return v.accessories
       ?.map((a, i) =>
@@ -161,13 +147,6 @@ export default function VehicleList() {
       desciption="VEHICLES_DESC"
       actions={
         <ButtonGroup>
-          {hasPermission('CanUpdateVehicle') && (
-            <Button variant="secondary" onClick={onNotificationSettingsClick}>
-              <div className="d-flex align-items-center gap-1">
-                <BellFill /> {t('Notification Settings')}
-              </div>
-            </Button>
-          )}
           {canCreate && <Button onClick={onAddClick}>{t('Add Equipment')}</Button>}
         </ButtonGroup>
       }
@@ -351,14 +330,6 @@ export default function VehicleList() {
           </Button>
         </Modal.Footer>
       </Modal>
-
-      <VehicleNotificationSettings
-        show={showNotificationSettingsModal}
-        onHide={() => setShowNotificationSettingsModal(false)}
-        canEdit={hasPermission('CanUpdateVehicle')}
-        onSave={handleSaveNotificationSettings}
-        onSaveSuccess={handleSaveNotificationSuccess}
-      />
     </PageLayout>
   );
 }

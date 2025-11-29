@@ -31,7 +31,6 @@ export interface SidebarItem {
   isSelected?: boolean;
   group?: string;
   external?: boolean;
-  gradient?: boolean;
 }
 
 /**
@@ -283,7 +282,7 @@ interface SidebarLinkProps {
 
 function SidebarLink(props: SidebarLinkProps) {
   const { isMobile, t, currentPath, onNavigate } = props;
-  let { icon: Cmp, pathname, items, text, external, gradient } = props.item;
+  let { icon: Cmp, pathname, items, text, external } = props.item;
   const [expanded, setExpanded] = useState(false);
   const { getToken } = useToken();
 
@@ -337,7 +336,7 @@ function SidebarLink(props: SidebarLinkProps) {
       <li
         className={`${isActive ? 'active' : ''} ${hasSubItems ? 'has-subitems' : ''} ${
           expanded ? 'expanded' : ''
-        } ${gradient ? 'gradient-link' : ''}`}
+        }`}
       >
         <a href={pathname} onClick={handleClick} target="_blank" rel="noopener noreferrer">
           {Cmp && <Cmp className="icon_left" />}
@@ -351,7 +350,7 @@ function SidebarLink(props: SidebarLinkProps) {
     <li
       className={`${isActive ? 'active' : ''} ${hasSubItems ? 'has-subitems' : ''} ${
         expanded ? 'expanded' : ''
-      } ${gradient ? 'gradient-link' : ''}`}
+      }`}
     >
       <Link href={pathname} scroll={true}>
         <a onClick={handleClick}>

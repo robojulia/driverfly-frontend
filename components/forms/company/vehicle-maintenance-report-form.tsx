@@ -83,12 +83,8 @@ export function VehicleMaintenanceReportForm(props: VehicleMaintenanceReportForm
     },
   });
 
-  // Check if required fields are filled
-  const shouldForbidSubmit =
-    !form.values.maintenance_date ||
-    !form.values.maintenance_type ||
-    !form.values.description ||
-    !form.isValid;
+  // No required fields - allow submission as long as form is valid
+  const shouldForbidSubmit = !form.isValid;
 
   return (
     <EntityForm
@@ -96,9 +92,7 @@ export function VehicleMaintenanceReportForm(props: VehicleMaintenanceReportForm
       onSubmit={form.handleSubmit}
       id={entity?.id}
       formik={form}
-      submitLabel={
-        entity?.id ? 'Forms.UPDATE_MAINTENANCE_REPORT' : 'Forms.CREATE_MAINTENANCE_REPORT'
-      }
+      submitLabel={entity?.id ? 'Upload' : 'Upload'}
       forbidSubmit={shouldForbidSubmit}
     >
       <Container className="px-4 py-3">
@@ -110,7 +104,6 @@ export function VehicleMaintenanceReportForm(props: VehicleMaintenanceReportForm
                 className="mb-3"
                 label="Maintenance Date"
                 name="maintenance_date"
-                required
                 formik={form}
               />
 
@@ -119,7 +112,6 @@ export function VehicleMaintenanceReportForm(props: VehicleMaintenanceReportForm
                 name="maintenance_type"
                 label="Type"
                 placeholder="Select maintenance type"
-                required
                 enumType={MaintenanceType}
                 labelPrefix="MaintenanceType"
                 formik={form}
@@ -139,7 +131,6 @@ export function VehicleMaintenanceReportForm(props: VehicleMaintenanceReportForm
                 label="Description"
                 name="description"
                 rows={4}
-                required
                 placeholder="Enter maintenance description"
                 formik={form}
               />

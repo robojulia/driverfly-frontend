@@ -20,7 +20,7 @@ export default function CreateVehicleInspection({ id }) {
   return (
     <ChildPageLayout
       backPath={backPath}
-      title={t('CREATE_{name}', { name: 'INSPECTION' }, { translateProps: true })}
+      title={t('Upload Inspection Report')}
     >
       <VehicleInspectionForm
         entity={new VehicleInspectionEntity()}

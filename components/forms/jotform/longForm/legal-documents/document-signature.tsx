@@ -374,51 +374,7 @@ export const DocumentSignature = memo(function DocumentSignature({
   // Original compact layout for sidebar
   return (
     <div className="document-signature-panel">
-      {/* Completion Status */}
-      <div className={`alert ${isComplete ? 'alert-success' : 'alert-info'} mb-4`}>
-        <div className="d-flex align-items-center">
-          {isComplete ? (
-            <CheckCircleFill className="text-success me-2" size={20} />
-          ) : (
-            <InfoCircle className="text-info me-2" size={20} />
-          )}
-          <div>
-            <h6 className="mb-0">{isComplete ? 'Document Completed' : 'Signature Required'}</h6>
-            <small>
-              {isComplete
-                ? 'This document has been successfully signed and completed.'
-                : 'Please complete the required fields below to sign this document.'}
-            </small>
-          </div>
-        </div>
-      </div>
-
-      {/* Requirements Checklist */}
-      <div className="mb-4">
-        <h6 className="fw-bold mb-3">
-          <Shield className="me-2" size={16} />
-          Requirements
-        </h6>
-
-        {requirements.map((req, index) => (
-          <div key={index} className="d-flex align-items-center mb-2">
-            <div className="me-2">
-              {req.met ? (
-                <CheckCircleFill className="text-success" size={16} />
-              ) : (
-                <div
-                  className="rounded-circle border border-secondary"
-                  style={{ width: '16px', height: '16px' }}
-                />
-              )}
-            </div>
-            <span className={req.met ? 'text-success' : 'text-muted'}>
-              {req.label}
-              {req.required && <span className="text-danger ms-1">*</span>}
-            </span>
-          </div>
-        ))}
-      </div>
+      {/* Completion Status - Removed per user request */}
 
       {/* SSN Input (if required) */}
       {ssnRequired && (

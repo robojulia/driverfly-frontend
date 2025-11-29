@@ -160,7 +160,7 @@ export function CampaignCta({
                     who:
                   </small>
                   <ul className="mb-0 mt-1" style={{ fontSize: '0.875rem' }}>
-                    <li>Have applied to your company but not this specific job</li>
+                    <li>Applied directly to this job within the last 30 days, OR applied to general intake or other jobs at any time</li>
                     <li>Meet critical job requirements (CDL, experience, geography)</li>
                     <li>Have a minimum eligibility score of 50+</li>
                     <li>Can pass drug tests and background checks if required</li>
@@ -183,7 +183,6 @@ export function CampaignCta({
         reachPreview={reachPreview}
         loadingReachPreview={loadingReachPreview}
         eligibilityStats={eligibilityStats}
-        completedCampaigns={completedCampaigns}
         creatingCampaign={creatingCampaign}
         onCreateCampaign={handleCreateCampaign}
       />

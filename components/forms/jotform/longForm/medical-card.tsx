@@ -265,6 +265,7 @@ export function MedicalCard() {
                   className="my-3"
                   name="document"
                   accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
+                  allowedTypesFriendlyName="PDF, Word, or Image files"
                   allowedSizeInByte={MEDICAL_CARD_SIZE_LIMIT}
                   formik={form}
                   onRemove={handleApplicantExtrasCleanup}

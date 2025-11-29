@@ -187,22 +187,35 @@ export function SignatureComponent({
 
   return (
     <div className={styles.txtcolor} ref={containerRef}>
-      {/* Signature Instructions */}
-      <div className="mb-4">
-        <p className={styles.bold}>{t('SIGNATURE_INSTRUCTIONS')}</p>
-        <ul>
-          <li>{t('SIGNATURE_OPTION_1')}</li>
-          <li>{t('SIGNATURE_OPTION_2')}</li>
-        </ul>
-        <p className="text-muted">
-          <em>{t('SIGNATURE_ACCESSIBILITY_NOTE')}</em>
-        </p>
+      {/* Electronic Signature Consent Checkbox - Above signature section */}
+      <div className="mb-3">
+        <Form.Check
+          type="checkbox"
+          id="typed-signature-consent"
+          label={t('I_CONSENT_TO_USE_TYPED_SIGNATURE')}
+          checked={typedSignatureConsent}
+          onChange={handleConsentChange}
+          className={`${styles.bold}`}
+        />
+        {typedSignatureConsent && (
+          <div className="mt-2">
+            <button
+              type="button"
+              className="theme-secondary-btn"
+              onClick={generateTypedSignature}
+              disabled={!typedSignatureConsent || !firstName || !lastName}
+              aria-label={t('USE_TYPED_SIGNATURE')}
+            >
+              {t('USE_TYPED_SIGNATURE')}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Signature Canvas Container */}
-      {/* 
-        Fixed canvas scaling issue: Canvas internal size now matches display size 
-        to ensure drawing coordinates align with cursor position at any scale 
+      {/*
+        Fixed canvas scaling issue: Canvas internal size now matches display size
+        to ensure drawing coordinates align with cursor position at any scale
       */}
       <div
         style={{
@@ -239,32 +252,6 @@ export function SignatureComponent({
         <button type="button" className="theme-secondary-btn me-2" onClick={clearSignatureCanvas}>
           {t('CLEAR')}
         </button>
-      </div>
-
-      {/* Typed Signature Option */}
-      <div className="border-top pt-3 mb-3">
-        <Form.Check
-          type="checkbox"
-          id="typed-signature-consent"
-          label={t('I_CONSENT_TO_USE_TYPED_SIGNATURE')}
-          checked={typedSignatureConsent}
-          onChange={handleConsentChange}
-          className={`${styles.bold} mb-2`}
-        />
-        {typedSignatureConsent && (
-          <div className="mb-3">
-            <small className="text-muted d-block mb-2">{t('TYPED_SIGNATURE_LEGAL_NOTICE')}</small>
-            <button
-              type="button"
-              className="theme-secondary-btn"
-              onClick={generateTypedSignature}
-              disabled={!typedSignatureConsent || !firstName || !lastName}
-              aria-label={t('USE_TYPED_SIGNATURE')}
-            >
-              {t('USE_TYPED_SIGNATURE')}
-            </button>
-          </div>
-        )}
       </div>
 
       {required && !hasSignature && (

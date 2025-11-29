@@ -16,9 +16,9 @@ export enum MaintenanceType {
 
 export class VehicleMaintenanceReportEntity {
   id?: number;
-  maintenance_date: Date;
-  maintenance_type: MaintenanceType = MaintenanceType.OIL_CHANGE;
-  description: string;
+  maintenance_date?: Date;
+  maintenance_type?: MaintenanceType;
+  description?: string;
   notes?: string;
   odometer_reading?: number;
   next_service_date?: Date;
@@ -29,11 +29,11 @@ export class VehicleMaintenanceReportEntity {
 
   static yupSchema() {
     return Yup.object().shape({
-      maintenance_date: Yup.date().required('Maintenance date is required'),
+      maintenance_date: Yup.date().nullable(),
       maintenance_type: Yup.string()
         .oneOf(Object.values(MaintenanceType))
-        .required('Maintenance type is required'),
-      description: Yup.string().required('Description is required'),
+        .nullable(),
+      description: Yup.string().nullable(),
       notes: Yup.string().nullable(),
       odometer_reading: Yup.number()
         .min(0, 'Odometer reading must be greater than or equal to 0')

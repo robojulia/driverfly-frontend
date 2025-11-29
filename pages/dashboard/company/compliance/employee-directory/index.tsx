@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Col, FormGroup, Row } from 'react-bootstrap';
-import { EyeFill, PenFill, TrashFill, PersonFill, PersonX, Bell, GearFill } from 'react-bootstrap-icons';
+import { EyeFill, PenFill, TrashFill, PersonFill, PersonX, Bell, GearFill, Download } from 'react-bootstrap-icons';
 import { Accordion, Tabs, Tab } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import EmployeeFilterForm, { EmployeeFilterDto } from '../../../../../components/forms/company/employee-filter-form';
@@ -37,6 +37,7 @@ import { useEffectAsync } from '../../../../../utils/react';
 import EmployeeApi from '../../../../api/employee';
 import DataViewToggle from '../../../../../components/shared/DataViewToggle';
 import Notifications from '../../../../../components/dashboard/employee-directory/notifications';
+import { EmployeeCSVExporter } from '../../../../../utils/employee-csv-exporter';
 
 enum ViewModeType {
   EMPLOYEE = 'EMPLOYEE',
@@ -258,6 +259,18 @@ export default function EmployeeDirectory() {
 
   const onEditClick = (data) =>
     router.push(`/dashboard/company/compliance/employee-directory/${data?.id}/edit`);
+
+  const handleExportEmployees = () => {
+    if (employees && employees.length > 0) {
+      const filename = viewMode === ViewModeType.EMPLOYEE
+        ? `active-employees-export-${new Date().toISOString().split('T')[0]}.csv`
+        : `past-employees-export-${new Date().toISOString().split('T')[0]}.csv`;
+      EmployeeCSVExporter.exportEmployeesToCSV(employees, filename);
+      toast.success(t('EMPLOYEES_EXPORTED_SUCCESSFULLY'));
+    } else {
+      toast.warning(t('NO_EMPLOYEES_TO_EXPORT'));
+    }
+  };
 
   const onTrashClick = async (entity: EmployeeEntity): Promise<void> =>
     setModalAction({ entity, type: 'DELETE' });
@@ -582,7 +595,7 @@ export default function EmployeeDirectory() {
             flexWrap: 'wrap',
             gap: '1rem'
           }}>
-            <div>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
               {viewMode == ViewModeType.EMPLOYEE && (
                 <Button
                   variant=""
@@ -594,6 +607,14 @@ export default function EmployeeDirectory() {
                   + {t('IMPORT_EMPLOYEES')}
                 </Button>
               )}
+              <Button
+                variant="outline-secondary"
+                onClick={handleExportEmployees}
+                disabled={!employees || employees.length === 0}
+              >
+                <Download size={14} className="mr-1" />
+                Export
+              </Button>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>

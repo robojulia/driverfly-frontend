@@ -13,6 +13,7 @@ export interface EligibilityQueryParams {
     | 'lastName'
     | 'yearsExperience'
     | 'createdAt'
+    | 'dateApplied'
     | 'interestLevel'
     | 'engagementCount';
   sortOrder?: 'ASC' | 'DESC';
@@ -35,6 +36,10 @@ export interface ApplicantBasicInfo {
   engagementCount?: number;
   daysSinceLastEngagement?: number | null;
   lastEngagementDate?: string | null;
+  created_at?: string;
+  dateApplied?: string;
+  appliedJobTitle?: string;
+  appliedJobId?: number;
 }
 
 export interface ScoringDetails {

@@ -21,8 +21,10 @@ import { ApplicantExtrasEntity } from "../../../models/applicant";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import { CdlExtras } from "../../../models/jot-form/long-form/cdl-object/index.dto";
 import { UserEntity } from "../../../models/user/user.entity";
+import { ReferralSourceEntity } from "../../../models/referral-source/referral-source.entity";
 import ApplicantApi from "../../../pages/api/applicant";
 import UserApi from "../../../pages/api/user";
+import { ReferralSourceApi } from "../../../pages/api/referral-source";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { focusOnErrorField } from "../../../utils/form-error";
 import { useEffectAsync } from "../../../utils/react";
@@ -57,7 +59,7 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
   const applicantApi = new ApplicantApi();
 
   const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([]);
-  // Referral source UI intentionally omitted in the new layout
+  const [referralSources, setReferralSources] = useState<ReferralSourceEntity[]>([]);
   const [canPerformJob, setCanPerformJob] = useState<boolean>(true);
   const [jobLimitationIndex, setJobLimitationIndex] = useState<number>(-1);
   const [initialized, setInitialized] = useState(false);
@@ -135,7 +137,12 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
     };
 
     if (!!entity?.id) {
-      form.setValues({ ...entity, extras, meta } as any);
+      form.setValues({
+        ...entity,
+        extras,
+        meta,
+        referralSourceId: entity?.referralSource?.id || entity?.referralSourceId
+      } as any);
       setInitialized(true);
     } else {
       await form.setValues({ ...new ApplicantEntity(), type: ApplicantType.COMPANY, extras, meta } as any);
@@ -146,6 +153,10 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
     const userApi = new UserApi();
     const data = await userApi.list();
     setCompanyUsers(data?.filter((u) => u.status == Status.ACTIVE));
+
+    const referralSourceApi = new ReferralSourceApi();
+    const referralData = await referralSourceApi.list();
+    setReferralSources(referralData?.filter((r) => r.status == Status.ACTIVE) || []);
   }, []);
 
   const today = new Date();
@@ -208,10 +219,14 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
           phone: formRef.current.values.phone,
           email: formRef.current.values.email,
           address_1: formRef.current.values.address_1,
+          address_2: formRef.current.values.address_2,
           city: formRef.current.values.city,
           state: formRef.current.values.state,
           zip_code: formRef.current.values.zip_code,
           birthdate: formRef.current.values.birthdate,
+          assignedUserId: formRef.current.values.assignedUserId,
+          type: formRef.current.values.type,
+          referralSourceId: formRef.current.values.referralSourceId,
           extras: currentExtras,
         };
       };
@@ -253,6 +268,13 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
     setCanPerformJob(!hasLimitation);
   }, [form.values?.extras]);
 
+  // Auto-set type to AUTO_RECRUIT when is_automated_recruiting_lead is true
+  useEffect(() => {
+    if (form.values?.is_automated_recruiting_lead && form.values?.type !== ApplicantType.AUTO_RECRUIT) {
+      form.setFieldValue('type', ApplicantType.AUTO_RECRUIT);
+    }
+  }, [form.values?.is_automated_recruiting_lead]);
+
   return (
     <Form onSubmit={form.handleSubmit} className={className} onReset={form.handleReset} data-applicant-edit-form>
       {/* Basic Information - Combined Section */}
@@ -289,7 +311,7 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
               </Col>
               <Col md="3" className="px-2">
                 <div style={{ maxWidth: '100%' }}>
-                  <BaseInputPhone className="col-12" readOnly={Boolean(entity?.is_hired)} label="Phone Number" name="phone" placeholder="(555) 987-6543" formik={form} />
+                  <BaseInputPhone className="col-12" readOnly={Boolean(entity?.is_hired)} label="Phone Number" required name="phone" placeholder="(555) 987-6543" formik={form} />
                 </div>
               </Col>
               <Col md="3" className="px-2">
@@ -302,10 +324,13 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
               </Col>
             </Row>
 
-            {/* Street Address, City, State, Zip */}
+            {/* Street Address, Address Line 2, City, State */}
             <Row className="mb-2">
               <Col md="3" className="px-2">
                 <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Street Address" name="address_1" placeholder="120 Folsom St." formik={form} />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Address Line 2" name="address_2" placeholder="Apt, Suite, Unit, etc." formik={form} />
               </Col>
               <Col md="3" className="px-2">
                 <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="City" name="city" placeholder="Atlanta" formik={form} />
@@ -313,8 +338,47 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
               <Col md="3" className="px-2">
                 <StateSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="State" name="state" placeholder="Select state" formik={form} />
               </Col>
+            </Row>
+
+            {/* Zip Code, Assigned Recruiter, Lead Type, Referral Source */}
+            <Row className="mb-2">
               <Col md="3" className="px-2">
                 <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Zip Code" name="zip_code" placeholder="83202" formik={form} />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseSelect
+                  className="col-12"
+                  readOnly={Boolean(entity?.is_hired)}
+                  label="Assigned Recruiter"
+                  name="assignedUserId"
+                  placeholder="Select recruiter"
+                  options={companyUsers?.map((u) => ({ label: `${u.first_name} ${u.last_name}`, value: u.id }))}
+                  formik={form}
+                />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseSelect
+                  className="col-12"
+                  readOnly={Boolean(entity?.is_hired) || Boolean(form.values?.is_automated_recruiting_lead)}
+                  label="Lead Type"
+                  name="type"
+                  placeholder="Select lead type"
+                  labelPrefix="ApplicantType"
+                  enumType={ApplicantType}
+                  hideOptions={!form.values?.is_automated_recruiting_lead ? [ApplicantType.AUTO_RECRUIT] : []}
+                  formik={form}
+                />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseSelect
+                  className="col-12"
+                  readOnly={Boolean(entity?.is_hired)}
+                  label="Referral Source"
+                  name="referralSourceId"
+                  placeholder="Select referral source"
+                  options={referralSources?.map((r) => ({ label: r.name, value: r.id }))}
+                  formik={form}
+                />
               </Col>
             </Row>
 

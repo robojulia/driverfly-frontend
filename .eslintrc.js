@@ -1,10 +1,9 @@
 module.exports = {
-  extends: ['next/core-web-vitals', 'prettier'],
+  extends: ["next", "next/core-web-vitals"],
   rules: {
-    'no-unused-vars': 'off',
-    indent: ['off', 2, { SwitchCase: 1 }],
-    'no-tabs': 'off',
-    'react/jsx-indent': ['off', 2],
-    'react/jsx-indent-props': ['off', 2],
-  },
+    "react/no-unescaped-entities": "off",
+    "@next/next/no-img-element": "off",
+    "@next/next/link-passhref": "off",
+    "react-hooks/exhaustive-deps": "warn"
+  }
 };

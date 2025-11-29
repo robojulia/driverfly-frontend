@@ -4,7 +4,6 @@ import {
   TelephoneFill,
   ChatDotsFill,
   InfoCircleFill,
-  FilterCircleFill,
   PeopleFill,
 } from 'react-bootstrap-icons';
 import { JobEntity } from '../../models/job/job.entity';
@@ -21,7 +20,6 @@ interface CampaignCreationModalProps {
   reachPreview: CampaignReachPreviewResponse | null;
   loadingReachPreview: boolean;
   eligibilityStats: any;
-  completedCampaigns: any[];
   creatingCampaign: boolean;
   onCreateCampaign: () => void;
 }
@@ -36,192 +34,149 @@ export const CampaignCreationModal: React.FC<CampaignCreationModalProps> = ({
   reachPreview,
   loadingReachPreview,
   eligibilityStats,
-  completedCampaigns,
   creatingCampaign,
   onCreateCampaign,
 }) => {
   return (
     <Modal show={show} onHide={onHide} size="lg" centered>
-      <Modal.Header closeButton>
-        <Modal.Title>
-          {selectedCommunicationType === CampaignCommunicationType.SMS ? (
-            <ChatDotsFill className="me-2" />
-          ) : (
-            <TelephoneFill className="me-2" />
-          )}
-          {completedCampaigns.length > 0
-            ? `Create New ${
-                selectedCommunicationType === CampaignCommunicationType.SMS ? 'SMS' : 'Calling'
-              } Campaign`
-            : `Create ${
-                selectedCommunicationType === CampaignCommunicationType.SMS ? 'SMS' : 'Calling'
-              } Campaign`}
-        </Modal.Title>
+      <Modal.Header closeButton className="border-0 pb-2">
+        <Modal.Title>Create Campaign</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="pt-2">
         {/* Communication Type Selection */}
-        <Card className="border-light mb-4">
-          <Card.Header className="bg-light">
-            <h6 className="mb-0">Choose Communication Method</h6>
-          </Card.Header>
-          <Card.Body>
-            <Row>
-              <Col md={6}>
-                <Card
-                  className={`h-100 ${
-                    selectedCommunicationType === CampaignCommunicationType.VOICE
-                      ? 'border-primary'
-                      : 'border-light'
-                  } ${!callCampaignsEnabled ? 'opacity-50' : ''}`}
-                  style={{
-                    cursor: callCampaignsEnabled ? 'pointer' : 'not-allowed',
-                  }}
-                  onClick={() => {
-                    if (callCampaignsEnabled) {
-                      onCommunicationTypeChange(CampaignCommunicationType.VOICE);
-                    }
-                  }}
-                >
-                  <Card.Body className="text-center p-3">
+        <div className="mb-4">
+          <label className="form-label fw-semibold mb-3">Communication Method</label>
+          <Row className="g-3">
+            <Col md={6}>
+              <Card
+                className={`h-100 transition-all ${
+                  selectedCommunicationType === CampaignCommunicationType.VOICE
+                    ? 'border-primary border-2 shadow-sm'
+                    : 'border-secondary border-opacity-25'
+                } ${!callCampaignsEnabled ? 'opacity-50' : ''}`}
+                style={{
+                  cursor: callCampaignsEnabled ? 'pointer' : 'not-allowed',
+                  transition: 'all 0.2s ease',
+                }}
+                onClick={() => {
+                  if (callCampaignsEnabled) {
+                    onCommunicationTypeChange(CampaignCommunicationType.VOICE);
+                  }
+                }}
+              >
+                <Card.Body className="text-center p-4">
+                  <div className="mb-3">
                     <TelephoneFill
-                      size={32}
-                      className={`mb-2 ${callCampaignsEnabled ? 'text-primary' : 'text-muted'}`}
+                      size={40}
+                      className={callCampaignsEnabled ? 'text-primary' : 'text-muted'}
                     />
-                    <h6 className={callCampaignsEnabled ? '' : 'text-muted'}>
-                      Voice Calls
-                      {!callCampaignsEnabled && (
-                        <Badge bg="secondary" className="ms-2">
-                          Coming Soon
-                        </Badge>
-                      )}
-                    </h6>
-                    <small className="text-muted">
-                      {callCampaignsEnabled
-                        ? 'Personal phone conversations with candidates'
-                        : 'Call campaigns are coming soon!'}
-                    </small>
-                  </Card.Body>
-                </Card>
-              </Col>
-              <Col md={6}>
-                <Card
-                  className={`h-100 ${
-                    selectedCommunicationType === CampaignCommunicationType.SMS
-                      ? 'border-success'
-                      : 'border-light'
-                  } ${!callCampaignsEnabled ? 'border-success bg-light' : ''}`}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => onCommunicationTypeChange(CampaignCommunicationType.SMS)}
-                >
-                  <Card.Body className="text-center p-3">
-                    <ChatDotsFill size={32} className="text-success mb-2" />
-                    <h6>
-                      SMS Messages
-                      {!callCampaignsEnabled && (
-                        <Badge bg="success" className="ms-2">
-                          Recommended
-                        </Badge>
-                      )}
-                    </h6>
-                    <small className="text-muted">Text messages to candidates&apos; phones</small>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
+                  </div>
+                  <h6 className={`mb-2 ${!callCampaignsEnabled ? 'text-muted' : ''}`}>
+                    Voice Calls
+                  </h6>
+                  {!callCampaignsEnabled && (
+                    <Badge bg="secondary" className="mb-2">
+                      Coming Soon
+                    </Badge>
+                  )}
+                  <p className="text-muted small mb-0">
+                    {callCampaignsEnabled
+                      ? 'Personal phone conversations'
+                      : 'Available soon'}
+                  </p>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={6}>
+              <Card
+                className={`h-100 transition-all ${
+                  selectedCommunicationType === CampaignCommunicationType.SMS
+                    ? 'border-success border-2 shadow-sm'
+                    : 'border-secondary border-opacity-25'
+                }`}
+                style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
+                onClick={() => onCommunicationTypeChange(CampaignCommunicationType.SMS)}
+              >
+                <Card.Body className="text-center p-4">
+                  <div className="mb-3">
+                    <ChatDotsFill size={40} className="text-success" />
+                  </div>
+                  <h6 className="mb-2">SMS Messages</h6>
+                  {!callCampaignsEnabled && (
+                    <Badge bg="success" className="mb-2">
+                      Recommended
+                    </Badge>
+                  )}
+                  <p className="text-muted small mb-0">
+                    Direct text messages
+                  </p>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        </div>
+
+        {/* Campaign Overview */}
+        <Card className="border-0 bg-light mb-4">
+          <Card.Body className="p-4">
+            <div className="text-center mb-4">
+              <div className="mb-2">
+                <PeopleFill size={24} className="text-primary me-2" />
+                <span className="h2 mb-0">
+                  {loadingReachPreview ? (
+                    <span className="spinner-border spinner-border-sm" />
+                  ) : (
+                    reachPreview?.qualifiedPool ?? eligibilityStats?.eligibleApplicants ?? 0
+                  )}
+                </span>
+              </div>
+              <p className="text-muted mb-0">
+                Qualified candidates ready to reach for <strong>{job.title}</strong>
+              </p>
+            </div>
+
+            {/* Job Details */}
+            <div className="d-flex justify-content-around text-center small">
+              <div>
+                <div className="text-muted">Location</div>
+                <div className="fw-semibold">
+                  {job.location?.city}, {job.location?.state}
+                </div>
+              </div>
+              <div className="vr"></div>
+              <div>
+                <div className="text-muted">CDL Class</div>
+                <div className="fw-semibold">{job.cdl_class || 'None'}</div>
+              </div>
+              <div className="vr"></div>
+              <div>
+                <div className="text-muted">Method</div>
+                <div className="fw-semibold">
+                  {selectedCommunicationType === CampaignCommunicationType.SMS ? 'SMS' : 'Voice'}
+                </div>
+              </div>
+            </div>
           </Card.Body>
         </Card>
 
-        {!callCampaignsEnabled && (
-          <div className="alert alert-info mb-4">
-            <InfoCircleFill className="me-2" />
-            <strong>SMS campaigns are currently available.</strong> Voice call campaigns are coming
-            soon! SMS campaigns provide effective reach and higher engagement rates with qualified
-            candidates.
-          </div>
-        )}
-
-        <div className="text-center mb-4">
-          <h5>
-            Ready to reach{' '}
-            {loadingReachPreview ? (
-              <span className="spinner-border spinner-border-sm mx-2" />
-            ) : (
-              reachPreview?.qualifiedPool ?? eligibilityStats?.eligibleApplicants ?? 0
-            )}{' '}
-            qualified candidates?
-          </h5>
-          <p className="text-muted">
-            We&apos;ll create a targeted{' '}
-            {selectedCommunicationType === CampaignCommunicationType.SMS ? 'SMS' : 'calling'}{' '}
-            campaign to reach out to drivers who meet your job requirements but haven&apos;t applied
-            yet.
-          </p>
-
-          {/* Show SMS filtering info if applicable */}
-          {selectedCommunicationType === CampaignCommunicationType.SMS &&
-            reachPreview &&
-            reachPreview.filteringDetails.filteredForSms > 0 && (
-              <div className="alert alert-info mt-3">
-                <InfoCircleFill className="me-2" />
-                <strong>SMS Compliance:</strong> {reachPreview.filteringDetails.filteredForSms}{' '}
-                candidates were filtered out because they don&apos;t authorize SMS communication.
-                <div className="mt-2">
+        {/* SMS Filtering Notice */}
+        {selectedCommunicationType === CampaignCommunicationType.SMS &&
+          reachPreview &&
+          reachPreview.filteringDetails.filteredForSms > 0 && (
+            <div className="alert alert-warning border-0 mb-3">
+              <div className="d-flex align-items-start">
+                <InfoCircleFill className="me-2 mt-1 flex-shrink-0" />
+                <div className="small">
+                  <strong>{reachPreview.filteringDetails.filteredForSms} candidates excluded</strong> -
                   {reachPreview.filteringDetails.reasons.noPhoneNumber > 0 && (
-                    <small className="d-block">
-                      • {reachPreview.filteringDetails.reasons.noPhoneNumber} have no phone number
-                    </small>
+                    <span className="d-block text-muted">
+                      {reachPreview.filteringDetails.reasons.noPhoneNumber} missing phone number or SMS authorization
+                    </span>
                   )}
                 </div>
               </div>
-            )}
-        </div>
-
-        <Card className="border-primary mb-4">
-          <Card.Header className="bg-primary text-white">
-            <h6 className="mb-0">
-              <FilterCircleFill className="me-2" />
-              Campaign Targeting
-            </h6>
-          </Card.Header>
-          <Card.Body>
-            <Row>
-              <Col md={6}>
-                <strong>Job:</strong> {job.title}
-                <br />
-                <strong>Location:</strong> {job.location?.city}, {job.location?.state}
-                <br />
-                <strong>CDL Required:</strong> {job.cdl_class || 'None'}
-              </Col>
-              <Col md={6}>
-                <strong>Target Pool:</strong>{' '}
-                {loadingReachPreview ? (
-                  <span className="spinner-border spinner-border-sm" />
-                ) : (
-                  <>
-                    {reachPreview?.qualifiedPool ?? eligibilityStats?.eligibleApplicants ?? 0}{' '}
-                    candidates
-                  </>
-                )}
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
-
-        <div className="bg-light rounded p-3 mb-4">
-          <div className="text-center">
-            <strong>Qualified Pool</strong>
-            <br />
-            {loadingReachPreview ? (
-              <span className="spinner-border spinner-border-sm" />
-            ) : (
-              <span className="text-primary h4">
-                {reachPreview?.qualifiedPool ?? eligibilityStats?.eligibleApplicants ?? 0}
-              </span>
-            )}
-            <br />
-            <small className="text-muted">eligible candidates</small>
-          </div>
-        </div>
+            </div>
+          )}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide} disabled={creatingCampaign}>

@@ -158,7 +158,7 @@ export const InspectionCompletionModal: React.FC<InspectionCompletionModalProps>
         </div>
 
         <Form.Group className="mb-3">
-          <Form.Label>{t('Inspection Date')}</Form.Label>
+          <Form.Label>{t('Inspection Date')} ({t('Optional')})</Form.Label>
           <Form.Control
             type="date"
             value={formik.values.inspection_date.toISOString().split('T')[0]}
@@ -168,6 +168,7 @@ export const InspectionCompletionModal: React.FC<InspectionCompletionModalProps>
         </Form.Group>
 
         <div className="completion-actions mb-4">
+          <Form.Label className="mb-2">{t('Status')} ({t('Optional')})</Form.Label>
           <div className="d-flex gap-3 mb-4">
             <Button
               variant={formik.values.status === 'Passed' ? 'success' : 'outline-success'}
@@ -204,7 +205,7 @@ export const InspectionCompletionModal: React.FC<InspectionCompletionModalProps>
           </div>
 
           <Form.Group className="mb-3">
-            <Form.Label>{t('Notes')}</Form.Label>
+            <Form.Label>{t('Notes')} ({t('Optional')})</Form.Label>
             <Form.Control
               as="textarea"
               rows={3}
@@ -216,13 +217,14 @@ export const InspectionCompletionModal: React.FC<InspectionCompletionModalProps>
 
           <FileInput
             className="mb-3"
-            label="Inspection Document"
+            label="Inspection Document (Optional)"
             name="inspection_document"
             accept=".pdf,image/*"
             documentType={DocumentType.INSPECTION}
             formik={formik}
             allowedSizeInByte={3145728}
             allowedTypesFriendlyName="PDF or image format, under 3MB"
+            required={false}
           />
 
           {formik.values.status === 'Failed' && (
@@ -300,7 +302,7 @@ export const InspectionCompletionModal: React.FC<InspectionCompletionModalProps>
         <Button
           variant="primary"
           onClick={() => formik.handleSubmit()}
-          disabled={!formik.values.status || isSubmitting}
+          disabled={isSubmitting}
         >
           {isSubmitting ? (
             <div className="d-flex align-items-center gap-2">

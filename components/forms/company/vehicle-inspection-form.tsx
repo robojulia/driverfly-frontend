@@ -80,7 +80,7 @@ export function VehicleInspectionForm(props: VehicleInspectionFormProps) {
   });
 
   // Check if required fields are filled
-  const shouldForbidSubmit = !form.values.inspection_type || !form.values.status || !form.isValid;
+  const shouldForbidSubmit = !form.isValid;
 
   return (
     <EntityForm
@@ -88,7 +88,7 @@ export function VehicleInspectionForm(props: VehicleInspectionFormProps) {
       onSubmit={form.handleSubmit}
       id={entity?.id}
       formik={form}
-      submitLabel={entity?.id ? 'Forms.UPDATE_INSPECTION' : 'Forms.CREATE_INSPECTION'}
+      submitLabel={entity?.id ? 'Upload' : 'Upload'}
       forbidSubmit={shouldForbidSubmit}
     >
       <Container className="px-4 py-3">
@@ -101,7 +101,6 @@ export function VehicleInspectionForm(props: VehicleInspectionFormProps) {
                 name="inspection_type"
                 label="Type"
                 placeholder="Select inspection type"
-                required
                 enumType={InspectionType}
                 labelPrefix="InspectionType"
                 formik={form}
@@ -112,7 +111,6 @@ export function VehicleInspectionForm(props: VehicleInspectionFormProps) {
                 name="status"
                 label="Status"
                 placeholder="Select status"
-                required
                 enumType={InspectionStatus}
                 labelPrefix="InspectionStatus"
                 formik={form}

@@ -89,6 +89,14 @@ const FullLayout = ({ children }) => {
       startsWith: true,
       group: 'MAIN',
     },
+    {
+      pathname: '/dashboard/company/campaigns',
+      icon: MegaphoneFill,
+      text: 'CAMPAIGNS',
+      startsWith: true,
+      group: 'MAIN',
+      visible: isFeatureEnabled('CAMPAIGNS_ENABLED'),
+    },
     // {
     // 	pathname: "/dashboard/company/call",
     // 	icon: TelephoneFill,
@@ -103,14 +111,6 @@ const FullLayout = ({ children }) => {
       group: 'COMPANY',
     },
     {
-      pathname: '/dashboard/company/campaigns',
-      icon: MegaphoneFill,
-      text: 'CAMPAIGNS',
-      startsWith: true,
-      group: 'COMPANY',
-      visible: isFeatureEnabled('CAMPAIGNS_ENABLED'),
-    },
-    {
       pathname: '/dashboard/company/auto-recruiting',
       icon: Lightning,
       text: 'AUTO_RECRUITING',
@@ -123,7 +123,6 @@ const FullLayout = ({ children }) => {
       icon: BookFill,
       text: 'TRAINING_ACADEMY',
       external: true,
-      gradient: true,
       group: 'COMPANY',
     },
     {

@@ -46,7 +46,7 @@ export default function EditVehicleInspection() {
   return (
     <ChildPageLayout
       backPath={backPath}
-      title={t('EDIT_{name}', { name: 'INSPECTION' }, { translateProps: true })}
+      title={t('Upload Inspection Report')}
     >
       {inspection && (
         <VehicleInspectionForm

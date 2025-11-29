@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Badge, Button, Col, Container, FormControl, InputGroup, Row } from 'react-bootstrap';
-import { ArrowLeft, Bell, PersonFill, Search, GearFill } from 'react-bootstrap-icons';
+import { ArrowLeft, Bell, PersonFill, Search, GearFill, ChatDots } from 'react-bootstrap-icons';
 import { Tabs, Tab, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import { toast } from 'react-toastify';
@@ -10,6 +10,7 @@ import Background from '../../../../../../components/dashboard/employee-director
 import DQF from '../../../../../../components/dashboard/employee-directory/dqf';
 import HRFiles from '../../../../../../components/dashboard/employee-directory/hr-files';
 import FullLayout from '../../../../../../components/dashboard/layouts/layout/full-layout';
+import { EmployeeMessages } from '../../../../../../components/employees/employee-messages';
 import { EmployeeStatus } from '../../../../../../enums/applicants/employee-status.enum';
 import { useAuth } from '../../../../../../hooks/use-auth';
 import { useTranslation } from '../../../../../../hooks/use-translation';
@@ -83,13 +84,64 @@ export default function EmployeeDetailPage() {
   );
 
   const getDocumentStats = (emp: EmployeeEntity) => {
+    const now = new Date();
+    const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+    let pending = 0;
+    let overdue = 0;
+
+    // Check license expiration
+    if (emp.license_expiry) {
+      const expiryDate = new Date(emp.license_expiry);
+      if (expiryDate <= now) {
+        overdue++; // Already expired
+      } else if (expiryDate <= thirtyDaysFromNow) {
+        pending++; // Expiring within 30 days
+      }
+    } else {
+      overdue++; // Missing license expiry is critical
+    }
+
+    // Check for required documents
+    const hasDriverLicense = emp.documents?.some(doc => doc.type === 'DRIVER_LICENSE');
+    const hasMedicalCard = emp.documents?.some(doc => doc.type === 'MEDICAL_CARD');
+    const hasMVR = emp.documents?.some(doc => doc.type === 'MVR');
+
+    if (!hasDriverLicense) overdue++;
+    if (!hasMedicalCard) overdue++;
+    if (!hasMVR) overdue++;
+
     const complete = emp.documents?.length || 0;
-    const pending = 5; // Mock - calculate based on required vs uploaded
-    const overdue = 2; // Mock
+
     return { complete, pending, overdue };
   };
 
+  // Calculate compliance notifications (recent uploads + outstanding items)
+  const getComplianceNotifications = (emp: EmployeeEntity) => {
+    const now = new Date();
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+    // Count recent uploads (last 7 days)
+    const recentUploads = emp.documents?.filter(doc => {
+      const uploadDate = new Date(doc.created_at);
+      return uploadDate >= sevenDaysAgo;
+    }).length || 0;
+
+    // Use the same stats from getDocumentStats
+    const stats = getDocumentStats(emp);
+    const outstandingCount = stats.pending + stats.overdue;
+
+    return {
+      total: recentUploads + outstandingCount,
+      recentUploads,
+      outstanding: outstandingCount,
+      pending: stats.pending,
+      overdue: stats.overdue
+    };
+  };
+
   const totalPending = getDocumentStats(employee).pending + getDocumentStats(employee).overdue;
+  const complianceNotifications = getComplianceNotifications(employee);
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa', display: 'flex', flexDirection: 'column' }}>
@@ -109,8 +161,29 @@ export default function EmployeeDetailPage() {
             <Button variant="link" className="p-2 mr-2">
               <GearFill size={18} />
             </Button>
-            <Button variant="link" className="p-2 mr-3">
+            <Button
+              variant="link"
+              className="p-2 mr-3"
+              onClick={() => setSelectedTabIndex(6)}
+              style={{ position: 'relative' }}
+            >
               <Bell size={18} />
+              {complianceNotifications.total > 0 && (
+                <Badge
+                  bg="danger"
+                  pill
+                  style={{
+                    position: 'absolute',
+                    top: '-2px',
+                    right: '-2px',
+                    fontSize: '0.65rem',
+                    padding: '0.25rem 0.4rem',
+                    minWidth: '18px'
+                  }}
+                >
+                  {complianceNotifications.total}
+                </Badge>
+              )}
             </Button>
             <Button variant="primary" size="sm">
               + Add Employee
@@ -215,6 +288,12 @@ export default function EmployeeDetailPage() {
                 <Tab>HR Files</Tab>
                 <Tab>Additional</Tab>
                 <Tab>All Files</Tab>
+                <Tab>
+                  <div className="d-flex align-items-center justify-content-center">
+                    <ChatDots size={16} className="mr-2" />
+                    Messages
+                  </div>
+                </Tab>
                 <Tab><Bell size={16} /></Tab>
               </TabList>
 
@@ -273,13 +352,151 @@ export default function EmployeeDetailPage() {
               </TabPanel>
 
               <TabPanel>
-                <div className="bg-white p-4 rounded">
-                  <h4>
+                <EmployeeMessages employee={employee} />
+              </TabPanel>
+
+              <TabPanel>
+                <div className="bg-white rounded" style={{ padding: '1.5rem' }}>
+                  <h4 className="mb-3">
                     <Bell size={20} className="mr-2" />
-                    {t('NOTIFICATIONS')}
+                    Compliance Updates
                   </h4>
-                  <p className="text-muted">{t('NOTIFICATIONS_DESCRIPTION')}</p>
-                  {/* Notification settings will be added here */}
+
+                  {/* Recent Document Uploads */}
+                  {complianceNotifications.recentUploads > 0 && (
+                    <div className="mb-4">
+                      <h6 className="font-weight-bold mb-3" style={{ color: '#198754' }}>
+                        Recent Uploads ({complianceNotifications.recentUploads})
+                      </h6>
+                      <div className="list-group">
+                        {employee.documents
+                          ?.filter(doc => {
+                            const uploadDate = new Date(doc.created_at);
+                            const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+                            return uploadDate >= sevenDaysAgo;
+                          })
+                          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+                          .map(doc => (
+                            <div
+                              key={doc.id}
+                              className="list-group-item d-flex justify-content-between align-items-start"
+                            >
+                              <div>
+                                <div className="font-weight-bold">{doc.name}</div>
+                                <small className="text-muted">
+                                  Uploaded {new Date(doc.created_at).toLocaleDateString()} at{' '}
+                                  {new Date(doc.created_at).toLocaleTimeString()}
+                                </small>
+                              </div>
+                              <Badge bg="success">New</Badge>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Outstanding Items */}
+                  {complianceNotifications.outstanding > 0 && (
+                    <div className="mb-4">
+                      <h6 className="font-weight-bold mb-3" style={{ color: '#dc3545' }}>
+                        Outstanding Items ({complianceNotifications.outstanding})
+                        {complianceNotifications.pending > 0 && (
+                          <Badge bg="warning" className="ml-2" style={{ fontSize: '0.75rem' }}>
+                            {complianceNotifications.pending} Pending
+                          </Badge>
+                        )}
+                        {complianceNotifications.overdue > 0 && (
+                          <Badge bg="danger" className="ml-2" style={{ fontSize: '0.75rem' }}>
+                            {complianceNotifications.overdue} Overdue
+                          </Badge>
+                        )}
+                      </h6>
+                      <div className="list-group">
+                        {/* License Expiration - Check if expired or expiring */}
+                        {employee.license_expiry && (() => {
+                          const expiryDate = new Date(employee.license_expiry);
+                          const now = new Date();
+                          const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+                          if (expiryDate <= now) {
+                            return (
+                              <div className="list-group-item d-flex justify-content-between align-items-start">
+                                <div>
+                                  <div className="font-weight-bold">Driver License Expired</div>
+                                  <small className="text-muted">
+                                    Expired: {expiryDate.toLocaleDateString()}
+                                  </small>
+                                </div>
+                                <Badge bg="danger">Overdue</Badge>
+                              </div>
+                            );
+                          } else if (expiryDate <= thirtyDaysFromNow) {
+                            return (
+                              <div className="list-group-item d-flex justify-content-between align-items-start">
+                                <div>
+                                  <div className="font-weight-bold">Driver License Expiring Soon</div>
+                                  <small className="text-muted">
+                                    Expires: {expiryDate.toLocaleDateString()}
+                                  </small>
+                                </div>
+                                <Badge bg="warning">Pending</Badge>
+                              </div>
+                            );
+                          }
+                          return null;
+                        })()}
+                        {!employee.license_expiry && (
+                          <div className="list-group-item d-flex justify-content-between align-items-start">
+                            <div>
+                              <div className="font-weight-bold">Driver License Expiry Date Missing</div>
+                              <small className="text-muted">Please update license expiry information</small>
+                            </div>
+                            <Badge bg="danger">Overdue</Badge>
+                          </div>
+                        )}
+
+                        {/* Missing Documents */}
+                        {!employee.documents?.some(doc => doc.type === 'DRIVER_LICENSE') && (
+                          <div className="list-group-item d-flex justify-content-between align-items-start">
+                            <div>
+                              <div className="font-weight-bold">Driver License Document</div>
+                              <small className="text-muted">Upload required driver license document</small>
+                            </div>
+                            <Badge bg="danger">Overdue</Badge>
+                          </div>
+                        )}
+                        {!employee.documents?.some(doc => doc.type === 'MEDICAL_CARD') && (
+                          <div className="list-group-item d-flex justify-content-between align-items-start">
+                            <div>
+                              <div className="font-weight-bold">Medical Card</div>
+                              <small className="text-muted">Upload required medical card document</small>
+                            </div>
+                            <Badge bg="danger">Overdue</Badge>
+                          </div>
+                        )}
+                        {!employee.documents?.some(doc => doc.type === 'MVR') && (
+                          <div className="list-group-item d-flex justify-content-between align-items-start">
+                            <div>
+                              <div className="font-weight-bold">Motor Vehicle Record (MVR)</div>
+                              <small className="text-muted">Upload required MVR document</small>
+                            </div>
+                            <Badge bg="danger">Overdue</Badge>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* No Updates */}
+                  {complianceNotifications.total === 0 && (
+                    <div className="text-center py-5">
+                      <Bell size={48} className="text-muted mb-3" />
+                      <h5 className="text-muted">All Caught Up!</h5>
+                      <p className="text-muted">
+                        No recent document uploads or outstanding compliance items for {employee.first_name} {employee.last_name}.
+                      </p>
+                    </div>
+                  )}
                 </div>
               </TabPanel>
             </Tabs>

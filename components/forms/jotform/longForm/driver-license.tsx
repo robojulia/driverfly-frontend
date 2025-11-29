@@ -2,7 +2,7 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
-import { Trash, Eye } from 'react-bootstrap-icons';
+import { Trash, Eye, PlusCircle } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { ApplicantDocumentType } from '../../../../enums/applicants/applicant-document-type.enum';
@@ -12,7 +12,7 @@ import { useAsyncFormSave } from '../../../../hooks/use-async-form-save';
 import { DocumentEntity } from '../../../../models/documents/document.entity';
 import { DocumentsDto } from '../../../../models/jot-form/long-form/documents.dto';
 import { FormActions } from '../form-buttons';
-import { DocumentCard, Checkbox, Button } from '../../../shared/dha';
+import { DocumentCard, Checkbox, Button, Input, Select, MaskedInput, EquipmentCard } from '../../../shared/dha';
 import FileInput from '../../file-input';
 import { CameraComponent } from './camera';
 import ViewModal from '../../../view-details/view-modal';
@@ -23,15 +23,39 @@ import {
   getFileSizeLimitDescription,
 } from '../../../../constants/file-upload.constants';
 import styles from '../../../../styles/digitalhiringapp.module.css';
+import { ApplicantExtrasEntity } from '../../../../models/applicant/applicant-extras.entity';
+import { CdlExtras } from '../../../../models/jot-form/long-form/cdl-object/index.dto';
+import stateList from '../../../../utils/stateList';
+import { getCDLFormat } from '../../../../utils/cdl-formats';
+
+// Custom hook to detect screen size for responsive state list
+const useScreenSize = () => {
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth < 768);
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
+  return isSmallScreen;
+};
 
 export function DriverLicense() {
   const {
-    state: { applicant, steps },
-    method: { setApplicant, stepNext, stepBack, setApplicantExtras },
+    state: { applicant, steps, applicantExtras },
+    method: { setApplicant, stepNext, stepBack, setApplicantExtras, updateApplicantExtras },
   }: JotFormContextType = useContext(JotformContext);
 
   const [isFormValid, setIsFormValid] = useState(false);
   const [viewDoc, setViewDoc] = useState('');
+  const [additionalLicenses, setAdditionalLicenses] = useState<CdlExtras[]>([]);
+  const isSmallScreen = useScreenSize();
 
   // Initialize async form saving
   const { saveFormData } = useAsyncFormSave(applicant?.id, steps);
@@ -50,6 +74,11 @@ export function DriverLicense() {
   const isLongFormRouteActive = router.route.includes('apply/longform/[applicant_uuid]');
   const quickApplyRouteActive = router.route.includes('apply/quick-apply');
   const dhaRouteActive = router.route.includes('apply/[slug]');
+
+  // Create responsive state list
+  const responsiveStateList = isSmallScreen
+    ? stateList.map((state) => ({ ...state, label: state.value }))
+    : stateList;
 
   const form = useFormik({
     initialValues: new DocumentsDto(),
@@ -71,6 +100,34 @@ export function DriverLicense() {
 
       setApplicant(updatedApplicant);
 
+      // Handle additional CDL licenses
+      try {
+        // Check if there are any valid CDL licenses
+        const hasValidLicenses =
+          additionalLicenses &&
+          additionalLicenses.length > 0 &&
+          additionalLicenses.some(
+            (license) =>
+              license.license_number?.trim() &&
+              license.state?.trim() &&
+              (typeof license.date === 'string' ? license.date.trim() : license.date)
+          );
+
+        if (hasValidLicenses) {
+          // Update with valid CDL licenses
+          const cdlExtrasEntity = new ApplicantExtrasEntity(ApplicantExtras.CDL_NUMBER);
+          cdlExtrasEntity.value = additionalLicenses;
+          updateApplicantExtras(cdlExtrasEntity);
+        } else {
+          // Remove CDL_NUMBER entry entirely if no valid licenses
+          setApplicantExtras(
+            (prev) => prev?.filter((extra) => extra.type !== ApplicantExtras.CDL_NUMBER) || []
+          );
+        }
+      } catch (error) {
+        console.error('Error submitting additional licenses:', error);
+      }
+
       // Save form data on submit
       saveFormData({
         applicant: updatedApplicant,
@@ -89,9 +146,21 @@ export function DriverLicense() {
   // Check if form is valid
   useEffect(() => {
     const hasNoErrors = Object.keys(form.errors).length === 0;
-    // Form is valid even without document, but only invalid if there are errors
-    setIsFormValid(hasNoErrors);
-  }, [form.values, form.errors]);
+
+    // Check additional licenses validation
+    let additionalLicensesValid = true;
+    if (additionalLicenses.length > 0) {
+      additionalLicensesValid = additionalLicenses.every(
+        (license) =>
+          !!license.license_number &&
+          !!license.state &&
+          (typeof license.date === 'string' ? !!license.date : !!license.date)
+      );
+    }
+
+    // Form is valid even without document, but only invalid if there are errors or invalid additional licenses
+    setIsFormValid(hasNoErrors && additionalLicensesValid);
+  }, [form.values, form.errors, additionalLicenses]);
 
   // Check if document is missing for warning display
   const hasDocument = !!form.values.document?.file_base64;
@@ -107,6 +176,14 @@ export function DriverLicense() {
       mediaOptions: false,
     });
   }, [applicant]);
+
+  // Load existing additional licenses from applicantExtras
+  useEffect(() => {
+    const apx_cdl = applicantExtras?.find((v) => v.type == ApplicantExtras.CDL_NUMBER);
+    if (apx_cdl?.value && Array.isArray(apx_cdl.value)) {
+      setAdditionalLicenses(apx_cdl.value);
+    }
+  }, [applicantExtras]);
 
   const handleNext = () => {
     const syntheticEvent = {
@@ -171,6 +248,29 @@ export function DriverLicense() {
 
   const closeDocumentViewer = () => {
     setViewDoc('');
+  };
+
+  // Additional licenses management functions
+  const addCDLLicense = () => {
+    setAdditionalLicenses([...additionalLicenses, new CdlExtras()]);
+  };
+
+  const removeCDLLicense = (index: number) => {
+    const newLicenses = additionalLicenses.filter((_, idx) => idx !== index);
+    setAdditionalLicenses(newLicenses);
+  };
+
+  const handleLicenseNumberChange = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const uppercaseValue = e.target.value.toUpperCase();
+    const newLicenses = [...additionalLicenses];
+    newLicenses[index].license_number = uppercaseValue;
+    setAdditionalLicenses(newLicenses);
+  };
+
+  const handleLicenseFieldChange = (index: number, field: keyof CdlExtras, value: string) => {
+    const newLicenses = [...additionalLicenses];
+    newLicenses[index][field] = value;
+    setAdditionalLicenses(newLicenses);
   };
 
   return (
@@ -261,6 +361,7 @@ export function DriverLicense() {
                   className="my-3"
                   name="document"
                   accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
+                  allowedTypesFriendlyName="PDF, Word, or Image files"
                   allowedSizeInByte={DRIVER_LICENSE_SIZE_LIMIT}
                   formik={form}
                   onRemove={handleApplicantExtrasCleanup}
@@ -283,6 +384,122 @@ export function DriverLicense() {
               )}
             </div>
           </DocumentCard>
+
+          {/* Additional CDL Licenses Section */}
+          <div style={{ marginTop: '2rem' }}>
+            <h2 className={`${styles.carrierName} ${styles.jot_form_headers_font}`} style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>
+              {t('HAVE_ANY_ACTIVE_DRIVERS_LICENSE')}
+            </h2>
+
+            <div className={styles.formInfoBox} style={{ marginBottom: '1.5rem' }}>
+              <p className={styles.formInfoBoxTitle}>🚗 {t('ADDITIONAL_CDL_LICENSES_HELP_TITLE')}</p>
+              <p>
+                Please add any additional Commercial Driver&apos;s Licenses you hold from other states.
+                Include the license number, issuing state, and expiration date for each.
+              </p>
+            </div>
+
+            <EquipmentCard
+              title="ADDITIONAL_CDL_LICENSES"
+              emptyStateText="No additional CDL licenses provided"
+              emptyStateSubtext="Click 'Add CDL Detail' to get started"
+              actions={
+                <Button
+                  size="sm"
+                  variant="outline"
+                  icon={<PlusCircle />}
+                  onClick={addCDLLicense}
+                  className="ml-2"
+                >
+                  {t('TITLE_ADD_CDL_DETAIL')}
+                </Button>
+              }
+            >
+              {additionalLicenses.length > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  {additionalLicenses.map((entity, i) => {
+                    const cdlFormat = getCDLFormat(entity.state || '');
+
+                    return (
+                      <div
+                        key={i}
+                        style={{
+                          padding: '1.5rem',
+                          border: '2px solid #e0e5eb',
+                          borderRadius: '8px',
+                          backgroundColor: '#f8f9fa',
+                          position: 'relative',
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                            gap: '1rem',
+                            alignItems: 'end',
+                            marginBottom: '1rem',
+                          }}
+                        >
+                          <Select
+                            name={`additional_license_state_${i}`}
+                            label={t('state_issued')}
+                            placeholder={t('SELECT_STATE')}
+                            options={responsiveStateList}
+                            value={entity.state || ''}
+                            onChange={(e) => {
+                              handleLicenseFieldChange(i, 'state', e.target.value);
+                              handleLicenseFieldChange(i, 'license_number', '');
+                            }}
+                            required
+                            helperText="Select the state where this CDL was issued"
+                          />
+                          <MaskedInput
+                            name={`additional_license_number_${i}`}
+                            label={t("driver's_license_number")}
+                            placeholder={cdlFormat.placeholder}
+                            mask={cdlFormat.mask}
+                            value={entity.license_number || ''}
+                            onChange={handleLicenseNumberChange(i)}
+                            required
+                            disabled={!entity.state}
+                            helperText={
+                              entity.state ? t(cdlFormat.description) : 'Select state first'
+                            }
+                          />
+                          <Input
+                            name={`additional_license_date_${i}`}
+                            label={t('expiration_date')}
+                            placeholder={t('expiration_date')}
+                            type="date"
+                            value={typeof entity.date === 'string' ? entity.date : ''}
+                            onChange={(e) => handleLicenseFieldChange(i, 'date', e.target.value)}
+                            required
+                            helperText="Expiration date must be at least 6 months from today"
+                          />
+                        </div>
+
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            icon={<Trash />}
+                            onClick={() => removeCDLLicense(i)}
+                          >
+                            {t('REMOVE')}
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </EquipmentCard>
+          </div>
         </div>
 
         <FormActions

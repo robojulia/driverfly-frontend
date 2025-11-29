@@ -91,6 +91,32 @@ export class CompanyPreferenceEntity {
                                 )
                                 .nullable(),
                         })
+                        .when("label", {
+                            is: CompanyPreferenceOnboardingChecklistLabel.EMPLOYEE_HR_FILES,
+                            then: yup.array()
+                                .of(yup.string().required())
+                                .test(
+                                    'unique',
+                                    'Items in the array must be unique',
+                                    (value) => Array.isArray(value) && new Set(value).size === value.length
+                                )
+                                .nullable(),
+                        })
+                })
+                .when("category", {
+                    is: CompanyPreferenceCategory.DQF,
+                    then: yup.mixed()
+                        .when("label", {
+                            is: CompanyPreferenceOnboardingChecklistLabel.EMPLOYEE_DQF_DOCUMENTS,
+                            then: yup.array()
+                                .of(yup.string().required())
+                                .test(
+                                    'unique',
+                                    'Items in the array must be unique',
+                                    (value) => Array.isArray(value) && new Set(value).size === value.length
+                                )
+                                .nullable(),
+                        })
                 })
         });
     }

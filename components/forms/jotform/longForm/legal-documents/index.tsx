@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import { useContext, useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
-import { FileText, ChevronDown, ChevronUp } from 'react-bootstrap-icons';
+import { ChevronDown, ChevronUp } from 'react-bootstrap-icons';
 import { Form } from 'react-bootstrap';
 import JotformContext, { JotFormContextType } from '../../../../../context/jotform-context';
 import { useTranslation } from '../../../../../hooks/use-translation';
@@ -106,9 +106,9 @@ function LegalDocumentsContent() {
   const { currentStep, setCurrentStep, completedDocuments, setCompletedDocuments } =
     useLegalDocuments();
 
-  // Track document expansion state
-  const [isDocumentExpanded, setIsDocumentExpanded] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // Track document expansion state for first form (Verification of Employment)
+  const [isFirstDocumentExpanded, setIsFirstDocumentExpanded] = useState(false);
 
   // Track initialization to prevent multiple setValues calls
   const isInitialized = useRef(false);
@@ -343,10 +343,9 @@ function LegalDocumentsContent() {
     }
   }, [currentStep, setCurrentStep, stepBack]);
 
-  // Reset document expansion when switching documents
+  // Scroll to top when switching documents and reset expansion state for first doc
   useEffect(() => {
-    setIsDocumentExpanded(false);
-    // Scroll to top when switching documents
+    setIsFirstDocumentExpanded(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentStep]);
 
@@ -408,36 +407,48 @@ function LegalDocumentsContent() {
               <p className="mb-0 lh-base">{currentDocument.summary}</p>
             </div>
 
-            {/* Collapsible Document Content */}
-            <div className="mb-4">
-              <SecondaryButton
-                type="button"
-                onClick={() => setIsDocumentExpanded(!isDocumentExpanded)}
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '0.875rem 1rem',
-                  fontSize: '0.95rem',
-                }}
-                className="text-start"
-              >
-                <span className="d-flex align-items-center">
-                  <FileText size={16} className="me-2 flex-shrink-0" />
-                  <span className="d-none d-sm-inline">
-                    {isDocumentExpanded ? 'Hide' : 'View'} Full Document Content
+            {/* Document Content - Conditional Display */}
+            {currentDocument.id === 'verification-of-employment' ? (
+              /* First form (Verification of Employment) - Collapsible for preview only */
+              <div className="mb-4">
+                <button
+                  type="button"
+                  onClick={() => setIsFirstDocumentExpanded(!isFirstDocumentExpanded)}
+                  className="btn btn-outline-secondary w-100 d-flex justify-content-between align-items-center"
+                  style={{
+                    padding: '0.875rem 1rem',
+                    fontSize: '0.95rem',
+                  }}
+                >
+                  <span>
+                    {isFirstDocumentExpanded ? 'Hide' : 'View'} Document Preview
                   </span>
-                  <span className="d-inline d-sm-none">
-                    {isDocumentExpanded ? 'Hide' : 'View'} Document
-                  </span>
-                </span>
-                {isDocumentExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-              </SecondaryButton>
+                  {isFirstDocumentExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                </button>
 
-              {isDocumentExpanded && (
+                {isFirstDocumentExpanded && (
+                  <div
+                    className="mt-3 p-3 border rounded"
+                    style={{
+                      backgroundColor: '#fff',
+                      maxHeight: '60vh',
+                      overflowY: 'auto',
+                    }}
+                  >
+                    <DocumentPreview
+                      document={currentDocument}
+                      form={form}
+                      applicant={applicant}
+                      company={company}
+                    />
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Other three forms - Always visible */
+              <div className="mb-4">
                 <div
-                  className="mt-3 p-3 border rounded"
+                  className="p-3 border rounded"
                   style={{
                     backgroundColor: '#fff',
                     maxHeight: '60vh',
@@ -451,8 +462,8 @@ function LegalDocumentsContent() {
                     company={company}
                   />
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Signature Fields Section */}
             <div className="mb-4">

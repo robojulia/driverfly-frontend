@@ -115,7 +115,7 @@ export class ApplicantEntity {
   is_hired?: boolean = false;
   remarks?: string;
   utm?: UtmReferral;
-  // referralSourceId?: number;
+  referralSourceId?: number;
   referralSource?: ReferralSourceEntity;
   accident_history?: ApplicantAccidentEntity[];
   moving_violation_history?: ApplicantMovingViolationEntity[];

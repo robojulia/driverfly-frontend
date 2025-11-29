@@ -542,6 +542,9 @@ const ImportApplicants = () => {
                             value={fileName}
                             id="formFile"
                         />
+                        <small className="text-muted d-block mt-1">
+                            {t("FILE_MUST_BE_OF_{types}", { types: "CSV" })} • {t("MAXIMUM_FILE_SIZE")}: 5MB
+                        </small>
                         {!!fileName && (
                             <div className="input-group-append">
                                 <button

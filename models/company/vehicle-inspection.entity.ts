@@ -30,8 +30,8 @@ export class VehicleInspectionEntity {
 
   static yupSchema() {
     return yup.object().shape({
-      inspection_type: yup.string().required('Inspection type is required'),
-      status: yup.string().required('Status is required'),
+      inspection_type: yup.string().nullable(),
+      status: yup.string().nullable(),
       inspection_date: yup.date().nullable(),
       due_date: yup.date().nullable(),
       notes: yup.string().nullable(),

@@ -107,7 +107,7 @@ export function FelonyConviction() {
       const existingCriminalHistory = applicant?.criminal_history || '';
 
       // Enhanced state detection for form restoration
-      let isConvictedFelonyState: boolean | null = null;
+      let isConvictedFelonyState: boolean | null = false; // Default to 'No' instead of null
 
       // Felony conviction state detection
       if (existingIsConvictedFelony === true || existingIsConvictedFelony === false) {

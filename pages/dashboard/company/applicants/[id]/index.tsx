@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 
 import { Button, Col, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
-import { Pencil, PlusLg, Trash } from 'react-bootstrap-icons';
+import { Pencil, PlusLg, Trash, ChatDots } from 'react-bootstrap-icons';
 
 import FullLayout from '../../../../../components/dashboard/layouts/layout/full-layout';
 
@@ -33,6 +33,7 @@ import ApplicantJobsApplied from '../../../../../components/applicants/applicant
 import ApplicantSafetyBackground from '../../../../../components/applicants/applicant-safety-background';
 import ViewApplicantDetail from '../../../../../components/applicants/applicant-view-details';
 import ApplicantWorkHistory from '../../../../../components/applicants/applicant-work-history';
+import { ApplicantMessages } from '../../../../../components/applicants/applicant-messages';
 import { ApplicantDocumentType } from '../../../../../enums/applicants/applicant-document-type.enum';
 import { ApplicantOnBoardingChecklist } from '../../../../../enums/applicants/applicant-onboarding-checklist.enum';
 import CompanyApi from '../../../../api/company';
@@ -40,8 +41,10 @@ import { ApplicantBasicDetailsFormNew } from '../../../../../components/forms/co
 import { ApplicantLicensingForm } from '../../../../../components/forms/company/applicant-licensing-form';
 import { ApplicantWorkHistoryForm } from '../../../../../components/forms/company/applicant-work-history-form';
 import { ApplicantEquipmentExperienceForm } from '../../../../../components/forms/company/applicant-equipment-experience-form';
+import { ApplicantEquipmentOwnForm } from '../../../../../components/forms/company/applicant-equipment-own-form';
 import { ApplicantSafetyBackgroundForm } from '../../../../../components/forms/company/applicant-safety-background-form';
 import { ApplicantSignedAgreementsForm } from '../../../../../components/forms/company/applicant-signed-agreements-form';
+import { ApplicantAlreadyWorkedForm } from '../../../../../components/forms/company/applicant-already-worked-form';
 import OnboardingChecklist from '../../../../../components/applicants/onboarding-checklist';
 import { ApplicantApplicationChecklistForm } from '../../../../../components/forms/company/applicant-application-checklist-form';
 import { ApplicantNotesForm } from '../../../../../components/forms/company/applicant-notes-form';
@@ -73,7 +76,7 @@ export default function ViewApplicant({ id }) {
     if (id) {
       const api = new ApplicantApi();
 
-      const data = await api.getById(+id, false, ['documents', 'notes', 'jobs', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned']);
+      const data = await api.getById(+id, false, ['documents', 'notes', 'jobs', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned', 'assignedUser', 'referralSource']);
 
       const suggestedJobs = await api.suggestedJobs.get(id);
       setApplicantSuggestedJobs(suggestedJobs);
@@ -204,27 +207,49 @@ export default function ViewApplicant({ id }) {
 
   const canEdit = hasPermission('CanUpdateApplicant');
 
+  const scrollToMessages = () => {
+    const messagesElement = document.getElementById('messages');
+    if (messagesElement) {
+      messagesElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   const title = t('VIEW_{name}', { name: 'APPLICANT' }, { translateProps: true });
 
   const tooltip = <Tooltip id="my-tooltip">{t('APPLICANT_ALREADY_HIRED')}</Tooltip>;
   const canEditTooltip = <Tooltip id="my-tooltip">{t('EDIT_APPLICANT_PROFILE')}</Tooltip>;
+  const messageTooltip = <Tooltip id="message-tooltip">{t('MESSAGE_APPLICANT')}</Tooltip>;
+
   return (
     <ChildPageLayout
       backPath={backPath}
       title={title}
-      actions={canEdit ? (
-        <OverlayTrigger
-          trigger={["hover", "focus"]}
-          delay={{ show: 0, hide: 0 }}
-          overlay={Boolean(applicant?.is_hired) ? tooltip : canEditTooltip}
-        >
-          <div>
-            <Button type="button" onClick={onEditClick} disabled={Boolean(applicant?.is_hired)}>
-              <Pencil /> {t('EDIT')}
+      actions={
+        <div className="d-flex gap-2">
+          <OverlayTrigger
+            trigger={["hover", "focus"]}
+            delay={{ show: 0, hide: 0 }}
+            overlay={messageTooltip}
+          >
+            <Button type="button" variant="info" onClick={scrollToMessages}>
+              <ChatDots /> {t('MESSAGE')}
             </Button>
-          </div>
-        </OverlayTrigger>
-      ) : undefined}
+          </OverlayTrigger>
+          {canEdit && (
+            <OverlayTrigger
+              trigger={["hover", "focus"]}
+              delay={{ show: 0, hide: 0 }}
+              overlay={Boolean(applicant?.is_hired) ? tooltip : canEditTooltip}
+            >
+              <div>
+                <Button type="button" onClick={onEditClick} disabled={Boolean(applicant?.is_hired)}>
+                  <Pencil /> {t('EDIT')}
+                </Button>
+              </div>
+            </OverlayTrigger>
+          )}
+        </div>
+      }
     >
       <nav aria-label="breadcrumb" className="px-2 mb-2">
         <div className="d-flex align-items-center small text-muted">
@@ -272,6 +297,17 @@ export default function ViewApplicant({ id }) {
             />
           </Row>
 
+          {/* Equipment owned (for owner-operators) */}
+          <div id="equipment-owned" />
+          <Row className="px-2">
+            <ApplicantEquipmentOwnForm
+              entity={{ ...applicant, is_hired: true }}
+              setEntity={() => {}}
+              isSubmitting={true}
+              setIsSubmitting={() => {}}
+            />
+          </Row>
+
           {/* Previous Employment */}
           <div id="work-history" />
           <Row className="px-2">
@@ -293,6 +329,17 @@ export default function ViewApplicant({ id }) {
               isSubmitting={true}
               setIsSubmitting={() => {}}
               hideActions
+            />
+          </Row>
+
+          {/* Already worked/applied at company */}
+          <div id="already-worked" />
+          <Row className="px-2">
+            <ApplicantAlreadyWorkedForm
+              entity={{ ...applicant, is_hired: true }}
+              setEntity={() => {}}
+              isSubmitting={true}
+              setIsSubmitting={() => {}}
             />
           </Row>
 
@@ -345,6 +392,14 @@ export default function ViewApplicant({ id }) {
           {/* Emergency Contact Information */}
           <div id="emergency-contact" />
           <ApplicantEmergencyContactForm entity={{ ...applicant, is_hired: true }} setEntity={() => {}} />
+
+          {/* Text Messages */}
+          <div id="messages" />
+          <Row className="px-2">
+            <Col md="12" className="p-0 px-lg-2">
+              <ApplicantMessages applicant={applicant} />
+            </Col>
+          </Row>
 
         </>
       )}

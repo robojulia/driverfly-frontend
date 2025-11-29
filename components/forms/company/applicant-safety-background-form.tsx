@@ -523,6 +523,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                             readOnly={Boolean(entity?.is_hired)}
                                             label="details"
                                             name="license_revoked_details"
+                                            required
                                             formik={form}
                                         />
                                     )}

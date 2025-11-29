@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { NextRouter, useRouter } from 'next/router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Accordion, Button, ButtonGroup, Col, Row, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { EyeFill, PencilFill, PersonFill } from 'react-bootstrap-icons';
+import { EyeFill, PencilFill, PersonFill, TrashFill, Download } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
 import ShowEnumFromString from '../../../../components/enum-filters/show-enum-from-string';
@@ -41,6 +41,7 @@ import joinArrayElements from '../../../../utils/join-in-order.utils';
 import CustomPagination from '../../../../components/pagination/custom-pagination';
 import { Pagination, PagingMeta } from '../../../../types/pagination.type';
 import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
+import { ApplicantCSVExporter } from '../../../../utils/applicant-csv-exporter';
 
 interface ConsolodatedApplicant extends ApplicantEntity {
   jobs?: ConsolodatedApplicantJob[];
@@ -74,6 +75,8 @@ export default function Applicants() {
   const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingsMetaInitialValues);
   const [filtersChanged, setFiltersChanged] = useState<boolean>(false);
   const [hasProvisionalApplicants, setHasProvisionalApplicants] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [applicantToDelete, setApplicantToDelete] = useState<number | null>(null);
 
   const fetchApplicant = async () => {
     setLoading(true);
@@ -125,6 +128,36 @@ export default function Applicants() {
 
   const onEditClick = (id: number) => {
     router.push(`${router.pathname}/${id}/edit`);
+  };
+
+  const onDeleteClick = (id: number) => {
+    setApplicantToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!applicantToDelete) return;
+
+    try {
+      const api = new ApplicantApi();
+      await api.remove(applicantToDelete);
+
+      // Remove the applicant from the local state
+      setApplicants(applicants.filter((a) => a.id !== applicantToDelete));
+
+      toast.success(t('APPLICANT_DELETED_SUCCESSFULLY'));
+      setShowDeleteModal(false);
+      setApplicantToDelete(null);
+
+      // Refresh the list to update pagination
+      await fetchApplicant();
+    } catch (e) {
+      globalAjaxExceptionHandler(e, {
+        t: t,
+        defaultMessage: 'UNABLE_TO_DELETE',
+        toast: toast,
+      });
+    }
   };
 
   const onChangeStatus = async (
@@ -196,6 +229,15 @@ export default function Applicants() {
 
   const canCreate = hasPermission('CanCreateApplicant');
 
+  const handleExportApplicants = () => {
+    if (applicants && applicants.length > 0) {
+      ApplicantCSVExporter.exportApplicantsToCSV(applicants);
+      toast.success(t('APPLICANTS_EXPORTED_SUCCESSFULLY'));
+    } else {
+      toast.warning(t('NO_APPLICANTS_TO_EXPORT'));
+    }
+  };
+
   useEffect(() => {
     console.log('debug', user.company.id, company?.id, applicants.length);
   }, [applicants]);
@@ -225,6 +267,16 @@ export default function Applicants() {
               >
                 <div className="mr-2">{t('FILTERS')}</div>
               </Accordion.Button>
+              <Button
+                size="sm"
+                variant="outline-secondary"
+                onClick={handleExportApplicants}
+                disabled={!applicants || applicants.length === 0}
+                className="mr-2"
+              >
+                <Download size={14} className="mr-1" />
+                Export
+              </Button>
               {canCreate && (
                 <ButtonGroup size="sm" style={{ float: 'right' }}>
                   <Button
@@ -245,36 +297,14 @@ export default function Applicants() {
             </div>
           }
         >
-          {/* Breadcrumb Navigation */}
-          <nav aria-label="breadcrumb" className="px-2 mb-3">
-            <div className="d-flex align-items-center small text-muted">
-              <Link href="/dashboard">
-                <a className="text-muted text-decoration-none">Dashboard</a>
-              </Link>
-              <span className="mx-2">&gt;</span>
-              <strong className="text-dark">Applicants</strong>
-            </div>
-          </nav>
-
-          {/* Explanatory Section */}
+          {/* Tip Section */}
           <div
             className="mb-4 p-3"
             style={{ backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef' }}
           >
-            <div className="d-flex align-items-start">
-              <div className="me-3">
-                <PersonFill size={24} className="text-primary-brand" />
-              </div>
-              <div>
-                <h6 className="mb-2 text-primary-brand">{t('YOUR_CANDIDATE_POOL')}</h6>
-                <p className="mb-2 text-muted" style={{ fontSize: '0.95rem' }}>
-                  {t('APPLICANTS_PAGE_EXPLANATION')}
-                </p>
-                <small className="text-secondary">
-                  <strong>{t('TIP')}:</strong> {t('CLICK_ARROW_TO_EXPAND_JOBS')}
-                </small>
-              </div>
-            </div>
+            <small className="text-secondary">
+              <strong>{t('TIP')}:</strong> {t('CLICK_ARROW_TO_EXPAND_JOBS')}
+            </small>
           </div>
 
           {/* Provisional Status Warning Banner */}
@@ -403,6 +433,7 @@ export default function Applicants() {
                     applicants={applicants}
                     onViewClick={onViewClick}
                     onEditClick={onEditClick}
+                    onDeleteClick={onDeleteClick}
                     onChangeStatus={onChangeStatus}
                     includeEligibility={includeEligibility}
                     hasProvisionalApplicants={hasProvisionalApplicants}
@@ -509,6 +540,24 @@ export default function Applicants() {
               </Row>
             </form>
           </ViewModal>
+          <ViewModal
+            show={showDeleteModal}
+            onCloseClick={() => setShowDeleteModal(false)}
+            closeText="CANCEL"
+            title="DELETE_CONFIRMATION"
+            footer={
+              <ButtonGroup>
+                <Button type="button" variant="info" onClick={() => setShowDeleteModal(false)}>
+                  {t('DO_NOT_DELETE')}
+                </Button>
+                <Button type="button" variant="danger" onClick={handleDeleteConfirm}>
+                  {t('DELETE')}
+                </Button>
+              </ButtonGroup>
+            }
+          >
+            {t('ARE_YOU_SURE_YOU_WANT_TO_DELETE')}
+          </ViewModal>
         </PageLayout>
       </Accordion>
     </>
@@ -584,6 +633,7 @@ interface ViewProps {
   ) => Promise<void>;
   onViewClick: (applicantId: number) => void;
   onEditClick: (applicantId: number) => void;
+  onDeleteClick: (applicantId: number) => void;
   router: NextRouter;
   t: TranslateInterface;
   pagingMeta?: PagingMeta;
@@ -600,6 +650,7 @@ function ApplicantView(props: ViewProps) {
     onChangeStatus,
     onViewClick,
     onEditClick,
+    onDeleteClick,
     t,
     totalItems,
     setPagingMeta,
@@ -881,6 +932,12 @@ function ApplicantView(props: ViewProps) {
             label: 'EDIT',
             onClick: (e) => onEditClick(row.id),
             hide: !hasPermission('CanUpdateApplicant'),
+          },
+          {
+            icon: TrashFill,
+            label: 'DELETE',
+            onClick: (e) => onDeleteClick(row.id),
+            hide: !hasPermission('CanDeleteApplicant'),
           },
         ]}
         expandableRowsComponent={({ data }) => (

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
 
-import { Files, PenFill, Plus, Recycle, CheckCircleFill, ClockFill } from 'react-bootstrap-icons';
+import { Files, PenFill, Plus, Recycle, CheckCircleFill, ClockFill, Code } from 'react-bootstrap-icons';
 
 import PageLayout from '../../../../components/layouts/page/page-layout';
 
@@ -31,6 +31,7 @@ import { useEffectAsync } from '../../../../utils/react';
 import DataViewToggle from '../../../../components/shared/DataViewToggle';
 import { GenericTable, TableColumn } from '../../../../components/common/GenericTable';
 import { getDataTableColumnKey } from '../../../../utils/table-migration';
+import { EmbedJobsModal } from '../../../../components/jobs/EmbedJobsModal';
 
 enum ViewModeType {
   ACTIVE = 'ACTIVE',
@@ -54,6 +55,7 @@ export default function JobListing() {
   const [refreshing, setRefreshing] = React.useState<boolean>(false);
   const [viewMode, setViewMode] = React.useState<ViewModeType>();
   const [showCloneModal, setShowCloneModal] = React.useState<boolean>(false);
+  const [showEmbedModal, setShowEmbedModal] = React.useState<boolean>(false);
   const [jobOptions, setJobOptions] = React.useState<JobEntity[]>([]);
   // Add sorting state
   const [sortBy, setSortBy] = React.useState<string>('');
@@ -314,6 +316,14 @@ export default function JobListing() {
     setShowCloneModal(false);
   };
 
+  const onEmbedClick = () => {
+    setShowEmbedModal(true);
+  };
+
+  const onCloseEmbedModal = () => {
+    setShowEmbedModal(false);
+  };
+
   const tableColumns = (): TableColumn<JobEntity>[] => {
     const data: TableColumn<JobEntity>[] = [
       {
@@ -502,6 +512,9 @@ export default function JobListing() {
                 <Button variant="" className="theme-general-btn" onClick={onCloneClick}>
                   <Files /> {t('CLONE')}
                 </Button>
+                <Button variant="" className="theme-general-btn" onClick={onEmbedClick}>
+                  <Code /> {t('EMBED')}
+                </Button>
               </ButtonGroup>
             </Col>
           </Row>
@@ -629,6 +642,7 @@ export default function JobListing() {
           </Col>
         </Row>
       </ViewModal>
+      <EmbedJobsModal show={showEmbedModal} onClose={onCloseEmbedModal} />
     </PageLayout>
   );
 }

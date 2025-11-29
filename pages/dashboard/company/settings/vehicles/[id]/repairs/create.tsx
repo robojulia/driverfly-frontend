@@ -18,7 +18,7 @@ export default function CreateRepairRecord({ id }) {
   return (
     <ChildPageLayout
       backPath={`/dashboard/company/settings/vehicles/${id}`}
-      title={t('CREATE_{name}', { name: 'REPAIR_RECORD' }, { translateProps: true })}
+      title={t('Upload Repair Receipt')}
     >
       <VehicleRepairRecordForm
         entity={new VehicleRepairRecordEntity()}

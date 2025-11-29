@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import { Button, ButtonGroup, Row, Col, ToggleButton } from 'react-bootstrap';
-import { Pencil, TrashFill, Gear } from 'react-bootstrap-icons';
+import { Pencil, TrashFill } from 'react-bootstrap-icons';
 import FullLayout from '../../../../../../components/dashboard/layouts/layout/full-layout';
 import ChildPageLayout from '../../../../../../components/layouts/page/child-page-layout';
 import { DeleteButton } from '../../../../../../components/buttons/delete-button';
@@ -304,10 +304,6 @@ export default function ViewVehicle({ id }) {
     }
   };
 
-  const onPreferencesClick = async () => {
-    await router.push(`${router.asPath}/preferences`);
-  };
-
   const handleSaveNotificationRecipients = (recipients: any) => {
     // TODO: Implement API call to save notification recipients
     console.log('Saving notification recipients:', recipients);
@@ -323,13 +319,6 @@ export default function ViewVehicle({ id }) {
       title={t('VIEW_{name}', { name: 'VEHICLE' }, { translateProps: true })}
       actions={
         <ButtonGroup>
-          <Button
-            variant="outline-primary"
-            onClick={onPreferencesClick}
-            title={t('Manage vehicle preferences')}
-          >
-            <Gear /> {t('Preferences')}
-          </Button>
           {canDelete && <DeleteButton onDelete={onDeleteClick} />}
           {canEdit && (
             <Button type="button" onClick={onEditClick}>

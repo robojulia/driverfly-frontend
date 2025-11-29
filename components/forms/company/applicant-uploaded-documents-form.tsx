@@ -160,6 +160,10 @@ export function ApplicantUploadedDocumentsForm(props: ApplicantUploadedDocuments
                     className="mb-3"
                 >
                     <div className="mb-2" style={{ fontSize: 14 }}>{t("Drag and drop files or click to browse")}</div>
+                    <div className="text-muted small mb-2">
+                        <div>{t("FILE_MUST_BE_OF_{types}", { types: "PDF, Word, or Image files" })}</div>
+                        <div>{t("MAXIMUM_FILE_SIZE")}: 3MB</div>
+                    </div>
                     <label className="btn btn-light border" style={{ cursor: "pointer" }}>
                         {t("Select Files")}
                         <input

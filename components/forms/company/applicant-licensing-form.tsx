@@ -22,6 +22,10 @@ import { formSuccess, formFailed } from "../../../utils/toast";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { toast } from "react-toastify";
 import CompanyApi from "../../../pages/api/company";
+import { CdlExtras } from "../../../models/jot-form/long-form/cdl-object/index.dto";
+import { PlusCircle, Trash } from "react-bootstrap-icons";
+import { getCDLFormat } from "../../../utils/cdl-formats";
+import stateList from "../../../utils/stateList";
 
 export interface ApplicantLicensingFormProps extends BaseFormProps<ApplicantEntity> {}
 
@@ -31,6 +35,8 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
   const applicantApi = new ApplicantApi();
   const [initialized, setInitialized] = useState(false);
   const [dotVerifyRaw, setDotVerifyRaw] = useState<any>(null);
+  const [additionalLicenses, setAdditionalLicenses] = useState<CdlExtras[]>([]);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   const form = useFormik<ApplicantEntity>({
     initialValues: entity || ({} as ApplicantEntity),
@@ -68,6 +74,24 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
       setInitialized(true);
     }
   }, [entity?.id, initialized]);
+
+  // Load existing additional licenses from entity extras
+  useEffect(() => {
+    const cdlExtra = entity?.extras?.find((v) => v.type === ApplicantExtras.CDL_NUMBER);
+    if (cdlExtra?.value && Array.isArray(cdlExtra.value)) {
+      setAdditionalLicenses(cdlExtra.value);
+    }
+  }, [entity?.extras]);
+
+  // Screen size detection for responsive state list
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth < 768);
+    };
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   // Keep a ref to always have the latest form instance
   const formRef = useRef(form);
@@ -125,6 +149,56 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
     const uppercaseValue = e.target.value.toUpperCase();
     form.setFieldValue(e.target.name, uppercaseValue);
   };
+
+  // Additional licenses management functions
+  const addCDLLicense = () => {
+    const newLicenses = [...additionalLicenses, new CdlExtras()];
+    setAdditionalLicenses(newLicenses);
+    updateExtrasWithLicenses(newLicenses);
+  };
+
+  const removeCDLLicense = (index: number) => {
+    const newLicenses = additionalLicenses.filter((_, idx) => idx !== index);
+    setAdditionalLicenses(newLicenses);
+    updateExtrasWithLicenses(newLicenses);
+  };
+
+  const handleAdditionalLicenseNumberChange = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const uppercaseValue = e.target.value.toUpperCase();
+    const newLicenses = [...additionalLicenses];
+    newLicenses[index].license_number = uppercaseValue;
+    setAdditionalLicenses(newLicenses);
+    updateExtrasWithLicenses(newLicenses);
+  };
+
+  const handleLicenseFieldChange = (index: number, field: keyof CdlExtras, value: string) => {
+    const newLicenses = [...additionalLicenses];
+    newLicenses[index][field] = value;
+    setAdditionalLicenses(newLicenses);
+    updateExtrasWithLicenses(newLicenses);
+  };
+
+  const updateExtrasWithLicenses = (licenses: CdlExtras[]) => {
+    const currentExtras = form.values.extras || [];
+    const otherExtras = currentExtras.filter((e: any) => e.type !== ApplicantExtras.CDL_NUMBER);
+
+    if (licenses.length > 0) {
+      const cdlExtra = currentExtras.find((e: any) => e.type === ApplicantExtras.CDL_NUMBER);
+      const updatedCdlExtra = {
+        ...(cdlExtra || new ApplicantExtrasEntity(ApplicantExtras.CDL_NUMBER)),
+        type: ApplicantExtras.CDL_NUMBER,
+        value: licenses,
+      };
+      form.setFieldValue('extras', [...otherExtras, updatedCdlExtra]);
+    } else {
+      form.setFieldValue('extras', otherExtras);
+    }
+  };
+
+  // Create responsive state list
+  const responsiveStateList = isSmallScreen
+    ? stateList.map((state) => ({ ...state, label: state.value }))
+    : stateList;
 
   return (
     <>
@@ -521,6 +595,143 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
             </div>
           </>
         )}
+
+        {/* Additional CDL Licenses Section */}
+        <Row className="px-3 mt-4">
+          <Col md="12">
+            <h5 className="mb-3">{t('HAVE_ANY_ACTIVE_DRIVERS_LICENSE')}</h5>
+            <p className="text-muted mb-3">
+              {t('ADDITIONAL_CDL_LICENSES_HELP_TITLE')}
+            </p>
+
+            {additionalLicenses.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                {additionalLicenses.map((license, i) => {
+                  const cdlFormat = getCDLFormat(license.state || '');
+
+                  return (
+                    <div
+                      key={i}
+                      style={{
+                        padding: '1.5rem',
+                        border: '2px solid #e0e5eb',
+                        borderRadius: '8px',
+                        backgroundColor: '#f8f9fa',
+                        position: 'relative',
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                          gap: '1rem',
+                          alignItems: 'end',
+                          marginBottom: '1rem',
+                        }}
+                      >
+                        <div>
+                          <label className="form-label">
+                            {t('state_issued')} <span className="text-danger">*</span>
+                          </label>
+                          <select
+                            className="form-select"
+                            value={license.state || ''}
+                            onChange={(e) => {
+                              handleLicenseFieldChange(i, 'state', e.target.value);
+                              handleLicenseFieldChange(i, 'license_number', '');
+                            }}
+                            disabled={Boolean(entity?.is_hired)}
+                          >
+                            <option value="">{t('SELECT_STATE')}</option>
+                            {responsiveStateList.map((state) => (
+                              <option key={state.value} value={state.value}>
+                                {state.label}
+                              </option>
+                            ))}
+                          </select>
+                          <small className="form-text text-muted">
+                            Select the state where this CDL was issued
+                          </small>
+                        </div>
+
+                        <div>
+                          <label className="form-label">
+                            {t("driver's_license_number")} <span className="text-danger">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder={cdlFormat.placeholder}
+                            value={license.license_number || ''}
+                            onChange={handleAdditionalLicenseNumberChange(i)}
+                            disabled={!license.state || Boolean(entity?.is_hired)}
+                            readOnly={Boolean(entity?.is_hired)}
+                          />
+                          <small className="form-text text-muted">
+                            {license.state ? t(cdlFormat.description) : 'Select state first'}
+                          </small>
+                        </div>
+
+                        <div>
+                          <label className="form-label">
+                            {t('expiration_date')} <span className="text-danger">*</span>
+                          </label>
+                          <input
+                            type="date"
+                            className="form-control"
+                            value={typeof license.date === 'string' ? license.date : ''}
+                            onChange={(e) => handleLicenseFieldChange(i, 'date', e.target.value)}
+                            disabled={Boolean(entity?.is_hired)}
+                            readOnly={Boolean(entity?.is_hired)}
+                          />
+                          <small className="form-text text-muted">
+                            Expiration date must be at least 6 months from today
+                          </small>
+                        </div>
+                      </div>
+
+                      {!Boolean(entity?.is_hired) && (
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            onClick={() => removeCDLLicense(i)}
+                            type="button"
+                          >
+                            <Trash /> {t('REMOVE')}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {!Boolean(entity?.is_hired) && (
+              <div className="mt-3">
+                <Button
+                  variant="outline-primary"
+                  size="sm"
+                  onClick={addCDLLicense}
+                  type="button"
+                >
+                  <PlusCircle /> {t('TITLE_ADD_CDL_DETAIL')}
+                </Button>
+              </div>
+            )}
+
+            {additionalLicenses.length === 0 && Boolean(entity?.is_hired) && (
+              <p className="text-muted">No additional CDL licenses provided</p>
+            )}
+          </Col>
+        </Row>
+
         </BsForm>
       </Section>
           </div>

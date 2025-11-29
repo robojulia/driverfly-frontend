@@ -31,6 +31,7 @@ import BaseCheckList from "../base-check-list";
 import BaseInput from "../base-input";
 import BaseInputPhone from "../base-input-phone";
 import BaseSelect from "../base-select";
+import BaseTextArea from "../base-text-area";
 import StateSelect from "../state-select";
 import { BaseFormProps } from "./base-form-props";
 import ViewModal from "../../view-details/view-modal";
@@ -394,6 +395,18 @@ export function EmployeeForm(props: EmployeeFormProps) {
                     label="RELATIONSHIP"
                     placeholder="RELATIONSHIP"
                     formik={form}
+                  />
+                </ViewCard>
+              </Col>
+              <Col xs="12" className="mt-2">
+                <ViewCard title="HR Notes">
+                  <BaseTextArea
+                    className="col-12"
+                    name={`hr_notes`}
+                    label="HR_NOTES"
+                    placeholder="ENTER_HR_NOTES"
+                    formik={form}
+                    rows={4}
                   />
                 </ViewCard>
               </Col>

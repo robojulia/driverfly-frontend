@@ -12,7 +12,6 @@ import {
   FelonyConviction,
   HighestLevelEducation,
   MedicalCard,
-  OtherQueues,
   PastEmploymentHistory,
   PastSuspension,
   Preferences,
@@ -43,7 +42,6 @@ const DriverApplicationWithSave = withAsyncSave(DriverApplication, 'DriverApplic
 const BackgroundInfoWithSave = withAsyncSave(BackgroundInfo, 'BackgroundInfo');
 const HighestLevelEducationWithSave = withAsyncSave(HighestLevelEducation, 'HighestLevelEducation');
 const DrivingExperienceWithSave = withAsyncSave(DrivingExperience, 'DrivingExperience');
-const OtherQueuesWithSave = withAsyncSave(OtherQueues, 'OtherQueues');
 const DriverLicenseWithSave = withAsyncSave(DriverLicense, 'DriverLicense');
 const MedicalCardWithSave = withAsyncSave(MedicalCard, 'MedicalCard');
 const EmergencyContactWithSave = withAsyncSave(EmergencyContact, 'EmergencyContact');
@@ -83,21 +81,20 @@ const getFullFormPages = (
     11: <BackgroundInfo />,
     12: <HighestLevelEducation />,
     13: <DrivingExperience />,
-    14: <OtherQueues />,
-    15: <DriverLicense />,
-    16: <MedicalCard />,
-    17: <EmergencyContact />,
-    18: <EmploymentHistory />,
-    19: <PastEmploymentHistory />,
-    20: <WorkedBefore />,
-    21: <AccidentHistory />,
-    22: <ViolationHistory />,
-    23: <PastSuspension />,
-    24: <UnableForJob />,
-    25: <FelonyConviction />,
-    26: <DrugTest />,
-    27: <LegalDocumentsPage />,
-    28: <ThankyouPage />,
+    14: <DriverLicense />,
+    15: <MedicalCard />,
+    16: <EmergencyContact />,
+    17: <EmploymentHistory />,
+    18: <PastEmploymentHistory />,
+    19: <WorkedBefore />,
+    20: <AccidentHistory />,
+    21: <ViolationHistory />,
+    22: <PastSuspension />,
+    23: <UnableForJob />,
+    24: <FelonyConviction />,
+    25: <DrugTest />,
+    26: <LegalDocumentsPage />,
+    27: <ThankyouPage />,
   };
 
   // If it's a direct job application and user is trying to access AtsJobs (step 1),
@@ -126,21 +123,20 @@ const getLongFormPages = (step: number): JSX.Element =>
     1: <BackgroundInfoWithSave />,
     2: <HighestLevelEducationWithSave />,
     3: <DrivingExperienceWithSave />,
-    4: <OtherQueuesWithSave />,
-    5: <DriverLicenseWithSave />,
-    6: <MedicalCardWithSave />,
-    7: <EmergencyContactWithSave />,
-    8: <EmploymentHistoryWithSave />,
-    9: <PastEmploymentHistoryWithSave />,
-    10: <WorkedBeforeWithSave />,
-    11: <AccidentHistoryWithSave />,
-    12: <ViolationHistoryWithSave />,
-    13: <PastSuspensionWithSave />,
-    14: <UnableForJobWithSave />,
-    15: <FelonyConvictionWithSave />,
-    16: <DrugTestWithSave />,
-    17: <LegalDocumentsPageWithSave />,
-    18: <ThankyouPage />,
+    4: <DriverLicenseWithSave />,
+    5: <MedicalCardWithSave />,
+    6: <EmergencyContactWithSave />,
+    7: <EmploymentHistoryWithSave />,
+    8: <PastEmploymentHistoryWithSave />,
+    9: <WorkedBeforeWithSave />,
+    10: <AccidentHistoryWithSave />,
+    11: <ViolationHistoryWithSave />,
+    12: <PastSuspensionWithSave />,
+    13: <UnableForJobWithSave />,
+    14: <FelonyConvictionWithSave />,
+    15: <DrugTestWithSave />,
+    16: <LegalDocumentsPageWithSave />,
+    17: <ThankyouPage />,
   }[step]);
 
 const getMissingDocumentsPages = (step: number): JSX.Element =>
@@ -166,7 +162,7 @@ const getLongFormStyle = (step: number): CSSProperties | undefined => ({}[step])
  * @returns Total number of steps in the form
  */
 const getTotalSteps = (isDirectJobApplication: boolean = false): number => {
-  const baseSteps = 29; // Total steps in full form
+  const baseSteps = 28; // Total steps in full form (reduced by 1 after merging OtherQueues into DriverLicense)
   return isDirectJobApplication ? baseSteps - 1 : baseSteps; // Skip AtsJobs step for direct applications
 };
 

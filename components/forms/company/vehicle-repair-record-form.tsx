@@ -108,7 +108,7 @@ export function VehicleRepairRecordForm(props: VehicleRepairRecordFormProps) {
       onSubmit={form.handleSubmit}
       id={entity?.id}
       formik={form}
-      submitLabel={entity?.id ? 'Forms.UPDATE_REPAIR_RECORD' : 'Forms.CREATE_REPAIR_RECORD'}
+      submitLabel={entity?.id ? 'Upload' : 'Upload'}
       forbidSubmit={shouldForbidSubmit}
     >
       <Container className="px-4 py-3">

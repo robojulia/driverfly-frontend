@@ -10,7 +10,11 @@ export interface CreateJobReachoutCampaignDto {
   name?: string;
   description?: string;
   minScore?: number;
-  filters?: any;
+  filters?: {
+    appliedOnly?: boolean;
+    excludeDirectApplicants?: boolean;
+    directApplicantDaysLimit?: number; // Only include direct applicants who applied within this many days
+  };
   communicationType?: CampaignCommunicationType;
 }
 
@@ -20,6 +24,7 @@ export interface CampaignReachPreviewQuery {
   minScore?: number;
   states?: string[];
   excludeApplied?: boolean;
+  directApplicantDaysLimit?: number; // Only include direct applicants who applied within this many days
 }
 
 export interface CampaignReachPreviewResponse {

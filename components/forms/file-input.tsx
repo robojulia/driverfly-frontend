@@ -8,6 +8,7 @@ import ViewModal from '../view-details/view-modal';
 import ViewPdf from '../view-details/view-pdf';
 import { BaseControlProps } from './base-control';
 import { handleDownloadDocument } from '../../utils/documents/button-actions';
+import { formatFileSize } from '../../constants/file-upload.constants';
 
 export interface FileInputProps extends BaseControlProps {
   documentType?: string;
@@ -210,10 +211,19 @@ export default function FileInput({
             <br />
           </>
         )}
-        {allowedTypesFriendlyName && (
-          <span className="text-muted small">
-            {t('FILE_MUST_BE_OF_{types}', { types: allowedTypesFriendlyName })}
-          </span>
+        {(allowedTypesFriendlyName || allowedSizeInByte) && (
+          <div className="text-muted small mb-2">
+            {allowedTypesFriendlyName && (
+              <div>
+                {t('FILE_MUST_BE_OF_{types}', { types: allowedTypesFriendlyName })}
+              </div>
+            )}
+            {allowedSizeInByte && (
+              <div>
+                {t('MAXIMUM_FILE_SIZE')}: {formatFileSize(allowedSizeInByte)}
+              </div>
+            )}
+          </div>
         )}
         <InputGroup>
           <input
