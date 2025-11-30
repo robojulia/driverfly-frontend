@@ -466,7 +466,7 @@ export default function VehicleNotificationSettings({
         )}
       </Modal.Footer>
 
-      <style jsx>{`
+      <style>{`
         .notification-setting-card:hover {
           box-shadow: 0 4px 8px rgba(0,0,0,0.12) !important;
         }
