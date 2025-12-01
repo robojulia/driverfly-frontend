@@ -63,7 +63,7 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
     },
   });
 
-  // Load form values on initial mount only 
+  // Load form values on initial mount only
   // Don't reload on entity updates to prevent ove rwriting user changes
   // (backend doesn't return routes/preferred_location with withRelations, which would reset form to empty values)
   useEffect(() => {
