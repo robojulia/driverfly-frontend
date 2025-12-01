@@ -61,7 +61,7 @@ export default function Forgot() {
       <div className="top-links-sec">
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
-            <h2>{t("FORGOT_PASSWORD")}</h2>
+            <h1>{t("FORGOT_PASSWORD")}</h1>
           </div>
         </div>
       </div>

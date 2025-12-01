@@ -18,7 +18,7 @@ export default function About() {
       <div className="top-links-sec">
         <div className="container p-0">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
-            <h2>{t("ABOUT")}</h2>
+            <h1>{t("ABOUT")}</h1>
           </div>
         </div>
       </div>
@@ -47,17 +47,11 @@ export default function About() {
         </div>
       </div>
 
-      <section className="driver-sec about-driver-sec">
-        <div className="container how-it-work-sec">
-          <Companies />
-        </div>
-      </section>
-
       <div className="who-we-serve-sec">
-        <div className="container-fluid">
+        <div className="container">
           <div className="d-flex flex-column">
             <div className="col-md-12">
-              <h2>Who We Serve</h2>
+              <h2 style={{ color: 'black' }}>Who We Serve</h2>
               <div className="row">
                 <div className="col">
                   <div className="who-we-serve-inner">
@@ -106,17 +100,6 @@ export default function About() {
                   className=""
                 />
               </div>
-              <div className="d-flex w-100  justify-content-center text-center">
-                <div className="who-we-serve-inner mb-3">
-                  <h3>{t("NOT_SURE_WHRE_TO_START?")}</h3>
-                  <p>{t("WITH_OVER_400+_CLIENTS_ACROSS_THE_US")}</p>
-                  <Link href={"/contact"}>
-                    <button type="button" className="theme-general-btn">
-                      {t("CONTACT_US_CTA")}
-                    </button>
-                  </Link>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -124,14 +107,14 @@ export default function About() {
 
       <div className="testimonial-sec about-testominial">
         <div className="container">
-          <h2 className="text-center">{t("WHAT_DRIVERS_SAY_ABOUT_US")}</h2>
+          <h2 className="text-center" style={{ color: 'black' }}>{t("WHAT_DRIVERS_SAY_ABOUT_US")}</h2>
           <Slider />
         </div>
       </div>
       <div className="">
         <div className="col-md-12">
           <div className="partners">
-            <h2>{t("PARTNERS")}</h2>
+            <h2 style={{ color: 'black' }}>{t("PARTNERS")}</h2>
             <img src="img/wilds_logo_250.png" alt="" className="img-fluid" />
             <h3 className="my-4">
               {t("WONEN_IN_LOGISTICS_AND_DELIVERY_SERVICES_(WILDS)")}

@@ -74,7 +74,7 @@ export default function ResetPassword({ passwordResetToken }) {
       <div className="top-links-sec">
         <Container>
           <div className="top-links-inner d-flex align-items-center justify-content-between">
-            <h2>{t('RESET_PASSWORD')}</h2>
+            <h1>{t('RESET_PASSWORD')}</h1>
           </div>
         </Container>
       </div>

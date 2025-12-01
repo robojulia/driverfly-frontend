@@ -47,6 +47,11 @@ export default function FeaturedJobs() {
                                                         <h4 className="mt-10"> {job.title?.length > 30 ? job.title.slice(0, 30) + '...' : job.title}</h4>
                                                     </a>
                                                 </Link>
+                                                {job.company?.name && (
+                                                    <div className="job-company">
+                                                        <span>{job.company.name}</span>
+                                                    </div>
+                                                )}
                                                 <div className="job-metas">
                                                     <div className="job-location">
                                                         <strong>{buildAddress(job.location)}</strong>

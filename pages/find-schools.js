@@ -144,7 +144,7 @@ export default function FindSchools(props) {
       <div className="top-links-sec">
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
-            <h2>{t("FIND_SCHOOLS")}</h2>
+            <h1>{t("FIND_SCHOOLS")}</h1>
           </div>
         </div>
       </div>

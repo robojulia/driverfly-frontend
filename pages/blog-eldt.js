@@ -19,7 +19,7 @@ export default function EldtBlog() {
       <div className="top-links-sec">
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
-            <h2>The DriverFly On The Wall Blog</h2>
+            <h1>The DriverFly On The Wall Blog</h1>
             {/* <Breadcrumbs /> */}
           </div>
         </div>

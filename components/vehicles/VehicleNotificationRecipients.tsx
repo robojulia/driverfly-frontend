@@ -61,7 +61,7 @@ export default function VehicleNotificationRecipients({
             Notification Recipients
           </h6>
           <p style={{ fontSize: '0.875rem', color: '#6c757d', marginBottom: 0 }}>
-            Configure who receives notifications for this vehicle's documentation reminders
+            Configure who receives notifications for this vehicle&apos;s documentation reminders
           </p>
         </div>
 

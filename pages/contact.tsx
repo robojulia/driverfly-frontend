@@ -57,7 +57,7 @@ export default function Contact() {
       <div className="top-links-sec">
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
-            <h2>{t("CONTACT")}</h2>
+            <h1>{t("CONTACT")}</h1>
           </div>
         </div>
       </div>

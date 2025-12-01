@@ -42,7 +42,7 @@ export default function Login() {
   });
 
   return (
-    <PublicPage title="LOGIN">
+    <PublicPage title="LOGIN" hideTopLinks>
       <Head>
         <title> {t('LOGIN_META_TITLE')} </title>
         <meta name="description" content={t('LOGIN_META_DESC')} key="desc" />

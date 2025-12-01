@@ -87,17 +87,19 @@ export default function Signup() {
 	}, [form]);
 
 	return (
-		<PublicPage title="SIGN_UP">
+		<PublicPage title="SIGN_UP" hideTopLinks={true}>
 			<Head>
 				<title>{t("SIGNUP_META_TITLE")} </title>
 				<meta name="description" content={t("SIGNUP_META_DESC")} key="desc" />
 			</Head>
-			<Row>
-				<Col>
-					<h2 className="text-center">{t("CREATE_NEW_ACCOUNT")}</h2>
-				</Col>
-			</Row>
-			<Row className="justify-content-lg-center">
+			<div className="top-links-sec">
+				<div className="container">
+					<div className="top-links-inner d-flex align-items-center justify-content-center">
+						<h1>{t("CREATE_NEW_ACCOUNT")}</h1>
+					</div>
+				</div>
+			</div>
+			<Row className="justify-content-lg-center mt-5">
 				<Col lg="8">
 					<form onSubmit={form.handleSubmit}>
 						<Row>

@@ -835,7 +835,7 @@ export default function Notifications({ employee, canEdit = true }: Notification
                                 <Form.Check
                                     type="checkbox"
                                     id="follow-up-enabled"
-                                    label={<strong style={{ fontSize: '1rem' }}>Enable follow-up notifications if driver doesn't respond</strong>}
+                                    label={<strong style={{ fontSize: '1rem' }}>Enable follow-up notifications if driver doesn&apos;t respond</strong>}
                                     checked={modalFormData.followUpEnabled}
                                     onChange={(e) => setModalFormData({ ...modalFormData, followUpEnabled: e.target.checked })}
                                 />
@@ -862,7 +862,7 @@ export default function Notifications({ employee, canEdit = true }: Notification
                                             style={{ width: '180px' }}
                                         />
                                         <Form.Text className="text-muted" style={{ fontSize: '0.85rem' }}>
-                                            Send follow-up notification if driver hasn't completed the form
+                                            Send follow-up notification if driver hasn&apos;t completed the form
                                         </Form.Text>
                                     </Form.Group>
 

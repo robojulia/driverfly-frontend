@@ -779,6 +779,12 @@ input[type='range']::-webkit-slider-thumb {
   margin: 0;
 }
 
+.top-links-sec h1 {
+  font-size: 71px;
+  font-weight: 700;
+  margin: 0;
+}
+
 .top-links-sec ul {
   margin: 0;
 }
@@ -993,7 +999,7 @@ input[type='range']::-webkit-slider-thumb {
 
 .about-linear {
   background-color: transparent;
-  background-image: linear-gradient(180deg, #2ec8c46b 0%, #1d4354 100%);
+  background-image: linear-gradient(180deg, #2ec8c4cc 0%, #1d4354 100%);
   opacity: 1;
   padding: 31px 0px 85px;
   color: white;
@@ -1162,6 +1168,10 @@ input[type='range']::-webkit-slider-thumb {
   /* margin-bottom: 20px; */
 }
 
+.who-we-outer {
+  margin-top: 20px;
+}
+
 .who-we-outer h3 {
   font-size: 28px;
 }
@@ -1191,11 +1201,11 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 .testimonial-sec {
-  margin-top: 340px;
+  margin-top: 80px;
   background-color: #fafafa;
   /* background: #fafafa; */
   padding: 80px 0px;
-  height: 500px;
+  min-height: 500px;
 }
 
 .custom-tst .item {
@@ -1233,6 +1243,11 @@ input[type='range']::-webkit-slider-thumb {
   box-shadow: 1px 1px 4px 0 rgb(0 0 0 / 9%);
 }
 
+.Slider-container-bg {
+  position: relative;
+  min-height: 400px;
+}
+
 .Slider-container-bg::before {
   content: '';
   background: #fff;
@@ -1250,6 +1265,11 @@ input[type='range']::-webkit-slider-thumb {
   border-radius: 4px;
 }
 
+.Slider__container {
+  position: relative;
+  z-index: 1;
+}
+
 .Slider_box {
   background: white;
   position: relative;
@@ -1259,6 +1279,7 @@ input[type='range']::-webkit-slider-thumb {
   padding: 45px 45px 30px;
   margin: 100px 10px 20px;
   box-shadow: 1px 1px 4px 0 rgb(0 0 0 / 9%);
+  z-index: 2;
 }
 
 .Slider_box img {
@@ -1360,6 +1381,10 @@ input[type='range']::-webkit-slider-thumb {
   color: #1b4454;
   font-size: 71px;
   font-weight: 700;
+}
+
+.hero-inner h3 {
+  text-align: center;
 }
 
 .trending-keywords a,
@@ -1558,7 +1583,7 @@ input[type='range']::-webkit-slider-thumb {
 
 .driver-sec {
   background-color: #ffffff;
-  margin: 50px 0px 200px 0px;
+  margin: -30px 0px 200px 0px;
 }
 
 .driver-sec .card {
@@ -2006,7 +2031,7 @@ li.link-wrapper > a.active {
 
 .hire-driver-section {
   position: absolute;
-  height: 530px !important;
+  height: 380px !important;
   top: -280px;
 }
 
@@ -2073,8 +2098,6 @@ p {
 
 .hire-driver-left h3 {
   color: #fff;
-  font-size: 42px;
-  font-weight: 500;
   position: relative;
 }
 
@@ -2087,7 +2110,7 @@ p {
 }
 
 .hire-driver-left p:has(svg) {
-  margin-bottom: 8px;
+  margin-bottom: 0;
   line-height: 1.2;
 }
 
@@ -2230,7 +2253,7 @@ p {
   justify-content: center;
   align-items: center;
   position: relative;
-  background-image: linear-gradient(to bottom, #31bab369 0%, rgb(0 123 255 / 25%) 100%),
+  background-image: linear-gradient(135deg, rgba(48, 198, 194, 0.75) 0%, rgba(0, 96, 120, 0.75) 100%),
     url(/img/driver-standing-truck-door.png);
   background-size: fill;
   background-position: center;

@@ -17,7 +17,7 @@ export default function Blogs() {
       <div className="top-links-sec">
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
-            <h2>{t("BLOG")}</h2>
+            <h1>{t("BLOG")}</h1>
           </div>
         </div>
       </div>

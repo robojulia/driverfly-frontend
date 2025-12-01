@@ -18,7 +18,7 @@ export default function TermsAndPolicies() {
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>{t("TERMS_AND_POLICIES")}</h2>
+                        <h1>{t("TERMS_AND_POLICIES")}</h1>
                     </div>
                 </div>
             </div>

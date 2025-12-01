@@ -62,11 +62,13 @@ export default function CompanyDetail({ company, jobs, jobCount, termonals }) {
 										{company?.phone}
 									</button>
 								</div>
-								{/* <div>
-									<button type="button" className="custom-trucker-review-btn">
-										{t("APPLY_TODAY")}
-									</button>
-								</div> */}
+								<div className="my-3">
+									<Link href={`https://app.driverfly.co/apply/${company.slug}`}>
+										<a className="custom-trucker-review-btn text-white text-decoration-none d-block text-center">
+											{t("APPLY_TODAY")}
+										</a>
+									</Link>
+								</div>
 							</div>
 						</div>
 					</div>

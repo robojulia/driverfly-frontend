@@ -116,8 +116,14 @@ export function CompanyForm(props: CompanyFormProps) {
           {Boolean(showClickToCopy) && (
             <>
               <BaseClickToCopyInput
-                label="COMPANY_JOBS_PAGE"
+                label="COMPANY_APPLICATION_LINK"
                 className="rounded"
+                value={`https://app.driverfly.co/apply/${user?.company?.slug}`}
+                tooltipText={t('CLICK_TO_COPY')}
+              />
+              <BaseClickToCopyInput
+                label="COMPANY_JOBS_PAGE"
+                className="rounded mt-2"
                 value={`${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL ?? ''}employer/${user?.company?.slug}`}
                 tooltipText={t('CLICK_TO_COPY')}
               />

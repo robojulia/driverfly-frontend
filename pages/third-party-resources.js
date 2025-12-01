@@ -419,7 +419,7 @@ export default function ThirdPartyResources() {
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>{t("THIRD_PARTY_RESOURCES")}</h2>
+                        <h1>{t("THIRD_PARTY_RESOURCES")}</h1>
                     </div>
                 </div>
             </div>

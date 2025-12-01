@@ -71,22 +71,26 @@ export default function Index() {
       <MotorCarrier />
       <section className="hire-driver-bg">
         <div className="hire-driver-section container d-flex justify-content-center ">
-          <div className="hire-driver-item hire-driver-left d-flex flex-column justify-content-between ">
-            <h3 className="mt-5">Find Jobs</h3>
-            <p className="">{t('IT_COULD_NOT_BETTER_TIME')}</p>
-            <p>
-              <Check />
-              {t('TOP_PAYING_JOBS')}
-            </p>
-            <p>
-              <Check />
-              {t('HOME_BEST_TIME')}
-            </p>
-            <p>
-              <Check />
-              {t('FASTER_&_EASIER_HIRING')}
-            </p>
-            <div className="mb-5 gap-2  hire-driver-left-btns">
+          <div className="hire-driver-item hire-driver-left d-flex flex-column justify-content-start ">
+            <div className="mt-5">
+              <h3 style={{ marginBottom: '1.5rem' }}>Find Jobs</h3>
+              <p style={{ marginBottom: '1.5rem' }}>{t('IT_COULD_NOT_BETTER_TIME')}</p>
+              <div style={{ lineHeight: '1.5', marginBottom: '1.5rem' }}>
+                <p style={{ marginBottom: '0.75rem' }}>
+                  <Check />
+                  {t('TOP_PAYING_JOBS')}
+                </p>
+                <p style={{ marginBottom: '0.75rem' }}>
+                  <Check />
+                  {t('HOME_BEST_TIME')}
+                </p>
+                <p style={{ marginBottom: '0' }}>
+                  <Check />
+                  {t('FASTER_&_EASIER_HIRING')}
+                </p>
+              </div>
+            </div>
+            <div className="gap-2  hire-driver-left-btns" style={{ marginBottom: '2rem' }}>
               <button
                 className="theme-bg-btn-light-green"
                 type="button"
@@ -99,14 +103,16 @@ export default function Index() {
                 type="button"
                 onClick={() => router.push('find-jobs')}
               >
-                {t('browse_job')}
+                Browse All Jobs
               </button>
             </div>
           </div>
-          <div className="hire-driver-item hire-driver-right d-flex flex-column justify-content-between align-items-center ">
-            <h3 className="mt-5">Owner Operators</h3>
-            <p className="">{t('ARE_YOU_LOOKING_LEASE_ONTO_NOTOR_CARRIER')}</p>
-            <div className="mb-5 ">
+          <div className="hire-driver-item hire-driver-right d-flex flex-column justify-content-start align-items-center ">
+            <div className="mt-5" style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ marginBottom: '1.5rem' }}>Owner Operators</h3>
+              <p style={{ margin: '0' }}>{t('ARE_YOU_LOOKING_LEASE_ONTO_NOTOR_CARRIER')}</p>
+            </div>
+            <div style={{ marginBottom: '2rem' }}>
               <button
                 className="theme-bg-btn-light-green"
                 type="button"
@@ -126,12 +132,13 @@ export default function Index() {
       <section className="register-today-section">
         <div className="d-lg-flex signup-driver-section d-md-block">
           <div className="signup-driver-item signup-driver-left d-flex flex-column justify-content-center text-center">
-            <h2>{t('Getting a driver job has never been easier!')}</h2>
+            <h2 style={{ color: 'white' }}>{t('Getting a driver job has never been easier!')}</h2>
+            <p style={{ color: 'white' }}>Apply Online And Let Us Match You. Create your free account in just minutes to be featured in front of hundreds of motor carriers.</p>
             <div>
               <button
                 className="ocean-dark-bg-btn mt-3"
                 type="button"
-                onClick={() => router.push('signup')}
+                onClick={() => router.push('https://app.driverfly.co/apply/driverfly')}
               >
                 {t('REGISTER_TODAY')}
               </button>
@@ -172,20 +179,6 @@ export default function Index() {
       </section>
       {/* < OwnerOperators /> */}
       {/* <CompaniesSlider /> */}
-      <section>
-        <div className="opacity-overly">
-          <section className="get-feature-section">
-            <div className="container text-center">
-              <h2 style={{textTransform: 'capitalize', color: 'white'}}>Apply Online And Let Us Match You</h2>
-              <p>{t('CREATE_YOUR_FREE_ACCOUNT')}</p>
-              <button className="theme-bg-btn " onClick={() => router.push('https://app.driverfly.co/apply/driverfly')}>
-                Get Matched
-              </button>
-            </div>
-          </section>
-          <div className="get-featured-border"></div>
-        </div>
-      </section>
       <section>
         <div className="testimonial-sec home-testominial">
           <div className="container home-testominial">
