@@ -2,3 +2,8 @@
     display: inline-block;
     margin: 0.5em;
 }
+
+.resource_type_button button {
+    padding: 3pt 12pt;
+    border-radius: 4px;
+}

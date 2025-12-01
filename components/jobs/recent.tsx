@@ -49,12 +49,12 @@ export default function RecentJobs() {
                                                 </Link>
                                                 {job.company?.name && (
                                                     <div className="job-company">
-                                                        <span>{job.company.name}</span>
+                                                        <span style={{ fontWeight: 'bold', fontSize: '1.1em' }}>{job.company.name}</span>
                                                     </div>
                                                 )}
                                                 <div className="job-metas">
                                                     <div className="job-location">
-                                                        <strong>{buildAddress(job.location)}</strong>
+                                                        {buildAddress(job.location)}
                                                     </div>
                                                 </div>
                                             </div>

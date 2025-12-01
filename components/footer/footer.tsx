@@ -1,5 +1,4 @@
 import FollowUs from "./follow-us";
-import DriversNewsletter from "./drivers-newsletter";
 import ForDrivers from "./for-drivers";
 import ForEmployers from "./for-employers";
 import QuickLinks from "./quick-links";
@@ -30,9 +29,6 @@ export default function Footer() {
                             </div>
                             <div className="col-lg col-12">
                                 <ForDrivers />
-                            </div>
-                            <div className="col-lg col-12" style={{flex: '1.8'}}>
-                                <DriversNewsletter />
                             </div>
                         </div>
                     </div>

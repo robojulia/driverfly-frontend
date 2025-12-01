@@ -99,7 +99,7 @@ export default function Signup() {
 					</div>
 				</div>
 			</div>
-			<Row className="justify-content-lg-center mt-5">
+			<Row className="justify-content-lg-center">
 				<Col lg="8">
 					<form onSubmit={form.handleSubmit}>
 						<Row>

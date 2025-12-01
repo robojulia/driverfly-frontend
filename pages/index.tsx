@@ -90,7 +90,7 @@ export default function Index() {
                 </p>
               </div>
             </div>
-            <div className="gap-2  hire-driver-left-btns" style={{ marginBottom: '2rem' }}>
+            <div className="gap-2  hire-driver-left-btns">
               <button
                 className="theme-bg-btn-light-green"
                 type="button"
