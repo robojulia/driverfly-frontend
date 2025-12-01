@@ -1,6 +1,5 @@
 import Head from "next/head";
 import { PublicLayout } from "../components/layouts/public-layout";
-import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import Slider from "../components/testominial-slider/slider";
 import { useTranslation } from "../hooks/use-translation";
 import Companies from "../components/works/companies";
@@ -20,7 +19,6 @@ export default function About() {
         <div className="container p-0">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
             <h2>{t("ABOUT")}</h2>
-            <Breadcrumb />
           </div>
         </div>
       </div>

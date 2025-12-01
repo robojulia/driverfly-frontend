@@ -64,12 +64,12 @@ export default function MyNav() {
               </NavDropdown.Item>
               <NavDropdown.Item>
                 <Link href="/owner-operators">
-                  <a className="dropdown-item">Owner-Operator</a>
+                  <a className="dropdown-item">Owner-Operators</a>
                 </Link>
               </NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Motor Carrier Solutions" id="collasible-nav-dropdown">
-              <NavDropdown.Item href="http://driverfly.co/motor-carriers" target="_blank">
+              <NavDropdown.Item href="https://driverfly.co/our-software/" target="_blank">
                 Our Solutions
               </NavDropdown.Item>
               <NavDropdown.Item href="https://driverfly.co/pricing" target="_blank">
@@ -77,7 +77,7 @@ export default function MyNav() {
               </NavDropdown.Item>
               <NavDropdown.Item
                 className="dropdown-item"
-                href="https://driverfly.co/request-a-quote"
+                href="https://driverfly.co/contact-us/"
                 target="_blank"
               >
                 Request Quote
@@ -87,7 +87,7 @@ export default function MyNav() {
                 href="https://digitalhiringapp.com/"
                 target="_blank"
               >
-                Digital App
+                Digital Hiring App
               </NavDropdown.Item>
               <NavDropdown.Item>
                 <Link href="/third-party-resources">

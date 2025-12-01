@@ -845,7 +845,7 @@ export default function Notifications({ employee, canEdit = true }: Notification
                                 <div style={{
                                     marginLeft: '1.5rem',
                                     paddingLeft: '1.5rem',
-                                    borderLeft: '3px solid #ffc107',
+                                    borderLeft: '3px solid #2ec8c4',
                                     backgroundColor: '#fffbf0',
                                     padding: '1.25rem',
                                     borderRadius: '0.25rem'
@@ -888,7 +888,7 @@ export default function Notifications({ employee, canEdit = true }: Notification
                             <div style={{
                                 marginTop: '1rem',
                                 paddingTop: '1rem',
-                                borderTop: '1px dashed #ffc107'
+                                borderTop: '1px dashed #2ec8c4'
                             }}>
                                 <Form.Group className="mb-0">
                                     <Form.Check

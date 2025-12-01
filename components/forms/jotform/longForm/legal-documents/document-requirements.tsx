@@ -83,14 +83,14 @@ export const DocumentRequirements = memo(function DocumentRequirements({
       <div
         className="mb-4"
         style={{
-          border: `2px solid ${isComplete ? '#198754' : '#ffc107'}`,
+          border: `2px solid ${isComplete ? '#198754' : '#2ec8c4'}`,
           borderRadius: '8px',
           overflow: 'hidden',
         }}
       >
         <div
           style={{
-            backgroundColor: isComplete ? '#198754' : '#ffc107',
+            backgroundColor: isComplete ? '#198754' : '#2ec8c4',
             color: isComplete ? 'white' : '#000',
             padding: '0.75rem 1rem',
             display: 'flex',

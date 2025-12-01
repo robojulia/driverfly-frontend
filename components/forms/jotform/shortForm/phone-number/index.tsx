@@ -379,7 +379,7 @@ export function PhoneNumber() {
             <div className="text-center">
               <i
                 className="fa fa-exclamation-triangle mb-3"
-                style={{ fontSize: '48px', color: '#ffc107' }}
+                style={{ fontSize: '48px', color: '#2ec8c4' }}
               />
               <h5 className="mb-3">{t('ALREADY_APPLIED_TO_THIS_JOB')}</h5>
               <p className="mb-2">
@@ -622,7 +622,7 @@ export function PhoneNumber() {
             <div className="text-center">
               <i
                 className="fa fa-exclamation-triangle mb-3"
-                style={{ fontSize: '48px', color: '#ffc107' }}
+                style={{ fontSize: '48px', color: '#2ec8c4' }}
               />
               {applicantScenario.type === 'SAME_COMPANY_NO_JOB' ? (
                 <>

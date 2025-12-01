@@ -72,7 +72,7 @@ export default function Index() {
       <section className="hire-driver-bg">
         <div className="hire-driver-section container d-flex justify-content-center ">
           <div className="hire-driver-item hire-driver-left d-flex flex-column justify-content-between ">
-            <h1 className="mt-5">{t('FIND_JOBS_+')}</h1>
+            <h3 className="mt-5">Find Jobs</h3>
             <p className="">{t('IT_COULD_NOT_BETTER_TIME')}</p>
             <p>
               <Check />
@@ -104,7 +104,7 @@ export default function Index() {
             </div>
           </div>
           <div className="hire-driver-item hire-driver-right d-flex flex-column justify-content-between align-items-center ">
-            <h1 className="mt-5">{t('OWNER_OPERATORS')}</h1>
+            <h3 className="mt-5">Owner Operators</h3>
             <p className="">{t('ARE_YOU_LOOKING_LEASE_ONTO_NOTOR_CARRIER')}</p>
             <div className="mb-5 ">
               <button
@@ -126,7 +126,7 @@ export default function Index() {
       <section className="register-today-section">
         <div className="d-lg-flex signup-driver-section d-md-block">
           <div className="signup-driver-item signup-driver-left d-flex flex-column justify-content-center text-center">
-            <h1>{t('Getting a driver job has never been easier!')}</h1>
+            <h2>{t('Getting a driver job has never been easier!')}</h2>
             <div>
               <button
                 className="ocean-dark-bg-btn mt-3"
@@ -164,7 +164,7 @@ export default function Index() {
                 setShowTab('recent');
               }}
             >
-              {t('RECENT_JOBS')}{' '}
+              {t('RECENT_JOBS')}
             </a>
           </li>
         </ul>
@@ -176,10 +176,10 @@ export default function Index() {
         <div className="opacity-overly">
           <section className="get-feature-section">
             <div className="container text-center">
-              <h1>{t('POST A RESUME & GET FEATURED')}</h1>
+              <h2 style={{textTransform: 'capitalize', color: 'white'}}>Apply Online And Let Us Match You</h2>
               <p>{t('CREATE_YOUR_FREE_ACCOUNT')}</p>
-              <button className="theme-bg-btn " onClick={() => router.push('signup')}>
-                {t('CREATE_AN_ACCOUNT')}
+              <button className="theme-bg-btn " onClick={() => router.push('https://app.driverfly.co/apply/driverfly')}>
+                Get Matched
               </button>
             </div>
           </section>

@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { PublicLayout } from "../components/layouts/public-layout";
 import { Accordion, Container } from 'react-bootstrap';
-import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import FreeResources from '../components/free-resources';
 import { useTranslation } from "../hooks/use-translation";
 
@@ -13,7 +12,6 @@ export default function FreeResource() {
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>{t("RESOURCES")}</h2>
-                        < Breadcrumb />
                     </div>
                 </div>
             </div>

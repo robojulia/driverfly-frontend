@@ -7,7 +7,7 @@ export default function DriversNewsletter() {
     return (
         <div id="newsletter-section">
             <div className="footer-inner">
-                <h2 className="widget-title font-weight-normal">{t("DRIVER_ALERTS")}</h2>
+                <h3 className="widget-title font-weight-normal">{t("DRIVER_ALERTS")}</h3>
                 <ul className="p-0">
                     <p className="text-secondary mb-4">{t("SUBSCRIBE_TO_THE_DRIVERFLY_NEWSLETTER")}</p>
                     <form action="">
@@ -17,8 +17,8 @@ export default function DriversNewsletter() {
                 </ul>
             </div>
             <div className="footer-inner">
-                <h2 className="widget-title font-weight-normal">{t("COMPANY_NEWSLETTER")}</h2>
-                <p className="text-secondary mb-4">{t("SUBSCRIBE_TO_THE_DRIVERFLY_NEWSLETTER_TO_GET_THE_LATEST")} <br /> {t("DISCOUNT_CODES_&_AOUPONS")}</p>
+                <h3 className="widget-title font-weight-normal">{t("COMPANY_NEWSLETTER")}</h3>
+                <p className="text-secondary mb-4">{t("SUBSCRIBE_TO_THE_DRIVERFLY_NEWSLETTER_TO_GET_THE_LATEST")} {t("DISCOUNT_CODES_&_AOUPONS")}</p>
                 <ul className="p-0">
 
                     <form action="">

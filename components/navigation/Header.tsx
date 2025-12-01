@@ -30,14 +30,14 @@ const navItems: NavItem[] = [
   {
     label: 'Motor Carrier Solutions',
     children: [
-      { label: 'Our Solutions', href: 'http://driverfly.co/motor-carriers', external: true },
+      { label: 'Our Solutions', href: 'https://driverfly.co/our-software/', external: true },
       { label: 'Pricing', href: 'https://driverfly.co/pricing', external: true },
-      { label: 'Request Quote', href: 'https://driverfly.co/request-a-quote', external: true },
-      { label: 'Digital App', href: 'https://digitalhiringapp.com/', external: true },
+      { label: 'Request Quote', href: 'https://driverfly.co/contact-us/', external: true },
+      { label: 'Digital Hiring App', href: 'https://digitalhiringapp.com/', external: true },
       { label: 'Third Party Resources', href: '/third-party-resources' },
     ],
   },
-  { label: 'Blogs', href: 'http://blog.driverfly.co', external: true },
+  { label: 'Blog', href: 'https://driverfly.co/blog/', external: true },
 ];
 
 export default function Header({ hideAuthButtons = false }: { hideAuthButtons?: boolean }) {

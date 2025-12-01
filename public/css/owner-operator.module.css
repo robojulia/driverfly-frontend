@@ -1,7 +1,7 @@
 /******************************** Owner Operators**********************/
 
 .owneroperators{
-    background: linear-gradient(to bottom, rgba(245, 246, 252, 0.52), rgb(19 54 117 / 73%)) , url(/img/driver-getting.jpg);
+    background: linear-gradient(to bottom, rgba(0, 96, 120, 0.85), rgba(0, 96, 120, 0.85)) , url(/img/driver-getting.jpg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

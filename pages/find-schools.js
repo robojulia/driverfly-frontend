@@ -8,7 +8,6 @@ import FilterSchools from '../components/filter-schools/filter-schools'
 import CdlInfo from '../components/cdl-info/cdlInfo'
 import SchoolApi from "./api/school"
 import { useTranslation } from "../hooks/use-translation";
-import Breadcrumb from '../components/breadcrumbs/breadcrumb';
 
 export default function FindSchools(props) {
 
@@ -146,7 +145,6 @@ export default function FindSchools(props) {
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
             <h2>{t("FIND_SCHOOLS")}</h2>
-            < Breadcrumb />
           </div>
         </div>
       </div>

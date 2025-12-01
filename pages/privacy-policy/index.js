@@ -16,14 +16,6 @@ export default function TermsAndPolicies2() {
                     key="desc"
                 />
             </Head>
-            <div className="top-links-sec">
-                <div className="container">
-                    <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>{t("privacy_policy")}</h2>
-                        <Breadcrumb />
-                    </div>
-                </div>
-            </div>
             <div className="container my-5 privacy__policies__container">
                 <h2 className="my-4">Privacy &amp; Cookies Policy </h2>
                 <p className="text-secondary">

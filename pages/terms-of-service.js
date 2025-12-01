@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Head from 'next/head';
-import Breadcrumb from '../components/breadcrumbs/breadcrumb';
 import { PublicLayout } from "../components/layouts/public-layout";
 import Terms from "../public/css/terms.module.css"
 import { useTranslation } from '../hooks/use-translation';
@@ -22,7 +21,6 @@ export default function TermsOfService() {
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>{t("TERMS_OF_SERVICE")}</h2>
-                        < Breadcrumb />
                     </div>
                 </div>
             </div>

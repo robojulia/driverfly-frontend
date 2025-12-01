@@ -257,7 +257,7 @@
 
   .hero-inner h1 {
     font-size: 35px;
-    letter-spacing: 0.5px;
+    letter-spacing: normal;
     line-height: 45px;
     margin-bottom: 35px;
   }

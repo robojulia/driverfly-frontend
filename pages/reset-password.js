@@ -5,7 +5,6 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Col, Container, Row } from 'react-bootstrap';
 import Head from 'next/head';
-import Breadcrumb from '../components/breadcrumbs/breadcrumb';
 import { PublicLayout } from '../components/layouts/public-layout';
 import Forgotpassword from '../public/css/forgot.module.css';
 import ResetPasswordAPI from './api/reset-account';
@@ -76,7 +75,6 @@ export default function ResetPassword({ passwordResetToken }) {
         <Container>
           <div className="top-links-inner d-flex align-items-center justify-content-between">
             <h2>{t('RESET_PASSWORD')}</h2>
-            <Breadcrumb />
           </div>
         </Container>
       </div>

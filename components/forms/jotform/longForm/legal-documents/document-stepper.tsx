@@ -169,7 +169,7 @@ const DocumentStepperComponent = memo(function DocumentStepper({
                           style={{
                             top: '-8px',
                             right: '-8px',
-                            background: '#ffc107',
+                            background: '#2ec8c4',
                             borderRadius: '50%',
                             width: '12px',
                             height: '12px',

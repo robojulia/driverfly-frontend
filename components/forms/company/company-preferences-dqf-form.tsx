@@ -200,7 +200,6 @@ export function CompanyPreferencesDqfForm(
 					<BaseSelect
 						label="DQF_DOCUMENTS"
 						value={item}
-						hideOptions={form.values.dqfList?.value}
 						placeholder="SELECT_DOCUMENT_TYPE"
 						className="col-8 offset-1"
 						name="dqfList"

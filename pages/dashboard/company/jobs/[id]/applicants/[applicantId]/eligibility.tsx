@@ -279,7 +279,7 @@ export default function ApplicantEligibilityDetail({
                             requirement.status.variant === 'success'
                               ? '#28a745'
                               : requirement.status.variant === 'warning'
-                              ? '#ffc107'
+                              ? '#2ec8c4'
                               : '#dc3545';
                           const bgColor =
                             requirement.status.variant === 'success'

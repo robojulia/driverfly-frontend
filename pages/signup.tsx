@@ -92,36 +92,6 @@ export default function Signup() {
 				<title>{t("SIGNUP_META_TITLE")} </title>
 				<meta name="description" content={t("SIGNUP_META_DESC")} key="desc" />
 			</Head>
-			<Row className={`${SignupStyle.banner}`}>
-				<Col>
-					<h1>
-						{t("SignUp.DRIVERS_HAVE_ACCESS")}
-						<br />
-						{t("SignUp.TO_OVER_1000_JOBS")}
-					</h1>
-					<p>
-						{t("SignUp.ARE_YOU_A_MOTOR_CARRIER")}{" "}
-						{t("SignUp.VIEW_OUR_PACKAGES")}
-						<Link href="http://driverfly.co/motor-carriers">
-							<a className="mx-1" target="__blank">
-								{t("HERE")}
-							</a>
-						</Link>
-						{t("OR")}
-						<Link href="/contact">
-							<a className="mx-1">{t("SignUp.CONTACT_US")}</a>
-						</Link>
-						{t("SignUp.FOR_AN_ACCOUNT")}
-					</p>
-					<p>
-						{t("SignUp.IF_YOU_ARE_ALREADY_A_USER_LOGIN")}
-						<Link href="/login">
-							<a className="ml-1">{t("HERE")}</a>
-						</Link>
-						.
-					</p>
-				</Col>
-			</Row>
 			<Row>
 				<Col>
 					<h2 className="text-center">{t("CREATE_NEW_ACCOUNT")}</h2>

@@ -9,7 +9,6 @@ import {
 } from "react-bootstrap-icons";
 import { ToastContainer, toast } from "react-toastify";
 import { Col, Row } from "reactstrap";
-import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import BaseInput from "../components/forms/base-input";
 import BaseRecaptcha from "../components/forms/base-recaptcha";
 import BaseTextArea from "../components/forms/base-text-area";
@@ -59,7 +58,6 @@ export default function Contact() {
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
             <h2>{t("CONTACT")}</h2>
-            <Breadcrumb />
           </div>
         </div>
       </div>

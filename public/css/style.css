@@ -1,6 +1,7 @@
 @import url('https://fonts.cdnfonts.com/css/arial');
 @import url('https://fonts.googleapis.com/css2?family=Akronim&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import '../css/hover-min.css';
 
 html,
@@ -98,10 +99,11 @@ li {
 
 .general-headings {
   text-align: center;
-  font-size: 40px;
+  font-size: 71px;
   margin-bottom: 45px;
-  font-weight: 400;
+  font-weight: 700;
   background-color: #fff0;
+  font-family: 'Poppins', sans-serif;
 }
 
 button:focus,
@@ -141,19 +143,25 @@ h1,
 h2,
 h3,
 h4,
+h5,
 h6,
 label {
   color: #262626;
+  font-family: 'Poppins', sans-serif;
 }
 
-h3 {
-  font-weight: 400;
-  font-size: 19px;
+h1 {
+  font-weight: 700;
 }
 
 h2 {
-  font-size: 32px !important;
-  font-weight: 600 !important;
+  font-size: 42px !important;
+  font-weight: 500 !important;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .header-sec ul li a:hover,
@@ -271,7 +279,7 @@ li:hover ul {
 }
 
 .tab-content .media-body h6 {
-  color: #ffc107;
+  color: #2ec8c4;
 }
 
 .tab-content .accordion-button:not(.collapsed) {
@@ -677,11 +685,9 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 .widget-title {
-  font-size: 20px;
   margin: 0 0 20px;
   color: white;
-  font-weight: 600;
-  font-family: sans-serif;
+  font-size: 20px;
 }
 
 .footer-inner .nav-item {
@@ -769,7 +775,7 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 .top-links-sec h2 {
-  font-weight: 400;
+  font-weight: 700;
   margin: 0;
 }
 
@@ -1305,7 +1311,8 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 .partners h2 {
-  font-size: 25px;
+  font-size: 71px;
+  font-weight: 700;
   color: #2ec8c4;
   margin-bottom: 50px;
 }
@@ -1342,17 +1349,17 @@ input[type='range']::-webkit-slider-thumb {
 
 .hero-inner h1 {
   color: #1b4454;
-  font-size: 60px;
+  font-size: 71px;
   line-height: 60px;
-  font-weight: bold;
-  letter-spacing: 2.5px;
+  font-weight: 700;
+  letter-spacing: normal;
 }
 
 .hero-inner h2 {
   margin: 20px 0px;
   color: #1b4454;
-  font-size: 32px;
-  font-weight: 400;
+  font-size: 71px;
+  font-weight: 700;
 }
 
 .trending-keywords a,
@@ -1385,9 +1392,10 @@ input[type='range']::-webkit-slider-thumb {
   display: flex;
   background: #ffffff;
   align-items: center;
-  padding: 0px 0px 0px 10px;
+  padding: 0px 10px 0px 10px;
   border-radius: 5px;
-  margin: 30px 0px;
+  margin: 30px auto;
+  max-width: fit-content;
 }
 
 .hero-search .input-group input {
@@ -1395,6 +1403,26 @@ input[type='range']::-webkit-slider-thumb {
   color: black;
   width: 100%;
   height: 70px;
+  font-size: 16px;
+}
+
+.hero-search .input-group input::placeholder {
+  font-size: 16px;
+  color: #6a6a6a;
+}
+
+.hero-search .rbt-input-main {
+  padding: 15px !important;
+  color: black !important;
+  width: 100% !important;
+  height: 70px !important;
+  font-size: 16px !important;
+  border: none !important;
+}
+
+.hero-search .rbt-input-main::placeholder {
+  font-size: 16px !important;
+  color: #6a6a6a !important;
 }
 
 .hero-search .input-group {
@@ -1438,7 +1466,7 @@ input[type='range']::-webkit-slider-thumb {
 
 .form-group-search {
   width: 20%;
-  padding: 0 10px 0px 0px !important;
+  padding: 0 !important;
 }
 
 .btn-submit {
@@ -2032,11 +2060,18 @@ p {
 
 .hire-driver-right p {
   font-weight: 400;
-  font-size: 21px;
+  font-size: 18px;
   line-height: 34.5px;
 }
 
 .hire-driver-left h1 {
+  color: #fff;
+  font-size: 42px;
+  font-weight: 500;
+  position: relative;
+}
+
+.hire-driver-left h3 {
   color: #fff;
   font-size: 42px;
   font-weight: 500;
@@ -2049,6 +2084,11 @@ p {
   line-height: 30px;
   position: relative;
   margin: 0;
+}
+
+.hire-driver-left p:has(svg) {
+  margin-bottom: 8px;
+  line-height: 1.2;
 }
 
 .opacity-overly {
@@ -2094,7 +2134,7 @@ p {
 
 .ocean-dark-bg-btn {
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 400;
   fill: #1d4354;
   color: white;
   background-color: #1d4354;
@@ -2107,7 +2147,7 @@ p {
 
 .white-bg-btn {
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 400;
   fill: #1d4354;
   color: #1d4354;
   background-color: #ffffff;
@@ -2120,7 +2160,7 @@ p {
 
 .theme-bg-btn-light-green {
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 400;
   fill: #1d4354;
   color: #1d4354;
   background-color: #adfb51;
@@ -2161,7 +2201,7 @@ p {
 .get-feature-section h1 {
   color: #ffffff;
   font-size: 40px;
-  font-weight: bold;
+  font-weight: 400;
   text-transform: uppercase;
 }
 

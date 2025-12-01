@@ -22,16 +22,16 @@ export default function Footer() {
                 <div className="footer-FollowUs mt-5">
                     <div className="container">
                         <div className="row">
-                            <div className="col-12 col-md-3 col-lg-3 col-sm-4">
+                            <div className="col-12 col-lg-3">
                                 <QuickLinks />
                             </div>
-                            <div className="col-lg-2 col-12">
+                            <div className="col-lg-3 col-12">
                                 <ForEmployers />
                             </div>
-                            <div className="col-lg-2 col-12">
+                            <div className="col-lg-3 col-12">
                                 <ForDrivers />
                             </div>
-                            <div className="col-lg-5 pl-lg-5 p-2">
+                            <div className="col-lg-3 col-12">
                                 <DriversNewsletter />
                             </div>
                         </div>

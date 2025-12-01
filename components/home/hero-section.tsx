@@ -12,8 +12,8 @@ export default function HeroSection() {
           <div className="col-md-12">
             <div className="hero-inner">
               <h1>{t('FIND_THE_JOB_THAT_FITS_YOUR_LIFE')}</h1>
-              <h2>{t('CHOOSE_FROM_THOUSANDS_OF_CDL')}</h2>
-              <h2>{t('GET_HIRED_FAST')}</h2>
+              <h3>{t('CHOOSE_FROM_THOUSANDS_OF_CDL')}</h3>
+              <h3>{t('GET_HIRED_FAST')}</h3>
             </div>
             <HeroSearch />
             <TrendingWords />

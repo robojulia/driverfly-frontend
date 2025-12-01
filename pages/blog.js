@@ -5,7 +5,6 @@ import { PublicLayout } from "../components/layouts/public-layout";
 import Blog from "../public/css/blog.module.css";
 import BlogSidebar from "../components/blog-sidebar/blog-sidebar";
 import { useTranslation } from "../hooks/use-translation";
-import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 export default function Blogs() {
   const { t } = useTranslation();
 
@@ -19,7 +18,6 @@ export default function Blogs() {
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
             <h2>{t("BLOG")}</h2>
-            <Breadcrumb />
           </div>
         </div>
       </div>

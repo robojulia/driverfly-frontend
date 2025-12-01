@@ -14,9 +14,9 @@ export default function Driver() {
 
   return (
     <>
-      <h3 className="general-headings" style={{ fontSize: " 40px" }}>
+      <h2 className="general-headings">
         {t("HOW_IT_WORK")}
-      </h3>
+      </h2>
       <div className="row mb-4">
         <div className="col-md-4">
           <div className="how-it-work-sections card">
