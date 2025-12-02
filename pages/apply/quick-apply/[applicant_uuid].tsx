@@ -5,6 +5,8 @@ import {
   getQuickApplyPages,
   getQuickApplyStyle,
 } from '../../../components/forms/jotform/quick-apply-pages';
+import { PoweredByLogo } from '../../../components/forms/jotform/powered-by-logo';
+import { CompanyLogoUpperRight } from '../../../components/forms/jotform/company-logo-upper-right';
 import JotformContext from '../../../context/jotform-context';
 import { ApplicantEntity, ApplicantExtrasEntity } from '../../../models/applicant';
 import { CompanyPreferenceEntity } from '../../../models/company/company-preferences.entity';
@@ -56,6 +58,8 @@ export default function QuickApply({ entity, company, preferences }: QuickApplyP
       <div className={styles.container}>
         <div className={styles.main}>
           <div className={styles.main_form} style={getQuickApplyStyle(steps)}>
+            {/* Show company logo in upper right on all cards except the first one (splash page) */}
+            {steps > 0 && <CompanyLogoUpperRight />}
             {/* uncomment this during development */}
             {/* <BaseInput
               value={steps}
@@ -65,6 +69,8 @@ export default function QuickApply({ entity, company, preferences }: QuickApplyP
               onChange={({ target: { value } }) => setSteps(parseInt(value))} /> */}
             {getQuickApplyPages(steps)}
           </div>
+          {/* Show "Powered by DriverFly" below the card */}
+          <PoweredByLogo />
         </div>
       </div>
     </JotformContext.Provider>

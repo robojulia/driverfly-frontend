@@ -9,6 +9,7 @@ import BaseSelect from "../base-select";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
+import { OtherRequirementType } from "../../../enums/users/other-requirements.enum";
 import { BaseFormProps } from "./base-form-props";
 import { JobCapability } from "./job-capability";
 import { formSuccess, formFailed } from "../../../utils/toast";
@@ -27,31 +28,33 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
   const [initialized, setInitialized] = useState(false);
 
   const form = useFormik<ApplicantEntity>({
-    initialValues: { 
+    initialValues: {
       ...(entity || ({} as ApplicantEntity)),
       routes: entity?.routes || [],
-      preferred_location: entity?.preferred_location || []
+      preferred_location: entity?.preferred_location || [],
+      other_requirements: entity?.other_requirements || []
     },
     enableReinitialize: false,
     onSubmit: async (values) => {
-      
+
       try {
         // Send ONLY preference fields to avoid overwriting other forms' changes
         const payload = {
           routes: values.routes,
           preferred_location: values.preferred_location,
+          other_requirements: values.other_requirements,
           authorized_to_work_in_us: values.authorized_to_work_in_us,
           current_application_status: values.current_application_status,
         };
-        
+
         const saved = await applicantApi.update(values.id, payload as any);
-        
+
         // Check if child toasts are suppressed by global save
         if (!(window as any).__SUPPRESS_CHILD_TOASTS__) {
           formSuccess(t, 'update', 'APPLICANT');
         }
-        
-        // MERGE saved response with existing entity to preserve fields backend didn't return
+
+        // MERGE saved response with existing entity to preserve fields backend didn't returned
         setEntity?.({ ...entity, ...saved });
         // Update form with current values (don't reload from saved - it might be incomplete)
         form.setValues({ ...form.values });
@@ -63,15 +66,16 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
     },
   });
 
-  // Load form values on initial mount only 
-  // Don't reload on entity updates to prevent ove rwriting user changes
+  // Load form values on initial mount only
+  // Don't reload on entity updates to prevent overwriting user changes
   // (backend doesn't return routes/preferred_location with withRelations, which would reset form to empty values)
   useEffect(() => {
     if (!!entity?.id && !initialized) {
-      form.setValues({ 
+      form.setValues({
         ...entity,
         routes: entity.routes || [],
-        preferred_location: entity.preferred_location || []
+        preferred_location: entity.preferred_location || [],
+        other_requirements: entity.other_requirements || []
       });
       setInitialized(true);
     }
@@ -90,6 +94,7 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
         return {
           routes: formRef.current.values.routes,
           preferred_location: formRef.current.values.preferred_location,
+          other_requirements: formRef.current.values.other_requirements,
           authorized_to_work_in_us: formRef.current.values.authorized_to_work_in_us,
           current_application_status: formRef.current.values.current_application_status,
         };
@@ -106,19 +111,19 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
             <Row className="px-3">
               <BaseCheck className="col-12 mt-2" disabled={Boolean(entity?.is_hired)} label="AUTHORIZED_TO_WORK_IN_THE_US" name="authorized_to_work_in_us" formik={form} />
               <div className="col-12 mt-2">
-                <span style={{ marginRight: "20px", color: "black" }}>{t('PREFERRED_LOCATION')}:</span>
+                <span style={{ marginRight: "20px", color: "black" }}>{t('ROUTES')}:</span>
                 {Object.entries(JobGeography).map(([key, value]) => (
                   <div key={value} className="form-check form-check-inline flex-row-reverse">
                     <label className="form-check-label">{t(`JobGeography.${value}`)}</label>
-                    <input 
+                    <input
                       disabled={Boolean(entity?.is_hired)}
-                      className="form-check-input" 
-                      type="checkbox" 
+                      className="form-check-input"
+                      type="checkbox"
                       value={value}
                       checked={(form.values.preferred_location || []).includes(value)}
                       onChange={(e) => {
                         const currentArray = form.values.preferred_location || [];
-                        const newArray = e.target.checked 
+                        const newArray = e.target.checked
                           ? [...currentArray, value]
                           : currentArray.filter(v => v !== value);
                         form.setFieldValue('preferred_location', newArray);
@@ -128,22 +133,44 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
                 ))}
               </div>
               <div className="col-12 mt-2">
-                <span style={{ marginRight: "20px", color: "black" }}>{t('ROUTE_TYPE')}:</span>
+                <span style={{ marginRight: "20px", color: "black" }}>{t('SCHEDULE')}:</span>
                 {Object.entries(JobSchedule).map(([key, value]) => (
                   <div key={value} className="form-check form-check-inline flex-row-reverse">
                     <label className="form-check-label">{t(`JobSchedule.${value}`)}</label>
-                    <input 
+                    <input
                       disabled={Boolean(entity?.is_hired)}
-                      className="form-check-input" 
-                      type="checkbox" 
+                      className="form-check-input"
+                      type="checkbox"
                       value={value}
                       checked={(form.values.routes || []).includes(value)}
                       onChange={(e) => {
                         const currentArray = form.values.routes || [];
-                        const newArray = e.target.checked 
+                        const newArray = e.target.checked
                           ? [...currentArray, value]
                           : currentArray.filter(v => v !== value);
                         form.setFieldValue('routes', newArray);
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="col-12 mt-2">
+                <span style={{ marginRight: "20px", color: "black" }}>{t('OTHER_REQUIREMENTS')}:</span>
+                {Object.entries(OtherRequirementType).map(([key, value]) => (
+                  <div key={value} className="form-check form-check-inline flex-row-reverse">
+                    <label className="form-check-label">{t(`OtherRequirementType.${value}`)}</label>
+                    <input
+                      disabled={Boolean(entity?.is_hired)}
+                      className="form-check-input"
+                      type="checkbox"
+                      value={value}
+                      checked={(form.values.other_requirements || []).includes(value)}
+                      onChange={(e) => {
+                        const currentArray = form.values.other_requirements || [];
+                        const newArray = e.target.checked
+                          ? [...currentArray, value]
+                          : currentArray.filter(v => v !== value);
+                        form.setFieldValue('other_requirements', newArray);
                       }}
                     />
                   </div>

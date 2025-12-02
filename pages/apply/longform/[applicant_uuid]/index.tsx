@@ -5,6 +5,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { getLongFormPages } from '../../../../components/forms/jotform/jotform-pages';
 import { DevPageNavigator } from '../../../../components/developer/dev-page-navigator';
+import { PoweredByLogo } from '../../../../components/forms/jotform/powered-by-logo';
+import { CompanyLogoUpperRight } from '../../../../components/forms/jotform/company-logo-upper-right';
 import JotformContext from '../../../../context/jotform-context';
 import { ApplicantEntity, ApplicantExtrasEntity } from '../../../../models/applicant';
 import { CompanyPreferenceEntity } from '../../../../models/company/company-preferences.entity';
@@ -123,10 +125,13 @@ export default function LongForm({
       <div className={styles.container}>
         <div className={styles.main}>
           <div className={styles.main_form}>
+            <CompanyLogoUpperRight />
             <FormProgress currentStep={steps} totalSteps={totalSteps} />
             <ProgressSaveIndicator showLastSaved={true} />
             {getLongFormPages(steps)}
           </div>
+          {/* Show "Powered by DriverFly" below the card */}
+          <PoweredByLogo />
         </div>
       </div>
 
