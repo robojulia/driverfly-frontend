@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import {
     DashCircle,
@@ -79,7 +79,48 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
     }, [entity]);
 
 
-    useEffect(() => focusOnErrorField(form), [form.submitCount])
+    useEffect(() => focusOnErrorField(form), [form.submitCount]);
+
+    // Keep a ref to always have the latest form instance
+    const formRef = useRef(form);
+    formRef.current = form;
+
+    // Register getter function that returns CURRENT form values when called
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            // Register validation function
+            (window as any).__applicantFormValidation = (window as any).__applicantFormValidation || {};
+            (window as any).__applicantFormValidation['equipment-owned'] = () => {
+                // Return current validation errors from formik
+                return formRef.current.errors;
+            };
+
+            (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
+            (window as any).__applicantFormRegistry['equipment-owned'] = () => {
+                console.log('EquipmentOwnedForm getter called, equipment_owned count:', formRef.current.values.equipment_owned?.length);
+
+                // Only return equipment_owned if the applicant is an owner operator
+                if (formRef.current.values.is_owner_operator) {
+                    return {
+                        equipment_owned: formRef.current.values.equipment_owned || [],
+                    };
+                }
+
+                // If not owner operator, return empty equipment_owned
+                return {
+                    equipment_owned: [],
+                };
+            };
+        }
+
+        // Cleanup function to prevent memory leaks
+        return () => {
+            if (typeof window !== 'undefined') {
+                delete (window as any).__applicantFormValidation?.['equipment-owned'];
+                delete (window as any).__applicantFormRegistry?.['equipment-owned'];
+            }
+        };
+    }, []);
 
     return (
         <Form
@@ -105,20 +146,23 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
                                         })
                                     }
                                 >
-                                    <PlusCircle /> {t("ADD")}
+                                    <PlusCircle className="me-2" /> {t("ADD")}
                                 </Button>
                             }
                         >
                             {form.values?.equipment_owned?.length > 0 && (
                                 <>
                                     <Row className="d-sm-none d-md-flex">
-                                        <Col>
+                                        <Col md="4">
                                             <strong>{t("TYPE")}</strong>
                                             <span className="p-0 text-danger">*</span>
                                         </Col>
-                                        <Col>
+                                        <Col md="2">
                                             <strong>{t("QUANTITY")}</strong>
                                             <span className="p-0 text-danger">*</span>
+                                        </Col>
+                                        <Col md="5">
+                                            <strong>{t("EQUIPMENT_IMAGE_URL")}</strong>
                                         </Col>
                                     </Row>
                                     {form.values?.equipment_owned?.map((entity, i) => (
@@ -131,7 +175,7 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
                                                     <strong>{t("QUANTITY")}</strong>
                                                 </Col>
                                             </Col>
-                                            <Col xs="6">
+                                            <Col xs="12" md="4">
                                                 <BaseSelect
                                                     readOnly={Boolean(props?.entity?.is_hired)}
                                                     name={`equipment_owned[${i}].type`}
@@ -141,7 +185,7 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
                                                     formik={form}
                                                 />
                                             </Col>
-                                            <Col xs="5">
+                                            <Col xs="11" md="2">
                                                 <BaseInput
                                                     readOnly={Boolean(props?.entity?.is_hired)}
                                                     name={`equipment_owned[${i}].quantity`}
@@ -149,6 +193,15 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
                                                     type="int"
                                                     min="1"
                                                     required
+                                                    formik={form}
+                                                />
+                                            </Col>
+                                            <Col xs="11" md="5">
+                                                <BaseInput
+                                                    readOnly={Boolean(props?.entity?.is_hired)}
+                                                    name={`equipment_owned[${i}].image_url`}
+                                                    placeholder="EQUIPMENT_IMAGE_URL"
+                                                    type="url"
                                                     formik={form}
                                                 />
                                             </Col>
@@ -176,6 +229,18 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
                                                         placeholder="TYPE"
                                                         formik={form}
                                                         required
+                                                    />
+                                                </Col>
+                                            )}
+                                            {entity.image_url && (
+                                                <Col xs="12" className="mt-2 mb-2">
+                                                    <img
+                                                        src={entity.image_url}
+                                                        alt={t("EQUIPMENT_IMAGE")}
+                                                        style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'contain' }}
+                                                        onError={(e) => {
+                                                            (e.target as HTMLImageElement).style.display = 'none';
+                                                        }}
                                                     />
                                                 </Col>
                                             )}

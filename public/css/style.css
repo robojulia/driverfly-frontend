@@ -154,6 +154,8 @@ h1 {
   font-weight: 700;
 }
 
+/* Note: H2 and H3 styles for authenticated dashboard are defined in styles/globals.css */
+/* These styles are for public-facing pages only */
 h2 {
   font-size: 42px !important;
   font-weight: 500 !important;
@@ -921,10 +923,12 @@ input[type='range']::-webkit-slider-thumb {
 .card-header {
   color: #6a6a6a;
   text-align: left;
+  cursor: default;
 }
 
-.card-header:hover {
-  color: #2da2af;
+.card-header h5,
+.card-header .h5 {
+  cursor: default;
 }
 
 .faq_question_widget .widget_list {
@@ -2380,6 +2384,29 @@ p {
 
 input[type='checkbox'] {
   padding: 7px !important;
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  min-height: 18px !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  border: 2px solid #0f5257 !important;
+  border-radius: 4px !important;
+  background-color: white !important;
+  appearance: auto !important;
+  -webkit-appearance: checkbox !important;
+  -moz-appearance: checkbox !important;
+}
+
+input[type='checkbox']:checked {
+  background-color: #0f5257 !important;
+  border-color: #0f5257 !important;
+}
+
+input[type='checkbox']:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
 }
 
 .dialer__close .btn-close {

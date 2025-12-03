@@ -98,6 +98,13 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
     // Register getter function that returns CURRENT form values when called
     useEffect(() => {
         if (typeof window !== 'undefined') {
+            // Register validation function
+            (window as any).__applicantFormValidation = (window as any).__applicantFormValidation || {};
+            (window as any).__applicantFormValidation['equipment'] = () => {
+                // Return current validation errors from formik
+                return formRef.current.errors;
+            };
+
             (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
             (window as any).__applicantFormRegistry['equipment'] = () => {
                 console.log('EquipmentForm getter called');
@@ -108,6 +115,14 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
                 };
             };
         }
+
+        // Cleanup function to prevent memory leaks
+        return () => {
+            if (typeof window !== 'undefined') {
+                delete (window as any).__applicantFormValidation?.['equipment'];
+                delete (window as any).__applicantFormRegistry?.['equipment'];
+            }
+        };
     }, []);
 
     useEffect(() => focusOnErrorField(form), [form.submitCount])
@@ -138,7 +153,7 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
                                         })
                                     }
                                 >
-                                    <PlusCircle /> {t("ADD_MORE_EXPERIENCE")}
+                                    <PlusCircle className="me-2" /> {t("ADD_MORE_EXPERIENCE")}
                                 </Button>
                             )
                         }

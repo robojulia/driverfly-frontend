@@ -54,7 +54,7 @@ export default function ChildPageLayout({
 
             {/* Page Title */}
             {title && (
-              <h2 className="mb-0" style={{ fontSize: '1.75rem', fontWeight: '600' }}>
+              <h2 className="mb-0">
                 {t(title)}
               </h2>
             )}

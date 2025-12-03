@@ -154,7 +154,7 @@ export function ApplicantVehicleAssiigedForm(
 									})
 								}
 							>
-								<PlusCircle /> {t("ADD")}
+								<PlusCircle className="me-2" /> {t("ADD")}
 							</Button>
 						}
 					>
@@ -212,7 +212,7 @@ export function ApplicantVehicleAssiigedForm(
 													disabled={!can.createVehicle}
 													onClick={() => setCreateVehicle(i)}
 												>
-													<PlusCircle /> {t("CREATE")}
+													<PlusCircle className="me-2" /> {t("CREATE")}
 												</Button>
 											</>
 										}

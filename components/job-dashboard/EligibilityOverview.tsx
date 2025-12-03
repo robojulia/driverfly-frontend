@@ -64,12 +64,16 @@ export const EligibilityOverview: React.FC<EligibilityOverviewProps> = ({
       )}
 
       {/* Eligibility Table Section */}
-      <div className={styles.eligibilitySection}>
+      <div className={styles.eligibilitySection} style={{ marginTop: '2rem' }}>
         <div className={styles.sectionHeader}>
-          <h3 className={styles.sectionTitle}>
-            <FilterCircleFill />
-            Applicant Eligibility Analysis
-          </h3>
+          <div>
+            <h3 className={styles.sectionTitle}>
+              Applicants
+            </h3>
+            <p className={styles.sectionSubtitle}>
+              Manage your leads and applicants in one place
+            </p>
+          </div>
         </div>
 
         <div className={styles.sectionContent}>

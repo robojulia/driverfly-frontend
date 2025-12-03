@@ -24,16 +24,16 @@ export default function PageLayout(props: PageLayoutProps) {
                 {
                     title && !hideTitle &&
                         <Col>
-                            <h2>
+                            <h2 style={{ marginBottom: '0.75rem' }}>
                                 {t(title)}
                             </h2>
                             {
-                                desciption &&  <p className="small text-secondary">{t(desciption)}</p>
+                                desciption &&  <p className="small text-secondary" style={{ marginBottom: '1rem' }}>{t(desciption)}</p>
                             }
                         </Col>
                 }
                 {
-                    actions && 
+                    actions &&
                         <Col className="text-right text-nowrap">
                             {actions}
                         </Col>

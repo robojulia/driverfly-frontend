@@ -42,16 +42,24 @@ a {
 /* Page Title Styling - Override Bootstrap defaults */
 h2,
 .h2 {
-  font-size: 71px !important;
-  font-weight: 700 !important;
+  font-size: 38px !important;
+  font-weight: 600 !important;
   font-family: 'Poppins', sans-serif !important;
 }
 
 /* Main Page Title Headers ONLY - Top headers like "Applicants", "Jobs", "Dashboard" */
 .row > .col > h2 {
   font-family: 'Poppins', sans-serif !important;
-  font-size: 71px !important;
+  font-size: 38px !important;
+  font-weight: 600 !important;
+}
+
+/* H3 Headers */
+h3,
+.h3 {
+  font-size: 24px !important;
   font-weight: 700 !important;
+  font-family: 'Poppins', sans-serif !important;
 }
 
 /* Navigation Link Improvements - Override Bootstrap defaults */
@@ -162,11 +170,9 @@ html {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-transform: none;
   letter-spacing: 0.025em;
-  border-width: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   font-size: 16px;
   line-height: 1.5;
-  min-height: 48px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -348,7 +354,7 @@ html {
 .btn.float-right {
   background: var(--light);
   color: var(--text-primary);
-  border: 2px solid var(--medium-gray);
+  border: 1px solid var(--medium-gray);
 }
 
 .btn.float-right:hover,
@@ -416,7 +422,6 @@ html {
   .btn-sm {
     padding: 0.875rem 1rem;
     font-size: 16px;
-    min-height: 48px;
   }
 }
 
@@ -573,13 +578,7 @@ html {
   border: none;
   margin-bottom: 1.5rem;
   overflow: hidden;
-  transition: all 0.3s ease;
   background-color: var(--light);
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--box-shadow);
 }
 
 .card-body {
@@ -698,7 +697,8 @@ html {
 
   h3,
   .h3 {
-    font-size: 1.25rem;
+    font-size: 24px !important;
+    font-weight: 700 !important;
   }
 
   .card-title {

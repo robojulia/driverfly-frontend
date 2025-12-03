@@ -5,6 +5,7 @@ import { LicenseRestrictions } from '../../enums/applicants/applicant-license-re
 import { ApplicantStatus } from '../../enums/applicants/applicant-status.enum';
 import { ApplicantType } from '../../enums/applicants/applicant-type.enum';
 import { JobGeography } from '../../enums/jobs/job-geography.enum';
+import { JobEmploymentType } from '../../enums/jobs/job-employment-type.enum';
 import { JobSchedule } from '../../enums/jobs/job-schedule.enum';
 import { OtherRequirementType } from '../../enums/users/other-requirements.enum';
 import { BooleanTypeExtra } from '../../enums/jotform/bool-and-not-sure.enum';
@@ -128,6 +129,7 @@ export class ApplicantEntity {
   authorize_to_communicate?: BooleanTypeExtra;
   routes?: JobSchedule[];
   other_requirements?: OtherRequirementType[];
+  employment_type?: JobEmploymentType;
   ssn?: string;
   ssn_last4?: string;
   employment_gap_details?: string;

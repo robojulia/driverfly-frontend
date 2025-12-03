@@ -12,7 +12,6 @@ import { Trash } from "react-bootstrap-icons";
 import { CompanyPreferenceCategory } from "../../../enums/company/company-preference-category.enum";
 import { CompanyPreferenceOnboardingChecklistLabel } from "../../../enums/company/company-preferences-onboarding-checklist-label.enum";
 import { CompanyPreferenceEntity } from "../../../models/company/company-preferences.entity";
-import { formSuccess } from "../../../utils/toast";
 import EntityForm from "../../layouts/page/entity-form";
 import BaseInput from "../base-input";
 import { BaseFormProps } from "./base-form-props";
@@ -66,7 +65,7 @@ export function CompanyPreferencesDacForm(
 				}
 
 				setValues({ dac });
-				formSuccess(t, !!entity?.id ? "update" : "create", "COMPANY");
+				toast.success(t("Successfully updated"));
 				if (onSaveComplete) onSaveComplete(dac);
 			} catch (e) {
 				console.error("Unable to save entity", e.response, e);
@@ -105,11 +104,45 @@ export function CompanyPreferencesDacForm(
 		[form.values.dac.value]
 	);
 
+	const handleDragStart = (e: React.DragEvent, index: number) => {
+		e.dataTransfer.effectAllowed = "move";
+		e.dataTransfer.setData("text/plain", index.toString());
+	};
+
+	const handleDragOver = (e: React.DragEvent) => {
+		e.preventDefault();
+		e.dataTransfer.dropEffect = "move";
+	};
+
+	const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+		e.preventDefault();
+		const dragIndex = parseInt(e.dataTransfer.getData("text/plain"));
+
+		if (dragIndex === dropIndex) return;
+
+		const items = [...(form.values.dac?.value || [])];
+		const [draggedItem] = items.splice(dragIndex, 1);
+		items.splice(dropIndex, 0, draggedItem);
+
+		form.setFieldValue("dac.value", items);
+	};
+
 	const checklistItems = useMemo(
 		() =>
-			form.values.dac?.value?.map((listItem: string, key: Key) => (
-				<Row key={key} className="mt-2">
-					<div className="col-6 offset-2 border-bottom">{t(`${listItem}`)}</div>
+			form.values.dac?.value?.map((listItem: string, index: number) => (
+				<Row
+					key={index}
+					className="mt-2"
+					draggable
+					onDragStart={(e) => handleDragStart(e, index)}
+					onDragOver={handleDragOver}
+					onDrop={(e) => handleDrop(e, index)}
+					style={{ cursor: 'move' }}
+				>
+					<div className="col-1 offset-1 border-bottom d-flex align-items-center">
+						<span style={{ fontSize: '1.2em', color: '#999' }}>⋮⋮</span>
+					</div>
+					<div className="col-5 border-bottom">{t(`${listItem}`)}</div>
 					<div className="col-1 border-bottom">
 						<Button
 							variant="danger"
@@ -121,7 +154,7 @@ export function CompanyPreferencesDacForm(
 					</div>
 				</Row>
 			)),
-		[form.values.dac?.value, handleRemoveItem]
+		[form.values.dac?.value, handleRemoveItem, t]
 	);
 
 	return (

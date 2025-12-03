@@ -221,6 +221,7 @@ export default function OnboardingChecklist(
   const companyApi = new CompanyApi();
 
   const [editList, setEditList] = useState<boolean>(false);
+  const [editChecklistItems, setEditChecklistItems] = useState<boolean>(false);
   const [companyOnboardingPreferences, setCompanyOnboardingPreferences] =
     useState<CompanyPreferenceEntity[]>();
   const [pdf, setPdf] = useState({});
@@ -349,7 +350,7 @@ export default function OnboardingChecklist(
    * @param {number} [documentId] - The id of the document to be updated.
    */
   const handleUpdateDocument = async (
-    type: ApplicantOnBoardingChecklist,
+    type: ApplicantOnBoardingChecklist | string,
     documentId?: number
   ): Promise<void> => {
     form.setFieldValue("document", { type, id: documentId ?? null });
@@ -551,10 +552,13 @@ export default function OnboardingChecklist(
         disabled={isEnablingAllDocuments}
         onClick={handleEnableAllDocuments}
       >
-        {isEnablingAllDocuments ? t("ENABLING...") : t("ENABLE_ALL_DOCUMENTS")}
+        {isEnablingAllDocuments ? t("Enabling...") : t("Enable All Documents")}
       </Button>
-      <Button variant="link" className="p-0" size="sm" onClick={() => setEditList(!editList)}>
-        {editList ? t("CANCEL") : t("EDIT_LIST")}
+      <Button variant="link" className="p-0" size="sm" onClick={() => {
+        setEditList(!editList);
+        if (editChecklistItems) setEditChecklistItems(false);
+      }}>
+        {editList ? t("Cancel") : t("Edit Document List")}
       </Button>
     </>
   );
@@ -573,21 +577,7 @@ export default function OnboardingChecklist(
             ),
             newChecklist,
           ]);
-        }}
-      />
-      <hr/>
-      <CompanyPreferencesDacForm
-        className="m-5"
-        companyDaclist={companyDaclist}
-        onSaveComplete={(newDac: CompanyPreferenceEntity) => {
-          setCompanyOnboardingPreferences([
-            ...companyOnboardingPreferences?.filter(
-              (v) =>
-                v.label !==
-                CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DAC
-            ),
-            newDac,
-          ]);
+          setEditList(false);
         }}
       />
     </>
@@ -595,18 +585,38 @@ export default function OnboardingChecklist(
     <>
       {/* Unified checklist view */}
       <div className="d-flex flex-column" style={{ gap: 12 }}>
-        {(companyOnboardingChecklist?.value || []).map((type: ApplicantOnBoardingChecklist) => {
-          const completedDoc: DocumentEntity | undefined = applicant?.documents?.find((v) => v.type === type && !!v.path);
-          const pendingDoc: DocumentEntity | undefined = applicant?.documents?.find((v) => v.type === type && !v.path);
-          const document = completedDoc || pendingDoc;
-          const isCompleted = Boolean(completedDoc);
-          return (
-            <div key={type} className="p-3 border rounded" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              {/* Left: status + name */}
-              <div className="d-flex align-items-center" style={{ gap: 10 }}>
-                <div style={{ width: 16, height: 16, borderRadius: 4, border: '1px solid #0f5257', background: isCompleted ? '#0f5257' : 'transparent' }} />
-                <div style={{ fontWeight: 600 }}>{t(`ApplicantOnBoardingChecklist.${type}`)}</div>
-              </div>
+        {(() => {
+          // Get union of global template types and types that have documents for this applicant
+          // This ensures historical documents are preserved even if removed from global template
+          const globalTypes = companyOnboardingChecklist?.value || [];
+          const applicantDocumentTypes = (applicant?.documents || [])
+            .filter(d => d.type && d.path) // Only include completed documents
+            .map(d => d.type);
+          const allTypes = [...new Set([...globalTypes, ...applicantDocumentTypes])];
+
+          return allTypes.map((type: string) => {
+            const completedDoc: DocumentEntity | undefined = applicant?.documents?.find((v) => v.type === type && !!v.path);
+            const pendingDoc: DocumentEntity | undefined = applicant?.documents?.find((v) => v.type === type && !v.path);
+            const document = completedDoc || pendingDoc;
+            const isCompleted = Boolean(completedDoc);
+            const isHistorical = !globalTypes.includes(type);
+            const isEnumValue = Object.values(ApplicantOnBoardingChecklist).includes(type as ApplicantOnBoardingChecklist);
+            const displayName = isEnumValue ? t(`ApplicantOnBoardingChecklist.${type}`) : type;
+
+            return (
+              <div key={type} className="p-3 border rounded" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', ...(isHistorical ? { backgroundColor: '#fff3cd' } : {}) }}>
+                {/* Left: status + name */}
+                <div className="d-flex align-items-center" style={{ gap: 10 }}>
+                  <div style={{ width: 16, height: 16, borderRadius: 4, border: '1px solid #0f5257', background: isCompleted ? '#0f5257' : 'transparent' }} />
+                  <div style={{ fontWeight: 600 }}>
+                    {displayName}
+                    {isHistorical && (
+                      <span className="badge bg-warning text-dark ms-2" title={t("This document type was removed from the global template but data is preserved")}>
+                        {t("Historical")}
+                      </span>
+                    )}
+                  </div>
+                </div>
               {/* Right: uploaded at + actions */}
               <div className="d-flex align-items-center" style={{ gap: 12 }}>
                 <div className="text-muted small" style={{ minWidth: 160, textAlign: 'right' }}>
@@ -692,12 +702,13 @@ export default function OnboardingChecklist(
               )}
             </div>
           );
-        })}
+        });
+      })()}
       </div>
 
       {/* Uploaded Documents as a subsection inside the Onboarding Documents card (bottom) */}
       <div className="mt-4">
-        <h6 className="mb-3" style={{ color: '#666', fontSize: '0.95rem', fontWeight: 600 }}>{t('UPLOADED_DOCUMENTS')}</h6>
+        <h3 className="mb-3">{t('UPLOADED_DOCUMENTS')}</h3>
         <ApplicantUploadedDocumentsForm
           entity={applicant as any}
           setEntity={setApplicant as any}

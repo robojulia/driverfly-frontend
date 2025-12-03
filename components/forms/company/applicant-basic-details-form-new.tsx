@@ -10,6 +10,7 @@ import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum
 import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
+import { JobEmploymentType } from "../../../enums/jobs/job-employment-type.enum";
 import { Status } from "../../../enums/status.enum";
 import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
 import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
@@ -25,6 +26,7 @@ import { ReferralSourceEntity } from "../../../models/referral-source/referral-s
 import ApplicantApi from "../../../pages/api/applicant";
 import UserApi from "../../../pages/api/user";
 import { ReferralSourceApi } from "../../../pages/api/referral-source";
+import CompanyApi from "../../../pages/api/company";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { focusOnErrorField } from "../../../utils/form-error";
 import { useEffectAsync } from "../../../utils/react";
@@ -39,7 +41,6 @@ import BaseTextArea from "../base-text-area";
 import StateSelect from "../state-select";
 import { BaseFormProps } from "./base-form-props";
 import SSNDisplay from "../../shared/SSNDisplay";
-import { JobCapability } from "./job-capability";
 
 export interface ApplicantBasicDetailsFormNewProps extends BaseFormProps<ApplicantEntity> {
   isSubmitting: boolean;
@@ -60,9 +61,8 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
 
   const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([]);
   const [referralSources, setReferralSources] = useState<ReferralSourceEntity[]>([]);
-  const [canPerformJob, setCanPerformJob] = useState<boolean>(true);
-  const [jobLimitationIndex, setJobLimitationIndex] = useState<number>(-1);
   const [initialized, setInitialized] = useState(false);
+  const [dotVerifyRaw, setDotVerifyRaw] = useState<any>(null);
 
   const form = useFormik({
     initialValues: new ApplicantEntity(),
@@ -114,11 +114,6 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
       extras?.push({ ...new ApplicantExtrasEntity(), type: ApplicantExtras.DOT_NUMBER });
     if (!extras?.find((v) => v.type == ApplicantExtras.CDL_NUMBER))
       extras?.push({ ...new ApplicantExtrasEntity(), type: ApplicantExtras.CDL_NUMBER });
-
-    const jobCapabilityExtra = entity?.extras?.find((v) => v.type == ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB);
-    if (jobCapabilityExtra && !extras.find((v) => v.type == ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB)) {
-      extras.push(jobCapabilityExtra);
-    }
 
     // Extract meta fields from extras into a meta object for easier form handling
     const meta = {
@@ -173,12 +168,19 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
   // Register getter function that returns CURRENT form values when called
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // Register validation function
+      (window as any).__applicantFormValidation = (window as any).__applicantFormValidation || {};
+      (window as any).__applicantFormValidation['basic-details'] = () => {
+        // Return current validation errors from formik
+        return formRef.current.errors;
+      };
+
       (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
       (window as any).__applicantFormRegistry['basic-details'] = () => {
         console.log('BasicDetailsForm getter called, current city:', formRef.current.values.city);
-        
+
         // Convert meta fields back into extras format
-        const currentExtras = (formRef.current.values.extras || []).filter((e: any) => 
+        const currentExtras = (formRef.current.values.extras || []).filter((e: any) =>
           // Remove old meta field entries so we can add fresh ones
           // Also remove DOT_NUMBER and BUSINESS_NAME (handled by licensing form)
           ![
@@ -197,7 +199,7 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
             ApplicantExtras.BUSINESS_NAME,
           ].includes(e.type)
         );
-        
+
         // Add meta fields to extras
         const meta = (formRef.current.values as any).meta || {};
         if (meta.middle_name) currentExtras.push({ type: ApplicantExtras.MIDDLE_NAME, value: meta.middle_name } as any);
@@ -211,7 +213,26 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
         if (meta.ethnicity) currentExtras.push({ type: ApplicantExtras.ETHNICITY, value: meta.ethnicity } as any);
         if (meta.gender) currentExtras.push({ type: ApplicantExtras.GENDER, value: meta.gender } as any);
         if (meta.veteran_status) currentExtras.push({ type: ApplicantExtras.VETERAN_STATUS, value: meta.veteran_status } as any);
-        
+
+        // Add DOT_NUMBER and BUSINESS_NAME to extras (from this form)
+        const dotNumberIdx = formRef.current.values.extras?.findIndex((v: any) => v.type === ApplicantExtras.DOT_NUMBER);
+        const businessNameIdx = formRef.current.values.extras?.findIndex((v: any) => v.type === ApplicantExtras.BUSINESS_NAME);
+
+        if (dotNumberIdx !== -1 && formRef.current.values.extras?.[dotNumberIdx]?.value) {
+          currentExtras.push({
+            type: ApplicantExtras.DOT_NUMBER,
+            value: formRef.current.values.extras[dotNumberIdx].value,
+            id: formRef.current.values.extras[dotNumberIdx].id,
+          } as any);
+        }
+        if (businessNameIdx !== -1 && formRef.current.values.extras?.[businessNameIdx]?.value) {
+          currentExtras.push({
+            type: ApplicantExtras.BUSINESS_NAME,
+            value: formRef.current.values.extras[businessNameIdx].value,
+            id: formRef.current.values.extras[businessNameIdx].id,
+          } as any);
+        }
+
         // Return ONLY fields managed by this form (CDL fields are handled by licensing form)
         return {
           first_name: formRef.current.values.first_name,
@@ -227,46 +248,27 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
           assignedUserId: formRef.current.values.assignedUserId,
           type: formRef.current.values.type,
           referralSourceId: formRef.current.values.referralSourceId,
+          current_application_status: formRef.current.values.current_application_status,
+          employment_type: formRef.current.values.employment_type,
+          is_owner_operator: formRef.current.values.is_owner_operator,
           extras: currentExtras,
         };
       };
     }
+
+    // Cleanup function to prevent memory leaks
+    return () => {
+      if (typeof window !== 'undefined') {
+        delete (window as any).__applicantFormValidation?.['basic-details'];
+        delete (window as any).__applicantFormRegistry?.['basic-details'];
+      }
+    };
   }, []);
 
   const handleLicenseNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const uppercaseValue = e.target.value.toUpperCase();
     form.setFieldValue(e.target.name, uppercaseValue);
   };
-
-  const handleCanPerformJobChange = (canPerform: boolean) => {
-    setCanPerformJob(canPerform);
-    const extrasArray = [...(form.values?.extras || [])];
-    const currentExtraIndex = form.values?.extras?.findIndex((v) => v.type === ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB);
-
-    if (canPerform) {
-      if (currentExtraIndex !== -1) {
-        const filteredExtras = extrasArray.filter((_, index) => index !== currentExtraIndex);
-        form.setFieldValue("extras", filteredExtras);
-        setJobLimitationIndex(-1);
-      }
-    } else {
-      if (currentExtraIndex !== -1) {
-        setJobLimitationIndex(currentExtraIndex);
-      } else {
-        const newExtra = new ApplicantExtrasEntity(ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB);
-        extrasArray.push(newExtra);
-        form.setFieldValue("extras", extrasArray);
-        setJobLimitationIndex(extrasArray.length - 1);
-      }
-    }
-  };
-
-  useEffect(() => {
-    const extraIndex = form.values?.extras?.findIndex((v) => v.type === ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB);
-    setJobLimitationIndex(extraIndex);
-    const hasLimitation = extraIndex !== -1 && form.values?.extras[extraIndex]?.value;
-    setCanPerformJob(!hasLimitation);
-  }, [form.values?.extras]);
 
   // Auto-set type to AUTO_RECRUIT when is_automated_recruiting_lead is true
   useEffect(() => {
@@ -382,11 +384,26 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
               </Col>
             </Row>
 
-            {/* Date of Birth, Age, Authorized to work */}
+            {/* Status, Employment Type, Country, Date of Birth */}
             <Row className="mb-2">
+              <Col md="3" className="px-2">
+                {form.values?.id && (
+                  <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} name="current_application_status" placeholder="Select status" label="Status" labelPrefix="ApplicantStatus" enumType={ApplicantStatus} formik={form} style={{ backgroundColor: '#83e0de' }} />
+                )}
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Employment Type" name="employment_type" placeholder="Select employment type" labelPrefix="JobEmploymentType" enumType={JobEmploymentType} formik={form} />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Country" name="meta.country" placeholder="Select country" options={["United States","Canada","Mexico"]} formik={form} />
+              </Col>
               <Col md="3" className="px-2">
                 <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Date of Birth" type="date" name="birthdate" placeholder="mm / dd / yyyy" formik={form} max={OldThan18Year} />
               </Col>
+            </Row>
+
+            {/* Age, Authorized to work, Citizenship Status (conditional) */}
+            <Row className="mb-2">
               <Col md="3" className="px-2">
                 <BaseInput className="col-12" label="Age" type="number" name="meta.age" value={(function(){
                   const v:any = form?.values as any; const d = v?.birthdate ? new Date(v.birthdate as any) : null; if(!d||isNaN(d as any)) return ""; const today = new Date(); let age = today.getFullYear()-d.getFullYear(); const m=today.getMonth()-d.getMonth(); if(m<0 || (m===0 && today.getDate()<d.getDate())) age--; return String(age);
@@ -395,23 +412,264 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
               <Col md="3" className="px-2">
                 <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Authorized to work in the US?" name="meta.authorized_to_work" placeholder="Select" options={["Yes","No"]} formik={form} />
               </Col>
+              {(form.values as any)?.meta?.authorized_to_work === "Yes" && (
+                <Col md="3" className="px-2">
+                  <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Citizenship Status" name="meta.citizenship_status" placeholder="Select" options={["U.S. Citizen","Permanent Resident","Work Visa","Other"]} formik={form} />
+                </Col>
+              )}
             </Row>
 
-            {/* Fourth row - Additional fields */}
+            {/* Owner Operator Section */}
             <Row className="mb-2">
-              <Col md="3" className="px-2">
-                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Marital Status" name="meta.marital_status" placeholder="Select" options={["Single","Married","Divorced","Widowed"]} formik={form} />
-              </Col>
-              <Col md="3" className="px-2">
-                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Race" name="meta.race" placeholder="Select" options={["White","Black or African American","Asian","American Indian or Alaska Native","Native Hawaiian or Other Pacific Islander","Other"]} formik={form} />
-              </Col>
-              <Col md="3" className="px-2">
-                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Citizenship Status" name="meta.citizenship_status" placeholder="Select" options={["U.S. Citizen","Permanent Resident","Work Visa","Other"]} formik={form} />
-              </Col>
-              <Col md="3" className="px-2">
-                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Country" name="meta.country" placeholder="Select country" options={["United States","Canada","Mexico"]} formik={form} />
+              <Col md="12" className="px-2">
+                <BaseCheck className="col-12 mt-2" disabled={Boolean(entity?.is_hired)} label="OWNER_OPERATOR" name="is_owner_operator" formik={form} />
               </Col>
             </Row>
+            {Boolean(form.values.is_owner_operator) && (
+              <>
+                <Row className="mb-2">
+                  <Col md="6" className="px-2">
+                    <BaseInput readOnly={Boolean(entity?.is_hired)} className="col-12" label="BUSINESS_NAME" placeholder="Business Name (Optional)" name={`extras[${form.values?.extras?.findIndex((v) => v.type == ApplicantExtras.BUSINESS_NAME)}].value`} formik={form} />
+                  </Col>
+                  <Col md="6" className="px-2">
+                    <div>
+                      <label>
+                        {t('DOT_NUMBER')}:
+                      </label>
+                      <br />
+                      <div className="d-flex align-items-center gap-2" style={{ marginTop: '0.5rem' }}>
+                        <div className="flex-grow-1">
+                          <BaseInput
+                            readOnly={Boolean(entity?.is_hired)}
+                            className=""
+                            name={`extras[${form.values?.extras?.findIndex((v) => v.type == ApplicantExtras.DOT_NUMBER)}].value`}
+                            formik={form}
+                          />
+                        </div>
+                        <Button
+                          type="button"
+                          className="btn theme-general-btn"
+                          style={{ whiteSpace: 'nowrap', height: '44px' }}
+                          onClick={async () => {
+                            try {
+                              const companyApi = new CompanyApi();
+                              const dot_number = form.values.extras?.find((e: any) => e.type === ApplicantExtras.DOT_NUMBER)?.value;
+                              const business_name = form.values.extras?.find((e: any) => e.type === ApplicantExtras.BUSINESS_NAME)?.value;
+                              const tokens = await companyApi.dotVerify({
+                                dot_number,
+                                email: form.values.email,
+                                phone: form.values.phone,
+                                address_1: form.values.address_1 || (form.values as any).street,
+                                city: form.values.city,
+                                state: form.values.state,
+                                zip_code: form.values.zip_code,
+                                business_name,
+                              });
+                              setDotVerifyRaw(tokens);
+                              const newTokens = Array.isArray(tokens) && tokens.length ? tokens[0] : [];
+                              const others = (form.values.extras || []).filter((e: any) => e.type !== ApplicantExtras.DOT_VERIFICATION_RESULTS);
+                              const updated = { type: ApplicantExtras.DOT_VERIFICATION_RESULTS, value: newTokens } as any;
+                              const newExtras = [...others, updated];
+                              const saved = await applicantApi.update(
+                                entity?.id,
+                                {
+                                  first_name: form.values.first_name,
+                                  last_name: form.values.last_name,
+                                  extras: newExtras,
+                                } as any,
+                              );
+                              setEntity?.({ ...entity, ...saved });
+
+                              // Check if records array is empty
+                              const data: any = (tokens as any)?.records ?? tokens;
+                              const records: any[] = Array.isArray(data) ? data : (data ? [data] : []);
+                              const validRecords = records.filter(rec => rec && Object.keys(rec || {}).length > 0);
+
+                              if (records.length === 0 || validRecords.length === 0) {
+                                toast.info("DOT lookup completed, but no records were found for this DOT number.");
+                              } else {
+                                toast.success("DOT Number Lookup Successful");
+                              }
+                            } catch (e) {
+                              toast.error("Failed to refresh DOT verification");
+                            }
+                          }}
+                        >
+                          Lookup
+                        </Button>
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
+                {(() => {
+                  const dot_number = form.values.extras?.find((e: any) => e.type === ApplicantExtras.DOT_NUMBER)?.value;
+                  if (!dot_number) return null;
+                  const tokens: string[] =
+                    (form.values.extras?.find((e: any) => e.type === ApplicantExtras.DOT_VERIFICATION_RESULTS)?.value as string[]) || [];
+                  if (!tokens.length && !dotVerifyRaw) return null;
+
+                  const checks = [
+                    { key: "EMAIL", label: "Email" },
+                    { key: "PHONE", label: "Phone" },
+                    { key: "STREET_ADDRESS", label: "Street address" },
+                    { key: "CITY", label: "City" },
+                    { key: "STATE", label: "State" },
+                    { key: "ZIP_CODE", label: "ZIP code" },
+                  ];
+                  const getStatus = (k: string): boolean | null => {
+                    if (tokens.includes(`${k}_SUCCESS`)) return true;
+                    if (tokens.includes(`${k}_FAIL`)) return false;
+                    return null;
+                  };
+                  const formatCountry = (value?: string) => {
+                    if (!value) return value;
+                    const raw = String(value).trim();
+                    const normalized = raw.toUpperCase().replace(/\./g, '');
+                    if (normalized === 'US' || normalized === 'USA' || normalized === 'UNITED STATES' || normalized === 'UNITED STATES OF AMERICA') {
+                      return 'United States of America';
+                    }
+                    return raw.toUpperCase();
+                  };
+                  const formatPhone = (value?: string) => {
+                    if (!value) return value;
+                    const raw = String(value);
+                    const digitsOnly = raw.replace(/\D/g, '');
+                    const normalized = digitsOnly.length === 11 && digitsOnly.startsWith('1') ? digitsOnly.slice(1) : digitsOnly;
+                    if (normalized.length === 10) {
+                      const area = normalized.slice(0, 3);
+                      const exchange = normalized.slice(3, 6);
+                      const line = normalized.slice(6);
+                      return `(${area}) ${exchange}-${line}`;
+                    }
+                    if (normalized.length === 7) {
+                      return `${normalized.slice(0, 3)}-${normalized.slice(3)}`;
+                    }
+                    return raw;
+                  };
+                  const join = (parts: Array<string | undefined | null>, sep: string) =>
+                    parts.filter((p) => Boolean(p && String(p).trim().length)).map((p) => String(p)).join(sep);
+                  const toTitleCase = (value?: string) => {
+                    if (!value) return value;
+                    const cased = String(value)
+                      .toLowerCase()
+                      .replace(/\b([a-z])(\w*)/g, (_: any, a: string, b: string) => a.toUpperCase() + b);
+                    return cased.replace(/ Llc\b/g, ' LLC');
+                  };
+
+                  return (
+                    <Row className="mb-2">
+                      <Col md="12" className="px-2">
+                        <div className="mt-3" style={{ borderTop: '1px solid #dee2e6', paddingTop: '1rem' }}>
+                          <div className="fw-semibold mb-2">DOT Lookup Results</div>
+                          <div className="d-flex justify-content-between align-items-start flex-wrap">
+                            {tokens.length > 0 && (
+                              <div className="mb-2" style={{ minWidth: 240 }}>
+                                {checks.map(({ key, label }) => {
+                                  const status = getStatus(key);
+                                  return (
+                                    <div key={key} className="d-flex align-items-center mb-1">
+                                      <div style={{ width: 140 }}>{label}</div>
+                                      {status === true && (
+                                        <span className="badge bg-success">Match</span>
+                                      )}
+                                      {status === false && (
+                                        <span className="badge bg-danger">No match</span>
+                                      )}
+                                      {status === null && (
+                                        <span className="badge bg-secondary">Unknown</span>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                            {dotVerifyRaw && (
+                              <div style={{ flex: 1, minWidth: 280 }} className="text-start">
+                                {(() => {
+                                  const data: any = (dotVerifyRaw as any)?.records ?? dotVerifyRaw;
+                                  const records: any[] = Array.isArray(data) ? data : (data ? [data] : []);
+                                  if (records.length === 0) {
+                                    return (
+                                      <div className="text-muted">
+                                        No records found for this DOT number.
+                                      </div>
+                                    );
+                                  }
+                                  const validRecords = records.filter(rec => rec && Object.keys(rec || {}).length > 0);
+                                  if (validRecords.length === 0) {
+                                    return (
+                                      <div className="text-muted">
+                                        No records found for this DOT number.
+                                      </div>
+                                    );
+                                  }
+                                  return (
+                                    <div>
+                                      {validRecords.map((rec: any, idx: number) => {
+                                        const phyCityStateZip = join([
+                                          toTitleCase(rec?.phy_city),
+                                          join([String(rec?.phy_state || '').toUpperCase(), rec?.phy_zip], ' '),
+                                        ], ', ');
+                                        const mailingCityStateZip = join([
+                                          toTitleCase(rec?.carrier_mailing_city),
+                                          join([String(rec?.carrier_mailing_state || '').toUpperCase(), rec?.carrier_mailing_zip], ' '),
+                                        ], ', ');
+                                        const phyStreet = toTitleCase(rec?.phy_street);
+                                        const phyCountryDisplay = formatCountry(rec?.phy_country);
+                                        const addressString = join([
+                                          phyStreet,
+                                          phyCityStateZip,
+                                          phyCountryDisplay,
+                                        ], ', ');
+                                        const mailingStreet = toTitleCase(rec?.carrier_mailing_street);
+                                        const mailingCountryDisplay = formatCountry(rec?.carrier_mailing_country);
+                                        const mailingAddressString = join([
+                                          mailingStreet,
+                                          mailingCityStateZip,
+                                          mailingCountryDisplay,
+                                        ], ', ');
+                                        const areAddressesIdentical = Boolean(addressString) && Boolean(mailingAddressString) && addressString === mailingAddressString;
+                                        return (
+                                          <div key={idx} className="mb-2">
+                                            <div className="fw-semibold">Company Name</div>
+                                            <div className="mb-1">{toTitleCase(rec?.legal_name) ?? ''}</div>
+                                            <div className="fw-semibold">Address</div>
+                                            <div className="mb-1">
+                                              {phyStreet && <div>{phyStreet}</div>}
+                                              {phyCityStateZip && <div>{phyCityStateZip}</div>}
+                                              {phyCountryDisplay && <div>{phyCountryDisplay}</div>}
+                                            </div>
+                                            {!areAddressesIdentical && mailingAddressString && (
+                                              <>
+                                                <div className="fw-semibold">Mailing Address</div>
+                                                <div className="mb-1">
+                                                  {mailingStreet && <div>{mailingStreet}</div>}
+                                                  {mailingCityStateZip && <div>{mailingCityStateZip}</div>}
+                                                  {mailingCountryDisplay && <div>{mailingCountryDisplay}</div>}
+                                                </div>
+                                              </>
+                                            )}
+                                            <div className="fw-semibold">Phone</div>
+                                            <div className="mb-1">{formatPhone(rec?.phone) ?? ''}</div>
+                                            <div className="fw-semibold">Email Address</div>
+                                            <div>{rec?.email_address ?? ''}</div>
+                                            {idx < validRecords.length - 1 && <hr className="my-2" />}
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  );
+                                })()}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </Col>
+                    </Row>
+                  );
+                })()}
+              </>
+            )}
           </Section>
           </div>
         </Col>
@@ -424,7 +682,10 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
           <Section title="Demographic Information">
             <Row>
               <Col md="3" className="px-2">
-                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Ethnicity" name="meta.ethnicity" placeholder="Select" options={["Hispanic or Latino","Not Hispanic or Latino"]} formik={form} />
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Marital Status" name="meta.marital_status" placeholder="Select" options={["Single","Married","Divorced","Widowed"]} formik={form} />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Ethnicity" name="meta.ethnicity" placeholder="Select" options={["White","Black or African American","Asian","American Indian or Alaska Native","Native Hawaiian or Other Pacific Islander","Other"]} formik={form} />
               </Col>
               <Col md="3" className="px-2">
                 <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Gender" name="meta.gender" placeholder="Select" options={["Male","Female","Non-binary","Prefer not to say"]} formik={form} />
@@ -432,6 +693,8 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
               <Col md="3" className="px-2">
                 <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Veteran Status" name="meta.veteran_status" placeholder="Select" options={["Yes","No","Prefer not to say"]} formik={form} />
               </Col>
+            </Row>
+            <Row>
               <Col md="3" className="px-2">
                 <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="HIGHEST_DEGREE" name="highest_degree" placeholder="SELECT_HIGHEST_DEGREE" formik={form} labelPrefix="EducationLevel" enumType={EducationLevel} />
               </Col>
@@ -534,7 +797,7 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
                       });
                     }}
                   >
-                    <PlusCircle /> {t("ADD_ANOTHER_LICENSE")}
+                    <PlusCircle className="me-2" /> {t("ADD_ANOTHER_LICENSE")}
                   </Button>
                 </Row>
               )}
@@ -565,17 +828,6 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
                 {form.values?.id && (
                   <BaseSelect className="col-12 mt-2" readOnly={Boolean(entity?.is_hired)} name={`current_application_status`} required placeholder="APPLICANT_CURRENT_STATUS" label="APPLICANT_CURRENT_STATUS" labelPrefix="ApplicantStatus" enumType={ApplicantStatus} formik={form} />
                 )}
-              </Row>
-
-              {/* Job Capability Component */}
-              <Row className="px-3">
-                <JobCapability
-                  canPerformJob={canPerformJob}
-                  onCanPerformJobChange={handleCanPerformJobChange}
-                  reasonIndex={jobLimitationIndex}
-                  formik={form}
-                  disabled={Boolean(entity?.is_hired)}
-                />
               </Row>
             </Section>
           </Col>

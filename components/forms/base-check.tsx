@@ -72,6 +72,21 @@ export default function BaseCheck({
           name={name}
           role="switch"
           className={`${styles.radioInput} form-check-input ${error ? 'is-invalid' : ''}`}
+          style={{
+            width: '18px',
+            height: '18px',
+            minWidth: '18px',
+            minHeight: '18px',
+            opacity: 1,
+            visibility: 'visible',
+            cursor: disabled ? 'not-allowed' : 'pointer',
+            border: '2px solid #0f5257',
+            borderRadius: '4px',
+            backgroundColor: checked ? '#0f5257' : 'white',
+            appearance: 'auto',
+            WebkitAppearance: 'checkbox',
+            MozAppearance: 'checkbox'
+          }}
         />
         {label && (
           <label

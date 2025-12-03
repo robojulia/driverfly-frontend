@@ -253,46 +253,71 @@ export default function Applicants() {
                 display: 'flex',
                 justifyContent: 'end',
                 alignItems: 'center',
+                gap: '0.5rem',
               }}
             >
               <Accordion.Button
-                className="mr-3 text-black theme-filter-btn"
+                className="text-white theme-filter-btn"
                 style={{
                   width: 'auto',
-                  fontSize: '.95rem',
+                  fontSize: '1rem',
                   lineHeight: '1.5',
-                  padding: '.25rem 1.5rem',
-                  borderRadius: '.2rem',
+                  padding: '0.375rem 0.75rem',
+                  borderRadius: '0.25rem',
+                  height: '38px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
                 }}
               >
-                <div className="mr-2">{t('FILTERS')}</div>
+                <div>{t('FILTERS')}</div>
               </Accordion.Button>
               <Button
-                size="sm"
                 variant="outline-secondary"
                 onClick={handleExportApplicants}
                 disabled={!applicants || applicants.length === 0}
-                className="mr-2"
+                style={{
+                  height: '38px',
+                  padding: '0.375rem 0.75rem',
+                  borderRadius: '0.25rem',
+                  fontSize: '1rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                }}
               >
                 <Download size={14} className="mr-1" />
                 Export
               </Button>
               {canCreate && (
-                <ButtonGroup size="sm" style={{ float: 'right' }}>
+                <>
                   <Button
                     variant="primary"
                     onClick={() => router.push('/dashboard/company/applicants/create')}
+                    style={{
+                      height: '38px',
+                      padding: '0.375rem 0.75rem',
+                      borderRadius: '0.25rem',
+                      fontSize: '1rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                    }}
                   >
                     + {t('ADD_AN_APPLICANT')}
                   </Button>
                   <Button
-                    variant=""
                     className="theme-general-btn"
                     onClick={() => router.push('/dashboard/company/applicants/import')}
+                    style={{
+                      height: '38px',
+                      padding: '0.375rem 0.75rem',
+                      borderRadius: '0.25rem',
+                      fontSize: '1rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                    }}
                   >
                     + {t('IMPORT_APPLICANTS')}
                   </Button>
-                </ButtonGroup>
+                </>
               )}
             </div>
           }

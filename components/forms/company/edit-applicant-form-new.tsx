@@ -143,6 +143,7 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
           setIsSubmitting={props?.setIsSubmitting}
           className={props?.className}
           setEntity={props?.setEntity}
+          hideActions
         />
       </Row>
 
