@@ -1,3 +1,9 @@
+// init bootstrap first
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import '../public/bootstrap/css/bootstrap.min.css';
+
+// then our custom styles (in order of specificity)
 import '../public/css/buttons/buttons.css';
 import '../public/css/cards/cards.css';
 import '../public/css/links/links.css';
@@ -7,11 +13,7 @@ import '../public/css/responsive.css';
 import '../public/css/style.css';
 import '../styles/main.css';
 import '../styles/modern-forms.css';
-
-// init bootstrap
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import 'bootstrap/dist/css/bootstrap.css';
-import '../public/bootstrap/css/bootstrap.min.css';
+import '../styles/globals.css';
 
 // init fontawsome
 import '@fortawesome/fontawesome-free/css/all.css';

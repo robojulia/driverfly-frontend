@@ -91,8 +91,8 @@ body {
 
 .card-title {
   color: var(--text-primary);
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 700;
   margin-bottom: var(--spacing-md);
   border-bottom: 2px solid var(--primary);
   padding-bottom: var(--spacing-sm);
@@ -178,6 +178,16 @@ body {
 .rdt_TableHeadRow {
   background-color: var(--primary-dark) !important;
   color: white !important;
+}
+
+/* DataTable Row Hover - Change text color instead of white */
+.rdt_TableRow:hover {
+  color: rgb(0, 96, 120) !important;
+  cursor: pointer;
+}
+
+.rdt_TableRow:hover a {
+  color: rgb(0, 96, 120) !important;
 }
 
 /* Bootstrap Table Overrides */
@@ -326,7 +336,7 @@ body {
 
 .view-section h2 {
   color: var(--primary-dark);
-  font-size: 20px;
+  font-size: 38px;
   font-weight: 600;
   margin-bottom: 16px;
   padding-bottom: 8px;

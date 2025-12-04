@@ -12,6 +12,8 @@ import { useTranslation } from "../../../hooks/use-translation";
 import { ApplicantAccidentEntity } from "../../../models/applicant/applicant-accidentr.entity";
 import { ApplicantMovingViolationEntity } from "../../../models/applicant/applicant-moving-violation.entity";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
+import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../../models/applicant";
 import ApplicantApi from "../../../pages/api/applicant";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { focusOnErrorField } from "../../../utils/form-error";
@@ -23,6 +25,7 @@ import BaseCheck from "../base-check";
 import BaseInput from "../base-input";
 import BaseTextArea from "../base-text-area";
 import { BaseFormProps } from "./base-form-props";
+import { JobCapability } from "./job-capability";
 
 export interface ApplicantSafetyBackgroundFormProps extends BaseFormProps<ApplicantEntity> {
     isSubmitting: boolean;
@@ -37,6 +40,8 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
     const applicantApi = new ApplicantApi();
     const [hasCriminalHistory, setHasCriminalHistory] = useState<boolean>();
     const [initialized, setInitialized] = useState(false);
+    const [canPerformJob, setCanPerformJob] = useState<boolean>(true);
+    const [jobLimitationIndex, setJobLimitationIndex] = useState<number>(-1);
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
@@ -79,9 +84,18 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
 
         if (!!entity?.id) {
             setHasCriminalHistory(!!entity.criminal_history)
+
+            // Initialize job capability extras if not present
+            let extras: ApplicantExtrasEntity[] = entity?.extras || [];
+            const jobCapabilityExtra = extras?.find((v) => v.type == ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB);
+            if (!jobCapabilityExtra) {
+                extras = [...extras];
+            }
+
             form.setValues(
                 {
                     ...entity,
+                    extras,
                 });
             setInitialized(true);
         } else {
@@ -101,10 +115,17 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
     // Register getter function that returns CURRENT form values when called
     useEffect(() => {
         if (typeof window !== 'undefined') {
+            // Register validation function
+            (window as any).__applicantFormValidation = (window as any).__applicantFormValidation || {};
+            (window as any).__applicantFormValidation['safety'] = () => {
+                // Return current validation errors from formik
+                return formRef.current.errors;
+            };
+
             (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
             (window as any).__applicantFormRegistry['safety'] = () => {
                 console.log('SafetyForm getter called');
-                // Return ONLY safety-related fields 
+                // Return ONLY safety-related fields including job capability extras
                 return {
                     can_pass_drug_test: formRef.current.values.can_pass_drug_test,
                     has_past_dui: formRef.current.values.has_past_dui,
@@ -112,9 +133,20 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                     accident_history: formRef.current.values.accident_history,
                     moving_violation_history: formRef.current.values.moving_violation_history,
                     vehicles: formRef.current.values.vehicles,
+                    extras: formRef.current.values.extras?.filter((e: any) =>
+                        e.type === ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
+                    ) || [],
                 };
             };
         }
+
+        // Cleanup function to prevent memory leaks
+        return () => {
+            if (typeof window !== 'undefined') {
+                delete (window as any).__applicantFormValidation?.['safety'];
+                delete (window as any).__applicantFormRegistry?.['safety'];
+            }
+        };
     }, []);
 
     useEffect(() => focusOnErrorField(form), [form.submitCount])
@@ -123,6 +155,40 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
         //console.log("Applicant safety Form values", form.values)
         //console.log("Applicant safety Form errors", form.errors)
     }, [form.errors, form.values])
+
+    // Handler for job capability change
+    const handleCanPerformJobChange = (canPerform: boolean) => {
+        setCanPerformJob(canPerform);
+        const extrasArray = [...(form.values?.extras || [])];
+        const currentExtraIndex = form.values?.extras?.findIndex((v) => v.type === ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB);
+
+        if (canPerform) {
+            if (currentExtraIndex !== -1) {
+                const filteredExtras = extrasArray.filter((_, index) => index !== currentExtraIndex);
+                form.setFieldValue("extras", filteredExtras);
+                setJobLimitationIndex(-1);
+            }
+        } else {
+            if (currentExtraIndex !== -1) {
+                setJobLimitationIndex(currentExtraIndex);
+            } else {
+                const newExtra = new ApplicantExtrasEntity(ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB);
+                extrasArray.push(newExtra);
+                form.setFieldValue("extras", extrasArray);
+                setJobLimitationIndex(extrasArray.length - 1);
+            }
+        }
+    };
+
+    // Initialize job capability state from extras
+    useEffect(() => {
+        const extraIndex = form.values?.extras?.findIndex((v) => v.type === ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB);
+        setJobLimitationIndex(extraIndex !== undefined ? extraIndex : -1);
+        // Only set to false if there's an actual limitation value (not just the extra exists)
+        const hasLimitation = extraIndex !== -1 && form.values?.extras?.[extraIndex]?.value;
+        // Default to true (can perform job) unless there's a specific limitation
+        setCanPerformJob(!hasLimitation);
+    }, [form.values?.extras])
 
     return (
         <Form
@@ -166,7 +232,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                                             })
                                                         }
                                                     >
-                                                        <PlusCircle /> {t("ADD")}
+                                                        <PlusCircle className="me-2" /> {t("ADD")}
                                                     </Button>
                                                 )
                                             }
@@ -278,7 +344,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                                             });
                                                         }}
                                                     >
-                                                        <PlusCircle /> {t("ADD")}
+                                                        <PlusCircle className="me-2" /> {t("ADD")}
                                                     </Button>
                                                 )
                                             }
@@ -408,7 +474,7 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                                             });
                                                         }}
                                                     >
-                                                        <PlusCircle /> {t("ADD")}
+                                                        <PlusCircle className="me-2" /> {t("ADD")}
                                                     </Button>
                                                 )
                                             }
@@ -510,6 +576,14 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                             </Col>
                             <Col md="6">
                                 <Row>
+                                    {/* Job Capability Component */}
+                                    <JobCapability
+                                        canPerformJob={canPerformJob}
+                                        onCanPerformJobChange={handleCanPerformJobChange}
+                                        reasonIndex={jobLimitationIndex}
+                                        formik={form}
+                                        disabled={Boolean(entity?.is_hired)}
+                                    />
                                     <BaseCheck
                                         className="col-12 mt-2"
                                         disabled={Boolean(entity?.is_hired)}

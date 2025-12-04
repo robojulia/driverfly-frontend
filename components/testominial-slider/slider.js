@@ -11,12 +11,13 @@ export default function TestimonialSlider() {
         return (
             <CarouselProvider
                 naturalSlideWidth={100}
-                naturalSlideHeight={125}
+                naturalSlideHeight={200}
                 totalSlides={3}
                 isPlaying
                 touchEnabled
                 dragEnabled
                 infinite
+                isIntrinsicHeight={true}
             >
                 <div className='Slider-container-bg'>
                     <Slider className='Slider__container'>

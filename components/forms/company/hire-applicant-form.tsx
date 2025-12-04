@@ -86,6 +86,7 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
           onClick={() =>
             hireApplicantForm.setValues({ applicantId: entity?.id })
           }
+          style={{ borderRadius: '0.375rem' }}
         >
           {t("HIRE")}
         </Button>

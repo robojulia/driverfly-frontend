@@ -17,8 +17,8 @@ export default function About() {
 
       <div className="top-links-sec">
         <div className="container p-0">
-          <div className="top-links-inner d-flex align-items-center justify-content-between">
-            <h1>{t("ABOUT")}</h1>
+          <div className="top-links-inner d-flex align-items-center justify-content-center">
+            <h1>{t("ABOUT_US")}</h1>
           </div>
         </div>
       </div>

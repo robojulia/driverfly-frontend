@@ -8,6 +8,8 @@ import {
   getTotalSteps,
 } from '../../../components/forms/jotform/jotform-pages';
 import FormProgress from '../../../components/forms/jotform/form-progress';
+import { PoweredByLogo } from '../../../components/forms/jotform/powered-by-logo';
+import { CompanyLogoUpperRight } from '../../../components/forms/jotform/company-logo-upper-right';
 import { DevPageNavigator } from '../../../components/developer/dev-page-navigator';
 import JotformContext from '../../../context/jotform-context';
 import { Status } from '../../../enums/status.enum';
@@ -139,12 +141,16 @@ export default function FullForm({
       <div className={styles.container}>
         <div className={styles.main}>
           <div className={styles.main_form} style={getFullFormStyle(steps, isDirectJobApplication)}>
+            {/* Show company logo in upper right on all cards except the first one (splash page) */}
+            {steps > 0 && <CompanyLogoUpperRight />}
             {steps > 0 && steps < totalSteps - 1 && (
               <FormProgress currentStep={steps} totalSteps={totalSteps} />
             )}
             {getFullFormPages(steps, isDirectJobApplication, isPrefilled)}
           </div>
         </div>
+        {/* Show "Powered by DriverFly" at bottom center of page */}
+        <PoweredByLogo />
       </div>
 
       {/* Developer Page Navigator */}

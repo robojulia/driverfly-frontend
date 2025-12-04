@@ -8,7 +8,8 @@
 
 .welcome_banner h2 {
   margin: 0 0 1rem 0;
-  font-size: 1.75rem;
+  font-size: 38px;
+  font-weight: 600;
 }
 
 .welcome_banner p {

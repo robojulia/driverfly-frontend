@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 
@@ -19,10 +19,11 @@ import { BaseFormProps } from "./base-form-props";
 export interface ApplicantAlreadyWorkedFormProps extends BaseFormProps<ApplicantEntity> {
     isSubmitting: boolean;
     setIsSubmitting(value: boolean): void;
+    hideActions?: boolean;
 }
 
 export function ApplicantAlreadyWorkedForm(props: ApplicantAlreadyWorkedFormProps) {
-    let { className, entity, setEntity, isSubmitting, setIsSubmitting } = props;
+    let { className, entity, setEntity, isSubmitting, setIsSubmitting, hideActions } = props;
     const { t } = useTranslation();
     const applicantApi = new ApplicantApi();
 
@@ -72,6 +73,38 @@ export function ApplicantAlreadyWorkedForm(props: ApplicantAlreadyWorkedFormProp
     }, [entity]);
 
     useEffect(() => focusOnErrorField(form), [form.submitCount])
+
+    // Keep a ref to always have the latest form instance
+    const formRef = useRef(form);
+    formRef.current = form;
+
+    // Register getter function that returns CURRENT form values when called
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            // Register validation function
+            (window as any).__applicantFormValidation = (window as any).__applicantFormValidation || {};
+            (window as any).__applicantFormValidation['already-worked'] = () => {
+                // Return current validation errors from formik
+                return formRef.current.errors;
+            };
+
+            (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
+            (window as any).__applicantFormRegistry['already-worked'] = () => ({
+                already_applied_to_company: formRef.current.values.already_applied_to_company,
+                already_worked_to_company: formRef.current.values.already_worked_to_company,
+                already_worked_start_date: formRef.current.values.already_worked_start_date,
+                already_worked_end_date: formRef.current.values.already_worked_end_date,
+            });
+        }
+
+        // Cleanup function to prevent memory leaks
+        return () => {
+            if (typeof window !== 'undefined') {
+                delete (window as any).__applicantFormValidation?.['already-worked'];
+                delete (window as any).__applicantFormRegistry?.['already-worked'];
+            }
+        };
+    }, []);
 
     return (
         <Form
@@ -166,11 +199,13 @@ export function ApplicantAlreadyWorkedForm(props: ApplicantAlreadyWorkedFormProp
                                 )}
                             </>
                         )}
-                        <div style={{ display: "flex", justifyContent: "right" }}>
-                            <Button disabled={form.isSubmitting || isSubmitting} type="submit" className="theme-secondary-btn">
-                                {t("UPDATE")}
-                            </Button>
-                        </div>
+                        {!hideActions && (
+                            <div style={{ display: "flex", justifyContent: "right" }}>
+                                <Button disabled={form.isSubmitting || isSubmitting} type="submit" className="theme-secondary-btn">
+                                    {t("UPDATE")}
+                                </Button>
+                            </div>
+                        )}
                     </ViewCard>
                 </Col>
             </Row>

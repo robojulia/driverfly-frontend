@@ -141,6 +141,13 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
   // Register getter function that returns CURRENT work history fields when called
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // Register validation function
+      (window as any).__applicantFormValidation = (window as any).__applicantFormValidation || {};
+      (window as any).__applicantFormValidation['work-history'] = () => {
+        // Return current validation errors from formik
+        return formRef.current.errors;
+      };
+
       (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
       (window as any).__applicantFormRegistry['work-history'] = () => {
         // Prepare job duties in extras
@@ -161,6 +168,14 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
         };
       };
     }
+
+    // Cleanup function to prevent memory leaks
+    return () => {
+      if (typeof window !== 'undefined') {
+        delete (window as any).__applicantFormValidation?.['work-history'];
+        delete (window as any).__applicantFormRegistry?.['work-history'];
+      }
+    };
   }, []);
 
   const currentCompanyCheckBox = (employerId) => {
@@ -251,7 +266,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                          });
                        }}
                      >
-                       <PlusCircle /> {t('ADD')}
+                       <PlusCircle className="me-2" /> {t('ADD')}
                      </Button>
                   </div>
                 )
@@ -300,6 +315,84 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                           <XCircle color="red" size={20} />
                         </a>
                       </div>
+                      <div className="col-md-12 mt-2">
+                        <Col className="p-0">
+                          <strong>Street Address</strong>
+                        </Col>
+                        <BaseInput
+                          readOnly={Boolean(entity?.is_hired)}
+                          name={`employers[${i}].street`}
+                          placeholder="123 Main St"
+                          formik={form}
+                        />
+                      </div>
+                      <div className="col-md-6 mt-2">
+                        <Col className="p-0">
+                          <strong>City</strong>
+                        </Col>
+                        <BaseInput
+                          readOnly={Boolean(entity?.is_hired)}
+                          name={`employers[${i}].city`}
+                          placeholder="City"
+                          formik={form}
+                        />
+                      </div>
+                      <div className="col-md-3 mt-2">
+                        <Col className="p-0">
+                          <strong>State</strong>
+                        </Col>
+                        <StateSelect
+                          readOnly={Boolean(entity?.is_hired)}
+                          name={`employers[${i}].state`}
+                          placeholder="State"
+                          formik={form}
+                        />
+                      </div>
+                      <div className="col-md-3 mt-2">
+                        <Col className="p-0">
+                          <strong>Zip Code</strong>
+                        </Col>
+                        <BaseInput
+                          readOnly={Boolean(entity?.is_hired)}
+                          name={`employers[${i}].zip_code`}
+                          placeholder="12345"
+                          formik={form}
+                        />
+                      </div>
+                      <div className="col-md-6 mt-2">
+                        <Col className="p-0">
+                          <strong>Phone</strong>
+                        </Col>
+                        <BaseInputPhone
+                          readOnly={Boolean(entity?.is_hired)}
+                          name={`employers[${i}].phone`}
+                          placeholder="(555) 555-5555"
+                          formik={form}
+                        />
+                      </div>
+                      <div className="col-md-6 mt-2">
+                        <Col className="p-0">
+                          <strong>Email</strong>
+                        </Col>
+                        <BaseInput
+                          readOnly={Boolean(entity?.is_hired)}
+                          name={`employers[${i}].email`}
+                          type="email"
+                          placeholder="email@company.com"
+                          formik={form}
+                        />
+                      </div>
+                      <div className="col-md-12 mt-2">
+                        <Col className="p-0">
+                          <strong>Manager Name</strong>
+                        </Col>
+                        <BaseInput
+                          readOnly={Boolean(entity?.is_hired)}
+                          name={`employers[${i}].manager_name`}
+                          placeholder="John Smith"
+                          formik={form}
+                        />
+                      </div>
                       <div className="col-md-6 mt-2">
                         <Col className="p-0">
                           <strong>Start Date</strong>
@@ -321,6 +414,27 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                           name={`employers[${i}].end_at`}
                           type="date"
                           formik={form}
+                          disabled={employer?.is_current}
+                        />
+                      </div>
+                      <div className="col-md-12 mt-2">
+                        <BaseCheck
+                          disabled={Boolean(entity?.is_hired)}
+                          label="Currently Employed Here"
+                          name={`employers[${i}].is_current`}
+                          formik={form}
+                        />
+                      </div>
+                      <div className="col-12 mt-2">
+                        <Col className="p-0">
+                          <strong>Reason for Leaving</strong>
+                        </Col>
+                        <BaseTextArea
+                          name={`employers[${i}].reason_for_leaving`}
+                          placeholder="Describe reason for leaving..."
+                          rows={2}
+                          formik={form}
+                          readOnly={Boolean(entity?.is_hired)}
                         />
                       </div>
                       <div className="col-12 mt-2">
@@ -333,6 +447,30 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                           rows={3}
                           formik={form}
                           readOnly={Boolean(entity?.is_hired)}
+                        />
+                      </div>
+                      <div className="col-md-4 mt-2">
+                        <BaseCheck
+                          disabled={Boolean(entity?.is_hired)}
+                          label="May we contact this employer?"
+                          name={`employers[${i}].can_contact`}
+                          formik={form}
+                        />
+                      </div>
+                      <div className="col-md-4 mt-2">
+                        <BaseCheck
+                          disabled={Boolean(entity?.is_hired)}
+                          label="Subject to FMCSRs?"
+                          name={`employers[${i}].is_subject_to_fmcsrs`}
+                          formik={form}
+                        />
+                      </div>
+                      <div className="col-md-4 mt-2">
+                        <BaseCheck
+                          disabled={Boolean(entity?.is_hired)}
+                          label="Subject to drug testing?"
+                          name={`employers[${i}].is_subject_to_drug_tests`}
+                          formik={form}
                         />
                       </div>
                       <div className="col-12">
@@ -358,7 +496,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                     });
                   }}
                 >
-                  <PlusCircle /> Add Another Position
+                  <PlusCircle className="me-2" /> Add Another Position
                 </Button>
               </div>
             </Section>

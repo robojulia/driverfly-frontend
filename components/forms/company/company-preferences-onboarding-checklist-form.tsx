@@ -13,9 +13,9 @@ import { ApplicantOnBoardingChecklist } from "../../../enums/applicants/applican
 import { CompanyPreferenceCategory } from "../../../enums/company/company-preference-category.enum";
 import { CompanyPreferenceOnboardingChecklistLabel } from "../../../enums/company/company-preferences-onboarding-checklist-label.enum";
 import { CompanyPreferenceEntity } from "../../../models/company/company-preferences.entity";
-import { formSuccess } from "../../../utils/toast";
 import EntityForm from "../../layouts/page/entity-form";
 import BaseSelect from "../base-select";
+import BaseInput from "../base-input";
 import { BaseFormProps } from "./base-form-props";
 
 export interface CompanyPreferencesOnboardingChecklistFormProps
@@ -27,6 +27,8 @@ export function CompanyPreferencesOnboardingChecklistForm(
 	props: CompanyPreferencesOnboardingChecklistFormProps
 ) {
 	const [item, setItem] = useState<ApplicantOnBoardingChecklist>();
+	const [customItem, setCustomItem] = useState<string>("");
+	const [useCustom, setUseCustom] = useState<boolean>(false);
 
 	const { user } = useAuth();
 
@@ -73,7 +75,7 @@ export function CompanyPreferencesOnboardingChecklistForm(
 				}
 
 				setValues({ onboardingChecklist });
-				formSuccess(t, !!entity?.id ? "update" : "create", "COMPANY");
+				toast.success(t("Successfully updated"));
 				if (onSaveComplete) onSaveComplete(onboardingChecklist);
 			} catch (e) {
 				console.error("Unable to save entity", e.response, e);
@@ -92,13 +94,20 @@ export function CompanyPreferencesOnboardingChecklistForm(
 		});
 	}, [companyOnboardingChecklist]);
 
-	const handleAddItem = useCallback(() => {
-		form.setFieldValue("onboardingChecklist.value", [
-			...(form.values?.onboardingChecklist?.value || []),
-			item,
-		]);
-		setItem(null);
-	}, [form.values?.onboardingChecklist?.value, item]);
+	const handleAddItem = useCallback(async () => {
+		const itemToAdd = useCustom ? customItem : item;
+		if (itemToAdd) {
+			await form.setFieldValue("onboardingChecklist.value", [
+				...(form.values?.onboardingChecklist?.value || []),
+				itemToAdd,
+			]);
+			setItem(null);
+			setCustomItem("");
+			setUseCustom(false);
+			// Trigger validation to update form state
+			setTimeout(() => form.validateForm(), 0);
+		}
+	}, [form, form.values?.onboardingChecklist?.value, item, customItem, useCustom]);
 
 	const handleRemoveItem = useCallback(
 		(listItem: ApplicantOnBoardingChecklist) => {
@@ -110,27 +119,67 @@ export function CompanyPreferencesOnboardingChecklistForm(
 		[form.values.onboardingChecklist.value]
 	);
 
+	const handleDragStart = (e: React.DragEvent, index: number) => {
+		e.dataTransfer.effectAllowed = "move";
+		e.dataTransfer.setData("text/plain", index.toString());
+	};
+
+	const handleDragOver = (e: React.DragEvent) => {
+		e.preventDefault();
+		e.dataTransfer.dropEffect = "move";
+	};
+
+	const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+		e.preventDefault();
+		const dragIndex = parseInt(e.dataTransfer.getData("text/plain"));
+
+		if (dragIndex === dropIndex) return;
+
+		const items = [...(form.values.onboardingChecklist?.value || [])];
+		const [draggedItem] = items.splice(dragIndex, 1);
+		items.splice(dropIndex, 0, draggedItem);
+
+		form.setFieldValue("onboardingChecklist.value", items);
+	};
+
 	const checklistItems = useMemo(
 		() =>
 			form.values.onboardingChecklist?.value?.map(
-				(listItem: ApplicantOnBoardingChecklist, key: Key) => (
-					<Row key={key} className="mt-2">
-						<div className="col-6 offset-2 border-bottom">
-							{t(`ApplicantOnBoardingChecklist.${listItem}`)}
-						</div>
-						<div className="col-1 border-bottom">
-							<Button
-								variant="danger"
-								type="button"
-								onClick={() => handleRemoveItem(listItem)}
-							>
-								<Trash />
-							</Button>
-						</div>
-					</Row>
-				)
+				(listItem: string, index: number) => {
+					// Check if the item is from the enum or a custom item
+					const isEnumValue = Object.values(ApplicantOnBoardingChecklist).includes(listItem as ApplicantOnBoardingChecklist);
+					const displayText = isEnumValue ? t(`ApplicantOnBoardingChecklist.${listItem}`) : listItem;
+
+					return (
+						<Row
+							key={index}
+							className="mt-2"
+							draggable
+							onDragStart={(e) => handleDragStart(e, index)}
+							onDragOver={handleDragOver}
+							onDrop={(e) => handleDrop(e, index)}
+							style={{ cursor: 'move' }}
+						>
+							<div className="col-1 offset-1 border-bottom d-flex align-items-center">
+								<span style={{ fontSize: '1.2em', color: '#999' }}>⋮⋮</span>
+							</div>
+							<div className="col-5 border-bottom">
+								{displayText}
+							</div>
+							<div className="col-1 border-bottom">
+								<Button
+									variant="danger"
+									type="button"
+									onClick={() => handleRemoveItem(listItem as ApplicantOnBoardingChecklist)}
+								>
+									<Trash />
+								</Button>
+							</div>
+						</Row>
+					);
+				}
 			),
-		[form.values.onboardingChecklist?.value, handleRemoveItem]
+		[form.values.onboardingChecklist?.value, handleRemoveItem, t]
 	);
 
 	return (
@@ -143,23 +192,61 @@ export function CompanyPreferencesOnboardingChecklistForm(
 			id={entity?.id}
 		>
 			<Row className="my-3">
-				<BaseSelect
-					label="ONBOARDING_DOCUMENTS"
-					value={item}
-					hideOptions={form.values.onboardingChecklist?.value}
-					placeholder="ONBOARDING_DOCUMENTS"
-					className="col-8 offset-1"
-					name="onboardingChecklist"
-					enumType={ApplicantOnBoardingChecklist}
-					labelPrefix="ApplicantOnBoardingChecklist"
-					onChange={({ target: { value } }) =>
-						setItem(value as ApplicantOnBoardingChecklist)
-					}
-				/>
+				<div className="col-10 offset-1">
+					<div className="d-flex align-items-center mb-2">
+						<Button
+							variant={!useCustom ? "primary" : "outline-secondary"}
+							size="sm"
+							type="button"
+							onClick={() => setUseCustom(false)}
+							className="me-2"
+						>
+							{t("Select from List")}
+						</Button>
+						<Button
+							variant={useCustom ? "primary" : "outline-secondary"}
+							size="sm"
+							type="button"
+							onClick={() => setUseCustom(true)}
+						>
+							{t("Custom Document Type")}
+						</Button>
+					</div>
+				</div>
+			</Row>
+			<Row className="my-3">
+				{!useCustom ? (
+					<BaseSelect
+						label="ONBOARDING_DOCUMENTS"
+						value={item}
+						hideOptions={form.values.onboardingChecklist?.value}
+						placeholder="ONBOARDING_DOCUMENTS"
+						className="col-8 offset-1"
+						name="onboardingChecklist"
+						enumType={ApplicantOnBoardingChecklist}
+						labelPrefix="ApplicantOnBoardingChecklist"
+						onChange={({ target: { value } }) => {
+							setItem(value as ApplicantOnBoardingChecklist);
+							setCustomItem("");
+						}}
+					/>
+				) : (
+					<BaseInput
+						label="Custom Document Name"
+						value={customItem}
+						placeholder="Enter custom document name"
+						className="col-8 offset-1"
+						name="customOnboardingDocument"
+						onChange={({ target: { value } }) => {
+							setCustomItem(value);
+							setItem(null);
+						}}
+					/>
+				)}
 				<div className="col-1 mt-4 pt-2">
 					<Button
 						className=""
-						disabled={!item}
+						disabled={useCustom ? !customItem : !item}
 						type="button"
 						onClick={handleAddItem}
 					>

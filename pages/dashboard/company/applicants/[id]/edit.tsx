@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useRef } from 'react';
 import { Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import FullLayout from '../../../../../components/dashboard/layouts/layout/full-layout';
@@ -12,6 +12,7 @@ import { ApplicantSuggestedJobEntity } from '../../../../../models/applicant/app
 import { useEffectAsync } from '../../../../../utils/react';
 import ApplicantApi from '../../../../api/applicant';
 import { HireApplicantForm } from '../../../../../components/forms/company/hire-applicant-form';
+import { ApplicantExtras as ApplicantExtrasEnum } from '../../../../../enums/applicants/applicant-extras.enum';
 // DOT verification panel is now rendered inside EditApplicantForm
 
 export default function EditApplicant({ id }) {
@@ -26,6 +27,7 @@ export default function EditApplicant({ id }) {
   const [eligibility, setEligibility] = useState<any>(null);
   const [refetchApplicant, setRefetchApplicant] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const [applicantSuggestedJobs, setApplicantSuggestedJobs] = useState<ApplicantSuggestedJobEntity[]>([]);
 
   useEffectAsync(async () => {
@@ -54,32 +56,163 @@ export default function EditApplicant({ id }) {
 
   // No page refresh after save; forms show their own success/failure notifications
 
+  const handleSave = async () => {
+    try {
+      setIsSaving(true);
+
+      // Check for validation errors in all forms
+      const validationRegistry = (window as any).__applicantFormValidation || {};
+      const validationErrors: { formId: string; errors: any }[] = [];
+
+      Object.keys(validationRegistry).forEach((formId) => {
+        const validateFn = validationRegistry[formId];
+        if (validateFn && typeof validateFn === 'function') {
+          const errors = validateFn();
+          if (errors && Object.keys(errors).length > 0) {
+            validationErrors.push({ formId, errors });
+          }
+        }
+      });
+
+      // If there are validation errors, stop and notify user
+      if (validationErrors.length > 0) {
+        console.error('Validation errors found:', validationErrors);
+        toast.error(t('Please fix validation errors before saving. Check the highlighted fields.'));
+        setIsSaving(false);
+
+        // Scroll to first error (find first form with errors in DOM)
+        const firstFormWithError = validationErrors[0].formId;
+        const formElement = document.querySelector(`[data-form-id="${firstFormWithError}"]`);
+        if (formElement) {
+          formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        return;
+      }
+
+      // Call all registered getter functions to get CURRENT form values
+      const registry = (window as any).__applicantFormRegistry || {};
+      const allValues: any = { ...applicant };
+
+      // Collect all extras arrays from forms to merge them
+      const extrasArrays: any[] = [];
+
+      // Call each getter function to get current values
+      Object.keys(registry).forEach((formId) => {
+        const getter = registry[formId];
+        if (getter && typeof getter === 'function') {
+          const formValues = getter();
+          if (formValues && typeof formValues === 'object') {
+            // Collect extras arrays separately for intelligent merging
+            if (formValues.extras && Array.isArray(formValues.extras)) {
+              extrasArrays.push({ formId, extras: formValues.extras });
+            }
+            // Assign all other fields (will overwrite, but that's OK for scalar fields)
+            const { extras, ...otherFields } = formValues;
+            Object.assign(allValues, otherFields);
+          }
+        }
+      });
+
+      // Intelligently merge extras: keep all unique types, last one wins for duplicates
+      const extrasMap = new Map();
+
+      // Start with existing extras from entity
+      (applicant?.extras || []).forEach((extra: any) => {
+        if (extra?.type &&
+            extra.type !== ApplicantExtrasEnum.DOT_NUMBER &&
+            extra.type !== ApplicantExtrasEnum.BUSINESS_NAME) {
+          extrasMap.set(extra.type, extra);
+        }
+      });
+
+      // Merge in extras from all forms (later forms overwrite earlier ones)
+      if (extrasArrays.length > 0) {
+        const sortedExtrasArrays = extrasArrays.sort((a, b) => {
+          if (a.formId === 'licensing') return 1; // Process licensing last
+          if (b.formId === 'licensing') return -1;
+          return 0;
+        });
+
+        sortedExtrasArrays.forEach(({ formId, extras: extrasArray }) => {
+          extrasArray.forEach((extra: any) => {
+            if (extra?.type) {
+              extrasMap.set(extra.type, extra);
+            }
+          });
+        });
+      }
+
+      // Completely replace allValues.extras with merged extras
+      allValues.extras = Array.from(extrasMap.values());
+
+      // Strip out fields that shouldn't be sent to backend
+      const {
+        jobs, documents, notes, dac, voeData,
+        ...payload
+      } = allValues;
+
+      // Keep certain relations and objects that should be sent
+      if (allValues.employers) payload.employers = allValues.employers;
+      if (allValues.extras) payload.extras = allValues.extras;
+      if (allValues.accident_history) payload.accident_history = allValues.accident_history;
+      if (allValues.moving_violation_history) payload.moving_violation_history = allValues.moving_violation_history;
+      if (allValues.equipment_experience) payload.equipment_experience = allValues.equipment_experience;
+      if (allValues.equipment_owned) payload.equipment_owned = allValues.equipment_owned;
+      if (allValues.vehicles) payload.vehicles = allValues.vehicles;
+      if (allValues.meta) payload.meta = allValues.meta;
+
+      // Send ONE consolidated PUT request
+      const applicantApi = new ApplicantApi();
+      const saved = await applicantApi.update(applicant?.id, payload);
+
+      // Update the entity
+      setApplicant({ ...applicant, ...saved });
+
+      toast.dismiss();
+      toast.success(t('Applicant Updated Successfully') || 'Changes saved');
+
+      // Refetch to get updated data
+      setRefetchApplicant(!refetchApplicant);
+
+    } catch (error) {
+      console.error('Save error:', error);
+      toast.error(t('Failed to save changes'));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
-    <ChildPageLayout
-      title={t('EDIT_{name}', { name: 'APPLICANT' }, { translateProps: true })}
-      backPath={backPath}
-      actions={(
-        <div className="d-flex align-items-center" style={{ gap: 8 }}>
+    <>
+      {/* Fixed Update Button - stays in upper right as user scrolls */}
+      <div style={{
+        position: 'fixed',
+        top: 20,
+        right: 20,
+        zIndex: 1000
+      }}>
+        <Button
+          type="button"
+          className={`btn btn-primary`}
+          onClick={handleSave}
+          disabled={isSaving}
+          style={{
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+            borderRadius: '0.375rem'
+          }}
+        >
+          {isSaving ? t('UPDATING') || 'Updating...' : t('UPDATE') || 'Update'}
+        </Button>
+      </div>
+
+      <ChildPageLayout
+        title={t('EDIT_{name}', { name: 'APPLICANT' }, { translateProps: true })}
+        backPath={backPath}
+        actions={(
           <HireApplicantForm entity={applicant} />
-          <Button
-            type="button"
-            className={`btn btn-light`}
-            onClick={() => router.push(backPath)}
-          >
-            {t('BACK')}
-          </Button>
-        </div>
-      )}
-    >
-      <nav aria-label="breadcrumb" className="px-2 mb-2">
-        <div className="d-flex align-items-center small text-muted">
-          <Link href="/dashboard"><a className="text-muted text-decoration-none">Dashboard</a></Link>
-          <span className="mx-2">&gt;</span>
-          <Link href="/dashboard/company/applicants"><a className="text-muted text-decoration-none">Applicants</a></Link>
-          <span className="mx-2">&gt;</span>
-          <strong className="text-dark">Edit Applicant</strong>
-        </div>
-      </nav>
+        )}
+      >
       {/* Identity summary and sticky sub-nav removed per design direction */}
 
       <EditApplicantFormNew
@@ -89,12 +222,14 @@ export default function EditApplicant({ id }) {
         setIsSubmitting={setIsSubmitting}
         applicantSuggestedJobs={applicantSuggestedJobs}
         hideHeaderActions
+        hideGlobalSave
         onSaveComplete={() => {
           // Trigger refetch to reload fresh data from database
           setRefetchApplicant(!refetchApplicant);
         }}
       />
     </ChildPageLayout>
+    </>
   );
 }
 

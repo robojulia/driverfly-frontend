@@ -89,11 +89,6 @@ export default function MyNav() {
               >
                 Digital Hiring App
               </NavDropdown.Item>
-              <NavDropdown.Item>
-                <Link href="/third-party-resources">
-                  <a className="dropdown-item p-0">Third Party Resources</a>
-                </Link>
-              </NavDropdown.Item>
             </NavDropdown>
             <Nav.Link className="nav-item ml-30">
               <Link href="http://blog.driverfly.co" target="_blank">

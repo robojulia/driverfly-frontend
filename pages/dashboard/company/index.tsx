@@ -5,6 +5,7 @@ import { ApplicantPieChart } from '../../../components/charts/company/applicant-
 import { ApplicantsPerRecruiterChart } from '../../../components/charts/company/applicants-per-recruiter-chart';
 import { SourceBreakdownChart } from '../../../components/charts/company/source-breakdown-chart';
 import { TotalApplicantBarChart } from '../../../components/charts/company/total-applicants-bar-chart';
+import { HistoricalRangeFiltersComponent, HistoricalRangeFilters } from '../../../components/charts/company/historical-range-filters';
 import FullLayout from '../../../components/dashboard/layouts/layout/full-layout';
 import PageLayout from '../../../components/layouts/page/page-layout';
 
@@ -51,6 +52,12 @@ export default function Dashboard() {
   }>(null);
 
   const [jobs, setJobs] = useState<JobEntity[]>([]);
+  const [historicalFilters, setHistoricalFilters] = useState<HistoricalRangeFilters>({
+    ownerOperator: 'all',
+    recruiterIds: [],
+    states: [],
+    sourceTypes: [],
+  });
   const applicantApi = new ApplicantApi();
   const employeeApi = new EmployeeApi();
   const jobApi = new JobApi();
@@ -171,6 +178,7 @@ export default function Dashboard() {
                 employees,
                 jobs,
               },
+              historicalFilters,
             }}
           >
             <div className="px-4 py-3">
@@ -219,6 +227,7 @@ export default function Dashboard() {
                     <div className="mb-3">
                       <h5 className="fw-semibold mb-1">{t('HISTORICAL_RANGE')}</h5>
                     </div>
+                    <HistoricalRangeFiltersComponent onFiltersChange={setHistoricalFilters} />
                     <TotalApplicantBarChart />
                   </div>
                 </Col>

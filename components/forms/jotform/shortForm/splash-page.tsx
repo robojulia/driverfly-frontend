@@ -1,10 +1,11 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { useTranslation } from '../../../../hooks/use-translation';
 import { PrimaryButton } from '../form-buttons';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { SplashPageJobView } from './splash-page-job-view';
+import DocumentApi from '../../../../pages/api/document';
 
 export function SplashPage() {
   const {
@@ -13,6 +14,25 @@ export function SplashPage() {
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
+  const [companyLogoUrl, setCompanyLogoUrl] = useState<string>('');
+
+  useEffect(() => {
+    const fetchLogoUrl = async () => {
+      const photo = applicant?.company?.photo || company?.photo;
+      if (photo?.id) {
+        try {
+          const api = new DocumentApi();
+          const document = await api.getSignedUrl(photo.id);
+          setCompanyLogoUrl(document?.path || '');
+        } catch (error) {
+          console.error('Error fetching company logo:', error);
+        }
+      } else if (photo?.path) {
+        setCompanyLogoUrl(photo.path);
+      }
+    };
+    fetchLogoUrl();
+  }, [applicant?.company?.photo, company?.photo]);
 
   const handleNext = () => {
     if (isDirectJobApplication) {
@@ -33,6 +53,16 @@ export function SplashPage() {
           handleNext();
         }}
       >
+        {/* Company Logo at the top of first card */}
+        {companyLogoUrl && (
+          <div className={styles.companyLogo}>
+            <img
+              src={companyLogoUrl}
+              alt={`${applicant?.company?.name || company?.name} logo`}
+            />
+          </div>
+        )}
+
         <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
           {t(
             '{name}_carrier',

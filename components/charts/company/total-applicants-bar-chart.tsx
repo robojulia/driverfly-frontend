@@ -1,11 +1,13 @@
 import moment from "moment";
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useCallback } from "react";
 import DashboardChartContext from "../../../context/dashboard-chart-context";
 import { useTranslation } from "../../../hooks/use-translation";
 import { BarChart } from "../bar-chart";
+import { ApplicantEntity } from "../../../models/applicant";
+import { EmployeeEntity } from "../../../models/employee/employee.entity";
 
 export function TotalApplicantBarChart() {
-  const { state } = useContext(DashboardChartContext);
+  const { state, historicalFilters } = useContext(DashboardChartContext);
   const { t } = useTranslation();
   const yearToShow: number = new Date().getFullYear();
 
@@ -41,7 +43,92 @@ export function TotalApplicantBarChart() {
     );
   };
 
-  const fetchData = () => {
+  const applicantMatchesFilter = useCallback((applicant: ApplicantEntity): boolean => {
+    // If no filters are applied, include all applicants
+    if (!historicalFilters) return true;
+
+    const { ownerOperator, recruiterIds, states, sourceTypes } = historicalFilters;
+
+    // Owner Operator filter
+    if (ownerOperator !== 'all') {
+      if (ownerOperator === 'owner' && !applicant.is_owner_operator) {
+        return false;
+      }
+      if (ownerOperator === 'non-owner' && applicant.is_owner_operator) {
+        return false;
+      }
+    }
+
+    // Recruiter filter
+    if (recruiterIds && recruiterIds.length > 0) {
+      if (!applicant.assignedUser || !recruiterIds.includes(applicant.assignedUser.id)) {
+        return false;
+      }
+    }
+
+    // States filter
+    if (states && states.length > 0) {
+      if (!applicant.state || !states.includes(applicant.state)) {
+        return false;
+      }
+    }
+
+    // Source Type filter
+    if (sourceTypes && sourceTypes.length > 0) {
+      if (!applicant.referralSource?.name || !sourceTypes.includes(applicant.referralSource.name)) {
+        return false;
+      }
+    }
+
+    return true;
+  }, [historicalFilters]);
+
+  const employeeMatchesFilter = useCallback((employee: EmployeeEntity): boolean => {
+    // If no filters are applied, include all employees
+    if (!historicalFilters) return true;
+
+    const { ownerOperator, recruiterIds, states, sourceTypes } = historicalFilters;
+
+    // For employees, we need to check their applicant data if available
+    const applicant = employee.applicant;
+
+    // Owner Operator filter
+    if (ownerOperator !== 'all') {
+      const isOwnerOperator = applicant?.is_owner_operator || employee.is_owner_operator;
+      if (ownerOperator === 'owner' && !isOwnerOperator) {
+        return false;
+      }
+      if (ownerOperator === 'non-owner' && isOwnerOperator) {
+        return false;
+      }
+    }
+
+    // Recruiter filter - check if the original applicant was assigned to this recruiter
+    if (recruiterIds && recruiterIds.length > 0) {
+      if (!applicant?.assignedUser || !recruiterIds.includes(applicant.assignedUser.id)) {
+        return false;
+      }
+    }
+
+    // States filter
+    if (states && states.length > 0) {
+      const employeeState = applicant?.state || employee.state;
+      if (!employeeState || !states.includes(employeeState)) {
+        return false;
+      }
+    }
+
+    // Source Type filter - check the original applicant's source
+    if (sourceTypes && sourceTypes.length > 0) {
+      if (!applicant?.referralSource?.name || !sourceTypes.includes(applicant.referralSource.name)) {
+        return false;
+      }
+    }
+
+    return true;
+  }, [historicalFilters]);
+
+  const data = useMemo(() => {
     const months = getMonthsInYear();
     const applicantData = [];
     const hiredData = [];
@@ -59,7 +146,8 @@ export function TotalApplicantBarChart() {
             created_at: applicant.created_at,
             monthStart,
             monthEnd,
-          })
+          }) &&
+          applicantMatchesFilter(applicant)
         ) {
           applicantCount++;
         }
@@ -67,7 +155,8 @@ export function TotalApplicantBarChart() {
 
       state?.employees?.forEach((employee) => {
         if (
-          isMonthData({ created_at: employee.hire_date, monthStart, monthEnd })
+          isMonthData({ created_at: employee.hire_date, monthStart, monthEnd }) &&
+          employeeMatchesFilter(employee)
         ) {
           hiredCount++;
         }
@@ -95,11 +184,7 @@ export function TotalApplicantBarChart() {
         borderRadius: 10,
       },
     ];
-  };
-
-  const data = useMemo(() => {
-    return fetchData();
-  }, [state]);
+  }, [state, applicantMatchesFilter, employeeMatchesFilter, t]);
 
   return (
     <BarChart

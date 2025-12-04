@@ -61,7 +61,7 @@
 }
 
 .campaign-stat-card h3 {
-  font-size: 2rem;
+  font-size: 24px;
   font-weight: 700;
   margin-bottom: 0.5rem;
 }
@@ -214,6 +214,8 @@
 
 .feature-disabled h3 {
   color: #6c757d;
+  font-size: 24px;
+  font-weight: 700;
   margin-bottom: 1rem;
 }
 
