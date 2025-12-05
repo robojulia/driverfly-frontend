@@ -461,7 +461,10 @@ export default function ViewApplicant({ id }) {
           )}
           <Row>
             <Col lg={6}>
-              <ApplicantWorkHistory applicant={applicant} />
+              <ApplicantWorkHistory
+                applicant={applicant}
+                onApplicantUpdate={(updated) => setApplicant(updated)}
+              />
             </Col>
             <Col lg={6}>
               {/* < ViewApplicantDAC applicant={applicant} /> */}

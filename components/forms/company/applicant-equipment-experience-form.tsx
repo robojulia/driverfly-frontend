@@ -162,7 +162,7 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
                             <>
                                 {form.values?.equipment_experience?.map((entity, i) => (
                                     <Row key={i}>
-                                        <div className="col-md-6 mt-2">
+                                        <div className="col-md-4 mt-2">
                                             <Col className="p-0  ">
                                                 <strong>{t("TYPE")}</strong>
                                                 <span className="p-0 text-danger">*</span>
@@ -185,14 +185,62 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
                                                 }}
                                             />
                                         </div>
-                                        <div className="col-md-5 mt-2">
+                                        <div className="col-md-2 mt-2">
+                                            <Col className="p-0">
+                                                <strong>{t("START_YEAR")}</strong>
+                                            </Col>
+                                            <BaseInput
+                                                readOnly={Boolean(props?.entity?.is_hired)}
+                                                name={`equipment_experience[${i}].start_year`}
+                                                placeholder="ENTER_START_YEAR"
+                                                type="int"
+                                                min="1900"
+                                                max={new Date().getFullYear()}
+                                                formik={form}
+                                                onChange={(e: any) => {
+                                                    const startYear = parseInt(e.target.value);
+                                                    form.setFieldValue(`equipment_experience[${i}].start_year`, startYear);
+
+                                                    const endYear = form.values.equipment_experience?.[i]?.end_year;
+                                                    if (startYear && endYear && endYear >= startYear) {
+                                                        const calculatedYears = endYear - startYear;
+                                                        form.setFieldValue(`equipment_experience[${i}].years`, calculatedYears);
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="col-md-2 mt-2">
+                                            <Col className="p-0">
+                                                <strong>{t("END_YEAR")}</strong>
+                                            </Col>
+                                            <BaseInput
+                                                readOnly={Boolean(props?.entity?.is_hired)}
+                                                name={`equipment_experience[${i}].end_year`}
+                                                placeholder="ENTER_END_YEAR"
+                                                type="int"
+                                                min="1900"
+                                                max={new Date().getFullYear()}
+                                                formik={form}
+                                                onChange={(e: any) => {
+                                                    const endYear = parseInt(e.target.value);
+                                                    form.setFieldValue(`equipment_experience[${i}].end_year`, endYear);
+
+                                                    const startYear = form.values.equipment_experience?.[i]?.start_year;
+                                                    if (startYear && endYear && endYear >= startYear) {
+                                                        const calculatedYears = endYear - startYear;
+                                                        form.setFieldValue(`equipment_experience[${i}].years`, calculatedYears);
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="col-md-3 mt-2">
                                             <Col className="p-0">
                                                 <strong>{t("YEARS")}</strong>
                                             </Col>
                                             <BaseInput
-                                                readOnly={Boolean(props?.entity?.is_hired)}
+                                                readOnly={true}
                                                 name={`equipment_experience[${i}].years`}
-                                                placeholder="ENTER_YEARS_OF_EXPERIENCE"
+                                                placeholder="AUTO_CALCULATED"
                                                 type="int"
                                                 min="1"
                                                 formik={form}

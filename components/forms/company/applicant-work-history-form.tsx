@@ -1,8 +1,8 @@
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import { useFormik } from 'formik';
-import { useEffect, useState, useRef } from 'react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
-import { ChevronUp, PlusCircle, XCircle, FileEarmarkText } from 'react-bootstrap-icons';
+import { useEffect, useState, useRef, useMemo } from 'react';
+import { Button, Col, Form, Row, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { ChevronUp, PlusCircle, XCircle, FileEarmarkText, EnvelopeCheck } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 
 import { ApplicantType } from '../../../enums/applicants/applicant-type.enum';
@@ -30,6 +30,7 @@ export interface ApplicantWorkHistoryFormProps extends BaseFormProps<ApplicantEn
   isSubmitting: boolean;
   setIsSubmitting(value: boolean): void;
   hideActions?: boolean;
+  companyAutoVoeEnabled?: boolean;
 }
 interface WorkHistoryMetaData {
   curentCompanyCheck: CurrentEmploymentHistoryDto;
@@ -44,7 +45,7 @@ const workHistoryMetaDataInitialState: WorkHistoryMetaData = {
 };
 
 export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
-  let { className, entity, setEntity, isSubmitting, setIsSubmitting, onSaveComplete } = props;
+  let { className, entity, setEntity, isSubmitting, setIsSubmitting, onSaveComplete, companyAutoVoeEnabled = true } = props;
   const { t } = useTranslation();
 
   const applicantApi = new ApplicantApi();
@@ -229,6 +230,91 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
   const showVoeSummary = Array.isArray(form.values?.employers)
     && form.values.employers.some((e) => Boolean(e?.can_contact));
 
+  // Sort employers from most recent to oldest (for display only)
+  const sortedEmployersWithIndex = useMemo(() => {
+    if (!form.values?.employers) return [];
+
+    return form.values.employers
+      .map((employer, originalIndex) => ({ employer, originalIndex }))
+      .sort((a, b) => {
+        // Current jobs always come first
+        if (a.employer.is_current && !b.employer.is_current) return -1;
+        if (!a.employer.is_current && b.employer.is_current) return 1;
+
+        // For non-current jobs, sort by end date (most recent first)
+        const aDate = a.employer.end_at || a.employer.start_at;
+        const bDate = b.employer.end_at || b.employer.start_at;
+
+        if (!aDate && !bDate) return 0;
+        if (!aDate) return 1;
+        if (!bDate) return -1;
+
+        return new Date(bDate).getTime() - new Date(aDate).getTime();
+      });
+  }, [form.values?.employers]);
+
+  const handleAutoSendVoe = async (i: number) => {
+    if (!entity?.id) return;
+
+    setWorkHistoryMetaData((prev) => ({ ...prev, isSubmittingVoe: true }));
+    try {
+      await handleSendBackgroundRequest(i);
+    } finally {
+      setWorkHistoryMetaData((prev) => ({ ...prev, isSubmittingVoe: false }));
+    }
+  };
+
+  const canSendVoe = (employer: any, originalIndex: number) => {
+    const hasEmail = employer?.email && typeof employer.email === 'string' && employer.email.trim() !== '';
+    const canContact = employer?.can_contact === true || employer?.can_contact === 'Yes';
+    const isSubjectToFmcsrs = employer?.is_subject_to_fmcsrs === true || employer?.is_subject_to_fmcsrs === 'Yes';
+    const alreadySent = employer?.voe_attempts > 0 || employer?.auto_voe_attempts > 0;
+
+    // Check if company has automated VOE disabled
+    // If automated VOE is enabled, don't show manual send button (it will be sent automatically)
+    if (companyAutoVoeEnabled) {
+      return false;
+    }
+
+    // Check if email was recently added or changed
+    const originalEmployer = entity?.employers?.[originalIndex];
+    const emailChanged = originalEmployer?.email !== employer?.email;
+
+    // Only show button if email was just added/changed AND all conditions are met
+    return hasEmail && emailChanged && canContact && isSubjectToFmcsrs && !alreadySent;
+  };
+
+  const getVoeButtonTooltip = (employer: any, originalIndex: number) => {
+    const hasEmail = employer?.email && typeof employer.email === 'string' && employer.email.trim() !== '';
+    const canContact = employer?.can_contact === true || employer?.can_contact === 'Yes';
+    const isSubjectToFmcsrs = employer?.is_subject_to_fmcsrs === true || employer?.is_subject_to_fmcsrs === 'Yes';
+    const alreadySent = employer?.voe_attempts > 0 || employer?.auto_voe_attempts > 0;
+
+    if (companyAutoVoeEnabled) {
+      return t('AUTOMATED_VOE_ENABLED_NO_MANUAL_SEND');
+    }
+    if (alreadySent) {
+      return t('VOE_ALREADY_SENT');
+    }
+
+    const originalEmployer = entity?.employers?.[originalIndex];
+    const emailChanged = originalEmployer?.email !== employer?.email;
+
+    if (!emailChanged && hasEmail) {
+      return t('VOE_EMAIL_NOT_CHANGED');
+    }
+    if (!hasEmail) {
+      return t('EMAIL_REQUIRED_FOR_VOE');
+    }
+    if (!canContact) {
+      return t('CONTACT_PERMISSION_REQUIRED_FOR_VOE');
+    }
+    if (!isSubjectToFmcsrs) {
+      return t('FMCSR_CONFIRMATION_REQUIRED_FOR_VOE');
+    }
+    return t('SEND_VOE_REQUEST_TO_EMPLOYER');
+  };
+
   return (
     <Form onSubmit={form.handleSubmit} className={className} data-applicant-edit-form>
       {form?.isSubmitting ? (
@@ -272,10 +358,20 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                 )
               }
             >
-              {form.values?.employers?.length > 0 && (
+              {sortedEmployersWithIndex.length > 0 && (
                 <>
-                  {form.values?.employers?.map((employer, i) => (
-                    <Row key={i}>
+                  {sortedEmployersWithIndex.map(({ employer, originalIndex: i }) => (
+                    <div key={i} style={{ marginBottom: '2rem', paddingBottom: '2rem', borderBottom: '2px solid #e0e0e0' }}><Row>
+                      <div className="col-md-12 mb-2">
+                        <div className="d-flex align-items-center gap-2">
+                          <h5 className="mb-0">
+                            {employer.name || 'Employer'}
+                          </h5>
+                          {employer.is_current && (
+                            <span className="badge bg-success">Current</span>
+                          )}
+                        </div>
+                      </div>
                       <div className="col-md-6 mt-2">
                         <Col className="p-0">
                           <strong>Employer Name</strong>
@@ -473,10 +569,40 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                           formik={form}
                         />
                       </div>
-                      <div className="col-12">
-                        <hr />
-                      </div>
-                    </Row>
+                      {Boolean(entity?.is_hired) && (
+                        <div className="col-12 mt-3">
+                          <OverlayTrigger
+                            placement="top"
+                            overlay={
+                              <Tooltip id={`tooltip-voe-${i}`}>
+                                {getVoeButtonTooltip(employer, i)}
+                              </Tooltip>
+                            }
+                          >
+                            <span className="d-inline-block">
+                              <Button
+                                size="sm"
+                                variant={canSendVoe(employer, i) ? "primary" : "secondary"}
+                                disabled={!canSendVoe(employer, i) || workHistoryMetaData.isSubmittingVoe}
+                                onClick={() => handleAutoSendVoe(i)}
+                                style={!canSendVoe(employer, i) ? { pointerEvents: 'none' } : {}}
+                              >
+                                {workHistoryMetaData.isSubmittingVoe ? (
+                                  <>
+                                    <LoaderIcon isLoading={true} /> {t('SENDING')}
+                                  </>
+                                ) : (
+                                  <>
+                                    <EnvelopeCheck className="me-1" />
+                                    {t('AUTO_SEND_VOE')}
+                                  </>
+                                )}
+                              </Button>
+                            </span>
+                          </OverlayTrigger>
+                        </div>
+                      )}
+                    </Row></div>
                   ))}
                 </>
               )}

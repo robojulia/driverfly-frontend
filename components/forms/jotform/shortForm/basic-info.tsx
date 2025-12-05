@@ -27,17 +27,23 @@ export function BasicInfo() {
     initialValues: {
       ...new ContactDto(),
       authorize_to_communicate: BooleanTypeExtra.YES,
+      is_owner_operator: BooleanTypeExtra.NO,
+      owner_operator_company_name: '',
+      owner_operator_dot_number: '',
     },
     validationSchema: ContactDto.yupSchema(),
     onSubmit: async (values) => {
       try {
-        const { email, zip_code, authorize_to_communicate } = values;
+        const { email, zip_code, authorize_to_communicate, is_owner_operator, owner_operator_company_name, owner_operator_dot_number } = values;
 
         setApplicant({
           ...applicant,
           email,
           zip_code,
           authorize_to_communicate,
+          is_owner_operator: is_owner_operator === BooleanTypeExtra.YES,
+          owner_operator_company_name,
+          owner_operator_dot_number,
         });
 
         stepNext();
@@ -56,6 +62,9 @@ export function BasicInfo() {
       email: applicant.email,
       authorize_to_communicate: applicant.authorize_to_communicate || BooleanTypeExtra.YES,
       zip_code: applicant.zip_code,
+      is_owner_operator: applicant.is_owner_operator ? BooleanTypeExtra.YES : BooleanTypeExtra.NO,
+      owner_operator_company_name: applicant.owner_operator_company_name || '',
+      owner_operator_dot_number: applicant.owner_operator_dot_number || '',
     });
   }, []);
 
@@ -118,6 +127,52 @@ export function BasicInfo() {
             />
           </div>
         </Row>
+        <Row className={styles.bold}>
+          <div className="col-12 my-3">
+            <BaseSelect
+              className="w-100"
+              required
+              labelPrefix="BooleanPreferenceType"
+              enumType={BooleanTypeExtra}
+              name="is_owner_operator"
+              placeholder="CHOOSE"
+              label={t('ARE_YOU_AN_OWNER_OPERATOR')}
+              formik={form}
+            />
+          </div>
+        </Row>
+        {form.values.is_owner_operator === BooleanTypeExtra.YES && (
+          <>
+            <Row className={styles.bold}>
+              <div className="col-12 my-3">
+                <Input
+                  name="owner_operator_company_name"
+                  type="text"
+                  label={t('OWNER_OPERATOR_COMPANY_NAME')}
+                  placeholder={t('OWNER_OPERATOR_COMPANY_NAME')}
+                  value={form.values.owner_operator_company_name}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  error={form.touched.owner_operator_company_name && form.errors.owner_operator_company_name ? form.errors.owner_operator_company_name : undefined}
+                />
+              </div>
+            </Row>
+            <Row className={styles.bold}>
+              <div className="col-12 my-3">
+                <Input
+                  name="owner_operator_dot_number"
+                  type="text"
+                  label={t('OWNER_OPERATOR_DOT_NUMBER')}
+                  placeholder={t('OWNER_OPERATOR_DOT_NUMBER')}
+                  value={form.values.owner_operator_dot_number}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  error={form.touched.owner_operator_dot_number && form.errors.owner_operator_dot_number ? form.errors.owner_operator_dot_number : undefined}
+                />
+              </div>
+            </Row>
+          </>
+        )}
         <Row className={`${styles.align__text_left} ${styles.bold}`}>
           <BaseSelect
             className="col-12 my-3"

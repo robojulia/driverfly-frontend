@@ -52,7 +52,6 @@ export function ThankyouPage() {
       <ToastContainer />
       <div
         style={{
-          background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
           padding: '2rem 1rem',
         }}
       >
@@ -134,9 +133,6 @@ export function ThankyouPage() {
               fontSize: '0.95rem',
             }}
           >
-            <p style={{ margin: '0 0 0.5rem 0' }}>
-              🚛 <strong>Driverfly</strong> - Connecting drivers with opportunities nationwide
-            </p>
             <p style={{ margin: 0, opacity: 0.8 }}>
               © 2025 Driverfly. Driving careers forward, one connection at a time.
             </p>

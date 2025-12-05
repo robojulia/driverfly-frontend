@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         borderBottomWidth: 4,
-        borderBottomColor: '#2DA2AF',
+        borderBottomColor: '#006078',
         borderBottomStyle: 'solid',
         alignItems: 'stretch',
         marginBottom: "5px",
@@ -24,17 +24,17 @@ const styles = StyleSheet.create({
     },
     name: {
         fontSize: 24,
-        fontFamily: 'Lato Bold',
-        color: '#2DA2AF',
+        fontFamily: 'Poppins Bold',
+        color: '#006078',
 
     },
     subtitle: {
         fontSize: 10,
         justifySelf: 'flex-end',
-        fontFamily: 'Lato',
+        fontFamily: 'Poppins',
     },
     link: {
-        fontFamily: 'Lato',
+        fontFamily: 'Poppins',
         fontSize: 10,
         color: 'black',
         textDecoration: 'none',

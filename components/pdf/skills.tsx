@@ -15,12 +15,12 @@ import Title from "./title";
 
 const styles = StyleSheet.create({
     title: {
-        fontFamily: 'Lato Bold',
+        fontFamily: 'Poppins Bold',
         fontSize: 11,
         marginBottom: 10,
     },
     skills: {
-        fontFamily: 'Lato',
+        fontFamily: 'Poppins',
         fontSize: 10,
         marginBottom: 10,
     },
@@ -31,7 +31,10 @@ const SkillEntry = ({ applicant, t }) => (
         <Title>{t("EQUIPMENT_TYPE_AND_YEAR")}</Title>
         <List>
             {applicant?.equipment_experience?.map((v: ApplicantExperienceEntity, index) => (
-                <Item key={index}> {v.type == JobEquipmentType.OTHER ? v.type_other : t(`JobEquipmentType.${v.type}`)} ({`${v?.years} ${t('YEARS')}`})</Item>
+                <Item key={index}>
+                    {v.type == JobEquipmentType.OTHER ? v.type_other : t(`JobEquipmentType.${v.type}`)}
+                    {v.start_year && v.end_year ? ` (${v.start_year} - ${v.end_year}, ${v?.years} ${t('YEARS')})` : ` (${v?.years} ${t('YEARS')})`}
+                </Item>
             ))}
         </List>
 

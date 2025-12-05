@@ -31,7 +31,8 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
       ...(entity || ({} as ApplicantEntity)),
       routes: entity?.routes || [],
       preferred_location: entity?.preferred_location || [],
-      other_requirements: entity?.other_requirements || []
+      other_requirements: entity?.other_requirements || [],
+      other_requirements_other: entity?.other_requirements_other || ''
     },
     enableReinitialize: false,
     onSubmit: async (values) => {
@@ -42,6 +43,7 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
           routes: values.routes,
           preferred_location: values.preferred_location,
           other_requirements: values.other_requirements,
+          other_requirements_other: values.other_requirements_other,
         };
 
         const saved = await applicantApi.update(values.id, payload as any);
@@ -72,7 +74,8 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
         ...entity,
         routes: entity.routes || [],
         preferred_location: entity.preferred_location || [],
-        other_requirements: entity.other_requirements || []
+        other_requirements: entity.other_requirements || [],
+        other_requirements_other: entity.other_requirements_other || ''
       });
       setInitialized(true);
     }
@@ -99,6 +102,7 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
           routes: formRef.current.values.routes,
           preferred_location: formRef.current.values.preferred_location,
           other_requirements: formRef.current.values.other_requirements,
+          other_requirements_other: formRef.current.values.other_requirements_other,
         };
       };
     }
@@ -232,6 +236,25 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
                     />
                   </div>
                 ))}
+                {(form.values.other_requirements || []).includes(OtherRequirementType.OTHERS) && (
+                  <div className="mt-2">
+                    <input
+                      disabled={Boolean(entity?.is_hired)}
+                      type="text"
+                      className="form-control"
+                      placeholder={t('Please specify other requirements')}
+                      value={form.values.other_requirements_other || ''}
+                      onChange={(e) => form.setFieldValue('other_requirements_other', e.target.value)}
+                      style={{
+                        fontFamily: 'Arial, Helvetica, sans-serif',
+                        fontSize: '16px',
+                        padding: '8px 12px',
+                        border: '2px solid #0f5257',
+                        borderRadius: '4px',
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             </Row>
           </Section>

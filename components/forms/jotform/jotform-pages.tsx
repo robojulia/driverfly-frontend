@@ -77,7 +77,7 @@ const getFullFormPages = (
     7: <DuiAndEquipment />,
     8: <Preferences />,
     9: <ContinueLongForm />,
-    10: <DriverApplication />,
+    10: <DriverApplication isAutoRecruitmentLead={false} />,
     11: <BackgroundInfo />,
     12: <HighestLevelEducation />,
     13: <DrivingExperience />,
@@ -148,7 +148,7 @@ const getMissingDocumentsPages = (step: number): JSX.Element =>
   }[step]);
 const getSuggestedJobPages = (step: number, jobId?: number): JSX.Element =>
   ({
-    0: <DriverApplication isAutoRecruitmentLead={Boolean(jobId)} />,
+    0: <DriverApplication isAutoRecruitmentLead={false} />,
     1: <WorkedBefore />,
     2: <LegalDocumentsPage />,
     3: <ThankyouPage />,

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 11,
-    fontFamily: "Lato Italic",
+    fontFamily: "Poppins",
   },
   detailLeftColumn: {
     flexDirection: "column",
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   details: {
     fontSize: 10,
-    fontFamily: "Lato",
+    fontFamily: "Poppins",
   },
   headerContainer: {
     flexDirection: "row",
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: "black",
     textDecoration: "none",
-    fontFamily: "Lato Bold",
+    fontFamily: "Poppins Bold",
   },
 });
 

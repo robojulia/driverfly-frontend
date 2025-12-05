@@ -7,19 +7,19 @@ import { PlusCircle } from 'react-bootstrap-icons'
 const styles = StyleSheet.create({
     container: {
         marginBottom: 10,
-        borderRight: '1px solid #2DA2AF',
+        borderRight: '1px solid #006078',
     },
     school: {
-        fontFamily: 'Lato Bold',
+        fontFamily: 'Poppins Bold',
         fontSize: 10,
     },
     degree: {
-        fontFamily: 'Lato',
+        fontFamily: 'Poppins',
         fontSize: 10,
         marginBottom: '5px'
     },
     candidate: {
-        fontFamily: 'Lato Italic',
+        fontFamily: 'Poppins',
         fontSize: 10,
     },
 });

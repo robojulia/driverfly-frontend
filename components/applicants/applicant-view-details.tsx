@@ -1,6 +1,7 @@
 import { Col, Row } from "react-bootstrap";
 import { JobEquipmentType } from "../../enums/jobs/job-equipment-type.enum";
 import { BooleanType } from "../../enums/jotform/boolean-type.enum";
+import { OtherRequirementType } from "../../enums/users/other-requirements.enum";
 import { useTranslation } from "../../hooks/use-translation";
 import { ViewApplicantDetailProps } from "../../types/applicant/view-application-detail-props.type";
 import { calculateAge } from "../../utils/date";
@@ -22,6 +23,26 @@ export default function ViewApplicantDetail({
 	const { t } = useTranslation();
 
 	const assignTo = !!hideAssignTo ? {} : { ASSIGNED_TO: applicant.assignedUser?.name || t("NONE"), }
+
+	// Format other requirements with custom "Other" text
+	const formatOtherRequirements = () => {
+		if (!applicant.other_requirements || applicant.other_requirements.length === 0) {
+			return null;
+		}
+
+		const requirements = applicant.other_requirements.map((v) => t(`OtherRequirementType.${v}`));
+
+		if (applicant.other_requirements.includes(OtherRequirementType.OTHERS) && applicant.other_requirements_other) {
+			const othersIndex = requirements.findIndex((req, idx) =>
+				applicant.other_requirements[idx] === OtherRequirementType.OTHERS
+			);
+			if (othersIndex !== -1) {
+				requirements[othersIndex] = `${requirements[othersIndex]} - ${applicant.other_requirements_other}`;
+			}
+		}
+
+		return requirements;
+	};
 	// const currentStatus = !!hideCurrentStatus
 	// 	? {}
 	// 	: {
@@ -90,6 +111,7 @@ export default function ViewApplicantDetail({
 								ROUTE_TYPE: applicant.routes?.map((v) =>
 									t(`RouteType.${v}`)
 								),
+								OTHER_REQUIREMENTS: formatOtherRequirements(),
 							}}
 						/>
 					</Col>
@@ -134,7 +156,9 @@ export default function ViewApplicantDetail({
 											v.type == JobEquipmentType.OTHER
 												? v.type_other
 												: t(`JobEquipmentType.${v.type}`),
-										years: v.years,
+										start_year: v.start_year,
+									end_year: v.end_year,
+									years: v.years,
 									})),
 								},
 							}}

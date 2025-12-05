@@ -64,6 +64,8 @@ export class ApplicantEntity {
   license_restrictions_other?: string;
   can_pass_drug_test?: boolean = true;
   is_owner_operator?: boolean = false;
+  owner_operator_company_name?: string;
+  owner_operator_dot_number?: string;
   transmission_type?: VehicleTransmissionType[] = [];
   endorsements?: DriverEndorsement[] = [];
   endorsements_other?: string;
@@ -129,6 +131,7 @@ export class ApplicantEntity {
   authorize_to_communicate?: BooleanTypeExtra;
   routes?: JobSchedule[];
   other_requirements?: OtherRequirementType[];
+  other_requirements_other?: string;
   employment_type?: JobEmploymentType;
   ssn?: string;
   ssn_last4?: string;
@@ -196,6 +199,8 @@ export class ApplicantEntity {
         .nullable(),
       can_pass_drug_test: yup.bool().nullable(),
       is_owner_operator: yup.bool().nullable(),
+      owner_operator_company_name: yup.string().trim().nullable(),
+      owner_operator_dot_number: yup.string().trim().nullable(),
       transmission_type: yup.array((yup.string() as any).enum(VehicleTransmissionType)).nullable(),
       endorsements: yup.array((yup.string() as any).enum(DriverEndorsement)).nullable(),
       endorsements_other: yup

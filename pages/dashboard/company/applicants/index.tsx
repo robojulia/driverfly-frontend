@@ -697,6 +697,7 @@ function ApplicantView(props: ViewProps) {
     <div className="applicant__table__sty ellipsis_remove">
       <ViewDataTable<ConsolodatedApplicant>
         columnSettingKey="applicant-table-column-preferences"
+        hideSearch={false}
         customStyles={{
           headRow: {
             style: {
@@ -717,6 +718,7 @@ function ApplicantView(props: ViewProps) {
             id: 'name',
             name: 'Name',
             wrap: true,
+            minWidth: '250px',
             selector: (applicant) => getApplicantName(applicant),
             cell: (applicant) => (
               <div className="d-flex align-items-center justify-content-between w-100">
@@ -832,7 +834,14 @@ function ApplicantView(props: ViewProps) {
             id: 'years_cdl_experience',
             name: 'years_cdl_experience',
             wrap: true,
-            selector: (applicant) => applicant?.years_cdl_experience || t('ZERO'),
+            selector: (applicant) => applicant?.years_cdl_experience ?? 0,
+            cell: (applicant) => {
+              const years = applicant?.years_cdl_experience;
+              if (years === null || years === undefined) {
+                return t('ZERO');
+              }
+              return years.toFixed(1);
+            },
           },
           {
             id: 'transmission_type',
@@ -949,7 +958,6 @@ function ApplicantView(props: ViewProps) {
                 : t('NONE'),
           },
         ]}
-        hideSetting
         items={items}
         actions={(row) => [
           {

@@ -33,39 +33,21 @@ export function AccidentViolation() {
     }
   };
 
-  const shouldShowWorkAuthorizationCheck = () => {
-    return Boolean(applicant.license_type == DriverLicenseType.NO_CDL);
-  };
-
   const submitForm = (values: AccidentViolationDto) => {
     setApplicant({
       ...applicant,
       can_pass_drug_test: values.can_pass_drug_test,
       moving_violations_count: values.moving_violations_count,
       all_violations_count: values.all_violations_count,
-      // Only save work authorization value if the field should be shown
-      authorized_to_work_in_us: shouldShowWorkAuthorizationCheck()
-        ? values.authorized_to_work_in_us
-        : applicant.authorized_to_work_in_us, // Keep existing value if field not shown
+      authorized_to_work_in_us: values.authorized_to_work_in_us,
       accident_count: values.accident_count,
     });
     stepNext();
   };
 
-  // Create dynamic validation schema based on whether work authorization should be shown
   const validationSchema = useMemo(() => {
-    const baseSchema = AccidentViolationDto.yupSchema();
-
-    // If work authorization field should not be shown, make it optional
-    if (!shouldShowWorkAuthorizationCheck()) {
-      return baseSchema.shape({
-        ...baseSchema.fields,
-        authorized_to_work_in_us: yup.boolean().optional().nullable(),
-      });
-    }
-
-    return baseSchema;
-  }, [applicant.license_type]);
+    return AccidentViolationDto.yupSchema();
+  }, []);
 
   const form = useFormik({
     initialValues: new AccidentViolationDto(),
@@ -105,10 +87,7 @@ export function AccidentViolation() {
       all_violations_count:
         applicantValues.all_violations_count !== null ? applicantValues.all_violations_count : 0,
       accident_count: applicantValues.accident_count !== null ? applicantValues.accident_count : 0,
-      // Set work authorization to null if field is not shown, otherwise keep the applicant value
-      authorized_to_work_in_us: shouldShowWorkAuthorizationCheck()
-        ? applicantValues.authorized_to_work_in_us
-        : null,
+      authorized_to_work_in_us: applicantValues.authorized_to_work_in_us,
     };
 
     // Set values and reset form state to clear any validation errors
@@ -120,7 +99,7 @@ export function AccidentViolation() {
     setTimeout(() => {
       form.validateForm();
     }, 0);
-  }, [applicantValues, applicant.license_type]);
+  }, [applicantValues]);
 
   const handleNext = () => {
     const syntheticEvent = {
@@ -277,22 +256,20 @@ export function AccidentViolation() {
             />
           </div>
 
-          {shouldShowWorkAuthorizationCheck() && (
-            <div className="my-4">
-              <BaseCheck
-                className="my-3"
-                name="authorized_to_work_in_us"
-                label="ELIGIBLE_TO_WORK_IN_US"
-                required
-                formik={form}
-              />
-              {form.touched.authorized_to_work_in_us && form.errors.authorized_to_work_in_us && (
-                <div className="invalid-feedback d-block">
-                  {form.errors.authorized_to_work_in_us}
-                </div>
-              )}
-            </div>
-          )}
+          <div className="my-4">
+            <BaseCheck
+              className="my-3"
+              name="authorized_to_work_in_us"
+              label="ELIGIBLE_TO_WORK_IN_US"
+              required
+              formik={form}
+            />
+            {form.touched.authorized_to_work_in_us && form.errors.authorized_to_work_in_us && (
+              <div className="invalid-feedback d-block">
+                {form.errors.authorized_to_work_in_us}
+              </div>
+            )}
+          </div>
         </div>
 
         <FormActions

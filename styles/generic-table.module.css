@@ -175,7 +175,23 @@
 }
 
 .table tbody tr:hover {
-  background: #f9fafb;
+  cursor: pointer;
+}
+
+.table tbody tr:hover td {
+  color: #2ec8c4 !important;
+}
+
+.table tbody tr:hover td a {
+  color: #2ec8c4 !important;
+}
+
+.table tbody tr:active td {
+  color: #2ec8c4 !important;
+}
+
+.table tbody tr:active td a {
+  color: #2ec8c4 !important;
 }
 
 .table tbody tr:last-child td {

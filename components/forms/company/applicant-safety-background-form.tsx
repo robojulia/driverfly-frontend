@@ -221,20 +221,18 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                                         <Section
                                             title="PAST_DUIS"
                                             actions={
-                                                !props?.hideActions && (
-                                                    <Button
-                                                        disabled={Boolean(entity?.is_hired)}
-                                                        size="sm"
-                                                        onClick={() =>
-                                                            form.setValues({
-                                                                ...form.values,
-                                                                dui_years: [...(form.values?.dui_years || []), ""],
-                                                            })
-                                                        }
-                                                    >
-                                                        <PlusCircle className="me-2" /> {t("ADD")}
-                                                    </Button>
-                                                )
+                                                <Button
+                                                    disabled={Boolean(entity?.is_hired)}
+                                                    size="sm"
+                                                    onClick={() =>
+                                                        form.setValues({
+                                                            ...form.values,
+                                                            dui_years: [...(form.values?.dui_years || []), ""],
+                                                        })
+                                                    }
+                                                >
+                                                    <PlusCircle className="me-2" /> {t("ADD")}
+                                                </Button>
                                             }
                                         >
                                             {form.values?.dui_years?.length > 0 && (

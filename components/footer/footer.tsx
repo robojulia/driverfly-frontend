@@ -4,6 +4,7 @@ import ForEmployers from "./for-employers";
 import QuickLinks from "./quick-links";
 import Logo from "./logo";
 import CopyRight from "./copy-right";
+import DriversNewsletter from "./drivers-newsletter";
 
 
 export default function Footer() {
@@ -29,6 +30,9 @@ export default function Footer() {
                             </div>
                             <div className="col-lg col-12">
                                 <ForDrivers />
+                            </div>
+                            <div className="col-lg col-12">
+                                <DriversNewsletter />
                             </div>
                         </div>
                     </div>

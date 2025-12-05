@@ -390,13 +390,28 @@ export default function OnboardingChecklist(
         <div className="d-flex align-items-center justify-content-end w-100">
           {document && !document?.name?.includes('.doc') && (
             <Button variant="link" className="p-0 me-3"
-              onClick={() => handleViewDocument(document.id, setPdf)}>
+              onClick={async () => {
+                try {
+                  await handleViewDocument(document.id, setPdf, undefined, document);
+                } catch (error: any) {
+                  console.error('Error viewing document:', error);
+                  const message = error?.message || t('ERROR_VIEWING_DOCUMENT');
+                  toast.error(message);
+                }
+              }}>
               {t('View')}
             </Button>
           )}
           {document && (
             <Button variant="link" className="p-0 me-3"
-              onClick={() => handleDownloadDocument(document.id)}>
+              onClick={async () => {
+                try {
+                  await handleDownloadDocument(document.id);
+                } catch (error) {
+                  console.error('Error downloading document:', error);
+                  toast.error(t('ERROR_DOWNLOADING_DOCUMENT'));
+                }
+              }}>
               {t('Download')}
             </Button>
           )}
@@ -630,7 +645,15 @@ export default function OnboardingChecklist(
                 <div className="d-flex align-items-center" style={{ gap: 8 }}>
                   {/* View */}
                   {document && completedDoc && !document?.name?.includes('.doc') && (
-                    <Button variant="success" size="sm" title={t('View')} onClick={() => handleViewDocument(document.id, setPdf)}>
+                    <Button variant="success" size="sm" title={t('View')} onClick={async () => {
+                      try {
+                        await handleViewDocument(document.id, setPdf, undefined, document);
+                      } catch (error: any) {
+                        console.error('Error viewing document:', error);
+                        const message = error?.message || t('ERROR_VIEWING_DOCUMENT');
+                        toast.error(message);
+                      }
+                    }}>
                       <Eye />
                     </Button>
                   )}
@@ -647,7 +670,14 @@ export default function OnboardingChecklist(
                   )}
                   {/* Download */}
                   {document && completedDoc && (
-                    <Button variant="dark" size="sm" title={t('Download')} onClick={() => handleDownloadDocument(document.id)}>
+                    <Button variant="dark" size="sm" title={t('Download')} onClick={async () => {
+                      try {
+                        await handleDownloadDocument(document.id);
+                      } catch (error) {
+                        console.error('Error downloading document:', error);
+                        toast.error(t('ERROR_DOWNLOADING_DOCUMENT'));
+                      }
+                    }}>
                       <CloudDownload />
                     </Button>
                   )}

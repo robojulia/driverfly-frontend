@@ -27,12 +27,14 @@ import { EmbeddedCodeExamples } from './embedded-code-examples';
 export interface CompanyFormProps extends BaseFormProps<CompanyEntity> {
   showClickToCopy?: boolean | (() => boolean);
   skipApiCall?: boolean; // If true, form will not make API call but just pass data to onSaveComplete
+  formRef?: React.MutableRefObject<any>;
+  hideSubmitButton?: boolean;
 }
 
 export function CompanyForm(props: CompanyFormProps) {
   const { user } = useAuth();
   const { t } = useTranslation();
-  let { className, entity, onSaveComplete, onSaveError, showClickToCopy, skipApiCall } = props;
+  let { className, entity, onSaveComplete, onSaveError, showClickToCopy, skipApiCall, formRef, hideSubmitButton } = props;
 
   const [viewLogo, setViewLogo] = useState('');
 
@@ -75,6 +77,12 @@ export function CompanyForm(props: CompanyFormProps) {
     if (entity && !form.dirty) form.setValues(entity);
   }, [entity]);
 
+  useEffect(() => {
+    if (formRef) {
+      formRef.current = form;
+    }
+  }, [form, formRef]);
+
   useEffectAsync(async () => {
     if (!form.values?.photo) {
       setViewLogo('');
@@ -89,10 +97,10 @@ export function CompanyForm(props: CompanyFormProps) {
 
   return (
     <>
-      <EntityForm className={className} onSubmit={form.handleSubmit} formik={form} id={entity?.id}>
+      <EntityForm className={className} onSubmit={form.handleSubmit} formik={form} id={entity?.id} hideSubmitButton={hideSubmitButton}>
         <Row>
           <BaseInput
-            className="col-12 mt-2"
+            className="col-12 mt-4"
             label={t('NAME')}
             name={`name`}
             required
@@ -100,14 +108,14 @@ export function CompanyForm(props: CompanyFormProps) {
             formik={form}
           />
           <BaseInput
-            className="col-12 mt-2"
+            className="col-12 mt-4"
             label={t('HEADQUATERS')}
             name={`location`}
             placeholder={t('ADD_HEADQUATERS_LOCATION')}
             formik={form}
           />
           <BaseInput
-            className="col-12 mt-2"
+            className="col-12 mt-4"
             label={t('WEBSITE')}
             name={`website`}
             placeholder="http://www.example.com"
@@ -117,28 +125,50 @@ export function CompanyForm(props: CompanyFormProps) {
             <>
               <BaseClickToCopyInput
                 label="COMPANY_APPLICATION_LINK"
-                className="rounded"
+                className="rounded mt-4"
                 value={`https://app.driverfly.co/apply/${user?.company?.slug}`}
                 tooltipText={t('CLICK_TO_COPY')}
               />
               <BaseClickToCopyInput
                 label="COMPANY_JOBS_PAGE"
-                className="rounded mt-2"
+                className="rounded mt-4"
                 value={`${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL ?? ''}employer/${user?.company?.slug}`}
                 tooltipText={t('CLICK_TO_COPY')}
               />
               <BaseClickToCopyInput
                 label="COMPANY_EMEDDED_JOBS_PAGE"
-                className="rounded mt-2"
+                className="rounded mt-4"
                 value={`${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL ?? ''}embedded?companyId=${
                   user?.company?.id
                 }`}
                 tooltipText={t('CLICK_TO_COPY')}
+                instructionsTitle={t('EMBED_CODE_INSTRUCTIONS')}
+                instructionsContent={
+                  <div>
+                    <p>{t('EMBED_COMPANY_JOBS_DESC')}</p>
+                    <div className="code-block bg-light p-3 rounded">
+                      <pre className="mb-0">
+                        <code>{`<script
+  src="https://app.driverfly.co/js/cdl-script.js"
+  charset="UTF-8"
+  companyId="${user?.company?.id}">
+</script>`}</code>
+                      </pre>
+                    </div>
+                    <div className="mt-3">
+                      <h6>{t('NEED_HELP')}</h6>
+                      <p>{t('EMBED_HELP_TEXT')}</p>
+                      <a href="mailto:support@driverfly.co" className="text-primary">
+                        support@driverfly.co
+                      </a>
+                    </div>
+                  </div>
+                }
               />
             </>
           )}
           <BaseTextArea
-            className="col-12 mt-2"
+            className="col-12 mt-4"
             label={t('ABOUT')}
             name={`about`}
             rows={3}
@@ -146,7 +176,7 @@ export function CompanyForm(props: CompanyFormProps) {
             formik={form}
           />
           <FileInput
-            className="col-12 mt-2"
+            className="col-12 mt-4"
             label={`COMPANY_LOGO`}
             id="imgpurpose"
             name={`photo`}
@@ -169,14 +199,14 @@ export function CompanyForm(props: CompanyFormProps) {
           </UncontrolledTooltip>
 
           <BaseInputPhone
-            className="col-3 mt-2"
+            className="col-3 mt-4"
             label="PHONE"
             name="phone"
             placeholder="PHONE"
             formik={form}
           />
 
-          <p className="mt-3">{t('SOCIAL_MEDIA_LINKS')}</p>
+          <h5 className="mt-5 mb-3">{t('SOCIAL_MEDIA_LINKS')}</h5>
           <div className="p-0 d-flex justify-content-start ">
             <div className="col-3">
               <BaseInput
@@ -217,20 +247,20 @@ export function CompanyForm(props: CompanyFormProps) {
           </div>
 
           {/* Company Information for Candidate Communication */}
-          <div className="col-12 mt-4">
+          <div className="col-12 mt-5">
             <h5 className="mb-3">{t('COMPANY_DETAILS_FOR_RECRUITING')}</h5>
             <p className="text-muted mb-3">{t('COMPANY_DETAILS_HELP_TEXT')}</p>
           </div>
 
           <BaseInput
-            className="col-6 mt-2"
+            className="col-6 mt-4"
             label={t('FLEET_SIZE')}
             name="fleet_size"
             placeholder={t('FLEET_SIZE_PLACEHOLDER')}
             formik={form}
           />
           <BaseInput
-            className="col-6 mt-2"
+            className="col-6 mt-4"
             label={t('FOUNDED_YEAR')}
             name="founded_year"
             type="number"
@@ -238,14 +268,14 @@ export function CompanyForm(props: CompanyFormProps) {
             formik={form}
           />
           <BaseInput
-            className="col-12 mt-2"
+            className="col-12 mt-4"
             label={t('SAFETY_RATING')}
             name="safety_rating"
             placeholder={t('SAFETY_RATING_PLACEHOLDER')}
             formik={form}
           />
           <BaseTextArea
-            className="col-12 mt-2"
+            className="col-12 mt-4"
             label={t('COMPANY_CULTURE')}
             name="company_culture"
             rows={3}
@@ -253,7 +283,7 @@ export function CompanyForm(props: CompanyFormProps) {
             formik={form}
           />
           <BaseTextArea
-            className="col-12 mt-2"
+            className="col-12 mt-4"
             label={t('COMPANY_BENEFITS')}
             name="company_benefits"
             rows={3}
@@ -261,7 +291,7 @@ export function CompanyForm(props: CompanyFormProps) {
             formik={form}
           />
           <BaseMultiSelect
-            className="col-12 mt-2"
+            className="col-12 mt-4"
             label={t('SPECIALTIES')}
             name="specialties"
             placeholder={t('SPECIALTIES_PLACEHOLDER')}
@@ -285,8 +315,6 @@ export function CompanyForm(props: CompanyFormProps) {
           />
         </Row>
       </EntityForm>
-
-      {entity?.id && <EmbeddedCodeExamples companyId={entity.id} />}
     </>
   );
 }

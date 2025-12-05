@@ -78,9 +78,17 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
         setLoadingStats(true);
         const eligibilityApi = new EligibilityApi();
 
+        // Fetch applicants who applied to this job
         const stats = await eligibilityApi.getJobEligibilityScores(job.id, {
           limit: 100,
           offset: 0,
+        });
+
+        // Fetch all eligible applicants from the entire system
+        const systemStats = await eligibilityApi.getJobEligibilityScores(job.id, {
+          limit: 1000,
+          offset: 0,
+          appliedOnly: false,
         });
 
         // Calculate summary stats from the actual API response structure
@@ -105,6 +113,11 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
               stats.scoredApplicants.length
             : 0;
 
+        // Count eligible from entire system
+        const eligibleFromSystemCount =
+          systemStats.scoredApplicants?.filter((item) => item.eligibilityStatus === 'ELIGIBLE')
+            ?.length || 0;
+
         const eligibilityStats = {
           totalApplicants: stats.totalApplicants || 0,
           eligibleApplicants: eligibleCount,
@@ -113,6 +126,7 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
             stats.totalApplicants > 0 ? (eligibleCount / stats.totalApplicants) * 100 : 0,
           recentApplications: recentCount,
           averageScore: avgScore,
+          eligibleFromSystem: eligibleFromSystemCount,
         };
 
         setEligibilityStats(eligibilityStats);
@@ -131,6 +145,7 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
           eligibilityRate: 0,
           recentApplications: 0,
           averageScore: 0,
+          eligibleFromSystem: 0,
         });
       } finally {
         setLoadingStats(false);
@@ -258,7 +273,12 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
     return '';
   };
 
-  const tabs = [
+  const tabs: Array<{
+    id: TabType;
+    label: string;
+    icon: any;
+    badge?: number;
+  }> = [
     {
       id: 'overview' as TabType,
       label: 'Overview',
@@ -266,8 +286,7 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
     },
     {
       id: 'applicants' as TabType,
-      label: 'Applicants',
-      badge: eligibilityStats?.totalApplicants || 0,
+      label: 'Candidates',
       icon: PeopleFill,
     },
     ...(campaignsEnabled
@@ -368,7 +387,6 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
             >
               <tab.icon className="me-2" />
               {tab.label}
-              {tab.badge !== undefined && <span className={styles.tabBadge}>{tab.badge}</span>}
             </button>
           ))}
         </div>

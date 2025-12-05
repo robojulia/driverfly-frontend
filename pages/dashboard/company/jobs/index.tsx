@@ -325,6 +325,10 @@ export default function JobListing() {
   };
 
   const tableColumns = (): TableColumn<JobEntity>[] => {
+    // Check if user is managing multiple companies
+    const hasMultipleCompanies =
+      user?.company?.children && user.company.children.length > 1;
+
     const data: TableColumn<JobEntity>[] = [
       {
         key: 'id',
@@ -337,6 +341,7 @@ export default function JobListing() {
         label: 'COMPANY_ID',
         selector: (j) => j.company?.id || 'N/A',
         sortable: true,
+        hide: !hasMultipleCompanies, // Hide if not managing multiple companies
       },
       {
         key: 'job_title',

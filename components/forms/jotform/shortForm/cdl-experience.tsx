@@ -68,7 +68,7 @@ export function CdlExperience() {
 
     const initialValues = {
       license_type: license_type || null,
-      years_cdl_experience: years_cdl_experience || 0,
+      years_cdl_experience: years_cdl_experience || null,
       is_owner_operator: is_owner_operator !== undefined ? is_owner_operator : null,
       BUSINESS_NAME: !!apx_business_name?.type
         ? apx_business_name

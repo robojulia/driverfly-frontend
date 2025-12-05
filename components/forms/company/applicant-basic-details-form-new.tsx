@@ -120,7 +120,6 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
       middle_name: extras?.find((e) => e.type === ApplicantExtras.MIDDLE_NAME)?.value || '',
       suffix: extras?.find((e) => e.type === ApplicantExtras.SUFFIX)?.value || '',
       alternative_phone: extras?.find((e) => e.type === ApplicantExtras.ALTERNATIVE_PHONE)?.value || '',
-      authorized_to_work: extras?.find((e) => e.type === ApplicantExtras.AUTHORIZED_TO_WORK)?.value || '',
       marital_status: extras?.find((e) => e.type === ApplicantExtras.MARITAL_STATUS)?.value || '',
       race: extras?.find((e) => e.type === ApplicantExtras.RACE)?.value || '',
       citizenship_status: extras?.find((e) => e.type === ApplicantExtras.CITIZENSHIP_STATUS)?.value || '',
@@ -410,9 +409,20 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
                 })()} readOnly />
               </Col>
               <Col md="3" className="px-2">
-                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Authorized to work in the US?" name="meta.authorized_to_work" placeholder="Select" options={["Yes","No"]} formik={form} />
+                <BaseSelect
+                  className="col-12"
+                  readOnly={Boolean(entity?.is_hired)}
+                  label="Authorized to work in the US?"
+                  name="authorized_to_work_in_us"
+                  placeholder="Select"
+                  options={[
+                    { label: "Yes", value: true },
+                    { label: "No", value: false }
+                  ]}
+                  formik={form}
+                />
               </Col>
-              {(form.values as any)?.meta?.authorized_to_work === "Yes" && (
+              {form.values?.authorized_to_work_in_us && (
                 <Col md="3" className="px-2">
                   <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Citizenship Status" name="meta.citizenship_status" placeholder="Select" options={["U.S. Citizen","Permanent Resident","Work Visa","Other"]} formik={form} />
                 </Col>

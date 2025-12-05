@@ -19,23 +19,36 @@ interface EligibilityTableProps {
 
 export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, className = '' }) => {
   const { t } = useTranslation();
-  const [data, setData] = useState<ApplicantEligibilityResponse | null>(null);
+  const [appliedData, setAppliedData] = useState<ApplicantEligibilityResponse | null>(null);
+  const [eligibleData, setEligibleData] = useState<ApplicantEligibilityResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<EligibilityQueryParams>({
-    limit: 50,
+    limit: 100,
     offset: 0,
     sortBy: 'score',
     sortOrder: 'DESC',
     minScore: 0,
-    appliedOnly: false,
   });
 
   const loadData = async (newFilters: EligibilityQueryParams = filters) => {
     try {
       setLoading(true);
       const api = new EligibilityApi();
-      const result = await api.getJobEligibilityScores(jobId, newFilters);
-      setData(result);
+
+      // Fetch applied applicants separately
+      const appliedResult = await api.getJobEligibilityScores(jobId, {
+        ...newFilters,
+        appliedOnly: true,
+      });
+
+      // Fetch eligible candidates (who haven't applied) separately
+      const eligibleResult = await api.getJobEligibilityScores(jobId, {
+        ...newFilters,
+        appliedOnly: false,
+      });
+
+      setAppliedData(appliedResult);
+      setEligibleData(eligibleResult);
     } catch (error) {
       console.error('Failed to load eligibility data:', error);
     } finally {
@@ -55,25 +68,49 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
     loadData(newFilters);
   };
 
-  const handleLoadMore = () => {
+  const handleLoadMore = async () => {
     const newFilters = {
       ...filters,
-      offset: (filters.offset || 0) + (filters.limit || 50),
+      offset: (filters.offset || 0) + (filters.limit || 100),
     };
     setFilters(newFilters);
-    loadData(newFilters).then(() => {
-      if (data) {
-        // Append new data to existing data
-        setData((prev) =>
-          prev
-            ? {
-                ...prev,
-                scoredApplicants: [...prev.scoredApplicants, ...(data.scoredApplicants || [])],
-              }
-            : null
-        );
-      }
-    });
+
+    try {
+      const api = new EligibilityApi();
+
+      // Fetch more applied applicants
+      const appliedResult = await api.getJobEligibilityScores(jobId, {
+        ...newFilters,
+        appliedOnly: true,
+      });
+
+      // Fetch more eligible candidates
+      const eligibleResult = await api.getJobEligibilityScores(jobId, {
+        ...newFilters,
+        appliedOnly: false,
+      });
+
+      // Append new data to existing data
+      setAppliedData((prev) =>
+        prev
+          ? {
+              ...appliedResult,
+              scoredApplicants: [...prev.scoredApplicants, ...(appliedResult.scoredApplicants || [])],
+            }
+          : appliedResult
+      );
+
+      setEligibleData((prev) =>
+        prev
+          ? {
+              ...eligibleResult,
+              scoredApplicants: [...prev.scoredApplicants, ...(eligibleResult.scoredApplicants || [])],
+            }
+          : eligibleResult
+      );
+    } catch (error) {
+      console.error('Failed to load more data:', error);
+    }
   };
 
   const getStatusBadgeClass = (status: string): string => {
@@ -139,7 +176,7 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
     );
   };
 
-  if (loading && !data) {
+  if (loading && !appliedData && !eligibleData) {
     return (
       <div className={`${styles.eligibilityContainer} ${className}`}>
         <div className={styles.loading}>
@@ -150,7 +187,7 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
     );
   }
 
-  if (!data) {
+  if (!appliedData && !eligibleData) {
     return (
       <div className={`${styles.eligibilityContainer} ${className}`}>
         <div className={styles.emptyState}>
@@ -163,18 +200,15 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
     );
   }
 
-  // Separate applicants into Applied and Eligible categories
-  const appliedApplicants = data.scoredApplicants.filter(
-    (applicant: ApplicantEligibilityScore) => applicant.applicant.hasApplied
-  );
+  // Get applicants from the separate data sets
+  const appliedApplicants = appliedData?.scoredApplicants || [];
 
-  // Eligible applicants: those who have NOT applied to this job but ARE eligible/partially eligible
-  // ONLY show applicants who applied to general intake, NOT those who applied to other specific jobs
-  const eligibleApplicants = data.scoredApplicants.filter(
+  // Eligible candidates: those who have NOT applied to this job but ARE eligible/partially eligible
+  // Filter out those who already applied (hasApplied) and those who applied to other specific jobs
+  const eligibleApplicants = (eligibleData?.scoredApplicants || []).filter(
     (applicant: ApplicantEligibilityScore) =>
       !applicant.applicant.hasApplied &&
       (applicant.eligibilityStatus === 'ELIGIBLE' || applicant.eligibilityStatus === 'PARTIALLY_ELIGIBLE') &&
-      // Only show if they didn't apply to a different specific job (only show general intake applicants)
       !applicant.applicant.appliedJobId
   );
 
@@ -308,8 +342,10 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
 
       <td>
         <span className={styles.textGray500}>
-          {applicant.lastUpdated || applicant.applicant.created_at
-            ? moment(applicant.lastUpdated || applicant.applicant.created_at).format('MMM DD, YYYY')
+          {applicant.applicant.hasApplied && applicant.applicant.dateApplied
+            ? moment(applicant.applicant.dateApplied).format('MMM DD, YYYY')
+            : applicant.applicant.created_at
+            ? moment(applicant.applicant.created_at).format('MMM DD, YYYY')
             : '-'}
         </span>
       </td>
@@ -395,12 +431,15 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
         </>
       )}
 
-      {/* Eligible Applicants Table */}
+      {/* Eligible Candidates Table */}
       {sortedEligibleApplicants.length > 0 && (
         <>
-          <h3 className={styles.tableTitle} style={{ marginTop: '2rem', marginBottom: '0.75rem' }}>
-            Eligible Applicants ({sortedEligibleApplicants.length})
+          <h3 className={styles.tableTitle} style={{ marginTop: '2rem', marginBottom: '0.5rem' }}>
+            Eligible Candidates ({sortedEligibleApplicants.length})
           </h3>
+          <p className={styles.textGray500} style={{ marginBottom: '0.75rem', fontSize: '0.9rem' }}>
+            These candidates match your job requirements but haven't applied yet. They submitted general applications and are eligible for this position.
+          </p>
           <div className={styles.applicantEligibilityTableWrapper}>
             <table className={styles.applicantEligibilityTable}>
               <thead>
@@ -424,7 +463,7 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
       )}
 
       {/* Load More */}
-      {data.pagination.hasMore && (
+      {(appliedData?.pagination.hasMore || eligibleData?.pagination.hasMore) && (
         <div className={`${styles.textCenter} ${styles.mt3}`}>
           <button
             className={`${styles.button} ${styles.buttonOutlinePrimary}`}
@@ -436,7 +475,7 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
         </div>
       )}
 
-      {data.scoredApplicants.length === 0 && (
+      {appliedApplicants.length === 0 && eligibleApplicants.length === 0 && (
         <div className={styles.emptyState}>
           <div className={styles.emptyStateTitle}>No Applicants Found</div>
           <p className={styles.emptyStateText}>

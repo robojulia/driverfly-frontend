@@ -2,6 +2,7 @@ import { Col, Row } from "react-bootstrap";
 
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
+import { OtherRequirementType } from "../../../../enums/users/other-requirements.enum";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { ViewApplicantDetailProps } from "../../../../types/applicant/view-application-detail-props.type";
 import ViewCard from "../../../view-details/view-card";
@@ -56,6 +57,26 @@ export default function ApplicantExtrasDetails({
 	const current_employer = applicant.employers?.find(v => !!v.is_current)
 
 	const past_employers = applicant.employers?.filter(v => !!!v.is_current);
+
+	// Format other requirements with custom "Other" text
+	const formatOtherRequirements = () => {
+		if (!other_requirement?.value || !Array.isArray(other_requirement.value)) {
+			return null;
+		}
+
+		const requirements = other_requirement.value.map(other => t(`OtherRequirementType.${other}`));
+
+		if (other_requirement.value.includes(OtherRequirementType.OTHERS) && applicant.other_requirements_other) {
+			const othersIndex = requirements.findIndex((req, idx) =>
+				other_requirement.value[idx] === OtherRequirementType.OTHERS
+			);
+			if (othersIndex !== -1) {
+				requirements[othersIndex] = `${requirements[othersIndex]} - ${applicant.other_requirements_other}`;
+			}
+		}
+
+		return requirements;
+	};
 
 	return (
 		<>
@@ -131,7 +152,7 @@ export default function ApplicantExtrasDetails({
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
-								OTHER_ABSOLUTE_REQUIREMENTS: other_requirement?.value && other_requirement?.value?.map(other => t(`OtherRequirementType.${other}`))
+								OTHER_ABSOLUTE_REQUIREMENTS: formatOtherRequirements()
 							}}
 						/>
 						<ViewDetails

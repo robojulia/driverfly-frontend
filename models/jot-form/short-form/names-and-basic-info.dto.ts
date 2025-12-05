@@ -9,6 +9,9 @@ export class NamesAndBasicInfoDto {
   email: string;
   zip_code: string;
   authorize_to_communicate: BooleanTypeExtra;
+  is_owner_operator: BooleanTypeExtra;
+  owner_operator_company_name: string;
+  owner_operator_dot_number: string;
   HEAR_ABOUT_US: ApplicantExtrasEntity;
   REFERAL_NAME?: ApplicantExtrasEntity;
 
@@ -23,6 +26,9 @@ export class NamesAndBasicInfoDto {
         .matches(/^\d{5}$/, 'Must be exactly 5 digits')
         .length(5, 'Must be exactly 5 digits'),
       authorize_to_communicate: yup.string().required().nullable(),
+      is_owner_operator: yup.string().required().nullable(),
+      owner_operator_company_name: yup.string().trim().nullable(),
+      owner_operator_dot_number: yup.string().trim().nullable(),
       HEAR_ABOUT_US: ApplicantExtrasEntity.yupSchema(),
       REFERAL_NAME: yup
         .object()

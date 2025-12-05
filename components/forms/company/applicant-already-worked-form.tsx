@@ -115,7 +115,7 @@ export function ApplicantAlreadyWorkedForm(props: ApplicantAlreadyWorkedFormProp
                 <Col md="12" className="p-0 px-lg-2">
                     <ViewCard title="ALREADY_WORKED_TO_COMPANY">
                         <Row>
-                            <Col>
+                            <Col md="6">
                                 <BaseCheck
                                     disabled={Boolean(entity?.is_hired)}
                                     className="my-3 col float-left p-0"
@@ -135,69 +135,64 @@ export function ApplicantAlreadyWorkedForm(props: ApplicantAlreadyWorkedFormProp
                                     formik={form}
                                 />
                             </Col>
+                            {Boolean(form.values?.already_applied_to_company) && (
+                                <Col md="6">
+                                    <BaseCheck
+                                        formik={form}
+                                        disabled={Boolean(entity?.is_hired)}
+                                        className="my-3 col float-left p-0"
+                                        name="already_worked_to_company"
+                                        label="WORKED_HERE_BEFORE"
+                                        onChange={({ target: { value } }) => {
+                                            form.setFieldValue(`already_worked_to_company`, value);
+                                            if (!value) {
+                                                form.setFieldValue(`already_worked_start_date`, null);
+                                                form.setFieldValue(`already_worked_end_date`, null);
+                                            }
+                                        }}
+                                    />
+                                </Col>
+                            )}
                         </Row>
-
-                        {Boolean(form.values?.already_applied_to_company) && (
-                            <>
-                                <Row>
-                                    <Col>
-                                        <BaseCheck
-                                            formik={form}
-                                            disabled={Boolean(entity?.is_hired)}
-                                            className="my-3 col float-left p-0"
-                                            name="already_worked_to_company"
-                                            label="WORKED_HERE_BEFORE"
-                                            onChange={({ target: { value } }) => {
-                                                form.setFieldValue(`already_worked_to_company`, value);
-                                                if (!value) {
-                                                    form.setFieldValue(`already_worked_start_date`, null);
-                                                    form.setFieldValue(`already_worked_end_date`, null);
-                                                }
-                                            }}
-                                        />
-                                    </Col>
-                                </Row>
-                                {form.values.already_worked_to_company && (
-                                    <Row>
-                                        <BaseInput
-                                            readOnly={Boolean(entity?.is_hired)}
-                                            className="col-md-6 my-3 font-weight-bold"
-                                            type="date"
-                                            name={`already_worked_start_date`}
-                                            placeholder="DATE"
-                                            label="FROM"
-                                            max={
-                                                new Date(
-                                                    new Date().getFullYear(),
-                                                    new Date().getMonth(),
-                                                    new Date().getDate()
-                                                )
-                                                    .toISOString()
-                                                    .split("T")[0]
-                                            }
-                                            formik={form}
-                                        />
-                                        <BaseInput
-                                            readOnly={Boolean(entity?.is_hired)}
-                                            className="col-md-6 my-3 font-weight-bold"
-                                            type="date"
-                                            name={`already_worked_end_date`}
-                                            placeholder="DATE"
-                                            label="TO"
-                                            max={
-                                                new Date(
-                                                    new Date().getFullYear(),
-                                                    new Date().getMonth(),
-                                                    new Date().getDate()
-                                                )
-                                                    .toISOString()
-                                                    .split("T")[0]
-                                            }
-                                            formik={form}
-                                        />
-                                    </Row>
-                                )}
-                            </>
+                        {form.values.already_worked_to_company && (
+                            <Row>
+                                <BaseInput
+                                    readOnly={Boolean(entity?.is_hired)}
+                                    className="col-md-6 my-3 font-weight-bold"
+                                    type="date"
+                                    name={`already_worked_start_date`}
+                                    placeholder="DATE"
+                                    label="FROM"
+                                    max={
+                                        new Date(
+                                            new Date().getFullYear(),
+                                            new Date().getMonth(),
+                                            new Date().getDate()
+                                        )
+                                            .toISOString()
+                                            .split("T")[0]
+                                    }
+                                    formik={form}
+                                />
+                                <BaseInput
+                                    readOnly={Boolean(entity?.is_hired)}
+                                    className="col-md-6 my-3 font-weight-bold"
+                                    type="date"
+                                    name={`already_worked_end_date`}
+                                    placeholder="DATE"
+                                    label="TO"
+                                    max={
+                                        new Date(
+                                            new Date().getFullYear(),
+                                            new Date().getMonth(),
+                                            new Date().getDate()
+                                        )
+                                            .toISOString()
+                                            .split("T")[0]
+                                    }
+                                    formik={form}
+                                />
+                            </Row>
                         )}
                         {!hideActions && (
                             <div style={{ display: "flex", justifyContent: "right" }}>

@@ -26,6 +26,9 @@ export function NamesAndBasicInfo() {
     initialValues: {
       ...new NamesAndBasicInfoDto(),
       authorize_to_communicate: BooleanTypeExtra.YES,
+      is_owner_operator: BooleanTypeExtra.NO,
+      owner_operator_company_name: '',
+      owner_operator_dot_number: '',
     },
     validationSchema: NamesAndBasicInfoDto.yupSchema(),
     onSubmit: async (values) => {
@@ -36,6 +39,9 @@ export function NamesAndBasicInfo() {
           email,
           zip_code,
           authorize_to_communicate,
+          is_owner_operator,
+          owner_operator_company_name,
+          owner_operator_dot_number,
           HEAR_ABOUT_US,
           REFERAL_NAME,
         } = values;
@@ -48,6 +54,9 @@ export function NamesAndBasicInfo() {
           email,
           zip_code,
           authorize_to_communicate,
+          is_owner_operator: is_owner_operator === BooleanTypeExtra.YES,
+          owner_operator_company_name,
+          owner_operator_dot_number,
         });
 
         // Update applicant extras with hear about info
@@ -76,7 +85,7 @@ export function NamesAndBasicInfo() {
       return;
     }
 
-    const { first_name, last_name, email, zip_code, authorize_to_communicate } = applicant;
+    const { first_name, last_name, email, zip_code, authorize_to_communicate, is_owner_operator, owner_operator_company_name, owner_operator_dot_number } = applicant;
 
     // Find existing hear about extras
     const apx = applicantExtras?.find((v) => v.type === ApplicantExtras.HEAR_ABOUT_US);
@@ -100,6 +109,9 @@ export function NamesAndBasicInfo() {
       email: email || '',
       zip_code: zip_code || '',
       authorize_to_communicate: authorize_to_communicate || BooleanTypeExtra.YES,
+      is_owner_operator: is_owner_operator ? BooleanTypeExtra.YES : BooleanTypeExtra.NO,
+      owner_operator_company_name: owner_operator_company_name || '',
+      owner_operator_dot_number: owner_operator_dot_number || '',
       HEAR_ABOUT_US: apx || hearAboutObject,
       REFERAL_NAME: apx_referal_name || referalNameObject,
     };
@@ -217,6 +229,59 @@ export function NamesAndBasicInfo() {
               />
             </div>
           </Row>
+
+          {/* Owner Operator Section */}
+          <Row className={styles.bold}>
+            <div className="col-12 my-3">
+              <BaseSelect
+                className="w-100"
+                required
+                labelPrefix="BooleanPreferenceType"
+                enumType={BooleanTypeExtra}
+                name="is_owner_operator"
+                placeholder="CHOOSE"
+                label={t('ARE_YOU_AN_OWNER_OPERATOR')}
+                formik={form}
+              />
+            </div>
+          </Row>
+
+          {form.values.is_owner_operator === BooleanTypeExtra.YES && (
+            <>
+              <Row className={styles.bold}>
+                <div className="col-12 my-3">
+                  <Input
+                    name="owner_operator_company_name"
+                    type="text"
+                    label={t('OWNER_OPERATOR_COMPANY_NAME')}
+                    placeholder={t('OWNER_OPERATOR_COMPANY_NAME')}
+                    value={form.values.owner_operator_company_name || ''}
+                    onChange={form.handleChange}
+                    onBlur={form.handleBlur}
+                    error={form.touched.owner_operator_company_name && form.errors.owner_operator_company_name ? String(form.errors.owner_operator_company_name) : undefined}
+                    icon={<span>🏢</span>}
+                    size="large"
+                  />
+                </div>
+              </Row>
+              <Row className={styles.bold}>
+                <div className="col-12 my-3">
+                  <Input
+                    name="owner_operator_dot_number"
+                    type="text"
+                    label={t('OWNER_OPERATOR_DOT_NUMBER')}
+                    placeholder={t('OWNER_OPERATOR_DOT_NUMBER')}
+                    value={form.values.owner_operator_dot_number || ''}
+                    onChange={form.handleChange}
+                    onBlur={form.handleBlur}
+                    error={form.touched.owner_operator_dot_number && form.errors.owner_operator_dot_number ? String(form.errors.owner_operator_dot_number) : undefined}
+                    icon={<span>🔢</span>}
+                    size="large"
+                  />
+                </div>
+              </Row>
+            </>
+          )}
 
           {/* Authorization Section */}
           <Row className={`${styles.align__text_left} ${styles.bold}`}>

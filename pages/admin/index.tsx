@@ -110,8 +110,8 @@ const AdminDashboard = () => {
                   <p className="card-text text-muted flex-grow-1">{tool.description}</p>
 
                   {tool.status === 'Active' ? (
-                    <Link href={tool.href}>
-                      <a className={`btn btn-primary ${styles.actionButton}`}>Access Tool</a>
+                    <Link href={tool.href} className={`btn btn-primary ${styles.actionButton}`}>
+                      Access Tool
                     </Link>
                   ) : (
                     <button className={`btn btn-outline-secondary ${styles.actionButton}`} disabled>

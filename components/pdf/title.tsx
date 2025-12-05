@@ -3,12 +3,12 @@ import { Text, StyleSheet } from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
     title: {
-        fontFamily: 'Lato Bold',
+        fontFamily: 'Poppins Bold',
         fontSize: 14,
         marginBottom: 10,
-        color: '#2DA2AF',
+        color: '#006078',
         textTransform: 'uppercase',
-        borderBottomColor: '#2DA2AF',
+        borderBottomColor: '#006078',
     },
 });
 

@@ -20,21 +20,21 @@ export default function PageLayout(props: PageLayoutProps) {
     return (
         <>
             <ToastContainer />
-            <Row>
+            <Row className="mb-1 align-items-center">
                 {
                     title && !hideTitle &&
                         <Col>
-                            <h2 style={{ marginBottom: '0.75rem' }}>
+                            <h2 style={{ marginBottom: '0' }}>
                                 {t(title)}
                             </h2>
                             {
-                                desciption &&  <p className="small text-secondary" style={{ marginBottom: '1rem' }}>{t(desciption)}</p>
+                                desciption &&  <p className="small text-secondary" style={{ marginBottom: '0' }}>{t(desciption)}</p>
                             }
                         </Col>
                 }
                 {
                     actions &&
-                        <Col className="text-right text-nowrap">
+                        <Col xs="auto" className="text-right text-nowrap">
                             {actions}
                         </Col>
                 }

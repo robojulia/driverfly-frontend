@@ -10,13 +10,13 @@ const styles = StyleSheet.create({
     bulletPoint: {
         width: 10,
         fontSize: 10,
-        color: '#2DA2AF',
+        color: '#006078',
     },
     itemContent: {
         flex: 1,
         justifyContent: 'space-between',
         fontSize: 10,
-        fontFamily: 'Lato',
+        fontFamily: 'Poppins',
     },
 });
 
