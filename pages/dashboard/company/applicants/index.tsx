@@ -325,7 +325,7 @@ export default function Applicants() {
           {/* Tip Section */}
           <div
             className="mb-4 p-3"
-            style={{ backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e9ecef' }}
+            style={{ backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid #e9ecef' }}
           >
             <small className="text-secondary">
               <strong>{t('TIP')}:</strong> {t('CLICK_ARROW_TO_EXPAND_JOBS')}
@@ -434,22 +434,6 @@ export default function Applicants() {
                 </div>
               ) : (
                 <>
-                  {/* Legend for Eligibility Badges - only show when not provisional */}
-                  {includeEligibility && !hasProvisionalApplicants && (
-                    <div className="mb-3 px-3">
-                      <div className="d-flex align-items-center gap-3 flex-wrap">
-                        <div className="d-flex align-items-center gap-1">
-                          <span className="badge bg-success">YES</span>
-                          <small className="text-muted">Meets hiring criteria</small>
-                        </div>
-                        <div className="d-flex align-items-center gap-1">
-                          <span className="badge bg-danger">NO</span>
-                          <small className="text-muted">Does not meet criteria</small>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
                   <ApplicantView
                     totalItems={pagingMeta?.totalItems}
                     setPagingMeta={setPagingMeta}
@@ -695,6 +679,19 @@ function ApplicantView(props: ViewProps) {
   const items: ConsolodatedApplicant[] = applicants;
   return (
     <div className="applicant__table__sty ellipsis_remove">
+      {/* Eligibility Legend - positioned to align with search bar */}
+      {includeEligibility && !hasProvisionalApplicants && (
+        <div className="mb-3 d-flex align-items-center gap-3 flex-wrap">
+          <div className="d-flex align-items-center gap-1">
+            <span className="badge bg-success">YES</span>
+            <small className="text-muted">Meets hiring criteria</small>
+          </div>
+          <div className="d-flex align-items-center gap-1">
+            <span className="badge bg-danger">NO</span>
+            <small className="text-muted">Does not meet criteria</small>
+          </div>
+        </div>
+      )}
       <ViewDataTable<ConsolodatedApplicant>
         columnSettingKey="applicant-table-column-preferences"
         hideSearch={false}

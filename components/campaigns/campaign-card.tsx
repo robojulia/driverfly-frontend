@@ -30,6 +30,8 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, onAction }
         return 'success';
       case CampaignStatus.CANCELLED:
         return 'danger';
+      case CampaignStatus.FAILED:
+        return 'danger';
       default:
         return 'secondary';
     }

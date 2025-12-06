@@ -100,6 +100,8 @@ export const CampaignsTable: React.FC<CampaignsTableProps> = ({
         return styles.statusCompleted;
       case CampaignStatus.CANCELLED:
         return styles.statusCancelled;
+      case CampaignStatus.FAILED:
+        return styles.statusCancelled; // Use same styling as cancelled (danger/red)
       default:
         return styles.statusDraft;
     }
@@ -128,6 +130,8 @@ export const CampaignsTable: React.FC<CampaignsTableProps> = ({
         return 'Completed';
       case CampaignStatus.CANCELLED:
         return 'Cancelled';
+      case CampaignStatus.FAILED:
+        return 'Failed';
       default:
         return status;
     }
@@ -313,6 +317,7 @@ export const CampaignsTable: React.FC<CampaignsTableProps> = ({
         { value: CampaignStatus.PAUSED, label: 'Paused' },
         { value: CampaignStatus.COMPLETED, label: 'Completed' },
         { value: CampaignStatus.CANCELLED, label: 'Cancelled' },
+        { value: CampaignStatus.FAILED, label: 'Failed' },
       ],
     },
   ];

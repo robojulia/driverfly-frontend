@@ -42,6 +42,11 @@ const statusConfig: Record<CampaignStatus, StatusConfig> = {
     label: 'Cancelled',
     description: 'Campaign has been stopped and cannot be resumed.',
   },
+  [CampaignStatus.FAILED]: {
+    color: 'danger',
+    label: 'Failed',
+    description: 'Campaign failed to deliver messages to all targets. Please check your configuration and try again.',
+  },
 };
 
 const CampaignStatusBadge: React.FC<CampaignStatusBadgeProps> = ({ status, className = '' }) => {

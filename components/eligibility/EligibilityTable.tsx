@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { EyeFill, PersonFill, GeoAltFill, CalendarFill, StarFill } from 'react-bootstrap-icons';
+import { EyeFill, PersonFill, GeoAltFill, CalendarFill, StarFill, BuildingFill } from 'react-bootstrap-icons';
 import Link from 'next/link';
 import moment from 'moment';
 import { useTranslation } from '../../hooks/use-translation';
+import { useAuth } from '../../hooks/use-auth';
 import EligibilityApi, {
   ApplicantEligibilityResponse,
   ApplicantEligibilityScore,
@@ -19,8 +20,10 @@ interface EligibilityTableProps {
 
 export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, className = '' }) => {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [appliedData, setAppliedData] = useState<ApplicantEligibilityResponse | null>(null);
   const [eligibleData, setEligibleData] = useState<ApplicantEligibilityResponse | null>(null);
+  const [crossCompanyData, setCrossCompanyData] = useState<ApplicantEligibilityResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<EligibilityQueryParams>({
     limit: 100,
@@ -29,6 +32,9 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
     sortOrder: 'DESC',
     minScore: 0,
   });
+
+  // Check if user manages multiple companies
+  const hasMultipleCompanies = user?.jwt?.companies && user.jwt.companies.length > 1;
 
   const loadData = async (newFilters: EligibilityQueryParams = filters) => {
     try {
@@ -49,6 +55,21 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
 
       setAppliedData(appliedResult);
       setEligibleData(eligibleResult);
+
+      // Fetch cross-company eligible candidates if user manages multiple companies
+      if (hasMultipleCompanies) {
+        try {
+          const crossCompanyResult = await api.getJobEligibilityScores(jobId, {
+            ...newFilters,
+            appliedOnly: false,
+            crossCompany: true,
+          });
+          setCrossCompanyData(crossCompanyResult);
+        } catch (error) {
+          console.error('Failed to load cross-company eligibility data:', error);
+          setCrossCompanyData(null);
+        }
+      }
     } catch (error) {
       console.error('Failed to load eligibility data:', error);
     } finally {
@@ -108,6 +129,28 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
             }
           : eligibleResult
       );
+
+      // Fetch more cross-company candidates if applicable
+      if (hasMultipleCompanies) {
+        try {
+          const crossCompanyResult = await api.getJobEligibilityScores(jobId, {
+            ...newFilters,
+            appliedOnly: false,
+            crossCompany: true,
+          });
+
+          setCrossCompanyData((prev) =>
+            prev
+              ? {
+                  ...crossCompanyResult,
+                  scoredApplicants: [...prev.scoredApplicants, ...(crossCompanyResult.scoredApplicants || [])],
+                }
+              : crossCompanyResult
+          );
+        } catch (error) {
+          console.error('Failed to load more cross-company data:', error);
+        }
+      }
     } catch (error) {
       console.error('Failed to load more data:', error);
     }
@@ -204,12 +247,11 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
   const appliedApplicants = appliedData?.scoredApplicants || [];
 
   // Eligible candidates: those who have NOT applied to this job but ARE eligible/partially eligible
-  // Filter out those who already applied (hasApplied) and those who applied to other specific jobs
+  // This includes general applicants AND those who applied to other jobs in this company
   const eligibleApplicants = (eligibleData?.scoredApplicants || []).filter(
     (applicant: ApplicantEligibilityScore) =>
       !applicant.applicant.hasApplied &&
-      (applicant.eligibilityStatus === 'ELIGIBLE' || applicant.eligibilityStatus === 'PARTIALLY_ELIGIBLE') &&
-      !applicant.applicant.appliedJobId
+      (applicant.eligibilityStatus === 'ELIGIBLE' || applicant.eligibilityStatus === 'PARTIALLY_ELIGIBLE')
   );
 
   // Apply sorting based on current filters
@@ -259,10 +301,18 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
     });
   };
 
+  // Cross-company eligible candidates: those from other companies in the network
+  const crossCompanyApplicants = (crossCompanyData?.scoredApplicants || []).filter(
+    (applicant: ApplicantEligibilityScore) =>
+      !applicant.applicant.hasApplied &&
+      (applicant.eligibilityStatus === 'ELIGIBLE' || applicant.eligibilityStatus === 'PARTIALLY_ELIGIBLE')
+  );
+
   const sortedAppliedApplicants = applySorting(appliedApplicants);
   const sortedEligibleApplicants = applySorting(eligibleApplicants);
+  const sortedCrossCompanyApplicants = applySorting(crossCompanyApplicants);
 
-  const renderApplicantRow = (applicant: ApplicantEligibilityScore) => (
+  const renderApplicantRow = (applicant: ApplicantEligibilityScore, showCompany: boolean = false) => (
     <tr key={applicant.applicantId}>
       <td>
         <div className={styles.applicantInfo}>
@@ -340,12 +390,25 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
         )}
       </td>
 
+      {showCompany && (
+        <td>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <BuildingFill size={14} className={styles.textGray500} />
+            <span className={styles.textGray500}>
+              {applicant.applicant.appliedCompanyName || '-'}
+            </span>
+          </div>
+        </td>
+      )}
+
       <td>
         <span className={styles.textGray500}>
-          {applicant.applicant.hasApplied && applicant.applicant.dateApplied
+          {applicant.applicant.dateApplied
             ? moment(applicant.applicant.dateApplied).format('MMM DD, YYYY')
             : applicant.applicant.created_at
             ? moment(applicant.applicant.created_at).format('MMM DD, YYYY')
+            : applicant.lastUpdated
+            ? moment(applicant.lastUpdated).format('MMM DD, YYYY')
             : '-'}
         </span>
       </td>
@@ -406,7 +469,7 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
       {/* Applied Applicants Table */}
       {sortedAppliedApplicants.length > 0 && (
         <>
-          <h3 className={styles.tableTitle} style={{ marginTop: '1.5rem', marginBottom: '0.75rem' }}>
+          <h3 style={{ marginTop: '1.5rem', marginBottom: '0.75rem', fontSize: '1.25rem', fontWeight: '600', color: 'var(--text-primary)', background: 'transparent' }}>
             Applied Applicants ({sortedAppliedApplicants.length})
           </h3>
           <div className={styles.applicantEligibilityTableWrapper}>
@@ -424,7 +487,7 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
                 </tr>
               </thead>
               <tbody>
-                {sortedAppliedApplicants.map(renderApplicantRow)}
+                {sortedAppliedApplicants.map((applicant) => renderApplicantRow(applicant, false))}
               </tbody>
             </table>
           </div>
@@ -434,11 +497,11 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
       {/* Eligible Candidates Table */}
       {sortedEligibleApplicants.length > 0 && (
         <>
-          <h3 className={styles.tableTitle} style={{ marginTop: '2rem', marginBottom: '0.5rem' }}>
+          <h3 style={{ marginTop: '2rem', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: '600', color: 'var(--text-primary)', background: 'transparent' }}>
             Eligible Candidates ({sortedEligibleApplicants.length})
           </h3>
           <p className={styles.textGray500} style={{ marginBottom: '0.75rem', fontSize: '0.9rem' }}>
-            These candidates match your job requirements but haven't applied yet. They submitted general applications and are eligible for this position.
+            These candidates match your job requirements but haven't applied yet. They may have submitted general applications or applied to other jobs within your company.
           </p>
           <div className={styles.applicantEligibilityTableWrapper}>
             <table className={styles.applicantEligibilityTable}>
@@ -455,7 +518,39 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
                 </tr>
               </thead>
               <tbody>
-                {sortedEligibleApplicants.map(renderApplicantRow)}
+                {sortedEligibleApplicants.map((applicant) => renderApplicantRow(applicant, false))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+
+      {/* Cross-Company Eligible Candidates Table */}
+      {hasMultipleCompanies && sortedCrossCompanyApplicants.length > 0 && (
+        <>
+          <h3 style={{ marginTop: '2rem', marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: '600', color: 'var(--text-primary)', background: 'transparent' }}>
+            Eligible Candidates from Network Companies ({sortedCrossCompanyApplicants.length})
+          </h3>
+          <p className={styles.textGray500} style={{ marginBottom: '0.75rem', fontSize: '0.9rem' }}>
+            These candidates match your job requirements and applied to other companies in your network. Consider reaching out to them for this position.
+          </p>
+          <div className={styles.applicantEligibilityTableWrapper}>
+            <table className={styles.applicantEligibilityTable}>
+              <thead>
+                <tr>
+                  <th>Applicant</th>
+                  <th>Status</th>
+                  <th>Experience</th>
+                  <th>Interest</th>
+                  <th>Location</th>
+                  <th>Applied</th>
+                  <th>Company</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedCrossCompanyApplicants.map((applicant) => renderApplicantRow(applicant, true))}
               </tbody>
             </table>
           </div>
@@ -463,7 +558,7 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
       )}
 
       {/* Load More */}
-      {(appliedData?.pagination.hasMore || eligibleData?.pagination.hasMore) && (
+      {(appliedData?.pagination.hasMore || eligibleData?.pagination.hasMore || crossCompanyData?.pagination.hasMore) && (
         <div className={`${styles.textCenter} ${styles.mt3}`}>
           <button
             className={`${styles.button} ${styles.buttonOutlinePrimary}`}
@@ -475,7 +570,7 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
         </div>
       )}
 
-      {appliedApplicants.length === 0 && eligibleApplicants.length === 0 && (
+      {appliedApplicants.length === 0 && eligibleApplicants.length === 0 && crossCompanyApplicants.length === 0 && (
         <div className={styles.emptyState}>
           <div className={styles.emptyStateTitle}>No Applicants Found</div>
           <p className={styles.emptyStateText}>

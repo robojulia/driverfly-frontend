@@ -268,45 +268,46 @@ export function GenericTable<T = any>({
           {subHeader}
           {(enableSearch || canHideColumns) && (
             <div className={styles.tableControls}>
-              {enableSearch && (
-                <div className={styles.searchGroup}>
-                  <BaseInput
-                    placeholder="SEARCH"
-                    onChange={(e) => setSearch(e.target.value)}
-                    value={search}
-                    className={styles.searchInput}
-                  />
-                  <Button variant="primary" type="button" className={styles.searchButton}>
-                    <Search />
-                  </Button>
-                </div>
-              )}
+              <ButtonGroup>
+                {enableSearch && (
+                  <>
+                    <BaseInput
+                      placeholder="SEARCH"
+                      onChange={(e) => setSearch(e.target.value)}
+                      value={search}
+                    />
+                    <Button variant="primary" type="button">
+                      <Search />
+                    </Button>
+                  </>
+                )}
 
-              {canHideColumns && (
-                <Dropdown autoClose="outside">
-                  <Dropdown.Toggle variant="" className="btn-group-end theme-general-btn">
-                    <Gear />
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu className="select_dropdown data_table_dropdown">
-                    {visibleColumns
-                      .filter((col) => col.key !== '__actions__')
-                      .map((col) => (
-                        <Dropdown.Item
-                          key={col.key}
-                          disabled={!hideable.has(col.key)}
-                          onClick={() => onColumnToggle(col.key)}
-                        >
-                          <span className="d-flex align-items-center">
-                            {!col.hide && (
-                              <span className="me-2">✓</span>
-                            )}
-                            {t(col.label)}
-                          </span>
-                        </Dropdown.Item>
-                      ))}
-                  </Dropdown.Menu>
-                </Dropdown>
-              )}
+                {canHideColumns && (
+                  <Dropdown autoClose="outside">
+                    <Dropdown.Toggle variant="" className="btn-group-end theme-general-btn">
+                      <Gear />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu className="select_dropdown data_table_dropdown">
+                      {visibleColumns
+                        .filter((col) => col.key !== '__actions__')
+                        .map((col) => (
+                          <Dropdown.Item
+                            key={col.key}
+                            disabled={!hideable.has(col.key)}
+                            onClick={() => onColumnToggle(col.key)}
+                          >
+                            <span className="d-flex align-items-center">
+                              {!col.hide && (
+                                <span className="me-2">✓</span>
+                              )}
+                              {t(col.label)}
+                            </span>
+                          </Dropdown.Item>
+                        ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                )}
+              </ButtonGroup>
             </div>
           )}
         </div>

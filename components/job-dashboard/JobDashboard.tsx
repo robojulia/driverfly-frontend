@@ -78,10 +78,11 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
         setLoadingStats(true);
         const eligibilityApi = new EligibilityApi();
 
-        // Fetch applicants who applied to this job
+        // Fetch applicants who applied DIRECTLY to this job only
         const stats = await eligibilityApi.getJobEligibilityScores(job.id, {
           limit: 100,
           offset: 0,
+          appliedOnly: true,
         });
 
         // Fetch all eligible applicants from the entire system
@@ -91,7 +92,8 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
           appliedOnly: false,
         });
 
-        // Calculate summary stats from the actual API response structure
+        // Calculate summary stats from applicants who DIRECTLY applied to this job
+        // Only count those who are eligible AND applied directly
         const eligibleCount =
           stats.scoredApplicants?.filter((item) => item.eligibilityStatus === 'ELIGIBLE')?.length ||
           0;

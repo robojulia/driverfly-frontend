@@ -329,6 +329,8 @@ const CampaignDetailPage = () => {
         return 'success';
       case CampaignStatus.CANCELLED:
         return 'danger';
+      case CampaignStatus.FAILED:
+        return 'danger';
       default:
         return 'secondary';
     }
@@ -462,6 +464,27 @@ const CampaignDetailPage = () => {
           <Row className="mb-3">
             <Col>
               <Alert color="danger">{error}</Alert>
+            </Col>
+          </Row>
+        )}
+
+        {/* Failed Campaign Alert */}
+        {campaign.status === CampaignStatus.FAILED && (
+          <Row className="mb-3">
+            <Col>
+              <Alert color="danger">
+                <h5 className="alert-heading">Campaign Failed</h5>
+                <p className="mb-0">
+                  This campaign failed to deliver messages to all targets. All calls failed within the
+                  campaign timeframe. Please check your campaign configuration, target phone numbers, and
+                  try creating a new campaign.
+                </p>
+                {stats && stats.failedCount > 0 && (
+                  <p className="mb-0 mt-2">
+                    <strong>Failed Targets:</strong> {stats.failedCount} out of {stats.totalTargets}
+                  </p>
+                )}
+              </Alert>
             </Col>
           </Row>
         )}

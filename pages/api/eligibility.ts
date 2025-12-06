@@ -6,6 +6,7 @@ export interface EligibilityQueryParams {
   limit?: number;
   offset?: number;
   appliedOnly?: boolean;
+  crossCompany?: boolean;
   states?: string[];
   sortBy?:
     | 'score'
@@ -40,6 +41,8 @@ export interface ApplicantBasicInfo {
   dateApplied?: string;
   appliedJobTitle?: string;
   appliedJobId?: number;
+  appliedCompanyName?: string;
+  appliedCompanyId?: number;
 }
 
 export interface ScoringDetails {
@@ -113,6 +116,8 @@ export default class EligibilityApi extends BaseApi {
       if (params?.offset !== undefined) queryParams.append('offset', params.offset.toString());
       if (params?.appliedOnly !== undefined)
         queryParams.append('appliedOnly', params.appliedOnly.toString());
+      if (params?.crossCompany !== undefined)
+        queryParams.append('crossCompany', params.crossCompany.toString());
       if (params?.sortBy) queryParams.append('sortBy', params.sortBy);
       if (params?.sortOrder) queryParams.append('sortOrder', params.sortOrder);
       if (params?.states?.length) {

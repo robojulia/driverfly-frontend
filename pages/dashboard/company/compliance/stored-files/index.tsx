@@ -19,8 +19,10 @@ import ViewDataTable, {
 } from "../../../../../components/view-details/view-data-table";
 import ViewModal from "../../../../../components/view-details/view-modal";
 import ViewPdf from "../../../../../components/view-details/view-pdf";
+import { ApplicantStatus } from "../../../../../enums/applicants/applicant-status.enum";
 import { EmployeeStatus } from "../../../../../enums/applicants/employee-status.enum";
 import { CompanyDocumentType } from "../../../../../enums/compliance/company-document-type.enum";
+import { JobEmploymentType } from "../../../../../enums/jobs/job-employment-type.enum";
 import { useAuth } from "../../../../../hooks/use-auth";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
@@ -91,11 +93,7 @@ export default function StoredFiles() {
 
       setIsFetchingEmployees(true);
       const e = (await employeeApi.list()) as EmployeeEntity[];
-      setEmployees(
-        e?.filter(
-          ({ email, status }) => !!email && status == EmployeeStatus.ACTIVE
-        )
-      );
+      setEmployees(e?.filter(({ email }) => !!email));
       setIsFetchingEmployees(false);
     },
     [user],
@@ -152,6 +150,9 @@ export default function StoredFiles() {
 
   function ApplicantListing() {
     const [selectedRows, setSelectedRows] = useState<ApplicantEntity[]>();
+    const [statusFilter, setStatusFilter] = useState<string>("");
+    const [employmentTypeFilter, setEmploymentTypeFilter] = useState<string>("");
+
     const handleSelectedRowsChange = (arg: any) => {
       setSelectedRows(
         arg?.selectedRows?.map(({ email, first_name, last_name }) => ({
@@ -162,10 +163,40 @@ export default function StoredFiles() {
       );
     };
 
+    const filteredApplicants = applicants?.filter((applicant) => {
+      const statusMatch = !statusFilter || applicant.current_application_status === statusFilter;
+      const employmentTypeMatch = !employmentTypeFilter || applicant.employment_type === employmentTypeFilter;
+      return statusMatch && employmentTypeMatch;
+    });
+
     if (isFetchingApplicants) return <LoaderIcon isLoading />;
 
     return (
       <>
+        <div className="mb-3 d-flex gap-3">
+          <BaseSelect
+            className="col-4"
+            label="FILTER_BY_STATUS"
+            name="statusFilter"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            displayPlaceholder
+            placeholder="ALL_STATUSES"
+            labelPrefix="ApplicantStatus"
+            enumType={ApplicantStatus}
+          />
+          <BaseSelect
+            className="col-4"
+            label="FILTER_BY_EMPLOYMENT_TYPE"
+            name="employmentTypeFilter"
+            value={employmentTypeFilter}
+            onChange={(e) => setEmploymentTypeFilter(e.target.value)}
+            displayPlaceholder
+            placeholder="ALL_EMPLOYMENT_TYPES"
+            labelPrefix="JobEmploymentType"
+            enumType={JobEmploymentType}
+          />
+        </div>
         <ViewDataTable<ApplicantEntity>
           subHeader={
             <div className="float-left pr-2">
@@ -231,7 +262,7 @@ export default function StoredFiles() {
                 ),
             },
           ]}
-          items={applicants}
+          items={filteredApplicants}
         />
       </>
     );
@@ -239,6 +270,8 @@ export default function StoredFiles() {
 
   function EmployeeListing() {
     const [selectedRows, setSelectedRows] = useState<EmployeeEntity[]>();
+    const [statusFilter, setStatusFilter] = useState<string>("");
+
     const handleSelectedRowsChange = (arg: any) => {
       setSelectedRows(
         arg?.selectedRows?.map(({ email, first_name, last_name }) => ({
@@ -249,10 +282,27 @@ export default function StoredFiles() {
       );
     };
 
+    const filteredEmployees = employees?.filter((employee) => {
+      return !statusFilter || employee.status === statusFilter;
+    });
+
     if (isFetchingEmployees) return <LoaderIcon isLoading />;
 
     return (
       <>
+        <div className="mb-3 d-flex gap-3">
+          <BaseSelect
+            className="col-4"
+            label="FILTER_BY_STATUS"
+            name="statusFilter"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            displayPlaceholder
+            placeholder="ALL_STATUSES"
+            labelPrefix="EmployeeStatus"
+            enumType={EmployeeStatus}
+          />
+        </div>
         <ViewDataTable<EmployeeEntity>
           subHeader={
             <div className="float-left pr-2">
@@ -318,7 +368,7 @@ export default function StoredFiles() {
                 ),
             },
           ]}
-          items={employees}
+          items={filteredEmployees}
         />
       </>
     );
@@ -418,20 +468,18 @@ export default function StoredFiles() {
                       <Eye />
                     </button>
                   )}
-                  <div className="p-2 ">
-                    <button
-                      className="btn btn-danger py-1 px-3 "
-                      type="button"
-                      onClick={() =>
-                        setConfirmationModal({
-                          value: !confirmationModal.value,
-                          fileId: file.id,
-                        })
-                      }
-                    >
-                      <Trash />
-                    </button>
-                  </div>
+                  <button
+                    className="btn btn-danger mr-0 px-4 py-2"
+                    type="button"
+                    onClick={() =>
+                      setConfirmationModal({
+                        value: !confirmationModal.value,
+                        fileId: file.id,
+                      })
+                    }
+                  >
+                    <Trash />
+                  </button>
                 </>
               ),
             },
@@ -531,7 +579,7 @@ export default function StoredFiles() {
         show={!!documentId}
         onCloseClick={resetDocumentId}
         closeText="CANCEL"
-        title="DISPATCH_FILES_TO"
+        title="SEND_FILES_TO"
       >
         <TabbedLayout
           items={{

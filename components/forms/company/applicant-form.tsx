@@ -1554,19 +1554,20 @@ export function ApplicantForm(props: ApplicantFormProps) {
                                 label="LABEL_ACCIDENT_FAULT"
                                 formik={form}
                               />
-                              <Button
-                                className="rounded-lg"
-                                variant="outline-danger close_btn w-25 mx-auto my-2"
-                                onClick={() =>
-                                  form.setFieldValue('accident_history', [
-                                    ...form.values?.accident_history?.filter(
-                                      (ex, indx) => indx !== i
-                                    ),
-                                  ])
-                                }
-                              >
-                                <DashCircle />
-                              </Button>
+                              <div className="text-center">
+                                <a
+                                  href="#"
+                                  onClick={() =>
+                                    form.setFieldValue('accident_history', [
+                                      ...form.values?.accident_history?.filter(
+                                        (ex, indx) => indx !== i
+                                      ),
+                                    ])
+                                  }
+                                >
+                                  <DashCircle color="red" />
+                                </a>
+                              </div>
                               <div
                                 className="Row"
                                 style={{
@@ -1666,19 +1667,20 @@ export function ApplicantForm(props: ApplicantFormProps) {
                                 formik={form}
                                 required
                               />
-                              <Button
-                                className="rounded-lg"
-                                variant="outline-danger close_btn w-25 mx-auto my-2"
-                                onClick={() =>
-                                  form.setFieldValue('moving_violation_history', [
-                                    ...form.values?.moving_violation_history?.filter(
-                                      (ex, indx) => indx !== i
-                                    ),
-                                  ])
-                                }
-                              >
-                                <DashCircle />
-                              </Button>
+                              <div className="text-center">
+                                <a
+                                  href="#"
+                                  onClick={() =>
+                                    form.setFieldValue('moving_violation_history', [
+                                      ...form.values?.moving_violation_history?.filter(
+                                        (ex, indx) => indx !== i
+                                      ),
+                                    ])
+                                  }
+                                >
+                                  <DashCircle color="red" />
+                                </a>
+                              </div>
                               <div
                                 className="Row"
                                 style={{

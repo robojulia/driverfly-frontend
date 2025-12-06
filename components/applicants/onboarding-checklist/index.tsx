@@ -384,65 +384,150 @@ export default function OnboardingChecklist(
     }
   };
 
-  const ButtonList = ({ document, type }) => (
-    <>
-      {(!form.values.document?.type || form.values.document?.type != type) && (
-        <div className="d-flex align-items-center justify-content-end w-100">
-          {document && !document?.name?.includes('.doc') && (
-            <Button variant="link" className="p-0 me-3"
-              onClick={async () => {
-                try {
-                  await handleViewDocument(document.id, setPdf, undefined, document);
-                } catch (error: any) {
-                  console.error('Error viewing document:', error);
-                  const message = error?.message || t('ERROR_VIEWING_DOCUMENT');
-                  toast.error(message);
-                }
-              }}>
-              {t('View')}
-            </Button>
-          )}
-          {document && (
-            <Button variant="link" className="p-0 me-3"
-              onClick={async () => {
-                try {
-                  await handleDownloadDocument(document.id);
-                } catch (error) {
-                  console.error('Error downloading document:', error);
-                  toast.error(t('ERROR_DOWNLOADING_DOCUMENT'));
-                }
-              }}>
-              {t('Download')}
-            </Button>
-          )}
-          {Boolean(props.canEdit) && (
-            <Button variant="link" className="p-0 me-3"
-              onClick={() => handleUpdateDocument(type, document?.id)}>
-              {document ? t('Replace') : t('Upload')}
-            </Button>
-          )}
-          {/* VOE list button removed per styling request */}
-          {Boolean(props.showHistory) && (
-            <ViewDocumentHistory
-              buttonClass="btn btn-link p-0 me-3"
-              canDelete={!applicant.is_hired}
-              typePrefix="ApplicantOnBoardingChecklist"
-              document={document}
-              type={type}
-              documentable_id={applicant.id}
-              documentable_type={DocumentableType.APPLICANTS}
-            />
-          )}
-          {Boolean(props.canEdit) && document && (
-            <Button variant="link" className="p-0 text-danger"
-              onClick={() => handleDeleteDocument(type)}>
-              {t('Remove')}
-            </Button>
-          )}
-        </div>
-      )}
-    </>
-  );
+  /**
+   * Generates the Record of Attempts document from employer VOE attempt data
+   */
+  const handleGenerateRecordOfAttempts = async (): Promise<void> => {
+    try {
+      // Fetch employers with VOE attempt data
+      const employers = await applicantApi.employer.list(applicant.id);
+
+      if (!employers || employers.length === 0) {
+        toast.warning(t('NO_EMPLOYER_DATA_AVAILABLE_FOR_RECORD_OF_ATTEMPTS'));
+        return;
+      }
+
+      // Check if any employer has VOE attempts
+      const hasAttempts = employers.some(emp => emp.voe_attempts && emp.voe_attempts.length > 0);
+
+      if (!hasAttempts) {
+        toast.warning(t('NO_VOE_ATTEMPTS_RECORDED'));
+        return;
+      }
+
+      // Generate a simple text-based document with the attempts data
+      // In a real implementation, this would call a backend API to generate a proper PDF
+      let documentContent = `Record of Attempts - Safety Performance History\n`;
+      documentContent += `Applicant: ${applicant.first_name} ${applicant.last_name}\n`;
+      documentContent += `Date Generated: ${new Date().toLocaleDateString()}\n\n`;
+
+      employers.forEach((employer, index) => {
+        documentContent += `\n${index + 1}. ${employer.name}\n`;
+        documentContent += `   Manager: ${employer.manager_name || 'N/A'}\n`;
+        documentContent += `   Email: ${employer.email || 'N/A'}\n`;
+        documentContent += `   Can Contact: ${employer.can_contact ? 'Yes' : 'No'}\n`;
+        documentContent += `   Subject to FMCSRs: ${employer.is_subject_to_fmcsrs ? 'Yes' : 'No'}\n`;
+
+        if (employer.voe_attempts && employer.voe_attempts.length > 0) {
+          documentContent += `   VOE Attempts:\n`;
+          employer.voe_attempts.forEach((attempt: string, attemptIndex: number) => {
+            documentContent += `      ${attemptIndex + 1}. ${new Date(attempt).toLocaleString()}\n`;
+          });
+        } else {
+          documentContent += `   VOE Attempts: None\n`;
+        }
+      });
+
+      // Create a blob and trigger download
+      const blob = new Blob([documentContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Record_of_Attempts_${applicant.first_name}_${applicant.last_name}_${new Date().toISOString().split('T')[0]}.txt`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast.success(t('RECORD_OF_ATTEMPTS_GENERATED'));
+    } catch (error) {
+      console.error('Error generating Record of Attempts:', error);
+      toast.error(t('ERROR_GENERATING_RECORD_OF_ATTEMPTS'));
+    }
+  };
+
+  const ButtonList = ({ document, type }) => {
+    // Special handling for Record of Attempts document type
+    const isRecordOfAttempts = type === ApplicantOnBoardingChecklist.RECORD_OF_ATTEMPTS_SAFETY_PERFORMANCE_HISTORY;
+
+    return (
+      <>
+        {(!form.values.document?.type || form.values.document?.type != type) && (
+          <div className="d-flex align-items-center justify-content-end w-100">
+            {/* For Record of Attempts, show a "Generate" button instead of upload */}
+            {isRecordOfAttempts && (
+              <Button variant="link" className="p-0 me-3"
+                onClick={handleGenerateRecordOfAttempts}>
+                {t('Generate Document')}
+              </Button>
+            )}
+
+            {/* For Safety Performance History, show the VOE list button */}
+            {type === ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY && (
+              <SafetyPerformanceHistory
+                buttonClass="btn btn-link p-0 me-3"
+                applicant={applicant}
+                canEditSafetyPerformance={props.canEditSafetyPerformance}
+                showHistory={props.showHistory}
+                showResendButton={props.showResendButton}
+              />
+            )}
+
+            {document && !document?.name?.includes('.doc') && !isRecordOfAttempts && (
+              <Button variant="link" className="p-0 me-3"
+                onClick={async () => {
+                  try {
+                    await handleViewDocument(document.id, setPdf, undefined, document);
+                  } catch (error: any) {
+                    console.error('Error viewing document:', error);
+                    const message = error?.message || t('ERROR_VIEWING_DOCUMENT');
+                    toast.error(message);
+                  }
+                }}>
+                {t('View')}
+              </Button>
+            )}
+            {document && !isRecordOfAttempts && (
+              <Button variant="link" className="p-0 me-3"
+                onClick={async () => {
+                  try {
+                    await handleDownloadDocument(document.id);
+                  } catch (error) {
+                    console.error('Error downloading document:', error);
+                    toast.error(t('ERROR_DOWNLOADING_DOCUMENT'));
+                  }
+                }}>
+                {t('Download')}
+              </Button>
+            )}
+            {Boolean(props.canEdit) && !isRecordOfAttempts && (
+              <Button variant="link" className="p-0 me-3"
+                onClick={() => handleUpdateDocument(type, document?.id)}>
+                {document ? t('Replace') : t('Upload')}
+              </Button>
+            )}
+            {Boolean(props.showHistory) && !isRecordOfAttempts && (
+              <ViewDocumentHistory
+                buttonClass="btn btn-link p-0 me-3"
+                canDelete={!applicant.is_hired}
+                typePrefix="ApplicantOnBoardingChecklist"
+                document={document}
+                type={type}
+                documentable_id={applicant.id}
+                documentable_type={DocumentableType.APPLICANTS}
+              />
+            )}
+            {Boolean(props.canEdit) && document && !isRecordOfAttempts && (
+              <Button variant="link" className="p-0 text-danger"
+                onClick={() => handleDeleteDocument(type)}>
+                {t('Remove')}
+              </Button>
+            )}
+          </div>
+        )}
+      </>
+    );
+  };
 
   // Define vehicle document types
   const vehicleDocumentTypes = [
@@ -613,7 +698,14 @@ export default function OnboardingChecklist(
             const completedDoc: DocumentEntity | undefined = applicant?.documents?.find((v) => v.type === type && !!v.path);
             const pendingDoc: DocumentEntity | undefined = applicant?.documents?.find((v) => v.type === type && !v.path);
             const document = completedDoc || pendingDoc;
-            const isCompleted = Boolean(completedDoc);
+
+            // Special handling for Record of Attempts - check if there's employer VOE attempt data
+            const isRecordOfAttempts = type === ApplicantOnBoardingChecklist.RECORD_OF_ATTEMPTS_SAFETY_PERFORMANCE_HISTORY;
+            const hasEmployerData = applicant?.employers && applicant.employers.length > 0;
+            const hasVoeAttempts = hasEmployerData && applicant.employers.some((emp: any) => emp.voe_attempts && emp.voe_attempts.length > 0);
+
+            // For Record of Attempts, consider it "completed" if there's VOE attempt data available
+            const isCompleted = isRecordOfAttempts ? hasVoeAttempts : Boolean(completedDoc);
             const isHistorical = !globalTypes.includes(type);
             const isEnumValue = Object.values(ApplicantOnBoardingChecklist).includes(type as ApplicantOnBoardingChecklist);
             const displayName = isEnumValue ? t(`ApplicantOnBoardingChecklist.${type}`) : type;
@@ -635,7 +727,7 @@ export default function OnboardingChecklist(
               {/* Right: uploaded at + actions */}
               <div className="d-flex align-items-center" style={{ gap: 12 }}>
                 <div className="text-muted small" style={{ minWidth: 160, textAlign: 'right' }}>
-                  {isCompleted ? (
+                  {isCompleted && !isRecordOfAttempts ? (
                     <>
                       {t('Uploaded')} <UpdatedAt document={document} t={t} />
                     </>
@@ -643,8 +735,31 @@ export default function OnboardingChecklist(
                 </div>
                 {/* Actions */}
                 <div className="d-flex align-items-center" style={{ gap: 8 }}>
+                  {/* Special handling for Record of Attempts - show Generate button */}
+                  {isRecordOfAttempts && (
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      title={t('Generate Document')}
+                      onClick={handleGenerateRecordOfAttempts}
+                    >
+                      {t('Generate')}
+                    </Button>
+                  )}
+
+                  {/* Special handling for Safety Performance History - show VOE list button */}
+                  {type === ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY && (
+                    <SafetyPerformanceHistory
+                      buttonClass="btn btn-sm btn-info"
+                      applicant={applicant}
+                      canEditSafetyPerformance={props.canEditSafetyPerformance}
+                      showHistory={props.showHistory}
+                      showResendButton={props.showResendButton}
+                    />
+                  )}
+
                   {/* View */}
-                  {document && completedDoc && !document?.name?.includes('.doc') && (
+                  {document && completedDoc && !document?.name?.includes('.doc') && !isRecordOfAttempts && (
                     <Button variant="success" size="sm" title={t('View')} onClick={async () => {
                       try {
                         await handleViewDocument(document.id, setPdf, undefined, document);
@@ -658,7 +773,7 @@ export default function OnboardingChecklist(
                     </Button>
                   )}
                   {/* Replace / Upload */}
-                  {Boolean(props.canEdit) && (
+                  {Boolean(props.canEdit) && !isRecordOfAttempts && type !== ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY && (
                     <Button
                       variant="info"
                       size="sm"
@@ -669,7 +784,7 @@ export default function OnboardingChecklist(
                     </Button>
                   )}
                   {/* Download */}
-                  {document && completedDoc && (
+                  {document && completedDoc && !isRecordOfAttempts && (
                     <Button variant="dark" size="sm" title={t('Download')} onClick={async () => {
                       try {
                         await handleDownloadDocument(document.id);
@@ -682,7 +797,7 @@ export default function OnboardingChecklist(
                     </Button>
                   )}
                   {/* History */}
-                  {Boolean(props.showHistory) && document && (
+                  {Boolean(props.showHistory) && document && !isRecordOfAttempts && (
                     <ViewDocumentHistory
                       buttonClass="btn btn-sm btn-history-teal"
                       canDelete={!applicant.is_hired}
@@ -694,7 +809,7 @@ export default function OnboardingChecklist(
                     />
                   )}
                   {/* Remove */}
-                  {Boolean(props.canEdit) && completedDoc && (
+                  {Boolean(props.canEdit) && completedDoc && !isRecordOfAttempts && (
                     <Button variant="danger" size="sm" title={t('Remove')} onClick={() => handleDeleteDocument(type)}>
                       <Trash />
                     </Button>

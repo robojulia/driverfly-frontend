@@ -429,26 +429,7 @@
 .tableControls {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.searchGroup {
-  display: flex;
-  align-items: center;
-  gap: 0;
-}
-
-.searchInput {
-  border-top-right-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
-  border-right: none !important;
-  min-width: 200px;
-}
-
-.searchButton {
-  border-top-left-radius: 0 !important;
-  border-bottom-left-radius: 0 !important;
-  padding: 0.375rem 0.75rem;
+  margin-left: auto;
 }
 
 /* Sortable headers */
@@ -523,15 +504,7 @@
   }
 
   .tableControls {
-    justify-content: space-between;
-  }
-
-  .searchGroup {
-    flex: 1;
-  }
-
-  .searchInput {
-    flex: 1;
-    min-width: auto;
+    justify-content: flex-end;
+    margin-left: 0;
   }
 }

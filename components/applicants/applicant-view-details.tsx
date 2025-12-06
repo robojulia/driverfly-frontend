@@ -2,6 +2,7 @@ import { Col, Row } from "react-bootstrap";
 import { JobEquipmentType } from "../../enums/jobs/job-equipment-type.enum";
 import { BooleanType } from "../../enums/jotform/boolean-type.enum";
 import { OtherRequirementType } from "../../enums/users/other-requirements.enum";
+import { LicenseRestrictions } from "../../enums/applicants/applicant-license-restrictions-type.enum";
 import { useTranslation } from "../../hooks/use-translation";
 import { ViewApplicantDetailProps } from "../../types/applicant/view-application-detail-props.type";
 import { calculateAge } from "../../utils/date";
@@ -42,6 +43,26 @@ export default function ViewApplicantDetail({
 		}
 
 		return requirements;
+	};
+
+	// Format license restrictions with custom "Other" text
+	const formatLicenseRestrictions = () => {
+		if (!applicant.license_restrictions || applicant.license_restrictions.length === 0) {
+			return null;
+		}
+
+		const restrictions = applicant.license_restrictions.map((v) => t(`LicenseRestrictions.${v}`));
+
+		if (applicant.license_restrictions.includes(LicenseRestrictions.OTHER) && applicant.license_restrictions_other) {
+			const othersIndex = restrictions.findIndex((req, idx) =>
+				applicant.license_restrictions[idx] === LicenseRestrictions.OTHER
+			);
+			if (othersIndex !== -1) {
+				restrictions[othersIndex] = `${restrictions[othersIndex]} - ${applicant.license_restrictions_other}`;
+			}
+		}
+
+		return restrictions;
 	};
 	// const currentStatus = !!hideCurrentStatus
 	// 	? {}
@@ -122,9 +143,14 @@ export default function ViewApplicantDetail({
 								transmission_type: applicant.transmission_type?.map((v) =>
 									t(`VehicleTransmissionType.${v}`)
 								),
-								ENDORSEMENTS: applicant.endorsements?.map((v) =>
-									t(`DriverEndorsement.${v}`)
-								),
+								"ENDORSEMENTS / LICENSE_RESTRICTIONS": (() => {
+									const endorsements = applicant.endorsements?.map((v) => t(`DriverEndorsement.${v}`));
+									const restrictions = formatLicenseRestrictions();
+									const parts = [];
+									if (endorsements?.length) parts.push(endorsements.join(", "));
+									if (restrictions?.length) parts.push(restrictions.join(", "));
+									return parts.length ? parts.join(" / ") : null;
+								})(),
 								above_21: applicant.birthdate
 									? calculateAge(applicant.birthdate) >= 21
 									: null,
@@ -176,7 +202,9 @@ export default function ViewApplicantDetail({
 												v.type == JobEquipmentType.OTHER
 													? v.type_other
 													: t(`JobEquipmentType.${v.type}`),
-											quantity: v.quantity,
+											make: v.make,
+											model: v.model,
+											year: v.year,
 										})),
 									},
 								}}

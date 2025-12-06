@@ -4,4 +4,5 @@ export enum CampaignStatus {
   PAUSED = 'PAUSED',
   COMPLETED = 'COMPLETED',
   CANCELLED = 'CANCELLED',
+  FAILED = 'FAILED',
 }

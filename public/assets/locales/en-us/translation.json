@@ -832,7 +832,11 @@
   "drivers_needed": "Drivers Needed",
   "JOB_LISTINGS": "Job Listings",
   "APPLICANT": "Applicant",
-  "DISPATCH_FILES_TO": " Dispatch files to...",
+  "SEND_FILES_TO": " Send files to...",
+  "FILTER_BY_STATUS": "Filter by Status",
+  "FILTER_BY_EMPLOYMENT_TYPE": "Filter by Employment Type",
+  "ALL_STATUSES": "All Statuses",
+  "ALL_EMPLOYMENT_TYPES": "All Employment Types",
   "IS_MMEMBER": "Is Member",
   "MMEMBER": "Member",
   "NON_MMEMBER": "Non Member",
@@ -3166,5 +3170,11 @@
   "HR Notes": "HR Notes",
   "NO_HR_NOTES": "No HR notes available",
   "HR_NOTES": "HR Notes",
-  "ENTER_HR_NOTES": "Enter notes about this employee"
+  "ENTER_HR_NOTES": "Enter notes about this employee",
+  "Generate Document": "Generate Document",
+  "Generate": "Generate",
+  "NO_EMPLOYER_DATA_AVAILABLE_FOR_RECORD_OF_ATTEMPTS": "No employer data available to generate Record of Attempts",
+  "NO_VOE_ATTEMPTS_RECORDED": "No verification of employment attempts have been recorded yet",
+  "RECORD_OF_ATTEMPTS_GENERATED": "Record of Attempts document has been generated and downloaded",
+  "ERROR_GENERATING_RECORD_OF_ATTEMPTS": "Error generating Record of Attempts document"
 }

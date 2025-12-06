@@ -125,6 +125,9 @@ const CampaignActions: React.FC<CampaignActionsProps> = ({
       case CampaignStatus.CANCELLED:
         return null; // No primary action for cancelled campaigns
 
+      case CampaignStatus.FAILED:
+        return null; // No primary action for failed campaigns
+
       default:
         return {
           label: 'Launch Campaign',

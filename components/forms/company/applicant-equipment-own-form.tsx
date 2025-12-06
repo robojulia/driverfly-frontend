@@ -153,15 +153,20 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
                             {form.values?.equipment_owned?.length > 0 && (
                                 <>
                                     <Row className="d-sm-none d-md-flex">
-                                        <Col md="4">
+                                        <Col md="3">
                                             <strong>{t("TYPE")}</strong>
                                             <span className="p-0 text-danger">*</span>
                                         </Col>
                                         <Col md="2">
-                                            <strong>{t("QUANTITY")}</strong>
-                                            <span className="p-0 text-danger">*</span>
+                                            <strong>{t("MAKE")}</strong>
                                         </Col>
-                                        <Col md="5">
+                                        <Col md="2">
+                                            <strong>{t("MODEL")}</strong>
+                                        </Col>
+                                        <Col md="1">
+                                            <strong>{t("YEAR")}</strong>
+                                        </Col>
+                                        <Col md="3">
                                             <strong>{t("EQUIPMENT_IMAGE_URL")}</strong>
                                         </Col>
                                     </Row>
@@ -171,11 +176,8 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
                                                 <Col>
                                                     <strong>{t("TYPE")}</strong>
                                                 </Col>
-                                                <Col>
-                                                    <strong>{t("QUANTITY")}</strong>
-                                                </Col>
                                             </Col>
-                                            <Col xs="12" md="4">
+                                            <Col xs="12" md="3">
                                                 <BaseSelect
                                                     readOnly={Boolean(props?.entity?.is_hired)}
                                                     name={`equipment_owned[${i}].type`}
@@ -188,15 +190,31 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
                                             <Col xs="11" md="2">
                                                 <BaseInput
                                                     readOnly={Boolean(props?.entity?.is_hired)}
-                                                    name={`equipment_owned[${i}].quantity`}
-                                                    placeholder="QUANTITY"
-                                                    type="int"
-                                                    min="1"
-                                                    required
+                                                    name={`equipment_owned[${i}].make`}
+                                                    placeholder="MAKE"
                                                     formik={form}
                                                 />
                                             </Col>
-                                            <Col xs="11" md="5">
+                                            <Col xs="11" md="2">
+                                                <BaseInput
+                                                    readOnly={Boolean(props?.entity?.is_hired)}
+                                                    name={`equipment_owned[${i}].model`}
+                                                    placeholder="MODEL"
+                                                    formik={form}
+                                                />
+                                            </Col>
+                                            <Col xs="11" md="1">
+                                                <BaseInput
+                                                    readOnly={Boolean(props?.entity?.is_hired)}
+                                                    name={`equipment_owned[${i}].year`}
+                                                    placeholder="YEAR"
+                                                    type="int"
+                                                    min="1900"
+                                                    max="2100"
+                                                    formik={form}
+                                                />
+                                            </Col>
+                                            <Col xs="11" md="3">
                                                 <BaseInput
                                                     readOnly={Boolean(props?.entity?.is_hired)}
                                                     name={`equipment_owned[${i}].image_url`}
