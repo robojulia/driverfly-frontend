@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
 
-import { Files, PenFill, Plus, Recycle, CheckCircleFill, ClockFill, Code } from 'react-bootstrap-icons';
+import { Files, PenFill, Plus, Recycle, CheckCircleFill, ClockFill, Code, TrashFill } from 'react-bootstrap-icons';
 
 import PageLayout from '../../../../components/layouts/page/page-layout';
 
@@ -32,6 +32,7 @@ import DataViewToggle from '../../../../components/shared/DataViewToggle';
 import { GenericTable, TableColumn } from '../../../../components/common/GenericTable';
 import { getDataTableColumnKey } from '../../../../utils/table-migration';
 import { EmbedJobsModal } from '../../../../components/jobs/EmbedJobsModal';
+import { ConfirmationModal } from '../../../../components/shared/confirmation-modal';
 
 enum ViewModeType {
   ACTIVE = 'ACTIVE',
@@ -57,6 +58,9 @@ export default function JobListing() {
   const [showCloneModal, setShowCloneModal] = React.useState<boolean>(false);
   const [showEmbedModal, setShowEmbedModal] = React.useState<boolean>(false);
   const [jobOptions, setJobOptions] = React.useState<JobEntity[]>([]);
+  const [showDeleteModal, setShowDeleteModal] = React.useState<boolean>(false);
+  const [jobToDelete, setJobToDelete] = React.useState<JobEntity | null>(null);
+  const [isDeleting, setIsDeleting] = React.useState<boolean>(false);
   // Add sorting state
   const [sortBy, setSortBy] = React.useState<string>('');
   const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>('asc');
@@ -255,11 +259,32 @@ export default function JobListing() {
     router.push(`${router.pathname}/${id}/edit`);
   };
 
-  // const onDeleteClick = async (id: number) => {
-  //     await jobApi.remove(id);
+  const onDeleteClick = (job: JobEntity) => {
+    setJobToDelete(job);
+    setShowDeleteModal(true);
+  };
 
-  //     setJobs(activeJobs.filter(v => v.id != id));
-  // }
+  const handleConfirmDelete = async () => {
+    if (!jobToDelete) return;
+
+    setIsDeleting(true);
+    try {
+      await jobApi.remove(jobToDelete.id);
+      setJobs(jobs.filter((j) => j.id !== jobToDelete.id));
+      toast.success('Job Successfully Deleted');
+      setShowDeleteModal(false);
+      setJobToDelete(null);
+    } catch (error) {
+      toast.error('Unable to Delete Job');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setJobToDelete(null);
+  };
 
   const can = {
     editJob: hasPermission('CanUpdateJob'),
@@ -493,12 +518,12 @@ export default function JobListing() {
       });
     }
 
-    // {
-    //     onClick: e => onDeleteClick(j.id),
-    //     icon: TrashFill,
-    //     label: "DELETE",
-    //     hide: !can.deleteJob
-    // },
+    actions.push({
+      onClick: (e) => onDeleteClick(job),
+      icon: TrashFill,
+      label: 'DELETE',
+      hide: !can.deleteJob,
+    });
 
     return actions;
   };
@@ -648,6 +673,50 @@ export default function JobListing() {
         </Row>
       </ViewModal>
       <EmbedJobsModal show={showEmbedModal} onClose={onCloseEmbedModal} />
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        title="Delete Job"
+        message={
+          <div style={{ fontSize: '15px', lineHeight: '1.6' }}>
+            <p className="mb-3" style={{ fontSize: '16px' }}>
+              Are you sure you want to delete this job?
+            </p>
+            <div className="mb-3 p-3" style={{ backgroundColor: '#f8f9fa', borderRadius: '6px' }}>
+              <p className="mb-1" style={{ fontSize: '14px', color: '#6c757d' }}>
+                Job Title
+              </p>
+              <p className="mb-0" style={{ fontSize: '16px', fontWeight: '600' }}>
+                {jobToDelete?.title}
+              </p>
+            </div>
+            <div className="mb-3 p-3" style={{ backgroundColor: '#fff3cd', borderLeft: '4px solid #ffc107', borderRadius: '4px' }}>
+              <p className="mb-2" style={{ fontWeight: '600', color: '#856404' }}>
+                ⚠️ Warning
+              </p>
+              <p className="mb-0" style={{ color: '#856404' }}>
+                This action cannot be undone. The job listing and all associated data will be permanently removed.
+              </p>
+            </div>
+            <div className="p-3" style={{ backgroundColor: '#d1ecf1', borderLeft: '4px solid #17a2b8', borderRadius: '4px' }}>
+              <p className="mb-2" style={{ fontWeight: '600', color: '#0c5460' }}>
+                💡 Alternative Option
+              </p>
+              <p className="mb-0" style={{ color: '#0c5460' }}>
+                Consider marking this job as expired instead. This allows you to keep the job listing for historical purposes and view past candidates.
+              </p>
+            </div>
+          </div>
+        }
+        confirmText="Delete Permanently"
+        cancelText="Cancel"
+        confirmButtonColor="danger"
+        isLoading={isDeleting}
+        loadingText="Deleting..."
+        icon="danger"
+        size="lg"
+      />
     </PageLayout>
   );
 }

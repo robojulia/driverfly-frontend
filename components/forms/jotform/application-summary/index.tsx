@@ -371,7 +371,10 @@ export function ApplicationSummary() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.formContainer}>
+      <div
+        className={styles.formContainer}
+        style={isPrefilled ? { backgroundColor: 'white', padding: '40px' } : undefined}
+      >
         <div className="text-center mb-4">
           <h2 className="mb-3">Application Summary</h2>
 
