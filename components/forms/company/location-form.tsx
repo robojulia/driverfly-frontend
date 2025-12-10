@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useTranslation } from '../../../hooks/use-translation';
+import { useUnsavedChangesWarning } from '../../../hooks/use-unsaved-changes-warning';
 
 import { Row } from 'react-bootstrap';
 
@@ -43,6 +44,8 @@ export function LocationForm(props: LocationFormProps) {
             { translateProps: true }
           )
         );
+        // Reset dirty state after successful save to prevent unsaved changes warning
+        form.resetForm({ values: location });
         if (onSaveComplete) onSaveComplete(location);
       } catch (e) {
         console.error('Unable to save entity', e);
@@ -87,8 +90,16 @@ export function LocationForm(props: LocationFormProps) {
     setError(null);
   }, [form.values]);
 
+  // Warn user about unsaved changes when navigating away
+  const unsavedChangesWarning = useUnsavedChangesWarning({
+    isDirty: form.dirty,
+    shouldWarn: !form.isSubmitting,
+  });
+
   return (
-    <EntityForm className={className} onSubmit={valicateLocation} id={entity?.id} formik={form}>
+    <>
+      {unsavedChangesWarning}
+      <EntityForm className={className} onSubmit={valicateLocation} id={entity?.id} formik={form}>
       <>
         {error && <div className="text-danger">{t(error)}</div>}
         <Row className="my-2">
@@ -127,5 +138,6 @@ export function LocationForm(props: LocationFormProps) {
         </Row>
       </>
     </EntityForm>
+    </>
   );
 }

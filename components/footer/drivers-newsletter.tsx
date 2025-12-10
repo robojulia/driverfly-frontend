@@ -11,19 +11,8 @@ export default function DriversNewsletter() {
                 <ul className="p-0">
                     <p className="text-secondary mb-4">{t("SUBSCRIBE_TO_THE_DRIVERFLY_NEWSLETTER")}</p>
                     <form action="">
-                        <input type="email" className="form-control" placeholder={`${t("EMAIL_ADDRESS")}`} />
-                        <button type="submit" className="theme-primary-btn btn-block mt-3">{t("submit")}</button>
-                    </form>
-                </ul>
-            </div>
-            <div className="footer-inner">
-                <h3 className="widget-title font-weight-normal">{t("COMPANY_NEWSLETTER")}</h3>
-                <p className="text-secondary mb-4">{t("SUBSCRIBE_TO_THE_DRIVERFLY_NEWSLETTER_TO_GET_THE_LATEST")} {t("DISCOUNT_CODES_&_AOUPONS")}</p>
-                <ul className="p-0">
-
-                    <form action="">
-                        <input type="email" className="form-control" placeholder={`${t("EMAIL_ADDRESS")}`} />
-                        <button type="submit" className="theme-primary-btn btn-block mt-3">{t("submit")}</button>
+                        <input type="email" className="form-control font-weight-light" placeholder={`${t("EMAIL_ADDRESS")}`} style={{ height: '38px' }} />
+                        <button type="submit" className="theme-primary-btn btn-block mt-3" style={{ textAlign: 'center', display: 'block', width: '100%' }}>Send</button>
                     </form>
                 </ul>
             </div>

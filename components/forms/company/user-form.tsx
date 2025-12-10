@@ -13,6 +13,7 @@ import { globalAjaxExceptionHandler } from '../../../utils/ajax';
 import { BaseFormProps } from './base-form-props';
 import { useEffect } from 'react';
 import { useAuth } from '../../../hooks/use-auth';
+import { useUnsavedChangesWarning } from '../../../hooks/use-unsaved-changes-warning';
 // import { RoleSelect } from "../entities/role-select";
 
 export interface UserFormProps extends BaseFormProps<UserEntity> {}
@@ -41,6 +42,8 @@ export function UserForm(props: UserFormProps) {
           user = await api.create(dto);
         }
         formSuccess(t, !!entity?.id ? 'update' : 'create', 'USER');
+        // Reset dirty state after successful save to prevent unsaved changes warning
+        form.resetForm({ values: user });
         if (onSaveComplete) onSaveComplete(user);
       } catch (e) {
         console.error('Unable to save entity', e.response);
@@ -60,7 +63,15 @@ export function UserForm(props: UserFormProps) {
     if (entity && !form.dirty) form.setValues(entity);
   }, [entity]);
 
+  // Warn user about unsaved changes when navigating away
+  const unsavedChangesWarning = useUnsavedChangesWarning({
+    isDirty: form.dirty,
+    shouldWarn: !form.isSubmitting,
+  });
+
   return (
+    <>
+      {unsavedChangesWarning}
     <EntityForm className={className} onSubmit={form.handleSubmit} formik={form} id={entity?.id}>
       <Row className="mt-2">
         <BaseInput
@@ -134,5 +145,6 @@ export function UserForm(props: UserFormProps) {
         )}
       </Row>
     </EntityForm>
+    </>
   );
 }

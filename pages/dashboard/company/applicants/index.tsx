@@ -243,10 +243,102 @@ export default function Applicants() {
   }, [applicants]);
   return (
     <>
+      <style>{`
+        /* Filter button dropdown arrow - white color */
+        .theme-filter-btn.accordion-button::after {
+          filter: brightness(0) invert(1) !important;
+        }
+
+        /* Fix spacing gaps - remove extra margins from InputGroup and react-select */
+        .input-group.flex-nowrap {
+          margin-bottom: 0 !important;
+          margin-top: 0 !important;
+        }
+
+        /* Remove any extra spacing from react-select wrapper */
+        .basic-single {
+          margin: 0 !important;
+        }
+
+        .basic-single [class*="control"] {
+          margin: 0 !important;
+        }
+
+        /* Consistent font size and color for ALL filter form fields */
+        input.form-control,
+        select.form-select,
+        .form-control,
+        .form-select {
+          font-size: 1rem !important;
+          color: #000 !important;
+          font-weight: normal !important;
+        }
+
+        input.form-control::placeholder,
+        select.form-select::placeholder,
+        .form-control::placeholder,
+        .form-select::placeholder,
+        input::placeholder,
+        select::placeholder {
+          font-size: 1rem !important;
+          color: #000 !important;
+          opacity: 1 !important;
+          font-weight: normal !important;
+        }
+
+        /* Native select first option (acts as placeholder) */
+        select.form-select option:first-child,
+        select option:first-child {
+          font-size: 1rem !important;
+          color: #000 !important;
+          font-weight: normal !important;
+        }
+
+        /* React-select - Force all elements to have consistent sizing */
+        .basic-single,
+        .basic-single * {
+          font-size: 1rem !important;
+          font-weight: normal !important;
+        }
+
+        /* React-select placeholder - highest priority */
+        .basic-single [class*="placeholder"],
+        .basic-single div[class*="placeholder"] {
+          font-size: 1rem !important;
+          color: #000 !important;
+          opacity: 1 !important;
+          font-weight: normal !important;
+        }
+
+        /* React-select values */
+        .basic-single [class*="singleValue"],
+        .basic-single [class*="multiValue"],
+        .basic-single [class*="multiValueLabel"],
+        .basic-single [class*="Input"],
+        .basic-single input {
+          font-size: 1rem !important;
+          color: #000 !important;
+          font-weight: normal !important;
+        }
+
+        /* React-select control */
+        .basic-single [class*="control"],
+        .basic-single [class*="ValueContainer"] {
+          font-size: 1rem !important;
+          font-weight: normal !important;
+        }
+
+        /* Ensure all select options and menu items have consistent font */
+        .basic-single [class*="option"],
+        .basic-single [class*="menu"] div,
+        .basic-single [class*="menu"] {
+          font-size: 1rem !important;
+          font-weight: normal !important;
+        }
+      `}</style>
       <Accordion defaultActiveKey="0" flush>
         <PageLayout
           title="APPLICANTS"
-          desciption="MANAGE_YOUR_CANDIDATE_POOL"
           actions={
             <div
               style={{
@@ -267,9 +359,10 @@ export default function Applicants() {
                   height: '38px',
                   display: 'inline-flex',
                   alignItems: 'center',
+                  gap: '0.5rem',
                 }}
               >
-                <div>{t('FILTERS')}</div>
+                {t('FILTERS')}
               </Accordion.Button>
               <Button
                 variant="outline-secondary"

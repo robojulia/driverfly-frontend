@@ -71,13 +71,6 @@ export default function ResetPassword({ passwordResetToken }) {
         <meta name="description" content={t('RESET_PASSWORD_META_DESC')} key="desc" />
       </Head>
       <ToastContainer />
-      <div className="top-links-sec">
-        <Container>
-          <div className="top-links-inner d-flex align-items-center justify-content-between">
-            <h1>{t('RESET_PASSWORD')}</h1>
-          </div>
-        </Container>
-      </div>
       <div className={Forgotpassword.formsec}>
         <Container>
           <Row>

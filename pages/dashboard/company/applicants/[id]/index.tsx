@@ -202,7 +202,13 @@ export default function ViewApplicant({ id }) {
   };
 
   const onEditClick = async () => {
-    await router.push(router.asPath + `/edit`);
+    // Remove query parameters like ?no_bot=1 and add /edit
+    let path = router.asPath;
+    const queryIndex = path.indexOf('?');
+    if (queryIndex !== -1) {
+      path = path.substring(0, queryIndex);
+    }
+    await router.push(path + '/edit');
   };
 
   const canEdit = hasPermission('CanUpdateApplicant');
@@ -221,37 +227,68 @@ export default function ViewApplicant({ id }) {
   const messageTooltip = <Tooltip id="message-tooltip">{t('MESSAGE_APPLICANT')}</Tooltip>;
 
   return (
-    <ChildPageLayout
-      backPath={backPath}
-      title={title}
-      actions={
-        <div className="d-flex gap-2">
+    <>
+      {/* Fixed Update Button - stays in upper right as user scrolls */}
+      {canEdit && (
+        <div style={{
+          position: 'fixed',
+          top: 20,
+          right: 20,
+          zIndex: 1000
+        }}>
           <OverlayTrigger
             trigger={["hover", "focus"]}
             delay={{ show: 0, hide: 0 }}
-            overlay={messageTooltip}
+            overlay={Boolean(applicant?.is_hired) ? tooltip : canEditTooltip}
           >
-            <Button type="button" variant="info" onClick={scrollToMessages}>
-              <ChatDots /> {t('MESSAGE')}
-            </Button>
+            <div>
+              <Button
+                type="button"
+                onClick={onEditClick}
+                disabled={Boolean(applicant?.is_hired)}
+                style={{
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                  borderRadius: '0.375rem'
+                }}
+              >
+                <Pencil /> {t('UPDATE')}
+              </Button>
+            </div>
           </OverlayTrigger>
-          {canEdit && (
+        </div>
+      )}
+
+      <ChildPageLayout
+        backPath={backPath}
+        title={title}
+        actions={
+          <div className="d-flex gap-2">
             <OverlayTrigger
               trigger={["hover", "focus"]}
               delay={{ show: 0, hide: 0 }}
-              overlay={Boolean(applicant?.is_hired) ? tooltip : canEditTooltip}
+              overlay={messageTooltip}
             >
-              <div>
-                <Button type="button" onClick={onEditClick} disabled={Boolean(applicant?.is_hired)}>
-                  <Pencil /> {t('EDIT')}
-                </Button>
-              </div>
+              <Button type="button" variant="info" onClick={scrollToMessages}>
+                <ChatDots /> {t('MESSAGE')}
+              </Button>
             </OverlayTrigger>
-          )}
-        </div>
-      }
-    >
-      <nav aria-label="breadcrumb" className="px-2 mb-2">
+            {canEdit && (
+              <OverlayTrigger
+                trigger={["hover", "focus"]}
+                delay={{ show: 0, hide: 0 }}
+                overlay={Boolean(applicant?.is_hired) ? tooltip : canEditTooltip}
+              >
+                <div>
+                  <Button type="button" onClick={onEditClick} disabled={Boolean(applicant?.is_hired)}>
+                    <Pencil /> {t('EDIT')}
+                  </Button>
+                </div>
+              </OverlayTrigger>
+            )}
+          </div>
+        }
+      >
+        <nav aria-label="breadcrumb" className="px-2 mb-2">
         <div className="d-flex align-items-center small text-muted">
           <Link href="/dashboard"><a className="text-muted text-decoration-none">Dashboard</a></Link>
           <span className="mx-2">&gt;</span>
@@ -406,6 +443,7 @@ export default function ViewApplicant({ id }) {
 
       <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
     </ChildPageLayout>
+    </>
   );
 }
 

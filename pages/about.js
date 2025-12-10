@@ -15,14 +15,6 @@ export default function About() {
         <meta name="description" content={t("ABOUT_META_DESC")} key="desc" />
       </Head>
 
-      <div className="top-links-sec">
-        <div className="container p-0">
-          <div className="top-links-inner d-flex align-items-center justify-content-center">
-            <h1>{t("ABOUT_US")}</h1>
-          </div>
-        </div>
-      </div>
-
       <div className="about-sec">
         <div className="about-linear">
           <div className="container">
@@ -36,7 +28,7 @@ export default function About() {
               </div>
               <div className="col-sm-12 col-lg-8">
                 <div className="about-inner">
-                  <h3>{t("ABOUT_DRIVERFLY")}</h3>
+                  <h2 style={{ color: 'white' }}>{t("ABOUT_DRIVERFLY")}</h2>
                   <p>{t("DRIVERFLY_WAS_BUILT_AS_A_DIGITAL_PLATFORM")}</p>
                   <p>{t("UNLIKE_TRADITIONAL_JOB_BOARDS")}</p>
                   <p>{t("WITH_JOBS_ACROSS_THE_ENTIRE_US")}</p>

@@ -1,12 +1,12 @@
 const io = require("socket.io-client");
 import { Socket } from "socket.io-client";
 
-export const socket: Socket = io(`${process.env.BASE_URL}`, {
+export const socket: Socket = io(`${process.env.NEXT_PUBLIC_BASE_URL}`, {
     transports: ["websocket"],
     reconnectionAttempts: 5, // Limit reconnections
     reconnectionDelay: 2000, // Wait 2 seconds before retrying
-    timeout: 5000, // Connection timeout of 5 seconds   
-    autoConnect: false // We'll manually connect after setting up listeners 
+    timeout: 5000, // Connection timeout of 5 seconds
+    autoConnect: false // We'll manually connect after setting up listeners
     // rejectUnauthorized: false,
     // path: "/socket.io",
     // protocols: ["ws:// ", "wss://"],

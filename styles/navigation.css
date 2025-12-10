@@ -65,7 +65,7 @@
   box-shadow: var(--nav-shadow);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  margin-bottom: 40px;
+  margin-bottom: 0;
 }
 
 .header-container {

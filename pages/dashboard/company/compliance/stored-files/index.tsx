@@ -93,7 +93,11 @@ export default function StoredFiles() {
 
       setIsFetchingEmployees(true);
       const e = (await employeeApi.list()) as EmployeeEntity[];
-      setEmployees(e?.filter(({ email }) => !!email));
+      setEmployees(
+        e?.filter(
+          ({ email, status }) => !!email && status == EmployeeStatus.ACTIVE
+        )
+      );
       setIsFetchingEmployees(false);
     },
     [user],
@@ -176,7 +180,6 @@ export default function StoredFiles() {
         <div className="mb-3 d-flex gap-3">
           <BaseSelect
             className="col-4"
-            label="FILTER_BY_STATUS"
             name="statusFilter"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -187,7 +190,6 @@ export default function StoredFiles() {
           />
           <BaseSelect
             className="col-4"
-            label="FILTER_BY_EMPLOYMENT_TYPE"
             name="employmentTypeFilter"
             value={employmentTypeFilter}
             onChange={(e) => setEmploymentTypeFilter(e.target.value)}
@@ -270,7 +272,6 @@ export default function StoredFiles() {
 
   function EmployeeListing() {
     const [selectedRows, setSelectedRows] = useState<EmployeeEntity[]>();
-    const [statusFilter, setStatusFilter] = useState<string>("");
 
     const handleSelectedRowsChange = (arg: any) => {
       setSelectedRows(
@@ -282,27 +283,10 @@ export default function StoredFiles() {
       );
     };
 
-    const filteredEmployees = employees?.filter((employee) => {
-      return !statusFilter || employee.status === statusFilter;
-    });
-
     if (isFetchingEmployees) return <LoaderIcon isLoading />;
 
     return (
       <>
-        <div className="mb-3 d-flex gap-3">
-          <BaseSelect
-            className="col-4"
-            label="FILTER_BY_STATUS"
-            name="statusFilter"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            displayPlaceholder
-            placeholder="ALL_STATUSES"
-            labelPrefix="EmployeeStatus"
-            enumType={EmployeeStatus}
-          />
-        </div>
         <ViewDataTable<EmployeeEntity>
           subHeader={
             <div className="float-left pr-2">
@@ -368,7 +352,7 @@ export default function StoredFiles() {
                 ),
             },
           ]}
-          items={filteredEmployees}
+          items={employees}
         />
       </>
     );
@@ -469,8 +453,8 @@ export default function StoredFiles() {
                     </button>
                   )}
                   <button
-                    className="btn btn-danger mr-0 px-4 py-2"
                     type="button"
+                    className="btn-danger ml-2 px-4 py-2"
                     onClick={() =>
                       setConfirmationModal({
                         value: !confirmationModal.value,
@@ -580,6 +564,8 @@ export default function StoredFiles() {
         onCloseClick={resetDocumentId}
         closeText="CANCEL"
         title="SEND_FILES_TO"
+        size="xl"
+        headerClass="py-2 align-items-center"
       >
         <TabbedLayout
           items={{

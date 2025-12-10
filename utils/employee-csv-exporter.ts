@@ -57,7 +57,7 @@ export class EmployeeCSVExporter {
       // Testing & Preferences
       'Can Pass Drug Test': employee.can_pass_drug_test ? 'Yes' : 'No',
       'Is Owner Operator': employee.is_owner_operator ? 'Yes' : 'No',
-      'Preferred Location': Array.isArray(employee.preferred_location)
+      'Preferred Routes': Array.isArray(employee.preferred_location)
         ? employee.preferred_location.join(', ')
         : '',
 

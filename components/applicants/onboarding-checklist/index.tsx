@@ -713,16 +713,16 @@ export default function OnboardingChecklist(
             return (
               <div key={type} className="p-3 border rounded" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', ...(isHistorical ? { backgroundColor: '#fff3cd' } : {}) }}>
                 {/* Left: status + name */}
-                <div className="d-flex align-items-center" style={{ gap: 10 }}>
-                  <div style={{ width: 16, height: 16, borderRadius: 4, border: '1px solid #0f5257', background: isCompleted ? '#0f5257' : 'transparent' }} />
-                  <div style={{ fontWeight: 600 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <div style={{ width: 16, height: 16, borderRadius: 4, border: '1px solid #0f5257', background: isCompleted ? '#0f5257' : 'transparent', flexShrink: 0 }} />
+                  <span style={{ fontWeight: 600, lineHeight: 1 }}>
                     {displayName}
                     {isHistorical && (
                       <span className="badge bg-warning text-dark ms-2" title={t("This document type was removed from the global template but data is preserved")}>
                         {t("Historical")}
                       </span>
                     )}
-                  </div>
+                  </span>
                 </div>
               {/* Right: uploaded at + actions */}
               <div className="d-flex align-items-center" style={{ gap: 12 }}>

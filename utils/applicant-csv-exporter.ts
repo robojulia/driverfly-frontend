@@ -87,7 +87,7 @@ export class ApplicantCSVExporter {
       'Routes': Array.isArray(applicant.routes)
         ? applicant.routes.join(', ')
         : '',
-      'Preferred Location': Array.isArray(applicant.preferred_location)
+      'Preferred Routes': Array.isArray(applicant.preferred_location)
         ? applicant.preferred_location.join(', ')
         : '',
 

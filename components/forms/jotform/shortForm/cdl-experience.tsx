@@ -7,16 +7,13 @@ import { CdlDto } from '../../../../models/jot-form/short-form/cdl-experience.dt
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { useContext, useEffect } from 'react';
 import styles from '../../../../styles/digitalhiringapp.module.css';
-import { ApplicantExtras } from '../../../../enums/applicants/applicant-extras.enum';
-import { ApplicantExtrasEntity } from '../../../../models/applicant';
-import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
 import { FormActions } from '../form-buttons';
-import { Input, RadioGroup } from '../../../shared/dha';
+import { Input } from '../../../shared/dha';
 
 export function CdlExperience() {
   const {
     state: { applicant, applicantExtras },
-    method: { setApplicant, stepNext, stepBack, setApplicantExtras, updateApplicantExtras },
+    method: { setApplicant, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
@@ -25,33 +22,13 @@ export function CdlExperience() {
     initialValues: new CdlDto(),
     validationSchema: CdlDto.yupSchema(),
     onSubmit: (values) => {
-      const { license_type, years_cdl_experience, is_owner_operator, BUSINESS_NAME, DOT_NUMBER } =
-        values;
+      const { license_type, years_cdl_experience } = values;
 
       setApplicant({
         ...applicant,
         license_type,
         years_cdl_experience,
-        is_owner_operator,
       });
-
-      // Handle BUSINESS_NAME - only update if owner-operator and has value, otherwise remove
-      if (is_owner_operator && BUSINESS_NAME?.value?.trim()) {
-        updateApplicantExtras(BUSINESS_NAME);
-      } else {
-        setApplicantExtras(
-          (prev) => prev?.filter((extra) => extra.type !== ApplicantExtras.BUSINESS_NAME) || []
-        );
-      }
-
-      // Handle DOT_NUMBER - only update if owner-operator and has value, otherwise remove
-      if (is_owner_operator && DOT_NUMBER?.value?.trim()) {
-        updateApplicantExtras(DOT_NUMBER);
-      } else {
-        setApplicantExtras(
-          (prev) => prev?.filter((extra) => extra.type !== ApplicantExtras.DOT_NUMBER) || []
-        );
-      }
 
       stepNext();
     },
@@ -61,25 +38,11 @@ export function CdlExperience() {
   });
 
   useEffect(() => {
-    const { license_type, years_cdl_experience, is_owner_operator } = applicant;
+    const { license_type, years_cdl_experience } = applicant;
 
-    const apx_business_name = applicantExtras?.find((v) => v.type == ApplicantExtras.BUSINESS_NAME);
-    const apx_dot_number = applicantExtras?.find((v) => v.type == ApplicantExtras.DOT_NUMBER);
-
-    const initialValues = {
-      license_type: license_type || null,
-      years_cdl_experience: years_cdl_experience || null,
-      is_owner_operator: is_owner_operator !== undefined ? is_owner_operator : null,
-      BUSINESS_NAME: !!apx_business_name?.type
-        ? apx_business_name
-        : new ApplicantExtrasEntity(ApplicantExtras.BUSINESS_NAME),
-      DOT_NUMBER: !!apx_dot_number?.type
-        ? apx_dot_number
-        : new ApplicantExtrasEntity(ApplicantExtras.DOT_NUMBER),
-    };
-
-    // Set values and reset form state to clear any validation errors
-    form.setValues(initialValues, false);
+    // Set individual field values and reset form state to clear any validation errors
+    form.setFieldValue('license_type', license_type || null, false);
+    form.setFieldValue('years_cdl_experience', years_cdl_experience || null, false);
     form.setTouched({}, false);
     form.setErrors({});
 
@@ -91,38 +54,7 @@ export function CdlExperience() {
 
   function onLicenseTypeChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const licenseType = e.target.value;
-    switch (licenseType) {
-      case DriverLicenseType.CDL_CLASS_C:
-        form.setValues(
-          {
-            ...form.values,
-            license_type: licenseType,
-            is_owner_operator: false,
-          },
-          true
-        );
-        break;
-      case null:
-        form.setValues(
-          {
-            ...form.values,
-            license_type: licenseType,
-            is_owner_operator: false,
-            years_cdl_experience: null,
-          },
-          true
-        );
-        break;
-      default:
-        form.setValues(
-          {
-            ...form.values,
-            license_type: licenseType,
-          },
-          true
-        );
-        break;
-    }
+    form.setFieldValue('license_type', licenseType);
   }
 
   const handleNext = () => {
@@ -145,41 +77,6 @@ export function CdlExperience() {
     return form.values.license_type !== DriverLicenseType.NO_CDL
       ? t('years_cdl_experience')
       : t('years__driving_experience');
-  };
-
-  const shouldShowOwnerOperatorQuestion = () => {
-    return (
-      form.values.license_type &&
-      form.values.license_type !== DriverLicenseType.NO_CDL &&
-      form.values.license_type !== DriverLicenseType.CDL_CLASS_C
-    );
-  };
-
-  const shouldShowBusinessFields = () => {
-    return Boolean(form.values.is_owner_operator);
-  };
-
-  // Define radio group value clearly
-  const getOwnerOperatorRadioValue = () => {
-    if (form.values.is_owner_operator === true) {
-      return BooleanType.YES;
-    }
-    if (form.values.is_owner_operator === false) {
-      return BooleanType.NO;
-    }
-    return undefined;
-  };
-
-  const ownerOperatorRadioValue = getOwnerOperatorRadioValue();
-
-  const handleOwnerOperatorChange = (value: string) => {
-    let newValue: boolean | null = null;
-    if (value === BooleanType.YES) {
-      newValue = true;
-    } else if (value === BooleanType.NO) {
-      newValue = false;
-    }
-    form.setFieldValue('is_owner_operator', newValue);
   };
 
   return (
@@ -233,67 +130,6 @@ export function CdlExperience() {
                 icon={<span>🚛</span>}
                 helperText="Enter your years of experience (e.g., 2.5 for 2 years and 6 months)"
               />
-            </div>
-          )}
-
-          {shouldShowOwnerOperatorQuestion() && (
-            <div className="my-4">
-              <RadioGroup
-                name="is_owner_operator"
-                label={t('is_owner_operator_question')}
-                enumType={BooleanType}
-                value={ownerOperatorRadioValue}
-                onChange={handleOwnerOperatorChange}
-                required
-                error={
-                  form.touched.is_owner_operator && form.errors.is_owner_operator
-                    ? String(form.errors.is_owner_operator)
-                    : undefined
-                }
-                labelPrefix="BooleanType"
-                columns={2}
-                variant="card"
-              />
-            </div>
-          )}
-
-          {shouldShowBusinessFields() && (
-            <div className="mt-4" style={{ clear: 'both' }}>
-              <div className="my-3">
-                <Input
-                  name="BUSINESS_NAME.value"
-                  label={t('BUSINESS_NAME')}
-                  placeholder={t('BUSINESS_NAME')}
-                  value={form.values.BUSINESS_NAME?.value || ''}
-                  onChange={form.handleChange}
-                  onBlur={form.handleBlur}
-                  error={
-                    form.touched.BUSINESS_NAME?.value && form.errors.BUSINESS_NAME?.value
-                      ? String(form.errors.BUSINESS_NAME.value)
-                      : undefined
-                  }
-                  icon={<span>🏢</span>}
-                  helperText="Enter your business or company name"
-                />
-              </div>
-
-              <div className="my-3">
-                <Input
-                  name="DOT_NUMBER.value"
-                  label={t('DOT_NUMBER')}
-                  placeholder={t('DOT_NUMBER')}
-                  value={form.values.DOT_NUMBER?.value || ''}
-                  onChange={form.handleChange}
-                  onBlur={form.handleBlur}
-                  error={
-                    form.touched.DOT_NUMBER?.value && form.errors.DOT_NUMBER?.value
-                      ? String(form.errors.DOT_NUMBER.value)
-                      : undefined
-                  }
-                  icon={<span>🔢</span>}
-                  helperText="Enter your DOT number (Department of Transportation)"
-                />
-              </div>
             </div>
           )}
         </div>

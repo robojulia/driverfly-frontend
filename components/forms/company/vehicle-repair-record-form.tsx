@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import InputMask from 'react-input-mask';
 import { NumericFormat } from 'react-number-format';
 import { useTranslation } from '../../../hooks/use-translation';
+import { useUnsavedChangesWarning } from '../../../hooks/use-unsaved-changes-warning';
 import {
   VehicleRepairRecordEntity,
   RepairType,
@@ -76,6 +77,8 @@ export function VehicleRepairRecordForm(props: VehicleRepairRecordFormProps) {
             { translateProps: true }
           )
         );
+        // Reset dirty state after successful save to prevent unsaved changes warning
+        form.resetForm({ values: repair });
         if (onSaveComplete) onSaveComplete(repair);
       } catch (e) {
         console.error('Unable to save entity', e);
@@ -102,8 +105,16 @@ export function VehicleRepairRecordForm(props: VehicleRepairRecordFormProps) {
     !form.values.description ||
     !form.isValid;
 
+  // Warn user about unsaved changes when navigating away
+  const unsavedChangesWarning = useUnsavedChangesWarning({
+    isDirty: form.dirty,
+    shouldWarn: !form.isSubmitting,
+  });
+
   return (
-    <EntityForm
+    <>
+      {unsavedChangesWarning}
+      <EntityForm
       className={`${className} vehicle-repair-record-form`}
       onSubmit={form.handleSubmit}
       id={entity?.id}
@@ -197,6 +208,7 @@ export function VehicleRepairRecordForm(props: VehicleRepairRecordFormProps) {
         </Row>
       </Container>
     </EntityForm>
+    </>
   );
 }
 

@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 
 import { useAuth } from '../../../hooks/use-auth';
 import { useTranslation } from '../../../hooks/use-translation';
+import { useUnsavedChangesWarning } from '../../../hooks/use-unsaved-changes-warning';
 import { useEffectAsync } from '../../../utils/react';
 
 import { globalAjaxExceptionHandler } from '../../../utils/ajax';
@@ -437,6 +438,8 @@ export function JobForm(props: JobFormProps) {
           { translateProps: true }
         )
       );
+      // Reset dirty state after successful save to prevent unsaved changes warning
+      form.resetForm({ values: job });
       if (onSaveComplete) onSaveComplete(job);
     } catch (e) {
       console.error('Unable to save job', e);
@@ -466,8 +469,15 @@ export function JobForm(props: JobFormProps) {
     return (hasAttemptedSubmit || form.touched[fieldName]) && form.errors[fieldName];
   };
 
+  // Warn user about unsaved changes when navigating away
+  const unsavedChangesWarning = useUnsavedChangesWarning({
+    isDirty: form.dirty,
+    shouldWarn: !isSubmitting,
+  });
+
   return (
     <>
+      {unsavedChangesWarning}
       <EntityForm
         className={className}
         onSubmit={form.handleSubmit}

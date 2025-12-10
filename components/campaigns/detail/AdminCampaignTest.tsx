@@ -172,14 +172,14 @@ export const AdminCampaignTest: React.FC<AdminCampaignTestProps> = ({
           <CardHeader className="bg-warning bg-opacity-15 border-warning py-4">
             <div className="d-flex align-items-center">
               <div
-                className="d-flex align-items-center justify-content-center bg-warning text-white rounded-circle me-3"
+                className="d-flex align-items-center justify-content-center bg-warning rounded-circle me-3"
                 style={{ width: '40px', height: '40px' }}
               >
-                <Gear size={20} />
+                <Gear size={20} className="text-white" />
               </div>
               <div className="flex-grow-1">
-                <h5 className="fw-bold text-dark mb-1">Job Reachout Campaign Call Results</h5>
-                <p className="text-muted mb-0 small">
+                <h5 className="fw-bold text-white mb-1">Job Reachout Campaign Call Results</h5>
+                <p className="text-white mb-0 small">
                   Test different call outcomes and simulate campaign microservice responses
                 </p>
               </div>

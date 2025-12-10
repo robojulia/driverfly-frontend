@@ -78,29 +78,25 @@ const CDLInformation = ({ applicant, t }) => {
                 </View>
             </View>
 
-            {/* Endorsements */}
-            {applicant?.endorsements && applicant.endorsements.length > 0 && (
-                <View style={styles.row}>
-                    <View style={styles.field}>
-                        <Text style={styles.label}>{t("ENDORSEMENTS")}</Text>
-                        <Text style={styles.value}>
-                            {formatEnumValues(applicant.endorsements)}
-                        </Text>
-                    </View>
+            {/* Endorsements / TWIC and License Restrictions */}
+            <View style={styles.row}>
+                <View style={styles.field}>
+                    <Text style={styles.label}>{t("ENDORSEMENTS")}</Text>
+                    <Text style={styles.value}>
+                        {applicant?.endorsements && applicant.endorsements.length > 0
+                            ? formatEnumValues(applicant.endorsements)
+                            : 'N/A'}
+                    </Text>
                 </View>
-            )}
-
-            {/* License Restrictions */}
-            {applicant?.license_restrictions && applicant.license_restrictions.length > 0 && (
-                <View style={styles.row}>
-                    <View style={styles.field}>
-                        <Text style={styles.label}>{t("LICENSE_RESTRICTIONS")}</Text>
-                        <Text style={styles.value}>
-                            {formatEnumValues(applicant.license_restrictions)}
-                        </Text>
-                    </View>
+                <View style={styles.field}>
+                    <Text style={styles.label}>{t("LICENSE_RESTRICTIONS")}</Text>
+                    <Text style={styles.value}>
+                        {applicant?.license_restrictions && applicant.license_restrictions.length > 0
+                            ? formatEnumValues(applicant.license_restrictions)
+                            : 'N/A'}
+                    </Text>
                 </View>
-            )}
+            </View>
         </View>
     );
 };

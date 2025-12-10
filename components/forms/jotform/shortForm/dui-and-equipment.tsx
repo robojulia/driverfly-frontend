@@ -24,7 +24,7 @@ export function DuiAndEquipment() {
       equipment_experience: [],
     },
     validationSchema: yup.object({
-      equipment_experience: (yup.array(ApplicantExperienceEntity.yupSchema()) as any)
+      equipment_experience: (yup.array(ApplicantExperienceEntity.yupSchemaForImport()) as any)
         .unique('type', { mapper: ApplicantExperienceEntity.key })
         .test('no-negative-years', 'Years of experience cannot be negative', function (value) {
           if (!value || !Array.isArray(value)) return true;
@@ -135,6 +135,28 @@ export function DuiAndEquipment() {
     form.handleChange(e);
   };
 
+  const handleStartYearChange = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const startYear = parseInt(e.target.value);
+    form.setFieldValue(`equipment_experience[${index}].start_year`, startYear);
+
+    const endYear = form.values.equipment_experience?.[index]?.end_year;
+    if (startYear && endYear && endYear >= startYear) {
+      const calculatedYears = endYear - startYear;
+      form.setFieldValue(`equipment_experience[${index}].years`, calculatedYears);
+    }
+  };
+
+  const handleEndYearChange = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const endYear = parseInt(e.target.value);
+    form.setFieldValue(`equipment_experience[${index}].end_year`, endYear);
+
+    const startYear = form.values.equipment_experience?.[index]?.start_year;
+    if (startYear && endYear && endYear >= startYear) {
+      const calculatedYears = endYear - startYear;
+      form.setFieldValue(`equipment_experience[${index}].years`, calculatedYears);
+    }
+  };
+
   return (
     <>
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
@@ -198,9 +220,37 @@ export function DuiAndEquipment() {
                       />
 
                       <Input
+                        name={`equipment_experience[${i}].start_year`}
+                        label={t('START_YEAR')}
+                        placeholder={t('ENTER_START_YEAR')}
+                        type="number"
+                        min="1900"
+                        max={new Date().getFullYear().toString()}
+                        value={entity.start_year?.toString() || ''}
+                        onChange={handleStartYearChange(i)}
+                        onBlur={form.handleBlur}
+                        error={getFieldError(`equipment_experience[${i}].start_year`)}
+                        helperText="Year you started using this equipment"
+                      />
+
+                      <Input
+                        name={`equipment_experience[${i}].end_year`}
+                        label={t('END_YEAR')}
+                        placeholder={t('ENTER_END_YEAR')}
+                        type="number"
+                        min="1900"
+                        max={new Date().getFullYear().toString()}
+                        value={entity.end_year?.toString() || ''}
+                        onChange={handleEndYearChange(i)}
+                        onBlur={form.handleBlur}
+                        error={getFieldError(`equipment_experience[${i}].end_year`)}
+                        helperText="Year you stopped using this equipment"
+                      />
+
+                      <Input
                         name={`equipment_experience[${i}].years`}
                         label={t('YEARS')}
-                        placeholder={t('PLACEHOLDER_FOR_DIGITS')}
+                        placeholder={t('AUTO_CALCULATED')}
                         type="number"
                         min="1"
                         max="100"
@@ -208,8 +258,8 @@ export function DuiAndEquipment() {
                         onChange={handleYearsChange(i)}
                         onBlur={form.handleBlur}
                         error={getFieldError(`equipment_experience[${i}].years`)}
-                        helperText="Enter years of experience with this equipment (1-100 years)"
-                        required
+                        helperText="Total years (auto-calculated from start/end year)"
+                        disabled={!!(entity.start_year && entity.end_year)}
                       />
                     </div>
 

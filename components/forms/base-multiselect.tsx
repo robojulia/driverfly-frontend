@@ -186,43 +186,40 @@ function BaseMultiSelect({
 	}, [formik.dirty, formik.setFieldValue, name]);
 
 	return (
-		<div className={className} >
-			<BaseControl
-				name={name}
-				label={label}
-				required={required}
-				formik={formik}
-				touched={touched}
-				error={error}
-				prepend={prepend}
-				append={append}
-			>
-				<Select
-					closeMenuOnSelect={false}
-					isMulti
-					onChange={onChangeProxy}
-					ref={selectInputRef}
-					value={options?.filter(option => value?.includes(option?.value)) || []}
-					className="basic-single"
-					isClearable={true}
-					styles={csutomStyles}
-					isSearchable={true}
-					onBlur={handleBlur}
-					placeholder={
-						(displayPlaceholder || placeholder) &&
-						t(
-							(typeof displayPlaceholder == "string" && displayPlaceholder) ||
-							placeholder ||
-							label ||
-							name
-						)
-					}
-					options={options}
-				/>
-			</BaseControl>
-
-		</div>
-
+		<BaseControl
+			className={className}
+			name={name}
+			label={label}
+			required={required}
+			formik={formik}
+			touched={touched}
+			error={error}
+			prepend={prepend}
+			append={append}
+		>
+			<Select
+				closeMenuOnSelect={false}
+				isMulti
+				onChange={onChangeProxy}
+				ref={selectInputRef}
+				value={options?.filter(option => value?.includes(option?.value)) || []}
+				className="basic-single"
+				isClearable={true}
+				styles={csutomStyles}
+				isSearchable={true}
+				onBlur={handleBlur}
+				placeholder={
+					(displayPlaceholder || placeholder) &&
+					t(
+						(typeof displayPlaceholder == "string" && displayPlaceholder) ||
+						placeholder ||
+						label ||
+						name
+					)
+				}
+				options={options}
+			/>
+		</BaseControl>
 	);
 }
 

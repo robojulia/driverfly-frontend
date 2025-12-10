@@ -155,10 +155,9 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, onAction }
             // Draft mode: Show Launch, Refresh Targets, and View buttons
             <div className="d-grid gap-2">
               <Button
-                color="outline-secondary"
                 size="sm"
                 onClick={() => router.push(`/dashboard/company/campaigns/${campaign.id}`)}
-                className="w-100 mt-2"
+                className={`w-100 mt-2 ${styles.viewButton}`}
               >
                 <Eye size={14} className="me-1" />
                 {t('VIEW_DETAILS')}
@@ -168,9 +167,9 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, onAction }
             // Active campaigns: Show standard action buttons
             <div className="btn-group w-100" role="group">
               <Button
-                color="outline-primary"
                 size="sm"
                 onClick={() => router.push(`/dashboard/company/campaigns/${campaign.id}`)}
+                className={styles.viewButton}
               >
                 <Eye size={14} className="me-1" />
                 {t('VIEW')}

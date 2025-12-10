@@ -190,7 +190,7 @@ export default function EditApplicant({ id }) {
         position: 'fixed',
         top: 20,
         right: 20,
-        zIndex: 1000
+        zIndex: 9999
       }}>
         <Button
           type="button"
@@ -202,7 +202,7 @@ export default function EditApplicant({ id }) {
             borderRadius: '0.375rem'
           }}
         >
-          {isSaving ? t('UPDATING') || 'Updating...' : t('UPDATE') || 'Update'}
+          {isSaving ? 'Updating' : t('UPDATE') || 'Update'}
         </Button>
       </div>
 
@@ -210,7 +210,18 @@ export default function EditApplicant({ id }) {
         title={t('EDIT_{name}', { name: 'APPLICANT' }, { translateProps: true })}
         backPath={backPath}
         actions={(
-          <HireApplicantForm entity={applicant} />
+          <div className="d-flex gap-2">
+            <HireApplicantForm entity={applicant} />
+            <Button
+              type="button"
+              className="btn theme-primary-btn"
+              onClick={handleSave}
+              disabled={isSaving}
+              style={{ borderRadius: '0.375rem' }}
+            >
+              {isSaving ? 'Updating' : t('UPDATE') || 'Update'}
+            </Button>
+          </div>
         )}
       >
       {/* Identity summary and sticky sub-nav removed per design direction */}

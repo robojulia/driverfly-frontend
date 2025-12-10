@@ -88,11 +88,6 @@ export default function BaseClickToCopyInput({
 					<Modal.Body>
 						{instructionsContent}
 					</Modal.Body>
-					<Modal.Footer>
-						<Button variant="secondary" onClick={() => setShowInstructions(false)}>
-							{t('CLOSE')}
-						</Button>
-					</Modal.Footer>
 				</Modal>
 			)}
 		</>

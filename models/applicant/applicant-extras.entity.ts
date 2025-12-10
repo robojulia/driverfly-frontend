@@ -59,7 +59,18 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.OTHER_ABSOLUTELY_REQUIREMENTS,
 					then: yup
-						.array((yup.string() as any).enum(OtherRequirementType))
+						.array(
+							yup.string().test(
+								'is-valid-requirement',
+								'Invalid requirement type',
+								(value) => {
+									if (!value) return true;
+									// Allow enum values or strings starting with "OTHERS:"
+									return Object.values(OtherRequirementType).includes(value as OtherRequirementType) ||
+										value.startsWith('OTHERS:');
+								}
+							)
+						)
 						.optional()
 						.nullable(),
 				})

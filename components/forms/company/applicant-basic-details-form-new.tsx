@@ -289,13 +289,13 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
                 <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="First Name" required name="first_name" placeholder="John" formik={form} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Middle Name" name="meta.middle_name" />
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Middle Name" name="meta.middle_name" formik={form} />
               </Col>
               <Col md="3" className="px-2">
                 <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Last Name" required name="last_name" placeholder="Doe" formik={form} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Suffix" name="meta.suffix" />
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Suffix" name="meta.suffix" formik={form} />
               </Col>
             </Row>
             

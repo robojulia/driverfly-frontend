@@ -74,6 +74,9 @@ export default function Sidebar(props: SidebarProps) {
 
   const filteredItems = filterItems(items, hasPermission);
 
+  // Filter out Training Academy from the main menu list - it will be rendered separately at the bottom
+  const menuItems = isSubmenu ? filteredItems : filteredItems.filter(item => item.text !== 'TRAINING_ACADEMY');
+
   // Find selected item
   let current = findLast(filteredItems, (v) => IsSelected(v, router.asPath));
   if (!current) current = filteredItems[0];
@@ -95,7 +98,7 @@ export default function Sidebar(props: SidebarProps) {
   }, [current, hasVisibleSubmenu, onHasSubmenu, isSubmenu, router.asPath]);
 
   // Group items by their group property
-  const groupedItems = groupItemsByCategory(filteredItems);
+  const groupedItems = groupItemsByCategory(menuItems);
 
   const handleNavigation = (item: SidebarItem) => {
     if (isMobile) {
@@ -175,6 +178,26 @@ export default function Sidebar(props: SidebarProps) {
               />
             </div>
           )}
+
+        {/* Training Academy Link - Always at the very bottom */}
+        {!isSubmenu && (() => {
+          const trainingItem = items.find(item => item.text === 'TRAINING_ACADEMY');
+          if (!trainingItem) return null;
+
+          return (
+            <div style={{ marginTop: isFeatureEnabled('AUTORECRUITING_ENABLED') && isAutoRecruitingEnabled === false ? '0' : 'auto' }}>
+              <ul style={{ padding: 0, margin: 0, listStyle: 'none' }}>
+                <SidebarLink
+                  isMobile={isMobile}
+                  item={trainingItem}
+                  t={t}
+                  currentPath={router.asPath}
+                  onNavigate={() => handleNavigation(trainingItem)}
+                />
+              </ul>
+            </div>
+          );
+        })()}
       </aside>
       {hasVisibleSubmenu && (
         <Sidebar

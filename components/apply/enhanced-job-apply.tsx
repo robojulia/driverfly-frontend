@@ -64,6 +64,8 @@ const enhancedQuickApplyValidationSchema = yup.object({
   all_violations_count: yup.number().min(0).nullable(),
   accident_count: yup.number().min(0).nullable(),
   is_owner_operator: yup.boolean().nullable(),
+  owner_operator_company_name: yup.string().trim().nullable(),
+  owner_operator_dot_number: yup.string().trim().nullable(),
   documents: yup.array().nullable(),
 });
 
@@ -221,6 +223,9 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
         can_pass_drug_test: applicantProfile.can_pass_drug_test ?? true,
         authorize_to_communicate: applicantProfile.authorize_to_communicate || BooleanTypeExtra.YES,
         documents: applicantProfile.documents || [],
+        is_owner_operator: applicantProfile.is_owner_operator ?? false,
+        owner_operator_company_name: applicantProfile.owner_operator_company_name || '',
+        owner_operator_dot_number: applicantProfile.owner_operator_dot_number || '',
       });
 
       setIsPrefilled(true);
@@ -305,6 +310,9 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
       documents: [],
       can_pass_drug_test: true,
       authorize_to_communicate: BooleanTypeExtra.YES, // Default to YES
+      is_owner_operator: false,
+      owner_operator_company_name: '',
+      owner_operator_dot_number: '',
     },
     validationSchema: enhancedQuickApplyValidationSchema,
     onSubmit: async (dto, { resetForm }) => {
@@ -1024,6 +1032,7 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
                       )
                     ) {
                       apply_form.setFieldValue('years_cdl_experience', 0);
+                      apply_form.setFieldValue('is_owner_operator', false);
                     }
                   }}
                   onBlur={apply_form.handleBlur}
@@ -1061,21 +1070,57 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
             {[DriverLicenseType.CDL_CLASS_A, DriverLicenseType.CDL_CLASS_B].includes(
               apply_form.values?.license_type
             ) && (
-              <Row className="mt-3">
-                <Col>
-                  <Checkbox
-                    name="is_owner_operator"
-                    label="Are you an owner operator?"
-                    checked={apply_form.values.is_owner_operator}
-                    onChange={(e) =>
-                      apply_form.setFieldValue('is_owner_operator', e.target.checked)
-                    }
-                    error={getErrorString(
-                      apply_form.touched.is_owner_operator && apply_form.errors.is_owner_operator
-                    )}
-                  />
-                </Col>
-              </Row>
+              <>
+                <Row className="mt-3">
+                  <Col>
+                    <Checkbox
+                      name="is_owner_operator"
+                      label="Are you an owner operator?"
+                      checked={apply_form.values.is_owner_operator}
+                      onChange={(e) =>
+                        apply_form.setFieldValue('is_owner_operator', e.target.checked)
+                      }
+                      error={getErrorString(
+                        apply_form.touched.is_owner_operator && apply_form.errors.is_owner_operator
+                      )}
+                    />
+                  </Col>
+                </Row>
+
+                {/* Owner Operator Company and DOT Number */}
+                {apply_form.values.is_owner_operator && (
+                  <Row className="mt-3">
+                    <Col md={6}>
+                      <Input
+                        label="Company Name (Optional)"
+                        name="owner_operator_company_name"
+                        type="text"
+                        value={apply_form.values.owner_operator_company_name || ''}
+                        onChange={apply_form.handleChange}
+                        onBlur={apply_form.handleBlur}
+                        error={getErrorString(
+                          apply_form.touched.owner_operator_company_name &&
+                            apply_form.errors.owner_operator_company_name
+                        )}
+                      />
+                    </Col>
+                    <Col md={6}>
+                      <Input
+                        label="DOT Number (Optional)"
+                        name="owner_operator_dot_number"
+                        type="text"
+                        value={apply_form.values.owner_operator_dot_number || ''}
+                        onChange={apply_form.handleChange}
+                        onBlur={apply_form.handleBlur}
+                        error={getErrorString(
+                          apply_form.touched.owner_operator_dot_number &&
+                            apply_form.errors.owner_operator_dot_number
+                        )}
+                      />
+                    </Col>
+                  </Row>
+                )}
+              </>
             )}
 
             {/* Driver's License Section */}

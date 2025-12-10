@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Col, Row, Container } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useTranslation } from '../../../hooks/use-translation';
+import { useUnsavedChangesWarning } from '../../../hooks/use-unsaved-changes-warning';
 import { VehicleEntity } from '../../../models/company/vehicle.entity';
 import VehicleApi from '../../../pages/api/vehicle';
 import { EmployeeEntity } from '../../../models/employee/employee.entity';
@@ -67,6 +68,8 @@ export function VehicleForm(props: VehicleFormProps) {
             { translateProps: true }
           )
         );
+        // Reset dirty state after successful save to prevent unsaved changes warning
+        form.resetForm({ values: vehicle });
         if (onSaveComplete) onSaveComplete(vehicle);
       } catch (e) {
         console.error('Unable to save entity', e);
@@ -169,8 +172,16 @@ export function VehicleForm(props: VehicleFormProps) {
     setShowEmployeeDropdown(false);
   };
 
+  // Warn user about unsaved changes when navigating away
+  const unsavedChangesWarning = useUnsavedChangesWarning({
+    isDirty: form.dirty,
+    shouldWarn: !form.isSubmitting,
+  });
+
   return (
-    <EntityForm
+    <>
+      {unsavedChangesWarning}
+      <EntityForm
       className={`${className} vehicle-form`}
       onSubmit={form.handleSubmit}
       id={entity?.id}
@@ -565,6 +576,7 @@ export function VehicleForm(props: VehicleFormProps) {
         </Row>
       </Container>
     </EntityForm>
+    </>
   );
 }
 

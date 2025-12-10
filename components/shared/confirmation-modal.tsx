@@ -35,6 +35,29 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   centered = true,
   additionalContent,
 }) => {
+  // Add styles to prevent hover gradient change on cancel button
+  React.useEffect(() => {
+    const styleId = 'confirmation-modal-button-styles';
+    if (typeof document !== 'undefined' && !document.getElementById(styleId)) {
+      const style = document.createElement('style');
+      style.id = styleId;
+      style.innerHTML = `
+        .confirmation-modal-cancel-btn.btn-secondary:hover {
+          background-color: #6c757d !important;
+          border-color: #6c757d !important;
+          background-image: none !important;
+        }
+        .confirmation-modal-cancel-btn.btn-secondary:active,
+        .confirmation-modal-cancel-btn.btn-secondary:focus {
+          background-color: #6c757d !important;
+          border-color: #6c757d !important;
+          background-image: none !important;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }, []);
+
   const getIconComponent = () => {
     const iconSize = 24;
     const iconClass = 'text-white';
@@ -82,7 +105,12 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         {additionalContent && <div className="mt-3">{additionalContent}</div>}
       </ModalBody>
       <ModalFooter>
-        <Button color="secondary" onClick={onClose} disabled={isLoading}>
+        <Button
+          color="secondary"
+          className="confirmation-modal-cancel-btn"
+          onClick={onClose}
+          disabled={isLoading}
+        >
           {cancelText}
         </Button>
         <Button color={confirmButtonColor} onClick={onConfirm} disabled={isLoading}>

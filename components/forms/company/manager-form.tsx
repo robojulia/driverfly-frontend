@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useFormik } from 'formik';
 import { Row } from 'react-bootstrap';
 import { useTranslation } from '../../../hooks/use-translation';
+import { useUnsavedChangesWarning } from '../../../hooks/use-unsaved-changes-warning';
 import { toast } from 'react-toastify';
 import BaseInput from '../base-input';
 import BaseInputPhone from '../base-input-phone';
@@ -31,6 +32,8 @@ export function ManagerForm(props: ManagerFormProps) {
           manager = await companyApi.manager.create(dto);
         }
         formSuccess(t, !!entity?.id ? 'update' : 'create', 'MANAGER');
+        // Reset dirty state after successful save to prevent unsaved changes warning
+        form.resetForm({ values: manager });
         if (onSaveComplete) onSaveComplete(manager);
       } catch (e) {
         console.error('Unable to save entity', e.response);
@@ -52,8 +55,16 @@ export function ManagerForm(props: ManagerFormProps) {
     if (entity && !form.dirty) form.setValues(entity);
   }, [entity]);
 
+  // Warn user about unsaved changes when navigating away
+  const unsavedChangesWarning = useUnsavedChangesWarning({
+    isDirty: form.dirty,
+    shouldWarn: !form.isSubmitting,
+  });
+
   return (
-    <EntityForm className={className} onSubmit={form.handleSubmit} formik={form} id={entity?.id}>
+    <>
+      {unsavedChangesWarning}
+      <EntityForm className={className} onSubmit={form.handleSubmit} formik={form} id={entity?.id}>
       <Row className="mt-2">
         <BaseInput
           className="col-6 mt-1"
@@ -74,5 +85,6 @@ export function ManagerForm(props: ManagerFormProps) {
         <BaseInputPhone className="col-6 mt-1" label="phone" name="phone" formik={form} />
       </Row>
     </EntityForm>
+    </>
   );
 }

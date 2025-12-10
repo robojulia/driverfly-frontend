@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import FullLayout from "../../../../components/dashboard/layouts/full-layout";
 import { useAuth } from "../../../../hooks/use-auth";
 import { useTranslation } from "../../../../hooks/use-translation";
+import { useUnsavedChangesWarning } from "../../../../hooks/use-unsaved-changes-warning";
 import UserApi from "../../../api/user";
 import { Row, Col, Button } from "react-bootstrap";
 import PageLayout from "../../../../components/layouts/page/page-layout";
@@ -89,6 +90,13 @@ export default function Communication() {
                 );
                 populateForm(preferences);
                 toast.success(t("successfully_saved_information"));
+                // Reset dirty state after successful save
+                const updatedValues = preferences.reduce((acc, pref) => {
+                    const key = Object.keys(values).find(k => values[k].label === pref.label);
+                    if (key) acc[key] = pref;
+                    return acc;
+                }, {} as typeof values);
+                form.resetForm({ values: { ...values, ...updatedValues } });
             } catch (e) {
                 console.error("Unable to save preferences", e);
                 toast.error(t("unable_to_save_information"));
@@ -131,7 +139,14 @@ export default function Communication() {
         })
     }
 
+    // Warn user about unsaved changes when navigating away
+    const unsavedChangesWarning = useUnsavedChangesWarning({
+        isDirty: form.dirty,
+        shouldWarn: !form.isSubmitting,
+    });
+
     return (<>
+        {unsavedChangesWarning}
         <PageLayout title="COMMUNICATION">
             <form onSubmit={form.handleSubmit}>
                 <Row>

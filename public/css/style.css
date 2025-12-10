@@ -990,7 +990,7 @@ input[type='range']::-webkit-slider-thumb {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  /* margin-top: 25px; */
+  margin-top: 0;
 }
 
 .about-img {
@@ -2770,8 +2770,8 @@ input::-webkit-inner-spin-button {
 }
 
 .form-control::placeholder {
-  color: #aaa;
-  font-size: 14px;
+  color: #000;
+  font-size: 1rem;
 }
 
 .form-control:focus {
@@ -3003,4 +3003,35 @@ input::-webkit-inner-spin-button {
   .vehicle-info-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Applicant Filter Form Styles - Ensure consistent font size and color */
+.form-control,
+.form-select,
+.form-control input,
+.form-select select {
+  font-size: 1rem !important;
+  color: #000 !important;
+}
+
+.form-control::placeholder {
+  color: #000 !important;
+  opacity: 0.6;
+}
+
+/* React-select (multi-select) styling for filter forms */
+.basic-single .css-1dimb5e-singleValue,
+.basic-single .css-qbdosj-Input,
+.basic-single input {
+  font-size: 1rem !important;
+  color: #000 !important;
+}
+
+/* Ensure all react-select options have consistent styling */
+.basic-single div[class*="-placeholder"],
+.basic-single div[class*="-singleValue"],
+.basic-single div[class*="-multiValue"],
+.basic-single div[class*="-Input"] {
+  font-size: 1rem !important;
+  color: #000 !important;
 }

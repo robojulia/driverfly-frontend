@@ -38,7 +38,7 @@ export default function CreateJob() {
   }, [router.query]);
 
   const handleJobSaveComplete = (savedJob: JobEntity) => {
-    router.push(`/dashboard/company/jobs/${savedJob.id}`);
+    router.push('/dashboard/company/jobs?success=true');
   };
 
   return (

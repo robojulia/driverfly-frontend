@@ -260,7 +260,7 @@ export default function UserList() {
             className="d-flex flex-column align-items-center justify-content-between w-100 gap-5"
             style={{ background: '1D4345' }}
           >
-            <h2>{t('ARE_YOU_SURE_YOU_WANT_TO_DELETE_USER')}</h2>
+            <p>{t('ARE_YOU_SURE_YOU_WANT_TO_DELETE_USER')}</p>
             <div className="gap-4 d-flex justify-content-between">
               <button
                 type="button"

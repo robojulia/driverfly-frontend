@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import BaseClickToCopyInput from '../../../components/forms/base-click-to-copy-input';
 import { useAuth } from '../../../hooks/use-auth';
 import { useTranslation } from '../../../hooks/use-translation';
+import { useUnsavedChangesWarning } from '../../../hooks/use-unsaved-changes-warning';
 import { CompanyEntity } from '../../../models/company/company.entity';
 import CompanyApi from '../../../pages/api/company';
 import { globalAjaxExceptionHandler } from '../../../utils/ajax';
@@ -63,6 +64,8 @@ export function CompanyForm(props: CompanyFormProps) {
           }
         }
         formSuccess(t, !!entity?.id ? 'update' : 'create', 'COMPANY');
+        // Reset dirty state after successful save to prevent unsaved changes warning
+        if (company) form.resetForm({ values: company });
         if (onSaveComplete) onSaveComplete(company);
       } catch (e) {
         console.error('Unable to save entity', e.response);
@@ -95,8 +98,15 @@ export function CompanyForm(props: CompanyFormProps) {
     }
   }, [form.values?.photo]);
 
+  // Warn user about unsaved changes when navigating away
+  const unsavedChangesWarning = useUnsavedChangesWarning({
+    isDirty: form.dirty,
+    shouldWarn: !form.isSubmitting,
+  });
+
   return (
     <>
+      {unsavedChangesWarning}
       <EntityForm className={className} onSubmit={form.handleSubmit} formik={form} id={entity?.id} hideSubmitButton={hideSubmitButton}>
         <Row>
           <BaseInput

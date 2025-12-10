@@ -72,8 +72,7 @@ export function EmploymentHistory() {
         form.values.employer?.name &&
         form.values.employer?.title &&
         form.values.employer?.start_at &&
-        form.values.employer?.manager_name &&
-        form.values.employer?.email
+        form.values.employer?.manager_name
       );
       setIsFormValid(hasNoErrors && requiredFieldsFilled);
     } else {
@@ -400,7 +399,6 @@ export function EmploymentHistory() {
                   value={form.values.employer?.email || ''}
                   onChange={form.handleChange}
                   onBlur={form.handleBlur}
-                  required
                   error={
                     form.touched.employer?.email && form.errors.employer?.email
                       ? String(form.errors.employer?.email)

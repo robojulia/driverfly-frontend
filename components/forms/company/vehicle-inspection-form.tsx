@@ -2,6 +2,7 @@ import { useFormik } from 'formik';
 import { Container, Row, Col } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { useTranslation } from '../../../hooks/use-translation';
+import { useUnsavedChangesWarning } from '../../../hooks/use-unsaved-changes-warning';
 import {
   VehicleInspectionEntity,
   InspectionType,
@@ -61,6 +62,8 @@ export function VehicleInspectionForm(props: VehicleInspectionFormProps) {
             { translateProps: true }
           )
         );
+        // Reset dirty state after successful save to prevent unsaved changes warning
+        form.resetForm({ values: inspection });
         if (onSaveComplete) onSaveComplete(inspection);
       } catch (e) {
         console.error('Unable to save entity', e);
@@ -82,8 +85,16 @@ export function VehicleInspectionForm(props: VehicleInspectionFormProps) {
   // Check if required fields are filled
   const shouldForbidSubmit = !form.isValid;
 
+  // Warn user about unsaved changes when navigating away
+  const unsavedChangesWarning = useUnsavedChangesWarning({
+    isDirty: form.dirty,
+    shouldWarn: !form.isSubmitting,
+  });
+
   return (
-    <EntityForm
+    <>
+      {unsavedChangesWarning}
+      <EntityForm
       className={`${className} vehicle-inspection-form`}
       onSubmit={form.handleSubmit}
       id={entity?.id}
@@ -167,6 +178,7 @@ export function VehicleInspectionForm(props: VehicleInspectionFormProps) {
         </Row>
       </Container>
     </EntityForm>
+    </>
   );
 }
 

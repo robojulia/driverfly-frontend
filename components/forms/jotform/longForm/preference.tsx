@@ -25,6 +25,7 @@ export function Preferences() {
 
   const { t } = useTranslation();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [customRequirement, setCustomRequirement] = useState<string>('');
 
   const form = useFormik({
     initialValues: new PreferencesDto(),
@@ -37,10 +38,31 @@ export function Preferences() {
         const { routes, REQUIRE_W2_EMPLOYMENT, OTHER_ABSOLUTELY_REQUIREMENTS, preferred_location } =
           values;
 
-        // Update applicant preferences
-        setApplicant({ ...applicant, preferred_location, routes });
+        // Process other requirements to extract custom text
+        let processedRequirements = OTHER_ABSOLUTELY_REQUIREMENTS.value || [];
+        let otherRequirementText = '';
+
+        // Extract custom "Other" text from the array
+        if (Array.isArray(processedRequirements)) {
+          processedRequirements = processedRequirements.map((req: string) => {
+            if (req.startsWith('OTHERS:')) {
+              otherRequirementText = req.replace('OTHERS:', '');
+              return 'OTHERS';
+            }
+            return req;
+          });
+        }
+
+        // Update applicant preferences with custom requirement text
+        setApplicant({
+          ...applicant,
+          preferred_location,
+          routes,
+          other_requirements: processedRequirements,
+          other_requirements_other: otherRequirementText,
+        });
         updateApplicantExtras(REQUIRE_W2_EMPLOYMENT);
-        updateApplicantExtras(OTHER_ABSOLUTELY_REQUIREMENTS);
+        updateApplicantExtras({ ...OTHER_ABSOLUTELY_REQUIREMENTS, value: processedRequirements });
 
         let data;
 
@@ -48,7 +70,13 @@ export function Preferences() {
           // UPDATE existing applicant - this is much more efficient!
           console.log('Updating existing applicant:', applicant.id);
           data = await applicantApi.jotform.update(applicant.id, {
-            applicant: { ...applicant, preferred_location, routes },
+            applicant: {
+              ...applicant,
+              preferred_location,
+              routes,
+              other_requirements: processedRequirements,
+              other_requirements_other: otherRequirementText,
+            },
             applicantExtras,
             jobs,
             utm,
@@ -59,7 +87,13 @@ export function Preferences() {
           // CREATE new applicant (original flow)
           console.log('Creating new applicant for company:', company.id);
           data = await applicantApi.jotform.create(company.id, {
-            applicant: { ...applicant, preferred_location, routes },
+            applicant: {
+              ...applicant,
+              preferred_location,
+              routes,
+              other_requirements: processedRequirements,
+              other_requirements_other: otherRequirementText,
+            },
             applicantExtras,
             jobs,
             utm,
@@ -95,6 +129,21 @@ export function Preferences() {
     const apx_other = applicantExtras?.find(
       (v) => v.type == ApplicantExtras.OTHER_ABSOLUTELY_REQUIREMENTS
     );
+
+    // Extract custom requirement text from stored value
+    let storedRequirements = apx_other?.value || [];
+    let customReqText = '';
+
+    if (Array.isArray(storedRequirements)) {
+      const othersItem = storedRequirements.find((req: string) =>
+        req.startsWith('OTHERS:')
+      );
+      if (othersItem) {
+        customReqText = othersItem.replace('OTHERS:', '');
+      }
+    }
+
+    setCustomRequirement(customReqText);
 
     const initialValues = {
       ...form.values,
@@ -144,7 +193,31 @@ export function Preferences() {
   };
 
   const handleRequirementsChange = (values: string[]) => {
-    form.setFieldValue('OTHER_ABSOLUTELY_REQUIREMENTS.value', values);
+    // Process the values to include custom "Other" text if provided
+    const processedValues = values.map((val) => {
+      if (val === 'OTHERS' && customRequirement.trim()) {
+        return `OTHERS:${customRequirement.trim()}`;
+      }
+      return val;
+    });
+
+    form.setFieldValue('OTHER_ABSOLUTELY_REQUIREMENTS.value', processedValues);
+  };
+
+  const handleCustomRequirementChange = (text: string) => {
+    setCustomRequirement(text);
+
+    // Update the form value immediately if OTHERS is already selected
+    const currentValues = form.values.OTHER_ABSOLUTELY_REQUIREMENTS?.value || [];
+    if (currentValues.includes('OTHERS') || currentValues.some((v: string) => v.startsWith('OTHERS:'))) {
+      const updatedValues = currentValues.map((val: string) => {
+        if (val === 'OTHERS' || val.startsWith('OTHERS:')) {
+          return text.trim() ? `OTHERS:${text.trim()}` : 'OTHERS';
+        }
+        return val;
+      });
+      form.setFieldValue('OTHER_ABSOLUTELY_REQUIREMENTS.value', updatedValues);
+    }
   };
 
   const getFieldError = (fieldName: string) => {
@@ -255,6 +328,11 @@ export function Preferences() {
               helperText={t('SELECT_ALL_REQUIREMENTS_THAT_ARE_ABSOLUTELY_NECESSARY')}
               variant="card"
               columns={1}
+              allowOther={true}
+              otherLabel="Other"
+              otherPlaceholder="Please specify your requirement..."
+              onOtherTextChange={handleCustomRequirementChange}
+              otherTextValue={customRequirement}
             />
           </div>
         </div>

@@ -5,6 +5,7 @@ import { VehicleTransmissionType } from '../../../enums/vehicles/vehicle-transmi
 import { JobGeography } from '../../../enums/jobs/job-geography.enum';
 import { formatEnumValues, formatEnumValue } from '../utils/format-enum';
 import { ApplicantExtrasEntity } from '../../../models/applicant/applicant-extras.entity';
+import { ApplicantExtras } from '../../../enums/applicants/applicant-extras.enum';
 import { OtherRequirementType } from '../../../enums/users/other-requirements.enum';
 
 const styles = StyleSheet.create({
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
 const Preferences = ({ applicant, t }) => {
     // Get other requirements from extras
     const otherRequirements = applicant?.extras?.find(
-        (e: ApplicantExtrasEntity) => e.type === 'OTHER_ABSOLUTELY_REQUIREMENTS'
+        (e: ApplicantExtrasEntity) => e.type === ApplicantExtras.OTHER_ABSOLUTELY_REQUIREMENTS
     )?.value as OtherRequirementType[] | undefined;
 
     // Only show Automated Recruiting Lead if answer is yes

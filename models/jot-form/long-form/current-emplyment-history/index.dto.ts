@@ -29,7 +29,7 @@ export class CurrentEmploymentHistoryDto extends ApplicantEmployerEntity {
       is_current: yup.boolean().default(true).nullable(),
 
       state: yup.string().optional().nullable(),
-      email: yup.string().email().required().nullable(),
+      email: yup.string().email().optional().nullable(),
       start_at: yup.date().required().nullable(),
       can_contact: yup
         .boolean()

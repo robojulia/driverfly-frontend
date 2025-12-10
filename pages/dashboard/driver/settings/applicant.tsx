@@ -31,6 +31,7 @@ import StateSelect from "../../../../components/forms/state-select";
 import ViewCard from "../../../../components/view-details/view-card";
 
 import { useTranslation } from "../../../../hooks/use-translation";
+import { useUnsavedChangesWarning } from "../../../../hooks/use-unsaved-changes-warning";
 
 import { useFormik } from "formik";
 import { useState } from "react";
@@ -57,6 +58,8 @@ export default function Applicant() {
                 setApplicant(values)
 
                 toast.success(t("successfully_saved_information"));
+                // Reset dirty state after successful save to prevent unsaved changes warning
+                form.resetForm({ values });
 
                 // router.push(`/dashboard/driver/settings/applicant`);
             } catch (e) {
@@ -86,7 +89,14 @@ export default function Applicant() {
     const today = new Date()
     const OldThan18Year = new Date((today.getFullYear() - 18), today.getMonth(), today.getDate()).toISOString().split("T")[0]
 
+    // Warn user about unsaved changes when navigating away
+    const unsavedChangesWarning = useUnsavedChangesWarning({
+        isDirty: form.dirty,
+        shouldWarn: !form.isSubmitting,
+    });
+
     return (<>
+        {unsavedChangesWarning}
         <ToastContainer />
         <form onSubmit={form.handleSubmit}>
             <Row>

@@ -3,7 +3,7 @@ import { Socket } from "socket.io-client";
 import { ConversationMessageEntity } from "../../models/conversation/conversation-message.entity";
 import { UserEntity } from "../../models/user/user.entity";
 
-export const socket: Socket = io(`${process.env.BASE_URL}`, {
+export const socket: Socket = io(`${process.env.NEXT_PUBLIC_BASE_URL}`, {
     transports: ["websocket"],
     // rejectUnauthorized: false,
     // path: "/socket.io",

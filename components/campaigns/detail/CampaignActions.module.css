@@ -10,16 +10,16 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  border: 1px solid #dee2e6;
-  color: #6c757d;
-  background: white;
+  border: 1px solid #006078;
+  color: white;
+  background: #006078;
   transition: all 0.2s ease-in-out;
 }
 
 .backButton:hover {
-  background: #f8f9fa;
-  border-color: #adb5bd;
-  color: #495057;
+  background: #004d5f;
+  border-color: #004d5f;
+  color: white;
 }
 
 .actionGroup {

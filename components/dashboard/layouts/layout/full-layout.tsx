@@ -119,13 +119,6 @@ const FullLayout = ({ children }) => {
       visible: isFeatureEnabled('AUTORECRUITING_ENABLED'),
     },
     {
-      pathname: 'https://learning.driverfly.co',
-      icon: BookFill,
-      text: 'TRAINING_ACADEMY',
-      external: true,
-      group: 'COMPANY',
-    },
-    {
       icon: FileEarmarkImage,
       text: 'STORED_FILES',
       pathname: '/dashboard/company/compliance/stored-files',
@@ -205,6 +198,12 @@ const FullLayout = ({ children }) => {
           ],
         },
       ],
+    },
+    {
+      pathname: 'https://learning.driverfly.co',
+      icon: BookFill,
+      text: 'TRAINING_ACADEMY',
+      external: true,
     },
   ];
 

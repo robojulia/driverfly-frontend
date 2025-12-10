@@ -77,7 +77,6 @@ export function PastEmploymentHistory() {
             employer.name &&
             employer.title &&
             employer.manager_name &&
-            employer.email &&
             employer.start_at &&
             employer.end_at
         );
@@ -390,7 +389,6 @@ export function PastEmploymentHistory() {
                       value={form.values.employers?.[i]?.email || ''}
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
-                      required
                       error={getFieldError(`employers[${i}].email`)}
                       autoComplete="email"
                     />

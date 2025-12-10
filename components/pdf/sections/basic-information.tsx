@@ -3,6 +3,7 @@ import { Text, View, StyleSheet } from '@react-pdf/renderer';
 import Title from '../title';
 import moment from 'moment';
 import { ApplicantExtrasEntity } from '../../../models/applicant/applicant-extras.entity';
+import { ApplicantExtras } from '../../../enums/applicants/applicant-extras.enum';
 
 const styles = StyleSheet.create({
     container: {
@@ -141,8 +142,8 @@ const BasicInformation = ({ applicant, t }) => {
             {applicant?.is_owner_operator && (
                 <>
                     {(() => {
-                        const businessName = applicant.extras?.find((e: ApplicantExtrasEntity) => e.type === 'BUSINESS_NAME')?.value;
-                        const dotNumber = applicant.extras?.find((e: ApplicantExtrasEntity) => e.type === 'DOT_NUMBER')?.value;
+                        const businessName = applicant.extras?.find((e: ApplicantExtrasEntity) => e.type === ApplicantExtras.BUSINESS_NAME)?.value;
+                        const dotNumber = applicant.extras?.find((e: ApplicantExtrasEntity) => e.type === ApplicantExtras.DOT_NUMBER)?.value;
 
                         if (businessName || dotNumber) {
                             return (

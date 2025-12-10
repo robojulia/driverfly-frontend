@@ -148,7 +148,7 @@ export const CampaignOverview: React.FC<CampaignOverviewProps> = ({
               <dd className="col-sm-8">{formatDate(campaign.createdAt)}</dd>
               {campaign.startedAt && (
                 <>
-                  <dt className="col-sm-4">{t('STARTED')}:</dt>
+                  <dt className="col-sm-4">Started:</dt>
                   <dd className="col-sm-8">{formatDate(campaign.startedAt)}</dd>
                 </>
               )}

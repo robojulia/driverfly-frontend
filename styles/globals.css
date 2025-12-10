@@ -460,7 +460,7 @@ html {
 }
 
 .form-control::placeholder {
-  color: #a0aec0;
+  color: #000;
   opacity: 1;
 }
 

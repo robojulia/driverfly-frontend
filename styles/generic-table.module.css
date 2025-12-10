@@ -241,14 +241,16 @@
 }
 
 .buttonOutlinePrimary {
-  color: #3b82f6;
-  border-color: #3b82f6;
-  background: white;
+  background: linear-gradient(135deg, rgb(48, 198, 194) 0%, rgb(0, 96, 120) 100%);
+  border: 1px solid rgb(48, 198, 194);
+  color: #fff;
+  transition: background 0.3s ease;
 }
 
 .buttonOutlinePrimary:hover:not(:disabled) {
-  background: #3b82f6;
-  color: white;
+  background: rgb(0, 96, 120);
+  color: #fff;
+  border: 1px solid rgb(0, 96, 120);
 }
 
 .buttonOutlineSecondary {

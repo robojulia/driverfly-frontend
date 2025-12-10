@@ -181,7 +181,7 @@ export function BackgroundInfoAttachment() {
 
             <div className="Row">
                 <div className='Col'>
-                    <p style={{ textAlign: 'left', color: 'black', display: 'inline', fontWeight: 'bold', marginRight: '4rem' }}>Routes you&apos;re open to (select ALL that best apply):</p>
+                    <p style={{ textAlign: 'left', color: 'black', display: 'inline', fontWeight: 'bold', marginRight: '4rem' }}>Schedule(s) you&apos;re open to (select ALL that best apply):</p>
                     <p style={{ color: 'black', display: 'inline' }}>Regional (home every night)</p>
                     <p style={{ color: 'black', marginLeft: '28.1rem' }}>Regional (home every weekend)</p>
                     <p style={{ color: 'black', marginLeft: '28.1rem' }}>Regional (2+ weeks on the road)</p>

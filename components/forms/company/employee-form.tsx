@@ -7,6 +7,7 @@ import { formFailed, formSuccess } from "../../../utils/toast";
 
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
+import { useUnsavedChangesWarning } from "../../../hooks/use-unsaved-changes-warning";
 import { Button, Col, Row } from "react-bootstrap";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
@@ -84,6 +85,8 @@ export function EmployeeForm(props: EmployeeFormProps) {
         }
 
         formSuccess(t, entity?.id ? "update" : "create", "EMPLOYEE");
+        // Reset dirty state after successful save to prevent unsaved changes warning
+        form.resetForm({ values });
         goBack();
         // if (onSaveComplete) onSaveComplete(values);
       } catch (e) {
@@ -157,8 +160,16 @@ export function EmployeeForm(props: EmployeeFormProps) {
     form.setFieldValue(e.target.name, uppercaseValue);
   };
 
+  // Warn user about unsaved changes when navigating away
+  const unsavedChangesWarning = useUnsavedChangesWarning({
+    isDirty: form.dirty,
+    shouldWarn: !form.isSubmitting,
+  });
+
   return (
-    <EntityForm
+    <>
+      {unsavedChangesWarning}
+      <EntityForm
       id={entity?.id}
       formik={form}
       onSubmit={form.handleSubmit}
@@ -608,5 +619,6 @@ export function EmployeeForm(props: EmployeeFormProps) {
         <ManagerForm onSaveComplete={onManagerAdded} />
       </ViewModal>
     </EntityForm>
+    </>
   );
 }

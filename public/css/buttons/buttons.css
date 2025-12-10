@@ -108,6 +108,7 @@
   width: 0.8rem !important;
   height: 0.8rem !important;
   background-size: 0.8rem !important;
+  filter: brightness(0) invert(1) !important;
 }
 
 .theme-general-btn:hover {

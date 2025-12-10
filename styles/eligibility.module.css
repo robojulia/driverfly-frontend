@@ -658,7 +658,7 @@
 
 /* Applicant Table */
 .applicantEligibilityTableWrapper {
-  background: var(--eligibility-light);
+  background: transparent;
   border-radius: var(--eligibility-border-radius-lg);
   overflow: hidden;
   box-shadow: var(--eligibility-shadow);
@@ -669,7 +669,7 @@
 .applicantEligibilityTable {
   width: 100%;
   border-collapse: collapse;
-  background: var(--eligibility-light);
+  background: transparent;
   margin: 0;
   font-size: var(--eligibility-font-size-sm);
 }
@@ -703,7 +703,7 @@
 }
 
 .applicantEligibilityTable tbody {
-  background: var(--eligibility-gray-50);
+  background: transparent;
 }
 
 .applicantEligibilityTable tbody tr {

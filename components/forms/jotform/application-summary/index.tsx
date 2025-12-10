@@ -301,12 +301,12 @@ export function ApplicationSummary() {
       title: 'Job Preferences',
       stepNumber: 8,
       summary: applicant?.preferred_location
-        ? `Preferred Locations: ${
+        ? `Preferred Routes: ${
             Array.isArray(applicant.preferred_location)
               ? applicant.preferred_location.join(', ')
               : applicant.preferred_location
           }`
-        : 'No location preferences specified',
+        : 'No route preferences specified',
     },
     // Legal Documents/Signatures
     {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FormLabel } from './form-label';
 import { useTranslation } from '../../../hooks/use-translation';
 
@@ -25,6 +25,11 @@ interface CheckboxGroupProps {
   columns?: 1 | 2 | 3 | 4;
   labelPrefix?: string;
   enumType?: object;
+  allowOther?: boolean;
+  otherLabel?: string;
+  otherPlaceholder?: string;
+  onOtherTextChange?: (text: string) => void;
+  otherTextValue?: string;
 }
 
 export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
@@ -42,8 +47,14 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   columns = 2,
   labelPrefix,
   enumType,
+  allowOther = false,
+  otherLabel = 'Other',
+  otherPlaceholder = 'Please specify...',
+  onOtherTextChange,
+  otherTextValue = '',
 }) => {
   const { t } = useTranslation();
+  const [showOtherInput, setShowOtherInput] = useState(false);
 
   // Generate options from enum if provided
   const options = React.useMemo(() => {
@@ -60,6 +71,14 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
     }
     return propOptions || [];
   }, [enumType, propOptions]);
+
+  // Check if "OTHERS" is selected and show/hide input accordingly
+  useEffect(() => {
+    const hasOthersSelected = value.some((v) =>
+      v === 'OTHERS' || v.startsWith('OTHERS:')
+    );
+    setShowOtherInput(hasOthersSelected);
+  }, [value]);
 
   // Helper function to get translated label
   const getTranslatedLabel = (option: CheckboxOption) => {
@@ -292,6 +311,42 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
           );
         })}
       </div>
+
+      {/* Other text input - shown when OTHERS is selected */}
+      {showOtherInput && allowOther && (
+        <div style={{ marginTop: '1rem' }}>
+          <input
+            type="text"
+            placeholder={otherPlaceholder}
+            value={otherTextValue}
+            onChange={(e) => {
+              if (onOtherTextChange) {
+                onOtherTextChange(e.target.value);
+              }
+            }}
+            disabled={disabled}
+            style={{
+              width: '100%',
+              padding: '0.75rem 1rem',
+              border: '2px solid var(--medium-gray)',
+              borderRadius: '8px',
+              fontSize: '1rem',
+              outline: 'none',
+              transition: 'border-color 0.2s',
+              backgroundColor: 'var(--light)',
+              color: 'var(--text-primary)',
+            }}
+            onFocus={(e) => {
+              e.target.style.borderColor = 'var(--primary-button)';
+              e.target.style.boxShadow = '0 0 0 3px rgba(95, 203, 196, 0.1)';
+            }}
+            onBlur={(e) => {
+              e.target.style.borderColor = 'var(--medium-gray)';
+              e.target.style.boxShadow = 'none';
+            }}
+          />
+        </div>
+      )}
 
       {error && (
         <div style={errorStyles} role="alert">
