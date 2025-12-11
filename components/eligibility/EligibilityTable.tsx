@@ -285,8 +285,8 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
           compareValue = (a.applicant.engagementCount || 0) - (b.applicant.engagementCount || 0);
           break;
         case 'dateApplied':
-          const appliedDateA = new Date(a.applicant.dateApplied || 0).getTime();
-          const appliedDateB = new Date(b.applicant.dateApplied || 0).getTime();
+          const appliedDateA = new Date(a.applicant.created_at || 0).getTime();
+          const appliedDateB = new Date(b.applicant.created_at || 0).getTime();
           compareValue = appliedDateA - appliedDateB;
           break;
         case 'createdAt':
@@ -403,9 +403,7 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
 
       <td>
         <span className={styles.textGray500}>
-          {applicant.applicant.dateApplied
-            ? moment(applicant.applicant.dateApplied).format('MMM DD, YYYY')
-            : applicant.applicant.created_at
+          {applicant.applicant.created_at
             ? moment(applicant.applicant.created_at).format('MMM DD, YYYY')
             : applicant.lastUpdated
             ? moment(applicant.lastUpdated).format('MMM DD, YYYY')

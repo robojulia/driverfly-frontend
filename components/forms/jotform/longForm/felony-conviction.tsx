@@ -236,10 +236,13 @@ export function FelonyConviction() {
         <p style={{ margin: '0 0 0.5rem 0', fontWeight: '600', color: '#1a2b3c' }}>
           ⚖️ Criminal History & Background
         </p>
-        <p style={{ margin: 0 }}>
+        <p style={{ margin: '0 0 0.5rem 0' }}>
           We are required to ask about criminal history as part of our background verification
           process. Having a criminal record does not automatically disqualify you from employment,
           and we consider each case individually in compliance with applicable laws.
+        </p>
+        <p style={{ margin: 0, fontWeight: '600', color: '#0066cc', fontSize: '1rem' }}>
+          ⏰ Please report only criminal history from the past 3 years.
         </p>
       </div>
 
@@ -266,7 +269,7 @@ export function FelonyConviction() {
               labelPrefix="BooleanType"
               columns={2}
               variant="card"
-              helperText="Include all felony convictions, regardless of when they occurred"
+              helperText="Include all felony convictions from the past 3 years"
             />
           </div>
 

@@ -135,86 +135,15 @@ const SafetyInfo = ({ applicant, t }) => {
                 </View>
             )}
 
-            {/* Violations Section */}
-            <Text style={styles.sectionTitle}>{t("VIOLATIONS")}</Text>
-
-            {/* PSP Violations */}
+            {/* Moving Violations Section */}
+            <Text style={styles.sectionTitle}>{t("MOVING_VIOLATIONS_LAST_3_YEARS")}</Text>
             <View style={styles.row}>
                 <View style={styles.field}>
                     <Text>
-                        <Text style={styles.fieldLabel}>{t("PSP_VIOLATIONS")}: </Text>
-                        <Text style={styles.fieldValue}>{applicant?.psp_violations ? t('YES') : t('NO')}</Text>
+                        <Text style={styles.fieldLabel}>{t("COUNT")}: </Text>
+                        <Text style={styles.fieldValue}>{applicant?.moving_violations_count || 0}</Text>
                     </Text>
                 </View>
-            </View>
-            {applicant?.psp_violations_details && (
-                <View style={styles.detailsBox}>
-                    <Text style={styles.detailsText}>{applicant.psp_violations_details}</Text>
-                </View>
-            )}
-
-            {/* Tickets */}
-            <View style={styles.row}>
-                <View style={styles.field}>
-                    <Text>
-                        <Text style={styles.fieldLabel}>{t("TICKETS_LAST_5_YEARS")}: </Text>
-                        <Text style={styles.fieldValue}>{applicant?.tickets ? t('YES') : t('NO')}</Text>
-                    </Text>
-                </View>
-                {applicant?.tickets_count && (
-                    <View style={styles.field}>
-                        <Text>
-                            <Text style={styles.fieldLabel}>{t("COUNT")}: </Text>
-                            <Text style={styles.fieldValue}>{applicant.tickets_count}</Text>
-                        </Text>
-                    </View>
-                )}
-            </View>
-            {applicant?.tickets_details && (
-                <View style={styles.detailsBox}>
-                    <Text style={styles.detailsText}>{applicant.tickets_details}</Text>
-                </View>
-            )}
-
-            {/* Infractions */}
-            <View style={styles.row}>
-                <View style={styles.field}>
-                    <Text>
-                        <Text style={styles.fieldLabel}>{t("INFRACTIONS_LAST_5_YEARS")}: </Text>
-                        <Text style={styles.fieldValue}>{applicant?.infractions ? t('YES') : t('NO')}</Text>
-                    </Text>
-                </View>
-                {applicant?.infractions_count && (
-                    <View style={styles.field}>
-                        <Text>
-                            <Text style={styles.fieldLabel}>{t("COUNT")}: </Text>
-                            <Text style={styles.fieldValue}>{applicant.infractions_count}</Text>
-                        </Text>
-                    </View>
-                )}
-            </View>
-            {applicant?.infractions_details && (
-                <View style={styles.detailsBox}>
-                    <Text style={styles.detailsText}>{applicant.infractions_details}</Text>
-                </View>
-            )}
-
-            {/* Moving Violations */}
-            <View style={styles.row}>
-                <View style={styles.field}>
-                    <Text>
-                        <Text style={styles.fieldLabel}>{t("MOVING_VIOLATIONS_LAST_3_YEARS")}: </Text>
-                        <Text style={styles.fieldValue}>{applicant?.moving_violations ? t('YES') : t('NO')}</Text>
-                    </Text>
-                </View>
-                {applicant?.moving_violations_count && (
-                    <View style={styles.field}>
-                        <Text>
-                            <Text style={styles.fieldLabel}>{t("COUNT")}: </Text>
-                            <Text style={styles.fieldValue}>{applicant.moving_violations_count}</Text>
-                        </Text>
-                    </View>
-                )}
             </View>
             {applicant?.moving_violations_details && (
                 <View style={styles.detailsBox}>

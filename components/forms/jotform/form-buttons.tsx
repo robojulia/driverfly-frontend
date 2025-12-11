@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import styles from '../../../styles/digitalhiringapp.module.css';
 import JotformContext, { JotFormContextType } from '../../../context/jotform-context';
+import { SaveAndContinueLaterButton } from './save-and-continue-later-button';
 
 interface PrimaryButtonProps {
   onClick?: () => void;
@@ -174,10 +175,13 @@ interface FormActionsProps {
   onNext?: () => void;
   onBack?: () => void;
   onSaveAndFinish?: () => void;
+  onSave?: () => void;
   isSubmitting?: boolean;
   isValid?: boolean;
   showBackButton?: boolean;
   showSaveAndFinish?: boolean;
+  showSaveButton?: boolean;
+  isSaving?: boolean;
   nextButtonText?: React.ReactNode;
   backButtonText?: React.ReactNode;
   saveAndFinishText?: React.ReactNode;
@@ -187,10 +191,13 @@ export const FormActions: React.FC<FormActionsProps> = ({
   onNext,
   onBack,
   onSaveAndFinish,
+  onSave,
   isSubmitting = false,
   isValid = true,
   showBackButton = true,
   showSaveAndFinish = false,
+  showSaveButton = false,
+  isSaving = false,
   nextButtonText,
   backButtonText,
   saveAndFinishText,
@@ -228,7 +235,15 @@ export const FormActions: React.FC<FormActionsProps> = ({
         </SecondaryButton>
       )}
 
-      <div style={{ display: 'flex', gap: '1rem', flex: 1, justifyContent: 'flex-end' }}>
+      <div style={{ display: 'flex', gap: '1rem', flex: 1, justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+        {showSaveButton && onSave && (
+          <SaveAndContinueLaterButton
+            onClick={onSave}
+            isSaving={isSaving}
+            style={isMobile ? { width: '100%' } : {}}
+          />
+        )}
+
         {shouldShowSaveAndFinish && onSaveAndFinish && (
           <SecondaryButton
             type="button"

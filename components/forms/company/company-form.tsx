@@ -77,7 +77,7 @@ export function CompanyForm(props: CompanyFormProps) {
   });
 
   useEffect(() => {
-    if (entity && !form.dirty) form.setValues(entity);
+    if (entity && !form.dirty) form.resetForm({ values: entity });
   }, [entity]);
 
   useEffect(() => {

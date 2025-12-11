@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   getLongFormStyle,
   getSuggestedJobPages,
@@ -40,6 +42,56 @@ export default function SuggestedJobs({ entity, job, company }: SuggestedJobsPro
 
   // Total number of steps in the suggested job form
   const totalSteps = 5; // Based on getSuggestedJobPages in jotform-pages.tsx
+
+  // Show welcome back message for returning applicants
+  useEffect(() => {
+    const companyName = company?.name || 'this company';
+    const jobTitle = job?.title || 'this position';
+    const hasAlreadyApplied = entity?.jobs?.some((j) => j?.job?.id == job?.id);
+
+    if (hasAlreadyApplied) {
+      toast.info(
+        `You've already applied to ${jobTitle} at ${companyName}. You can review and update your application.`,
+        {
+          position: 'top-center',
+          autoClose: 6000,
+        }
+      );
+    } else {
+      // Check if they've applied to other jobs at this company
+      const otherJobsAtCompany = entity?.jobs?.filter((j) => j?.company?.id === company?.id) || [];
+      if (otherJobsAtCompany.length > 0) {
+        const previousJob = otherJobsAtCompany[0]?.job?.title || 'another position';
+        toast.info(
+          `Welcome back! You previously applied to ${previousJob} at ${companyName}. Now applying to ${jobTitle}.`,
+          {
+            position: 'top-center',
+            autoClose: 7000,
+          }
+        );
+      } else {
+        // Applied to different company
+        const previousCompany = entity?.jobs?.[0]?.company?.name || entity?.company?.name;
+        if (previousCompany && previousCompany !== companyName) {
+          toast.info(
+            `Welcome back! You previously applied to ${previousCompany}. Now applying to ${jobTitle} at ${companyName}.`,
+            {
+              position: 'top-center',
+              autoClose: 7000,
+            }
+          );
+        } else {
+          toast.info(
+            `Welcome back! Applying to ${jobTitle} at ${companyName}.`,
+            {
+              position: 'top-center',
+              autoClose: 5000,
+            }
+          );
+        }
+      }
+    }
+  }, []); // Only run on mount
 
   return (
     <JotformContext.Provider

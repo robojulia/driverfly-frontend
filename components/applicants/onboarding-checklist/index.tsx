@@ -38,7 +38,6 @@ import {
   DownloadDocumentButton,
   ViewDocumentButton,
 } from "../../documents/buttons";
-import ViewDocumentHistory from "../../documents/view-history";
 import BaseCheck from "../../forms/base-check";
 import BaseInput from "../../forms/base-input";
 import BaseRadio from "../../forms/base-radio";
@@ -453,10 +452,10 @@ export default function OnboardingChecklist(
     return (
       <>
         {(!form.values.document?.type || form.values.document?.type != type) && (
-          <div className="d-flex align-items-center justify-content-end w-100">
+          <div className="d-flex align-items-center justify-content-end w-100" style={{ gap: 10 }}>
             {/* For Record of Attempts, show a "Generate" button instead of upload */}
             {isRecordOfAttempts && (
-              <Button variant="link" className="p-0 me-3"
+              <Button variant="link" className="p-0"
                 onClick={handleGenerateRecordOfAttempts}>
                 {t('Generate Document')}
               </Button>
@@ -465,7 +464,7 @@ export default function OnboardingChecklist(
             {/* For Safety Performance History, show the VOE list button */}
             {type === ApplicantOnBoardingChecklist.SAFETY_PERFORMANCE_HISTORY && (
               <SafetyPerformanceHistory
-                buttonClass="btn btn-link p-0 me-3"
+                buttonClass="btn btn-link p-0"
                 applicant={applicant}
                 canEditSafetyPerformance={props.canEditSafetyPerformance}
                 showHistory={props.showHistory}
@@ -474,7 +473,7 @@ export default function OnboardingChecklist(
             )}
 
             {document && !document?.name?.includes('.doc') && !isRecordOfAttempts && (
-              <Button variant="link" className="p-0 me-3"
+              <Button variant="link" className="p-0"
                 onClick={async () => {
                   try {
                     await handleViewDocument(document.id, setPdf, undefined, document);
@@ -488,7 +487,7 @@ export default function OnboardingChecklist(
               </Button>
             )}
             {document && !isRecordOfAttempts && (
-              <Button variant="link" className="p-0 me-3"
+              <Button variant="link" className="p-0"
                 onClick={async () => {
                   try {
                     await handleDownloadDocument(document.id);
@@ -501,21 +500,10 @@ export default function OnboardingChecklist(
               </Button>
             )}
             {Boolean(props.canEdit) && !isRecordOfAttempts && (
-              <Button variant="link" className="p-0 me-3"
+              <Button variant="link" className="p-0"
                 onClick={() => handleUpdateDocument(type, document?.id)}>
                 {document ? t('Replace') : t('Upload')}
               </Button>
-            )}
-            {Boolean(props.showHistory) && !isRecordOfAttempts && (
-              <ViewDocumentHistory
-                buttonClass="btn btn-link p-0 me-3"
-                canDelete={!applicant.is_hired}
-                typePrefix="ApplicantOnBoardingChecklist"
-                document={document}
-                type={type}
-                documentable_id={applicant.id}
-                documentable_type={DocumentableType.APPLICANTS}
-              />
             )}
             {Boolean(props.canEdit) && document && !isRecordOfAttempts && (
               <Button variant="link" className="p-0 text-danger"
@@ -734,7 +722,7 @@ export default function OnboardingChecklist(
                   ) : null}
                 </div>
                 {/* Actions */}
-                <div className="d-flex align-items-center" style={{ gap: 8 }}>
+                <div className="d-flex align-items-center" style={{ gap: 10 }}>
                   {/* Special handling for Record of Attempts - show Generate button */}
                   {isRecordOfAttempts && (
                     <Button
@@ -760,7 +748,7 @@ export default function OnboardingChecklist(
 
                   {/* View */}
                   {document && completedDoc && !document?.name?.includes('.doc') && !isRecordOfAttempts && (
-                    <Button variant="success" size="sm" title={t('View')} onClick={async () => {
+                    <Button variant="success" size="sm" style={{ width: '38px', height: '38px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }} title={t('View')} onClick={async () => {
                       try {
                         await handleViewDocument(document.id, setPdf, undefined, document);
                       } catch (error: any) {
@@ -777,6 +765,7 @@ export default function OnboardingChecklist(
                     <Button
                       variant="info"
                       size="sm"
+                      style={{ width: '38px', height: '38px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       title={completedDoc ? t('Replace') : t('Upload')}
                       onClick={() => handleUpdateDocument(type, document?.id)}
                     >
@@ -785,7 +774,7 @@ export default function OnboardingChecklist(
                   )}
                   {/* Download */}
                   {document && completedDoc && !isRecordOfAttempts && (
-                    <Button variant="dark" size="sm" title={t('Download')} onClick={async () => {
+                    <Button variant="dark" size="sm" style={{ width: '38px', height: '38px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }} title={t('Download')} onClick={async () => {
                       try {
                         await handleDownloadDocument(document.id);
                       } catch (error) {
@@ -796,21 +785,9 @@ export default function OnboardingChecklist(
                       <CloudDownload />
                     </Button>
                   )}
-                  {/* History */}
-                  {Boolean(props.showHistory) && document && !isRecordOfAttempts && (
-                    <ViewDocumentHistory
-                      buttonClass="btn btn-sm btn-history-teal"
-                      canDelete={!applicant.is_hired}
-                      typePrefix="ApplicantOnBoardingChecklist"
-                      document={document}
-                      type={type}
-                      documentable_id={applicant.id}
-                      documentable_type={DocumentableType.APPLICANTS}
-                    />
-                  )}
                   {/* Remove */}
                   {Boolean(props.canEdit) && completedDoc && !isRecordOfAttempts && (
-                    <Button variant="danger" size="sm" title={t('Remove')} onClick={() => handleDeleteDocument(type)}>
+                    <Button variant="danger" size="sm" style={{ width: '38px', height: '38px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }} title={t('Remove')} onClick={() => handleDeleteDocument(type)}>
                       <Trash />
                     </Button>
                   )}

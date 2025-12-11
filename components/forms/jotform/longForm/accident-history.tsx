@@ -393,11 +393,25 @@ export function AccidentHistory() {
         {t('ACCIDENT_HISTORY')}
       </h1>
 
-      <div className={styles.formInfoBox}>
-        <p>
-          We need to know about any accidents you have been involved in during the last 5 years.
-          This information helps us assess your driving record and ensure compliance with safety
-          regulations.
+      <div
+        style={{
+          maxWidth: '800px',
+          margin: '0 auto 2rem auto',
+          padding: '1rem',
+          backgroundColor: '#f8f9fa',
+          border: '1px solid #e0e5eb',
+          borderRadius: '8px',
+          color: '#667788',
+          fontSize: '0.95rem',
+          lineHeight: '1.5',
+        }}
+      >
+        <p style={{ margin: '0 0 0.5rem 0' }}>
+          We need to know about any accidents you have been involved in. This information helps us
+          assess your driving record and ensure compliance with safety regulations.
+        </p>
+        <p style={{ margin: 0, fontWeight: '600', color: '#0066cc', fontSize: '1rem' }}>
+          ⏰ Please report only accidents from the past 5 years.
         </p>
       </div>
 

@@ -15,6 +15,7 @@ type ButtonProps = {
     className?: string;
     isLoading?: boolean | (() => boolean);
     disabled?: boolean;
+    style?: React.CSSProperties;
 };
 
 /**
@@ -29,11 +30,13 @@ export const AddDocumentButton = ({
     onClick,
     className,
     disabled,
+    style,
 }: ButtonProps) => (
     <>
         <Button
             type="button"
             className={className ?? "mr-2 w-100"}
+            style={style}
             onClick={() => onClick(type, document?.id)}
             disabled={disabled}
         >
@@ -52,6 +55,7 @@ export const DeleteDocumentButton = ({
     onClick,
     className,
     isLoading,
+    style,
 }: ButtonProps) => {
     const [showDialog, setShowDialog] = useState(false);
 
@@ -84,6 +88,7 @@ export const DeleteDocumentButton = ({
                     <button
                         type="button"
                         className={className ?? "btn btn-danger  p-0 pt-1 mr-2 w-100"}
+                        style={style}
                         onClick={handleClick}
                     >
                         <Trash /> <LoaderIcon isLoading={Boolean(isLoading)} />
@@ -122,6 +127,7 @@ export const DownloadDocumentButton = ({
     onClick,
     className,
     isLoading,
+    style,
 }: ButtonProps) => (
     <>
         {document && (
@@ -129,6 +135,7 @@ export const DownloadDocumentButton = ({
                 type="button"
                 onClick={() => onClick(document.id)}
                 className={className ?? "btn theme-primary2-btn p-0 pt-1 mr-2"}
+                style={style}
             >
                 <CloudArrowDown /> <LoaderIcon isLoading={Boolean(isLoading)} />
             </button>
@@ -145,12 +152,14 @@ export const ViewDocumentButton = ({
     onClick,
     className,
     isLoading,
+    style,
 }: ButtonProps) => (
     <>
         {document && (
             <button
                 type="button"
                 className={className ?? "btn btn-success p-0 pt-1 mr-2 w-100"}
+                style={style}
                 onClick={() => onClick(document.id)}
             >
                 <Eye /> <LoaderIcon isLoading={Boolean(isLoading)} />

@@ -103,38 +103,6 @@ const SafetyExperience = ({ t, applicant }) => {
           {applicant?.license_revoked_details}
         </Item>
         <Item>
-          {t("has_had_psp_violations")} :
-          {applicant?.psp_violations}
-        </Item>
-        <Item>
-          {t("details")} :
-          {applicant?.psp_violations_details}
-        </Item>
-        <Item>
-          {t("has_had_tickets_last_5_years")} :
-          {applicant?.tickets}
-        </Item>
-        <Item>
-          {t("COUNT")} :
-          {applicant?.tickets_count}
-        </Item>
-        <Item>
-          {t("details")} :
-          {applicant?.tickets_details}
-        </Item>
-        <Item>
-          {t("HAS_HAD_INFRACTIONS_LAST_5_YEARS")} :
-          {applicant?.infractions}
-        </Item>
-        <Item>
-          {t("COUNT")} :
-          {applicant?.infractions_count}
-        </Item>
-        <Item>
-          {t("details")} :
-          {applicant?.infractions_details}
-        </Item>
-        <Item>
           {t("HAS_HAD_MOVING_VIOLATIONS_LAST_3_YEARS")} :
           {applicant?.moving_violations}
         </Item>

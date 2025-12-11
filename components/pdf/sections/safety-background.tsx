@@ -111,7 +111,7 @@ const SafetyBackground = ({ applicant, t }) => {
             )}
 
             {/* Moving Violations */}
-            <Text style={styles.subsectionTitle}>{t("voilations_in_last_3_years")}</Text>
+            <Text style={styles.subsectionTitle}>Moving Violations (Last 3 Years)</Text>
             <View style={styles.row}>
                 <View style={styles.field}>
                     <Text style={styles.label}>{t("COUNT")}</Text>
@@ -134,32 +134,6 @@ const SafetyBackground = ({ applicant, t }) => {
             {applicant?.license_revoked_details && (
                 <View style={styles.detailsBox}>
                     <Text style={styles.detailsText}>{applicant.license_revoked_details}</Text>
-                </View>
-            )}
-
-            {/* PSP Violations */}
-            <Text style={styles.subsectionTitle}>{t("has_had_psp_violations")}</Text>
-            <View style={styles.row}>
-                <View style={styles.field}>
-                    <Text style={styles.value}>{applicant?.psp_violations ? t('YES') : t('NO')}</Text>
-                </View>
-            </View>
-            {applicant?.psp_violations_details && (
-                <View style={styles.detailsBox}>
-                    <Text style={styles.detailsText}>{applicant.psp_violations_details}</Text>
-                </View>
-            )}
-
-            {/* Tickets */}
-            <Text style={styles.subsectionTitle}>{t("has_had_tickets_last_5_years")}</Text>
-            <View style={styles.row}>
-                <View style={styles.field}>
-                    <Text style={styles.value}>{applicant?.tickets ? t('YES') : t('NO')}</Text>
-                </View>
-            </View>
-            {applicant?.tickets_details && (
-                <View style={styles.detailsBox}>
-                    <Text style={styles.detailsText}>{applicant.tickets_details}</Text>
                 </View>
             )}
         </View>

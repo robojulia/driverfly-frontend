@@ -1,5 +1,6 @@
 import { NextPageContext } from 'next';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
   getQuickApplyPages,
@@ -33,6 +34,22 @@ export default function QuickApply({ entity, company, preferences }: QuickApplyP
   const [steps, setSteps] = useState<number>(0);
   const stepNext = (): void => setSteps(steps + 1);
   const stepBack = (): void => setSteps(steps - 1);
+
+  // Show welcome back message for returning applicants
+  useEffect(() => {
+    const companyName = company?.name || 'this company';
+    const jobInfo = entity.jobs && entity.jobs.length > 0
+      ? ` for ${entity.jobs[0].job?.title || 'a position'}`
+      : '';
+
+    toast.info(
+      `Welcome back! Continuing your quick application to ${companyName}${jobInfo}.`,
+      {
+        position: 'top-center',
+        autoClose: 5000,
+      }
+    );
+  }, []); // Only run on mount
 
   return (
     <JotformContext.Provider

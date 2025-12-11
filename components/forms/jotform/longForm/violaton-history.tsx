@@ -339,10 +339,12 @@ export function ViolationHistory() {
           lineHeight: '1.5',
         }}
       >
-        <p style={{ margin: 0 }}>
-          We need to know about any moving violations you have received in the last 3 years. This
-          information helps us assess your driving record and ensure compliance with safety
-          regulations.
+        <p style={{ margin: '0 0 0.5rem 0' }}>
+          We need to know about any moving violations you have received. This information helps us
+          assess your driving record and ensure compliance with safety regulations.
+        </p>
+        <p style={{ margin: 0, fontWeight: '600', color: '#0066cc', fontSize: '1rem' }}>
+          ⏰ Please report only moving violations from the past 3 years.
         </p>
       </div>
 

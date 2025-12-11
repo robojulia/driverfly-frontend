@@ -22,7 +22,6 @@ import {
   DownloadDocumentButton,
   ViewDocumentButton,
 } from "../documents/buttons";
-import ViewDocumentHistory from "../documents/view-history";
 import FileInput from "../forms/file-input";
 import ShowFormattedDate from "../jobs/show-formatted-date";
 import { LoaderIcon } from "../loading/loader-icon";
@@ -53,6 +52,8 @@ export default function SafetyPerformanceHistory({
     action: "DELETE" | "RESEND";
   }>(null);
   const resetIsLoading = (): void => setIsLoading(null);
+
+  const [sentEmployerId, setSentEmployerId] = useState<number | null>(null);
 
   const form = useFormik({
     initialValues: new ApplicantEmployerDocumentDto(),
@@ -160,8 +161,15 @@ export default function SafetyPerformanceHistory({
       setEmployers(updatedEmployers.slice().sort((a, b) => a.id - b.id));
 
       resetIsLoading();
+      setSentEmployerId(employerId);
       toast.success(t("RESEND_VOE_SUCCESSFULL"));
+
+      // Reset sent status after 3 seconds
+      setTimeout(() => {
+        setSentEmployerId(null);
+      }, 3000);
     } catch (error) {
+      resetIsLoading();
       toast.error(t("ERROR_MESSAGE_DEFAULT"));
     }
   };
@@ -169,10 +177,12 @@ export default function SafetyPerformanceHistory({
   const ButtonList = ({ employer, document, type }) => (
     <>
       {form?.values?.employer?.id != employer?.id && (
-        <div className="d-flex w-100 mt-2 justify-content-end">
+        <div className="d-flex w-100 mt-2 justify-content-end" style={{ gap: 10 }}>
           {!document?.name?.includes(".doc") && (
             <ViewDocumentButton
               document={document}
+              className="btn btn-success p-0"
+              style={{ width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               onClick={() => handleViewDocument(document.id, setPdf)}
             />
           )}
@@ -188,6 +198,8 @@ export default function SafetyPerformanceHistory({
               <AddDocumentButton
                 disabled={!Boolean(employer?.can_contact)}
                 document={document}
+                className="btn btn-info p-0"
+                style={{ width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 type={type}
                 t={t}
                 onClick={() =>
@@ -198,18 +210,10 @@ export default function SafetyPerformanceHistory({
           )}
           <DownloadDocumentButton
             document={document}
+            className="btn theme-primary2-btn p-0"
+            style={{ width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             onClick={() => handleDownloadDocument(document.id)}
           />
-          {Boolean(showHistory) && (
-            <ViewDocumentHistory
-              buttonClass="btn btn-link p-0 me-3"
-              typePrefix="ApplicantOnBoardingChecklist"
-              document={document}
-              type={type}
-              documentable_id={applicant.id}
-              documentable_type={DocumentableType.APPLICANT_EMPLOYERS}
-            />
-          )}
           {!applicant?.is_hired && (
             <>
               {Boolean(canEditSafetyPerformance) && (
@@ -219,6 +223,8 @@ export default function SafetyPerformanceHistory({
                     isLoading.id == document?.id
                   }
                   document={document}
+                  className="btn btn-danger p-0"
+                  style={{ width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                   onClick={() =>
                     deleteEmployerVoeDocumentHandler(employer, type)
                   }
@@ -236,7 +242,7 @@ export default function SafetyPerformanceHistory({
                     className="popover-class"
                   >
                     <Button
-                      disabled={!Boolean(employer?.can_contact)}
+                      disabled={!Boolean(employer?.can_contact) || sentEmployerId === employer?.id}
                       className="mr-2 w-100 "
                       onClick={() =>
                         Boolean(employer?.can_contact) &&
@@ -248,6 +254,8 @@ export default function SafetyPerformanceHistory({
                           isLoading.id == employer?.id
                       ) ? (
                         <LoaderIcon isLoading />
+                      ) : sentEmployerId === employer?.id ? (
+                        t("SENT")
                       ) : (
                         <>
                           {t("RESEND")} <Send />
@@ -277,6 +285,7 @@ export default function SafetyPerformanceHistory({
 
       <ViewModal
         show={showModal}
+        size="xl"
         onCloseClick={() => {
           setShowModal(false);
           form.resetForm();

@@ -12,6 +12,7 @@ import { PhoneNumberDto } from '../../../../../models/jot-form/short-form/phone-
 import ApplicantApi from '../../../../../pages/api/applicant';
 import styles from '../../../../../styles/digitalhiringapp.module.css';
 import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
+import { normalizePhoneNumber } from '../../../../../utils/phone-normalization';
 import { LoaderIcon } from '../../../../loading/loader-icon';
 import ViewModal from '../../../../view-details/view-modal';
 import BaseInputPhone from '../../../base-input-phone';
@@ -157,10 +158,12 @@ export function PhoneNumber() {
     onSubmit: async (values, { setErrors }) => {
       try {
         const { phone } = values;
+        // Normalize phone number for consistent lookup
+        const normalizedPhone = normalizePhoneNumber(phone);
         const applicantApi = new ApplicantApi();
 
         // Check if applicant has already applied for any jobs with this phone number
-        const appliedJobs = await applicantApi.getAppliedJobsByPhone(phone);
+        const appliedJobs = await applicantApi.getAppliedJobsByPhone(normalizedPhone);
 
         // Check if they've already applied to this specific job
         if (isDirectJobApplication && directJob) {
@@ -184,7 +187,7 @@ export function PhoneNumber() {
 
         // If no direct conflict, continue with the existing applicant search flow
         const existingApplicants = await applicantApi.searchApplicantsByPhone({
-          phone,
+          phone: normalizedPhone,
         });
 
         // Analyze the scenario for better UX
@@ -205,18 +208,42 @@ export function PhoneNumber() {
           // NEW_APPLICANT or other scenarios - proceed normally
           setApplicant({
             ...applicant,
-            phone,
+            phone: normalizedPhone,
           });
           stepNext();
         }
-      } catch (error) {
-        console.log('error', error);
-        // If there's an error (like applicant not found), just proceed
-        setApplicant({
-          ...applicant,
-          phone: values.phone,
-        });
-        stepNext();
+      } catch (error: any) {
+        console.error('Applicant recognition failed:', error);
+
+        // Distinguish between "not found" (404) and actual API errors
+        const isNotFound = error?.response?.status === 404 || error?.status === 404;
+
+        if (isNotFound) {
+          // No existing applicant found - proceed as new applicant
+          console.log('No existing applicant found, proceeding as new applicant');
+          setApplicant({
+            ...applicant,
+            phone: normalizePhoneNumber(values.phone),
+          });
+          stepNext();
+        } else {
+          // Real error - network issue, server error, timeout, etc.
+          // Show error to user and allow them to retry
+          const errorMessage = error?.message || 'Unable to verify phone number. Please try again.';
+          console.error('API error during applicant recognition:', errorMessage);
+
+          setErrors({
+            phone: 'Connection issue. Please try again.',
+          });
+
+          toast.error(
+            'Unable to check for existing applications. Please check your connection and try again.',
+            {
+              position: 'top-right',
+              autoClose: 5000,
+            }
+          );
+        }
       }
     },
     onReset: (values) => {
@@ -243,7 +270,7 @@ export function PhoneNumber() {
       if (applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' && shouldPrefillApplication) {
         // Get the most recent applicant profile with full data for prefilling
         applicantProfile = await applicantApi.getMostRecentApplicantForPrefill({
-          phone: form.values.phone,
+          phone: normalizePhoneNumber(form.values.phone),
         });
 
         // Clear sensitive company-specific data while keeping personal information
@@ -473,7 +500,8 @@ export function PhoneNumber() {
     try {
       const applicantApi = new ApplicantApi();
       const { phone } = form.values;
-      const OTPresponse = await applicantApi.requestOTP({ phone });
+      const normalizedPhone = normalizePhoneNumber(phone);
+      const OTPresponse = await applicantApi.requestOTP({ phone: normalizedPhone });
       setOtpApplicant(OTPresponse);
       seShowtOtpField(true);
       setOpenModal(true); // Open the modal to show OTP verification
@@ -496,16 +524,17 @@ export function PhoneNumber() {
     setOtpException(false);
     const applicantApi = new ApplicantApi();
     const { phone } = form.values;
+    const normalizedPhone = normalizePhoneNumber(phone);
     try {
       let otpResponse;
 
       if (applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL') {
         // For cross-company prefill, we don't need existing applicant ID
         // We'll use the phone number to get the most recent profile
-        otpResponse = await applicantApi.requestOTP({ phone });
+        otpResponse = await applicantApi.requestOTP({ phone: normalizedPhone });
       } else {
         // For same company scenarios, use the existing flow
-        otpResponse = await applicantApi.requestOTP({ phone });
+        otpResponse = await applicantApi.requestOTP({ phone: normalizedPhone });
       }
 
       setOtpApplicant(otpResponse);

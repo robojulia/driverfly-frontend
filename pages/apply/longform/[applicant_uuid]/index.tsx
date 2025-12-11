@@ -41,7 +41,8 @@ export default function LongForm({
       return !!oldApx ? [...oldApx, { ...applicantExtrasEntity }] : [{ ...applicantExtrasEntity }];
     });
 
-  const [steps, setSteps] = useState<number>(0);
+  // Initialize step from last_completed_step if available
+  const [steps, setSteps] = useState<number>(initialApplicant.last_completed_step ?? 0);
   const stepNext = (): void => setSteps(steps + 1);
   const stepBack = (): void => setSteps(steps - 1);
 
@@ -64,6 +65,38 @@ export default function LongForm({
       storageType: 'localStorage',
     }
   );
+
+  // Show welcome back message if resuming from saved progress
+  useEffect(() => {
+    if (initialApplicant.last_completed_step && initialApplicant.last_completed_step > 0) {
+      const companyName = initialApplicant.company?.name || 'this company';
+      const jobInfo = initialApplicant.jobs && initialApplicant.jobs.length > 0
+        ? ` for ${initialApplicant.jobs[0].job?.title || 'a position'}`
+        : '';
+
+      toast.info(
+        `Welcome back! Continuing your application to ${companyName}${jobInfo}. Resuming from step ${initialApplicant.last_completed_step + 1} of ${totalSteps}`,
+        {
+          position: 'top-center',
+          autoClose: 7000,
+        }
+      );
+    } else {
+      // First time accessing this application
+      const companyName = initialApplicant.company?.name || 'this company';
+      const jobInfo = initialApplicant.jobs && initialApplicant.jobs.length > 0
+        ? ` for ${initialApplicant.jobs[0].job?.title || 'a position'}`
+        : '';
+
+      toast.info(
+        `Welcome back! Continuing your application to ${companyName}${jobInfo}.`,
+        {
+          position: 'top-center',
+          autoClose: 5000,
+        }
+      );
+    }
+  }, []); // Only run on mount
 
   // Restore data on component mount if available
   useEffect(() => {

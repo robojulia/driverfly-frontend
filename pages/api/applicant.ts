@@ -258,6 +258,19 @@ export default class ApplicantApi extends BaseApi {
       const { data } = await this.put(`${this.jotform.baseUrl()}/${applicantId}/documents`, dto);
       return data;
     },
+    saveDraft: async (
+      applicantId: number,
+      dto: UpsertApplicantJotformDto,
+      currentStep: number,
+      config?: AxiosRequestConfig
+    ): Promise<ApplicantEntity> => {
+      const { data } = await this.put(
+        `${this.jotform.baseUrl()}/${applicantId}/save-draft?step=${currentStep}`,
+        dto,
+        config
+      );
+      return data;
+    },
     suggestedJobs: async (applicantId: number): Promise<ApplicantSuggestedJobEntity[]> => {
       const { data } = await this.get(`${this.baseUrl}/${applicantId}/jotform-suggested-jobs`);
 

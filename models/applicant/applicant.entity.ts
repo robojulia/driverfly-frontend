@@ -137,6 +137,7 @@ export class ApplicantEntity {
   ssn_last4?: string;
   employment_gap_details?: string;
   vehicles?: ApplicantVehicleEntity[];
+  last_completed_step?: number;
 
   static yupSchema() {
     return yup.object({
