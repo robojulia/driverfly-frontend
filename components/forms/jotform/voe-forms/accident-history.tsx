@@ -14,14 +14,27 @@ import styles from '../../../../styles/digitalhiringapp.module.css';
 
 export function AccidentHistory() {
   const {
-    state: { voe, applicant },
+    state: { voe, applicant, employer },
     method: { stepNext, stepBack, updateVoe },
   }: VoeFormContextType = useContext(VoeFormContext);
 
   const { t } = useTranslation();
 
+  const formatDate = (date: string | Date | null | undefined): string | null => {
+    if (!date) return null;
+    if (date instanceof Date) return date.toISOString().split('T')[0];
+    return date;
+  };
+
   const form = useFormik({
-    initialValues: new ApplicantVoeEntity(),
+    initialValues: {
+      ...new ApplicantVoeEntity(),
+      position: employer?.title || null,
+      start_date: formatDate(employer?.start_at),
+      end_date: formatDate(employer?.end_at),
+      did_drive_check: BooleanType.YES,
+      safety_performance: true,
+    },
     validationSchema: ApplicantVoeEntity.yupSchemaAccidentHistory(),
     validateOnMount: true,
     validateOnChange: true,
@@ -66,12 +79,12 @@ export function AccidentHistory() {
 
     form.setValues({
       ...form.values,
-      position,
-      start_date,
-      end_date,
-      did_drive_check: did_drive_check || null,
+      position: position || employer?.title || null,
+      start_date: formatDate(start_date) || formatDate(employer?.start_at),
+      end_date: formatDate(end_date) || formatDate(employer?.end_at),
+      did_drive_check: did_drive_check || BooleanType.YES,
       drived_vehicle,
-      safety_performance,
+      safety_performance: safety_performance !== undefined ? safety_performance : true,
       registered_accidents_details,
       accidents_reported_to_government,
       reason_to_leave,

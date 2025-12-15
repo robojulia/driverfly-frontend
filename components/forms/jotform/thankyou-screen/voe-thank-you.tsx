@@ -127,7 +127,7 @@ export function VoeThankYouPage() {
                 </div>
 
                 <div className={styles.navigationButtons} style={{ marginTop: '2rem' }}>
-                  <Link href="https://employers.driverfly.com/register" target="_blank">
+                  <Link href="https://app.driverfly.co/signup" target="_blank">
                     <button className={styles.formButton}>
                       {t('JOIN_DRIVERFLY_EMPLOYERS') || 'Join Driverfly Employers'}
                     </button>

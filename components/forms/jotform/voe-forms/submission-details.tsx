@@ -145,7 +145,7 @@ export function SubmissionDetails() {
     const newValues = {
       signature,
       focal_person_name: Boolean(id) ? focal_person_name : employer.manager_name,
-      focal_person_title: Boolean(id) ? focal_person_title : employer.title,
+      focal_person_title: Boolean(id) ? focal_person_title : 'Manager',
       focal_person_phone: Boolean(id) ? focal_person_phone : employer.phone,
       focal_person_email: Boolean(id) ? focal_person_email : employer.email,
       signed_date: Boolean(signed_date) ? signed_date : getCurrentDate(),

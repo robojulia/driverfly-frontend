@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import * as yup from 'yup';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
@@ -20,6 +20,7 @@ export function FelonyConviction() {
 
   const { t } = useTranslation();
   const [isValid, setIsValid] = useState(false);
+  const initializedRef = useRef(false);
 
   // Save form data function
   const saveFormData = async (formData: any) => {
@@ -102,6 +103,8 @@ export function FelonyConviction() {
 
   // Initialize form with applicant data once on mount
   useEffect(() => {
+    if (initializedRef.current) return;
+
     if (applicant) {
       const existingIsConvictedFelony = (applicant as any)?.is_convicted_felony;
       const existingCriminalHistory = applicant?.criminal_history || '';
@@ -129,11 +132,15 @@ export function FelonyConviction() {
       setTimeout(() => {
         form.validateForm();
       }, 0);
+
+      initializedRef.current = true;
     }
-  }, [applicant]);
+  }, [applicant?.id]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // REASON: Form object intentionally excluded to prevent infinite loop
 
   // Custom form validity check - more lenient, allows progression without details
-  const checkFormValidity = () => {
+  const checkFormValidity = useCallback(() => {
     // The question must be answered
     const questionAnswered = form.values.is_convicted_felony !== null;
 
@@ -143,7 +150,7 @@ export function FelonyConviction() {
     // Basic requirement: question answered, no validation errors
     // Details are now optional - users can proceed and fill later
     return questionAnswered && hasNoErrors;
-  };
+  }, [form.values.is_convicted_felony, form.errors]);
 
   // Helper function to determine if criminal history should be required (have started filling)
   const isCriminalHistoryRequired = () => {
@@ -160,7 +167,7 @@ export function FelonyConviction() {
     if (newIsValid !== isValid) {
       setIsValid(newIsValid);
     }
-  }, [form.values, form.errors, form.touched]);
+  }, [checkFormValidity, isValid]);
 
   // Helper functions for radio group values
   const getFelonyConvictionValue = () => {

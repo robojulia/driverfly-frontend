@@ -6,7 +6,7 @@ export default function Logo
             <div className="col-md-2 text-center">
                 <Link href="/">
                     <a>
-                        <img src="/img/driverfly-logo-square.png" className="footer-logo" />
+                        <img src="/img/driverfly-logo-square.png" className="footer-logo" alt="DriverFly" />
                     </a>
                 </Link>
             </div>

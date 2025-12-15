@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { Form, Row, Card } from 'react-bootstrap';
 import { PlusCircle, TrashFill } from 'react-bootstrap-icons';
 import * as yup from 'yup';
@@ -21,6 +21,7 @@ export function AccidentHistory() {
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
+  const initializedRef = useRef(false);
 
   // Save form data function
   const saveFormData = async (formData: any) => {
@@ -223,62 +224,70 @@ export function AccidentHistory() {
   });
 
   useEffect(() => {
-    const existingAccidentCount = applicant.accident_count;
-    const existingAccidentHistory = applicant.accident_history;
-    const existingAccidentDetails = applicant.accident_details;
+    if (initializedRef.current) return;
 
-    // Determine the has_accidents state based on what's stored
-    let hasAccidentsState: boolean | null = null;
+    if (applicant) {
+      const existingAccidentCount = applicant.accident_count;
+      const existingAccidentHistory = applicant.accident_history;
+      const existingAccidentDetails = applicant.accident_details;
 
-    // Check if they've visited this form before by looking for explicit data
-    const hasVisitedForm =
-      existingAccidentCount !== undefined ||
-      existingAccidentHistory !== undefined ||
-      existingAccidentDetails !== undefined;
+      // Determine the has_accidents state based on what's stored
+      let hasAccidentsState: boolean | null = null;
 
-    if (hasVisitedForm) {
-      const actualCount = existingAccidentCount || 0;
-      const actualHistory = existingAccidentHistory || [];
-      const actualDetails = existingAccidentDetails || '';
+      // Check if they've visited this form before by looking for explicit data
+      const hasVisitedForm =
+        existingAccidentCount !== undefined ||
+        existingAccidentHistory !== undefined ||
+        existingAccidentDetails !== undefined;
 
-      if (actualCount > 0 || actualHistory.length > 0) {
-        // They have actual accidents, so they said yes
-        hasAccidentsState = true;
-      } else if (actualDetails === '__YES_NO_DETAILS__') {
-        // They said yes but haven't added details yet
-        hasAccidentsState = true;
-      } else if (actualDetails.trim() !== '' && actualDetails !== '__YES_NO_DETAILS__') {
-        // They have actual accident details - they said yes
-        hasAccidentsState = true;
-      } else if (actualCount === 0 && Array.isArray(actualHistory) && actualDetails === '') {
-        // They have count=0, empty array, and empty details - they said NO
-        hasAccidentsState = false;
+      if (hasVisitedForm) {
+        const actualCount = existingAccidentCount || 0;
+        const actualHistory = existingAccidentHistory || [];
+        const actualDetails = existingAccidentDetails || '';
+
+        if (actualCount > 0 || actualHistory.length > 0) {
+          // They have actual accidents, so they said yes
+          hasAccidentsState = true;
+        } else if (actualDetails === '__YES_NO_DETAILS__') {
+          // They said yes but haven't added details yet
+          hasAccidentsState = true;
+        } else if (actualDetails.trim() !== '' && actualDetails !== '__YES_NO_DETAILS__') {
+          // They have actual accident details - they said yes
+          hasAccidentsState = true;
+        } else if (actualCount === 0 && Array.isArray(actualHistory) && actualDetails === '') {
+          // They have count=0, empty array, and empty details - they said NO
+          hasAccidentsState = false;
+        } else {
+          // Edge case: they've visited but unclear what they chose, default to null
+          hasAccidentsState = null;
+        }
+
+        // Clean up the special marker for display
+        const displayDetails = actualDetails === '__YES_NO_DETAILS__' ? '' : actualDetails;
+
+        form.setValues({
+          ...form.values,
+          accident_count: actualCount,
+          accident_history: actualHistory,
+          accident_details: displayDetails,
+          has_accidents: hasAccidentsState,
+        });
       } else {
-        // Edge case: they've visited but unclear what they chose, default to null
-        hasAccidentsState = null;
+        // First time visiting, initialize with empty state
+        form.setValues({
+          ...form.values,
+          accident_count: 0,
+          accident_history: [],
+          accident_details: '',
+          has_accidents: null,
+        });
       }
 
-      // Clean up the special marker for display
-      const displayDetails = actualDetails === '__YES_NO_DETAILS__' ? '' : actualDetails;
-
-      form.setValues({
-        ...form.values,
-        accident_count: actualCount,
-        accident_history: actualHistory,
-        accident_details: displayDetails,
-        has_accidents: hasAccidentsState,
-      });
-    } else {
-      // First time visiting, initialize with empty state
-      form.setValues({
-        ...form.values,
-        accident_count: 0,
-        accident_history: [],
-        accident_details: '',
-        has_accidents: null,
-      });
+      initializedRef.current = true;
     }
-  }, [applicant]);
+  }, [applicant?.id]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // REASON: Form object intentionally excluded to prevent infinite loop
 
   // Auto-update accident count based on accident history length
   useEffect(() => {
@@ -286,7 +295,9 @@ export function AccidentHistory() {
     if (form.values.accident_count !== accidentHistoryLength) {
       form.setFieldValue('accident_count', accidentHistoryLength);
     }
-  }, [form.values.accident_history]);
+  }, [form.values.accident_history, form.values.accident_count]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // REASON: form.setFieldValue intentionally excluded - guard condition prevents infinite loops
 
   // Extract complex conditions into variables
   const hasAccidents = form.values.has_accidents === true;

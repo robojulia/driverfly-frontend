@@ -28,7 +28,7 @@ export default function Blogs() {
               <div className="row border-bottom pb-3">
                 <div className="col-lg-4 col-md-4 p-0  ">
                   <div className={Blog.postthumbnail}>
-                    <img src="img/Freight1.jpg" />
+                    <img src="img/Freight1.jpg" alt="" />
                   </div>
                   <div className={Blog.custombtn}></div>
                   <div className={Blog.cusbtn}>
@@ -69,7 +69,7 @@ export default function Blogs() {
               <div className="row border-bottom pb-3">
                 <div className="col-lg-4 col-md-4 p-0  ">
                   <div className={Blog.postthumbnail}>
-                    <img src="img/driver-getting.jpg" />
+                    <img src="img/driver-getting.jpg" alt="" />
                   </div>
 
                   <div className={Blog.custombtn}></div>

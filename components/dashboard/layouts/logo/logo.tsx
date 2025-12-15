@@ -6,7 +6,7 @@ const Logo = () => {
     <div className="logoicon">
     <Link href="/">
       <a>
-        <img src="/dashboard/assets/images/logos/logo.png" />
+        <img src="/dashboard/assets/images/logos/logo.png" alt="DriverFly" />
       </a>
     </Link>
     </div>

@@ -34,7 +34,7 @@ export default function BlogSidebr() {
                     <div className={Blog.sidebarwigt}>
                         <div className="row mb-4">
                             <div className="col-3 mr-2 ml-3 p-0">
-                                <img src="img/Freight1.jpg" />
+                                <img src="img/Freight1.jpg" alt="" />
                             </div>
                             <div className="col-7">
                                 <ul className="list-group list-group-flush">
@@ -49,7 +49,7 @@ export default function BlogSidebr() {
                         </div>
                         <div className="row mb-4">
                             <div className="col-3 mr-2  ml-3 p-0">
-                                <img src="img/Freight1.jpg" />
+                                <img src="img/Freight1.jpg" alt="" />
                             </div>
                             <div className="col-7">
                                 <ul className="list-group list-group-flush">

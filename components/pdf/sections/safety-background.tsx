@@ -60,6 +60,8 @@ const SafetyBackground = ({ applicant, t }) => {
                     <Text style={styles.label}>{t("CAN_PASS_DRUG_TEST")}</Text>
                     <Text style={styles.value}>{applicant?.can_pass_drug_test ? t('YES') : t('NO')}</Text>
                 </View>
+            </View>
+            <View style={styles.row}>
                 <View style={styles.field}>
                     <Text style={styles.label}>{t("has_had_positive_drug_test")}</Text>
                     <Text style={styles.value}>{applicant?.positive_drug_test ? t('YES') : t('NO')}</Text>

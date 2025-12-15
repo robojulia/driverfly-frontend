@@ -27,7 +27,7 @@ export default function EldtBlog() {
       <div className={BlogDetail.job__deatails__sec}>
         <div className="container">
           <div className="row">
-            <img src="img/Freight1.jpg" className="w-100" />
+            <img src="img/Freight1.jpg" className="w-100" alt="Freight truck on highway" />
             <p className="mt-3">Changes in Trucking</p>
             <h2 className="font-weight-normal">
               {" "}

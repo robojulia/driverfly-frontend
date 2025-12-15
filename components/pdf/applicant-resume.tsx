@@ -23,7 +23,6 @@ import PreviousEmployment from "./sections/previous-employment";
 import SafetyBackground from "./sections/safety-background";
 import Preferences from "./sections/preferences";
 import ApplicationDetails from "./sections/application-details";
-import EmergencyContact from "./sections/emergency-contact";
 export interface ApplicantResumeProps extends ViewApplicantDetailProps {
 	disabled?: boolean | (() => boolean);
 	className?: string;
@@ -102,9 +101,6 @@ export default function ApplicantResume({
 
 				{/* Section 8: Application Details (moved after safety) */}
 				<ApplicationDetails t={t} applicant={applicant} />
-
-				{/* Section 9: Emergency Contact (moved to separate section) */}
-				<EmergencyContact t={t} applicant={applicant} />
 			</Page>
 		</Document>
 	);

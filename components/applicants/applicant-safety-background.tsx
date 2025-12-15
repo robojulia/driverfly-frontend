@@ -44,18 +44,6 @@ export default function ApplicantSafetyBackground({ applicant }: ApplicantSafety
                                 show: !!applicant.license_revoked,
                                 text: applicant.license_revoked_details
                             },
-                            has_had_psp_violations: applicant.psp_violations,
-                            violations_details: {
-                                label: "details",
-                                show: !!applicant.psp_violations,
-                                text: applicant.psp_violations_details
-                            },
-                            has_had_tickets_last_5_years: applicant.tickets,
-                            tickets_details: {
-                                label: "details",
-                                show: !!applicant.tickets,
-                                text: applicant.tickets_details
-                            },
                             has_had_positive_drug_test: applicant.positive_drug_test,
                             failed_drug_test_details: {
                                 label: "details",

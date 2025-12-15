@@ -26,7 +26,7 @@ export default function TipsBlog() {
       <div className={BlogDetail.job__deatails__sec}>
         <div className="container">
           <div className="row">
-            <img src="img/driver-getting.jpg" className='w-100' />
+            <img src="img/driver-getting.jpg" className='w-100' alt="Truck driver entering vehicle" />
             <p className='mt-3'>Tips and Tricks</p>
             <h2 className='font-weight-normal'> Finding Your Dream Trucking Job: 3 Quick & Easy Tips</h2>
             <div className="top-info mb-3">

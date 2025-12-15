@@ -63,7 +63,7 @@ const Preferences = ({ applicant, t }) => {
 
     return (
         <View style={styles.container}>
-            <Title>{t("Preferences")}</Title>
+            <Title>Preferences & Qualifications</Title>
 
             {/* Preferred Locations */}
             {applicant?.preferred_location && applicant.preferred_location.length > 0 && (

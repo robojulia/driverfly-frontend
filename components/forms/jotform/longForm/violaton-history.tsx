@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { Form, Row, Card } from 'react-bootstrap';
 import { PlusCircle, TrashFill } from 'react-bootstrap-icons';
 import * as yup from 'yup';
@@ -21,6 +21,7 @@ export function ViolationHistory() {
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
+  const initializedRef = useRef(false);
 
   // Save form data function
   const saveFormData = async (formData: any) => {
@@ -164,42 +165,50 @@ export function ViolationHistory() {
   });
 
   useEffect(() => {
-    const existingViolationCount = applicant.moving_violations_count || 0;
-    const existingViolationHistory = applicant.moving_violation_history || [];
-    const existingDetails = applicant?.moving_violations_details || '';
+    if (initializedRef.current) return;
 
-    // Enhanced state detection for form restoration
-    let hasViolationsState: boolean | null = null;
+    if (applicant) {
+      const existingViolationCount = applicant.moving_violations_count || 0;
+      const existingViolationHistory = applicant.moving_violation_history || [];
+      const existingDetails = applicant?.moving_violations_details || '';
 
-    // Check if user has visited this form before
-    const hasActualViolations = existingViolationCount > 0 || existingViolationHistory.length > 0;
-    const hasActualDetails = existingDetails && existingDetails !== '__YES_NO_DETAILS__';
+      // Enhanced state detection for form restoration
+      let hasViolationsState: boolean | null = null;
 
-    if (hasActualViolations || hasActualDetails) {
-      // User said YES and provided actual data
-      hasViolationsState = true;
-    } else if (existingDetails === '__YES_NO_DETAILS__') {
-      // User said YES but provided no details (special marker)
-      hasViolationsState = true;
-    } else if (
-      existingViolationCount === 0 &&
-      existingViolationHistory.length === 0 &&
-      existingDetails === '' &&
-      applicant.moving_violations_details !== undefined
-    ) {
-      // User said NO (explicitly saved as empty values)
-      hasViolationsState = false;
+      // Check if user has visited this form before
+      const hasActualViolations = existingViolationCount > 0 || existingViolationHistory.length > 0;
+      const hasActualDetails = existingDetails && existingDetails !== '__YES_NO_DETAILS__';
+
+      if (hasActualViolations || hasActualDetails) {
+        // User said YES and provided actual data
+        hasViolationsState = true;
+      } else if (existingDetails === '__YES_NO_DETAILS__') {
+        // User said YES but provided no details (special marker)
+        hasViolationsState = true;
+      } else if (
+        existingViolationCount === 0 &&
+        existingViolationHistory.length === 0 &&
+        existingDetails === '' &&
+        applicant.moving_violations_details !== undefined
+      ) {
+        // User said NO (explicitly saved as empty values)
+        hasViolationsState = false;
+      }
+      // Otherwise null (never visited)
+
+      form.setValues({
+        ...form.values,
+        moving_violations_count: existingViolationCount,
+        moving_violation_history: existingViolationHistory,
+        moving_violations_details: existingDetails === '__YES_NO_DETAILS__' ? '' : existingDetails, // Clean up marker for display
+        has_violations: hasViolationsState,
+      });
+
+      initializedRef.current = true;
     }
-    // Otherwise null (never visited)
-
-    form.setValues({
-      ...form.values,
-      moving_violations_count: existingViolationCount,
-      moving_violation_history: existingViolationHistory,
-      moving_violations_details: existingDetails === '__YES_NO_DETAILS__' ? '' : existingDetails, // Clean up marker for display
-      has_violations: hasViolationsState,
-    });
-  }, [applicant]);
+  }, [applicant?.id]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // REASON: Form object intentionally excluded to prevent infinite loop
 
   // Auto-update violation count based on violation history length
   useEffect(() => {
@@ -207,7 +216,9 @@ export function ViolationHistory() {
     if (form.values.moving_violations_count !== violationHistoryLength) {
       form.setFieldValue('moving_violations_count', violationHistoryLength);
     }
-  }, [form.values.moving_violation_history]);
+  }, [form.values.moving_violation_history, form.values.moving_violations_count]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // REASON: form.setFieldValue intentionally excluded - guard condition prevents infinite loops
 
   // Extract complex conditions into variables
   const hasViolations = form.values.has_violations === true;

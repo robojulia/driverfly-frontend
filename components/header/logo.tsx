@@ -5,7 +5,7 @@ export default function Logo() {
       <div className="logo">
         <Link href="/">
           <a>
-            <img src="/img/DriverFly-Official-Favicon.png" className="logo" />
+            <img src="/img/DriverFly-Official-Favicon.png" className="logo" alt="DriverFly" />
           </a>
         </Link>
       </div>
