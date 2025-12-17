@@ -72,6 +72,10 @@ export class CompanyPreferenceEntity {
                             is: CompanyPreferenceEnhancementLabel.ADD_SSN_ON_DHA,
                             then: yup.boolean().optional().nullable()
                         })
+                        .when("label", {
+                            is: CompanyPreferenceEnhancementLabel.SSN_REQUIRED,
+                            then: yup.boolean().optional().nullable()
+                        })
                 })
                 .when("category", {
                     is: CompanyPreferenceCategory.ONBOARDING_CHECKLIST,

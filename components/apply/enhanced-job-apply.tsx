@@ -27,6 +27,9 @@ import { LoaderIcon } from '../loading/loader-icon';
 import { QuickApplyDriversLicense } from './quick-apply-drivers-license';
 import { Input, Select, Checkbox, DhaPhoneInput, Button, FormLabel, OTPInput } from '../shared/dha';
 import { PrimaryButton, SecondaryButton } from '../forms/jotform/form-buttons';
+import { ReferralSourceApi } from '../../pages/api/referral-source';
+import { ReferralSourceEntity } from '../../models/referral-source/referral-source.entity';
+import { Status } from '../../enums/status.enum';
 
 interface EnhancedJobApplyProps {
   job: JobEntity;
@@ -101,6 +104,23 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
   const [applicationStatus, setApplicationStatus] = useState<
     'new' | 'update' | 'additional' | null
   >(null);
+  const [referralSources, setReferralSources] = useState<ReferralSourceEntity[]>([]);
+
+  // Fetch referral sources
+  useEffect(() => {
+    const fetchReferralSources = async () => {
+      try {
+        const referralSourceApi = new ReferralSourceApi();
+        const data = await referralSourceApi.list();
+        setReferralSources(data?.filter((r) => r.status === Status.ACTIVE) || []);
+      } catch (error) {
+        console.error('Error fetching referral sources:', error);
+        setReferralSources([]);
+      }
+    };
+
+    fetchReferralSources();
+  }, []);
 
   // Helper function to extract error string
   const getErrorString = (error: any): string | undefined => {
@@ -335,13 +355,21 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
         dto.moving_violations_count = Number(dto.moving_violations_count);
         dto.all_violations_count = Number(dto.all_violations_count);
         dto.accident_count = Number(dto.accident_count);
-        dto.extras = [
-          ...dto.extras,
-          {
-            ...new ApplicantExtrasEntity(ApplicantExtras.HEAR_ABOUT_US),
-            value: HearAboutUsType.JOB_BOARD,
-          },
-        ];
+
+        // Map JOB_BOARD to referralSourceId
+        const jobBoardSource = referralSources.find(
+          (source) =>
+            source.name?.toLowerCase() === 'job_board' ||
+            source.name?.toLowerCase() === 'job board' ||
+            source.name?.toLowerCase() === t('HearAboutUsType.JOB_BOARD')?.toLowerCase()
+        );
+
+        if (jobBoardSource) {
+          dto.referralSourceId = jobBoardSource.id;
+        }
+
+        // Remove HEAR_ABOUT_US from extras as we're now using referralSourceId
+        dto.extras = dto.extras?.filter((e) => e.type !== ApplicantExtras.HEAR_ABOUT_US) || [];
 
         try {
           let applicantResult;

@@ -57,6 +57,7 @@ export default function Dashboard() {
     recruiterIds: [],
     states: [],
     sourceTypes: [],
+    statuses: [],
   });
   const applicantApi = new ApplicantApi();
   const employeeApi = new EmployeeApi();
@@ -68,9 +69,9 @@ export default function Dashboard() {
     let todayDate = new Date();
     if (company?.id) {
       // DRIV-144 - Get all applicants without any filtering
+      // Explicitly don't exclude referralSource to ensure it loads for source tracking
       const a = await applicantApi.list({
         is_paginated: false,
-        without: [],
       });
 
       setApplicants(a as ApplicantEntity[]);

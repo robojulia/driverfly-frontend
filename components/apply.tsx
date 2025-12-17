@@ -24,6 +24,9 @@ import JobApi from '../pages/api/job';
 import UserApi from '../pages/api/user';
 import { globalAjaxExceptionHandler } from '../utils/ajax';
 import { useEffectAsync } from '../utils/react';
+import { ReferralSourceApi } from '../pages/api/referral-source';
+import { ReferralSourceEntity } from '../models/referral-source/referral-source.entity';
+import { Status } from '../enums/status.enum';
 import BaseCheck from './forms/base-check';
 import BaseInput from './forms/base-input';
 import BaseInputPhone from './forms/base-input-phone';
@@ -67,6 +70,23 @@ export default function JobApply({ job, setEncourageModal }) {
   const [showDrugErrorMessage, setShowDrugErrorMessage] = useState<boolean>(false);
 
   const [applicant, setApplicant] = useState<ApplicantEntity>();
+  const [referralSources, setReferralSources] = useState<ReferralSourceEntity[]>([]);
+
+  // Fetch referral sources
+  useEffect(() => {
+    const fetchReferralSources = async () => {
+      try {
+        const referralSourceApi = new ReferralSourceApi();
+        const data = await referralSourceApi.list();
+        setReferralSources(data?.filter((r) => r.status === Status.ACTIVE) || []);
+      } catch (error) {
+        console.error('Error fetching referral sources:', error);
+        setReferralSources([]);
+      }
+    };
+
+    fetchReferralSources();
+  }, []);
 
   const apply_form = useFormik({
     initialValues: new ApplicantEntity(),
@@ -81,15 +101,23 @@ export default function JobApply({ job, setEncourageModal }) {
         dto.moving_violations_count = Number(dto.moving_violations_count);
         dto.all_violations_count = Number(dto.all_violations_count);
         dto.accident_count = Number(dto.accident_count);
-        dto.extras = [
-          ...dto.extras,
-          {
-            ...new ApplicantExtrasEntity(ApplicantExtras.HEAR_ABOUT_US),
-            value: HearAboutUsType.JOB_BOARD,
-          },
-        ];
 
-        try {
+        // Map JOB_BOARD to referralSourceId
+        const jobBoardSource = referralSources.find(
+          (source) =>
+            source.name?.toLowerCase() === 'job_board' ||
+            source.name?.toLowerCase() === 'job board' ||
+            source.name?.toLowerCase() === t('HearAboutUsType.JOB_BOARD')?.toLowerCase()
+        );
+
+        if (jobBoardSource) {
+          dto.referralSourceId = jobBoardSource.id;
+        }
+
+        // Remove HEAR_ABOUT_US from extras as we're now using referralSourceId
+        dto.extras = dto.extras?.filter((e) => e.type !== ApplicantExtras.HEAR_ABOUT_US) || [];
+
+        try{
           const response = await jobApi.apply(job.id, dto);
           setApplicant(response);
           toast.success(t('job_applied_success_message'));

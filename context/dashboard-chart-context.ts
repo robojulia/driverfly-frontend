@@ -24,6 +24,7 @@ const DashboardChartContext = createContext<DashboardChartContextType>({
         recruiterIds: [],
         states: [],
         sourceTypes: [],
+        statuses: [],
     }
 });
 

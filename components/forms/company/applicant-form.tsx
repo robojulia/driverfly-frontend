@@ -1746,38 +1746,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
                   <BaseCheck
                     className="col-12 mt-2"
                     disabled={Boolean(entity?.is_hired)}
-                    label="has_had_psp_violations"
-                    name="psp_violations"
-                    formik={form}
-                  />
-                  {form.values?.psp_violations && (
-                    <BaseTextArea
-                      className="col-12 mt-2"
-                      readOnly={Boolean(entity?.is_hired)}
-                      label="details"
-                      name="psp_violations_details"
-                      formik={form}
-                    />
-                  )}
-                  {/* <BaseCheck
-										className="col-12 mt-2"
-										disabled={Boolean(entity?.is_hired)}
-										label="has_had_tickets_last_5_years"
-										name="tickets"
-										formik={form}
-									/> */}
-                  {form.values?.tickets && (
-                    <BaseTextArea
-                      className="col-12 mt-2"
-                      readOnly={Boolean(entity?.is_hired)}
-                      label="details"
-                      name="tickets_details"
-                      formik={form}
-                    />
-                  )}
-                  <BaseCheck
-                    className="col-12 mt-2"
-                    disabled={Boolean(entity?.is_hired)}
                     label="has_had_positive_drug_test"
                     name="positive_drug_test"
                     formik={form}

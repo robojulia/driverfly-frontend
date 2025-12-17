@@ -64,7 +64,7 @@ export function EmployeeForm(props: EmployeeFormProps) {
   const [createManager, setCreateManager] = useState<boolean>(false);
 
   const onManagerAdded = (manager: CompanyManagerEntity) => {
-    form.setFieldValue(`manager.id`, manager.id);
+    form.setFieldValue(`managerId`, manager.id);
     setManagers([...managers, manager]);
     setCreateManager(false);
   };
@@ -76,17 +76,34 @@ export function EmployeeForm(props: EmployeeFormProps) {
   }, [user]);
 
   const form = useFormik({
-    initialValues: new EmployeeEntity(),
+    initialValues: {
+      ...new EmployeeEntity(),
+      hr_notes: "",
+    },
     validationSchema: EmployeeEntity.employeeFormYupSchema(),
     onSubmit: async (values) => {
       try {
+        console.log("SUBMITTING EMPLOYEE VALUES:", values);
+        console.log("HR_NOTES VALUE:", values.hr_notes);
+        console.log("MANAGER_ID VALUE:", values.managerId);
+
+        // Remove the manager object to avoid conflicts with managerId
+        const { manager, job, ...submitValues } = values;
+        const payload = {
+          ...submitValues,
+          jobId: values.jobId || values.job?.id,
+          hr_notes: submitValues.hr_notes || '',
+        };
+
         if (entity?.id) {
-          values = await employeeApi.update(entity.id, values);
+          const updatedEmployee = await employeeApi.update(entity.id, payload);
+          console.log("RECEIVED RESPONSE:", updatedEmployee);
+          console.log("RESPONSE HR_NOTES:", updatedEmployee.hr_notes);
+          // Reset dirty state after successful save to prevent unsaved changes warning
+          form.resetForm({ values: { ...values, ...updatedEmployee, hr_notes: updatedEmployee.hr_notes || "" } });
         }
 
         formSuccess(t, entity?.id ? "update" : "create", "EMPLOYEE");
-        // Reset dirty state after successful save to prevent unsaved changes warning
-        form.resetForm({ values });
         goBack();
         // if (onSaveComplete) onSaveComplete(values);
       } catch (e) {
@@ -103,13 +120,16 @@ export function EmployeeForm(props: EmployeeFormProps) {
 
   useEffect(() => {
     if (entity.id) {
+      console.log("LOADING ENTITY INTO FORM:", entity);
+      console.log("ENTITY HR_NOTES:", entity.hr_notes);
       form.setValues({
         ...entity,
-        jobId: entity.job.id,
+        jobId: entity.job?.id,
         managerId: entity?.manager?.id,
+        hr_notes: entity.hr_notes || "",
       });
     }
-  }, [entity]);
+  }, [entity.id]);
 
   useEffect(() => {
     console.log("form error", form.errors);
@@ -182,8 +202,8 @@ export function EmployeeForm(props: EmployeeFormProps) {
               <BaseSelect
                 name={`managerId`}
                 label="MANAGER"
-                required
                 placeholder="MANAGER"
+                displayPlaceholder={true}
                 options={managers}
                 labelKey="name"
                 valueKey="id"
@@ -215,7 +235,6 @@ export function EmployeeForm(props: EmployeeFormProps) {
               <BaseInput
                 className="col-12"
                 label="FIRST_NAME"
-                required
                 name="first_name"
                 placeholder="FIRST_NAME"
                 formik={form}
@@ -223,7 +242,6 @@ export function EmployeeForm(props: EmployeeFormProps) {
               <BaseInput
                 className="col-12"
                 label="LAST_NAME"
-                required
                 name="last_name"
                 placeholder="LAST_NAME"
                 formik={form}
@@ -248,7 +266,6 @@ export function EmployeeForm(props: EmployeeFormProps) {
               <BaseInput
                 className="col-12"
                 label="EMAIL"
-                required
                 type="email"
                 name="email"
                 placeholder="EMAIL"

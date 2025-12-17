@@ -39,7 +39,18 @@ export const LEGAL_DOCUMENTS = [
     showSsn: true,
     completionCheck: (form, companyPreferences) => {
       const isSignatureComplete = !!form.values.SIGNATURE_VOE_AUTHORIZATION?.value;
-      // SSN is now completely optional regardless of company preferences
+      // Check if SSN is required by company preference
+      const ssnRequiredByCompany = companyPreferences?.find(
+        (v) => v.label === CompanyPreferenceEnhancementLabel.SSN_REQUIRED
+      )?.value;
+      const ssnProvided = !!form.values.ssn && form.values.ssn.length >= 9;
+
+      // If SSN is required by company, check that it's provided
+      if (ssnRequiredByCompany) {
+        return isSignatureComplete && ssnProvided;
+      }
+
+      // Otherwise, just check signature
       return isSignatureComplete;
     },
   },

@@ -33,13 +33,21 @@ export const DocumentSignature = memo(function DocumentSignature({
   console.log(document, companyPreferences);
 
   // SSN handling for verification of employment - memoized
-  const ssnRequired = useMemo(() => {
+  const ssnShown = useMemo(() => {
     return (
       document.showSsn === true &&
       companyPreferences?.find((v) => v.label === CompanyPreferenceEnhancementLabel.ADD_SSN_ON_DHA)
         ?.value
     );
   }, [document.showSsn, companyPreferences]);
+
+  const ssnRequired = useMemo(() => {
+    return (
+      ssnShown &&
+      companyPreferences?.find((v) => v.label === CompanyPreferenceEnhancementLabel.SSN_REQUIRED)
+        ?.value
+    );
+  }, [ssnShown, companyPreferences]);
 
   // Format SSN in XXX-XX-XXXX pattern - memoized
   const formatSSN = useCallback((value: string) => {
@@ -164,11 +172,11 @@ export const DocumentSignature = memo(function DocumentSignature({
   const requirements = useMemo(() => {
     const reqs = [];
 
-    if (ssnRequired) {
+    if (ssnShown) {
       reqs.push({
         label: 'Social Security Number',
         met: form.values.ssn && form.values.ssn.length === 9,
-        required: false, // SSN is completely optional now
+        required: ssnRequired, // SSN is required based on company preference
       });
     }
 
@@ -188,6 +196,7 @@ export const DocumentSignature = memo(function DocumentSignature({
 
     return reqs;
   }, [
+    ssnShown,
     ssnRequired,
     form.values.ssn,
     form.values[document.signatureField]?.value,
@@ -255,10 +264,13 @@ export const DocumentSignature = memo(function DocumentSignature({
               </div>
             </div>
 
-            {/* SSN Input (if required) */}
-            {ssnRequired && (
+            {/* SSN Input (if shown by company preference) */}
+            {ssnShown && (
               <div className="mb-4">
-                <label className="form-label fw-bold">Social Security Number</label>
+                <label className="form-label fw-bold">
+                  Social Security Number
+                  {ssnRequired && <span className="text-danger ms-1">*</span>}
+                </label>
                 <div className="mb-2">
                   {isFocused ? (
                     <input
@@ -273,6 +285,7 @@ export const DocumentSignature = memo(function DocumentSignature({
                       }`}
                       placeholder="XXX-XX-XXXX"
                       maxLength={11}
+                      required={ssnRequired}
                     />
                   ) : (
                     <input
@@ -293,7 +306,7 @@ export const DocumentSignature = memo(function DocumentSignature({
                 </div>
                 <small className="text-muted">
                   <Shield size={12} className="me-1" />
-                  Your SSN is encrypted and protected. Click to edit. This field is optional.
+                  Your SSN is encrypted and protected. Click to edit. This field is {ssnRequired ? 'required' : 'optional'}.
                 </small>
               </div>
             )}
@@ -376,10 +389,13 @@ export const DocumentSignature = memo(function DocumentSignature({
     <div className="document-signature-panel">
       {/* Completion Status - Removed per user request */}
 
-      {/* SSN Input (if required) */}
-      {ssnRequired && (
+      {/* SSN Input (if shown by company preference) */}
+      {ssnShown && (
         <div className="mb-4">
-          <label className="form-label fw-bold">Social Security Number</label>
+          <label className="form-label fw-bold">
+            Social Security Number
+            {ssnRequired && <span className="text-danger ms-1">*</span>}
+          </label>
           <div className="mb-2">
             {isFocused ? (
               <input
@@ -394,6 +410,7 @@ export const DocumentSignature = memo(function DocumentSignature({
                 }`}
                 placeholder="XXX-XX-XXXX"
                 maxLength={11}
+                required={ssnRequired}
               />
             ) : (
               <input
@@ -414,7 +431,7 @@ export const DocumentSignature = memo(function DocumentSignature({
           </div>
           <small className="text-muted">
             <Shield size={12} className="me-1" />
-            Your SSN is encrypted and protected. Click to edit. This field is optional.
+            Your SSN is encrypted and protected. Click to edit. This field is {ssnRequired ? 'required' : 'optional'}.
           </small>
         </div>
       )}

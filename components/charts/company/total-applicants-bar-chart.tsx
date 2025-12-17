@@ -47,7 +47,7 @@ export function TotalApplicantBarChart() {
     // If no filters are applied, include all applicants
     if (!historicalFilters) return true;
 
-    const { ownerOperator, recruiterIds, states, sourceTypes } = historicalFilters;
+    const { ownerOperator, recruiterIds, states, sourceTypes, statuses } = historicalFilters;
 
     // Owner Operator filter
     if (ownerOperator !== 'all') {
@@ -73,9 +73,16 @@ export function TotalApplicantBarChart() {
       }
     }
 
-    // Source Type filter
+    // Source Type filter (using applicant.type which is the lead type)
     if (sourceTypes && sourceTypes.length > 0) {
-      if (!applicant.referralSource?.name || !sourceTypes.includes(applicant.referralSource.name)) {
+      if (!applicant.type || !sourceTypes.includes(applicant.type)) {
+        return false;
+      }
+    }
+
+    // Status filter
+    if (statuses && statuses.length > 0) {
+      if (!applicant.current_application_status || !statuses.includes(applicant.current_application_status)) {
         return false;
       }
     }
@@ -87,7 +94,7 @@ export function TotalApplicantBarChart() {
     // If no filters are applied, include all employees
     if (!historicalFilters) return true;
 
-    const { ownerOperator, recruiterIds, states, sourceTypes } = historicalFilters;
+    const { ownerOperator, recruiterIds, states, sourceTypes, statuses } = historicalFilters;
 
     // For employees, we need to check their applicant data if available
     const applicant = employee.applicant;
@@ -118,9 +125,16 @@ export function TotalApplicantBarChart() {
       }
     }
 
-    // Source Type filter - check the original applicant's source
+    // Source Type filter (using applicant.type which is the lead type)
     if (sourceTypes && sourceTypes.length > 0) {
-      if (!applicant?.referralSource?.name || !sourceTypes.includes(applicant.referralSource.name)) {
+      if (!applicant?.type || !sourceTypes.includes(applicant.type)) {
+        return false;
+      }
+    }
+
+    // Status filter - check the original applicant's status
+    if (statuses && statuses.length > 0) {
+      if (!applicant?.current_application_status || !statuses.includes(applicant.current_application_status)) {
         return false;
       }
     }

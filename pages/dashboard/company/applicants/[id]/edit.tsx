@@ -186,12 +186,33 @@ export default function EditApplicant({ id }) {
   return (
     <>
       {/* Fixed Update Button - stays in upper right as user scrolls */}
-      <div style={{
-        position: 'fixed',
-        top: 20,
-        right: 20,
-        zIndex: 9999
-      }}>
+      <div
+        style={{
+          position: 'fixed',
+          top: 20,
+          right: 20,
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: '#ffffff',
+            opacity: 1,
+            padding: '10px 20px',
+            borderRadius: '0.375rem',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+            whiteSpace: 'nowrap',
+            fontWeight: 500,
+            fontSize: '14px',
+            border: '1px solid #dee2e6',
+            color: '#000'
+          }}
+        >
+          {applicant?.first_name} {applicant?.last_name}
+        </div>
         <Button
           type="button"
           className={`btn btn-primary`}

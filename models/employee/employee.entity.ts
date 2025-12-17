@@ -72,10 +72,10 @@ export class EmployeeEntity {
 
   static employeeFormYupSchema() {
     return yup.object({
-      first_name: yup.string().trim().required().nullable(),
-      last_name: yup.string().trim().required().nullable(),
+      first_name: yup.string().trim().nullable(),
+      last_name: yup.string().trim().nullable(),
       phone: yup.string().nullable(),
-      email: yup.string().email().required().nullable(),
+      email: yup.string().email().nullable(),
       birthdate: yup
         .date()
         .nullable()
@@ -111,9 +111,8 @@ export class EmployeeEntity {
       preferred_location: yup.array((yup.string() as any).enum(JobGeography)).nullable(),
       job: yup
         .object({
-          id: yup.number().required().nullable(),
+          id: yup.number().nullable(),
         })
-        .required()
         .nullable(),
       equipment_experience: (yup.array(EmployeeExperienceEntity.yupSchema()) as any).unique(
         'type',
@@ -122,7 +121,7 @@ export class EmployeeEntity {
       equipment_owned: (yup.array(EmployeeEquipmentEntity.yupSchema()) as any).unique('type', {
         mapper: EmployeeEquipmentEntity.key,
       }),
-      managerId: yup.number().required().nullable(),
+      managerId: yup.number().nullable(),
       hire_date: yup.date().nullable(),
       hr_notes: yup.string().nullable(),
     });

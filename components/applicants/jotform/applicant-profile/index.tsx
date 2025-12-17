@@ -15,9 +15,14 @@ export default function ApplicantExtrasDetails({
 	applicant,
 }: ApplicantSafetyBackgroundProps) {
 	const { t } = useTranslation();
-	const hear_about_us = applicant.extras?.find(
+	// Check for HEAR_ABOUT_US in extras (for backwards compatibility)
+	const hear_about_us_extra = applicant.extras?.find(
 		(ex) => ex?.type == ApplicantExtras.HEAR_ABOUT_US
 	);
+
+	// Prefer referralSource over extras for displaying lead source
+	const hear_about_us_display = applicant.referralSource?.name ||
+		(hear_about_us_extra?.value ? t(`HearAboutUsType.${hear_about_us_extra.value}`) : null);
 	const job_apply_date = applicant.extras?.find(
 		(ex) => ex?.type == ApplicantExtras.APPLY_DATE
 	);
@@ -31,9 +36,16 @@ export default function ApplicantExtrasDetails({
 	const unable_to_perform_job = applicant.extras?.find(
 		(ex) => ex?.type == ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
 	);
-	const convicted_of_felony = applicant.extras?.find(
-		(ex) => ex?.type == ApplicantExtras.CONVICTED_OF_FELONY
-	);
+
+	// Determine felony conviction status from criminal_history field
+	const hasCriminalHistory = applicant.criminal_history &&
+		applicant.criminal_history.trim() !== '' &&
+		applicant.criminal_history !== '__YES_NO_DETAILS__';
+	const isConvictedFelony = !!applicant.criminal_history && applicant.criminal_history !== '';
+	const felonyConvictionDisplay = isConvictedFelony ?
+		(hasCriminalHistory ? applicant.criminal_history : t("YES")) :
+		t("NO");
+
 	const dot_regulation = applicant.extras?.find(
 		(ex) => ex?.type == ApplicantExtras.DOT_REGULATION
 	);
@@ -48,12 +60,9 @@ export default function ApplicantExtrasDetails({
 		(ex) => ex?.type == ApplicantExtras.REQUIRE_W2_EMPLOYMENT
 	);
 
-	const accident_details = applicant.extras?.find(
-		(ex) => ex?.type == ApplicantExtras.ACCIDENT_DETAILS
-	);
-	const violation_details = applicant.extras?.find(
-		(ex) => ex?.type == ApplicantExtras.VIOLATION_DETAILS
-	);
+	// Read accident and violation data from direct applicant fields, not extras
+	const accident_history = applicant.accident_history || [];
+	const moving_violation_history = applicant.moving_violation_history || [];
 	const current_employer = applicant.employers?.find(v => !!v.is_current)
 
 	const past_employers = applicant.employers?.filter(v => !!!v.is_current);
@@ -87,7 +96,7 @@ export default function ApplicantExtrasDetails({
 							default={t("NOT_ANSWERED")}
 							obj={{
 								Authorize_to_Communicate: applicant.authorize_to_communicate && t(`BooleanPreferenceType.${applicant.authorize_to_communicate}`),
-								hear_about_us: hear_about_us?.value && t(`HearAboutUsType.${hear_about_us?.value}`),
+								hear_about_us: hear_about_us_display,
 								job_apply_date: job_apply_date?.value,
 								qualified_for_manual_transmission:
 									!!qualified_for_manual_transmission,
@@ -102,7 +111,7 @@ export default function ApplicantExtrasDetails({
 							obj={{
 								past_license_suspension: past_license_suspension?.value,
 								unable_to_perform_job: unable_to_perform_job?.value,
-								convicted_of_felony: convicted_of_felony?.value,
+								convicted_of_felony: felonyConvictionDisplay,
 								dot_regulation: dot_regulation?.value,
 							}}
 						/>
@@ -178,7 +187,7 @@ export default function ApplicantExtrasDetails({
 								number_of_fatalaties: "number_of_fatalaties",
 								number_of_injured: "number_of_injured",
 							}}
-							items={accident_details?.value?.map((a) => ({
+							items={accident_history?.map((a) => ({
 								at_fault: !!a?.at_fault ? `${t("YES")}` : `${t("NO")}`,
 								date_of_accident: a?.date_of_accident,
 								dot_recordable: !!a?.dot_recordable
@@ -202,7 +211,7 @@ export default function ApplicantExtrasDetails({
 								location: "location",
 								penalty: "penalty",
 							}}
-							items={violation_details?.value.map((v) => ({
+							items={moving_violation_history?.map((v) => ({
 								charge: v?.charge,
 								date_of_violation: v?.date_of_violation,
 								location: v?.location,

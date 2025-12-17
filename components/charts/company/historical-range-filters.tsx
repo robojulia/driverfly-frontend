@@ -3,12 +3,14 @@ import { Row, Col } from 'react-bootstrap';
 import stateList from '../../../utils/stateList';
 import { useTranslation } from '../../../hooks/use-translation';
 import DashboardChartContext from '../../../context/dashboard-chart-context';
+import { ApplicantStatus } from '../../../enums/applicants/applicant-status.enum';
 
 export interface HistoricalRangeFilters {
   ownerOperator: string;
   recruiterIds: number[];
   states: string[];
   sourceTypes: string[];
+  statuses: string[];
 }
 
 export interface HistoricalRangeFiltersProps {
@@ -40,33 +42,40 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
   const sourceTypes = useMemo(() => {
     const sourceMap = new Map<string, string>();
     state?.applicants?.forEach((applicant) => {
-      if (applicant.referralSource?.name) {
-        sourceMap.set(applicant.referralSource.name, applicant.referralSource.name);
+      // Use applicant.type which corresponds to "Lead Type" in the applicant profile
+      if (applicant.type) {
+        sourceMap.set(applicant.type, applicant.type);
       }
     });
     return Array.from(sourceMap.values()).sort();
   }, [state?.applicants]);
 
   const getInitialFilters = (): HistoricalRangeFilters => {
-    if (initialFilters) return initialFilters;
+    const defaultFilters: HistoricalRangeFilters = {
+      ownerOperator: 'all',
+      recruiterIds: [],
+      states: [],
+      sourceTypes: [],
+      statuses: [],
+    };
+
+    if (initialFilters) {
+      return { ...defaultFilters, ...initialFilters };
+    }
 
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         try {
-          return JSON.parse(stored) as HistoricalRangeFilters;
+          const parsedFilters = JSON.parse(stored) as Partial<HistoricalRangeFilters>;
+          return { ...defaultFilters, ...parsedFilters };
         } catch (e) {
           console.error('Failed to parse stored filters', e);
         }
       }
     }
 
-    return {
-      ownerOperator: 'all',
-      recruiterIds: [],
-      states: [],
-      sourceTypes: [],
-    };
+    return defaultFilters;
   };
 
   const [filters, setFilters] = useState<HistoricalRangeFilters>(getInitialFilters);
@@ -89,9 +98,10 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
       return;
     }
     const recruiterId = parseInt(value);
-    const newArray = filters.recruiterIds.includes(recruiterId)
-      ? filters.recruiterIds.filter(v => v !== recruiterId)
-      : [...filters.recruiterIds, recruiterId];
+    const currentRecruiterIds = filters.recruiterIds || [];
+    const newArray = currentRecruiterIds.includes(recruiterId)
+      ? currentRecruiterIds.filter(v => v !== recruiterId)
+      : [...currentRecruiterIds, recruiterId];
 
     setFilters({ ...filters, recruiterIds: newArray });
   };
@@ -102,9 +112,10 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
       setFilters({ ...filters, states: [] });
       return;
     }
-    const newArray = filters.states.includes(value)
-      ? filters.states.filter(v => v !== value)
-      : [...filters.states, value];
+    const currentStates = filters.states || [];
+    const newArray = currentStates.includes(value)
+      ? currentStates.filter(v => v !== value)
+      : [...currentStates, value];
 
     setFilters({ ...filters, states: newArray });
   };
@@ -115,11 +126,26 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
       setFilters({ ...filters, sourceTypes: [] });
       return;
     }
-    const newArray = filters.sourceTypes.includes(value)
-      ? filters.sourceTypes.filter(v => v !== value)
-      : [...filters.sourceTypes, value];
+    const currentSourceTypes = filters.sourceTypes || [];
+    const newArray = currentSourceTypes.includes(value)
+      ? currentSourceTypes.filter(v => v !== value)
+      : [...currentSourceTypes, value];
 
     setFilters({ ...filters, sourceTypes: newArray });
+  };
+
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    if (!value) {
+      setFilters({ ...filters, statuses: [] });
+      return;
+    }
+    const currentStatuses = filters.statuses || [];
+    const newArray = currentStatuses.includes(value)
+      ? currentStatuses.filter(v => v !== value)
+      : [...currentStatuses, value];
+
+    setFilters({ ...filters, statuses: newArray });
   };
 
   const handleClearFilters = () => {
@@ -128,6 +154,7 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
       recruiterIds: [],
       states: [],
       sourceTypes: [],
+      statuses: [],
     };
     setFilters(emptyFilters);
     if (typeof window !== 'undefined') {
@@ -137,9 +164,10 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
 
   const hasActiveFilters =
     filters.ownerOperator !== 'all' ||
-    filters.recruiterIds.length > 0 ||
-    filters.states.length > 0 ||
-    filters.sourceTypes.length > 0;
+    (filters.recruiterIds?.length ?? 0) > 0 ||
+    (filters.states?.length ?? 0) > 0 ||
+    (filters.sourceTypes?.length ?? 0) > 0 ||
+    (filters.statuses?.length ?? 0) > 0;
 
   return (
     <div className="mb-3">
@@ -243,7 +271,7 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
           )}
         </Col>
 
-        {/* SOURCE TYPE */}
+        {/* SOURCE TYPE / LEAD TYPE */}
         <Col md={3}>
           <label className="form-label small text-muted mb-1">{t('SOURCE')}</label>
           <select
@@ -254,7 +282,7 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
             <option value="">{t('ALL')}</option>
             {sourceTypes.map((source) => (
               <option key={source} value={source}>
-                {source}
+                {t(`ApplicantType.${source}`)}
               </option>
             ))}
           </select>
@@ -263,7 +291,7 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
             <div className="mt-1">
               {filters.sourceTypes.map((source, idx) => (
                 <span key={idx} className="badge bg-primary me-1">
-                  {source}
+                  {t(`ApplicantType.${source}`)}
                   <button
                     type="button"
                     className="btn-close btn-close-white ms-1"
@@ -272,6 +300,44 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
                       setFilters({
                         ...filters,
                         sourceTypes: filters.sourceTypes.filter(s => s !== source)
+                      })
+                    }
+                  />
+                </span>
+              ))}
+            </div>
+          )}
+        </Col>
+
+        {/* STATUS */}
+        <Col md={3}>
+          <label className="form-label small text-muted mb-1">{t('STATUS')}</label>
+          <select
+            className="form-select form-select-sm"
+            value={filters.statuses?.[filters.statuses?.length - 1] ?? ''}
+            onChange={handleStatusChange}
+          >
+            <option value="">{t('ALL')}</option>
+            {Object.values(ApplicantStatus).map((status) => (
+              <option key={status} value={status}>
+                {t(`ApplicantStatus.${status}`)}
+              </option>
+            ))}
+          </select>
+
+          {filters.statuses.length > 0 && (
+            <div className="mt-1">
+              {filters.statuses.map((status, idx) => (
+                <span key={idx} className="badge bg-primary me-1">
+                  {t(`ApplicantStatus.${status}`)}
+                  <button
+                    type="button"
+                    className="btn-close btn-close-white ms-1"
+                    style={{ fontSize: '0.6rem' }}
+                    onClick={() =>
+                      setFilters({
+                        ...filters,
+                        statuses: filters.statuses.filter(s => s !== status)
                       })
                     }
                   />

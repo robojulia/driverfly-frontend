@@ -254,6 +254,11 @@ export default function CompanyPreference() {
         });
       }
       setPreferences([...(preferences?.filter((p) => p?.id != pref?.id) ?? []), { ...pref }]);
+
+      // If disabling SSN, also disable SSN required
+      if (!enabled) {
+        await handleSsnRequiredChange(false);
+      }
     } catch (e) {
       console.error('Unable to update SSN preference', e);
       toast.error('Unable to save information');
@@ -280,6 +285,37 @@ export default function CompanyPreference() {
   const ssnEnabled = Boolean(
     preferences?.find((p) => p.label == CompanyPreferenceEnhancementLabel.ADD_SSN_ON_DHA)?.value
   );
+
+  const ssnRequired = Boolean(
+    preferences?.find((p) => p.label == CompanyPreferenceEnhancementLabel.SSN_REQUIRED)?.value
+  );
+
+  const handleSsnRequiredChange = async (isRequired: boolean) => {
+    try {
+      setLoading(true);
+      let pref = preferences?.find(
+        (p) => p.label == CompanyPreferenceEnhancementLabel.SSN_REQUIRED
+      );
+      if (pref?.id) {
+        pref = await api.preferences.update(user?.company?.id, pref?.id, {
+          ...pref,
+          value: isRequired,
+        });
+      } else {
+        pref = await api.preferences.create(user?.company?.id, {
+          category: CompanyPreferenceCategory.ENHANCEMENT,
+          label: CompanyPreferenceEnhancementLabel.SSN_REQUIRED,
+          value: isRequired,
+        });
+      }
+      setPreferences([...(preferences?.filter((p) => p?.id != pref?.id) ?? []), { ...pref }]);
+    } catch (e) {
+      console.error('Unable to update SSN required preference', e);
+      toast.error('Unable to save information');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Check if this is first run experience (no hiring preferences exist)
   const isFirstRunExperience = !preferences?.some(
@@ -365,7 +401,13 @@ export default function CompanyPreference() {
           />
 
           {/* Privacy Settings - SSN Toggle */}
-          <SsnToggle checked={ssnEnabled} onChange={handleSsnChange} loading={loading} />
+          <SsnToggle
+            checked={ssnEnabled}
+            onChange={handleSsnChange}
+            isRequired={ssnRequired}
+            onRequiredChange={handleSsnRequiredChange}
+            loading={loading}
+          />
 
           {/* System Preferences - Auto VOE */}
           <SystemPreferences

@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState, useCallback } from 'react';
 import { Button, ButtonGroup, Container, Dropdown } from 'react-bootstrap';
 import { Gear, Search } from 'react-bootstrap-icons';
 import DataTable, { TableColumn, TableStyles } from 'react-data-table-component';
@@ -58,10 +58,22 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
 
   const [items, setItems] = useState([]);
   const [columns, setColumns] = useState<TableColumn<TElement>[]>([]);
+
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    if (!search) setItems(props.items);
+    if (!search) {
+      setItems(props.items);
+    } else {
+      // Apply search filter
+      const filteredItems = props.items.filter((v) =>
+        props.columns.some(
+          (c) =>
+            !c.hide && c.selector && !!c.selector(v)?.toString()?.toLowerCase()?.includes(search)
+        )
+      );
+      setItems(filteredItems);
+    }
 
     const visible = new Set(
       (props.columnSettingKey ? storage?.item : null) ||
@@ -80,26 +92,13 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
     setColumns(columns);
   }, [props, storage?.item, search]);
 
-  const doSearch = (search: string) => {
-    setItems(
-      props.items.filter((v) =>
-        columns.some(
-          (c) =>
-            !c.hide && c.selector && !!c.selector(v)?.toString()?.toLowerCase()?.includes(search)
-        )
-      )
-    );
-  };
-
   const onSearchClick = (e?: React.MouseEvent) => {
-    doSearch(search);
+    // Search is now handled in useEffect
   };
 
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const search = e.target.value.toLowerCase();
-
-    setSearch(search);
-    doSearch(search);
+    const searchValue = e.target.value.toLowerCase();
+    setSearch(searchValue);
   };
 
   /**
@@ -132,11 +131,31 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
             ...v,
             name: typeof v.name == 'string' ? t(v.name) : v.name,
             // hide: v.id && hideable.has(`${v.id}`) && !visible.has(`${v.id}`) ? 1 : 0,
-            sortable: v.sortable || !!v.name,
+            sortable: v.sortable !== false && !!v.name,
+            sortFunction: v.sortFunction || (v.selector ? (rowA, rowB) => {
+              const a = v.selector(rowA);
+              const b = v.selector(rowB);
+
+              if (a === null || a === undefined) return 1;
+              if (b === null || b === undefined) return -1;
+
+              if (typeof a === 'string' && typeof b === 'string') {
+                return a.localeCompare(b);
+              }
+
+              if (typeof a === 'number' && typeof b === 'number') {
+                return a - b;
+              }
+
+              // For dates and other types
+              return a > b ? 1 : a < b ? -1 : 0;
+            } : undefined),
           }))}
         striped
         responsive
         fixedHeader
+        sortServer={false}
+        defaultSortAsc={true}
         noDataComponent={props.noDataComponent || <>{t('NO_RECORDS_FOUND')}</>}
         selectableRows={Boolean(props.enableSelectableRows)}
         onSelectedRowsChange={props.selectableRowChangeHandler}

@@ -603,6 +603,14 @@ export default function EmployeeDirectory() {
                   onClick={() =>
                     router.push('/dashboard/company/compliance/employee-directory/import')
                   }
+                  style={{
+                    height: '38px',
+                    padding: '0.375rem 0.75rem',
+                    borderRadius: '0.25rem',
+                    fontSize: '1rem',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                  }}
                 >
                   + {t('IMPORT_EMPLOYEES')}
                 </Button>
@@ -611,6 +619,14 @@ export default function EmployeeDirectory() {
                 variant="outline-secondary"
                 onClick={handleExportEmployees}
                 disabled={!employees || employees.length === 0}
+                style={{
+                  height: '38px',
+                  padding: '0.375rem 0.75rem',
+                  borderRadius: '0.25rem',
+                  fontSize: '1rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                }}
               >
                 <Download size={14} className="mr-1" />
                 Export
@@ -622,10 +638,14 @@ export default function EmployeeDirectory() {
                 className="text-black theme-filter-btn"
                 style={{
                   width: 'auto',
-                  fontSize: '.95rem',
+                  fontSize: '1rem',
                   lineHeight: '1.5',
-                  padding: '.25rem 1.5rem',
-                  borderRadius: '.2rem',
+                  padding: '0.375rem 0.75rem',
+                  borderRadius: '0.25rem',
+                  height: '38px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
                 }}
               >
                 <div className="mr-2">{t('FILTERS')}</div>

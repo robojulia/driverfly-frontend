@@ -7,10 +7,12 @@ import UnifiedModal from '../modals/Modal';
 interface SsnToggleProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
+  isRequired: boolean;
+  onRequiredChange: (isRequired: boolean) => void;
   loading?: boolean;
 }
 
-export const SsnToggle: React.FC<SsnToggleProps> = ({ checked, onChange, loading = false }) => {
+export const SsnToggle: React.FC<SsnToggleProps> = ({ checked, onChange, isRequired, onRequiredChange, loading = false }) => {
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [pendingChange, setPendingChange] = useState<boolean | null>(null);
 
@@ -63,6 +65,31 @@ export const SsnToggle: React.FC<SsnToggleProps> = ({ checked, onChange, loading
               />
             </div>
           </div>
+
+          {/* SSN Required Toggle - Only visible when SSN is enabled */}
+          {checked && (
+            <div className="d-flex justify-content-between align-items-center mt-3 pt-3" style={{ borderTop: '1px solid #e2e8f0' }}>
+              <div>
+                <p className="mb-0" style={{ color: '#1a202c', fontWeight: '500', fontSize: '14px' }}>
+                  Require SSN from drivers
+                </p>
+                <p className="mb-0 small" style={{ color: '#718096' }}>
+                  Make SSN a required field instead of optional
+                </p>
+              </div>
+
+              <div className="d-flex align-items-center gap-3">
+                <span className="small" style={{ color: isRequired ? '#1a202c' : '#718096', fontWeight: '500' }}>
+                  {isRequired ? 'Required' : 'Optional'}
+                </span>
+                <BaseCheck
+                  checked={isRequired}
+                  onChange={(e) => onRequiredChange(e.target.checked)}
+                  disabled={loading}
+                />
+              </div>
+            </div>
+          )}
         </Card.Body>
       </Card>
 
