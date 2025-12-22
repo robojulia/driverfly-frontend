@@ -33,7 +33,7 @@ export default function EditApplicant({ id }) {
   useEffectAsync(async () => {
     if (id) {
       const api = new ApplicantApi();
-      const entity = await api.getById(+id, true, ['documents', 'notes', 'jobs', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned']);
+      const entity = await api.getById(+id, true, ['documents', 'notes', 'notes.user', 'jobs', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned']);
 
       const suggestedJobs = await api.suggestedJobs.get(id);
       setApplicantSuggestedJobs(suggestedJobs || []);
@@ -246,6 +246,13 @@ export default function EditApplicant({ id }) {
         )}
       >
       {/* Identity summary and sticky sub-nav removed per design direction */}
+      {applicant?.first_name && applicant?.last_name && (
+        <div className="px-2 mb-3">
+          <h4 style={{ fontWeight: 'bold' }}>
+            {applicant.first_name} {applicant.last_name}
+          </h4>
+        </div>
+      )}
 
       <EditApplicantFormNew
         entity={applicant}

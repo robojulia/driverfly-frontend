@@ -76,7 +76,7 @@ export default function ViewApplicant({ id }) {
     if (id) {
       const api = new ApplicantApi();
 
-      const data = await api.getById(+id, false, ['documents', 'notes', 'jobs', 'jobs.job', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned', 'assignedUser', 'referralSource']);
+      const data = await api.getById(+id, false, ['documents', 'notes', 'notes.user', 'jobs', 'jobs.job', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned', 'assignedUser', 'referralSource']);
 
       const suggestedJobs = await api.suggestedJobs.get(id);
       setApplicantSuggestedJobs(suggestedJobs);
@@ -312,6 +312,13 @@ export default function ViewApplicant({ id }) {
           </div>
         }
       >
+        {applicant?.first_name && applicant?.last_name && (
+          <div className="px-2 mb-3">
+            <h4 style={{ fontWeight: 'bold' }}>
+              {applicant.first_name} {applicant.last_name}
+            </h4>
+          </div>
+        )}
         <nav aria-label="breadcrumb" className="px-2 mb-2">
         <div className="d-flex align-items-center small text-muted">
           <Link href="/dashboard"><a className="text-muted text-decoration-none">Dashboard</a></Link>

@@ -238,6 +238,13 @@ export function ViolationHistory() {
     if (hasViolationsValue) {
       // When user says yes, ensure count starts at 0 and will be updated by useEffect
       form.setFieldValue('moving_violations_count', 0);
+      // Automatically add first violation entry if none exist
+      if (!form.values.moving_violation_history || form.values.moving_violation_history.length === 0) {
+        const newViolation = {
+          ...new ApplicantMovingViolationEntity(),
+        };
+        form.setFieldValue('moving_violation_history', [newViolation]);
+      }
     } else {
       // Clear all violation data if user says no and set count to 0
       form.setFieldValue('moving_violation_history', []);
@@ -269,6 +276,12 @@ export function ViolationHistory() {
 
   const getMaxDate = () => {
     return new Date().toISOString().split('T')[0];
+  };
+
+  const getMinDate = () => {
+    const threeYearsAgo = new Date();
+    threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
+    return threeYearsAgo.toISOString().split('T')[0];
   };
 
   const getHasViolationsValue = () => {
@@ -466,14 +479,30 @@ export function ViolationHistory() {
                                 placeholder="Select date"
                                 value={formatDateForInput(violation.date_of_violation)}
                                 onChange={(e) => {
-                                  const value = e.target.value || '';
-                                  form.setFieldValue(
-                                    `moving_violation_history[${i}].date_of_violation`,
-                                    value
-                                  );
+                                  const inputValue = e.target.value;
+                                  if (inputValue) {
+                                    const selectedDate = new Date(inputValue);
+                                    const minDate = new Date(getMinDate());
+
+                                    if (selectedDate < minDate) {
+                                      alert('You only need to enter violations from the past 3 years.');
+                                      return;
+                                    }
+
+                                    form.setFieldValue(
+                                      `moving_violation_history[${i}].date_of_violation`,
+                                      inputValue
+                                    );
+                                  } else {
+                                    form.setFieldValue(
+                                      `moving_violation_history[${i}].date_of_violation`,
+                                      ''
+                                    );
+                                  }
                                 }}
                                 onBlur={form.handleBlur}
                                 required={isViolationFieldRequired(i)}
+                                min={getMinDate()}
                                 max={getMaxDate()}
                                 error={getNestedError(
                                   `moving_violation_history.${i}.date_of_violation`

@@ -318,6 +318,15 @@ export function AccidentHistory() {
     if (hasAccidentsValue) {
       // When user says yes, ensure count starts at 0 and will be updated by useEffect
       form.setFieldValue('accident_count', 0);
+      // Automatically add first accident entry if none exist
+      if (!form.values.accident_history || form.values.accident_history.length === 0) {
+        const newAccident = {
+          ...new ApplicantAccidentEntity(),
+          number_of_injured: 0,
+          number_of_fatalaties: 0,
+        };
+        form.setFieldValue('accident_history', [newAccident]);
+      }
     } else {
       // Clear all accident data if user says no and set count to 0
       form.setFieldValue('accident_history', []);
@@ -349,6 +358,12 @@ export function AccidentHistory() {
 
   const getMaxDate = () => {
     return new Date().toISOString().split('T')[0];
+  };
+
+  const getMinDate = () => {
+    const fiveYearsAgo = new Date();
+    fiveYearsAgo.setFullYear(fiveYearsAgo.getFullYear() - 5);
+    return fiveYearsAgo.toISOString().split('T')[0];
   };
 
   const getHasAccidentsValue = () => {
@@ -485,8 +500,8 @@ export function AccidentHistory() {
                   </p>
                 </div>
 
-                {/* Accident History List */}
-                {hasAccidentHistory && (
+                {/* Accident History List - Always show when hasAccidents is true */}
+                {hasAccidents && form.values.accident_history && form.values.accident_history.length > 0 && (
                   <div className="mb-4">
                     {form.values.accident_history.map((accident, i) => (
                       <Card
@@ -521,11 +536,26 @@ export function AccidentHistory() {
                                 placeholder="Select date"
                                 value={formatDateForInput(accident.date_of_accident)}
                                 onChange={(e) => {
-                                  const value = e.target.value ? new Date(e.target.value) : null;
-                                  form.setFieldValue(
-                                    `accident_history[${i}].date_of_accident`,
-                                    value
-                                  );
+                                  const inputValue = e.target.value;
+                                  if (inputValue) {
+                                    const selectedDate = new Date(inputValue);
+                                    const minDate = new Date(getMinDate());
+
+                                    if (selectedDate < minDate) {
+                                      alert('You only need to enter accidents from the past 5 years.');
+                                      return;
+                                    }
+
+                                    form.setFieldValue(
+                                      `accident_history[${i}].date_of_accident`,
+                                      selectedDate
+                                    );
+                                  } else {
+                                    form.setFieldValue(
+                                      `accident_history[${i}].date_of_accident`,
+                                      null
+                                    );
+                                  }
                                 }}
                                 onBlur={form.handleBlur}
                                 required={
@@ -538,6 +568,7 @@ export function AccidentHistory() {
                                       accident.number_of_fatalaties !== null)
                                   )
                                 }
+                                min={getMinDate()}
                                 max={getMaxDate()}
                                 error={getNestedError(`accident_history.${i}.date_of_accident`)}
                                 icon={<span>📅</span>}

@@ -495,4 +495,12 @@ export default class ApplicantApi extends BaseApi {
     );
     return data;
   }
+
+  // Search for applicants by email
+  async searchApplicantsByEmail(params: { email: string }): Promise<ApplicantEntity[]> {
+    const { data } = await this.get(
+      this.buildUrl(this.baseUrl + '/search-applicants-by-email', params)
+    );
+    return data;
+  }
 }

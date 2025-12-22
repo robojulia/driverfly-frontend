@@ -37,6 +37,7 @@ import StateSelect from "../state-select";
 import { BaseFormProps } from "./base-form-props";
 import ViewModal from "../../view-details/view-modal";
 import { ManagerForm } from "./manager-form";
+import { EmployeeNotesForm } from "./employee-notes-form";
 
 export interface EmployeeFormProps extends BaseFormProps<EmployeeEntity> {}
 
@@ -83,10 +84,6 @@ export function EmployeeForm(props: EmployeeFormProps) {
     validationSchema: EmployeeEntity.employeeFormYupSchema(),
     onSubmit: async (values) => {
       try {
-        console.log("SUBMITTING EMPLOYEE VALUES:", values);
-        console.log("HR_NOTES VALUE:", values.hr_notes);
-        console.log("MANAGER_ID VALUE:", values.managerId);
-
         // Remove the manager object to avoid conflicts with managerId
         const { manager, job, ...submitValues } = values;
         const payload = {
@@ -97,8 +94,6 @@ export function EmployeeForm(props: EmployeeFormProps) {
 
         if (entity?.id) {
           const updatedEmployee = await employeeApi.update(entity.id, payload);
-          console.log("RECEIVED RESPONSE:", updatedEmployee);
-          console.log("RESPONSE HR_NOTES:", updatedEmployee.hr_notes);
           // Reset dirty state after successful save to prevent unsaved changes warning
           form.resetForm({ values: { ...values, ...updatedEmployee, hr_notes: updatedEmployee.hr_notes || "" } });
         }
@@ -120,21 +115,17 @@ export function EmployeeForm(props: EmployeeFormProps) {
 
   useEffect(() => {
     if (entity.id) {
-      console.log("LOADING ENTITY INTO FORM:", entity);
-      console.log("ENTITY HR_NOTES:", entity.hr_notes);
-      form.setValues({
-        ...entity,
-        jobId: entity.job?.id,
-        managerId: entity?.manager?.id,
-        hr_notes: entity.hr_notes || "",
+      form.resetForm({
+        values: {
+          ...entity,
+          jobId: entity.job?.id,
+          managerId: entity?.manager?.id,
+          hr_notes: entity.hr_notes || "",
+        }
       });
     }
   }, [entity.id]);
 
-  useEffect(() => {
-    console.log("form error", form.errors);
-    console.log("form val", form.values);
-  }, [form.errors, form.values]);
 
   useEffectAsync(async () => {
     const data = await userApi.list();
@@ -426,18 +417,6 @@ export function EmployeeForm(props: EmployeeFormProps) {
                   />
                 </ViewCard>
               </Col>
-              <Col xs="12" className="mt-2">
-                <ViewCard title="HR Notes">
-                  <BaseTextArea
-                    className="col-12"
-                    name={`hr_notes`}
-                    label="HR_NOTES"
-                    placeholder="ENTER_HR_NOTES"
-                    formik={form}
-                    rows={4}
-                  />
-                </ViewCard>
-              </Col>
             </Col>
           </Row>
           <Row>
@@ -628,6 +607,14 @@ export function EmployeeForm(props: EmployeeFormProps) {
           </Row>
         </ViewCard>
       </div>
+
+      {/* HR Notes Section */}
+      <Row className="px-2 mt-3">
+        <Col md="12" className="p-0 px-lg-2">
+          <EmployeeNotesForm entity={entity} setEntity={() => {}} />
+        </Col>
+      </Row>
+
       <ViewModal
         title={t("ASSIGN_TO_MANAGER")}
         show={createManager}

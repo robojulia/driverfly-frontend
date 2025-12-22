@@ -35,7 +35,7 @@ export default function EmployeeDetailPage() {
   useEffectAsync(async () => {
     if (id && user) {
       try {
-        const data = await employeeApi.getById(Number(id));
+        const data = await employeeApi.getById(Number(id), ['notes', 'notes.user']);
         setEmployee(data);
 
         // Fetch employee list for sidebar

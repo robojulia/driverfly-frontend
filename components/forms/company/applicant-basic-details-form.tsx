@@ -8,6 +8,7 @@ import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum
 import { LicenseRestrictions } from "../../../enums/applicants/applicant-license-restrictions-type.enum";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
 import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
+import { ApplicantEntryMode } from "../../../enums/applicants/applicant-entry-mode.enum";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
 import { Status } from "../../../enums/status.enum";
@@ -155,6 +156,7 @@ export function ApplicantBasicDetailsForm(
       await form.setValues({
         ...new ApplicantEntity(),
         type: ApplicantType.COMPANY,
+        entry_mode: ApplicantEntryMode.MANUALLY_ADDED,
         extras,
       });
     }
@@ -375,6 +377,17 @@ export function ApplicantBasicDetailsForm(
                     displayPlaceholder
                     enumType={ApplicantType}
                     labelPrefix="ApplicantType"
+                  />
+                  <BaseSelect
+                    readOnly
+                    className="col-12 p-0 px-lg-2"
+                    label="ENTRY_MODE"
+                    name="entry_mode"
+                    displayPlaceholder
+                    formik={form}
+                    placeholder="ENTRY_MODE"
+                    enumType={ApplicantEntryMode}
+                    labelPrefix="ApplicantEntryMode"
                   />
                   <BaseSelect
                     readOnly={Boolean(entity?.is_hired)}

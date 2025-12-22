@@ -32,6 +32,7 @@ import {
 } from "../../../hooks/use-translation";
 import { ApplicantExperienceEntity } from "../../../models/applicant/applicant-experience.entity";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
+import { ApplicantEntryMode } from "../../../enums/applicants/applicant-entry-mode.enum";
 import ApplicantApi from "../../../pages/api/applicant";
 import * as _style from "../../../public/components/styles/ImportApplicantsModule.module.css";
 import { matchEnum } from "../../../utils/enums.utils";
@@ -470,6 +471,9 @@ const ImportApplicants = () => {
                 if (!entity.positive_drug_test) entity.positive_drug_test_details = "";
                 if (!entity.infractions) entity.infractions_details = "";
                 if (!entity.moving_violations) entity.moving_violations_details = "";
+
+                // Set entry mode for imported applicants
+                entity.entry_mode = ApplicantEntryMode.COMPANY_UPLOADED;
 
                 return entity;
             })

@@ -9,6 +9,7 @@ import { ViewApplicantBackgroundProps } from '../../../../types/applicant/view-a
 import { calculateAge } from '../../../../utils/date';
 import ViewEmployeeDetails from '../../../employee/view-employee-detail';
 import ViewDetails from '../../../view-details/view-details';
+import { EmployeeNotesForm } from '../../../forms/company/employee-notes-form';
 import moment from 'moment';
 
 
@@ -248,22 +249,9 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 						/>
 					</div>
 
-					{/* HR Notes Card */}
-					<div className="bg-white p-4 rounded mb-3">
-						<h5 className="mb-3 font-weight-bold">{t('HR Notes')}</h5>
-						<div style={{
-							minHeight: '100px',
-							padding: '0.75rem',
-							backgroundColor: '#f8f9fa',
-							borderRadius: '0.25rem',
-							border: '1px solid #dee2e6'
-						}}>
-							{employee.hr_notes ? (
-								<p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{employee.hr_notes}</p>
-							) : (
-								<p style={{ margin: 0, color: '#6c757d', fontStyle: 'italic' }}>{t('NO_HR_NOTES')}</p>
-							)}
-						</div>
+					{/* HR Notes Section */}
+					<div className="bg-white rounded mb-3">
+						<EmployeeNotesForm entity={employee} setEntity={() => {}} />
 					</div>
 
 					{/* Equipment Experience Card */}

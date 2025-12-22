@@ -47,6 +47,49 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
   const routeToEmployees = () =>
     router.push("/dashboard/company/compliance/employee-directory");
 
+  // Helper function to format applicant notes into HR notes
+  const formatApplicantNotesForHR = () => {
+    if (!entity?.notes || entity.notes.length === 0) {
+      return "";
+    }
+
+    const formatDate = (dateString: string) => {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      return date.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+    };
+
+    // Sort notes by creation date (oldest first) and format them
+    const sortedNotes = [...entity.notes].sort((a, b) => {
+      const dateA = new Date(a.created_at || 0).getTime();
+      const dateB = new Date(b.created_at || 0).getTime();
+      return dateA - dateB;
+    });
+
+    const formattedNotes = sortedNotes.map((note) => {
+      let noteHeader = `[${formatDate(note.created_at)}]`;
+
+      if (note.user?.first_name) {
+        noteHeader += ` ${note.user.first_name} ${note.user.last_name || ''}`.trim();
+      }
+
+      if (note.last_updated_at && note.last_updated_at !== note.created_at) {
+        noteHeader += ` (Edited: ${formatDate(note.last_updated_at)})`;
+      }
+
+      return `${noteHeader}\n${note.text}`;
+    }).join('\n\n---\n\n');
+
+    return formattedNotes;
+  };
+
   const hireApplicantForm = useFormik({
     initialValues: new HireApplicantDto(),
     validationSchema: HireApplicantDto.yupSchema(),
@@ -54,7 +97,26 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
     onSubmit: async (values, { resetForm }) => {
       try {
         const employeeApi = new EmployeeApi();
-        await employeeApi.hire(values);
+
+        // Hire the applicant (creates employee record)
+        const newEmployee = await employeeApi.hire(values);
+
+        // Copy applicant notes to employee notes
+        if (entity?.notes && entity.notes.length > 0 && newEmployee?.id) {
+          try {
+            // Create employee notes from applicant notes (preserving original timestamps and content)
+            for (const applicantNote of entity.notes) {
+              await employeeApi.notes.create(newEmployee.id, {
+                text: applicantNote.text
+              });
+            }
+          } catch (noteError) {
+            console.error('Error copying notes to employee:', noteError);
+            // Don't fail the whole hire process if note copying fails
+            toast.warning(t("Employee hired successfully, but some notes could not be copied"));
+          }
+        }
+
         resetForm();
         toast.success(t("STATUS_UPDATED_SUCCESSFULLY"));
         setTimeout(() => {

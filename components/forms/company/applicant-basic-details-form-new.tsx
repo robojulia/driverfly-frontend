@@ -8,6 +8,7 @@ import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum
 import { LicenseRestrictions } from "../../../enums/applicants/applicant-license-restrictions-type.enum";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
 import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
+import { ApplicantEntryMode } from "../../../enums/applicants/applicant-entry-mode.enum";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
 import { JobEmploymentType } from "../../../enums/jobs/job-employment-type.enum";
@@ -139,7 +140,13 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
       } as any);
       setInitialized(true);
     } else {
-      await form.setValues({ ...new ApplicantEntity(), type: ApplicantType.COMPANY, extras, meta } as any);
+      await form.setValues({
+        ...new ApplicantEntity(),
+        type: ApplicantType.COMPANY,
+        entry_mode: ApplicantEntryMode.MANUALLY_ADDED,
+        extras,
+        meta
+      } as any);
     }
   }, [entity?.id, initialized]);
 
@@ -367,6 +374,18 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
                   labelPrefix="ApplicantType"
                   enumType={ApplicantType}
                   hideOptions={!form.values?.is_automated_recruiting_lead ? [ApplicantType.AUTO_RECRUIT] : []}
+                  formik={form}
+                />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseSelect
+                  className="col-12"
+                  readOnly
+                  label="Entry Mode"
+                  name="entry_mode"
+                  placeholder="Entry Mode"
+                  labelPrefix="ApplicantEntryMode"
+                  enumType={ApplicantEntryMode}
                   formik={form}
                 />
               </Col>

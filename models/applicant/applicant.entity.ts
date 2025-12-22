@@ -4,6 +4,7 @@ import { ApplicantDocumentType } from '../../enums/applicants/applicant-document
 import { LicenseRestrictions } from '../../enums/applicants/applicant-license-restrictions-type.enum';
 import { ApplicantStatus } from '../../enums/applicants/applicant-status.enum';
 import { ApplicantType } from '../../enums/applicants/applicant-type.enum';
+import { ApplicantEntryMode } from '../../enums/applicants/applicant-entry-mode.enum';
 import { JobGeography } from '../../enums/jobs/job-geography.enum';
 import { JobEmploymentType } from '../../enums/jobs/job-employment-type.enum';
 import { JobSchedule } from '../../enums/jobs/job-schedule.enum';
@@ -121,6 +122,7 @@ export class ApplicantEntity {
   utm?: UtmReferral;
   referralSourceId?: number;
   referralSource?: ReferralSourceEntity;
+  entry_mode?: ApplicantEntryMode;
   accident_history?: ApplicantAccidentEntity[];
   moving_violation_history?: ApplicantMovingViolationEntity[];
   already_applied_to_company?: boolean;

@@ -20,6 +20,7 @@ import { DocumentEntity } from '../documents/document.entity';
 import { JobEntity } from '../job/job.entity';
 import { EmployeeEquipmentEntity } from './employee-equipment.entity';
 import { EmployeeExperienceEntity } from './employee-experience.entity';
+import { EmployeeNoteEntity } from './employee-note.entity';
 
 export class EmployeeEntity {
   id?: number;
@@ -69,6 +70,7 @@ export class EmployeeEntity {
   documents?: DocumentEntity[] = [];
   termination_date?: Date;
   hr_notes?: string;
+  notes?: EmployeeNoteEntity[] = [];
 
   static employeeFormYupSchema() {
     return yup.object({

@@ -35,14 +35,6 @@ export function DrugTest() {
 
   // Enhanced validation schema with conditional requirements
   const validationSchema = yup.object({
-    can_pass_drug_test: yup
-      .boolean()
-      .nullable()
-      .test(
-        'is-selected',
-        'Please select whether you can pass a drug test',
-        (value) => value !== null
-      ),
     positive_drug_test: yup
       .boolean()
       .nullable()
@@ -81,7 +73,6 @@ export function DrugTest() {
 
   const form = useFormik({
     initialValues: {
-      can_pass_drug_test: null as boolean | null,
       positive_drug_test: null as boolean | null,
       positive_drug_test_details: '',
       is_sap_participant: null as boolean | null,
@@ -91,7 +82,7 @@ export function DrugTest() {
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: (values) => {
-      let { positive_drug_test_details, positive_drug_test, is_sap_participant, can_pass_drug_test } = values;
+      let { positive_drug_test_details, positive_drug_test, is_sap_participant } = values;
 
       // Handle state persistence for radio button restoration
       if (positive_drug_test === false) {
@@ -105,7 +96,6 @@ export function DrugTest() {
 
       const updatedApplicant = {
         ...applicant,
-        can_pass_drug_test: can_pass_drug_test,
         positive_drug_test: positive_drug_test,
         positive_drug_test_details: positive_drug_test_details,
         is_sap_participant: is_sap_participant,
@@ -126,7 +116,6 @@ export function DrugTest() {
   });
 
   useEffect(() => {
-    const existingCanPassDrugTest = applicant?.can_pass_drug_test;
     const existingPositiveDrugTest = applicant?.positive_drug_test;
     const existingDrugTestDetails = applicant?.positive_drug_test_details || '';
     const existingSapParticipant = applicant?.is_sap_participant;
@@ -145,7 +134,6 @@ export function DrugTest() {
 
     form.setValues({
       ...form.values,
-      can_pass_drug_test: existingCanPassDrugTest ?? null,
       positive_drug_test: positiveDrugTestState,
       positive_drug_test_details:
         existingDrugTestDetails === '__YES_NO_DETAILS__' ? '' : existingDrugTestDetails, // Clean up marker for display
@@ -155,8 +143,7 @@ export function DrugTest() {
 
   // Custom form validity check - more lenient, allows progression without details
   const checkFormValidity = () => {
-    // Both questions must be answered
-    const canPassQuestionAnswered = form.values.can_pass_drug_test !== null;
+    // Positive drug test question must be answered
     const positiveTestQuestionAnswered = form.values.positive_drug_test !== null;
 
     // If they said YES to positive drug test, SAP question must be answered
@@ -166,9 +153,9 @@ export function DrugTest() {
     // Check if there are any validation errors
     const hasNoErrors = Object.keys(form.errors).length === 0;
 
-    // Basic requirement: both questions answered, SAP question answered if needed, no validation errors
+    // Basic requirement: positive test question answered, SAP question answered if needed, no validation errors
     // Details are now optional - users can proceed and fill later
-    return canPassQuestionAnswered && positiveTestQuestionAnswered && sapQuestionAnswered && hasNoErrors;
+    return positiveTestQuestionAnswered && sapQuestionAnswered && hasNoErrors;
   };
 
   // Helper function to determine if drug test details should be required (have started filling)
@@ -189,12 +176,6 @@ export function DrugTest() {
   }, [form.values, form.errors, form.touched]);
 
   // Helper functions for radio group values
-  const getCanPassDrugTestValue = () => {
-    if (form.values.can_pass_drug_test === true) return BooleanType.YES;
-    if (form.values.can_pass_drug_test === false) return BooleanType.NO;
-    return undefined;
-  };
-
   const getDrugTestValue = () => {
     if (form.values.positive_drug_test === true) return BooleanType.YES;
     if (form.values.positive_drug_test === false) return BooleanType.NO;
@@ -208,18 +189,6 @@ export function DrugTest() {
   };
 
   // Handle radio group changes
-  const handleCanPassDrugTestChange = (value: string) => {
-    const canPass = value === BooleanType.YES;
-
-    form.setFieldValue('can_pass_drug_test', canPass);
-    form.setFieldTouched('can_pass_drug_test', true);
-
-    // Force validation to run immediately
-    setTimeout(() => {
-      form.validateForm();
-    }, 0);
-  };
-
   const handleDrugTestChange = (value: string) => {
     const hasPositiveTest = value === BooleanType.YES;
 
@@ -253,7 +222,6 @@ export function DrugTest() {
 
   const handleNext = () => {
     // Mark all fields as touched to show validation errors
-    form.setFieldTouched('can_pass_drug_test', true);
     form.setFieldTouched('positive_drug_test', true);
     if (form.values.positive_drug_test === true) {
       form.setFieldTouched('positive_drug_test_details', true);
@@ -313,25 +281,31 @@ export function DrugTest() {
         className={`${styles.align__text_left} ${styles.formStep}`}
       >
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          {/* Can Pass Drug Test Question */}
+          {/* Previous Drug Test Answer Reference */}
           <div className="my-4">
-            <RadioGroup
-              name="can_pass_drug_test"
-              label={t('can_pass_drug_test')}
-              enumType={BooleanType}
-              value={getCanPassDrugTestValue()}
-              onChange={handleCanPassDrugTestChange}
-              required
-              error={
-                form.touched.can_pass_drug_test && form.errors.can_pass_drug_test
-                  ? String(form.errors.can_pass_drug_test)
-                  : undefined
-              }
-              labelPrefix="BooleanType"
-              columns={2}
-              variant="card"
-              helperText="We may require a drug test as part of the hiring process"
-            />
+            <div
+              style={{
+                padding: '1rem',
+                backgroundColor: '#e7f3ff',
+                border: '1px solid #b3d9ff',
+                borderRadius: '8px',
+                color: '#1a2b3c',
+                fontSize: '1rem',
+              }}
+            >
+              <p style={{ margin: 0, fontWeight: '500' }}>
+                ℹ️ You mentioned previously that you{' '}
+                <strong>
+                  {applicant?.can_pass_drug_test === true
+                    ? 'can'
+                    : applicant?.can_pass_drug_test === false
+                    ? 'cannot'
+                    : 'did not specify if you can'}{' '}
+                  pass a drug test
+                </strong>
+                .
+              </p>
+            </div>
           </div>
 
           {/* Positive Drug Test Question */}

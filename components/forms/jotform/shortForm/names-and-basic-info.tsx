@@ -1,7 +1,7 @@
-import React, { useEffect, useContext, useRef } from 'react';
+import React, { useEffect, useContext, useRef, useState } from 'react';
 import { useFormik } from 'formik';
 import Form from 'react-bootstrap/Form';
-import { Row } from 'react-bootstrap';
+import { Row, Alert } from 'react-bootstrap';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import BaseSelect from '../../base-select';
 import { useTranslation } from '../../../../hooks/use-translation';
@@ -13,6 +13,8 @@ import { ApplicantExtrasEntity } from '../../../../models/applicant/applicant-ex
 import { HearAboutUsType } from '../../../../enums/jotform/hear-about-type.enum';
 import { Input, MaskedInput, Select } from '../../../shared/dha';
 import { FormActions } from '../form-buttons';
+import ApplicantApi from '../../../../pages/api/applicant';
+import { normalizePhoneNumber } from '../../../../utils/phone-normalization';
 
 export function NamesAndBasicInfo() {
   const {
@@ -21,6 +23,43 @@ export function NamesAndBasicInfo() {
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
+  const [emailExistsError, setEmailExistsError] = useState<string | null>(null);
+
+  // Validate email to check if it exists with a different phone number
+  const validateEmailExists = async (email: string) => {
+    if (!email || !email.includes('@')) {
+      setEmailExistsError(null);
+      return;
+    }
+
+    try {
+      const applicantApi = new ApplicantApi();
+      const existingApplicants = await applicantApi.searchApplicantsByEmail({ email });
+
+      if (existingApplicants && existingApplicants.length > 0) {
+        // Check if any of the existing applicants have a different phone number
+        const normalizedCurrentPhone = normalizePhoneNumber(applicant.phone);
+        const hasDifferentPhone = existingApplicants.some(
+          (existingApplicant) =>
+            normalizePhoneNumber(existingApplicant.phone) !== normalizedCurrentPhone
+        );
+
+        if (hasDifferentPhone) {
+          setEmailExistsError(
+            'This email is already registered in the system. Please login with the correct phone number or contact Support at info@driverfly.co'
+          );
+        } else {
+          setEmailExistsError(null);
+        }
+      } else {
+        setEmailExistsError(null);
+      }
+    } catch (error) {
+      console.error('Error checking email:', error);
+      // Don't block the user if the API call fails
+      setEmailExistsError(null);
+    }
+  };
 
   const form = useFormik({
     initialValues: {
@@ -122,6 +161,11 @@ export function NamesAndBasicInfo() {
   }, [applicant, applicantExtras, utm]);
 
   const handleNext = () => {
+    // Check if there's an email error before submitting
+    if (emailExistsError) {
+      return;
+    }
+
     const syntheticEvent = {
       preventDefault: () => {},
       target: {},
@@ -142,6 +186,19 @@ export function NamesAndBasicInfo() {
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
         Personal Information
       </h1>
+
+      {emailExistsError && (
+        <Alert variant="danger" className="mb-4">
+          <div className="text-center">
+            <i
+              className="fa fa-exclamation-triangle mb-3"
+              style={{ fontSize: '48px', color: '#dc3545' }}
+            />
+            <h5 className="mb-3">Email Already Registered</h5>
+            <p className="mb-0">{emailExistsError}</p>
+          </div>
+        </Alert>
+      )}
 
       <Form
         className={`${styles.align__text_left} ${styles.formStep}`}
@@ -200,10 +257,19 @@ export function NamesAndBasicInfo() {
                 label={t('email')}
                 placeholder={t('email')}
                 value={form.values.email || ''}
-                onChange={form.handleChange}
-                onBlur={form.handleBlur}
+                onChange={(e) => {
+                  form.handleChange(e);
+                  setEmailExistsError(null);
+                }}
+                onBlur={(e) => {
+                  form.handleBlur(e);
+                  validateEmailExists(e.target.value);
+                }}
                 required
-                error={form.touched.email && form.errors.email ? form.errors.email : undefined}
+                error={
+                  emailExistsError ||
+                  (form.touched.email && form.errors.email ? form.errors.email : undefined)
+                }
                 autoComplete="email"
                 icon={<span>📧</span>}
                 size="large"
@@ -357,7 +423,7 @@ export function NamesAndBasicInfo() {
           onNext={handleNext}
           onBack={handleBack}
           isSubmitting={form.isSubmitting}
-          isValid={form.isValid && !form.isValidating}
+          isValid={form.isValid && !form.isValidating && !emailExistsError}
           nextButtonText={t('NEXT')}
           backButtonText={t('BACK')}
         />

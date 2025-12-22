@@ -84,7 +84,11 @@ const CDLInformation = ({ applicant, t }) => {
                     <Text style={styles.label}>{t("ENDORSEMENTS")}</Text>
                     <Text style={styles.value}>
                         {applicant?.endorsements && applicant.endorsements.length > 0
-                            ? formatEnumValues(applicant.endorsements)
+                            ? applicant.endorsements
+                                .map(e => e === 'OTHER' && applicant.endorsements_other
+                                    ? `Other(${applicant.endorsements_other})`
+                                    : formatEnumValue(e))
+                                .join(', ')
                             : 'N/A'}
                     </Text>
                 </View>
@@ -92,7 +96,11 @@ const CDLInformation = ({ applicant, t }) => {
                     <Text style={styles.label}>{t("LICENSE_RESTRICTIONS")}</Text>
                     <Text style={styles.value}>
                         {applicant?.license_restrictions && applicant.license_restrictions.length > 0
-                            ? formatEnumValues(applicant.license_restrictions)
+                            ? applicant.license_restrictions
+                                .map(r => r === 'OTHER' && applicant.license_restrictions_other
+                                    ? `Other(${applicant.license_restrictions_other})`
+                                    : t(`LicenseRestrictions.${r}`))
+                                .join(', ')
                             : 'N/A'}
                     </Text>
                 </View>

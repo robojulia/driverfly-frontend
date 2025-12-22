@@ -200,4 +200,11 @@ export default class CompanyApi extends BaseApi {
     const { data } = await this.post(`${this.baseUrl}/dot-verify`, payload);
     return data;
   };
+
+  fmcsaCompanySearch = async (companyName: string): Promise<any> => {
+    const { data } = await this.post(`${this.baseUrl}/fmcsa-company-search`, {
+      company_name: companyName
+    });
+    return data;
+  };
 }

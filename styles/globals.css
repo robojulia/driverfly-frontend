@@ -258,10 +258,10 @@ html {
 
 .btn-secondary:hover,
 .btn-secondary:focus {
-  background: linear-gradient(135deg, var(--secondary-dark) 0%, #1e8449 100%);
-  border-color: var(--secondary-dark);
+  background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+  border-color: var(--secondary);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(39, 174, 96, 0.3);
+  box-shadow: 0 6px 20px rgba(48, 198, 194, 0.3);
 }
 
 .btn-outline-primary {

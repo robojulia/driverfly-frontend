@@ -11,6 +11,7 @@ export interface HistoricalRangeFilters {
   states: string[];
   sourceTypes: string[];
   statuses: string[];
+  referralSourceIds: number[];
 }
 
 export interface HistoricalRangeFiltersProps {
@@ -57,6 +58,7 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
       states: [],
       sourceTypes: [],
       statuses: [],
+      referralSourceIds: [],
     };
 
     if (initialFilters) {
@@ -155,6 +157,7 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
       states: [],
       sourceTypes: [],
       statuses: [],
+      referralSourceIds: [],
     };
     setFilters(emptyFilters);
     if (typeof window !== 'undefined') {
@@ -167,7 +170,8 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
     (filters.recruiterIds?.length ?? 0) > 0 ||
     (filters.states?.length ?? 0) > 0 ||
     (filters.sourceTypes?.length ?? 0) > 0 ||
-    (filters.statuses?.length ?? 0) > 0;
+    (filters.statuses?.length ?? 0) > 0 ||
+    (filters.referralSourceIds?.length ?? 0) > 0;
 
   return (
     <div className="mb-3">

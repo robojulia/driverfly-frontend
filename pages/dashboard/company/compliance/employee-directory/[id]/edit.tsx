@@ -25,7 +25,7 @@ export default function EditEmployee({ id }) {
         if (id) {
             const api = new EmployeeApi();
 
-            const entity = await api.getById(+id);
+            const entity = await api.getById(+id, ['notes', 'notes.user']);
 
             if (entity) setEmployee(entity);
             else {
@@ -43,6 +43,13 @@ export default function EditEmployee({ id }) {
             title={t("EDIT_{name}", { name: "Employee" }, { translateProps: true })}
             backPath={backPath}
         >
+            {employee?.first_name && employee?.last_name && (
+                <div className="px-2 mb-3">
+                    <h4 style={{ fontWeight: 'bold' }}>
+                        {employee.first_name} {employee.last_name}
+                    </h4>
+                </div>
+            )}
             <EmployeeForm entity={employee} />
         </ChildPageLayout>
     );

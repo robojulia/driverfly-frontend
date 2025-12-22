@@ -1769,7 +1769,7 @@
   "ADMIN": "Admin",
   "REFERRAL_SOURCES": "Referral Sources",
   "REFERRAL_CODE": "Referral Code",
-  "REFERRAL_SOURCE": "Referral Source",
+  "REFERRAL_SOURCE": "Lead Source",
   "GENERATE": "Generate",
   "URL": "Url",
   "REFERRALS": "Referrals",
@@ -2389,6 +2389,13 @@
     "DHA": "Lead from Digital Hiring App",
     "DIRECT_JOB_APPLY": "Driverfly Job Board"
   },
+  "ApplicantEntryMode": {
+    "MANUALLY_ADDED": "Manually Added",
+    "COMPANY_UPLOADED": "Company Uploaded",
+    "DIGITAL_HIRING_APP": "Digital Hiring App",
+    "SHORT_FORM_APPLICATION": "Short Form Application",
+    "AUTO_RECRUITING_LEAD": "Auto Recruiting Lead"
+  },
   "ChattableType": {
     "USER": "User (Driver)",
     "APPLICANT": "Applicant",
@@ -2639,6 +2646,7 @@
   "MATCH_CRITERIA": "Match Criteria",
   "MATCH_CRITERIA_MESSAGE": "We help you streamline your recruiting efforts by labeling  all incoming applicants as either \"good\" or \"ill fit\" candidates based on the parameters you provide below. For each field, please select all options that are applicable for your active company positions.",
   "LEAD_TYPE": "Lead Type",
+  "ENTRY_MODE": "Entry Mode",
   "ASSIGNED_RECRUITER": "Assigned Recruiter",
   "DHA_URL_TIP_TEXT": "Tip: to track activity across multiple job boards or channels such as indeed, add \"?source=indeed\" at the end of the URL listed above and insert the entire link into your job posting.",
   "AUTOMATED_RECRUITING_LEAD": "Automated Recruiting Lead",

@@ -2,6 +2,7 @@ import { AxiosRequestConfig } from 'axios';
 import { HireApplicantDto } from '../../models/applicant/hire-applicant.dto';
 import { DocumentEntity } from '../../models/documents/document.entity';
 import { EmployeeEntity } from '../../models/employee/employee.entity';
+import { EmployeeNoteEntity } from '../../models/employee/employee-note.entity';
 import { SearchEmployeeDto } from '../../models/employee/search-employee.dto';
 import { EmployeeDqf } from '../../enums/employee/employee-dqf.enum';
 import { EmployeeEmployerEntity } from './../../models/employee/employee-employer.entity';
@@ -26,8 +27,9 @@ export default class EmployeeApi extends BaseApi {
     return data;
   }
 
-  async getById(id: number): Promise<EmployeeEntity> {
-    const { data } = await this.get(this.buildUrl(`${this.baseUrl}/${id}`));
+  async getById(id: number, relations?: string[]): Promise<EmployeeEntity> {
+    const params = relations ? { relations: relations.join(',') } : {};
+    const { data } = await this.get(this.buildUrl(`${this.baseUrl}/${id}`, params));
 
     return data;
   }
@@ -61,6 +63,22 @@ export default class EmployeeApi extends BaseApi {
 
     return data;
   }
+
+  notes = {
+    baseUrl: (employeeId: number) => `${this.baseUrl}/${employeeId}/notes`,
+    create: async (employeeId: number, dto: EmployeeNoteEntity): Promise<EmployeeNoteEntity> => {
+      const { data } = await this.post(this.notes.baseUrl(employeeId), dto);
+      return data;
+    },
+    update: async (employeeId: number, noteId: number, dto: EmployeeNoteEntity): Promise<EmployeeNoteEntity> => {
+      const { data } = await this.put(`${this.notes.baseUrl(employeeId)}/${noteId}`, dto);
+      return data;
+    },
+    remove: async (employeeId: number, noteId: number): Promise<any> => {
+      const { data } = await this.delete(`${this.notes.baseUrl(employeeId)}/${noteId}`);
+      return data;
+    },
+  };
 
   documents = {
     baseUrl: (employeeId: number) => `${this.baseUrl}/${employeeId}/documents`,
