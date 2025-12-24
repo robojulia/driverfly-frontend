@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Alert } from 'reactstrap';
+import { Button } from 'react-bootstrap';
 
 import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
 import PageLayout from '../../../../components/layouts/page/page-layout';
-import { CampaignsTable } from '../../../../components/campaigns/CampaignsTable';
+import { CampaignsView, ViewMode } from '../../../../components/campaigns/CampaignsView';
+import RequestCampaignModal from '../../../../components/campaigns/RequestCampaignModal';
 import { useFeatureFlags } from '../../../../context/feature-flag-context';
 import { useTranslation } from '../../../../hooks/use-translation';
 
 const CampaignsPage = () => {
   const { t } = useTranslation();
   const { isFeatureEnabled, isLoading: flagsLoading } = useFeatureFlags();
+  const [pageTitle, setPageTitle] = useState<string>('MARKETING_CAMPAIGNS');
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>('summary');
 
   // Feature flag check first
   const campaignsEnabled = !flagsLoading && isFeatureEnabled('CAMPAIGNS_ENABLED');
@@ -39,23 +44,31 @@ const CampaignsPage = () => {
   }
 
   return (
-    <PageLayout
-      title="MARKETING_CAMPAIGNS"
-      actions={
-        null /*
-        
-        <Button
-          color="primary"
-          onClick={() => router.push('/dashboard/company/campaigns/create')}
-          disabled
-        >
-          {t('CREATE_CAMPAIGN')}
-        </Button>
-        */
-      }
-    >
-      <CampaignsTable />
-    </PageLayout>
+    <>
+      <PageLayout
+        title={pageTitle}
+        actions={
+          viewMode === 'summary' ? (
+            <Button
+              variant="primary"
+              onClick={() => setShowRequestModal(true)}
+            >
+              {t('REQUEST_A_NEW_CAMPAIGN')}
+            </Button>
+          ) : null
+        }
+      >
+        <CampaignsView
+          onTitleChange={setPageTitle}
+          onViewModeChange={setViewMode}
+        />
+      </PageLayout>
+
+      <RequestCampaignModal
+        show={showRequestModal}
+        onHide={() => setShowRequestModal(false)}
+      />
+    </>
   );
 };
 

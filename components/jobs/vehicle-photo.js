@@ -18,6 +18,7 @@ export default function VehiclePhoto({ vehicle, style, className }) {
     useEffect(() => {
         if (!!!vehicle || !!!vehicle.photo?.id) return;
         fetchVehiclephoto();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [vehicle, vehicle?.photo?.id])
 
     if (!!!vehicle || !!!vehicle.photo?.id) return <></>
@@ -27,12 +28,13 @@ export default function VehiclePhoto({ vehicle, style, className }) {
             onClick={() => setShowVehiclePhoto(true)}
             style={style}
             className={className}
-            src={photo} />
+            src={photo}
+            alt="Vehicle" />
 
         {showVehiclePhoto == true &&
             <ViewModal show={!!photo} title={vehicle.photo?.name} onCloseClick={closeVehiclePhoto}>
                 <div className="d-flex justify-content-center">
-                    <img className="img-thumbnail" src={photo}/>
+                    <img className="img-thumbnail" src={photo} alt={vehicle.photo?.name || "Vehicle photo"} />
                 </div>
             </ViewModal>
         }

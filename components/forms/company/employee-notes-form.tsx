@@ -189,7 +189,7 @@ export function EmployeeNotesForm(props: EmployeeNotesFormProps) {
                   className="mb-3 p-3"
                   style={{
                     border: '1px solid #dee2e6',
-                    borderLeft: '4px solid #0d6efd',
+                    borderLeft: '4px solid #1d4354',
                     borderRadius: '4px',
                     backgroundColor: '#fff',
                     position: 'relative'
@@ -199,7 +199,7 @@ export function EmployeeNotesForm(props: EmployeeNotesFormProps) {
                   <div className="mb-2">
                     <span
                       className="badge"
-                      style={{ backgroundColor: '#e7f1ff', color: '#0d6efd', fontSize: '0.75rem', fontWeight: 'normal' }}
+                      style={{ backgroundColor: '#e7f1ff', color: '#1d4354', fontSize: '0.75rem', fontWeight: 'normal' }}
                     >
                       Logged: {formatDate(note.created_at)}
                       {note.user?.first_name && ` by ${note.user.first_name} ${note.user.last_name || ''}`.trim()}

@@ -91,7 +91,7 @@ export default function ViewCompany({ id }) {
                     obj={{
                         PHOTO: {
                             label: "PHOTO",
-                            text: company?.photo ? <img className="img-thumbnail" style={{maxWidth: "100px"}} src={company.photo.path} /> : null
+                            text: company?.photo ? <img className="img-thumbnail" style={{maxWidth: "100px"}} src={company.photo.path} alt={`${company.name} logo`} /> : null
                         },
                         NAME: company.name,
                         WEBSITE: company.website,

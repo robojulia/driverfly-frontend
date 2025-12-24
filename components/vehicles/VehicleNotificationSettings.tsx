@@ -153,7 +153,7 @@ export default function VehicleNotificationSettings({ show, onHide, canEdit = tr
 
   const getDocumentTypeIcon = (type: DocumentReminderType) =>
     type === DocumentReminderType.SAFETY_INSPECTION ? (
-      <BellFill size={16} className="me-2" style={{ color: '#0d6efd' }} />
+      <BellFill size={16} className="me-2" style={{ color: '#1d4354' }} />
     ) : type === DocumentReminderType.MAINTENANCE_REPORT ? (
       <ClockFill size={16} className="me-2" style={{ color: '#198754' }} />
     ) : (

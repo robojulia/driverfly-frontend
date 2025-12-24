@@ -15,7 +15,7 @@ export const CampaignConfigDisplay: React.FC<CampaignConfigDisplayProps> = ({ ca
     return (
       <div>
         <h6 className="mb-3">
-          {t('JOB_REACHOUT_CAMPAIGN')} {t('CURRENT_SETTINGS')}
+          {t('REIGNITE_PAST_LEADS_CAMPAIGN')} {t('CURRENT_SETTINGS')}
         </h6>
 
         <div className="row">
@@ -150,7 +150,7 @@ export const CampaignConfigDisplay: React.FC<CampaignConfigDisplayProps> = ({ ca
   return (
     <Card>
       <CardBody>
-        {campaign.type === CampaignType.JOB_REACHOUT
+        {campaign.type === CampaignType.REIGNITE_PAST_LEADS
           ? renderJobReachoutConfig(campaign.config)
           : renderGeneralConfig(campaign.config)}
       </CardBody>

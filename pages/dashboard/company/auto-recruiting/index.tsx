@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { useAuth } from '../../../../hooks/use-auth';
 import AutoRecruitingOnboarding from '../../../../components/auto-recruiting/auto-recruiting-onboarding';
@@ -13,30 +13,30 @@ const AutoRecruitingPage = () => {
   const { company } = useAuth();
   const [isAutoRecruitingEnabled, setIsAutoRecruitingEnabled] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
-  const companyApi = new CompanyApi();
+  const companyApi = useMemo(() => new CompanyApi(), []);
+
+  const checkAutoRecruitingStatus = useCallback(async () => {
+    try {
+      if (company?.id) {
+        const preferences = await companyApi.preferences.list(company.id, {
+          label: 'ENROLL_IN_AUTO_RECRUITING',
+        });
+        const autoRecruitingPref = preferences.find(
+          (pref) => pref.label === 'ENROLL_IN_AUTO_RECRUITING'
+        );
+        setIsAutoRecruitingEnabled(autoRecruitingPref?.value === true);
+      }
+    } catch (error) {
+      console.error('Error fetching auto-recruiting status:', error);
+      setIsAutoRecruitingEnabled(false);
+    } finally {
+      setLoading(false);
+    }
+  }, [company?.id, companyApi.preferences]);
 
   useEffect(() => {
-    const checkAutoRecruitingStatus = async () => {
-      try {
-        if (company?.id) {
-          const preferences = await companyApi.preferences.list(company.id, {
-            label: 'ENROLL_IN_AUTO_RECRUITING',
-          });
-          const autoRecruitingPref = preferences.find(
-            (pref) => pref.label === 'ENROLL_IN_AUTO_RECRUITING'
-          );
-          setIsAutoRecruitingEnabled(autoRecruitingPref?.value === true);
-        }
-      } catch (error) {
-        console.error('Error fetching auto-recruiting status:', error);
-        setIsAutoRecruitingEnabled(false);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     checkAutoRecruitingStatus();
-  }, [company?.id]);
+  }, [checkAutoRecruitingStatus]);
 
   const handleEnableAutoRecruiting = async () => {
     try {

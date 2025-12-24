@@ -95,7 +95,7 @@ export default function EmployeeDirectory() {
   useEffect(() => {
     setPreviousPath(router.asPath);
     setViewMode((router.query.viewMode as ViewModeType) ?? ViewModeType.EMPLOYEE);
-  }, [router]);
+  }, [router, setPreviousPath]);
 
   useEffectAsync(async () => {
     if (viewMode) {
@@ -117,7 +117,7 @@ export default function EmployeeDirectory() {
     filters,
   ]);
 
-  React.useMemo(() => setFiltersChanged(true), [filters]);
+  useEffect(() => setFiltersChanged(true), [filters]);
 
   useEffect(() => {
     setFilters({});

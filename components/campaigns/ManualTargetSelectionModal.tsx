@@ -58,6 +58,7 @@ export const ManualTargetSelectionModal: React.FC<ManualTargetSelectionModalProp
     }, 300);
 
     return () => clearTimeout(timeoutId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
   const handleSearch = async () => {

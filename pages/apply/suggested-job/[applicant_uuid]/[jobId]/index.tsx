@@ -91,7 +91,8 @@ export default function SuggestedJobs({ entity, job, company }: SuggestedJobsPro
         }
       }
     }
-  }, []); // Only run on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run on mount - props intentionally excluded
 
   return (
     <JotformContext.Provider

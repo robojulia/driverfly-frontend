@@ -232,7 +232,7 @@ export default function EmployeeDetailPage() {
                     borderRadius: '0.375rem',
                     cursor: 'pointer',
                     backgroundColor: isSelected ? '#e7f3ff' : 'transparent',
-                    border: isSelected ? '1px solid #0d6efd' : '1px solid transparent',
+                    border: isSelected ? '1px solid #1d4354' : '1px solid transparent',
                     transition: 'all 0.2s'
                   }}
                   onMouseEnter={(e) => {
@@ -542,8 +542,8 @@ export default function EmployeeDetailPage() {
         }
 
         .employee-detail-tabs .react-tabs__tab--selected {
-          color: #0d6efd;
-          border-bottom-color: #0d6efd;
+          color: #1d4354;
+          border-bottom-color: #1d4354;
           font-weight: 500;
         }
 

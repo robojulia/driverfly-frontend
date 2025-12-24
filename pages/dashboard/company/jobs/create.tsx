@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
 import { JobForm } from '../../../../components/forms/company/job-form';
 import ChildPageLayout from '../../../../components/layouts/page/child-page-layout';
@@ -12,9 +12,9 @@ export default function CreateJob() {
 
   const { t } = useTranslation();
   const router = useRouter();
-  const jobApi = new JobApi();
+  const jobApi = useMemo(() => new JobApi(), []);
 
-  const fetchJobToClone = async () => {
+  const fetchJobToClone = useCallback(async () => {
     const { clone } = router.query;
     if (clone) {
       try {
@@ -31,11 +31,11 @@ export default function CreateJob() {
         console.error('Error fetching job to clone:', error);
       }
     }
-  };
+  }, [router.query, jobApi]);
 
   useEffect(() => {
     fetchJobToClone();
-  }, [router.query]);
+  }, [fetchJobToClone]);
 
   const handleJobSaveComplete = (savedJob: JobEntity) => {
     router.push('/dashboard/company/jobs?success=true');

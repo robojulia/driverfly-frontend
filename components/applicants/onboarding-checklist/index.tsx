@@ -250,7 +250,7 @@ export default function OnboardingChecklist(
         ({ label }) =>
           label == CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DOCUMETS
       ),
-    [companyOnboardingPreferences, user]
+    [companyOnboardingPreferences]
   );
 
   const companyDaclist = useMemo(
@@ -259,7 +259,7 @@ export default function OnboardingChecklist(
         ({ label }) =>
           label == CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DAC
       ),
-    [companyOnboardingPreferences, user]
+    [companyOnboardingPreferences]
   );
 
   const form = useFormik({

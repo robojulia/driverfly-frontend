@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import BaseCheck from "../../../../../components/forms/base-check";
@@ -22,7 +22,7 @@ export interface MissingDocumentsProps {
 
 export default function MissingDocuments({ entity, types }: MissingDocumentsProps) {
 
-    const applicantApi = new ApplicantApi()
+    const applicantApi = useMemo(() => new ApplicantApi(), [])
     const { t } = useTranslation();
 
     const [showThankYou, setThankYou] = useState<boolean>(false)
@@ -48,6 +48,7 @@ export default function MissingDocuments({ entity, types }: MissingDocumentsProp
             documents: types?.map((type, i) => ({ ...(new DocumentEntity), type })),
             mediaOptions: types?.map((type, i) => (false))
         });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [types])
 
     return (

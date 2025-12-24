@@ -272,6 +272,7 @@ export default function Call() {
                     <img
                       style={{ width: 300, padding: 30, borderRadius: 250 }}
                       src="/img/avatar.png"
+                      alt={`${identity.first_name} ${identity.last_name}`}
                     />
                   </div>
                   <h4 className="text-white-50 pb-0">

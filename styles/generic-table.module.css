@@ -182,8 +182,17 @@
   color: #2ec8c4 !important;
 }
 
-.table tbody tr:hover td a {
+.table tbody tr:hover td a:not(.keepWhiteOnHover) {
   color: #2ec8c4 !important;
+}
+
+.keepWhiteOnHover {
+  color: #fff !important;
+}
+
+.keepWhiteOnHover:hover {
+  color: #fff !important;
+  text-decoration: none !important;
 }
 
 .table tbody tr:active td {

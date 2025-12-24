@@ -13,7 +13,7 @@ import { PublicPage } from "../../components/layouts/public/public-page"
 
 import AuthApi from "../api/auth";
 import { VerifyEmailDto } from "../../models/auth/verify-email.dto";
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import BaseInput from '../../components/forms/base-input';
 
 export default function VerifyEmail(props: VerifyEmailDto) {
@@ -21,7 +21,7 @@ export default function VerifyEmail(props: VerifyEmailDto) {
   const { t } = useTranslation();
   const { user, updateUser, login } = useAuth();
 
-  const api = new AuthApi();
+  const api = useMemo(() => new AuthApi(), []);
 
   const form = useFormik({
     initialValues: new VerifyEmailDto(),
@@ -48,7 +48,7 @@ export default function VerifyEmail(props: VerifyEmailDto) {
     }
   });
 
-  async function resendVerify(e?: React.MouseEvent<HTMLButtonElement>) {
+  const resendVerify = useCallback(async (e?: React.MouseEvent<HTMLButtonElement>) => {
     try {
       if (form.values.email) {
         await api.sendVerifyEmail(form.values.email);
@@ -70,7 +70,8 @@ export default function VerifyEmail(props: VerifyEmailDto) {
       globalAjaxExceptionHandler(e, { formik: form, t: t, defaultMessage: "UNABLE_TO_VERIFY", toast: toast});
     }
 
-  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [api, form.values.email, user, updateUser, t])
 
   useEffect(() => {
     if (user) {
@@ -93,6 +94,7 @@ export default function VerifyEmail(props: VerifyEmailDto) {
     } else {
       router.replace("/")
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ props, user ]);
 
   return (

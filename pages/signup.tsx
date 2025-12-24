@@ -78,13 +78,15 @@ export default function Signup() {
 			utm_content: `${utm_content || ""}`,
 			role: SignUpRole.COMPANY // by default all accoounts will be registered as company
 		});
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	//  Uncomment this in debugging mode
 	useEffectAsync(async () => {
 		console.log("form values", form.values);
 		console.log("form errors", form.errors);
-	}, [form]);
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [form.values, form.errors]);
 
 	return (
 		<PublicPage title="SIGN_UP" hideTopLinks={true}>

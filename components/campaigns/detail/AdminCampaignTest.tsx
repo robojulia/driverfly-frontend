@@ -93,7 +93,7 @@ export const AdminCampaignTest: React.FC<AdminCampaignTestProps> = ({
   console.log('render admin');
 
   // Only show for job reachout campaigns
-  if (campaign.type !== CampaignType.JOB_REACHOUT) {
+  if (campaign.type !== CampaignType.REIGNITE_PAST_LEADS) {
     return null;
   }
 

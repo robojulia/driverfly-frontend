@@ -452,7 +452,7 @@ export default function Notifications({ employee, canEdit = true }: Notification
                                             <div className="mb-1" style={{ fontSize: '0.825rem' }}>
                                                 {rule.notifyDriver && (
                                                     <span className="mr-3">
-                                                        <PersonCircle size={14} className="mr-1" style={{ color: '#0d6efd' }} />
+                                                        <PersonCircle size={14} className="mr-1" style={{ color: '#1d4354' }} />
                                                         <strong>Driver:</strong> {rule.driverNotificationMethods.map(m => m.toUpperCase()).join(', ')}
                                                     </span>
                                                 )}
@@ -663,7 +663,7 @@ export default function Notifications({ employee, canEdit = true }: Notification
                                         borderRadius: '0.25rem'
                                     }}>
                                         <Form.Label style={{ fontSize: '0.9rem', fontWeight: 500, color: '#495057', marginBottom: '0.75rem' }}>
-                                            <PersonCircle size={16} className="mr-2" style={{ color: '#0d6efd' }} />
+                                            <PersonCircle size={16} className="mr-2" style={{ color: '#1d4354' }} />
                                             Notification Method
                                         </Form.Label>
                                         <div style={{ display: 'flex', gap: '1.5rem' }}>

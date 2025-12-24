@@ -54,7 +54,7 @@ export function PieChart(props: PieChartProps): JSX.Element {
     if (!props?.disableRerender) {
       setChartKey((prevKey) => prevKey + 1);
     }
-  }, [data]);
+  }, [data, props?.disableRerender]);
 
   const hasData = data.length > 0 && data.some((value) => value > 0);
 

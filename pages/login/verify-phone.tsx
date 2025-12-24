@@ -13,7 +13,7 @@ import { PublicPage } from '../../components/layouts/public/public-page';
 
 import AuthApi from '../api/auth';
 import { VerifyPhoneDto } from '../../models/auth/verify-phone.dto';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import BaseInput from '../../components/forms/base-input';
 import BaseInputPhone from '../../components/forms/base-input-phone';
 
@@ -22,7 +22,7 @@ export default function VerifyPhone(props: VerifyPhoneDto) {
   const { t } = useTranslation();
   const { user, updateUser, login } = useAuth();
 
-  const api = new AuthApi();
+  const api = useMemo(() => new AuthApi(), []);
 
   const form = useFormik({
     initialValues: new VerifyPhoneDto(),
@@ -52,7 +52,7 @@ export default function VerifyPhone(props: VerifyPhoneDto) {
     },
   });
 
-  async function resendVerify(e?: React.MouseEvent<HTMLButtonElement>) {
+  const resendVerify = useCallback(async (e?: React.MouseEvent<HTMLButtonElement>) => {
     try {
       if (!form.values.phone) {
         toast.error(t('PHONE_IS_REQUIRED'));
@@ -74,7 +74,8 @@ export default function VerifyPhone(props: VerifyPhoneDto) {
         toast: toast,
       });
     }
-  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [api, form.values, user, updateUser, t])
 
   useEffect(() => {
     if (!user) {
@@ -99,6 +100,7 @@ export default function VerifyPhone(props: VerifyPhoneDto) {
         ...props,
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props, user]);
 
   return (

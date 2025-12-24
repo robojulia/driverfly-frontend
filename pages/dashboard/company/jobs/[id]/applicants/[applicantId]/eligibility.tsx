@@ -82,7 +82,7 @@ export default function ApplicantEligibilityDetail({
     };
 
     loadData();
-  }, [jobId, applicantId, company]);
+  }, [jobId, applicantId, company, backPath, router, t]);
 
   if (loading) {
     return (

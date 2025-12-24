@@ -81,6 +81,7 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
     if (jobId) {
       loadData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jobId]);
 
   const handleFilterChange = (key: keyof EligibilityQueryParams, value: any) => {

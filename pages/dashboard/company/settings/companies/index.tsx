@@ -97,6 +97,7 @@ export default function CompanyList() {
                   className="img-thumbnail"
                   style={{ maxWidth: "100px" }}
                   src={v.photo.path}
+                  alt={`${v.name} logo`}
                 />
               ),
           },

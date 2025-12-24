@@ -36,8 +36,8 @@ const CampaignHeader: React.FC<CampaignHeaderProps> = ({ campaign, stats }) => {
 
   const getCampaignTypeLabel = (type: CampaignType) => {
     switch (type) {
-      case CampaignType.JOB_REACHOUT:
-        return 'Job Reachout';
+      case CampaignType.REIGNITE_PAST_LEADS:
+        return 'Reignite Past Leads';
       default:
         return type;
     }

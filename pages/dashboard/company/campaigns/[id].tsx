@@ -338,8 +338,8 @@ const CampaignDetailPage = () => {
 
   const getCampaignTypeLabel = (type: CampaignType) => {
     switch (type) {
-      case CampaignType.JOB_REACHOUT:
-        return t('CAMPAIGN_TYPES.JOB_REACHOUT');
+      case CampaignType.REIGNITE_PAST_LEADS:
+        return t('CAMPAIGN_TYPES.REIGNITE_PAST_LEADS');
       default:
         return t(type);
     }
@@ -431,7 +431,7 @@ const CampaignDetailPage = () => {
     );
   }
 
-  console.log(campaign, isSuperAdmin && campaign.type === CampaignType.JOB_REACHOUT);
+  console.log(campaign, isSuperAdmin && campaign.type === CampaignType.REIGNITE_PAST_LEADS);
 
   return (
     <PageLayout>
@@ -450,7 +450,7 @@ const CampaignDetailPage = () => {
           onSendTest={handleSendTest}
           onAddTestTarget={handleAddTestTarget}
           onViewJob={
-            campaign.type === CampaignType.JOB_REACHOUT && campaign.config?.jobId
+            campaign.type === CampaignType.REIGNITE_PAST_LEADS && campaign.config?.jobId
               ? () => router.push(`/dashboard/company/jobs/${campaign.config.jobId}`)
               : undefined
           }
@@ -573,7 +573,7 @@ const CampaignDetailPage = () => {
                     />
 
                     {/* Admin Test Campaign Section - Super Admin Only */}
-                    {isSuperAdmin && campaign.type === CampaignType.JOB_REACHOUT && (
+                    {isSuperAdmin && campaign.type === CampaignType.REIGNITE_PAST_LEADS && (
                       <AdminCampaignTest
                         campaign={campaign}
                         onAddTestTarget={addCurrentUserAsTestTarget}

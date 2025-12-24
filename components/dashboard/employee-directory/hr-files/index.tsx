@@ -96,7 +96,7 @@ export default function HRFiles(props: EmployeeAdditionalFilesProps) {
                 ({ label }) =>
                     label == CompanyPreferenceOnboardingChecklistLabel.EMPLOYEE_HR_FILES
             ),
-        [companyHRFilesPreferences, user]
+        [companyHRFilesPreferences]
     );
 
     // Update documents when employee or preferences change

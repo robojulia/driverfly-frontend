@@ -1,7 +1,7 @@
 import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useContext, useMemo } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import { Row, Col, Card, CardBody } from 'reactstrap';
 import { People, BriefcaseFill, PersonFill, PersonPlus, Search } from 'react-bootstrap-icons';
 
@@ -31,7 +31,7 @@ export const DashboardStats = () => {
   const { state } = useContext(DashboardChartContext);
   const { t } = useTranslation();
 
-  const calculateStats = () => {
+  const calculateStats = useCallback(() => {
     const applicants = state?.applicants || [];
     const employees = state?.employees || [];
     const jobs = state?.jobs || [];
@@ -153,9 +153,9 @@ export const DashboardStats = () => {
     ];
 
     return stats;
-  };
+  }, [state]);
 
-  const stats = useMemo(() => calculateStats(), [state]);
+  const stats = useMemo(() => calculateStats(), [state, calculateStats]);
   const mainCards = stats.filter((stat) => stat.isMainCard);
   const plainStats = stats.filter((stat) => !stat.isMainCard);
 

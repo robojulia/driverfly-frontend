@@ -96,7 +96,8 @@ export default function LongForm({
         }
       );
     }
-  }, []); // Only run on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run on mount - initialApplicant props intentionally excluded
 
   // Restore data on component mount if available
   useEffect(() => {
@@ -122,7 +123,8 @@ export default function LongForm({
         }
       }
     }
-  }, []); // Only run on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run on mount - dependencies intentionally excluded to prevent re-runs
 
   // Clear progress when form is completed (step 20)
   useEffect(() => {

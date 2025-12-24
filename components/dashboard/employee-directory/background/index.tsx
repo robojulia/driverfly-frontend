@@ -31,7 +31,7 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 		setProtectedFields({
 			license_number: hasPermission("CanViewEmployee.license_number"),
 		});
-	}, [user]);
+	}, [user, hasPermission]);
 
 
 	return (

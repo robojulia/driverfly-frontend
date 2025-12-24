@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Eye,
   Telephone,
@@ -17,18 +17,25 @@ import { useCampaigns } from '../../hooks/campaigns/use-campaigns';
 import { CampaignEntity } from '../../models/campaigns/campaign.entity';
 import { CampaignStatus } from '../../enums/campaigns/campaign-status.enum';
 import { CampaignCommunicationType } from '../../enums/campaigns/campaign-communication-type.enum';
+import { CampaignType } from '../../enums/campaigns/campaign-type.enum';
 import styles from '../../styles/generic-table.module.css';
 
 interface CampaignsTableProps {
   className?: string;
   defaultJobFilter?: string;
   onDataChange?: (campaigns: CampaignEntity[]) => void;
+  campaigns?: CampaignEntity[]; // Optional: provide campaigns directly
+  loading?: boolean; // Optional: loading state when campaigns are provided
+  showFilters?: boolean; // Optional: whether to show filters (default true)
 }
 
 export const CampaignsTable: React.FC<CampaignsTableProps> = ({
   className = '',
   defaultJobFilter,
   onDataChange,
+  campaigns: campaignsProp,
+  loading: loadingProp,
+  showFilters = true,
 }) => {
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
@@ -39,10 +46,22 @@ export const CampaignsTable: React.FC<CampaignsTableProps> = ({
     ...(defaultJobFilter && { jobId: defaultJobFilter }),
   });
 
-  const { campaigns, loading, error, total, loadCampaigns, cancelCampaign } = useCampaigns();
+  const {
+    campaigns: campaignsFromHook,
+    loading: loadingFromHook,
+    error,
+    total,
+    loadCampaigns,
+    cancelCampaign,
+  } = useCampaigns();
+
+  // Use provided campaigns or load from hook
+  const campaigns = campaignsProp !== undefined ? campaignsProp : campaignsFromHook;
+  const loading = loadingProp !== undefined ? loadingProp : loadingFromHook;
 
   useEffect(() => {
-    if (loadCampaigns) {
+    // Only load campaigns if they're not provided as props
+    if (campaignsProp === undefined && loadCampaigns) {
       const queryParams = {
         page: currentPage,
         limit: 50,
@@ -59,7 +78,7 @@ export const CampaignsTable: React.FC<CampaignsTableProps> = ({
         console.error('Failed to load campaigns:', err);
       });
     }
-  }, [currentPage, filters, loadCampaigns]);
+  }, [currentPage, filters, loadCampaigns, campaignsProp]);
 
   // Notify parent component when campaigns data changes
   useEffect(() => {
@@ -152,6 +171,28 @@ export const CampaignsTable: React.FC<CampaignsTableProps> = ({
     if (total === 0) return '0%';
     return `${Math.round((delivered / total) * 100)}%`;
   };
+
+  const getCampaignTypeLabel = (type: CampaignType | string): string => {
+    // Handle both new enum value and legacy database value
+    if (type === CampaignType.REIGNITE_PAST_LEADS || type === 'JOB_REACHOUT') {
+      return t('CAMPAIGN_TYPES.REIGNITE_PAST_LEADS');
+    }
+    return type as string;
+  };
+
+  // Group campaigns by type
+  const groupedCampaigns = useMemo(() => {
+    if (!campaigns || campaigns.length === 0) return {};
+
+    return campaigns.reduce((acc, campaign) => {
+      const type = campaign.type;
+      if (!acc[type]) {
+        acc[type] = [];
+      }
+      acc[type].push(campaign);
+      return acc;
+    }, {} as Record<CampaignType, CampaignEntity[]>);
+  }, [campaigns]);
 
   const columns: TableColumn<CampaignEntity>[] = [
     {
@@ -257,7 +298,9 @@ export const CampaignsTable: React.FC<CampaignsTableProps> = ({
       render: (campaign) => (
         <div className={`${styles.flexRow} ${styles.gap2}`}>
           <Link href={`/dashboard/company/campaigns/${campaign.id}`}>
-            <a className={`${styles.button} ${styles.buttonOutlinePrimary} ${styles.buttonSm}`}>
+            <a
+              className={`${styles.button} ${styles.buttonOutlinePrimary} ${styles.buttonSm} ${styles.keepWhiteOnHover}`}
+            >
               <Eye size={14} />
               View
             </a>
@@ -324,18 +367,102 @@ export const CampaignsTable: React.FC<CampaignsTableProps> = ({
 
   const hasMore = campaigns && campaigns.length < total;
 
+  // If no campaigns, show empty state
+  if (!loading && (!campaigns || campaigns.length === 0)) {
+    return (
+      <GenericTable
+        data={[]}
+        columns={columns}
+        loading={loading}
+        emptyTitle="No Marketing Campaigns Yet"
+        emptyText="Create your first campaign to start reaching out to potential candidates."
+        filters={tableFilters}
+        className={className}
+      />
+    );
+  }
+
   return (
-    <GenericTable
-      data={campaigns || []}
-      columns={columns}
-      loading={loading}
-      emptyTitle="No Marketing Campaigns Yet"
-      emptyText="Create your first campaign to start reaching out to potential candidates."
-      filters={tableFilters}
-      onLoadMore={hasMore ? handleLoadMore : undefined}
-      hasMore={hasMore}
-      loadMoreText="Load More Campaigns"
-      className={className}
-    />
+    <div className={className}>
+      {/* Filters */}
+      {showFilters && (
+        <div className={styles.filtersContainer}>
+          <div className={styles.filterRow}>
+            {tableFilters.map((filter) => (
+              <div key={filter.key} className={styles.filterGroup}>
+                <label className={styles.filterLabel}>{filter.label}</label>
+                <select
+                  value={filter.value}
+                  onChange={(e) => filter.onChange(e.target.value)}
+                  className={styles.filterSelect}
+                >
+                  {filter.options?.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Render campaigns */}
+      {campaignsProp !== undefined ? (
+        // When campaigns are provided as props (detail view), show flat list
+        <GenericTable
+          data={campaigns || []}
+          columns={columns}
+          loading={loading}
+          emptyTitle="No Campaigns"
+          emptyText="No campaigns found for this type."
+          onLoadMore={undefined}
+          hasMore={false}
+          loadMoreText=""
+        />
+      ) : (
+        // When loading from hook (summary view), group by campaign type
+        <>
+          {(Object.entries(groupedCampaigns) as [CampaignType, CampaignEntity[]][]).map(([type, typeCampaigns]) => (
+            <div key={type} style={{ marginBottom: '2rem' }}>
+              <h3 style={{
+                fontSize: '1.25rem',
+                fontWeight: '600',
+                marginBottom: '1rem',
+                color: '#2c3e50',
+                borderBottom: '2px solid #3498db',
+                paddingBottom: '0.5rem'
+              }}>
+                {getCampaignTypeLabel(type)}
+              </h3>
+              <GenericTable
+                data={typeCampaigns}
+                columns={columns}
+                loading={loading}
+                emptyTitle={`No ${getCampaignTypeLabel(type)} Campaigns`}
+                emptyText="No campaigns of this type yet."
+                onLoadMore={undefined}
+                hasMore={false}
+                loadMoreText=""
+              />
+            </div>
+          ))}
+
+          {/* Load More Button (shown at bottom if there are more campaigns) */}
+          {hasMore && (
+            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+              <button
+                onClick={handleLoadMore}
+                className={`${styles.button} ${styles.buttonPrimary}`}
+                disabled={loading}
+              >
+                {loading ? 'Loading...' : 'Load More Campaigns'}
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
   );
 };

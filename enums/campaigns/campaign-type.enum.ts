@@ -1,3 +1,3 @@
 export enum CampaignType {
-  JOB_REACHOUT = 'JOB_REACHOUT',
+  REIGNITE_PAST_LEADS = 'REIGNITE_PAST_LEADS',
 }

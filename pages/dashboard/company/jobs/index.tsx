@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback, useMemo } from 'react';
 import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
 
 import { Files, PenFill, Plus, Recycle, CheckCircleFill, ClockFill, Code, TrashFill } from 'react-bootstrap-icons';
@@ -71,7 +71,7 @@ export default function JobListing() {
   const { user, hasPermission } = useAuth();
   const { t } = useTranslation();
   const router = useRouter();
-  const jobApi = new JobApi();
+  const jobApi = useMemo(() => new JobApi(), []);
 
   const columnSettingKey = getDataTableColumnKey('company', user, 'jobs');
   const resetPagingMeta = () => setPagingMeta(pagingsMetaInitialValues);
@@ -318,20 +318,20 @@ export default function JobListing() {
         onCloseClick();
       }
     },
-    [expiryDate, reactivateJob]
+    [expiryDate, reactivateJob, jobApi, jobs]
   );
 
-  const fetchJobOptions = async () => {
+  const fetchJobOptions = useCallback(async () => {
     const data: JobEntity[] = (await jobApi.list({
       is_paginated: false,
       companyId: user?.company?.id,
     })) as JobEntity[];
     setJobOptions(data);
-  };
+  }, [jobApi, user?.company?.id]);
 
   useEffect(() => {
     fetchJobOptions();
-  }, [jobs]);
+  }, [jobs, fetchJobOptions]);
 
   const onCloneClick = () => {
     setShowCloneModal(true);

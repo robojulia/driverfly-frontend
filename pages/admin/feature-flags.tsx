@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Container,
   Row,
@@ -47,17 +47,9 @@ export default function FeatureFlagsAdmin() {
   const [formData, setFormData] = useState<FeatureFlagFormData>(initialFormData);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
-  const featureFlagsApi = new FeatureFlagsApi();
+  const featureFlagsApi = useMemo(() => new FeatureFlagsApi(), []);
 
-  useEffect(() => {
-    if (!isSuperAdmin) {
-      router.push('/dashboard');
-      return;
-    }
-    loadFlags();
-  }, [isSuperAdmin, router]);
-
-  const loadFlags = async () => {
+  const loadFlags = useCallback(async () => {
     try {
       setLoading(true);
       const response = await featureFlagsApi.getAll();
@@ -68,7 +60,15 @@ export default function FeatureFlagsAdmin() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [featureFlagsApi]);
+
+  useEffect(() => {
+    if (!isSuperAdmin) {
+      router.push('/dashboard');
+      return;
+    }
+    loadFlags();
+  }, [isSuperAdmin, router, loadFlags]);
 
   const handleCreate = () => {
     setEditingFlag(null);

@@ -137,7 +137,7 @@ export default function CompanyLookupModal({
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = '#f8f9fa';
-                    e.currentTarget.style.borderColor = '#0d6efd';
+                    e.currentTarget.style.borderColor = '#1d4354';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = '#ffffff';
@@ -153,7 +153,7 @@ export default function CompanyLookupModal({
                       <span
                         style={{
                           backgroundColor: '#e7f3ff',
-                          color: '#0d6efd',
+                          color: '#1d4354',
                           padding: '0.25rem 0.5rem',
                           borderRadius: '4px',
                           fontSize: '0.85rem',

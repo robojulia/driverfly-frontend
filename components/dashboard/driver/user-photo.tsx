@@ -32,5 +32,6 @@ export default function UserPhoto({ style, className, width, height }) {
         className={className}
         width={width}
         height={height}
-        src={photo} />
+        src={photo}
+        alt="User profile" />
 }

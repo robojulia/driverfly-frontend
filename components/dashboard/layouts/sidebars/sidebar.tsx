@@ -70,6 +70,7 @@ export default function Sidebar(props: SidebarProps) {
     };
 
     checkAutoRecruitingStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [company?.id]);
 
   const filteredItems = filterItems(items, hasPermission);

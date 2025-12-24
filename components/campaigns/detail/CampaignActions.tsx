@@ -17,7 +17,6 @@ import {
   ThreeDotsVertical,
   ArrowLeftShort,
   PersonPlusFill,
-  CheckCircleFill,
 } from 'react-bootstrap-icons';
 import { CampaignStatus } from '../../../enums/campaigns/campaign-status.enum';
 import styles from './CampaignActions.module.css';
@@ -114,13 +113,7 @@ const CampaignActions: React.FC<CampaignActionsProps> = ({
         };
 
       case CampaignStatus.COMPLETED:
-        return {
-          label: 'View Results',
-          action: () => {}, // Could scroll to results or open modal
-          color: 'primary',
-          icon: <CheckCircleFill className="me-2" />,
-          disabled: false,
-        };
+        return null; // No primary action for completed campaigns
 
       case CampaignStatus.CANCELLED:
         return null; // No primary action for cancelled campaigns

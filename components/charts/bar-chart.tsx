@@ -28,7 +28,7 @@ export function BarChart(props: BarChartProps): JSX.Element {
 
   useEffect(() => {
     if (!props.disableRerender) setChartKey((prevKey) => prevKey + 1);
-  }, [data]);
+  }, [data, props.disableRerender]);
 
   const hasData =
     data.length > 0 && data.some((dataset) => dataset.data.some((value) => value > 0));

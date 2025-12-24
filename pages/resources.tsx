@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import Head from 'next/head';
 import { PublicLayout } from "../components/layouts/public-layout";
 import resource from '../public/css/third-party-resources.module.css'
@@ -9,7 +9,7 @@ export default function Resources() {
     const { t } = useTranslation();
 
 
-    const types = [
+    const types = useMemo(() => [
         {
             type: "All",
             for_drivers: true,
@@ -124,9 +124,9 @@ export default function Resources() {
             for_oo: true,
             for_companies: true
         }
-    ]
+    ], [])
 
-    const resources = [
+    const resources = useMemo(() => [
         {
             company: "Zuum",
             type: "TMS",
@@ -368,7 +368,7 @@ export default function Resources() {
             for_oo: false,
             for_companies: true
         },
-    ];
+    ], [])
 
     const [audience, setAudience] = useState("all");
     const [resourceType, setResourceType] = useState("All");
@@ -395,7 +395,7 @@ export default function Resources() {
         });
 
         setFilteredResources(fr);
-    }, [audience, resourceType]);
+    }, [audience, resourceType, resources]);
 
     const handleChangeResourceType = event => {
         let type = event.target.name;

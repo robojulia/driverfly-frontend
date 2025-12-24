@@ -24,6 +24,7 @@ export function ApplicantPieChart() {
 
   const data = useMemo(() => {
     return fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   const inProgressCount = useMemo(() => {

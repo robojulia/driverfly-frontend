@@ -1,7 +1,7 @@
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import CompanyApi from '../../pages/api/company';
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import CompanyPhoto from "../jobs/company-photo"
 import CompanyJobsCount from '../employer/company-jobs-count';
 import { useTranslation } from '../../hooks/use-translation';
@@ -13,20 +13,20 @@ import Link from "next/link";
 export default function CompaniesSlider() {
 
     const { t } = useTranslation();
-    const companyApi = new CompanyApi();
+    const companyApi = useMemo(() => new CompanyApi(), []);
     const [companies, setCompanies] = useState([]);
 
-    const fetchCompanies = async () => {
+    const fetchCompanies = useCallback(async () => {
         await companyApi.employer.list({ take: 6 })
             .then(data => setCompanies(data))
             .catch(function (error) {
                 console.log("handle error success", error.response)
             })
-    }
+    }, [companyApi])
 
-    useEffect(async () => {
-        await fetchCompanies()
-    }, []);
+    useEffect(() => {
+        fetchCompanies()
+    }, [fetchCompanies]);
 
     const responsive = {
         superLargeDesktop: {

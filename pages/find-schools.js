@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useRouter } from 'next/router'
 import { Table } from "react-bootstrap";
 import Head from 'next/head';
@@ -14,7 +14,7 @@ export default function FindSchools(props) {
   const { t } = useTranslation();
 
   let { params } = props
-  const schoolApi = new SchoolApi();
+  const schoolApi = useMemo(() => new SchoolApi(), []);
 
   const [schools, setSchools] = useState([]);
   const [pagingMeta, setPagingMeta] = useState({
@@ -73,7 +73,7 @@ export default function FindSchools(props) {
     }
   }
 
-  const setFiltersForQuery = async () => {
+  const setFiltersForQuery = useCallback(async () => {
     Object.keys(params).map(key => {
       let inputs = document.getElementsByName(key);
       if (inputs[0].tagName.toLowerCase() != "input") {
@@ -90,14 +90,14 @@ export default function FindSchools(props) {
         })
       }
     })
-    params = {}
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params])
 
-  const fetchSchools = async () => {
+  const fetchSchools = useCallback(async () => {
     const { items, meta } = await schoolApi.search({ ...filters })
     setSchools(items)
     setPagingMeta(meta)
-  }
+  }, [schoolApi, filters])
 
   const handleClick = (data) => async () => {
     let link = 'https://form.jotform.com/212917100952046?';
@@ -107,16 +107,23 @@ export default function FindSchools(props) {
     window.open(link);
   }
 
-  useEffect(fetchSchools, [filters])
-  useEffect(async () => {
-    try {
-      await setFiltersForQuery()
-      await router.replace('find-schools', undefined, { shallow: true });
-      await fetchSchools()
-    } catch (e) {
-      console.error('exception is here: ', e);
-      throw e
+  useEffect(() => {
+    fetchSchools()
+  }, [fetchSchools])
+
+  useEffect(() => {
+    const initializeFilters = async () => {
+      try {
+        await setFiltersForQuery()
+        await router.replace('find-schools', undefined, { shallow: true });
+        await fetchSchools()
+      } catch (e) {
+        console.error('exception is here: ', e);
+        throw e
+      }
     }
+    initializeFilters()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

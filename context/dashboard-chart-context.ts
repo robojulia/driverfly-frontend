@@ -25,6 +25,7 @@ const DashboardChartContext = createContext<DashboardChartContextType>({
         states: [],
         sourceTypes: [],
         statuses: [],
+        referralSourceIds: [],
     }
 });
 

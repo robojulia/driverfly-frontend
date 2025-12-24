@@ -1,11 +1,14 @@
 import React from 'react';
-import { Row, Col, Button, Table, Badge } from 'reactstrap';
+import { useRouter } from 'next/router';
+import { Row, Col, Button, Table, Badge, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import { People, ExclamationTriangle } from 'react-bootstrap-icons';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import { CampaignEntity } from '../../../models/campaigns/campaign.entity';
 import { CampaignTargetEntity } from '../../../models/campaigns/campaign-target.entity';
 import { CampaignStatus } from '../../../enums/campaigns/campaign-status.enum';
+import { CampaignTargetType } from '../../../enums/campaigns/campaign-target-type.enum';
+import { CampaignTargetStatus } from '../../../enums/campaigns/campaign-target-status.enum';
 
 interface CampaignTargetListProps {
   campaign: CampaignEntity;
@@ -36,6 +39,32 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
   setManualTargetModal,
   isSuperAdmin = false,
 }) => {
+  const router = useRouter();
+  const [hoveredButton, setHoveredButton] = React.useState<number | null>(null);
+  const [showResultsModal, setShowResultsModal] = React.useState(false);
+
+  const handleTargetClick = (target: CampaignTargetEntity) => {
+    if (target.targetType === CampaignTargetType.APPLICANT) {
+      router.push(`/dashboard/company/applicants/${target.targetId}`);
+    } else if (target.targetType === CampaignTargetType.EMPLOYEE) {
+      router.push(`/dashboard/company/compliance/employee-directory/${target.targetId}`);
+    }
+  };
+
+  const getViewResultsStyle = (targetId: number) => {
+    if (hoveredButton === targetId) {
+      return {
+        background: 'linear-gradient(135deg, #30c6c2 0%, #006078 100%)',
+        borderColor: 'transparent',
+        color: 'white',
+        transition: 'all 0.3s ease',
+      };
+    }
+    return {
+      transition: 'all 0.3s ease',
+    };
+  };
+
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mb-3">
@@ -72,7 +101,7 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
       </div>
 
       <div className="table-responsive">
-        <Table hover className="align-middle">
+        <Table className="align-middle">
           <thead className="table-light">
             <tr>
               {isSuperAdmin && (
@@ -92,11 +121,9 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
               <th className="fw-semibold">{t('PHONE')}</th>
               <th className="fw-semibold">{t('STATUS')}</th>
               <th className="fw-semibold">{t('PROCESSED_AT')}</th>
-              {(campaign?.status || CampaignStatus.DRAFT) === CampaignStatus.DRAFT && (
-                <th className="fw-semibold" style={{ width: '100px' }}>
-                  {t('ACTIONS')}
-                </th>
-              )}
+              <th className="fw-semibold" style={{ width: '150px' }}>
+                {t('ACTIONS')}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -109,7 +136,15 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
                       <code className="text-muted small">{target.id}</code>
                     </td>
                   )}
-                  <td>{target.name || '-'}</td>
+                  <td>
+                    <span
+                      onClick={() => handleTargetClick(target)}
+                      style={{ cursor: 'pointer', color: '#1d4355', textDecoration: 'underline' }}
+                      className="fw-semibold"
+                    >
+                      {target.name || '-'}
+                    </span>
+                  </td>
                   <td>{target.email || '-'}</td>
                   <td>{target.phone || '-'}</td>
                   <td>
@@ -118,33 +153,49 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
                     </Badge>
                   </td>
                   <td>{target.processedAt ? formatDate(target.processedAt) : '-'}</td>
-                  {(campaign?.status || CampaignStatus.DRAFT) === CampaignStatus.DRAFT && (
-                    <td>
-                      <Button
-                        color="danger"
-                        size="sm"
-                        outline
-                        onClick={() => handleDeleteTarget(target.id)}
-                        disabled={deletingTargets.has(target.id)}
-                        title="Remove target from campaign"
-                      >
-                        {deletingTargets.has(target.id) ? (
-                          <>
-                            <div
-                              className="spinner-border spinner-border-sm me-1"
-                              role="status"
-                              style={{ width: '12px', height: '12px' }}
-                            >
-                              <span className="visually-hidden">Deleting...</span>
-                            </div>
-                            Removing...
-                          </>
-                        ) : (
-                          'Remove'
-                        )}
-                      </Button>
-                    </td>
-                  )}
+                  <td>
+                    <div className="d-flex gap-2">
+                      {targetStatus.toLowerCase() === CampaignTargetStatus.DELIVERED.toLowerCase() && (
+                        <Button
+                          color="info"
+                          size="sm"
+                          outline
+                          style={getViewResultsStyle(target.id)}
+                          onMouseEnter={() => setHoveredButton(target.id)}
+                          onMouseLeave={() => setHoveredButton(null)}
+                          onClick={() => setShowResultsModal(true)}
+                          title="View campaign results for this target"
+                        >
+                          View Results
+                        </Button>
+                      )}
+                      {(campaign?.status || CampaignStatus.DRAFT) === CampaignStatus.DRAFT && (
+                        <Button
+                          color="danger"
+                          size="sm"
+                          outline
+                          onClick={() => handleDeleteTarget(target.id)}
+                          disabled={deletingTargets.has(target.id)}
+                          title="Remove target from campaign"
+                        >
+                          {deletingTargets.has(target.id) ? (
+                            <>
+                              <div
+                                className="spinner-border spinner-border-sm me-1"
+                                role="status"
+                                style={{ width: '12px', height: '12px' }}
+                              >
+                                <span className="visually-hidden">Deleting...</span>
+                              </div>
+                              Removing...
+                            </>
+                          ) : (
+                            'Remove'
+                          )}
+                        </Button>
+                      )}
+                    </div>
+                  </td>
                 </tr>
               );
             })}
@@ -193,6 +244,18 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
           )}
         </div>
       )}
+
+      {/* Communication Summary Modal */}
+      <Modal isOpen={showResultsModal} toggle={() => setShowResultsModal(false)} centered>
+        <ModalHeader toggle={() => setShowResultsModal(false)}>
+          Communication Summary
+        </ModalHeader>
+        <ModalBody>
+          <div className="text-center py-4">
+            <p className="text-muted mb-0">Coming soon</p>
+          </div>
+        </ModalBody>
+      </Modal>
     </>
   );
 };

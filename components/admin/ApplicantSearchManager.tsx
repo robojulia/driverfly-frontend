@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Alert,
   Badge,
@@ -79,8 +79,8 @@ const ApplicantSearchManager: React.FC = () => {
   const [selectedApplicant, setSelectedApplicant] =
     useState<ApplicantWithAutoRecruitingData | null>(null);
 
-  const api = new AdminApplicantSearchApi();
-  const companiesApi = new CompaniesApi();
+  const api = useMemo(() => new AdminApplicantSearchApi(), []);
+  const companiesApi = useMemo(() => new CompaniesApi(), []);
 
   const loadCompanies = useCallback(async () => {
     try {
@@ -92,7 +92,7 @@ const ApplicantSearchManager: React.FC = () => {
     } finally {
       setCompaniesLoading(false);
     }
-  }, []);
+  }, [companiesApi]);
 
   const loadData = useCallback(
     async (params: Partial<ApplicantSearchParams> = {}) => {
@@ -130,7 +130,7 @@ const ApplicantSearchManager: React.FC = () => {
         }));
       }
     },
-    [state.pagination.currentPage, state.pagination.itemsPerPage, state.filters]
+    [state.pagination.currentPage, state.pagination.itemsPerPage, state.filters, api]
   );
 
   // Debounced search to avoid excessive API calls
@@ -144,7 +144,7 @@ const ApplicantSearchManager: React.FC = () => {
   useEffect(() => {
     loadData();
     loadCompanies();
-  }, []);
+  }, [loadData, loadCompanies]);
 
   const handleSearchChange = (value: string) => {
     setState((prev) => ({

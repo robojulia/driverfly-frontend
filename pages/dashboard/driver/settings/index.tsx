@@ -66,7 +66,7 @@ export default function Profile() {
     if (user) {
       form.setValues(user);
     }
-  }, [user]);
+  }, [user, form]);
 
   return (
     <PageLayout title="MY_ACCOUNT">

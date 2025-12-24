@@ -116,7 +116,7 @@ export default function Applicants() {
     [user, jobId, filters, includeEligibility, pagingMeta?.currentPage, pagingMeta?.itemsPerPage]
   );
 
-  React.useMemo(() => setFiltersChanged(true), [filters]);
+  useEffect(() => setFiltersChanged(true), [filters]);
 
   useEffect(() => {
     setFilters(new SearchApplicantDto());
@@ -240,7 +240,7 @@ export default function Applicants() {
 
   useEffect(() => {
     console.log('debug', user.company.id, company?.id, applicants.length);
-  }, [applicants]);
+  }, [applicants, user.company.id, company?.id]);
   return (
     <>
       <style>{`

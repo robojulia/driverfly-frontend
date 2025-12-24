@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Button, ButtonGroup, ButtonProps } from "react-bootstrap";
 import { Recycle } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
@@ -17,7 +17,7 @@ export interface ReactivateJobProps extends ButtonProps {
 export function ReactivateJobButton(props: ReactivateJobProps) {
     const { job, onComplete, ...rest } = props;
 
-    const jobApi = new JobApi();
+    const jobApi = useMemo(() => new JobApi(), []);
     const { t } = useTranslation();
 
     const [showDialog, setShowDialog] = React.useState(false);

@@ -39,8 +39,8 @@ export const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, onAction }
 
   const getCampaignTypeLabel = (type: CampaignType) => {
     switch (type) {
-      case CampaignType.JOB_REACHOUT:
-        return t('JOB_REACHOUT_CAMPAIGN');
+      case CampaignType.REIGNITE_PAST_LEADS:
+        return t('REIGNITE_PAST_LEADS_CAMPAIGN');
       default:
         return type;
     }

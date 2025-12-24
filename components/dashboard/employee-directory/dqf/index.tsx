@@ -107,7 +107,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                 ({ label }) =>
                     label == CompanyPreferenceOnboardingChecklistLabel.EMPLOYEE_DQF_DOCUMENTS
             ),
-        [companyDqfPreferences, user]
+        [companyDqfPreferences]
     );
 
     const form = useFormik({

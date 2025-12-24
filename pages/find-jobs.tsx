@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import { GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState, useCallback } from "react";
 import "react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css";
 import { toast } from "react-toastify";
 import FilterResult from "../components/filter-results/filter-results";
@@ -33,7 +33,7 @@ export default function FindJobs(props) {
 	let { params } = props;
 
 	const router = useRouter();
-	const jobApi = new JobApi();
+	const jobApi = useMemo(() => new JobApi(), []);
 	const { t } = useTranslation();
 
 	const [loading, setLoading] = useState<boolean>(true);
@@ -44,31 +44,31 @@ export default function FindJobs(props) {
 	const [location, setLocation] = useState<JobSearchLocation>(null);
 	const [range, setRange] = useState<string>(`${filters.location?.range || 50}`);
 
-	const resetPagingMeta = (): void => setPagingMeta(pagingMetaInitialValues);
-	const resetSearchQuery = (): void => setSearchQuery("");
-	const resetFilters = (): void => setFilters(filtersInitialsValues);
-	const resetLocation = (): void => setLocation(null);
-	const resetRange = (): void => setRange("");
+	const resetPagingMeta = useCallback((): void => setPagingMeta(pagingMetaInitialValues), []);
+	const resetSearchQuery = useCallback((): void => setSearchQuery(""), []);
+	const resetFilters = useCallback((): void => setFilters(filtersInitialsValues), []);
+	const resetLocation = useCallback((): void => setLocation(null), []);
+	const resetRange = useCallback((): void => setRange(""), []);
 
-	const handleReset = (): void => {
+	const handleReset = useCallback((): void => {
 		resetSearchQuery();
 		resetPagingMeta();
 		resetFilters();
 		resetLocation();
 		resetRange();
-	};
+	}, [resetSearchQuery, resetPagingMeta, resetFilters, resetLocation, resetRange]);
 
-	const setFiltersByKeyValue = (key: string, value: any): void => {
-		setFilters({
-			...filters,
+	const setFiltersByKeyValue = useCallback((key: string, value: any): void => {
+		setFilters((prevFilters) => ({
+			...prevFilters,
 			page: 1,
 			[key]: value,
-		});
-	};
+		}));
+	}, []);
 
-	const handleChange = ({
+	const handleChange = useCallback(({
 		target: { name, value },
-	}: ChangeEvent<HTMLInputElement>): void => setFiltersByKeyValue(name, value);
+	}: ChangeEvent<HTMLInputElement>): void => setFiltersByKeyValue(name, value), [setFiltersByKeyValue]);
 
 	const setNativeValue = (element: HTMLInputElement, value: any) => {
 		if (!element) {
@@ -123,7 +123,7 @@ export default function FindJobs(props) {
 		params = {};
 	};
 
-	const fetchJobs = async (): Promise<void> => {
+	const fetchJobs = useCallback(async (): Promise<void> => {
 		setLoading(true);
 		try {
 			// navigator.geolocation.getCurrentPosition(function (position) {
@@ -147,7 +147,7 @@ export default function FindJobs(props) {
 		} finally {
 			setLoading(false);
 		}
-	};
+	}, [jobApi, filters, t]);
 
 	useEffectAsync(fetchJobs, [filters]);
 	useEffectAsync(async (): Promise<void> => {
@@ -185,7 +185,7 @@ export default function FindJobs(props) {
 				handlePaging: setPagingMeta,
 			},
 		}),
-		[jobs, pagingMeta, filters, location, range, searchQuery]
+		[jobs, pagingMeta, filters, location, range, searchQuery, fetchJobs, handleChange, handleReset, setFiltersByKeyValue]
 	);
 
 	return (

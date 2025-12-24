@@ -26,6 +26,7 @@ export function SourceBreakdownChart() {
 
   const data = useMemo(() => {
     return fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   const totalApplicants = useMemo(() => {
