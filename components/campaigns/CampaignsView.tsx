@@ -21,9 +21,11 @@ interface CampaignsViewProps {
   onViewModeChange?: (mode: ViewMode) => void;
 }
 
+type TabType = CampaignCommunicationType | 'INBOUND_CALLS';
+
 export const CampaignsView: React.FC<CampaignsViewProps> = ({ onTitleChange, onViewModeChange }) => {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<CampaignCommunicationType>(
+  const [activeTab, setActiveTab] = useState<TabType>(
     CampaignCommunicationType.VOICE
   );
   const [viewMode, setViewMode] = useState<ViewMode>('summary');
@@ -279,6 +281,51 @@ export const CampaignsView: React.FC<CampaignsViewProps> = ({ onTitleChange, onV
           >
             Text Campaigns
           </button>
+          <button
+            onClick={() => setActiveTab('INBOUND_CALLS')}
+            style={{
+              padding: '0.875rem 1.5rem',
+              fontSize: '1.125rem',
+              backgroundColor:
+                activeTab === 'INBOUND_CALLS'
+                  ? 'var(--primary-dark, #006078)'
+                  : 'transparent',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              fontWeight: '500',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              minWidth: '120px',
+              justifyContent: 'center',
+              color:
+                activeTab === 'INBOUND_CALLS'
+                  ? 'var(--text-light, #ffffff)'
+                  : 'var(--text-secondary, #6c757d)',
+              boxShadow:
+                activeTab === 'INBOUND_CALLS'
+                  ? '0 2px 4px rgba(95, 203, 196, 0.3)'
+                  : 'none',
+              transform:
+                activeTab === 'INBOUND_CALLS' ? 'translateY(-1px)' : 'translateY(0)',
+            }}
+            onMouseEnter={(e) => {
+              if (activeTab !== 'INBOUND_CALLS') {
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (activeTab !== 'INBOUND_CALLS') {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+              }
+            }}
+          >
+            Inbound Calls
+          </button>
         </div>
       </div>
 
@@ -288,6 +335,11 @@ export const CampaignsView: React.FC<CampaignsViewProps> = ({ onTitleChange, onV
           renderSummaryView(CampaignCommunicationType.VOICE)}
         {activeTab === CampaignCommunicationType.SMS &&
           renderSummaryView(CampaignCommunicationType.SMS)}
+        {activeTab === 'INBOUND_CALLS' && (
+          <div className="text-center py-5">
+            <p className="text-muted">Inbound Calls content coming soon</p>
+          </div>
+        )}
       </div>
     </div>
   );
