@@ -209,8 +209,7 @@ export default function JobApply({ job, setEncourageModal }) {
         <div className="ort-btn mt-lg-4 mt-0">
           <button type="button" className="btn theme-primary-btn" onClick={onApplyClick}>
             {' '}
-            {t('APPLY_NOW')}
-            <ArrowRight />
+            {t('APPLY_NOW')} <ArrowRight className="ms-2" />
           </button>
         </div>
       )}

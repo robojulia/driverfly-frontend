@@ -68,7 +68,7 @@ export const EmbedJobsModal: React.FC<EmbedJobsModalProps> = ({ show, onClose })
           variant="theme-general-btn"
           onClick={onClose}
         >
-          <XLg /> {t('CLOSE')}
+          <XLg className="me-2" /> {t('CLOSE')}
         </Button>
       </Modal.Header>
 

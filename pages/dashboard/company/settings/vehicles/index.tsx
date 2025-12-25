@@ -281,14 +281,14 @@ export default function VehicleList() {
                 {hasPermission('CanUpdateVehicle') && (
                   <Button variant="secondary" size="sm" onClick={() => onEditClick(v.id)}>
                     <div className="d-flex align-items-center gap-1">
-                      <PenFill /> {t('EDIT')}
+                      <PenFill className="me-2" /> {t('EDIT')}
                     </div>
                   </Button>
                 )}
                 {hasPermission('CanDeleteVehicle') && (
                   <Button variant="danger" size="sm" onClick={() => onDeleteClick(v)}>
                     <div className="d-flex align-items-center gap-1">
-                      <TrashFill /> {t('DELETE')}
+                      <TrashFill className="me-2" /> {t('DELETE')}
                     </div>
                   </Button>
                 )}

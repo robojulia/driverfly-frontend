@@ -59,7 +59,7 @@ export default function ViewUser({ id }) {
             actions={
                 (<ButtonGroup>
                     <Button type="button" onClick={onEditClick}>
-                        <Pencil /> {t("EDIT")}
+                        <Pencil className="me-2" /> {t("EDIT")}
                     </Button>
                 </ButtonGroup>
                 )

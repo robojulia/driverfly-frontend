@@ -74,7 +74,7 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
   };
 
   return (
-    <div className={`${className}`} style={{ userSelect: 'none' }}>
+    <div className={`${className}`}>
       <style>{`
         .job-overview-card .card-header {
           pointer-events: none;
@@ -90,8 +90,22 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
             <ViewCard title="basic_details">
             <DisplayField label="title" value={job.title} required />
             <DisplayField
-              label="location"
-              value={job.location ? buildAddress(job.location) : null}
+              label="Street"
+              value={job.location?.street}
+            />
+            <DisplayField
+              label="City"
+              value={job.location?.city}
+              required
+            />
+            <DisplayField
+              label="State"
+              value={job.location?.state}
+              required
+            />
+            <DisplayField
+              label="Zip Code"
+              value={job.location?.zip_code}
               required
             />
             <DisplayField

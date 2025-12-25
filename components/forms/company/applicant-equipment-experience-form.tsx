@@ -77,17 +77,19 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
         if (initialized && entity?.id) return;
         
         if (!!entity?.id) {
-            form.setValues(
-                {
+            form.resetForm({
+                values: {
                     ...entity,
-                });
+                }
+            });
             setInitialized(true);
         } else {
-            await form.setValues(
-                {
+            await form.resetForm({
+                values: {
                     ...new ApplicantEntity(),
                     type: ApplicantType.COMPANY,
-                });
+                }
+            });
         }
     }, [entity?.id, initialized]);
 
@@ -105,6 +107,18 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
                 return formRef.current.errors;
             };
 
+            // Register dirty state function
+            (window as any).__applicantFormDirty = (window as any).__applicantFormDirty || {};
+            (window as any).__applicantFormDirty['equipment'] = () => {
+                return formRef.current.dirty;
+            };
+
+            // Register reset dirty function
+            (window as any).__applicantFormResetDirty = (window as any).__applicantFormResetDirty || {};
+            (window as any).__applicantFormResetDirty['equipment'] = () => {
+                formRef.current.resetForm({ values: formRef.current.values });
+            };
+
             (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
             (window as any).__applicantFormRegistry['equipment'] = () => {
                 console.log('EquipmentForm getter called');
@@ -120,6 +134,8 @@ export function ApplicantEquipmentExperienceForm(props: ApplicantEquipmentExperi
         return () => {
             if (typeof window !== 'undefined') {
                 delete (window as any).__applicantFormValidation?.['equipment'];
+                delete (window as any).__applicantFormDirty?.['equipment'];
+                delete (window as any).__applicantFormResetDirty?.['equipment'];
                 delete (window as any).__applicantFormRegistry?.['equipment'];
             }
         };

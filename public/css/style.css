@@ -2352,6 +2352,13 @@ p {
   background: #1d4354 !important;
   color: #fff;
   transition: all ease-in-out 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+  line-height: 45px;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .custom-trucker-review-btn:hover {

@@ -1,12 +1,13 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useCallback, useMemo, useState, useRef } from 'react';
+import { useCallback, useMemo, useState, useRef, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import FullLayout from '../../../../../components/dashboard/layouts/layout/full-layout';
 import { EditApplicantFormNew } from '../../../../../components/forms/company/edit-applicant-form-new';
 import ChildPageLayout from '../../../../../components/layouts/page/child-page-layout';
 import { useTranslation } from '../../../../../hooks/use-translation';
+import { useUnsavedChangesWarning } from '../../../../../hooks/use-unsaved-changes-warning';
 import { ApplicantEntity } from '../../../../../models/applicant/applicant.entity';
 import { ApplicantSuggestedJobEntity } from '../../../../../models/applicant/applicant-suggested-job.entity';
 import { useEffectAsync } from '../../../../../utils/react';
@@ -29,6 +30,7 @@ export default function EditApplicant({ id }) {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [applicantSuggestedJobs, setApplicantSuggestedJobs] = useState<ApplicantSuggestedJobEntity[]>([]);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false);
 
   useEffectAsync(async () => {
     if (id) {
@@ -53,6 +55,35 @@ export default function EditApplicant({ id }) {
       goBack();
     }
   }, [id, refetchApplicant]);
+
+  // Check if any registered form has unsaved changes
+  useEffect(() => {
+    const checkDirtyState = () => {
+      const dirtyRegistry = (window as any).__applicantFormDirty || {};
+      const isDirty = Object.keys(dirtyRegistry).some((formId) => {
+        const getDirtyFn = dirtyRegistry[formId];
+        if (getDirtyFn && typeof getDirtyFn === 'function') {
+          return getDirtyFn();
+        }
+        return false;
+      });
+      setHasUnsavedChanges(isDirty);
+    };
+
+    // Check immediately
+    checkDirtyState();
+
+    // Poll for changes every 500ms
+    const interval = setInterval(checkDirtyState, 500);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Warn user about unsaved changes when navigating away
+  const unsavedChangesWarning = useUnsavedChangesWarning({
+    isDirty: hasUnsavedChanges,
+    shouldWarn: !isSaving && !isSubmitting,
+  });
 
   // No page refresh after save; forms show their own success/failure notifications
 
@@ -172,6 +203,16 @@ export default function EditApplicant({ id }) {
       toast.dismiss();
       toast.success(t('Applicant Updated Successfully') || 'Changes saved');
 
+      // Reset dirty state for all forms after successful save
+      const dirtyRegistry = (window as any).__applicantFormDirty || {};
+      Object.keys(dirtyRegistry).forEach((formId) => {
+        const resetDirtyFn = (window as any).__applicantFormResetDirty?.[formId];
+        if (resetDirtyFn && typeof resetDirtyFn === 'function') {
+          resetDirtyFn();
+        }
+      });
+      setHasUnsavedChanges(false);
+
       // Refetch to get updated data
       setRefetchApplicant(!refetchApplicant);
 
@@ -185,6 +226,7 @@ export default function EditApplicant({ id }) {
 
   return (
     <>
+      {unsavedChangesWarning}
       {/* Fixed Update Button - stays in upper right as user scrolls */}
       <div
         style={{

@@ -18,6 +18,7 @@ import {
 import { toast } from 'react-toastify';
 import { DeleteButton } from '../buttons/delete-button';
 import { ReactivateJobButton } from '../jobs/reactivate-job';
+import { ExportToIndeedButton } from '../jobs/ExportToIndeedButton';
 import { JobAICampaigns } from './JobAICampaigns';
 import { EligibilityOverview } from './EligibilityOverview';
 import { JobDetailsOverview } from './JobDetailsOverview';
@@ -358,6 +359,11 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
                 <BoxArrowUpRight className="me-1" />
                 View Job Posting
               </Button>
+              <ExportToIndeedButton
+                job={job}
+                mode="single"
+                className="me-2"
+              />
               <ReactivateJobButton
                 variant="outline-success"
                 job={job}
@@ -370,7 +376,7 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
               {can.delete && <DeleteButton onDelete={handleDeleteClick} />}
               {can.update && (
                 <Button type="button" onClick={handleEditClick}>
-                  <Pencil /> {t('EDIT')}
+                  <Pencil className="me-2" /> {t('EDIT')}
                 </Button>
               )}
             </div>

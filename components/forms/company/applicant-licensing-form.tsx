@@ -70,7 +70,7 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
   // Load form values once on initial mount to prevent overwriting user changes
   useEffect(() => {
     if (!!entity?.id && !initialized) {
-      form.setValues({ ...entity });
+      form.resetForm({ values: { ...entity } });
       setInitialized(true);
     }
   }, [entity?.id, initialized]);
@@ -107,6 +107,18 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
         return formRef.current.errors;
       };
 
+      // Register dirty state function
+      (window as any).__applicantFormDirty = (window as any).__applicantFormDirty || {};
+      (window as any).__applicantFormDirty['licensing'] = () => {
+        return formRef.current.dirty;
+      };
+
+      // Register reset dirty function
+      (window as any).__applicantFormResetDirty = (window as any).__applicantFormResetDirty || {};
+      (window as any).__applicantFormResetDirty['licensing'] = () => {
+        formRef.current.resetForm({ values: formRef.current.values });
+      };
+
       (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
       (window as any).__applicantFormRegistry['licensing'] = () => {
         console.log('LicensingForm getter called, license_number:', formRef.current.values.license_number);
@@ -133,6 +145,8 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
     return () => {
       if (typeof window !== 'undefined') {
         delete (window as any).__applicantFormValidation?.['licensing'];
+        delete (window as any).__applicantFormDirty?.['licensing'];
+        delete (window as any).__applicantFormResetDirty?.['licensing'];
         delete (window as any).__applicantFormRegistry?.['licensing'];
       }
     };

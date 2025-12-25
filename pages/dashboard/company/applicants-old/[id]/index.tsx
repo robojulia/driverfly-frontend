@@ -228,7 +228,7 @@ export default function ViewApplicant({ id }) {
                         onClick={onEditClick}
                         disabled={Boolean(applicant?.is_hired)}
                       >
-                        <Pencil /> {t('EDIT')}
+                        <Pencil className="me-2" /> {t('EDIT')}
                       </Button>
                     </div>
                   </OverlayTrigger>
@@ -253,7 +253,7 @@ export default function ViewApplicant({ id }) {
                     </Button>
                   )} */}
                   {/* <Button type="button" onClick={onEditClick}>
-                    <Pencil /> {t("EDIT")}
+                    <Pencil className="me-2" /> {t("EDIT")}
                   </Button> */}
                   {/* </ButtonGroup> */}
                 </div>

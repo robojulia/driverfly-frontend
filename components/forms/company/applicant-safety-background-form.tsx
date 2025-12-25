@@ -92,18 +92,20 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
                 extras = [...extras];
             }
 
-            form.setValues(
-                {
+            form.resetForm({
+                values: {
                     ...entity,
                     extras,
-                });
+                }
+            });
             setInitialized(true);
         } else {
-            await form.setValues(
-                {
+            await form.resetForm({
+                values: {
                     ...new ApplicantEntity(),
                     type: ApplicantType.COMPANY
-                });
+                }
+            });
         }
 
     }, [entity?.id, initialized]);
@@ -120,6 +122,18 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
             (window as any).__applicantFormValidation['safety'] = () => {
                 // Return current validation errors from formik
                 return formRef.current.errors;
+            };
+
+            // Register dirty state function
+            (window as any).__applicantFormDirty = (window as any).__applicantFormDirty || {};
+            (window as any).__applicantFormDirty['safety'] = () => {
+                return formRef.current.dirty;
+            };
+
+            // Register reset dirty function
+            (window as any).__applicantFormResetDirty = (window as any).__applicantFormResetDirty || {};
+            (window as any).__applicantFormResetDirty['safety'] = () => {
+                formRef.current.resetForm({ values: formRef.current.values });
             };
 
             (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
@@ -144,6 +158,8 @@ export function ApplicantSafetyBackgroundForm(props: ApplicantSafetyBackgroundFo
         return () => {
             if (typeof window !== 'undefined') {
                 delete (window as any).__applicantFormValidation?.['safety'];
+                delete (window as any).__applicantFormDirty?.['safety'];
+                delete (window as any).__applicantFormResetDirty?.['safety'];
                 delete (window as any).__applicantFormRegistry?.['safety'];
             }
         };

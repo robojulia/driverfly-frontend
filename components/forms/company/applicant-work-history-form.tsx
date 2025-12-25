@@ -117,10 +117,12 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
       const dutiesExtra = (entity?.extras || []).find((e: any) => e.type === ApplicantExtrasEnum.JOB_DUTIES);
       const dutiesArray: Array<string | null> = Array.isArray(dutiesExtra?.value) ? dutiesExtra.value : [];
       const employersWithDuties = (entity?.employers || []).map((e, idx) => ({ ...e, job_duties: dutiesArray[idx] || '' }));
-      
-      form.setValues({
-        ...entity,
-        employers: employersWithDuties,
+
+      form.resetForm({
+        values: {
+          ...entity,
+          employers: employersWithDuties,
+        }
       });
       
       // Clear the flag after loading
@@ -149,6 +151,18 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
         return formRef.current.errors;
       };
 
+      // Register dirty state function
+      (window as any).__applicantFormDirty = (window as any).__applicantFormDirty || {};
+      (window as any).__applicantFormDirty['work-history'] = () => {
+        return formRef.current.dirty;
+      };
+
+      // Register reset dirty function
+      (window as any).__applicantFormResetDirty = (window as any).__applicantFormResetDirty || {};
+      (window as any).__applicantFormResetDirty['work-history'] = () => {
+        formRef.current.resetForm({ values: formRef.current.values });
+      };
+
       (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
       (window as any).__applicantFormRegistry['work-history'] = () => {
         // Prepare job duties in extras
@@ -174,6 +188,8 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
     return () => {
       if (typeof window !== 'undefined') {
         delete (window as any).__applicantFormValidation?.['work-history'];
+        delete (window as any).__applicantFormDirty?.['work-history'];
+        delete (window as any).__applicantFormResetDirty?.['work-history'];
         delete (window as any).__applicantFormRegistry?.['work-history'];
       }
     };

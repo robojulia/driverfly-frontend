@@ -65,16 +65,18 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
 
     useEffectAsync(async () => {
         if (!!entity?.id) {
-            form.setValues(
-                {
+            form.resetForm({
+                values: {
                     ...entity
-                });
+                }
+            });
         } else {
-            await form.setValues(
-                {
+            await form.resetForm({
+                values: {
                     ...new ApplicantEntity(),
                     type: ApplicantType.COMPANY,
-                });
+                }
+            });
         }
     }, [entity]);
 
@@ -93,6 +95,18 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
             (window as any).__applicantFormValidation['equipment-owned'] = () => {
                 // Return current validation errors from formik
                 return formRef.current.errors;
+            };
+
+            // Register dirty state function
+            (window as any).__applicantFormDirty = (window as any).__applicantFormDirty || {};
+            (window as any).__applicantFormDirty['equipment-owned'] = () => {
+                return formRef.current.dirty;
+            };
+
+            // Register reset dirty function
+            (window as any).__applicantFormResetDirty = (window as any).__applicantFormResetDirty || {};
+            (window as any).__applicantFormResetDirty['equipment-owned'] = () => {
+                formRef.current.resetForm({ values: formRef.current.values });
             };
 
             (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
@@ -117,6 +131,8 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
         return () => {
             if (typeof window !== 'undefined') {
                 delete (window as any).__applicantFormValidation?.['equipment-owned'];
+                delete (window as any).__applicantFormDirty?.['equipment-owned'];
+                delete (window as any).__applicantFormResetDirty?.['equipment-owned'];
                 delete (window as any).__applicantFormRegistry?.['equipment-owned'];
             }
         };

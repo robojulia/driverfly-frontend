@@ -58,16 +58,18 @@ export function ApplicantAlreadyWorkedForm(props: ApplicantAlreadyWorkedFormProp
 
     useEffectAsync(async () => {
         if (!!entity?.id) {
-            form.setValues(
-                {
+            form.resetForm({
+                values: {
                     ...entity,
-                });
+                }
+            });
         } else {
-            await form.setValues(
-                {
+            await form.resetForm({
+                values: {
                     ...new ApplicantEntity(),
                     type: ApplicantType.COMPANY,
-                });
+                }
+            });
         }
 
     }, [entity]);
@@ -88,6 +90,18 @@ export function ApplicantAlreadyWorkedForm(props: ApplicantAlreadyWorkedFormProp
                 return formRef.current.errors;
             };
 
+            // Register dirty state function
+            (window as any).__applicantFormDirty = (window as any).__applicantFormDirty || {};
+            (window as any).__applicantFormDirty['already-worked'] = () => {
+                return formRef.current.dirty;
+            };
+
+            // Register reset dirty function
+            (window as any).__applicantFormResetDirty = (window as any).__applicantFormResetDirty || {};
+            (window as any).__applicantFormResetDirty['already-worked'] = () => {
+                formRef.current.resetForm({ values: formRef.current.values });
+            };
+
             (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
             (window as any).__applicantFormRegistry['already-worked'] = () => ({
                 already_applied_to_company: formRef.current.values.already_applied_to_company,
@@ -101,6 +115,8 @@ export function ApplicantAlreadyWorkedForm(props: ApplicantAlreadyWorkedFormProp
         return () => {
             if (typeof window !== 'undefined') {
                 delete (window as any).__applicantFormValidation?.['already-worked'];
+                delete (window as any).__applicantFormDirty?.['already-worked'];
+                delete (window as any).__applicantFormResetDirty?.['already-worked'];
                 delete (window as any).__applicantFormRegistry?.['already-worked'];
             }
         };

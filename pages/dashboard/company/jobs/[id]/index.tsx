@@ -34,6 +34,23 @@ export default function ViewJob({ id }) {
           return;
         }
 
+        // Fetch complete location data if location exists
+        if (data.location && data.location.id) {
+          try {
+            const LocationApi = (await import('../../../../api/location')).default;
+            const locationApi = new LocationApi();
+            const fullLocation = await locationApi.getById(data.location.id);
+
+            if (fullLocation) {
+              data.location = fullLocation;
+              console.log('Loaded complete location data:', fullLocation);
+            }
+          } catch (locError) {
+            console.error('Failed to load complete location data:', locError);
+            // Continue with partial location data
+          }
+        }
+
         setJob(data);
       } catch (error) {
         toast.error(t('UNABLE_TO_FIND_{name}', { name: 'JOB' }, { translateProps: true }));

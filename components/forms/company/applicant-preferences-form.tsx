@@ -70,12 +70,14 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
   // (backend doesn't return routes/preferred_location with withRelations, which would reset form to empty values)
   useEffect(() => {
     if (!!entity?.id && !initialized) {
-      form.setValues({
-        ...entity,
-        routes: entity.routes || [],
-        preferred_location: entity.preferred_location || [],
-        other_requirements: entity.other_requirements || [],
-        other_requirements_other: entity.other_requirements_other || ''
+      form.resetForm({
+        values: {
+          ...entity,
+          routes: entity.routes || [],
+          preferred_location: entity.preferred_location || [],
+          other_requirements: entity.other_requirements || [],
+          other_requirements_other: entity.other_requirements_other || ''
+        }
       });
       setInitialized(true);
     }
@@ -95,6 +97,18 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
         return formRef.current.errors;
       };
 
+      // Register dirty state function
+      (window as any).__applicantFormDirty = (window as any).__applicantFormDirty || {};
+      (window as any).__applicantFormDirty['preferences'] = () => {
+        return formRef.current.dirty;
+      };
+
+      // Register reset dirty function
+      (window as any).__applicantFormResetDirty = (window as any).__applicantFormResetDirty || {};
+      (window as any).__applicantFormResetDirty['preferences'] = () => {
+        formRef.current.resetForm({ values: formRef.current.values });
+      };
+
       (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
       (window as any).__applicantFormRegistry['preferences'] = () => {
         console.log('PreferencesForm getter called, current routes:', formRef.current.values.routes);
@@ -111,6 +125,8 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
     return () => {
       if (typeof window !== 'undefined') {
         delete (window as any).__applicantFormValidation?.['preferences'];
+        delete (window as any).__applicantFormDirty?.['preferences'];
+        delete (window as any).__applicantFormResetDirty?.['preferences'];
         delete (window as any).__applicantFormRegistry?.['preferences'];
       }
     };

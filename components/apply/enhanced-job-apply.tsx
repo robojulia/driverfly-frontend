@@ -626,8 +626,7 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
       ) : (
         <div className="ort-btn mt-lg-4 mt-0">
           <button type="button" className="btn theme-primary-btn w-100" onClick={onApplyClick}>
-            {t('APPLY_NOW')}
-            <ArrowRight />
+            {t('APPLY_NOW')} <ArrowRight className="ms-2" />
           </button>
         </div>
       )}
@@ -1105,9 +1104,13 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
                       name="is_owner_operator"
                       label="Are you an owner operator?"
                       checked={apply_form.values.is_owner_operator}
-                      onChange={(e) =>
-                        apply_form.setFieldValue('is_owner_operator', e.target.checked)
-                      }
+                      onChange={(e) => {
+                        apply_form.setFieldValue('is_owner_operator', e.target.checked);
+                        if (!e.target.checked) {
+                          apply_form.setFieldValue('owner_operator_company_name', '');
+                          apply_form.setFieldValue('owner_operator_dot_number', '');
+                        }
+                      }}
                       error={getErrorString(
                         apply_form.touched.is_owner_operator && apply_form.errors.is_owner_operator
                       )}
@@ -1115,12 +1118,12 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
                   </Col>
                 </Row>
 
-                {/* Owner Operator Company and DOT Number */}
+                {/* Owner Operator DBA Name and DOT Number */}
                 {apply_form.values.is_owner_operator && (
                   <Row className="mt-3">
                     <Col md={6}>
                       <Input
-                        label="Company Name (Optional)"
+                        label="DBA Name (Optional)"
                         name="owner_operator_company_name"
                         type="text"
                         value={apply_form.values.owner_operator_company_name || ''}

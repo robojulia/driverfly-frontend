@@ -128,8 +128,7 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                     onClick={handleQuickApplyClick}
                   >
                     {' '}
-                    {t('QUICK_APPLY')}
-                    <ArrowRight />
+                    {t('QUICK_APPLY')} <ArrowRight className="ms-2" />
                   </button>
                 </Link>
               </div>

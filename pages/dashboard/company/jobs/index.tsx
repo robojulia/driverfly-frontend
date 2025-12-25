@@ -33,6 +33,7 @@ import { GenericTable, TableColumn } from '../../../../components/common/Generic
 import { getDataTableColumnKey } from '../../../../utils/table-migration';
 import { EmbedJobsModal } from '../../../../components/jobs/EmbedJobsModal';
 import { ConfirmationModal } from '../../../../components/shared/confirmation-modal';
+import { ExportToIndeedButton } from '../../../../components/jobs/ExportToIndeedButton';
 
 enum ViewModeType {
   ACTIVE = 'ACTIVE',
@@ -333,8 +334,8 @@ export default function JobListing() {
     fetchJobOptions();
   }, [jobs, fetchJobOptions]);
 
-  const onCloneClick = () => {
-    setShowCloneModal(true);
+  const onCloneClick = (job: JobEntity) => {
+    router.push(`${router.pathname}/create?clone=${job.id}`);
   };
 
   const onCloseCloneModal = () => {
@@ -506,6 +507,12 @@ export default function JobListing() {
         label: 'EDIT',
         hide: !can.editJob,
       },
+      {
+        onClick: (e) => onCloneClick(job),
+        icon: Files,
+        label: 'CLONE',
+        hide: false,
+      },
     ];
 
     // Only show reactivate button if job has an expiry date AND is expired
@@ -537,14 +544,18 @@ export default function JobListing() {
             <Col>
               <ButtonGroup size="sm">
                 <Button variant="primary" onClick={onAddClick}>
-                  <Plus /> {t('CREATE')}
-                </Button>
-                <Button variant="" className="theme-general-btn" onClick={onCloneClick}>
-                  <Files /> {t('CLONE')}
+                  <Plus className="me-2" /> {t('CREATE')}
                 </Button>
                 <Button variant="" className="theme-general-btn" onClick={onEmbedClick}>
-                  <Code /> {t('EMBED')}
+                  <Code className="me-2" /> {t('EMBED')}
                 </Button>
+                <ExportToIndeedButton
+                  jobs={jobs}
+                  mode="bulk"
+                  companyId={user?.company?.id}
+                  className="theme-general-btn"
+                  size="sm"
+                />
               </ButtonGroup>
             </Col>
           </Row>

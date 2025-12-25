@@ -1373,7 +1373,7 @@
   "JOB_DESIGNATED_AS_SATEFY_SENSITIVE": "Job designated as a safety-sensitive function in any DOT- regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40",
   "MUST_BE_A_VALID_URL": "Must be a valid url (make sure your url starts with http:// or https:// and ends in .com, .org, .co etc)",
   "WEBSITE": "Website",
-  "WEBSITE_": "WEBSITE",
+  "WEBSITE_": "Website",
   "HEADQUATERS": "Headquarters",
   "ADD_HEADQUATERS_LOCATION": "Add Headquaters Location",
   "COMPANY_APPLICATION_LINK": "Company Application Link",

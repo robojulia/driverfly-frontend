@@ -45,6 +45,18 @@ export function ApplicantEmergencyContactForm(props: ApplicantEmergencyContactFo
         return formRef.current.errors;
       };
 
+      // Register dirty state function
+      (window as any).__applicantFormDirty = (window as any).__applicantFormDirty || {};
+      (window as any).__applicantFormDirty['emergency-contact'] = () => {
+        return formRef.current.dirty;
+      };
+
+      // Register reset dirty function
+      (window as any).__applicantFormResetDirty = (window as any).__applicantFormResetDirty || {};
+      (window as any).__applicantFormResetDirty['emergency-contact'] = () => {
+        formRef.current.resetForm({ values: formRef.current.values });
+      };
+
       (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
       (window as any).__applicantFormRegistry['emergency-contact'] = () => {
         console.log('EmergencyContactForm getter called');
@@ -60,6 +72,8 @@ export function ApplicantEmergencyContactForm(props: ApplicantEmergencyContactFo
     return () => {
       if (typeof window !== 'undefined') {
         delete (window as any).__applicantFormValidation?.['emergency-contact'];
+        delete (window as any).__applicantFormDirty?.['emergency-contact'];
+        delete (window as any).__applicantFormResetDirty?.['emergency-contact'];
         delete (window as any).__applicantFormRegistry?.['emergency-contact'];
       }
     };

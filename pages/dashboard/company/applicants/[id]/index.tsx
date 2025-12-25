@@ -275,7 +275,7 @@ export default function ViewApplicant({ id }) {
                   borderRadius: '0.375rem'
                 }}
               >
-                <Pencil /> {t('UPDATE')}
+                <Pencil className="me-2" /> {t('UPDATE')}
               </Button>
             </div>
           </OverlayTrigger>
@@ -293,7 +293,7 @@ export default function ViewApplicant({ id }) {
               overlay={messageTooltip}
             >
               <Button type="button" variant="info" onClick={scrollToMessages}>
-                <ChatDots /> {t('MESSAGE')}
+                <ChatDots className="me-2" /> {t('MESSAGE')}
               </Button>
             </OverlayTrigger>
             {canEdit && (
@@ -304,7 +304,7 @@ export default function ViewApplicant({ id }) {
               >
                 <div>
                   <Button type="button" onClick={onEditClick} disabled={Boolean(applicant?.is_hired)}>
-                    <Pencil /> {t('EDIT')}
+                    <Pencil className="me-2" /> {t('EDIT')}
                   </Button>
                 </div>
               </OverlayTrigger>

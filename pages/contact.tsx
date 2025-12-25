@@ -140,7 +140,7 @@ export default function Contact() {
                         type="submit"
                         className="btn contact-submit-btn float-right py-3 px-5 mb-4"
                       >
-                        {t("submit")} <ArrowRight />
+                        {t("submit")} <ArrowRight className="ms-2" />
                       </button>
                     </form>
                   </Col>

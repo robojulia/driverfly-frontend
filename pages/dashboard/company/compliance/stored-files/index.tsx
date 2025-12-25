@@ -364,7 +364,7 @@ export default function StoredFiles() {
       desciption="STORED_FILES_DESC"
       actions={
         <Button variant="primary" onClick={openFileUploadModel}>
-          <Plus /> {t("UPLOAD_NEW_FILE")}
+          <Plus className="me-2" /> {t("UPLOAD_NEW_FILE")}
         </Button>
       }
     >

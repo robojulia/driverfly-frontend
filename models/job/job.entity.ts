@@ -63,8 +63,8 @@ export class JobEntity {
   vehicles?: VehicleEntity[] = [];
   cdl_class?: DriverLicenseType;
   min_years_experience?: number;
-  min_experience_in_months?: number;
-  min_experience_in_years?: number;
+  min_experience_in_months?: number = 0;
+  min_experience_in_years?: number = 0;
   min_degree?: EducationLevel;
   required_skills?: JobSkillEntity[] = [];
   required_skills_other?: string;

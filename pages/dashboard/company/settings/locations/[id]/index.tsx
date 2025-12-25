@@ -85,7 +85,7 @@ export default function ViewLocation({ id }) {
                     }
                     {canEdit &&
                         <Button type="button" onClick={onEditClick}>
-                            <Pencil /> {t("EDIT")}
+                            <Pencil className="me-2" /> {t("EDIT")}
                         </Button>
                     }
                 </ButtonGroup>

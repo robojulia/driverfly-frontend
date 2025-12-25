@@ -132,21 +132,25 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
     };
 
     if (!!entity?.id) {
-      form.setValues({
-        ...entity,
-        extras,
-        meta,
-        referralSourceId: entity?.referralSource?.id || entity?.referralSourceId
-      } as any);
+      form.resetForm({
+        values: {
+          ...entity,
+          extras,
+          meta,
+          referralSourceId: entity?.referralSource?.id || entity?.referralSourceId
+        } as any
+      });
       setInitialized(true);
     } else {
-      await form.setValues({
-        ...new ApplicantEntity(),
-        type: ApplicantType.COMPANY,
-        entry_mode: ApplicantEntryMode.MANUALLY_ADDED,
-        extras,
-        meta
-      } as any);
+      await form.resetForm({
+        values: {
+          ...new ApplicantEntity(),
+          type: ApplicantType.COMPANY,
+          entry_mode: ApplicantEntryMode.MANUALLY_ADDED,
+          extras,
+          meta
+        } as any
+      });
     }
   }, [entity?.id, initialized]);
 
@@ -179,6 +183,18 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
       (window as any).__applicantFormValidation['basic-details'] = () => {
         // Return current validation errors from formik
         return formRef.current.errors;
+      };
+
+      // Register dirty state function
+      (window as any).__applicantFormDirty = (window as any).__applicantFormDirty || {};
+      (window as any).__applicantFormDirty['basic-details'] = () => {
+        return formRef.current.dirty;
+      };
+
+      // Register reset dirty function
+      (window as any).__applicantFormResetDirty = (window as any).__applicantFormResetDirty || {};
+      (window as any).__applicantFormResetDirty['basic-details'] = () => {
+        formRef.current.resetForm({ values: formRef.current.values });
       };
 
       (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
@@ -266,6 +282,8 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
     return () => {
       if (typeof window !== 'undefined') {
         delete (window as any).__applicantFormValidation?.['basic-details'];
+        delete (window as any).__applicantFormDirty?.['basic-details'];
+        delete (window as any).__applicantFormResetDirty?.['basic-details'];
         delete (window as any).__applicantFormRegistry?.['basic-details'];
       }
     };

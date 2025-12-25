@@ -114,7 +114,7 @@ export default function ViewReferral({ id, host }) {
                     {
                         entity.id &&
                         <Button type="button" onClick={onEditClick}>
-                            <Pencil />{' '}{t("EDIT")}
+                            <Pencil className="me-2" /> {t("EDIT")}
                         </Button>
                     }
                 </ButtonGroup>

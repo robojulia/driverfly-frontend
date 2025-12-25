@@ -73,7 +73,12 @@ export function JobForm(props: JobFormProps) {
   });
 
   const form = useFormik({
-    initialValues: new JobEntity(),
+    initialValues: {
+      ...new JobEntity(),
+      team_drivers: JobTeamDriver.NO_TEAM_DRIVER,
+      min_experience_in_months: 0,
+      min_experience_in_years: 0,
+    },
     validationSchema: JobEntity.yupSchema(),
     validateOnChange: true,
     validateOnBlur: true,
@@ -92,6 +97,9 @@ export function JobForm(props: JobFormProps) {
       pay_method: entity?.pay_method,
       min_weekly_pay: Boolean(entity?.min_weekly_pay) ? entity.min_weekly_pay : null,
       max_weekly_pay: Boolean(entity?.max_weekly_pay) ? entity.max_weekly_pay : null,
+      team_drivers: entity?.team_drivers ?? JobTeamDriver.NO_TEAM_DRIVER,
+      min_experience_in_months: entity?.min_experience_in_months ?? 0,
+      min_experience_in_years: entity?.min_experience_in_years ?? 0,
     });
   }, [entity]);
 

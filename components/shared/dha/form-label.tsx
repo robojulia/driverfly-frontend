@@ -43,6 +43,7 @@ export const FormLabel: React.FC<FormLabelProps> = ({
   const baseStyles: React.CSSProperties = {
     marginBottom: '0.5rem',
     display: 'block',
+    textAlign: 'left',
     ...getVariantStyles(variant),
   };
 

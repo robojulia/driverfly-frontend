@@ -94,7 +94,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
       <ModalHeader toggle={onClose}>{title}</ModalHeader>
       <ModalBody>
         <div className="d-flex align-items-start mb-3">
-          <div className={`${getIconBackgroundClass()} rounded-circle p-3 me-3 flex-shrink-0`}>
+          <div className={`${getIconBackgroundClass()} rounded-circle p-3 me-3 flex-shrink-0 d-flex align-items-center justify-content-center`}>
             {getIconComponent()}
           </div>
           <div className="flex-grow-1">

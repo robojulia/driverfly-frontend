@@ -104,8 +104,7 @@ export const EligibilityBanner: React.FC<EligibilityBannerProps> = ({ jobId, cla
               </div>
             </div>
             <div className={styles.eligibilityBannerAction}>
-              View applicants
-              <ArrowRight />
+              View applicants <ArrowRight className="ms-2" />
             </div>
           </div>
         </a>
