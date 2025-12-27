@@ -62,11 +62,17 @@ export function ApplicantApplicationChecklistForm(
       let dac: ApplicantDacEntity;
       const newValue = !applicatDacItem?.value;
 
+      // When checking the box, default to today's date if no date exists
+      const dateValue = newValue && !applicatDacItem?.details
+        ? new Date().toISOString().split('T')[0]
+        : applicatDacItem?.details || null;
+
       if (applicatDacItem?.id) {
         // Update existing item
         dac = await applicantApi.dac.update(entity.id, applicatDacItem.id, {
           ...applicatDacItem,
           value: newValue,
+          details: dateValue,
         });
         entity.dac = entity.dac.filter((v) => v.id != dac.id);
       } else {
@@ -74,11 +80,34 @@ export function ApplicantApplicationChecklistForm(
         dac = await applicantApi.dac.create(entity.id, {
           type,
           value: newValue,
+          details: dateValue,
         });
       }
 
       entity.dac.push(dac);
       toast.success(t("Successfully updated checklist"));
+      setEntity?.({ ...entity });
+    } catch (e) {
+      globalAjaxExceptionHandler(e, { toast: toast, t: t });
+    }
+  };
+
+  const handleDateChange = async (
+    type: string,
+    applicatDacItem: ApplicantDacEntity,
+    newDate: string
+  ) => {
+    try {
+      if (!applicatDacItem?.id) return;
+
+      const dac = await applicantApi.dac.update(entity.id, applicatDacItem.id, {
+        ...applicatDacItem,
+        details: newDate,
+      });
+
+      entity.dac = entity.dac.filter((v) => v.id != dac.id);
+      entity.dac.push(dac);
+      toast.success(t("Successfully updated date"));
       setEntity?.({ ...entity });
     } catch (e) {
       globalAjaxExceptionHandler(e, { toast: toast, t: t });
@@ -130,7 +159,7 @@ export function ApplicantApplicationChecklistForm(
             <tr>
               <th style={{ width: "50px" }}></th>
               <th>{t("Title")}</th>
-              <th className="text-center">{t("Date Updated")}</th>
+              <th className="text-center" style={{ width: "200px" }}>{t("Date")}</th>
             </tr>
           </thead>
           <tbody>
@@ -160,8 +189,14 @@ export function ApplicantApplicationChecklistForm(
                     )}
                   </td>
                   <td className="text-center">
-                    {isChecked && applicatDacItem?.last_updated_at ? (
-                      <ShowFormattedDate date={applicatDacItem?.last_updated_at} />
+                    {isChecked ? (
+                      <Form.Control
+                        type="date"
+                        value={applicatDacItem?.details || ''}
+                        disabled={readOnly}
+                        onChange={(e) => handleDateChange(companyDacItemType, applicatDacItem, e.target.value)}
+                        style={{ maxWidth: "180px", margin: "0 auto" }}
+                      />
                     ) : (
                       <span className="text-muted font-italic">{t(`—`)}</span>
                     )}

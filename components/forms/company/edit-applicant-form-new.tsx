@@ -118,6 +118,7 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
           className={props?.className}
           setEntity={props?.setEntity}
           hideActions
+          companyAutoVoeEnabled={false}
         />
       </Row>
 

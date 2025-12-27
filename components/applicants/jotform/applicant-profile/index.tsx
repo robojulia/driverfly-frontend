@@ -3,6 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
 import { OtherRequirementType } from "../../../../enums/users/other-requirements.enum";
+import { JobEquipmentType } from "../../../../enums/jobs/job-equipment-type.enum";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { ViewApplicantDetailProps } from "../../../../types/applicant/view-application-detail-props.type";
 import ViewCard from "../../../view-details/view-card";
@@ -149,6 +150,39 @@ export default function ApplicantExtrasDetails({
 					</ViewCard>
 				</Col>
 			</Row>
+			{applicant.is_owner_operator && (
+				<Row>
+					<Col>
+						<ViewCard title="EQUIPMENT_OWNED">
+							<ViewDetails
+								default={t("NOT_ANSWERED")}
+								obj={{
+									OWNER_OPERATOR_COMPANY_NAME: applicant.owner_operator_company_name,
+									OWNER_OPERATOR_DOT_NUMBER: applicant.owner_operator_dot_number,
+								}}
+							/>
+							<ViewTable
+								type="equipment_owned"
+								headers={{
+									type: "TYPE",
+									make: "MAKE",
+									model: "MODEL",
+									year: "YEAR",
+								}}
+								items={applicant.equipment_owned?.map((v) => ({
+									type:
+										v.type == JobEquipmentType.OTHER
+											? v.type_other
+											: t(`JobEquipmentType.${v.type}`),
+									make: v.make,
+									model: v.model,
+									year: v.year,
+								}))}
+							/>
+						</ViewCard>
+					</Col>
+				</Row>
+			)}
 			<Row>
 				<Col>
 					<ViewCard title="PREFERENCES">
@@ -289,6 +323,14 @@ export default function ApplicantExtrasDetails({
 								))
 								: <>{t("PAST_EMPLOYER_NOT_FOUND")}</>
 						}
+						{applicant.employment_gap_details && (
+							<ViewDetails
+								default={t("NOT_ANSWERED")}
+								obj={{
+									EMPLOYMENT_GAP_DETAILS_LABEL: applicant.employment_gap_details,
+								}}
+							/>
+						)}
 					</ViewCard>
 				</Col>
 			</Row>

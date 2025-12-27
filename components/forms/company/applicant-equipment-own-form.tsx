@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import {
     DashCircle,
@@ -38,28 +38,9 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
         initialValues: new ApplicantEntity(),
         validationSchema: ApplicantEntity.yupSchemaApplicantEquipmentForm(),
         onSubmit: async (values) => {
-            setIsSubmitting(true)
-            try {
-                if (entity?.id) {
-                    values = await applicantApi.update(entity.id, {
-                        ...values
-                    })
-                } else {
-
-                    values = await applicantApi.create(values);
-                }
-
-                formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
-                setEntity(values);
-                setIsSubmitting(false)
-            } catch (e) {
-                setIsSubmitting(false)
-                console.error("Unable to save applicant info", e);
-                if (
-                    !globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
-                )
-                    formFailed(t, entity?.id ? "update" : "create", "APPLICANT");
-            }
+            // This form doesn't submit directly - it's submitted via the global save button
+            // The global registry handler below provides the values when needed
+            console.log('Equipment form values ready for global save:', values.equipment_owned);
         },
     });
 
@@ -111,16 +92,22 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
 
             (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
             (window as any).__applicantFormRegistry['equipment-owned'] = () => {
-                console.log('EquipmentOwnedForm getter called, equipment_owned count:', formRef.current.values.equipment_owned?.length);
+                console.log('🔧 EquipmentOwnedForm getter called');
+                console.log('  - is_owner_operator:', formRef.current.values.is_owner_operator);
+                console.log('  - equipment_owned count:', formRef.current.values.equipment_owned?.length);
+                console.log('  - equipment_owned data:', formRef.current.values.equipment_owned);
 
                 // Only return equipment_owned if the applicant is an owner operator
                 if (formRef.current.values.is_owner_operator) {
-                    return {
+                    const data = {
                         equipment_owned: formRef.current.values.equipment_owned || [],
                     };
+                    console.log('  - Returning equipment_owned:', data);
+                    return data;
                 }
 
                 // If not owner operator, return empty equipment_owned
+                console.log('  - Not owner operator, returning empty array');
                 return {
                     equipment_owned: [],
                 };
@@ -142,6 +129,7 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
         <Form
             onSubmit={form.handleSubmit}
             className={className}
+            data-form-id="equipment-owned"
         >
             <Row>
                 <Col md="12" className="p-2 mt-2">
@@ -169,8 +157,12 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
                             {form.values?.equipment_owned?.length > 0 && (
                                 <>
                                     <Row className="d-sm-none d-md-flex">
-                                        <Col md="3">
+                                        <Col md="2">
                                             <strong>{t("TYPE")}</strong>
+                                            <span className="p-0 text-danger">*</span>
+                                        </Col>
+                                        <Col md="1">
+                                            <strong>{t("QUANTITY")}</strong>
                                             <span className="p-0 text-danger">*</span>
                                         </Col>
                                         <Col md="2">
@@ -183,7 +175,7 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
                                             <strong>{t("YEAR")}</strong>
                                         </Col>
                                         <Col md="3">
-                                            <strong>{t("EQUIPMENT_IMAGE_URL")}</strong>
+                                            <strong>{t("EQUIPMENT_IMAGE")}</strong>
                                         </Col>
                                     </Row>
                                     {form.values?.equipment_owned?.map((entity, i) => (
@@ -193,13 +185,23 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
                                                     <strong>{t("TYPE")}</strong>
                                                 </Col>
                                             </Col>
-                                            <Col xs="12" md="3">
+                                            <Col xs="12" md="2">
                                                 <BaseSelect
                                                     readOnly={Boolean(props?.entity?.is_hired)}
                                                     name={`equipment_owned[${i}].type`}
                                                     placeholder="TYPE"
                                                     labelPrefix="JobEquipmentType"
                                                     enumType={JobEquipmentType}
+                                                    formik={form}
+                                                />
+                                            </Col>
+                                            <Col xs="11" md="1">
+                                                <BaseInput
+                                                    readOnly={Boolean(props?.entity?.is_hired)}
+                                                    name={`equipment_owned[${i}].quantity`}
+                                                    placeholder="QUANTITY"
+                                                    type="int"
+                                                    min="1"
                                                     formik={form}
                                                 />
                                             </Col>
@@ -231,13 +233,76 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
                                                 />
                                             </Col>
                                             <Col xs="11" md="3">
-                                                <BaseInput
-                                                    readOnly={Boolean(props?.entity?.is_hired)}
-                                                    name={`equipment_owned[${i}].image_url`}
-                                                    placeholder="EQUIPMENT_IMAGE_URL"
-                                                    type="url"
-                                                    formik={form}
-                                                />
+                                                <Form.Group>
+                                                    {!entity.image_url && (
+                                                        <Form.Control
+                                                            type="file"
+                                                            accept="image/*"
+                                                            disabled={Boolean(props?.entity?.is_hired)}
+                                                            onChange={async (e: React.ChangeEvent<HTMLInputElement>) => {
+                                                                const file = e.target.files?.[0];
+                                                                if (file) {
+                                                                    // Validate file size (max 2MB)
+                                                                    const maxSize = 2 * 1024 * 1024; // 2MB
+                                                                    if (file.size > maxSize) {
+                                                                        toast.error(t('FILE_MUST_BE_OF_{size}_{unit}', { size: 2, unit: 'MB' }));
+                                                                        e.target.value = '';
+                                                                        return;
+                                                                    }
+
+                                                                    // Read and compress image
+                                                                    const reader = new FileReader();
+                                                                    reader.onloadend = () => {
+                                                                        const img = new Image();
+                                                                        img.onload = () => {
+                                                                            // Create canvas to resize image
+                                                                            const canvas = document.createElement('canvas');
+                                                                            const MAX_WIDTH = 800;
+                                                                            const MAX_HEIGHT = 600;
+                                                                            let width = img.width;
+                                                                            let height = img.height;
+
+                                                                            if (width > height) {
+                                                                                if (width > MAX_WIDTH) {
+                                                                                    height *= MAX_WIDTH / width;
+                                                                                    width = MAX_WIDTH;
+                                                                                }
+                                                                            } else {
+                                                                                if (height > MAX_HEIGHT) {
+                                                                                    width *= MAX_HEIGHT / height;
+                                                                                    height = MAX_HEIGHT;
+                                                                                }
+                                                                            }
+
+                                                                            canvas.width = width;
+                                                                            canvas.height = height;
+                                                                            const ctx = canvas.getContext('2d');
+                                                                            ctx?.drawImage(img, 0, 0, width, height);
+
+                                                                            // Convert to base64 with compression
+                                                                            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                                                                            form.setFieldValue(`equipment_owned[${i}].image_url`, compressedBase64);
+                                                                        };
+                                                                        img.src = reader.result as string;
+                                                                    };
+                                                                    reader.readAsDataURL(file);
+                                                                }
+                                                            }}
+                                                        />
+                                                    )}
+                                                    {entity.image_url && (
+                                                        <div className="d-flex gap-2">
+                                                            <Button
+                                                                variant="danger"
+                                                                size="sm"
+                                                                onClick={() => form.setFieldValue(`equipment_owned[${i}].image_url`, null)}
+                                                            >
+                                                                {t("REMOVE")} {t("IMAGE")}
+                                                            </Button>
+                                                        </div>
+                                                    )}
+                                                    <small className="text-muted">Upload equipment image - Max 2MB (Optional)</small>
+                                                </Form.Group>
                                             </Col>
                                             <Col xs="1">
                                                 <a
@@ -285,11 +350,6 @@ export function ApplicantEquipmentOwnForm(props: ApplicantEquipmentOwnFormProps)
                                     ))}
                                 </>
                             )}
-                            <div style={{ display: "flex", justifyContent: "right" }}>
-                                <Button disabled={form.isSubmitting || isSubmitting} type="submit" className="theme-secondary-btn">
-                                    {t("UPDATE")}
-                                </Button>
-                            </div>
                         </ViewCard>
                     )}
 

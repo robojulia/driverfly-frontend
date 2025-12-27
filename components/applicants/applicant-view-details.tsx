@@ -3,6 +3,7 @@ import { JobEquipmentType } from "../../enums/jobs/job-equipment-type.enum";
 import { BooleanType } from "../../enums/jotform/boolean-type.enum";
 import { OtherRequirementType } from "../../enums/users/other-requirements.enum";
 import { LicenseRestrictions } from "../../enums/applicants/applicant-license-restrictions-type.enum";
+import { ApplicantExtras } from "../../enums/applicants/applicant-extras.enum";
 import { useTranslation } from "../../hooks/use-translation";
 import { ViewApplicantDetailProps } from "../../types/applicant/view-application-detail-props.type";
 import { calculateAge } from "../../utils/date";
@@ -64,6 +65,11 @@ export default function ViewApplicantDetail({
 
 		return restrictions;
 	};
+
+	// Get citizenship status from extras
+	const citizenshipStatus = applicant.extras?.find(
+		(ex) => ex?.type === ApplicantExtras.CITIZENSHIP_STATUS
+	)?.value;
 	// const currentStatus = !!hideCurrentStatus
 	// 	? {}
 	// 	: {
@@ -125,6 +131,9 @@ export default function ViewApplicantDetail({
 									default: t("UNKNOWN"),
 								},
 								AUTHORIZED_TO_WORK_IN_THE_US: applicant.authorized_to_work_in_us,
+								...(applicant.authorized_to_work_in_us && citizenshipStatus ? {
+									CITIZENSHIP: citizenshipStatus
+								} : {}),
 								PREFERRED_LOCATION: applicant.preferred_location?.map((v) =>
 									t(`JobGeography.${v}`)
 								),

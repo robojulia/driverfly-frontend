@@ -45,7 +45,9 @@ const workHistoryMetaDataInitialState: WorkHistoryMetaData = {
 };
 
 export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
+  console.log('ApplicantWorkHistoryForm received props:', { companyAutoVoeEnabled: props.companyAutoVoeEnabled, hideActions: props.hideActions });
   let { className, entity, setEntity, isSubmitting, setIsSubmitting, onSaveComplete, companyAutoVoeEnabled = true } = props;
+  console.log('After destructuring, companyAutoVoeEnabled =', companyAutoVoeEnabled);
   const { t } = useTranslation();
 
   const applicantApi = new ApplicantApi();
@@ -202,6 +204,11 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
   };
 
   const handleSendBackgroundRequest = async (i: number) => {
+    console.log('=== SENDING VOE REQUEST ===');
+    console.log('Employer index:', i);
+    console.log('Employer data:', form.values.employers[i]);
+    console.log('Applicant ID:', entity?.id);
+
     setWorkHistoryMetaData((prev) => ({ ...prev, isSubmittingVoe: true }));
 
     try {
@@ -209,6 +216,8 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
         applicant: entity,
         employer: form.values.employers[i],
       });
+      console.log('=== VOE REQUEST SUCCESS ===');
+      console.log('Response:', res);
       setEntity(res);
       setWorkHistoryMetaData((prev) => ({
         ...prev,
@@ -218,6 +227,8 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
       toast.success(t('SUCCESSFULLY_SENT_VOE'));
       setWorkHistoryMetaData((prev) => ({ ...prev, isSubmittingVoe: false }));
     } catch (e) {
+      console.error('=== VOE REQUEST FAILED ===');
+      console.error('Error:', e);
       setWorkHistoryMetaData((prev) => ({ ...prev, isSubmittingVoe: false }));
       globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast });
     }
@@ -281,26 +292,59 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
   };
 
   const canSendVoe = (employer: any, originalIndex: number) => {
+    // Check all required fields are populated
+    const hasCompanyName = employer?.name && typeof employer.name === 'string' && employer.name.trim() !== '';
+    const hasRoleName = employer?.title && typeof employer.title === 'string' && employer.title.trim() !== '';
+    const hasManagerName = employer?.manager_name && typeof employer.manager_name === 'string' && employer.manager_name.trim() !== '';
     const hasEmail = employer?.email && typeof employer.email === 'string' && employer.email.trim() !== '';
     const canContact = employer?.can_contact === true || employer?.can_contact === 'Yes';
     const isSubjectToFmcsrs = employer?.is_subject_to_fmcsrs === true || employer?.is_subject_to_fmcsrs === 'Yes';
     const alreadySent = employer?.voe_attempts > 0 || employer?.auto_voe_attempts > 0;
 
+    // Debug logging
+    console.log('VOE Debug for employer:', employer?.name, {
+      hasCompanyName,
+      hasRoleName,
+      hasManagerName,
+      hasEmail,
+      canContact,
+      isSubjectToFmcsrs,
+      alreadySent,
+      companyAutoVoeEnabled,
+      isViewMode: Boolean(entity?.is_hired),
+      employer
+    });
+
     // Check if company has automated VOE disabled
     // If automated VOE is enabled, don't show manual send button (it will be sent automatically)
     if (companyAutoVoeEnabled) {
+      console.log('VOE blocked: companyAutoVoeEnabled is true');
       return false;
     }
 
-    // Check if email was recently added or changed
-    const originalEmployer = entity?.employers?.[originalIndex];
-    const emailChanged = originalEmployer?.email !== employer?.email;
+    // In view mode (is_hired), allow sending if all fields are populated
+    // In edit mode, only allow if email was just changed
+    const isViewMode = Boolean(entity?.is_hired);
 
-    // Only show button if email was just added/changed AND all conditions are met
-    return hasEmail && emailChanged && canContact && isSubjectToFmcsrs && !alreadySent;
+    if (isViewMode) {
+      // View mode: Enable if all conditions met
+      const result = hasCompanyName && hasRoleName && hasManagerName && hasEmail && canContact && isSubjectToFmcsrs && !alreadySent;
+      console.log('VOE View Mode Result:', result);
+      return result;
+    } else {
+      // Edit mode: Require email to be recently changed plus all other conditions
+      const originalEmployer = entity?.employers?.[originalIndex];
+      const emailChanged = originalEmployer?.email !== employer?.email;
+      const result = hasCompanyName && hasRoleName && hasManagerName && hasEmail && emailChanged && canContact && isSubjectToFmcsrs && !alreadySent;
+      console.log('VOE Edit Mode Result:', result, 'emailChanged:', emailChanged);
+      return result;
+    }
   };
 
   const getVoeButtonTooltip = (employer: any, originalIndex: number) => {
+    const hasCompanyName = employer?.name && typeof employer.name === 'string' && employer.name.trim() !== '';
+    const hasRoleName = employer?.title && typeof employer.title === 'string' && employer.title.trim() !== '';
+    const hasManagerName = employer?.manager_name && typeof employer.manager_name === 'string' && employer.manager_name.trim() !== '';
     const hasEmail = employer?.email && typeof employer.email === 'string' && employer.email.trim() !== '';
     const canContact = employer?.can_contact === true || employer?.can_contact === 'Yes';
     const isSubjectToFmcsrs = employer?.is_subject_to_fmcsrs === true || employer?.is_subject_to_fmcsrs === 'Yes';
@@ -313,11 +357,27 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
       return t('VOE_ALREADY_SENT');
     }
 
-    const originalEmployer = entity?.employers?.[originalIndex];
-    const emailChanged = originalEmployer?.email !== employer?.email;
+    const isViewMode = Boolean(entity?.is_hired);
 
-    if (!emailChanged && hasEmail) {
-      return t('VOE_EMAIL_NOT_CHANGED');
+    if (!isViewMode) {
+      // Edit mode: Check if email was changed
+      const originalEmployer = entity?.employers?.[originalIndex];
+      const emailChanged = originalEmployer?.email !== employer?.email;
+
+      if (!emailChanged && hasEmail) {
+        return t('VOE_EMAIL_NOT_CHANGED');
+      }
+    }
+
+    // Check all required fields and provide specific feedback
+    if (!hasCompanyName) {
+      return 'Company name is required to send VOE';
+    }
+    if (!hasRoleName) {
+      return 'Role/title is required to send VOE';
+    }
+    if (!hasManagerName) {
+      return 'Manager name is required to send VOE';
     }
     if (!hasEmail) {
       return t('EMAIL_REQUIRED_FOR_VOE');
@@ -332,7 +392,7 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
   };
 
   return (
-    <Form onSubmit={form.handleSubmit} className={className} data-applicant-edit-form>
+    <Form onSubmit={form.handleSubmit} className={className} data-applicant-edit-form data-form-id="work-history">
       {form?.isSubmitting ? (
         <LoaderIcon isLoading={form?.isSubmitting} />
       ) : (
@@ -585,39 +645,37 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                           formik={form}
                         />
                       </div>
-                      {Boolean(entity?.is_hired) && (
-                        <div className="col-12 mt-3">
-                          <OverlayTrigger
-                            placement="top"
-                            overlay={
-                              <Tooltip id={`tooltip-voe-${i}`}>
-                                {getVoeButtonTooltip(employer, i)}
-                              </Tooltip>
-                            }
-                          >
-                            <span className="d-inline-block">
-                              <Button
-                                size="sm"
-                                variant={canSendVoe(employer, i) ? "primary" : "secondary"}
-                                disabled={!canSendVoe(employer, i) || workHistoryMetaData.isSubmittingVoe}
-                                onClick={() => handleAutoSendVoe(i)}
-                                style={!canSendVoe(employer, i) ? { pointerEvents: 'none' } : {}}
-                              >
-                                {workHistoryMetaData.isSubmittingVoe ? (
-                                  <>
-                                    <LoaderIcon isLoading={true} /> {t('SENDING')}
-                                  </>
-                                ) : (
-                                  <>
-                                    <EnvelopeCheck className="me-1" />
-                                    {t('AUTO_SEND_VOE')}
-                                  </>
-                                )}
-                              </Button>
-                            </span>
-                          </OverlayTrigger>
-                        </div>
-                      )}
+                      <div className="col-12 mt-3">
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip id={`tooltip-voe-${i}`}>
+                              {getVoeButtonTooltip(employer, i)}
+                            </Tooltip>
+                          }
+                        >
+                          <span className="d-inline-block">
+                            <Button
+                              size="sm"
+                              variant={canSendVoe(employer, i) ? "primary" : "secondary"}
+                              disabled={!canSendVoe(employer, i) || workHistoryMetaData.isSubmittingVoe}
+                              onClick={() => handleAutoSendVoe(i)}
+                              style={!canSendVoe(employer, i) ? { pointerEvents: 'none' } : {}}
+                            >
+                              {workHistoryMetaData.isSubmittingVoe ? (
+                                <>
+                                  <LoaderIcon isLoading={true} /> {t('SENDING')}
+                                </>
+                              ) : (
+                                <>
+                                  <EnvelopeCheck className="me-1" />
+                                  Send VOE
+                                </>
+                              )}
+                            </Button>
+                          </span>
+                        </OverlayTrigger>
+                      </div>
                     </Row></div>
                   ))}
                 </>

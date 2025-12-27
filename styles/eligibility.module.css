@@ -806,6 +806,23 @@
   border-color: #f5c6cb;
 }
 
+.statusBadge.unknown {
+  background: #e2e3e5;
+  color: #383d41;
+  border-color: #d6d8db;
+}
+
+.clickableBadge {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clickableBadge:hover {
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: var(--eligibility-shadow-sm);
+  opacity: 0.9;
+}
+
 .statusBadge:hover {
   transform: translateY(-1px);
   box-shadow: var(--eligibility-shadow-sm);
@@ -1661,4 +1678,241 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* Fit Comparison Modal Styles */
+.fitComparisonContent {
+  padding: var(--eligibility-spacing-md);
+}
+
+.modalLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--eligibility-spacing-xl);
+  gap: var(--eligibility-spacing-md);
+  color: var(--eligibility-gray-600);
+}
+
+.modalError {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--eligibility-spacing-xl);
+  gap: var(--eligibility-spacing-md);
+  color: var(--eligibility-danger);
+  text-align: center;
+}
+
+.retryButton {
+  margin-top: var(--eligibility-spacing-md);
+  padding: var(--eligibility-spacing-sm) var(--eligibility-spacing-md);
+  background: var(--eligibility-primary);
+  color: var(--eligibility-light);
+  border: none;
+  border-radius: var(--eligibility-border-radius);
+  cursor: pointer;
+  transition: var(--eligibility-transition);
+}
+
+.retryButton:hover {
+  background: var(--eligibility-primary-dark);
+}
+
+.overallStatusSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--eligibility-spacing-md);
+  background: var(--eligibility-gray-50);
+  border-radius: var(--eligibility-border-radius);
+  margin-bottom: var(--eligibility-spacing-lg);
+}
+
+.overallStatusBadge .statusBadge {
+  font-size: var(--eligibility-font-size-base);
+  padding: var(--eligibility-spacing-sm) var(--eligibility-spacing-md);
+}
+
+.scoreDisplay {
+  font-size: var(--eligibility-font-size-lg);
+  color: var(--eligibility-gray-700);
+}
+
+.scoreDisplay strong {
+  font-size: var(--eligibility-font-size-xl);
+  color: var(--eligibility-primary);
+}
+
+.missingFieldsSection {
+  padding: var(--eligibility-spacing-md);
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: var(--eligibility-border-radius);
+  margin-bottom: var(--eligibility-spacing-lg);
+}
+
+.missingFieldsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--eligibility-spacing-xs);
+  margin: var(--eligibility-spacing-md) 0;
+}
+
+.missingFieldItem {
+  display: flex;
+  align-items: center;
+  gap: var(--eligibility-spacing-sm);
+  font-size: var(--eligibility-font-size-sm);
+  color: var(--eligibility-gray-700);
+}
+
+.missingFieldsNote {
+  margin-top: var(--eligibility-spacing-md);
+  margin-bottom: 0;
+  font-size: var(--eligibility-font-size-xs);
+  color: #856404;
+  font-style: italic;
+}
+
+.requirementsSection {
+  margin-bottom: var(--eligibility-spacing-lg);
+}
+
+.sectionTitle {
+  font-size: var(--eligibility-font-size-lg);
+  font-weight: var(--eligibility-font-weight-semibold);
+  color: var(--eligibility-gray-800);
+  margin-bottom: var(--eligibility-spacing-md);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--eligibility-spacing-sm);
+  margin-bottom: var(--eligibility-spacing-md);
+}
+
+.sectionHeader h4 {
+  font-size: var(--eligibility-font-size-base);
+  font-weight: var(--eligibility-font-weight-semibold);
+  color: var(--eligibility-gray-800);
+  margin: 0;
+}
+
+.requirementsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--eligibility-spacing-md);
+}
+
+.requirementRow {
+  padding: var(--eligibility-spacing-md);
+  background: var(--eligibility-light);
+  border: 1px solid var(--eligibility-gray-200);
+  border-radius: var(--eligibility-border-radius);
+  transition: var(--eligibility-transition);
+}
+
+.requirementRow:hover {
+  box-shadow: var(--eligibility-shadow-sm);
+  border-color: var(--eligibility-primary-light);
+}
+
+.requirementHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--eligibility-spacing-sm);
+  margin-bottom: var(--eligibility-spacing-xs);
+}
+
+.requirementCategory {
+  font-weight: var(--eligibility-font-weight-semibold);
+  color: var(--eligibility-gray-800);
+  flex: 1;
+}
+
+.requirementStatus {
+  font-size: var(--eligibility-font-size-xs);
+  font-weight: var(--eligibility-font-weight-medium);
+  padding: 2px var(--eligibility-spacing-xs);
+  border-radius: var(--eligibility-border-radius-sm);
+  background: var(--eligibility-gray-100);
+  color: var(--eligibility-gray-600);
+}
+
+.requirementDetails {
+  font-size: var(--eligibility-font-size-sm);
+  color: var(--eligibility-gray-600);
+  margin-left: 26px;
+}
+
+.strongMatchesSection,
+.missingRequirementsSection,
+.recommendationsSection {
+  padding: var(--eligibility-spacing-md);
+  border-radius: var(--eligibility-border-radius);
+  margin-bottom: var(--eligibility-spacing-md);
+}
+
+.strongMatchesSection {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+}
+
+.missingRequirementsSection {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+}
+
+.recommendationsSection {
+  background: #d1ecf1;
+  border: 1px solid #bee5eb;
+}
+
+.requirementList {
+  margin: var(--eligibility-spacing-sm) 0 0 var(--eligibility-spacing-md);
+  padding-left: var(--eligibility-spacing-md);
+}
+
+.requirementList li {
+  margin-bottom: var(--eligibility-spacing-xs);
+  font-size: var(--eligibility-font-size-sm);
+  color: var(--eligibility-gray-700);
+}
+
+.iconSuccess {
+  color: #27ae60;
+}
+
+.iconDanger {
+  color: #e74c3c;
+}
+
+.iconWarning {
+  color: #f39c12;
+}
+
+.iconInfo {
+  color: #3498db;
+}
+
+.iconGray {
+  color: #95a5a6;
+}
+
+.buttonSecondary {
+  background: var(--eligibility-gray-500);
+  color: var(--eligibility-light);
+  border: none;
+  padding: var(--eligibility-spacing-sm) var(--eligibility-spacing-md);
+  border-radius: var(--eligibility-border-radius);
+  cursor: pointer;
+  transition: var(--eligibility-transition);
+}
+
+.buttonSecondary:hover {
+  background: var(--eligibility-gray-600);
 }

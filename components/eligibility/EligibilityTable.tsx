@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { EyeFill, PersonFill, GeoAltFill, CalendarFill, StarFill, BuildingFill } from 'react-bootstrap-icons';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Link from 'next/link';
 import moment from 'moment';
 import { useTranslation } from '../../hooks/use-translation';
@@ -11,6 +12,7 @@ import EligibilityApi, {
 } from '../../pages/api/eligibility';
 import AutoRecruitIndicator from './AutoRecruitIndicator';
 import HiredIndicator from './HiredIndicator';
+import { FitComparisonModal } from './FitComparisonModal';
 import styles from '../../styles/eligibility.module.css';
 
 interface EligibilityTableProps {
@@ -32,6 +34,8 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
     sortOrder: 'DESC',
     minScore: 0,
   });
+  const [showFitModal, setShowFitModal] = useState(false);
+  const [selectedApplicant, setSelectedApplicant] = useState<ApplicantEligibilityScore | null>(null);
 
   // Check if user manages multiple companies
   const hasMultipleCompanies = user?.jwt?.companies && user.jwt.companies.length > 1;
@@ -165,6 +169,8 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
         return styles.partiallyEligible;
       case 'NOT_ELIGIBLE':
         return styles.notEligible;
+      case 'UNKNOWN':
+        return styles.unknown;
       default:
         return styles.notEligible;
     }
@@ -173,14 +179,21 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
   const formatStatus = (status: string): string => {
     switch (status) {
       case 'ELIGIBLE':
-        return 'Eligible';
+        return 'Yes';
       case 'PARTIALLY_ELIGIBLE':
-        return 'Partially Eligible';
+        return 'Partially';
       case 'NOT_ELIGIBLE':
-        return 'Not Eligible';
+        return 'No';
+      case 'UNKNOWN':
+        return 'Unk';
       default:
         return status;
     }
+  };
+
+  const handleStatusBadgeClick = (applicant: ApplicantEligibilityScore) => {
+    setSelectedApplicant(applicant);
+    setShowFitModal(true);
   };
 
   const getInterestLevelBadgeClass = (tier: string): string => {
@@ -333,13 +346,41 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
 
       <td>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span
-            className={`${styles.statusBadge} ${getStatusBadgeClass(
-              applicant.eligibilityStatus
-            )}`}
-          >
-            {formatStatus(applicant.eligibilityStatus)}
-          </span>
+          {applicant.eligibilityStatus === 'UNKNOWN' && applicant.scoringDetails?.missingFields ? (
+            <OverlayTrigger
+              placement="top"
+              overlay={
+                <Tooltip id={`tooltip-${applicant.applicantId}`}>
+                  <div style={{ textAlign: 'left' }}>
+                    <strong>Missing Information:</strong>
+                    <ul style={{ margin: '4px 0', paddingLeft: '20px' }}>
+                      {applicant.scoringDetails.missingFields.map((field, idx) => (
+                        <li key={idx}>{field}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </Tooltip>
+              }
+            >
+              <span
+                className={`${styles.statusBadge} ${getStatusBadgeClass(
+                  applicant.eligibilityStatus
+                )} ${styles.clickableBadge}`}
+                onClick={() => handleStatusBadgeClick(applicant)}
+              >
+                {formatStatus(applicant.eligibilityStatus)}
+              </span>
+            </OverlayTrigger>
+          ) : (
+            <span
+              className={`${styles.statusBadge} ${getStatusBadgeClass(
+                applicant.eligibilityStatus
+              )} ${styles.clickableBadge}`}
+              onClick={() => handleStatusBadgeClick(applicant)}
+            >
+              {formatStatus(applicant.eligibilityStatus)}
+            </span>
+          )}
           {applicant.applicant.type === 'AUTO_RECRUIT' && <AutoRecruitIndicator />}
         </div>
       </td>
@@ -577,6 +618,21 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
             later.
           </p>
         </div>
+      )}
+
+      {/* Fit Comparison Modal */}
+      {selectedApplicant && (
+        <FitComparisonModal
+          show={showFitModal}
+          onHide={() => {
+            setShowFitModal(false);
+            setSelectedApplicant(null);
+          }}
+          jobId={jobId}
+          applicantId={selectedApplicant.applicantId}
+          applicantName={`${selectedApplicant.applicant.firstName} ${selectedApplicant.applicant.lastName}`}
+          eligibilityStatus={selectedApplicant.eligibilityStatus}
+        />
       )}
     </div>
   );

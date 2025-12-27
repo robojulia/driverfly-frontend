@@ -134,7 +134,7 @@ export class ApplicantEntity {
   routes?: JobSchedule[];
   other_requirements?: OtherRequirementType[];
   other_requirements_other?: string;
-  employment_type?: JobEmploymentType;
+  employment_type?: JobEmploymentType | JobEmploymentType[];
   ssn?: string;
   ssn_last4?: string;
   employment_gap_details?: string;

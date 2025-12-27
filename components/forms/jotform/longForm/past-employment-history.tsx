@@ -36,6 +36,7 @@ export function PastEmploymentHistory() {
   function updateApplicat({
     employers: past_employers,
     is_previous_employed,
+    employment_gap_details,
   }: PastEmploymentPageDto) {
     const all_employers: ApplicantEmployerEntity[] = is_previous_employed ? past_employers : [];
     const current_employer: ApplicantEmployerEntity = applicant?.employers?.find(
@@ -46,6 +47,7 @@ export function PastEmploymentHistory() {
     setApplicant({
       ...applicant,
       employers: all_employers,
+      employment_gap_details,
     });
   }
 
@@ -106,6 +108,7 @@ export function PastEmploymentHistory() {
       ...form.values,
       employers: normalizedEmployers,
       is_previous_employed: !!employers?.length,
+      employment_gap_details: applicant.employment_gap_details || '',
     });
   }, [applicant]);
 

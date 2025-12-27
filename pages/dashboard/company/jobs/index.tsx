@@ -33,7 +33,6 @@ import { GenericTable, TableColumn } from '../../../../components/common/Generic
 import { getDataTableColumnKey } from '../../../../utils/table-migration';
 import { EmbedJobsModal } from '../../../../components/jobs/EmbedJobsModal';
 import { ConfirmationModal } from '../../../../components/shared/confirmation-modal';
-import { ExportToIndeedButton } from '../../../../components/jobs/ExportToIndeedButton';
 
 enum ViewModeType {
   ACTIVE = 'ACTIVE',
@@ -549,13 +548,6 @@ export default function JobListing() {
                 <Button variant="" className="theme-general-btn" onClick={onEmbedClick}>
                   <Code className="me-2" /> {t('EMBED')}
                 </Button>
-                <ExportToIndeedButton
-                  jobs={jobs}
-                  mode="bulk"
-                  companyId={user?.company?.id}
-                  className="theme-general-btn"
-                  size="sm"
-                />
               </ButtonGroup>
             </Col>
           </Row>

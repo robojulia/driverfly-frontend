@@ -107,7 +107,9 @@ const Preferences = ({ applicant, t }) => {
                     <View style={styles.field}>
                         <Text style={styles.label}>{t("employment_type")}</Text>
                         <Text style={styles.value}>
-                            {formatEnumValue(applicant.employment_type)}
+                            {Array.isArray(applicant.employment_type)
+                                ? formatEnumValues(applicant.employment_type)
+                                : formatEnumValue(applicant.employment_type)}
                         </Text>
                     </View>
                 </View>

@@ -14,6 +14,7 @@ import { useEffectAsync } from '../../../../../utils/react';
 import ApplicantApi from '../../../../api/applicant';
 import { HireApplicantForm } from '../../../../../components/forms/company/hire-applicant-form';
 import { ApplicantExtras as ApplicantExtrasEnum } from '../../../../../enums/applicants/applicant-extras.enum';
+import ValidationErrorPanel from '../../../../../components/validation/ValidationErrorPanel';
 // DOT verification panel is now rendered inside EditApplicantForm
 
 export default function EditApplicant({ id }) {
@@ -31,6 +32,7 @@ export default function EditApplicant({ id }) {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [applicantSuggestedJobs, setApplicantSuggestedJobs] = useState<ApplicantSuggestedJobEntity[]>([]);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false);
+  const [validationErrors, setValidationErrors] = useState<{ formId: string; errors: any }[]>([]);
 
   useEffectAsync(async () => {
     if (id) {
@@ -111,12 +113,8 @@ export default function EditApplicant({ id }) {
         toast.error(t('Please fix validation errors before saving. Check the highlighted fields.'));
         setIsSaving(false);
 
-        // Scroll to first error (find first form with errors in DOM)
-        const firstFormWithError = validationErrors[0].formId;
-        const formElement = document.querySelector(`[data-form-id="${firstFormWithError}"]`);
-        if (formElement) {
-          formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        // Set validation errors to display the error panel
+        setValidationErrors(validationErrors);
 
         return;
       }
@@ -193,15 +191,28 @@ export default function EditApplicant({ id }) {
       if (allValues.vehicles) payload.vehicles = allValues.vehicles;
       if (allValues.meta) payload.meta = allValues.meta;
 
+      // Debug logging
+      console.log('=== Applicant Update Payload ===');
+      console.log('SSN in payload:', payload.ssn);
+      console.log('Full payload:', payload);
+
       // Send ONE consolidated PUT request
       const applicantApi = new ApplicantApi();
       const saved = await applicantApi.update(applicant?.id, payload);
+
+      // Debug logging
+      console.log('=== Applicant Update Response ===');
+      console.log('SSN in response:', (saved as any)?.ssn);
+      console.log('SSN last4 in response:', (saved as any)?.ssn_last4);
 
       // Update the entity
       setApplicant({ ...applicant, ...saved });
 
       toast.dismiss();
       toast.success(t('Applicant Updated Successfully') || 'Changes saved');
+
+      // Clear validation errors on successful save
+      setValidationErrors([]);
 
       // Reset dirty state for all forms after successful save
       const dirtyRegistry = (window as any).__applicantFormDirty || {};
@@ -227,6 +238,15 @@ export default function EditApplicant({ id }) {
   return (
     <>
       {unsavedChangesWarning}
+
+      {/* Validation Error Panel */}
+      {validationErrors.length > 0 && (
+        <ValidationErrorPanel
+          validationErrors={validationErrors}
+          onClose={() => setValidationErrors([])}
+        />
+      )}
+
       {/* Fixed Update Button - stays in upper right as user scrolls */}
       <div
         style={{

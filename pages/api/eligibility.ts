@@ -50,13 +50,14 @@ export interface ScoringDetails {
   requirementsFailed: string[];
   bonusPoints: string[];
   deductions: string[];
+  missingFields?: string[];
 }
 
 export interface ApplicantEligibilityScore {
   applicantId: number;
   applicant: ApplicantBasicInfo;
   score: number;
-  eligibilityStatus: 'ELIGIBLE' | 'PARTIALLY_ELIGIBLE' | 'NOT_ELIGIBLE';
+  eligibilityStatus: 'ELIGIBLE' | 'PARTIALLY_ELIGIBLE' | 'NOT_ELIGIBLE' | 'UNKNOWN';
   scoringDetails: ScoringDetails;
   lastUpdated: string;
 }
@@ -78,7 +79,7 @@ export interface ScoreBreakdown {
   category: string;
   points: number;
   maxPoints: number;
-  status: 'PASS' | 'FAIL' | 'PARTIAL';
+  status: 'PASS' | 'FAIL' | 'PARTIAL' | 'UNKNOWN';
   details: string;
 }
 

@@ -385,6 +385,7 @@ export default function ViewApplicant({ id }) {
               isSubmitting={true}
               setIsSubmitting={() => {}}
               hideActions
+              companyAutoVoeEnabled={false}
             />
           </Row>
 

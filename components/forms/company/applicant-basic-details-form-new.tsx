@@ -40,8 +40,11 @@ import BaseInputPhone from "../base-input-phone";
 import BaseSelect from "../base-select";
 import BaseTextArea from "../base-text-area";
 import StateSelect from "../state-select";
+import CountryStateSelect from "../country-state-select";
+import stateList from "../../../utils/stateList";
+import provinceList from "../../../utils/provinceList";
+import mexicoStateList from "../../../utils/mexicoStateList";
 import { BaseFormProps } from "./base-form-props";
-import SSNDisplay from "../../shared/SSNDisplay";
 
 export interface ApplicantBasicDetailsFormNewProps extends BaseFormProps<ApplicantEntity> {
   isSubmitting: boolean;
@@ -64,6 +67,7 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
   const [referralSources, setReferralSources] = useState<ReferralSourceEntity[]>([]);
   const [initialized, setInitialized] = useState(false);
   const [dotVerifyRaw, setDotVerifyRaw] = useState<any>(null);
+  const [currentAge, setCurrentAge] = useState<string>('');
 
   const form = useFormik({
     initialValues: new ApplicantEntity(),
@@ -132,9 +136,14 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
     };
 
     if (!!entity?.id) {
+      // If entity has ssn_last4 but no full ssn, show masked SSN
+      const ssnDisplay = entity?.ssn ||
+        ((entity as any)?.ssn_last4 ? `XXX-XX-${String((entity as any).ssn_last4).slice(-4)}` : '');
+
       form.resetForm({
         values: {
           ...entity,
+          ssn: ssnDisplay,
           extras,
           meta,
           referralSourceId: entity?.referralSource?.id || entity?.referralSourceId
@@ -227,7 +236,6 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
         if (meta.middle_name) currentExtras.push({ type: ApplicantExtras.MIDDLE_NAME, value: meta.middle_name } as any);
         if (meta.suffix) currentExtras.push({ type: ApplicantExtras.SUFFIX, value: meta.suffix } as any);
         if (meta.alternative_phone) currentExtras.push({ type: ApplicantExtras.ALTERNATIVE_PHONE, value: meta.alternative_phone } as any);
-        if (meta.authorized_to_work) currentExtras.push({ type: ApplicantExtras.AUTHORIZED_TO_WORK, value: meta.authorized_to_work } as any);
         if (meta.marital_status) currentExtras.push({ type: ApplicantExtras.MARITAL_STATUS, value: meta.marital_status } as any);
         if (meta.race) currentExtras.push({ type: ApplicantExtras.RACE, value: meta.race } as any);
         if (meta.citizenship_status) currentExtras.push({ type: ApplicantExtras.CITIZENSHIP_STATUS, value: meta.citizenship_status } as any);
@@ -256,7 +264,15 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
         }
 
         // Return ONLY fields managed by this form (CDL fields are handled by licensing form)
-        return {
+        const ssnFormValue = formRef.current.values.ssn || '';
+        // Extract digits from formatted SSN (removes hyphens and X's)
+        const ssnDigits = ssnFormValue.replace(/\D/g, '');
+        // Only include SSN if user entered a complete 9-digit SSN
+        // This prevents accidentally clearing existing SSN when form only has ssn_last4
+        const ssn = ssnDigits && ssnDigits.length === 9 ? ssnDigits : undefined;
+        const ssn_last4 = ssn && ssn.length >= 4 ? ssn.slice(-4) : undefined;
+
+        const formData: any = {
           first_name: formRef.current.values.first_name,
           last_name: formRef.current.values.last_name,
           phone: formRef.current.values.phone,
@@ -273,8 +289,22 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
           current_application_status: formRef.current.values.current_application_status,
           employment_type: formRef.current.values.employment_type,
           is_owner_operator: formRef.current.values.is_owner_operator,
+          authorized_to_work_in_us: formRef.current.values.authorized_to_work_in_us,
+          highest_degree: formRef.current.values.highest_degree,
           extras: currentExtras,
         };
+
+        // Only add SSN fields if user entered a complete SSN
+        if (ssn) {
+          formData.ssn = ssn;
+          formData.ssn_last4 = ssn_last4;
+        }
+
+        console.log('Basic Details Form Registry - SSN value:', formData.ssn);
+        console.log('Basic Details Form Registry - SSN last4:', formData.ssn_last4);
+        console.log('Basic Details Form Registry - Full data:', formData);
+
+        return formData;
       };
     }
 
@@ -300,6 +330,77 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
       form.setFieldValue('type', ApplicantType.AUTO_RECRUIT);
     }
   }, [form.values?.is_automated_recruiting_lead]);
+
+  // Clear citizenship_status when authorized_to_work_in_us is false
+  useEffect(() => {
+    const values = form.values as any;
+    if (values?.authorized_to_work_in_us === false && values?.meta?.citizenship_status) {
+      form.setFieldValue('meta.citizenship_status', '');
+    }
+  }, [form.values?.authorized_to_work_in_us]);
+
+  // Clear state/province when country changes to avoid invalid combinations
+  useEffect(() => {
+    const values = form.values as any;
+    if (values?.meta?.country && values?.state) {
+      // Only clear if the state value doesn't match the new country's format
+      const country = values.meta.country;
+      const state = values.state;
+
+      // Check if the current state is valid for the selected country
+      let isValidForCountry = false;
+      if (country === 'Canada') {
+        isValidForCountry = provinceList.some(p => p.value === state);
+      } else if (country === 'Mexico') {
+        isValidForCountry = mexicoStateList.some(s => s.value === state);
+      } else {
+        isValidForCountry = stateList.some(s => s.value === state);
+      }
+
+      // If not valid, clear the state field
+      if (!isValidForCountry) {
+        form.setFieldValue('state', '');
+      }
+    }
+  }, [(form.values as any)?.meta?.country]);
+
+  // Calculate age from birthdate
+  const calculateAge = (birthdate: string | Date | null | undefined): string => {
+    if (!birthdate) return '';
+    const birthDate = new Date(birthdate);
+    if (isNaN(birthDate.getTime())) return '';
+
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+
+    return age >= 0 ? String(age) : '';
+  };
+
+  // Update age dynamically based on birthdate - updates every minute
+  useEffect(() => {
+    const updateAge = () => {
+      const values = form.values as any;
+      if (values?.birthdate) {
+        const newAge = calculateAge(values.birthdate);
+        setCurrentAge(newAge);
+      } else {
+        setCurrentAge('');
+      }
+    };
+
+    // Initial calculation
+    updateAge();
+
+    // Update age every minute to keep it current
+    const interval = setInterval(updateAge, 60000); // 60000ms = 1 minute
+
+    return () => clearInterval(interval);
+  }, [form.values?.birthdate]);
 
   return (
     <Form onSubmit={form.handleSubmit} className={className} onReset={form.handleReset} data-applicant-edit-form>
@@ -328,11 +429,64 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
             <Row className="mb-2">
               <Col md="3" className="px-2">
                 <div className="col-12">
-                  <label>
-                    {t("Social Security Number")}:
-                  </label>
-                  <br />
-                  <SSNDisplay applicantId={entity?.id} last4={(entity as any)?.ssn_last4} />
+                  <label>{t("Social Security Number")}:</label>
+                  <div className="d-flex align-items-center gap-2">
+                    <div className="flex-grow-1">
+                      <BaseInput
+                        className="w-100"
+                        readOnly={Boolean(entity?.is_hired) || (Boolean((entity as any)?.ssn_last4) && !(form.values as any).ssnEditMode)}
+                        name="ssn"
+                        placeholder={(form.values as any).ssnEditMode ? "XXX-XX-XXXX" : ""}
+                        formik={form}
+                        maxLength={11}
+                        onChange={(e) => {
+                          const inputValue = e.target.value;
+                          const digitsOnly = inputValue.replace(/\D/g, '').slice(0, 9);
+
+                          // Format the value for display
+                          let formattedValue = '';
+                          if (digitsOnly.length <= 3) {
+                            formattedValue = digitsOnly;
+                          } else if (digitsOnly.length <= 5) {
+                            formattedValue = digitsOnly.slice(0, 3) + '-' + digitsOnly.slice(3);
+                          } else {
+                            formattedValue = digitsOnly.slice(0, 3) + '-' + digitsOnly.slice(3, 5) + '-' + digitsOnly.slice(5);
+                          }
+
+                          // Store the formatted value in formik (for display)
+                          form.setFieldValue('ssn', formattedValue);
+                        }}
+                      />
+                    </div>
+                    {/* Show Change/Cancel button if SSN exists */}
+                    {(entity as any)?.ssn_last4 && !Boolean(entity?.is_hired) && (
+                      <Button
+                        type="button"
+                        variant={(form.values as any).ssnEditMode ? "secondary" : "outline-primary"}
+                        size="sm"
+                        style={{ whiteSpace: 'nowrap', minWidth: '80px' }}
+                        onClick={() => {
+                          if ((form.values as any).ssnEditMode) {
+                            // Cancel editing - restore masked SSN
+                            const ssnLast4 = (entity as any)?.ssn_last4;
+                            form.setFieldValue('ssn', `XXX-XX-${String(ssnLast4).slice(-4)}`);
+                            form.setFieldValue('ssnEditMode', false);
+                          } else {
+                            // Enable editing - clear the field
+                            form.setFieldValue('ssn', '');
+                            form.setFieldValue('ssnEditMode', true);
+                          }
+                        }}
+                      >
+                        {(form.values as any).ssnEditMode ? t('Cancel') : t('Change')}
+                      </Button>
+                    )}
+                  </div>
+                  {(form.values as any).ssnEditMode && (
+                    <small className="text-muted">
+                      Enter the complete 9-digit SSN to replace the existing one
+                    </small>
+                  )}
                 </div>
               </Col>
               <Col md="3" className="px-2">
@@ -350,8 +504,11 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
               </Col>
             </Row>
 
-            {/* Street Address, Address Line 2, City, State */}
+            {/* Country, Street Address, Address Line 2, City */}
             <Row className="mb-2">
+              <Col md="3" className="px-2">
+                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Country" name="meta.country" placeholder="Select country" options={["United States","Canada","Mexico"]} formik={form} />
+              </Col>
               <Col md="3" className="px-2">
                 <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Street Address" name="address_1" placeholder="120 Folsom St." formik={form} />
               </Col>
@@ -361,16 +518,43 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
               <Col md="3" className="px-2">
                 <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="City" name="city" placeholder="Atlanta" formik={form} />
               </Col>
-              <Col md="3" className="px-2">
-                <StateSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="State" name="state" placeholder="Select state" formik={form} />
-              </Col>
             </Row>
 
-            {/* Zip Code, Assigned Recruiter, Lead Type, Referral Source */}
+            {/* State/Province, Zip Code, Date of Birth, Age */}
             <Row className="mb-2">
+              <Col md="3" className="px-2">
+                <CountryStateSelect
+                  className="col-12"
+                  readOnly={Boolean(entity?.is_hired)}
+                  label={(form.values as any)?.meta?.country === 'Canada' ? 'Province' : 'State'}
+                  name="state"
+                  placeholder={(form.values as any)?.meta?.country === 'Canada' ? 'Select province' : 'Select state'}
+                  country={(form.values as any)?.meta?.country}
+                  formik={form}
+                />
+              </Col>
               <Col md="3" className="px-2">
                 <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Zip Code" name="zip_code" placeholder="83202" formik={form} />
               </Col>
+              <Col md="3" className="px-2">
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Date of Birth" type="date" name="birthdate" placeholder="mm / dd / yyyy" formik={form} max={OldThan18Year} />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseInput
+                  className="col-12"
+                  label="Age"
+                  type="number"
+                  name="meta.age"
+                  value={currentAge}
+                  readOnly={Boolean(form.values?.birthdate) || Boolean(entity?.is_hired)}
+                  formik={!form.values?.birthdate ? form : undefined}
+                  placeholder={!form.values?.birthdate ? "Enter age" : ""}
+                />
+              </Col>
+            </Row>
+
+            {/* Assigned Recruiter, Lead Type, Entry Mode, Referral Source */}
+            <Row className="mb-2">
               <Col md="3" className="px-2">
                 <BaseSelect
                   className="col-12"
@@ -420,30 +604,12 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
               </Col>
             </Row>
 
-            {/* Status, Employment Type, Country, Date of Birth */}
+            {/* Status, Authorized to work, Citizenship Status (conditional) */}
             <Row className="mb-2">
               <Col md="3" className="px-2">
                 {form.values?.id && (
                   <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} name="current_application_status" placeholder="Select status" label="Status" labelPrefix="ApplicantStatus" enumType={ApplicantStatus} formik={form} style={{ backgroundColor: '#83e0de' }} />
                 )}
-              </Col>
-              <Col md="3" className="px-2">
-                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Employment Type" name="employment_type" placeholder="Select employment type" labelPrefix="JobEmploymentType" enumType={JobEmploymentType} formik={form} />
-              </Col>
-              <Col md="3" className="px-2">
-                <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Country" name="meta.country" placeholder="Select country" options={["United States","Canada","Mexico"]} formik={form} />
-              </Col>
-              <Col md="3" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Date of Birth" type="date" name="birthdate" placeholder="mm / dd / yyyy" formik={form} max={OldThan18Year} />
-              </Col>
-            </Row>
-
-            {/* Age, Authorized to work, Citizenship Status (conditional) */}
-            <Row className="mb-2">
-              <Col md="3" className="px-2">
-                <BaseInput className="col-12" label="Age" type="number" name="meta.age" value={(function(){
-                  const v:any = form?.values as any; const d = v?.birthdate ? new Date(v.birthdate as any) : null; if(!d||isNaN(d as any)) return ""; const today = new Date(); let age = today.getFullYear()-d.getFullYear(); const m=today.getMonth()-d.getMonth(); if(m<0 || (m===0 && today.getDate()<d.getDate())) age--; return String(age);
-                })()} readOnly />
               </Col>
               <Col md="3" className="px-2">
                 <BaseSelect
@@ -453,24 +619,45 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
                   name="authorized_to_work_in_us"
                   placeholder="Select"
                   options={[
-                    { label: "Yes", value: true },
-                    { label: "No", value: false }
+                    { label: "Yes", value: "true" },
+                    { label: "No", value: "false" }
                   ]}
                   formik={form}
+                  onChange={(e) => {
+                    // Convert string to boolean
+                    const boolValue = e.target.value === "true" ? true : e.target.value === "false" ? false : null;
+                    form.setFieldValue("authorized_to_work_in_us", boolValue);
+                  }}
                 />
               </Col>
-              {form.values?.authorized_to_work_in_us && (
+              {form.values?.authorized_to_work_in_us === true && (
                 <Col md="3" className="px-2">
                   <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Citizenship Status" name="meta.citizenship_status" placeholder="Select" options={["U.S. Citizen","Permanent Resident","Work Visa","Other"]} formik={form} />
                 </Col>
               )}
             </Row>
 
-            {/* Owner Operator Section */}
+            {/* Owner Operator and Employment Type Section */}
             <Row className="mb-2">
-              <Col md="12" className="px-2">
+              <Col md="6" className="px-2">
                 <BaseCheck className="col-12 mt-2" disabled={Boolean(entity?.is_hired)} label="OWNER_OPERATOR" name="is_owner_operator" formik={form} />
               </Col>
+              {!form.values.is_owner_operator && (
+                <Col md="6" className="px-2">
+                  <BaseCheckList
+                    className="col-12"
+                    disabled={Boolean(entity?.is_hired)}
+                    label="EMPLOYMENT_TYPE"
+                    name="employment_type"
+                    cols={1}
+                    labelPrefix="JobEmploymentType"
+                    options={Object.entries(JobEmploymentType)
+                      .filter(([key, value]) => value !== JobEmploymentType.OWNER_OPERATOR)
+                      .map(([key, value]) => ({ value, label: value }))}
+                    formik={form}
+                  />
+                </Col>
+              )}
             </Row>
             {Boolean(form.values.is_owner_operator) && (
               <>
