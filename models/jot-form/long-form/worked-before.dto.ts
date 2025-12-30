@@ -11,7 +11,6 @@ export class WorkedBeforeDto {
       already_applied_to_company: yup
         .boolean()
         .required("Please select whether you have applied before")
-        .default(false)
         .nullable(),
       already_worked_to_company: yup
         .boolean()
@@ -21,7 +20,6 @@ export class WorkedBeforeDto {
             .boolean()
             .required("Please select whether you have worked here before"),
         })
-        .default(false)
         .nullable(),
       already_worked_start_date: yup
         .date()

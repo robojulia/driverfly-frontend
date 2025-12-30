@@ -104,8 +104,6 @@ export function CompanyPreferencesOnboardingChecklistForm(
 			setItem(null);
 			setCustomItem("");
 			setUseCustom(false);
-			// Trigger validation to update form state
-			setTimeout(() => form.validateForm(), 0);
 		}
 	}, [form, form.values?.onboardingChecklist?.value, item, customItem, useCustom]);
 

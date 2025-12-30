@@ -7,6 +7,7 @@ import { getLongFormPages } from '../../../../components/forms/jotform/jotform-p
 import { DevPageNavigator } from '../../../../components/developer/dev-page-navigator';
 import { PoweredByLogo } from '../../../../components/forms/jotform/powered-by-logo';
 import { CompanyLogoUpperRight } from '../../../../components/forms/jotform/company-logo-upper-right';
+import { ReturningUserBanner } from '../../../../components/applicants/returning-user-banner';
 import JotformContext from '../../../../context/jotform-context';
 import { ApplicantEntity, ApplicantExtrasEntity } from '../../../../models/applicant';
 import { CompanyPreferenceEntity } from '../../../../models/company/company-preferences.entity';
@@ -35,6 +36,8 @@ export default function LongForm({
   const [applicantExtras, setApplicantExtras] =
     useState<ApplicantExtrasEntity[]>(initialApplicantExtras);
   const [isEditingExistingApplicant, setIsEditingExistingApplicant] = useState<boolean>(true); // Long form is always editing existing
+  const [isPrefilled, setIsPrefilled] = useState<boolean>(true); // Long form is always prefilled
+  const [isEditingFromSummary, setIsEditingFromSummary] = useState<boolean>(false);
   const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
     setApplicantExtras((oldApx) => {
       oldApx = oldApx?.filter((v) => v.type != applicantExtrasEntity?.type);
@@ -43,7 +46,16 @@ export default function LongForm({
 
   // Initialize step from last_completed_step if available
   const [steps, setSteps] = useState<number>(initialApplicant.last_completed_step ?? 0);
-  const stepNext = (): void => setSteps(steps + 1);
+  const stepNext = (): void => {
+    if (isEditingFromSummary) {
+      // If editing from summary, return to summary page and reset flag
+      setIsEditingFromSummary(false);
+      setSteps(-1);
+    } else {
+      // Normal flow: go to next step
+      setSteps(steps + 1);
+    }
+  };
   const stepBack = (): void => setSteps(steps - 1);
 
   // Total number of steps in the long form
@@ -144,6 +156,8 @@ export default function LongForm({
           steps,
           company: applicant?.company,
           isEditingExistingApplicant,
+          isPrefilled,
+          isEditingFromSummary,
         },
         method: {
           setApplicant,
@@ -154,6 +168,8 @@ export default function LongForm({
           stepNext,
           stepBack,
           setIsEditingExistingApplicant,
+          setIsPrefilled,
+          setIsEditingFromSummary,
         },
       }}
     >
@@ -163,6 +179,9 @@ export default function LongForm({
             <CompanyLogoUpperRight />
             <FormProgress currentStep={steps} totalSteps={totalSteps} />
             <ProgressSaveIndicator showLastSaved={true} />
+            <div style={{ marginBottom: '1rem' }}>
+              <ReturningUserBanner applicant={applicant} companyName={applicant?.company?.name} />
+            </div>
             {getLongFormPages(steps)}
           </div>
           {/* Show "Powered by DriverFly" below the card */}

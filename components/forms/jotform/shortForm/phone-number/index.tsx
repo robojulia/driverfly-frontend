@@ -42,7 +42,7 @@ interface ExistingApplicantScenario {
 
 export function PhoneNumber() {
   const {
-    state: { applicant, companyJobs, steps, company, directJob, isDirectJobApplication },
+    state: { applicant, companyJobs, steps, company, directJob, isDirectJobApplication, isEditingExistingApplicant },
     method: {
       setApplicant,
       setJobs,
@@ -70,6 +70,7 @@ export function PhoneNumber() {
   const [isCreatingJobApplication, setIsCreatingJobApplication] = useState<boolean>(false);
   const [showAlreadyAppliedAlert, setShowAlreadyAppliedAlert] = useState<boolean>(false);
   const [shouldPrefillApplication, setShouldPrefillApplication] = useState<boolean>(false);
+  const [debugInfo, setDebugInfo] = useState<string[]>([]);
 
   // Helper function to analyze applicant scenario
   const analyzeApplicantScenario = (existingApplicants: any[]): ExistingApplicantScenario => {
@@ -160,10 +161,28 @@ export function PhoneNumber() {
         const { phone } = values;
         // Normalize phone number for consistent lookup
         const normalizedPhone = normalizePhoneNumber(phone);
+        console.log('🔍 Phone number lookup:', {
+          original: phone,
+          normalized: normalizedPhone,
+        });
         const applicantApi = new ApplicantApi();
 
         // Check if applicant has already applied for any jobs with this phone number
-        const appliedJobs = await applicantApi.getAppliedJobsByPhone(normalizedPhone);
+        // Try multiple formats to handle legacy data
+        let appliedJobs = [];
+        for (const phoneFormat of [normalizedPhone, `+1${normalizedPhone}`, `+1 ${normalizedPhone}`, `1${normalizedPhone}`]) {
+          try {
+            const jobs = await applicantApi.getAppliedJobsByPhone(phoneFormat);
+            if (jobs && jobs.length > 0) {
+              appliedJobs = jobs;
+              console.log(`✅ Found applied jobs with format: "${phoneFormat}"`, jobs.length);
+              break;
+            }
+          } catch (error) {
+            // Continue to next format
+          }
+        }
+        console.log('📋 Applied jobs found:', appliedJobs?.length || 0);
 
         // Check if they've already applied to this specific job
         if (isDirectJobApplication && directJob) {
@@ -186,12 +205,47 @@ export function PhoneNumber() {
         }
 
         // If no direct conflict, continue with the existing applicant search flow
-        const existingApplicants = await applicantApi.searchApplicantsByPhone({
-          phone: normalizedPhone,
+        // Try multiple phone number formats to handle legacy data
+        const phoneFormats = [
+          normalizedPhone,                    // "7146231450"
+          `+1${normalizedPhone}`,             // "+17146231450"
+          `+1 ${normalizedPhone}`,            // "+1 7146231450"
+          `1${normalizedPhone}`,              // "17146231450"
+          // Formatted patterns
+          `(${normalizedPhone.slice(0,3)}) ${normalizedPhone.slice(3,6)}-${normalizedPhone.slice(6)}`, // "(714) 623-1450"
+          `${normalizedPhone.slice(0,3)}-${normalizedPhone.slice(3,6)}-${normalizedPhone.slice(6)}`,   // "714-623-1450"
+          `${normalizedPhone.slice(0,3)} ${normalizedPhone.slice(3,6)} ${normalizedPhone.slice(6)}`,   // "714 623 1450"
+          `+1 (${normalizedPhone.slice(0,3)}) ${normalizedPhone.slice(3,6)}-${normalizedPhone.slice(6)}`, // "+1 (714) 623-1450"
+          `1-${normalizedPhone.slice(0,3)}-${normalizedPhone.slice(3,6)}-${normalizedPhone.slice(6)}`,    // "1-714-623-1450"
+        ];
+
+        console.log('🔍 Trying phone formats:', phoneFormats);
+
+        let existingApplicants = [];
+        for (const phoneFormat of phoneFormats) {
+          try {
+            const results = await applicantApi.searchApplicantsByPhone({
+              phone: phoneFormat,
+            });
+            if (results && results.length > 0) {
+              existingApplicants = results;
+              console.log(`✅ Found applicants with format: "${phoneFormat}"`, results);
+              break; // Found results, no need to try other formats
+            }
+          } catch (error) {
+            // Continue to next format
+            console.log(`❌ No results for format: "${phoneFormat}"`);
+          }
+        }
+
+        console.log('👥 Final existing applicants found:', {
+          count: existingApplicants?.length || 0,
+          applicants: existingApplicants,
         });
 
         // Analyze the scenario for better UX
         const scenario = analyzeApplicantScenario(existingApplicants);
+        console.log('📊 Scenario determined:', scenario.type);
         setApplicantScenario(scenario);
 
         if (scenario.type === 'SAME_COMPANY_NEW_JOB') {
@@ -265,13 +319,19 @@ export function PhoneNumber() {
     try {
       setIsLoadingProfile(true);
 
-      // For DIFFERENT_COMPANY_PREFILL, we need to get the full profile for prefilling
+      // ALWAYS verify OTP first to authenticate the user
+      console.log('🔐 Verifying OTP for applicant ID:', applicantId);
+      const verifiedApplicant = await applicantApi.verifyOTP({
+        applicantId,
+        otp,
+      });
+
+      // For DIFFERENT_COMPANY_PREFILL, use the verified applicant data for prefilling
       let applicantProfile;
       if (applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' && shouldPrefillApplication) {
-        // Get the most recent applicant profile with full data for prefilling
-        applicantProfile = await applicantApi.getMostRecentApplicantForPrefill({
-          phone: normalizePhoneNumber(form.values.phone),
-        });
+        // Use the verified applicant data and clear company-specific fields
+        console.log('🔍 Using verified applicant data for prefill');
+        applicantProfile = { ...verifiedApplicant };
 
         // Clear sensitive company-specific data while keeping personal information
         if (applicantProfile) {
@@ -282,16 +342,29 @@ export function PhoneNumber() {
           applicantProfile.jobs = [];
           applicantProfile.notes = [];
           applicantProfile.created_at = null;
+          applicantProfile.is_hired = false; // Reset hired status - this is a new application at a different company
+
+          // Clear critical safety-related fields that must be re-submitted for each company
+          // These fields are company-specific and must be updated for the new application
+          applicantProfile.moving_violations_count = null;
+          applicantProfile.all_violations_count = null;
+          applicantProfile.accident_count = null;
+          applicantProfile.license_revoked = null;
+          applicantProfile.criminal_history = null;
+          applicantProfile.accident_history = null;
+          applicantProfile.moving_violation_history = null;
+          applicantProfile.accident_details = null;
+          applicantProfile.moving_violations_details = null;
+
+          // Note: can_pass_drug_test and authorized_to_work_in_us are personal attributes,
+          // not company-specific, so they are preserved from previous application
 
           // Keep personal information for prefilling
           // first_name, last_name, phone, email, birthdate, etc. will be preserved
         }
       } else {
-        // For same company scenarios, verify OTP and get existing profile
-        applicantProfile = await applicantApi.verifyOTP({
-          applicantId,
-          otp,
-        });
+        // For same company scenarios, use the verified profile
+        applicantProfile = verifiedApplicant;
       }
 
       // Show verification success state
@@ -300,11 +373,32 @@ export function PhoneNumber() {
       // Set applicant data
       if (applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' && shouldPrefillApplication) {
         // Use prefilled data for new company
-        setApplicant({
+        // Clear company-specific employment history and signatures
+        const clearedApplicant = {
           ...applicantProfile,
-          documents: applicantProfile.documents || [], // Ensure documents are explicitly set
+          documents: applicantProfile.documents || [],
+          employers: [], // Clear employment history - must be updated for new company
+          already_applied_to_company: null, // Clear - must answer for this company
+          already_worked_to_company: null, // Clear - must answer for this company
+          already_worked_start_date: null,
+          already_worked_end_date: null,
+        };
+
+        // Filter out all signature-related extras for the new company application
+        const filteredExtras = (applicantProfile.extras || []).filter(extra => {
+          const signatureTypes = [
+            'SIGNATURE_GENERAL_CONSENT',
+            'SIGNATURE_IMPORTANT_BACKGROUND',
+            'SIGNATURE_DISCLOSURE_AUTHORIZATION',
+            'SIGNATURE_VOE_AUTHORIZATION',
+            'SIGNATURE', // Application authorization signature
+            'APPLY_DATE',
+          ];
+          return !signatureTypes.includes(extra.type);
         });
-        setApplicantExtras(applicantProfile.extras || []); // Set the extras from the prefilled profile
+
+        setApplicant(clearedApplicant);
+        setApplicantExtras(filteredExtras); // Only keep non-signature extras
         setIsEditingExistingApplicant(false); // This is a new applicant with prefilled data
       } else {
         // Use existing profile for same company
@@ -500,15 +594,24 @@ export function PhoneNumber() {
     try {
       const applicantApi = new ApplicantApi();
       const { phone } = form.values;
-      const normalizedPhone = normalizePhoneNumber(phone);
-      const OTPresponse = await applicantApi.requestOTP({ phone: normalizedPhone });
+      // Use the original phone format from the form, not normalized
+      // The backend will handle formatting for SMS delivery
+      console.log('📱 handleGoToMyApplication - Requesting OTP for phone:', phone);
+      const OTPresponse = await applicantApi.requestOTP({ phone: phone });
+      console.log('✅ OTP Response received in handleGoToMyApplication:', OTPresponse);
       setOtpApplicant(OTPresponse);
       seShowtOtpField(true);
       setOpenModal(true); // Open the modal to show OTP verification
+      toast.success('Verification code sent to your phone!');
       // Don't hide the alert immediately - let the OTP flow take precedence
-    } catch (error) {
-      console.error('Failed to send OTP:', error);
-      toast.error(t('UNABLE_TO_SEND_OTP'));
+    } catch (error: any) {
+      console.error('❌ Failed to send OTP in handleGoToMyApplication:', error);
+      console.error('Error details:', {
+        message: error?.message,
+        response: error?.response?.data,
+        status: error?.response?.status,
+      });
+      toast.error(t('UNABLE_TO_SEND_OTP') + ': ' + (error?.response?.data?.message || error?.message || 'Unknown error'));
     }
   };
 
@@ -522,27 +625,51 @@ export function PhoneNumber() {
   const requestOTP = async () => {
     setIsResending(true);
     setOtpException(false);
+    setDebugInfo([]);
     const applicantApi = new ApplicantApi();
     const { phone } = form.values;
-    const normalizedPhone = normalizePhoneNumber(phone);
+
+    setDebugInfo(prev => [...prev, `🔵 requestOTP called at ${new Date().toLocaleTimeString()}`]);
+    setDebugInfo(prev => [...prev, `📱 Phone number: ${phone}`]);
+
+    // Use the original phone format from the form, not normalized
+    // The backend will handle formatting for SMS delivery
+    console.log('📱 Requesting OTP for phone:', phone);
     try {
       let otpResponse;
 
       if (applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL') {
         // For cross-company prefill, we don't need existing applicant ID
         // We'll use the phone number to get the most recent profile
-        otpResponse = await applicantApi.requestOTP({ phone: normalizedPhone });
+        setDebugInfo(prev => [...prev, `🔄 Scenario: DIFFERENT_COMPANY_PREFILL`]);
+        console.log('📱 DIFFERENT_COMPANY_PREFILL - Requesting OTP with phone:', phone);
+        otpResponse = await applicantApi.requestOTP({ phone: phone });
       } else {
         // For same company scenarios, use the existing flow
-        otpResponse = await applicantApi.requestOTP({ phone: normalizedPhone });
+        setDebugInfo(prev => [...prev, `🔄 Scenario: ${applicantScenario?.type || 'Unknown'}`]);
+        console.log('📱 Same company scenario - Requesting OTP with phone:', phone);
+        otpResponse = await applicantApi.requestOTP({ phone: phone });
       }
 
+      console.log('✅ OTP Response received:', otpResponse);
+      setDebugInfo(prev => [...prev, `✅ SUCCESS! OTP Response: ${JSON.stringify(otpResponse)}`]);
       setOtpApplicant(otpResponse);
       seShowtOtpField(true);
-    } catch (error) {
-      console.log('errors', error);
+      toast.success('Verification code sent to your phone!');
+    } catch (error: any) {
+      console.error('❌ OTP Request Failed:', error);
+      console.error('Error details:', {
+        message: error?.message,
+        response: error?.response?.data,
+        status: error?.response?.status,
+      });
+      const errorMsg = error?.response?.data?.message || error?.message || 'Unknown error';
+      setDebugInfo(prev => [...prev, `❌ ERROR: ${errorMsg}`]);
+      setDebugInfo(prev => [...prev, `Status: ${error?.response?.status || 'N/A'}`]);
+      toast.error(t('UNABLE_TO_SEND_OTP') + ': ' + errorMsg);
     } finally {
       setIsResending(false);
+      setDebugInfo(prev => [...prev, `🏁 Request completed at ${new Date().toLocaleTimeString()}`]);
     }
   };
 
@@ -591,6 +718,18 @@ export function PhoneNumber() {
     <>
       <ToastContainer />
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>{t('phone')}</h1>
+
+      {/* Debug Panel */}
+      {debugInfo.length > 0 && (
+        <Alert variant="dark" className="mb-4">
+          <h6 className="mb-2">🔍 Debug Info:</h6>
+          {debugInfo.map((info, idx) => (
+            <div key={idx} style={{ fontSize: '0.85rem', fontFamily: 'monospace' }}>
+              {info}
+            </div>
+          ))}
+        </Alert>
+      )}
 
       <div className="mb-4">
         <Alert variant="light" className="border">
@@ -1003,6 +1142,7 @@ export function PhoneNumber() {
                   name="phone"
                   label="Phone Number"
                   formik={form}
+                  readOnly={isEditingExistingApplicant}
                 />
               </div>
             </Row>

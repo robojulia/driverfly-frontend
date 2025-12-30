@@ -82,7 +82,7 @@ export class CompanyPreferenceEntity {
                     then: yup.mixed()
                         .when("label", {
                             is: CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DOCUMETS,
-                            then: yup.array((yup.string() as any).required().enum(ApplicantOnBoardingChecklist)).nullable()
+                            then: yup.array(yup.string().required()).nullable()
                         })
                         .when("label", {
                             is: CompanyPreferenceOnboardingChecklistLabel.APPLICANT_DAC,

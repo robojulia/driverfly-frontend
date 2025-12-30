@@ -8,6 +8,7 @@ import { useAuth } from '../../hooks/use-auth';
 import EligibilityApi, {
   ApplicantEligibilityResponse,
   ApplicantEligibilityScore,
+  ApplicantBasicInfo,
   EligibilityQueryParams,
 } from '../../pages/api/eligibility';
 import AutoRecruitIndicator from './AutoRecruitIndicator';
@@ -233,6 +234,74 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
     );
   };
 
+  /**
+   * Generates tooltip content explaining interest level derivation
+   */
+  const getInterestLevelTooltipContent = (applicant: ApplicantBasicInfo): JSX.Element => {
+    // Determine application status text
+    const getStatusText = () => {
+      if (applicant.hasApplied) return 'Applied to this job';
+      if (applicant.isInterested) return 'Expressed interest';
+      if (applicant.type === 'AUTO_RECRUIT') return 'Auto-recruited candidate';
+      return 'General applicant';
+    };
+
+    // Format engagement information
+    const getEngagementText = () => {
+      if (!applicant.engagementCount) return null;
+
+      const count = applicant.engagementCount;
+      const interactions = count === 1 ? 'interaction' : 'interactions';
+
+      if (applicant.daysSinceLastEngagement === null) {
+        return `${count} ${interactions}`;
+      }
+
+      const days = applicant.daysSinceLastEngagement;
+      const timeText = days === 0 ? 'today' :
+                       days === 1 ? 'yesterday' :
+                       `${days} days ago`;
+
+      return `${count} ${interactions}, last ${timeText}`;
+    };
+
+    const statusText = getStatusText();
+    const engagementText = getEngagementText();
+
+    return (
+      <div style={{ textAlign: 'left', fontSize: '13px', lineHeight: '1.5' }}>
+        <div style={{ fontWeight: 600, marginBottom: '8px', fontSize: '14px' }}>
+          Interest Level Factors:
+        </div>
+
+        {/* Application Status Section */}
+        <div style={{ marginBottom: '8px' }}>
+          <div style={{ fontWeight: 600, marginBottom: '4px' }}>Application Status:</div>
+          <div style={{ paddingLeft: '8px' }}>
+            <div>• Status: {statusText}</div>
+            {engagementText && <div>• Engagement: {engagementText}</div>}
+          </div>
+        </div>
+
+        {/* Profile Completeness Section */}
+        <div style={{ marginBottom: '8px' }}>
+          <div style={{ fontWeight: 600, marginBottom: '4px' }}>Profile Completeness:</div>
+          <div style={{ paddingLeft: '8px', color: '#999' }}>
+            • N/A (pending backend update)
+          </div>
+        </div>
+
+        {/* Notes Activity Section */}
+        <div>
+          <div style={{ fontWeight: 600, marginBottom: '4px' }}>Notes Activity:</div>
+          <div style={{ paddingLeft: '8px', color: '#999' }}>
+            • N/A (pending backend update)
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   if (loading && !appliedData && !eligibleData) {
     return (
       <div className={`${styles.eligibilityContainer} ${className}`}>
@@ -394,13 +463,23 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
       <td>
         {applicant.applicant.hasApplied && applicant.applicant.interestTier ? (
           <div className={styles.interestLevelCell}>
-            <span
-              className={`${styles.interestBadge} ${getInterestLevelBadgeClass(
-                applicant.applicant.interestTier
-              )}`}
+            <OverlayTrigger
+              placement="top"
+              overlay={
+                <Tooltip id={`interest-tooltip-${applicant.applicantId}`}>
+                  {getInterestLevelTooltipContent(applicant.applicant)}
+                </Tooltip>
+              }
             >
-              {formatInterestLevel(applicant.applicant.interestTier)}
-            </span>
+              <span
+                className={`${styles.interestBadge} ${getInterestLevelBadgeClass(
+                  applicant.applicant.interestTier
+                )}`}
+                style={{ cursor: 'help' }}
+              >
+                {formatInterestLevel(applicant.applicant.interestTier)}
+              </span>
+            </OverlayTrigger>
           </div>
         ) : applicant.applicant.isInterested && !applicant.applicant.hasApplied ? (
           <div className={styles.interestLevelCell}>

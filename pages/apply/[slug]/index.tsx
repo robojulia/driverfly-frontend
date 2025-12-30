@@ -49,6 +49,7 @@ export default function FullForm({
   const [directJobState, setDirectJobState] = useState<JobEntity | null>(directJob || null);
   const [isEditingExistingApplicant, setIsEditingExistingApplicant] = useState<boolean>(false);
   const [isPrefilled, setIsPrefilled] = useState<boolean>(false);
+  const [isEditingFromSummary, setIsEditingFromSummary] = useState<boolean>(false);
 
   const isDirectJobApplication = Boolean(directJobId && directJob);
 
@@ -59,8 +60,32 @@ export default function FullForm({
     });
 
   const [steps, setSteps] = useState<number>(0);
-  const stepNext = (): void => setSteps(steps + 1);
-  const stepBack = (): void => setSteps(steps - 1);
+  const stepNext = (): void => {
+    console.log('🔵 stepNext called');
+    console.log('isEditingFromSummary:', isEditingFromSummary);
+    console.log('current steps:', steps);
+
+    if (isEditingFromSummary) {
+      // If editing from summary, return to summary page and reset flag
+      console.log('✅ Navigating back to summary (step -1)');
+      setIsEditingFromSummary(false);
+      setSteps(-1);
+    } else {
+      // Normal flow: go to next step
+      console.log('➡️ Going to next step:', steps + 1);
+      setSteps(steps + 1);
+    }
+  };
+  const stepBack = (): void => {
+    if (isEditingFromSummary) {
+      // If editing from summary, return to summary page and reset flag
+      setIsEditingFromSummary(false);
+      setSteps(-1);
+    } else {
+      // Normal flow: go to previous step
+      setSteps(steps - 1);
+    }
+  };
 
   // Calculate total steps based on application type
   const totalSteps = getTotalSteps(isDirectJobApplication);
@@ -122,6 +147,7 @@ export default function FullForm({
           isDirectJobApplication,
           isEditingExistingApplicant,
           isPrefilled,
+          isEditingFromSummary,
         },
         method: {
           setApplicant,
@@ -135,6 +161,7 @@ export default function FullForm({
           setDirectJob: setDirectJobState,
           setIsEditingExistingApplicant,
           setIsPrefilled,
+          setIsEditingFromSummary,
         },
       }}
     >

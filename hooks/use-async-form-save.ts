@@ -11,7 +11,8 @@ interface AsyncFormSaveHook {
 
 export const useAsyncFormSave = (
   applicantId: number | undefined,
-  stepNumber: number
+  stepNumber: number,
+  isHired?: boolean
 ): AsyncFormSaveHook => {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
@@ -28,6 +29,12 @@ export const useAsyncFormSave = (
     async (formData: any) => {
       // Only save after the initial checkpoint (step 9)
       if (!applicantId || stepNumber <= 9) {
+        return;
+      }
+
+      // Skip auto-save for hired applicants to avoid backend validation errors
+      if (isHired) {
+        console.log('Skipping auto-save for hired applicant');
         return;
       }
 
@@ -62,7 +69,7 @@ export const useAsyncFormSave = (
         }
       }
     },
-    [applicantId, stepNumber, isSaving, cancel]
+    [applicantId, stepNumber, isSaving, cancel, isHired]
   );
 
   return {

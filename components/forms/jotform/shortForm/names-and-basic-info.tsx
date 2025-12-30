@@ -15,10 +15,61 @@ import { Input, MaskedInput, Select } from '../../../shared/dha';
 import { FormActions } from '../form-buttons';
 import ApplicantApi from '../../../../pages/api/applicant';
 import { normalizePhoneNumber } from '../../../../utils/phone-normalization';
+import { UtmReferral } from '../../../../models/auth/utm-referral.interface';
+
+// Helper function to check if any UTM parameters exist
+const hasUtmParameters = (utm?: UtmReferral): boolean => {
+  if (!utm) return false;
+  return Boolean(
+    utm.utm_source ||
+    utm.utm_medium ||
+    utm.utm_campaign ||
+    utm.utm_content ||
+    utm.referral_name
+  );
+};
+
+// Map UTM parameters to HearAboutUsType
+const mapUtmToHearAboutType = (utm?: UtmReferral): HearAboutUsType | null => {
+  if (!utm) return null;
+
+  // If there's a specific referral name, it's a referral
+  if (utm.referral_name) {
+    return HearAboutUsType.REFERRAL;
+  }
+
+  // Check utm_source and utm_medium for clues
+  const source = utm.utm_source?.toLowerCase() || '';
+  const medium = utm.utm_medium?.toLowerCase() || '';
+  const combined = `${source} ${medium}`;
+
+  // Map based on common patterns
+  if (combined.includes('social') || combined.includes('facebook') ||
+      combined.includes('twitter') || combined.includes('linkedin') ||
+      combined.includes('instagram')) {
+    return HearAboutUsType.SOCIAL_MEDIA;
+  }
+
+  if (combined.includes('email') || medium.includes('email')) {
+    return HearAboutUsType.EMAIL;
+  }
+
+  if (combined.includes('job') || combined.includes('board') ||
+      combined.includes('indeed') || combined.includes('ziprecruiter')) {
+    return HearAboutUsType.JOB_BOARD;
+  }
+
+  if (combined.includes('print') || combined.includes('ad') || combined.includes('newspaper')) {
+    return HearAboutUsType.PRINT_AD;
+  }
+
+  // Default to OTHER if we have UTM parameters but can't determine the specific type
+  return HearAboutUsType.OTHER;
+};
 
 export function NamesAndBasicInfo() {
   const {
-    state: { applicant, applicantExtras, utm },
+    state: { applicant, applicantExtras, utm, isEditingExistingApplicant },
     method: { setApplicant, setApplicantExtras, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
@@ -131,9 +182,12 @@ export function NamesAndBasicInfo() {
     const apx_referal_name = applicantExtras?.find((v) => v.type === ApplicantExtras.REFERAL_NAME);
 
     // Create default hear about objects
+    // If UTM parameters exist, automatically set the lead source
+    const utmLeadSource = hasUtmParameters(utm) ? mapUtmToHearAboutType(utm) : null;
+
     const hearAboutObject = {
       ...new ApplicantExtrasEntity(ApplicantExtras.HEAR_ABOUT_US),
-      value: Boolean(utm?.referral_name) ? HearAboutUsType.REFERRAL : null,
+      value: utmLeadSource,
     };
 
     const referalNameObject = {
@@ -217,6 +271,7 @@ export function NamesAndBasicInfo() {
                 onChange={form.handleChange}
                 onBlur={form.handleBlur}
                 required
+                readOnly={isEditingExistingApplicant}
                 error={
                   form.touched.first_name && form.errors.first_name
                     ? String(form.errors.first_name)
@@ -236,6 +291,7 @@ export function NamesAndBasicInfo() {
                 onChange={form.handleChange}
                 onBlur={form.handleBlur}
                 required
+                readOnly={isEditingExistingApplicant}
                 error={
                   form.touched.last_name && form.errors.last_name
                     ? String(form.errors.last_name)
@@ -367,56 +423,56 @@ export function NamesAndBasicInfo() {
             />
           </Row>
 
-          {/* How Did You Hear About Us Section */}
-          <div style={{ marginTop: '2rem', marginBottom: '1rem' }}>
-            <h4 className={`${styles.jot_form_headers_font}`}>{t('HOW_DID_YOU_HEAR_ABOUT_US')}</h4>
+          {/* How Did You Hear About Us Section - Hidden when UTM parameters are present */}
+          {!hasUtmParameters(utm) && (
+            <div style={{ marginTop: '2rem', marginBottom: '1rem' }}>
+              <h4 className={`${styles.jot_form_headers_font}`}>{t('HOW_DID_YOU_HEAR_ABOUT_US')}</h4>
 
-            <Row className={styles.bold}>
-              <div className="col-12 my-3">
-                <Select
-                  name="HEAR_ABOUT_US.value"
-                  label="Select an option"
-                  placeholder="CHOOSE"
-                  labelPrefix="HearAboutUsType"
-                  enumType={HearAboutUsType}
-                  value={form.values?.HEAR_ABOUT_US?.value || ''}
-                  onChange={form.handleChange}
-                  onBlur={form.handleBlur}
-                  error={
-                    form.touched?.HEAR_ABOUT_US?.value && form.errors?.HEAR_ABOUT_US?.value
-                      ? String(form.errors.HEAR_ABOUT_US.value)
-                      : undefined
-                  }
-                  disabled={Boolean(utm?.referral_name)}
-                  required
-                />
-              </div>
-
-              {form.values?.HEAR_ABOUT_US?.value === HearAboutUsType.REFERRAL && (
+              <Row className={styles.bold}>
                 <div className="col-12 my-3">
-                  <Input
-                    name="REFERAL_NAME.value"
-                    label={t('REFERRAL_NAME')}
-                    placeholder={t('REFERRAL_NAME')}
-                    value={form.values?.REFERAL_NAME?.value || ''}
+                  <Select
+                    name="HEAR_ABOUT_US.value"
+                    label="Select an option"
+                    placeholder="CHOOSE"
+                    labelPrefix="HearAboutUsType"
+                    enumType={HearAboutUsType}
+                    value={form.values?.HEAR_ABOUT_US?.value || ''}
                     onChange={form.handleChange}
                     onBlur={form.handleBlur}
                     error={
-                      form.touched?.REFERAL_NAME?.value && form.errors?.REFERAL_NAME?.value
-                        ? String(form.errors.REFERAL_NAME.value)
+                      form.touched?.HEAR_ABOUT_US?.value && form.errors?.HEAR_ABOUT_US?.value
+                        ? String(form.errors.HEAR_ABOUT_US.value)
                         : undefined
                     }
-                    disabled={Boolean(utm?.referral_name)}
                     required
-                    autoComplete="name"
-                    helperText="Please provide the name of the person who referred you"
-                    icon={<span>👤</span>}
-                    size="large"
                   />
                 </div>
-              )}
-            </Row>
-          </div>
+
+                {form.values?.HEAR_ABOUT_US?.value === HearAboutUsType.REFERRAL && (
+                  <div className="col-12 my-3">
+                    <Input
+                      name="REFERAL_NAME.value"
+                      label={t('REFERRAL_NAME')}
+                      placeholder={t('REFERRAL_NAME')}
+                      value={form.values?.REFERAL_NAME?.value || ''}
+                      onChange={form.handleChange}
+                      onBlur={form.handleBlur}
+                      error={
+                        form.touched?.REFERAL_NAME?.value && form.errors?.REFERAL_NAME?.value
+                          ? String(form.errors.REFERAL_NAME.value)
+                          : undefined
+                      }
+                      required
+                      autoComplete="name"
+                      helperText="Please provide the name of the person who referred you"
+                      icon={<span>👤</span>}
+                      size="large"
+                    />
+                  </div>
+                )}
+              </Row>
+            </div>
+          )}
         </div>
 
         <FormActions

@@ -7,7 +7,7 @@ import { useTranslation } from '../../../../hooks/use-translation';
 import { useAsyncFormSave } from '../../../../hooks/use-async-form-save';
 import { ApplicantExtrasEntity } from '../../../../models/applicant/applicant-extras.entity';
 import { DriverApplicationDto } from '../../../../models/jot-form/long-form/driver-application.dto';
-import { PrimaryButton } from '../form-buttons';
+import { FormActions } from '../form-buttons';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { SignatureComponent } from '../../signature';
 import { Input, DateInput } from '../../../shared/dha';
@@ -18,13 +18,14 @@ export interface DriverApplicationProps {
 
 export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationProps) {
   const {
-    state: { applicant, applicantExtras, company, steps, isPrefilled },
-    method: { setApplicant, updateApplicantExtras, stepNext },
+    state: { applicant, applicantExtras, company, steps, isPrefilled, isEditingFromSummary },
+    method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
   const [hasSignature, setHasSignature] = useState(false);
   const hasSkipped = useRef(false);
+  const hasSubmitted = useRef(false);
 
   // Initialize async form saving for this component
   const { saveFormData, isSaving } = useAsyncFormSave(applicant?.id, steps);
@@ -34,6 +35,13 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
     validationSchema: DriverApplicationDto.yupSchema(),
     onSubmit: async (values) => {
       try {
+        console.log('🔵 DriverApplication onSubmit called');
+        console.log('isEditingFromSummary:', isEditingFromSummary);
+        console.log('current step:', steps);
+
+        // Mark as submitted to prevent auto-skip from running again
+        hasSubmitted.current = true;
+
         const { first_name, last_name, APPLY_DATE, SIGNATURE, is_automated_recruiting_lead } =
           values;
 
@@ -62,9 +70,17 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
           ],
         });
 
+        console.log('🔵 About to call stepNext()');
         stepNext();
+        console.log('✅ stepNext() called');
       } catch (error) {
-        console.log(error);
+        console.log('❌ Error in onSubmit:', error);
+      }
+    },
+    onReset: () => {
+      // Navigate back when user clicks the Back button
+      if (stepBack) {
+        stepBack();
       }
     },
   });
@@ -100,11 +116,14 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
     const apx_sign = applicantExtras?.find((v) => v.type == ApplicantExtras.SIGNATURE);
 
     // If this is a prefilled application and user already has a signature, skip this step
-    if (isPrefilled && apx_sign?.value && stepNext && !hasSkipped.current) {
+    // BUT: Don't skip if:
+    // - User is intentionally editing from the summary
+    // - Form has already been submitted (to prevent double navigation)
+    if (isPrefilled && apx_sign?.value && stepNext && !hasSkipped.current && !isEditingFromSummary && !hasSubmitted.current) {
       hasSkipped.current = true;
       stepNext();
     }
-  }, [isPrefilled, applicantExtras, stepNext]);
+  }, [isPrefilled, applicantExtras, stepNext, isEditingFromSummary]);
 
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const now = new Date().toLocaleString('en-US', { timeZone: userTimeZone });
@@ -113,6 +132,22 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
   const handleSignatureChange = (signature: string | null) => {
     form.setFieldValue('SIGNATURE.value', signature);
     setHasSignature(!!signature);
+  };
+
+  const handleNext = () => {
+    const syntheticEvent = {
+      preventDefault: () => {},
+      target: {},
+    } as any;
+    form.handleSubmit(syntheticEvent);
+  };
+
+  const handleBack = () => {
+    const syntheticEvent = {
+      preventDefault: () => {},
+      target: {},
+    } as any;
+    form.handleReset(syntheticEvent);
   };
 
   return (
@@ -206,18 +241,15 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
             />
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-            <PrimaryButton
-              type="submit"
-              disabled={!hasSignature}
-              style={{
-                width: '100%',
-                maxWidth: '200px',
-              }}
-            >
-              {t('NEXT')}
-            </PrimaryButton>
-          </div>
+          <FormActions
+            onNext={handleNext}
+            onBack={handleBack}
+            isSubmitting={form.isSubmitting}
+            isValid={hasSignature && form.isValid}
+            showBackButton={true}
+            nextButtonText={isEditingFromSummary ? "Save and continue" : t('NEXT')}
+            backButtonText={t('BACK')}
+          />
         </div>
       </Form>
     </>

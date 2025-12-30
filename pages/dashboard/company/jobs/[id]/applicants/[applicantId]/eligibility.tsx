@@ -63,13 +63,24 @@ export default function ApplicantEligibilityDetail({
         setJob(jobData);
 
         // Load eligibility data
+        console.log('Creating EligibilityApi and fetching data for job:', jobId, 'applicant:', applicantId);
         const eligibilityApi = new EligibilityApi();
         const eligibilityResult = await eligibilityApi.getApplicantJobEligibility(
           +jobId,
           +applicantId
         );
+        console.log('Eligibility data received successfully:', eligibilityResult);
+        console.log('Setting eligibility data to state...');
         setEligibilityData(eligibilityResult);
+        console.log('Eligibility data set successfully, component should render now');
       } catch (error) {
+        console.error('Error loading eligibility data:', error);
+        console.error('Error details:', {
+          message: error?.message,
+          status: error?.response?.status,
+          statusText: error?.response?.statusText,
+          data: error?.response?.data,
+        });
         globalAjaxExceptionHandler(error, {
           toast: toast,
           t: t,
@@ -82,7 +93,8 @@ export default function ApplicantEligibilityDetail({
     };
 
     loadData();
-  }, [jobId, applicantId, company, backPath, router, t]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jobId, applicantId]);
 
   if (loading) {
     return (
@@ -112,8 +124,25 @@ export default function ApplicantEligibilityDetail({
     );
   }
 
+  console.log('Rendering with eligibility data:', eligibilityData);
+
   const { applicant, eligibilityStatus, scoringDetails, detailedBreakdown, recommendations } =
-    eligibilityData;
+    eligibilityData || {};
+
+  console.log('Destructured values:', { applicant, eligibilityStatus, scoringDetails, detailedBreakdown, recommendations });
+
+  // Ensure required fields have default values if missing from API response
+  const safeDetailedBreakdown = detailedBreakdown || {};
+  const safeRecommendations = recommendations || [];
+  const safeScoringDetails = scoringDetails || {
+    requirementsMet: [],
+    requirementsFailed: [],
+    bonusPoints: [],
+    deductions: [],
+    missingFields: [],
+  };
+
+  console.log('Safe values prepared for rendering');
 
   const getCompatibilityStatus = (status: string) => {
     // Map backend status to new compatibility states
@@ -191,7 +220,7 @@ export default function ApplicantEligibilityDetail({
 
   const compatibility = getCompatibilityStatus(eligibilityStatus);
 
-  const title = `${applicant.firstName} ${applicant.lastName} - Eligibility Analysis`;
+  const title = `${applicant?.firstName || 'Applicant'} ${applicant?.lastName || ''} - Eligibility Analysis`.trim();
 
   return (
     <ChildPageLayout backPath={backPath} title={title}>
@@ -207,13 +236,13 @@ export default function ApplicantEligibilityDetail({
                       <div>
                         <h4 className="mb-1">
                           <PersonFill className="me-2" />
-                          {applicant.firstName} {applicant.lastName}
+                          {applicant?.firstName || 'N/A'} {applicant?.lastName || ''}
                         </h4>
                         <p className="mb-1 text-muted">
-                          {applicant.licenseType} • {applicant.yearsExperience} years experience
+                          {applicant?.licenseType || 'N/A'} • {applicant?.yearsExperience || 0} years experience
                         </p>
                         <p className="mb-0 text-muted">
-                          {applicant.location} • {applicant.phone}
+                          {applicant?.location || 'N/A'} • {applicant?.phone || 'N/A'}
                         </p>
                       </div>
                     </div>
@@ -227,7 +256,7 @@ export default function ApplicantEligibilityDetail({
                         {compatibility.label}
                       </Badge>
 
-                      {applicant.hasApplied && (
+                      {applicant?.hasApplied && (
                         <Badge bg="info" style={{ fontSize: '0.9rem', padding: '0.5rem 1rem' }}>
                           Applied to this job
                         </Badge>
@@ -239,11 +268,13 @@ export default function ApplicantEligibilityDetail({
                     </div>
                   </Col>
                   <Col md={4} className="text-end">
-                    <Link href={`/dashboard/company/applicants/${applicant.id}/edit`}>
-                      <a>
-                        <Button variant="outline-primary">View Full Profile</Button>
-                      </a>
-                    </Link>
+                    {applicant?.id && (
+                      <Link href={`/dashboard/company/applicants/${applicant.id}/edit`}>
+                        <a>
+                          <Button variant="outline-primary">View Full Profile</Button>
+                        </a>
+                      </Link>
+                    )}
                   </Col>
                 </Row>
               </Card.Body>
@@ -256,7 +287,7 @@ export default function ApplicantEligibilityDetail({
               </div>
 
               {(() => {
-                const requirements = organizeRequirements(detailedBreakdown);
+                const requirements = organizeRequirements(safeDetailedBreakdown);
 
                 if (requirements.length === 0) {
                   return (
@@ -338,9 +369,9 @@ export default function ApplicantEligibilityDetail({
                     Strong Matches
                   </Card.Header>
                   <Card.Body>
-                    {scoringDetails.requirementsMet.length > 0 ? (
+                    {safeScoringDetails.requirementsMet.length > 0 ? (
                       <ul className="list-unstyled mb-0">
-                        {scoringDetails.requirementsMet.map((item, index) => (
+                        {safeScoringDetails.requirementsMet.map((item, index) => (
                           <li key={index} className="mb-2">
                             <CheckCircleFill className="text-success me-2" />
                             {item}
@@ -358,9 +389,9 @@ export default function ApplicantEligibilityDetail({
                 <Card className="mb-4 border-0 shadow-sm h-100">
                   <Card.Header className="bg-danger text-white">Missing Requirements</Card.Header>
                   <Card.Body>
-                    {scoringDetails.requirementsFailed.length > 0 ? (
+                    {safeScoringDetails.requirementsFailed.length > 0 ? (
                       <ul className="list-unstyled mb-0">
-                        {scoringDetails.requirementsFailed.map((item, index) => (
+                        {safeScoringDetails.requirementsFailed.map((item, index) => (
                           <li key={index} className="mb-2">
                             <XCircleFill className="text-danger me-2" />
                             {item}
@@ -375,9 +406,9 @@ export default function ApplicantEligibilityDetail({
               </Col>
             </Row>
 
-            {(scoringDetails.bonusPoints.length > 0 || scoringDetails.deductions.length > 0) && (
+            {(safeScoringDetails.bonusPoints.length > 0 || safeScoringDetails.deductions.length > 0) && (
               <Row>
-                {scoringDetails.deductions.length > 0 && (
+                {safeScoringDetails.deductions.length > 0 && (
                   <Col md={6}>
                     <Card className="mb-4 border-0 shadow-sm h-100">
                       <Card.Header className="bg-secondary text-white">
@@ -385,7 +416,7 @@ export default function ApplicantEligibilityDetail({
                       </Card.Header>
                       <Card.Body>
                         <ul className="list-unstyled mb-0">
-                          {scoringDetails.deductions.map((item, index) => (
+                          {safeScoringDetails.deductions.map((item, index) => (
                             <li key={index} className="mb-2">
                               <InfoCircleFill className="text-secondary me-2" />
                               {item}
@@ -404,26 +435,26 @@ export default function ApplicantEligibilityDetail({
             {/* Job Info Sidebar */}
             <Card className="mb-4 border-0 shadow-sm position-sticky" style={{ top: '20px' }}>
               <Card.Header className="bg-primary text-white">
-                <h6 className="mb-0">Job: {job.title}</h6>
+                <h6 className="mb-0">Job: {job?.title || 'N/A'}</h6>
               </Card.Header>
               <Card.Body>
                 <p className="mb-2">
-                  <strong>Location:</strong> {job.location?.city}, {job.location?.state}
+                  <strong>Location:</strong> {job?.location?.city || 'N/A'}, {job?.location?.state || ''}
                 </p>
                 <p className="mb-2">
-                  <strong>CDL Required:</strong> {job.cdl_class || 'None'}
+                  <strong>CDL Required:</strong> {job?.cdl_class || 'None'}
                 </p>
                 <p className="mb-2">
-                  <strong>Experience:</strong> {job.min_years_experience || 0}+ years
+                  <strong>Experience:</strong> {job?.min_years_experience || 0}+ years
                 </p>
                 <p className="mb-0">
-                  <strong>Pay:</strong> ${job.min_weekly_pay} - ${job.max_weekly_pay}/week
+                  <strong>Pay:</strong> ${job?.min_weekly_pay || 0} - ${job?.max_weekly_pay || 0}/week
                 </p>
               </Card.Body>
             </Card>
 
             {/* Recommendations */}
-            {recommendations.length > 0 && (
+            {safeRecommendations.length > 0 && (
               <Card className="mb-4 border-0 shadow-sm">
                 <Card.Header className="bg-info text-white">
                   <InfoCircleFill className="me-2" />
@@ -431,7 +462,7 @@ export default function ApplicantEligibilityDetail({
                 </Card.Header>
                 <Card.Body>
                   <ul className="list-unstyled mb-0">
-                    {recommendations.map((recommendation, index) => (
+                    {safeRecommendations.map((recommendation, index) => (
                       <li key={index} className="mb-2">
                         <InfoCircleFill className="text-info me-2" />
                         {recommendation}
@@ -447,13 +478,15 @@ export default function ApplicantEligibilityDetail({
               <Card.Body className="text-center">
                 <h6 className="mb-3">Next Steps</h6>
                 <div className="d-grid gap-2">
-                  <Link href={`/dashboard/company/applicants/${applicant.id}`}>
-                    <a>
-                      <Button variant="primary" size="lg" className="w-100">
-                        View Full Profile
-                      </Button>
-                    </a>
-                  </Link>
+                  {applicant?.id && (
+                    <Link href={`/dashboard/company/applicants/${applicant.id}`}>
+                      <a>
+                        <Button variant="primary" size="lg" className="w-100">
+                          View Full Profile
+                        </Button>
+                      </a>
+                    </Link>
+                  )}
                   <Link href={`/dashboard/company/jobs/${jobId}`}>
                     <a>
                       <Button variant="outline-secondary" className="w-100">

@@ -9,19 +9,20 @@
  * Normalizes a phone number to a consistent format for storage and lookup.
  *
  * Rules:
- * - Removes all non-numeric characters except leading +
- * - Preserves country code if present (starts with +)
- * - Returns normalized format: +1XXXXXXXXXX or XXXXXXXXXX
+ * - Removes all non-numeric characters (including spaces)
+ * - Strips leading +1 US country code for consistency
+ * - Always returns 10-digit US phone number format: XXXXXXXXXX
  *
  * Examples:
  * - "(123) 456-7890" → "1234567890"
- * - "+1 (123) 456-7890" → "+11234567890"
+ * - "+1 (123) 456-7890" → "1234567890"
+ * - "+1 123-456-7890" → "1234567890"
  * - "123-456-7890" → "1234567890"
- * - "+1-123-456-7890" → "+11234567890"
+ * - "+11234567890" → "1234567890"
  * - "123 456 7890" → "1234567890"
  *
  * @param phone - The phone number to normalize (can be in any format)
- * @returns Normalized phone number string
+ * @returns Normalized phone number string (10 digits for US numbers)
  */
 export function normalizePhoneNumber(phone: string | null | undefined): string {
   if (!phone) {
@@ -31,14 +32,17 @@ export function normalizePhoneNumber(phone: string | null | undefined): string {
   // Convert to string and trim whitespace
   const cleaned = String(phone).trim();
 
-  // Check if it starts with +
-  const hasCountryCode = cleaned.startsWith('+');
-
-  // Remove all non-numeric characters
+  // Remove all non-numeric characters (including spaces, dashes, parentheses, etc.)
   const digitsOnly = cleaned.replace(/\D/g, '');
 
-  // Return with + prefix if original had it
-  return hasCountryCode ? `+${digitsOnly}` : digitsOnly;
+  // For US numbers, strip the leading '1' country code if present
+  // This ensures "+1 123-456-7890", "+11234567890", and "1234567890" all normalize the same way
+  if (digitsOnly.length === 11 && digitsOnly.startsWith('1')) {
+    return digitsOnly.substring(1); // Return 10 digits
+  }
+
+  // Return the digits as-is (should be 10 digits for US numbers)
+  return digitsOnly;
 }
 
 /**
@@ -48,6 +52,7 @@ export function normalizePhoneNumber(phone: string | null | undefined): string {
  * - "(123) 456-7890" matches "1234567890" → true
  * - "+1 123-456-7890" matches "1234567890" → true
  * - "1234567890" matches "+11234567890" → true
+ * - "+1 (123) 456-7890" matches "123-456-7890" → true
  *
  * @param phone1 - First phone number
  * @param phone2 - Second phone number
@@ -64,25 +69,9 @@ export function phoneNumbersMatch(
     return false;
   }
 
-  // Remove + from both for comparison (handles +1XXXXX vs XXXXX)
-  const digits1 = normalized1.replace('+', '');
-  const digits2 = normalized2.replace('+', '');
-
-  // Check if they're exactly equal
-  if (digits1 === digits2) {
-    return true;
-  }
-
-  // Handle US country code (1) being present or absent
-  // +11234567890 should match 1234567890
-  if (digits1.startsWith('1') && digits1.substring(1) === digits2) {
-    return true;
-  }
-  if (digits2.startsWith('1') && digits2.substring(1) === digits1) {
-    return true;
-  }
-
-  return false;
+  // After normalization, both should be 10-digit US numbers
+  // Simple equality check is sufficient
+  return normalized1 === normalized2;
 }
 
 /**
@@ -90,7 +79,8 @@ export function phoneNumbersMatch(
  *
  * Examples:
  * - "1234567890" → "(123) 456-7890"
- * - "+11234567890" → "+1 (123) 456-7890"
+ * - "+11234567890" → "(123) 456-7890"
+ * - "+1 (123) 456-7890" → "(123) 456-7890"
  *
  * @param phone - The phone number to format
  * @returns Formatted phone number string
@@ -102,23 +92,13 @@ export function formatPhoneNumber(phone: string | null | undefined): string {
     return '';
   }
 
-  // Remove + for processing
-  const hasPlus = normalized.startsWith('+');
-  const digits = normalized.replace('+', '');
-
-  // Handle different lengths
-  if (digits.length === 10) {
+  // After normalization, we should have a 10-digit US number
+  if (normalized.length === 10) {
     // US format: (123) 456-7890
-    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
-  } else if (digits.length === 11 && digits.startsWith('1')) {
-    // US with country code: +1 (123) 456-7890
-    return `+1 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`;
-  } else if (hasPlus) {
-    // International format with country code
-    return `+${digits}`;
+    return `(${normalized.slice(0, 3)}) ${normalized.slice(3, 6)}-${normalized.slice(6)}`;
   }
 
-  // Return normalized if we can't format it
+  // Return normalized if it's not the expected length
   return normalized;
 }
 
@@ -126,7 +106,7 @@ export function formatPhoneNumber(phone: string | null | undefined): string {
  * Validates if a string looks like a valid phone number.
  *
  * @param phone - The phone number to validate
- * @returns true if the phone number appears valid
+ * @returns true if the phone number appears valid (10 digits for US numbers)
  */
 export function isValidPhoneNumber(phone: string | null | undefined): boolean {
   const normalized = normalizePhoneNumber(phone);
@@ -135,9 +115,6 @@ export function isValidPhoneNumber(phone: string | null | undefined): boolean {
     return false;
   }
 
-  // Remove + for digit counting
-  const digits = normalized.replace('+', '');
-
-  // Must have at least 10 digits (US) or up to 15 (international max)
-  return digits.length >= 10 && digits.length <= 15;
+  // Valid US phone number should be exactly 10 digits after normalization
+  return normalized.length === 10;
 }

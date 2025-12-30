@@ -21,6 +21,7 @@ import EmployeeApi from '../../../pages/api/employee';
 import * as _style from '../../../public/components/styles/ImportApplicantsModule.module.css';
 import { matchEnum } from '../../../utils/enums.utils';
 import { FormikInterface } from '../../../utils/formik';
+import { normalizePhoneNumber } from '../../../utils/phone-normalization';
 import { useRouter } from 'next/router';
 
 function unique<T>(value: T, index: number, self: T[]) {
@@ -66,15 +67,13 @@ const ImportEmployees = () => {
       for (let i = 0; i < values.items.length; i++) {
         const employee = values.items[i];
 
-        if (employee.phone?.length > 3 && !employee.phone.startsWith('+1')) {
-          employee.phone = '+1 ' + employee.phone;
+        // Normalize phone numbers to ensure consistent format
+        if (employee.phone?.length > 3) {
+          employee.phone = normalizePhoneNumber(employee.phone);
         }
 
-        if (
-          employee.emergency_contact_number?.length > 3 &&
-          !employee.emergency_contact_number.startsWith('+1')
-        ) {
-          employee.emergency_contact_number = '+1 ' + employee.emergency_contact_number;
+        if (employee.emergency_contact_number?.length > 3) {
+          employee.emergency_contact_number = normalizePhoneNumber(employee.emergency_contact_number);
         }
 
         let progress = Math.floor(((i + 1) * 100) / values.items.length);

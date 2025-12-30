@@ -25,7 +25,8 @@ export function withAsyncSave<P extends object>(
 
     const { saveFormData, isSaving, lastSaved, saveError } = useAsyncFormSave(
       applicant?.id, // Use applicant ID, not UUID token
-      steps
+      steps,
+      applicant?.is_hired // Pass is_hired flag to prevent saves for hired applicants
     );
 
     // Trigger save when applicant or extras data changes (and we're past checkpoint)

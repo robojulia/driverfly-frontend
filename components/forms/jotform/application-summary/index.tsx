@@ -4,6 +4,7 @@ import JotformContext, { JotFormContextType } from '../../../../context/jotform-
 import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
 import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
 import { ApplicantExtras } from '../../../../enums/applicants/applicant-extras.enum';
+import { ReturningUserBanner } from '../../../applicants/returning-user-banner';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 
 interface SummarySection {
@@ -14,8 +15,8 @@ interface SummarySection {
 
 export function ApplicationSummary() {
   const {
-    state: { applicant, applicantExtras, jobs, companyJobs, company, isPrefilled },
-    method: { setSteps },
+    state: { applicant, applicantExtras, jobs, companyJobs, company, isPrefilled, isEditingExistingApplicant, steps },
+    method: { setSteps, setIsEditingFromSummary },
   }: JotFormContextType = useContext(JotformContext);
 
   // Helper function to get extra value
@@ -89,15 +90,6 @@ export function ApplicationSummary() {
     return hasViolationIndicator;
   };
 
-  const hasCriminalHistory = () => {
-    // Check if user said YES to criminal history and has actual content
-    const hasCriminalIndicator =
-      applicant?.criminal_history &&
-      applicant.criminal_history.trim() !== '' &&
-      applicant.criminal_history !== '__YES_NO_DETAILS__';
-    return hasCriminalIndicator;
-  };
-
   // Helper function to check if user has any DUI history
   const hasDuiHistory = () => {
     return applicant?.has_past_dui === true;
@@ -111,6 +103,15 @@ export function ApplicationSummary() {
     const hasLicenseRevoked = applicant?.license_revoked === true;
 
     return hasAccidents || hasViolations || cannotPassDrugTest || hasLicenseRevoked;
+  };
+
+  // Helper functions for additional sections
+  const hasBackgroundInfo = () => {
+    return applicant?.birthdate || applicant?.address_1 || applicant?.city;
+  };
+
+  const hasEducation = () => {
+    return !!applicant?.highest_degree;
   };
 
   // Build summary sections with single-line summaries
@@ -134,122 +135,395 @@ export function ApplicationSummary() {
     {
       title: 'Basic Information',
       stepNumber: 3,
-      summary: `${applicant?.first_name || ''} ${applicant?.last_name || ''} | ${
-        applicant?.email || 'No email'
-      } | ZIP: ${applicant?.zip_code || 'Not provided'}`,
+      summary: (() => {
+        const parts: string[] = [];
+
+        // Name and email
+        parts.push(`${applicant?.first_name || ''} ${applicant?.last_name || ''}`);
+        parts.push(applicant?.email || 'No email');
+        parts.push(`ZIP: ${applicant?.zip_code || 'Not provided'}`);
+
+        // Owner operator status
+        if (applicant?.is_owner_operator) {
+          const ownerOpParts: string[] = ['Owner Operator'];
+          if (applicant?.owner_operator_company_name) {
+            ownerOpParts.push(applicant.owner_operator_company_name);
+          }
+          if (applicant?.owner_operator_dot_number) {
+            ownerOpParts.push(`DOT: ${applicant.owner_operator_dot_number}`);
+          }
+          parts.push(ownerOpParts.join(' - '));
+        }
+
+        // Communication authorization
+        if (applicant?.authorize_to_communicate !== undefined && applicant?.authorize_to_communicate !== null) {
+          parts.push(`Communication: ${applicant.authorize_to_communicate ? 'Authorized' : 'Not authorized'}`);
+        }
+
+        // How they heard about us
+        const hearAbout = getExtraValue(ApplicantExtras.HEAR_ABOUT_US);
+        if (hearAbout) {
+          const referralName = getExtraValue(ApplicantExtras.REFERAL_NAME);
+          if (referralName) {
+            parts.push(`Referral: ${referralName}`);
+          } else {
+            parts.push(`Source: ${hearAbout}`);
+          }
+        }
+
+        return parts.join(' | ');
+      })(),
     },
-    // Step 4: CDL Experience
+    // === DRIVER'S LICENSE INFORMATION (Combined Section) ===
     {
-      title: 'License & Experience',
+      title: "Driver's License Information",
       stepNumber: 4,
-      summary: `${formatLicenseType(applicant?.license_type)} | ${
-        applicant?.years_cdl_experience || 0
-      } years experience | ${applicant?.is_owner_operator ? 'Owner Operator' : 'Company Driver'}`,
+      summary: (() => {
+        const details: string[] = [];
+
+        // License Type & Experience
+        details.push(`License Type: ${formatLicenseType(applicant?.license_type) || 'Not specified'}`);
+        details.push(`Years of Experience: ${applicant?.years_cdl_experience || 0}`);
+
+        // License Number, State, Expiry
+        details.push(`License Number: ${applicant?.license_number || 'Not provided'}`);
+        details.push(`License State: ${applicant?.license_state || 'Not provided'}`);
+        details.push(`License Expiry: ${applicant?.license_expiry ? new Date(applicant.license_expiry).toLocaleDateString() : 'Not provided'}`);
+
+        // Transmissions
+        const transmissions = (Array.isArray(applicant?.transmission_type) && applicant.transmission_type.length > 0)
+          ? applicant.transmission_type.join(', ')
+          : 'None';
+        details.push(`Transmissions: ${transmissions}`);
+
+        // Endorsements
+        if (Array.isArray(applicant?.endorsements) && applicant.endorsements.length > 0) {
+          const endorsements = applicant.endorsements.join(', ');
+          const endorsementsText = applicant?.endorsements_other
+            ? `${endorsements}, Other: ${applicant.endorsements_other}`
+            : endorsements;
+          details.push(`Endorsements: ${endorsementsText}`);
+        } else {
+          details.push('Endorsements: None');
+        }
+
+        // Restrictions
+        if (Array.isArray(applicant?.license_restrictions) && applicant.license_restrictions.length > 0) {
+          const restrictions = applicant.license_restrictions.join(', ');
+          const restrictionsText = applicant?.license_restrictions_other
+            ? `${restrictions}, Other: ${applicant.license_restrictions_other}`
+            : restrictions;
+          details.push(`Restrictions: ${restrictionsText}`);
+        } else {
+          details.push('Restrictions: None');
+        }
+
+        // Equipment Experience
+        if (applicant?.equipment_experience && Array.isArray(applicant.equipment_experience) && applicant.equipment_experience.length > 0) {
+          const equipmentList = applicant.equipment_experience
+            .map((eq) => `${eq.type}${eq.years ? ` (${eq.years} years)` : ''}`)
+            .join(', ');
+          details.push(`Equipment Experience: ${equipmentList}`);
+        } else {
+          details.push('Equipment Experience: None');
+        }
+
+        // Additional Licenses
+        const additionalLicenses = getExtraValue(ApplicantExtras.CDL_NUMBER);
+        if (additionalLicenses && Array.isArray(additionalLicenses) && additionalLicenses.length > 0) {
+          const licensesList = additionalLicenses
+            .map((lic) => `${lic.license_number} (${lic.state})`)
+            .join(', ');
+          details.push(`Additional Licenses: ${licensesList}`);
+        } else {
+          details.push('Additional Licenses: None');
+        }
+
+        // Document Upload
+        details.push(`License Document: ${hasDriverLicense ? 'Uploaded' : 'Not uploaded'}`);
+
+        return details.join(' | ');
+      })(),
     },
-    // License Details
+    // === END DRIVER'S LICENSE INFORMATION ===
+    // Step 15: Medical Card
     {
-      title: 'License Details',
-      stepNumber: 12, // Driving Experience step
-      summary: `License #: ${applicant?.license_number || 'Not provided'} | State: ${
-        applicant?.license_state || 'Not provided'
-      } | Expires: ${
-        applicant?.license_expiry
-          ? new Date(applicant.license_expiry).toLocaleDateString()
-          : 'Not provided'
-      }`,
+      title: 'Medical Card Document',
+      stepNumber: 15, // MedicalCard step
+      summary: `Medical Card: ${hasMedicalCard ? 'Uploaded' : 'Not uploaded'}`,
     },
-    // Documents
-    {
-      title: 'Documents',
-      stepNumber: 13, // Documents step
-      summary: `Driver License: ${hasDriverLicense ? 'Uploaded' : 'Not uploaded'} | Medical Card: ${
-        hasMedicalCard ? 'Uploaded' : 'Not uploaded'
-      }`,
-    },
-    // Emergency Contact
+    // Step 16: Emergency Contact
     {
       title: 'Emergency Contact',
-      stepNumber: 14, // Emergency contact step
+      stepNumber: 16, // EmergencyContact step
       summary: applicant?.emergency_contact_name
         ? `${applicant.emergency_contact_name} (${
             applicant?.emergency_contact_relationship || 'No relationship'
           }) | ${applicant?.emergency_contact_number || 'No phone'}`
         : 'No emergency contact provided',
     },
-    // Safety Record - only show if user has safety-related data
-    ...(hasSafetyRecordData()
-      ? [
-          {
-            title: 'Safety Record',
-            stepNumber: 5,
-            summary: `Drug Test: ${applicant?.can_pass_drug_test ? 'Yes' : 'No'} | Violations: ${
-              applicant?.moving_violations_count || 0
-            } | Accidents: ${applicant?.accident_count || 0} | License Revoked: ${
-              applicant?.license_revoked ? 'Yes' : 'No'
-            }`,
-          },
-        ]
-      : []),
-    // Accident History - only show if user has accidents
-    ...(hasAccidentHistory()
-      ? [
-          {
-            title: 'Accident History',
-            stepNumber: 15, // Accident history step
-            summary:
-              applicant?.accident_count > 0
-                ? `${applicant.accident_count} accident(s) reported${
-                    applicant?.accident_details ? ' with details provided' : ''
-                  }`
-                : 'Accident history provided',
-          },
-        ]
-      : []),
-    // Violation History - only show if user has violations
-    ...(hasViolationHistory()
-      ? [
-          {
-            title: 'Violation History',
-            stepNumber: 16, // Violation history step
-            summary:
-              applicant?.moving_violations_count > 0
-                ? `${applicant.moving_violations_count} moving violation(s)${
-                    applicant?.moving_violations_details ? ' with details provided' : ''
-                  }`
-                : 'Violation history provided',
-          },
-        ]
-      : []),
-    // Criminal History - only show if user has criminal history
-    ...(hasCriminalHistory()
-      ? [
-          {
-            title: 'Criminal History',
-            stepNumber: 17, // Criminal history step
-            summary: 'Criminal history disclosed',
-          },
-        ]
-      : []),
-    // Employment History - only show if they've provided employment information
-    ...(() => {
-      const hasEmployers = applicant?.employers?.length > 0;
-      const hasCurrentEmployed = (applicant as any)?.is_current_employed !== undefined;
-      const hasPreviousEmployed = (applicant as any)?.is_previous_employed !== undefined;
+    // Safety Record - Always show for returning users
+    {
+      title: 'Safety Record',
+      stepNumber: 5,
+      summary: (() => {
+        const parts: string[] = [];
 
-      // Only show employment section if they've answered employment questions or have employers
-      if (hasCurrentEmployed || hasPreviousEmployed || hasEmployers) {
-        return [
-          {
-            title: 'Employment History',
-            stepNumber: 18, // Employment history step
-            summary: hasEmployers
-              ? `${applicant.employers.length} employer(s) provided`
-              : 'Not currently employed',
-          },
-        ];
-      }
-      return [];
-    })(),
+        // Drug test
+        if (applicant?.can_pass_drug_test !== undefined && applicant?.can_pass_drug_test !== null) {
+          parts.push(`Drug Test: ${applicant.can_pass_drug_test ? 'Yes' : 'No'}`);
+        } else {
+          parts.push('Drug Test: Not answered');
+        }
+
+        // Violations
+        if (applicant?.moving_violations_count !== undefined || applicant?.all_violations_count !== undefined) {
+          const violationParts: string[] = [];
+          if (applicant?.moving_violations_count) {
+            violationParts.push(`${applicant.moving_violations_count} moving`);
+          }
+          if (applicant?.all_violations_count) {
+            violationParts.push(`${applicant.all_violations_count} total`);
+          }
+          parts.push(`Violations: ${violationParts.length > 0 ? violationParts.join(', ') : '0'}`);
+        } else {
+          parts.push('Violations: Not answered');
+        }
+
+        // Accidents
+        if (applicant?.accident_count !== undefined && applicant?.accident_count !== null) {
+          parts.push(`Accidents: ${applicant.accident_count}`);
+        } else {
+          parts.push('Accidents: Not answered');
+        }
+
+        // License revoked
+        if (applicant?.license_revoked !== undefined && applicant?.license_revoked !== null) {
+          parts.push(`License Revoked: ${applicant.license_revoked ? 'Yes' : 'No'}`);
+        } else {
+          parts.push('License Revoked: Not answered');
+        }
+
+        // Work authorization
+        if (applicant?.authorized_to_work_in_us !== undefined && applicant?.authorized_to_work_in_us !== null) {
+          parts.push(`Work Authorization: ${applicant.authorized_to_work_in_us ? 'Yes' : 'No'}`);
+        } else {
+          parts.push('Work Authorization: Not answered');
+        }
+
+        return parts.join(' | ');
+      })(),
+    },
+    // Step 20: Accident History - Always show for returning users
+    {
+      title: 'Accident History',
+      stepNumber: 20, // AccidentHistory step
+      summary: (() => {
+        const parts: string[] = [];
+
+        // Check if user has answered the question (not null/undefined)
+        const hasAnswered = applicant?.accident_count !== undefined && applicant?.accident_count !== null;
+
+        if (!hasAnswered) {
+          return 'Not answered';
+        }
+
+        // Check if any accident data exists
+        if (!hasAccidentHistory()) {
+          return 'No accidents reported';
+        }
+
+        // Accident count
+        parts.push(`${applicant?.accident_count || 0} accident(s)`);
+
+        // Detailed accident records
+        if (applicant?.accident_history && Array.isArray(applicant.accident_history) && applicant.accident_history.length > 0) {
+          const accidentSummaries = applicant.accident_history.slice(0, 2).map((acc) => {
+            const date = acc.date_of_accident ? new Date(acc.date_of_accident).toLocaleDateString() : 'No date';
+            const location = acc.location_of_accident || 'Unknown location';
+            const injuries = acc.number_of_injured || 0;
+            const fatalities = acc.number_of_fatalaties || 0;
+            const dot = acc.dot_recordable ? 'DOT Recordable' : '';
+            const fault = acc.at_fault ? 'At Fault' : 'Not at Fault';
+            return `${date} - ${location} (${injuries} injured, ${fatalities} fatalities) ${fault}${dot ? ', ' + dot : ''}`;
+          });
+          parts.push(accidentSummaries.join(' | '));
+          if (applicant.accident_history.length > 2) {
+            parts.push(`+${applicant.accident_history.length - 2} more`);
+          }
+        } else if (applicant?.accident_details && applicant.accident_details !== '__YES_NO_DETAILS__') {
+          parts.push(`Details: ${applicant.accident_details}`);
+        }
+
+        return parts.join(' | ');
+      })(),
+    },
+    // Step 21: Violation History - Always show for returning users
+    {
+      title: 'Violation History',
+      stepNumber: 21, // ViolationHistory step
+      summary: (() => {
+        const parts: string[] = [];
+
+        // Check if user has answered the question (not null/undefined)
+        const hasAnswered = applicant?.moving_violations_count !== undefined && applicant?.moving_violations_count !== null;
+
+        if (!hasAnswered) {
+          return 'Not answered';
+        }
+
+        // Check if any violation data exists
+        if (!hasViolationHistory()) {
+          return 'No violations reported';
+        }
+
+        // Violation count
+        parts.push(`${applicant?.moving_violations_count || 0} moving violation(s)`);
+
+        // Detailed violation records
+        if (applicant?.moving_violation_history && Array.isArray(applicant.moving_violation_history) && applicant.moving_violation_history.length > 0) {
+          const violationSummaries = applicant.moving_violation_history.slice(0, 2).map((vio) => {
+            const date = vio.date_of_violation ? new Date(vio.date_of_violation).toLocaleDateString() : 'No date';
+            const location = vio.location || 'Unknown location';
+            const charge = vio.charge || 'Unknown charge';
+            const penalty = vio.penalty || 'Unknown penalty';
+            return `${date} - ${location}: ${charge} (${penalty})`;
+          });
+          parts.push(violationSummaries.join(' | '));
+          if (applicant.moving_violation_history.length > 2) {
+            parts.push(`+${applicant.moving_violation_history.length - 2} more`);
+          }
+        } else if (applicant?.moving_violations_details && applicant.moving_violations_details !== '__YES_NO_DETAILS__') {
+          parts.push(`Details: ${applicant.moving_violations_details}`);
+        }
+
+        return parts.join(' | ');
+      })(),
+    },
+    // Step 24: Criminal History - always show for returning users
+    {
+      title: 'Criminal History',
+      stepNumber: 24,
+      summary: (() => {
+        const parts: string[] = [];
+
+        // Check if criminal history is provided
+        if (applicant?.criminal_history && applicant.criminal_history.trim() !== '' && applicant.criminal_history !== '__YES_NO_DETAILS__') {
+          const details = applicant.criminal_history.length > 150
+            ? applicant.criminal_history.substring(0, 150) + '...'
+            : applicant.criminal_history;
+          parts.push(`Felony conviction: Yes | Details: ${details}`);
+        } else if (applicant?.criminal_history === '__YES_NO_DETAILS__') {
+          parts.push('Felony conviction: Yes (details not provided)');
+        } else if (applicant?.criminal_history === '') {
+          parts.push('Felony conviction: No');
+        } else {
+          parts.push('Criminal history: Not answered');
+        }
+
+        return parts.join(' | ');
+      })(),
+    },
+    // Step 17: Current Employment & Company History
+    {
+      title: 'Current Employment & Company History',
+      stepNumber: 17,
+      summary: (() => {
+        const parts: string[] = [];
+
+        // Company History Questions (from beginning of step 17)
+        if (applicant?.already_applied_to_company !== undefined && applicant?.already_applied_to_company !== null) {
+          parts.push(`Previously applied: ${applicant.already_applied_to_company ? 'Yes' : 'No'}`);
+        }
+        if (applicant?.already_worked_to_company) {
+          const startDate = applicant.already_worked_start_date
+            ? new Date(applicant.already_worked_start_date).toLocaleDateString()
+            : 'Unknown';
+          const endDate = applicant.already_worked_end_date
+            ? new Date(applicant.already_worked_end_date).toLocaleDateString()
+            : 'Unknown';
+          parts.push(`Previously worked here: ${startDate} to ${endDate}`);
+        } else if (applicant?.already_worked_to_company !== undefined && applicant?.already_worked_to_company !== null) {
+          parts.push(`Previously worked here: No`);
+        }
+
+        // Current Employment
+        const currentEmployers = applicant?.employers?.filter((e) => e.is_current) || [];
+        if (currentEmployers.length > 0) {
+          const currentSummaries = currentEmployers.map((employer) => {
+            const companyName = employer.name || 'Unknown Company';
+            const position = employer.title || 'Unknown Position';
+            const startDate = employer.start_at
+              ? new Date(employer.start_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+              : 'Unknown';
+            const phone = employer.phone ? ` | Contact: ${employer.phone}` : '';
+            const canContact = employer.can_contact !== undefined && employer.can_contact !== null
+              ? ` | Can contact: ${employer.can_contact ? 'Yes' : 'No'}`
+              : '';
+            return `${companyName} - ${position} (${startDate} - Present)${phone}${canContact}`;
+          });
+          parts.push(`Current employer(s): ${currentSummaries.join(' | ')}`);
+        } else {
+          parts.push('Currently employed: No');
+        }
+
+        return parts.length > 0 ? parts.join(' | ') : 'No current employment information';
+      })(),
+    },
+    // Step 18: Past Employment History
+    {
+      title: 'Past Employment History',
+      stepNumber: 18,
+      summary: (() => {
+        const parts: string[] = [];
+        const pastEmployers = applicant?.employers?.filter((e) => !e.is_current) || [];
+
+        // Check if they indicated they have past employment
+        const hasPastEmployment = pastEmployers.length > 0;
+
+        if (hasPastEmployment) {
+          // Sort by most recent
+          const sortedPast = [...pastEmployers].sort((a, b) => {
+            const dateA = a.start_at ? new Date(a.start_at).getTime() : 0;
+            const dateB = b.start_at ? new Date(b.start_at).getTime() : 0;
+            return dateB - dateA;
+          });
+
+          // Show detailed info for up to 2 most recent past employers
+          const pastSummaries = sortedPast.slice(0, 2).map((employer) => {
+            const companyName = employer.name || 'Unknown Company';
+            const position = employer.title || 'Unknown Position';
+            const startDate = employer.start_at
+              ? new Date(employer.start_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+              : 'Unknown';
+            const endDate = employer.end_at
+              ? new Date(employer.end_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+              : 'Unknown';
+            const phone = employer.phone ? ` | Contact: ${employer.phone}` : '';
+            const canContact = employer.can_contact !== undefined && employer.can_contact !== null
+              ? ` | Can contact: ${employer.can_contact ? 'Yes' : 'No'}`
+              : '';
+            const reasonForLeaving = employer.reason_for_leaving ? ` | Reason: ${employer.reason_for_leaving}` : '';
+            return `${companyName} - ${position} (${startDate} - ${endDate})${phone}${canContact}${reasonForLeaving}`;
+          });
+
+          parts.push(`${pastEmployers.length} past employer(s): ${pastSummaries.join(' | ')}`);
+
+          if (pastEmployers.length > 2) {
+            parts.push(`+${pastEmployers.length - 2} more employers`);
+          }
+        } else {
+          parts.push('No past employment');
+        }
+
+        // Employment gap details
+        if (applicant?.employment_gap_details) {
+          parts.push(`Gap details: ${applicant.employment_gap_details}`);
+        }
+
+        return parts.join(' | ');
+      })(),
+    },
     // DUI History - only show if user actually has DUI history
     ...(hasDuiHistory()
       ? [
@@ -270,48 +544,189 @@ export function ApplicationSummary() {
           },
         ]
       : []),
-    // Step 6: Transmission & Endorsements
-    {
-      title: 'Equipment Experience',
-      stepNumber: 6,
-      summary: (() => {
-        // Handle transmissions
-        let transmissionText = 'None selected';
-        if (Array.isArray(applicant?.transmission_type) && applicant.transmission_type.length > 0) {
-          transmissionText = applicant.transmission_type.join(', ');
-        } else if (applicant?.transmission_type && !Array.isArray(applicant.transmission_type)) {
-          // Handle case where it might be a string (fallback)
-          transmissionText = String(applicant.transmission_type);
-        }
-
-        // Handle endorsements
-        let endorsementText = 'None selected';
-        if (Array.isArray(applicant?.endorsements) && applicant.endorsements.length > 0) {
-          endorsementText = applicant.endorsements.join(', ');
-        } else if (applicant?.endorsements && !Array.isArray(applicant.endorsements)) {
-          // Handle case where it might be a string (fallback)
-          endorsementText = String(applicant.endorsements);
-        }
-
-        return `Transmissions: ${transmissionText} | Endorsements: ${endorsementText}`;
-      })(),
-    },
-    // Step 8: Preferences
+    // Step 8: Job Preferences
     {
       title: 'Job Preferences',
       stepNumber: 8,
-      summary: applicant?.preferred_location
-        ? `Preferred Routes: ${
-            Array.isArray(applicant.preferred_location)
-              ? applicant.preferred_location.join(', ')
-              : applicant.preferred_location
-          }`
-        : 'No route preferences specified',
+      summary: (() => {
+        const parts: string[] = [];
+
+        // Preferred location
+        if (applicant?.preferred_location && Array.isArray(applicant.preferred_location) && applicant.preferred_location.length > 0) {
+          parts.push(`Location: ${applicant.preferred_location.join(', ')}`);
+        } else if (applicant?.preferred_location) {
+          parts.push(`Location: ${applicant.preferred_location}`);
+        }
+
+        // Routes/schedules
+        if (applicant?.routes && Array.isArray(applicant.routes) && applicant.routes.length > 0) {
+          parts.push(`Routes: ${applicant.routes.join(', ')}`);
+        } else if (applicant?.routes) {
+          parts.push(`Routes: ${applicant.routes}`);
+        }
+
+        // Other requirements
+        if (applicant?.other_requirements && Array.isArray(applicant.other_requirements) && applicant.other_requirements.length > 0) {
+          const requirements = applicant.other_requirements.join(', ');
+          parts.push(`Requirements: ${requirements}`);
+        }
+
+        // Custom other requirement
+        if (applicant?.other_requirements_other) {
+          parts.push(`Other: ${applicant.other_requirements_other}`);
+        }
+
+        // W2 employment requirement
+        const requireW2 = getExtraValue(ApplicantExtras.REQUIRE_W2_EMPLOYMENT);
+        if (requireW2 !== undefined && requireW2 !== null) {
+          parts.push(`W2 Required: ${requireW2 ? 'Yes' : 'No'}`);
+        }
+
+        return parts.length > 0 ? parts.join(' | ') : 'No preferences specified';
+      })(),
     },
-    // Legal Documents/Signatures
+    // Step 10: Driver Application Authorization - always show for returning users
+    {
+      title: 'Application Authorization & Signature',
+      stepNumber: 10,
+      summary: (() => {
+        const signature = applicantExtras?.find((e) => e.type === ApplicantExtras.SIGNATURE);
+        const applyDate = applicantExtras?.find((e) => e.type === ApplicantExtras.APPLY_DATE);
+        const signatureText = signature?.value ? 'Signature completed' : 'No signature';
+        const dateText = applyDate?.value
+          ? `Applied: ${new Date(applyDate.value).toLocaleDateString()}`
+          : 'No application date';
+        return `${signatureText} | ${dateText}`;
+      })(),
+    },
+    // Step 11: Background Info - always show
+    {
+      title: 'Background Information',
+      stepNumber: 11,
+      summary: (() => {
+        const parts: string[] = [];
+        if (applicant?.birthdate) {
+          parts.push(`DOB: ${new Date(applicant.birthdate).toLocaleDateString()}`);
+        }
+        if (applicant?.address_1) {
+          parts.push(applicant.address_1);
+        }
+        if (applicant?.city && applicant?.state) {
+          parts.push(`${applicant.city}, ${applicant.state}`);
+        } else if (applicant?.city) {
+          parts.push(applicant.city);
+        } else if (applicant?.state) {
+          parts.push(applicant.state);
+        }
+        return parts.length > 0 ? parts.join(' | ') : 'No background information provided';
+      })(),
+    },
+    // Step 12: Education - only show if has education data
+    ...(hasEducation()
+      ? [
+          {
+            title: 'Education',
+            stepNumber: 12,
+            summary: `Education Level: ${applicant?.highest_degree || 'Not specified'}`,
+          },
+        ]
+      : []),
+    // Step 22: Past Suspension - always show for returning users
+    {
+      title: 'License Suspension/DUI History',
+      stepNumber: 22,
+      summary: (() => {
+        const parts: string[] = [];
+
+        // License suspension/revocation
+        if (applicant?.license_revoked === true) {
+          parts.push('License suspended/revoked: Yes');
+          if (applicant?.license_revoked_details && applicant.license_revoked_details !== '__YES_NO_DETAILS__') {
+            const details = applicant.license_revoked_details.length > 100
+              ? applicant.license_revoked_details.substring(0, 100) + '...'
+              : applicant.license_revoked_details;
+            parts.push(`Details: ${details}`);
+          }
+        } else if (applicant?.license_revoked === false) {
+          parts.push('License suspended/revoked: No');
+        } else {
+          parts.push('License suspension status: Not answered');
+        }
+
+        // DUI history
+        if (applicant?.has_past_dui === true) {
+          if (applicant?.dui_years && Array.isArray(applicant.dui_years) && applicant.dui_years.length > 0) {
+            const years = applicant.dui_years.join(', ');
+            parts.push(`DUI incidents in: ${years}`);
+          } else {
+            parts.push('DUI: Yes (years not specified)');
+          }
+        } else if (applicant?.has_past_dui === false) {
+          parts.push('DUI history: No');
+        } else {
+          parts.push('DUI history: Not answered');
+        }
+
+        return parts.join(' | ');
+      })(),
+    },
+    // Step 23: Unable For Job - always show for returning users
+    {
+      title: 'Job Performance Limitations',
+      stepNumber: 23,
+      summary: (() => {
+        const reasonExtra = applicantExtras?.find(
+          (e) => e.type === ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
+        );
+
+        if (reasonExtra?.value && reasonExtra.value.trim() !== '') {
+          const reason = reasonExtra.value.length > 150
+            ? reasonExtra.value.substring(0, 150) + '...'
+            : reasonExtra.value;
+          return `Cannot perform essential functions | Reason: ${reason}`;
+        }
+
+        return 'Can perform all essential job functions';
+      })(),
+    },
+    // Step 25: Drug Test - always show for returning users
+    {
+      title: 'Drug Test History',
+      stepNumber: 25,
+      summary: (() => {
+        const parts: string[] = [];
+
+        // Positive drug test question
+        if (applicant?.positive_drug_test === true) {
+          parts.push('Positive drug test: Yes');
+
+          // Show details if provided
+          if (applicant?.positive_drug_test_details && applicant.positive_drug_test_details !== '__YES_NO_DETAILS__') {
+            const details = applicant.positive_drug_test_details.length > 100
+              ? applicant.positive_drug_test_details.substring(0, 100) + '...'
+              : applicant.positive_drug_test_details;
+            parts.push(`Details: ${details}`);
+          }
+
+          // SAP participation
+          if (applicant?.is_sap_participant === true) {
+            parts.push('SAP program: Completed');
+          } else if (applicant?.is_sap_participant === false) {
+            parts.push('SAP program: Not completed');
+          }
+        } else if (applicant?.positive_drug_test === false) {
+          parts.push('Positive drug test history: No');
+        } else {
+          parts.push('Drug test history: Not answered');
+        }
+
+        return parts.join(' | ');
+      })(),
+    },
+    // Step 26: Legal Documents/Signatures
     {
       title: 'Legal Documents',
-      stepNumber: 10, // Driver application/signature step
+      stepNumber: 26, // LegalDocumentsPage step in short form
       summary: signatureStatus.allSigned
         ? `All legal documents signed (${signatureStatus.signed}/${signatureStatus.total})`
         : `Legal documents: ${signatureStatus.signed}/${signatureStatus.total} signed`,
@@ -324,7 +739,16 @@ export function ApplicationSummary() {
 
     // Always show these critical sections even if empty to indicate what's missing
     const criticalSections = [
-      'License Details',
+      "Driver's License Information",
+      'Application Authorization & Signature',
+      'Current Employment & Company History',
+      'Safety Record',
+      'Accident History',
+      'Violation History',
+      'License Suspension/DUI History',
+      'Criminal History',
+      'Job Performance Limitations',
+      'Drug Test History',
       'Documents',
       'Emergency Contact',
       'Legal Documents',
@@ -345,7 +769,123 @@ export function ApplicationSummary() {
   });
 
   const handleEditSection = (stepNumber: number) => {
-    setSteps(stepNumber);
+    console.log('🔵 handleEditSection called');
+    console.log('stepNumber:', stepNumber);
+    console.log('current steps:', steps);
+    console.log('applicant ID:', applicant?.id);
+    console.log('setSteps:', setSteps);
+    console.log('setIsEditingFromSummary:', setIsEditingFromSummary);
+
+    setIsEditingFromSummary(true);
+
+    // Special handling: Route "Driver's License Information" section to combined license edit page (step 99)
+    const targetStep = stepNumber === 4 ? 99 : stepNumber;
+    setSteps(targetStep);
+
+    console.log('✅ State setters called, navigating to step:', targetStep);
+  };
+
+  const handleSubmitApplication = () => {
+    // For returning users applying to a DIFFERENT company, validate all safety sections are complete
+    // For returning users re-applying to the SAME company, only validate legal documents
+    // For DIFFERENT_COMPANY_PREFILL scenario: isPrefilled=true and applicant.id=null
+    const isApplyingToDifferentCompany = isPrefilled || (applicant?.id && applicant.already_applied_to_company !== true);
+
+    const requiredSectionsForDifferentCompany = [
+      'Current Employment & Company History',
+      'Application Authorization & Signature',
+      'Legal Documents',
+    ];
+
+    const requiredSectionsForSameCompany = [
+      "Driver's License Information",
+      'Documents',
+      'Emergency Contact',
+      'Legal Documents',
+    ];
+
+    const requiredSections = isApplyingToDifferentCompany
+      ? requiredSectionsForDifferentCompany
+      : requiredSectionsForSameCompany;
+
+    // Find first incomplete required section
+    const incompleteSection = populatedSections.find((section) => {
+      if (!requiredSections.includes(section.title)) {
+        return false;
+      }
+
+      // Check if section is complete
+      let isComplete = false;
+
+      if (section.title === 'Legal Documents') {
+        isComplete = signatureStatus.allSigned;
+      } else if (section.title === 'Documents') {
+        isComplete = hasDriverLicense && hasMedicalCard;
+      } else if (section.title === "Driver's License Information") {
+        // Driver's License is complete if basic required fields are present
+        // (license type, years, number, state, expiry)
+        // Optional fields like "None" for equipment/endorsements are OK
+        const hasLicenseType = section.summary.includes('License Type:');
+        const hasYears = section.summary.includes('Years of Experience:');
+        const hasLicenseNumber = section.summary.includes('License Number:') && !section.summary.includes('License Number: Not provided');
+        const hasLicenseState = section.summary.includes('License State:') && !section.summary.includes('License State: Not provided');
+        const hasLicenseExpiry = section.summary.includes('License Expiry:') && !section.summary.includes('License Expiry: Not provided');
+
+        isComplete = hasLicenseType && hasYears && hasLicenseNumber && hasLicenseState && hasLicenseExpiry;
+      } else if (section.title === 'Safety Record') {
+        // Safety Record is complete if all required fields are answered
+        // Check actual data instead of summary text
+        const hasDrugTest = applicant?.can_pass_drug_test !== undefined && applicant?.can_pass_drug_test !== null;
+        const hasViolationCount = applicant?.moving_violations_count !== undefined && applicant?.moving_violations_count !== null;
+        const hasAccidentCount = applicant?.accident_count !== undefined && applicant?.accident_count !== null;
+        const hasWorkAuth = applicant?.authorized_to_work_in_us !== undefined && applicant?.authorized_to_work_in_us !== null;
+
+        isComplete = hasDrugTest && hasViolationCount && hasAccidentCount && hasWorkAuth;
+      } else if (section.title === 'Accident History') {
+        // Accident History is complete if user has provided their answer
+        // Either they have accidents (with details) OR they've indicated 0 accidents
+        const hasProvidedAnswer = applicant?.accident_count !== undefined && applicant?.accident_count !== null;
+        isComplete = hasProvidedAnswer;
+      } else if (section.title === 'Violation History') {
+        // Violation History is complete if user has provided their answer
+        // Either they have violations (with details) OR they've indicated 0 violations
+        const hasProvidedAnswer = applicant?.moving_violations_count !== undefined && applicant?.moving_violations_count !== null;
+        isComplete = hasProvidedAnswer;
+      } else if (section.title === 'Criminal History') {
+        // Criminal History is complete if user has answered (even if answer is empty string for "No")
+        // Incomplete if null/undefined (not answered) or if set to '__YES_NO_DETAILS__' (yes but no details)
+        const hasAnswered = applicant?.criminal_history !== undefined && applicant?.criminal_history !== null;
+        const isYesWithoutDetails = applicant?.criminal_history === '__YES_NO_DETAILS__';
+        isComplete = hasAnswered && !isYesWithoutDetails;
+      } else if (section.title === 'Application Authorization & Signature') {
+        // Check if the application signature exists
+        const hasSignature = applicantExtras?.some(
+          (extra) => extra.type === ApplicantExtras.SIGNATURE && extra.value
+        );
+        isComplete = hasSignature;
+      } else if (section.title === 'Current Employment & Company History') {
+        // Check if they've answered the company history questions
+        const hasAnsweredApplied = applicant?.already_applied_to_company !== undefined && applicant?.already_applied_to_company !== null;
+        isComplete = hasAnsweredApplied;
+      } else {
+        isComplete =
+          !section.summary.toLowerCase().includes('not provided') &&
+          !section.summary.toLowerCase().includes('not uploaded') &&
+          !section.summary.toLowerCase().includes('not answered') &&
+          section.summary.trim() !== '';
+      }
+
+      return !isComplete;
+    });
+
+    if (incompleteSection) {
+      // Navigate to first incomplete section
+      alert(`Please complete the "${incompleteSection.title}" section before submitting.`);
+      handleEditSection(incompleteSection.stepNumber);
+    } else {
+      // All sections complete, submit and go to thank you page
+      setSteps(27); // Thank you page
+    }
   };
 
   const handleContinueToLongForm = () => {
@@ -375,6 +915,17 @@ export function ApplicationSummary() {
         className={styles.formContainer}
         style={isPrefilled ? { backgroundColor: 'white', padding: '40px' } : undefined}
       >
+        {/* Returning User Banner */}
+        <div style={{ marginBottom: '1.5rem' }}>
+          <ReturningUserBanner
+            applicant={applicant}
+            companyName={company?.name}
+            onGoToSignatures={() => handleEditSection(19)} // WorkedBefore - where they specify if they worked here before
+            showActionButton={true}
+            isPrefilled={isPrefilled}
+          />
+        </div>
+
         <div className="text-center mb-4">
           <h2 className="mb-3">Application Summary</h2>
 
@@ -531,10 +1082,75 @@ export function ApplicationSummary() {
                 section.summary.trim() !== '';
             }
 
+            // Determine if this is a required section for returning users
+            // For returning users applying to a DIFFERENT company, safety-related fields are cleared and must be re-completed
+            // For returning users re-applying to the SAME company, only legal documents need re-signing
+            // For DIFFERENT_COMPANY_PREFILL scenario: isPrefilled=true and applicant.id=null
+            const isReturningUser = isPrefilled || applicant?.id;
+            const isApplyingToDifferentCompany = isPrefilled || (applicant?.id && applicant.already_applied_to_company !== true);
+
+            if (index === 0) {
+              console.log('🔵 ApplicationSummary - isPrefilled:', isPrefilled);
+              console.log('🔵 ApplicationSummary - applicant.id:', applicant?.id);
+              console.log('🔵 ApplicationSummary - applicant.already_applied_to_company:', applicant?.already_applied_to_company);
+              console.log('🔵 ApplicationSummary - isReturningUser:', isReturningUser);
+              console.log('🔵 ApplicationSummary - isApplyingToDifferentCompany:', isApplyingToDifferentCompany);
+            }
+
+            const requiredSectionsForDifferentCompany = [
+              'Current Employment & Company History',
+              'Application Authorization & Signature',
+              'Legal Documents',
+            ];
+
+            const requiredSectionsForSameCompany = [
+              'Legal Documents',
+            ];
+
+            const requiredSections = isApplyingToDifferentCompany
+              ? requiredSectionsForDifferentCompany
+              : requiredSectionsForSameCompany;
+
+            const isRequiredForReturningUser = requiredSections.includes(section.title) && isReturningUser;
+            const isOptionalForReturningUser = isReturningUser && !requiredSections.includes(section.title);
+
             return (
               <Col md={12} key={index} className="mb-3">
-                <Card className="shadow-sm">
+                <Card
+                  className="shadow-sm"
+                  style={{
+                    border: isRequiredForReturningUser ? '3px solid #ffc107' : undefined,
+                    backgroundColor: isRequiredForReturningUser ? '#fffbf0' : undefined,
+                  }}
+                >
                   <Card.Body className="py-3">
+                    {isRequiredForReturningUser && (
+                      <div style={{
+                        backgroundColor: '#ffc107',
+                        color: '#000',
+                        padding: '0.35rem 0.75rem',
+                        marginBottom: '0.75rem',
+                        borderRadius: '4px',
+                        fontWeight: 'bold',
+                        fontSize: '0.85rem',
+                        display: 'inline-block',
+                      }}>
+                        ⚠️ ACTION REQUIRED - Must Complete
+                      </div>
+                    )}
+                    {isOptionalForReturningUser && (
+                      <div style={{
+                        backgroundColor: '#e7f5ff',
+                        color: '#1971c2',
+                        padding: '0.35rem 0.75rem',
+                        marginBottom: '0.75rem',
+                        borderRadius: '4px',
+                        fontSize: '0.8rem',
+                        display: 'inline-block',
+                      }}>
+                        ℹ️ Optional - Already saved from previous application
+                      </div>
+                    )}
                     <Row className="align-items-center">
                       <Col md={1} className="text-center">
                         {/* Status indicator */}
@@ -561,39 +1177,60 @@ export function ApplicationSummary() {
                             className="fa fa-times-circle"
                             style={{
                               fontSize: '1.5rem',
-                              color: '#dc3545',
-                              textShadow: '0 0 3px rgba(220,53,69,0.3)',
+                              color: isRequiredForReturningUser ? '#ffc107' : '#dc3545',
+                              textShadow: isRequiredForReturningUser ? '0 0 3px rgba(255,193,7,0.3)' : '0 0 3px rgba(220,53,69,0.3)',
                             }}
                           />
                         )}
                       </Col>
-                      <Col md={9}>
+                      <Col md={8}>
                         <h6
                           className="mb-1"
-                          style={{ color: '#000000', fontWeight: '600', fontSize: '1.1rem' }}
+                          style={{
+                            color: isRequiredForReturningUser ? '#856404' : '#000000',
+                            fontWeight: '600',
+                            fontSize: '1.1rem'
+                          }}
                         >
                           {section.title}
                         </h6>
                         <p
                           className={`mb-0`}
                           style={{
-                            color: isComplete ? '#2c3e50' : '#000000',
+                            color: isComplete ? '#2c3e50' : (isRequiredForReturningUser ? '#856404' : '#000000'),
                             fontWeight: isComplete ? '400' : '600',
                             fontSize: '0.95rem',
+                            whiteSpace: 'normal',
+                            wordWrap: 'break-word',
+                            overflowWrap: 'break-word',
+                            wordBreak: 'break-word',
                           }}
                         >
                           {section.summary}
                         </p>
                       </Col>
-                      <Col md={2} className="text-end">
-                        <Button
-                          variant="outline-primary"
-                          size="sm"
-                          onClick={() => handleEditSection(section.stepNumber)}
-                        >
-                          <i className="fa fa-edit me-1" />
-                          {isComplete ? 'Edit' : 'Complete'}
-                        </Button>
+                      <Col md={3} className="text-end">
+                        {/* Prevent editing phone number (step 2) and names (step 3) for returning users */}
+                        {isEditingExistingApplicant && (section.stepNumber === 2 || section.stepNumber === 3) ? (
+                          <Badge bg="secondary" style={{ padding: '0.5rem 0.75rem', fontSize: '0.875rem' }}>
+                            <i className="fa fa-lock me-1" />
+                            Locked
+                          </Badge>
+                        ) : (
+                          <Button
+                            variant={isRequiredForReturningUser ? 'warning' : 'outline-primary'}
+                            size={isRequiredForReturningUser ? 'lg' : 'sm'}
+                            onClick={() => handleEditSection(section.stepNumber)}
+                            style={isRequiredForReturningUser ? {
+                              fontWeight: 'bold',
+                              padding: '0.5rem 1rem',
+                              whiteSpace: 'nowrap',
+                            } : undefined}
+                          >
+                            <i className="fa fa-edit me-1" />
+                            {isRequiredForReturningUser ? 'Complete' : (isComplete ? 'Edit' : 'Complete')}
+                          </Button>
+                        )}
                       </Col>
                     </Row>
                   </Card.Body>
@@ -604,9 +1241,14 @@ export function ApplicationSummary() {
         </Row>
 
         <div className="text-center mt-4">
-          <Button variant="primary" size="lg" onClick={handleContinueToLongForm} className="px-5">
-            <i className="fa fa-arrow-right me-2" />
-            {isPrefilled ? 'Continue Application' : 'Continue to Detailed Application'}
+          <Button
+            variant={isPrefilled ? "success" : "primary"}
+            size="lg"
+            onClick={isPrefilled ? handleSubmitApplication : handleContinueToLongForm}
+            className="px-5"
+          >
+            <i className={`fa ${isPrefilled ? 'fa-check' : 'fa-arrow-right'} me-2`} />
+            {isPrefilled ? 'Submit Application' : 'Continue to Detailed Application'}
           </Button>
         </div>
 

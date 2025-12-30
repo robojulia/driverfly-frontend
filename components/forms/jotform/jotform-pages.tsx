@@ -19,6 +19,7 @@ import {
   ViolationHistory,
   WorkedBefore,
 } from './longForm';
+import { CombinedLicenseEdit } from './longForm/combined-license-edit';
 import { LegalDocumentsPage } from './longForm/legal-documents';
 import { SubmitMissingDocuments } from './longForm/submit-missing-document';
 import {
@@ -55,6 +56,7 @@ const UnableForJobWithSave = withAsyncSave(UnableForJob, 'UnableForJob');
 const FelonyConvictionWithSave = withAsyncSave(FelonyConviction, 'FelonyConviction');
 const DrugTestWithSave = withAsyncSave(DrugTest, 'DrugTest');
 const LegalDocumentsPageWithSave = withAsyncSave(LegalDocumentsPage, 'LegalDocumentsPage');
+const CombinedLicenseEditWithSave = withAsyncSave(CombinedLicenseEdit, 'CombinedLicenseEdit');
 
 const getFullFormPages = (
   step: number,
@@ -77,24 +79,25 @@ const getFullFormPages = (
     7: <DuiAndEquipment />,
     8: <Preferences />,
     9: <ContinueLongForm />,
-    10: <DriverApplication isAutoRecruitmentLead={false} />,
-    11: <BackgroundInfo />,
-    12: <HighestLevelEducation />,
-    13: <DrivingExperience />,
-    14: <DriverLicense />,
-    15: <MedicalCard />,
-    16: <EmergencyContact />,
-    17: <EmploymentHistory />,
-    18: <PastEmploymentHistory />,
-    19: <WorkedBefore />,
-    20: <AccidentHistory />,
-    21: <ViolationHistory />,
-    22: <PastSuspension />,
-    23: <UnableForJob />,
-    24: <FelonyConviction />,
-    25: <DrugTest />,
-    26: <LegalDocumentsPage />,
+    10: <DriverApplicationWithSave />,
+    11: <BackgroundInfoWithSave />,
+    12: <HighestLevelEducationWithSave />,
+    13: <DrivingExperienceWithSave />,
+    14: <DriverLicenseWithSave />,
+    15: <MedicalCardWithSave />,
+    16: <EmergencyContactWithSave />,
+    17: <EmploymentHistoryWithSave />,
+    18: <PastEmploymentHistoryWithSave />,
+    19: <WorkedBeforeWithSave />,
+    20: <AccidentHistoryWithSave />,
+    21: <ViolationHistoryWithSave />,
+    22: <PastSuspensionWithSave />,
+    23: <UnableForJobWithSave />,
+    24: <FelonyConvictionWithSave />,
+    25: <DrugTestWithSave />,
+    26: <LegalDocumentsPageWithSave />,
     27: <ThankyouPage />,
+    99: <CombinedLicenseEditWithSave />, // Special page for combined license editing
   };
 
   // If it's a direct job application and user is trying to access AtsJobs (step 1),

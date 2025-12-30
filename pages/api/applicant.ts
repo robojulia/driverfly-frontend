@@ -112,23 +112,35 @@ export default class ApplicantApi extends BaseApi {
 
   // new api to get most recent applicant for prefill functionality
   async getMostRecentApplicantForPrefill(params: ApplicantEntity): Promise<ApplicantEntity> {
-    const { data } = await this.get(
-      this.buildUrl(this.baseUrl + '/get-recent-applicant-for-phone-number', params)
-    );
+    // This is a public endpoint, so we make the call directly with axios to avoid authentication
+    const baseURL = process.env.NEXT_PUBLIC_BASE_URL_API;
+    // Ensure proper URL construction with trailing slash
+    const normalizedBaseURL = baseURL?.endsWith('/') ? baseURL : `${baseURL}/`;
+    const url = `${normalizedBaseURL}${this.baseUrl}/get-recent-applicant-for-phone-number${this.buildQueryString(params)}`;
+    console.log('🔍 Fetching recent applicant for prefill from:', url);
+    const { data } = await axios.get(url);
     return data;
   }
 
   async requestOTP(dto: ApplicantEntity): Promise<any> {
     // This is a public endpoint, so we make the call directly with axios to avoid authentication
     const baseURL = process.env.NEXT_PUBLIC_BASE_URL_API;
-    const { data } = await axios.post(`${baseURL}/${this.baseUrl}/request-otp`, dto);
+    // Ensure proper URL construction with trailing slash
+    const normalizedBaseURL = baseURL?.endsWith('/') ? baseURL : `${baseURL}/`;
+    const url = `${normalizedBaseURL}${this.baseUrl}/request-otp`;
+    console.log('🔐 Requesting OTP from:', url, 'with data:', dto);
+    const { data } = await axios.post(url, dto);
 
     return data;
   }
   async verifyOTP(dto: VerifyOTPDto): Promise<ApplicantEntity> {
     // This is a public endpoint, so we make the call directly with axios to avoid authentication
     const baseURL = process.env.NEXT_PUBLIC_BASE_URL_API;
-    const { data } = await axios.post(`${baseURL}/${this.baseUrl}/verify-otp`, dto);
+    // Ensure proper URL construction with trailing slash
+    const normalizedBaseURL = baseURL?.endsWith('/') ? baseURL : `${baseURL}/`;
+    const url = `${normalizedBaseURL}${this.baseUrl}/verify-otp`;
+    console.log('✅ Verifying OTP at:', url);
+    const { data } = await axios.post(url, dto);
 
     return data;
   }

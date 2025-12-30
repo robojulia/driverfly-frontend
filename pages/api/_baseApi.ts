@@ -3,6 +3,45 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { isBrowser } from '../../utils/common';
 import * as https from 'https';
 
+// Add axios response interceptor to handle 401 errors globally
+if (isBrowser()) {
+  let isRedirecting = false;
+
+  axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      console.log('Axios interceptor caught error:', {
+        status: error?.response?.status,
+        url: error?.config?.url,
+        isRedirecting,
+      });
+
+      if (error?.response?.status === 401 && !isRedirecting) {
+        isRedirecting = true;
+        console.error('401 Unauthorized - Token expired or invalid. Redirecting to login...');
+
+        // Clear user data
+        try {
+          localStorage.removeItem('user');
+        } catch (e) {
+          console.error('Error clearing localStorage:', e);
+        }
+
+        // Redirect to login if on dashboard page
+        if (window.location.pathname.toLowerCase().startsWith('/dashboard')) {
+          console.log('Redirecting to /login...');
+          setTimeout(() => {
+            window.location.href = '/login';
+          }, 500);
+        }
+      }
+      return Promise.reject(error);
+    }
+  );
+
+  console.log('Axios 401 interceptor installed');
+}
+
 // Utility function to get token from storage without React hooks
 function getTokenFromStorage(): string | null {
   if (!isBrowser()) return null;
@@ -44,7 +83,7 @@ export default class BaseApi {
       // If environment variable is not set, provide a fallback
       if (!config.baseURL) {
         // In development, default to localhost:4000/api
-        // In production, this should be set via environment variables 
+        // In production, this should be set via environment variables
         if (isBrowser() && typeof window !== 'undefined') {
           const hostname = window.location.hostname;
           const isDevelopment = hostname === 'localhost' || hostname === '127.0.0.1';
@@ -60,6 +99,11 @@ export default class BaseApi {
           // Server-side fallback
           config.baseURL = 'http://localhost:4000/api';
         }
+      }
+
+      // Ensure baseURL has a trailing slash for proper URL concatenation
+      if (config.baseURL && !config.baseURL.endsWith('/')) {
+        config.baseURL = config.baseURL + '/';
       }
     }
 
@@ -80,7 +124,12 @@ export default class BaseApi {
       });
     }
 
-    // console.log("BaseApi: ", token); 
+    console.log("BaseApi request:", {
+      url: config.url,
+      baseURL: config.baseURL,
+      hasToken: !!token,
+      tokenPreview: token ? token.substring(0, 20) + '...' : null
+    });
 
     if (!config.headers) config.headers = {};
 
@@ -97,6 +146,12 @@ export default class BaseApi {
 
   async get(url, config?: AxiosRequestConfig) {
     config = this.mergeRequestConfig(config);
+
+    console.log('BaseApi GET request:', {
+      url,
+      fullUrl: config.baseURL + url,
+      hasToken: !!config.headers?.Authorization
+    });
 
     return axios.get(url, config);
   }

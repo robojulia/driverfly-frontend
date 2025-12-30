@@ -9,6 +9,7 @@ import { LicenseRestrictions } from "../../../enums/applicants/applicant-license
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
 import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
 import { ApplicantEntryMode } from "../../../enums/applicants/applicant-entry-mode.enum";
+import { HearAboutUsType } from "../../../enums/jotform/hear-about-type.enum";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
 import { JobEmploymentType } from "../../../enums/jobs/job-employment-type.enum";
@@ -32,6 +33,7 @@ import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { focusOnErrorField } from "../../../utils/form-error";
 import { useEffectAsync } from "../../../utils/react";
 import { formFailed, formSuccess } from "../../../utils/toast";
+import { ReturningUserBanner } from "../../applicants/returning-user-banner";
 import Section from "../../view-details/section";
 import BaseCheck from "../base-check";
 import BaseCheckList from "../base-check-list";
@@ -140,12 +142,18 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
       const ssnDisplay = entity?.ssn ||
         ((entity as any)?.ssn_last4 ? `XXX-XX-${String((entity as any).ssn_last4).slice(-4)}` : '');
 
+      // Set entry_mode based on is_automated_recruiting_lead or default to COMPANY
+      const entryMode = entity?.is_automated_recruiting_lead
+        ? ApplicantType.AUTO_RECRUIT
+        : (entity?.entry_mode || ApplicantType.COMPANY);
+
       form.resetForm({
         values: {
           ...entity,
           ssn: ssnDisplay,
           extras,
           meta,
+          entry_mode: entryMode,
           referralSourceId: entity?.referralSource?.id || entity?.referralSourceId
         } as any
       });
@@ -154,8 +162,8 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
       await form.resetForm({
         values: {
           ...new ApplicantEntity(),
-          type: ApplicantType.COMPANY,
-          entry_mode: ApplicantEntryMode.MANUALLY_ADDED,
+          type: null,
+          entry_mode: ApplicantType.COMPANY,
           extras,
           meta
         } as any
@@ -324,10 +332,12 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
     form.setFieldValue(e.target.name, uppercaseValue);
   };
 
-  // Auto-set type to AUTO_RECRUIT when is_automated_recruiting_lead is true
+  // Auto-set entry_mode to AUTO_RECRUITING_LEAD when is_automated_recruiting_lead is true
   useEffect(() => {
-    if (form.values?.is_automated_recruiting_lead && form.values?.type !== ApplicantType.AUTO_RECRUIT) {
-      form.setFieldValue('type', ApplicantType.AUTO_RECRUIT);
+    if (form.values?.is_automated_recruiting_lead && form.values?.entry_mode !== ApplicantEntryMode.AUTO_RECRUITING_LEAD) {
+      form.setFieldValue('entry_mode', ApplicantEntryMode.AUTO_RECRUITING_LEAD);
+    } else if (!form.values?.is_automated_recruiting_lead && form.values?.entry_mode === ApplicantEntryMode.AUTO_RECRUITING_LEAD) {
+      form.setFieldValue('entry_mode', ApplicantEntryMode.MANUALLY_ADDED);
     }
   }, [form.values?.is_automated_recruiting_lead]);
 
@@ -404,6 +414,15 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
 
   return (
     <Form onSubmit={form.handleSubmit} className={className} onReset={form.handleReset} data-applicant-edit-form>
+      {/* Returning User Banner */}
+      {entity?.id && (
+        <Row>
+          <Col md="12" className="p-2">
+            <ReturningUserBanner applicant={entity} companyName={entity?.company?.name} />
+          </Col>
+        </Row>
+      )}
+
       {/* Basic Information - Combined Section */}
       <Row>
         <Col md="12" className="p-2 mt-2">
@@ -496,7 +515,7 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
               </Col>
               <Col md="3" className="px-2">
                 <div style={{ maxWidth: '100%' }}>
-                  <BaseInputPhone className="col-12" readOnly={Boolean(entity?.is_hired)} label="Alternative Phone Number" name="meta.alternative_phone" placeholder="(555) 987-6543" />
+                  <BaseInputPhone className="col-12" readOnly={Boolean(entity?.is_hired)} label="Alternative Phone Number" name="meta.alternative_phone" placeholder="(555) 987-6543" formik={form} />
                 </div>
               </Col>
               <Col md="3" className="px-2">
@@ -553,41 +572,39 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
               </Col>
             </Row>
 
-            {/* Assigned Recruiter, Lead Type, Entry Mode, Referral Source */}
+            {/* Entry Mode, Auto Recruiting Lead, Lead Type, Referral Source */}
             <Row className="mb-2">
-              <Col md="3" className="px-2">
-                <BaseSelect
-                  className="col-12"
-                  readOnly={Boolean(entity?.is_hired)}
-                  label="Assigned Recruiter"
-                  name="assignedUserId"
-                  placeholder="Select recruiter"
-                  options={companyUsers?.map((u) => ({ label: `${u.first_name} ${u.last_name}`, value: u.id }))}
-                  formik={form}
-                />
-              </Col>
-              <Col md="3" className="px-2">
-                <BaseSelect
-                  className="col-12"
-                  readOnly={Boolean(entity?.is_hired) || Boolean(form.values?.is_automated_recruiting_lead)}
-                  label="Lead Type"
-                  name="type"
-                  placeholder="Select lead type"
-                  labelPrefix="ApplicantType"
-                  enumType={ApplicantType}
-                  hideOptions={!form.values?.is_automated_recruiting_lead ? [ApplicantType.AUTO_RECRUIT] : []}
-                  formik={form}
-                />
-              </Col>
               <Col md="3" className="px-2">
                 <BaseSelect
                   className="col-12"
                   readOnly
                   label="Entry Mode"
                   name="entry_mode"
-                  placeholder="Entry Mode"
-                  labelPrefix="ApplicantEntryMode"
-                  enumType={ApplicantEntryMode}
+                  placeholder="Select entry mode"
+                  labelPrefix="ApplicantType"
+                  enumType={ApplicantType}
+                  formik={form}
+                />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseInput
+                  className="col-12"
+                  readOnly
+                  label="Auto Recruiting Lead"
+                  name="auto_recruiting_lead_display"
+                  value={form.values?.is_automated_recruiting_lead ? "Yes" : "No"}
+                  formik={undefined}
+                />
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseSelect
+                  className="col-12"
+                  readOnly={Boolean(entity?.is_hired)}
+                  label="Lead Type"
+                  name="type"
+                  placeholder="Select lead type"
+                  labelPrefix="HearAboutUsType"
+                  enumType={HearAboutUsType}
                   formik={form}
                 />
               </Col>
@@ -604,12 +621,23 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
               </Col>
             </Row>
 
-            {/* Status, Authorized to work, Citizenship Status (conditional) */}
+            {/* Status, Assigned Recruiter, Authorized to work, Citizenship Status (conditional) */}
             <Row className="mb-2">
               <Col md="3" className="px-2">
                 {form.values?.id && (
                   <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} name="current_application_status" placeholder="Select status" label="Status" labelPrefix="ApplicantStatus" enumType={ApplicantStatus} formik={form} style={{ backgroundColor: '#83e0de' }} />
                 )}
+              </Col>
+              <Col md="3" className="px-2">
+                <BaseSelect
+                  className="col-12"
+                  readOnly={Boolean(entity?.is_hired)}
+                  label="Assigned Recruiter"
+                  name="assignedUserId"
+                  placeholder="Select recruiter"
+                  options={companyUsers?.map((u) => ({ label: `${u.first_name} ${u.last_name}`, value: u.id }))}
+                  formik={form}
+                />
               </Col>
               <Col md="3" className="px-2">
                 <BaseSelect

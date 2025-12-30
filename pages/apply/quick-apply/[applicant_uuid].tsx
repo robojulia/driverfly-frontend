@@ -8,6 +8,7 @@ import {
 } from '../../../components/forms/jotform/quick-apply-pages';
 import { PoweredByLogo } from '../../../components/forms/jotform/powered-by-logo';
 import { CompanyLogoUpperRight } from '../../../components/forms/jotform/company-logo-upper-right';
+import { ReturningUserBanner } from '../../../components/applicants/returning-user-banner';
 import JotformContext from '../../../context/jotform-context';
 import { ApplicantEntity, ApplicantExtrasEntity } from '../../../models/applicant';
 import { CompanyPreferenceEntity } from '../../../models/company/company-preferences.entity';
@@ -78,6 +79,12 @@ export default function QuickApply({ entity, company, preferences }: QuickApplyP
           <div className={styles.main_form} style={getQuickApplyStyle(steps)}>
             {/* Show company logo in upper right on all cards except the first one (splash page) */}
             {steps > 0 && <CompanyLogoUpperRight />}
+            {/* Show returning user banner on all pages except the first (splash page) */}
+            {steps > 0 && (
+              <div style={{ marginBottom: '1rem' }}>
+                <ReturningUserBanner applicant={applicant} companyName={company?.name} />
+              </div>
+            )}
             {/* uncomment this during development */}
             {/* <BaseInput
               value={steps}

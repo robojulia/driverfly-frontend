@@ -37,6 +37,7 @@ import ApplicantApi from "../../../pages/api/applicant";
 import * as _style from "../../../public/components/styles/ImportApplicantsModule.module.css";
 import { matchEnum } from "../../../utils/enums.utils";
 import { FormikInterface } from "../../../utils/formik";
+import { normalizePhoneNumber } from "../../../utils/phone-normalization";
 import Switch from "../../controls/switch";
 import OverlyPopover from "../../popover/overly-popover";
 import { isJwtExpired, useAuth } from "../../../hooks/use-auth";
@@ -93,15 +94,14 @@ const ImportApplicants = () => {
             for (let i = 0; i < values.items?.length; i++) {
                 const applicant = values.items[i];
 
-                if (
-                    applicant.phone?.length > 3 &&
-                    !applicant.phone.startsWith("+1")
-                ) { applicant.phone = "+1 " + applicant.phone; }
+                // Normalize phone numbers to ensure consistent format
+                if (applicant.phone?.length > 3) {
+                    applicant.phone = normalizePhoneNumber(applicant.phone);
+                }
 
-                if (
-                    applicant.emergency_contact_number?.length > 3 &&
-                    !applicant.emergency_contact_number.startsWith("+1")
-                ) { applicant.emergency_contact_number = "+1 " + applicant.emergency_contact_number; }
+                if (applicant.emergency_contact_number?.length > 3) {
+                    applicant.emergency_contact_number = normalizePhoneNumber(applicant.emergency_contact_number);
+                }
 
                 if (applicant.email) {
                     const rowError: { email?: string; phone?: string } = {};

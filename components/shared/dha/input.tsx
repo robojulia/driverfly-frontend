@@ -11,6 +11,7 @@ interface InputProps {
   type?: 'text' | 'email' | 'password' | 'tel' | 'number' | 'url' | 'date';
   required?: boolean;
   disabled?: boolean;
+  readOnly?: boolean;
   error?: string;
   helperText?: string;
   className?: string;
@@ -36,6 +37,7 @@ export const Input: React.FC<InputProps> = ({
   type = 'text',
   required = false,
   disabled = false,
+  readOnly = false,
   error,
   helperText,
   className = '',
@@ -204,6 +206,7 @@ export const Input: React.FC<InputProps> = ({
           placeholder={placeholder}
           required={required}
           disabled={disabled}
+          readOnly={readOnly}
           autoComplete={autoComplete}
           maxLength={maxLength}
           minLength={minLength}
@@ -212,8 +215,9 @@ export const Input: React.FC<InputProps> = ({
           min={min}
           style={{
             ...inputStyles,
-            cursor: disabled ? 'not-allowed' : 'text',
+            cursor: disabled ? 'not-allowed' : readOnly ? 'default' : 'text',
             opacity: disabled ? 0.6 : 1,
+            backgroundColor: readOnly ? 'var(--form-info-bg)' : inputStyles.backgroundColor,
           }}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${name}-error` : helperText ? `${name}-helper` : undefined}

@@ -694,7 +694,12 @@ export class ApplicantEntity {
           test: (value, context) => {
             console.log('value?.length', value?.length);
 
-            if (value?.length < 17) {
+            // Only validate length if the value is not empty
+            // Extract digits from the value to check actual phone number length
+            const digits = value?.replace(/\D/g, '') || '';
+
+            // A valid phone number should have at least 10 digits (US format)
+            if (value && digits.length > 0 && digits.length < 10) {
               return context.createError({ message: 'yup.phone' });
             }
             return true;

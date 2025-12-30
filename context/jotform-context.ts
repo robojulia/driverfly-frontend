@@ -22,6 +22,7 @@ export type JotFormContextType = {
     isDirectJobApplication?: boolean;
     isEditingExistingApplicant?: boolean;
     isPrefilled?: boolean;
+    isEditingFromSummary?: boolean;
   };
   method: {
     setApplicant?: (e?: any) => void;
@@ -35,6 +36,7 @@ export type JotFormContextType = {
     setDirectJob?: (job: JobEntity | null) => void;
     setIsEditingExistingApplicant?: (isEditing: boolean) => void;
     setIsPrefilled?: (isPrefilled: boolean) => void;
+    setIsEditingFromSummary?: (isEditing: boolean) => void;
   };
 };
 
@@ -58,6 +60,7 @@ const JotformContext = createContext<JotFormContextType>({
     isDirectJobApplication: false,
     isEditingExistingApplicant: false,
     isPrefilled: false,
+    isEditingFromSummary: false,
   },
   method: {
     setApplicant: (e?: any) => {},
@@ -71,6 +74,7 @@ const JotformContext = createContext<JotFormContextType>({
     setDirectJob: (job: JobEntity | null) => {},
     setIsEditingExistingApplicant: (isEditing: boolean) => {},
     setIsPrefilled: (isPrefilled: boolean) => {},
+    setIsEditingFromSummary: (isEditing: boolean) => {},
   },
 });
 export default JotformContext;
