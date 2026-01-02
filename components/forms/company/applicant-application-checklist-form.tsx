@@ -59,6 +59,18 @@ export function ApplicantApplicationChecklistForm(
     applicatDacItem?: ApplicantDacEntity
   ) => {
     try {
+      // Validate that we have an applicant ID
+      if (!entity?.id) {
+        toast.error(t("Cannot update checklist: Applicant ID is missing. Please save the applicant first."));
+        return;
+      }
+
+      // Validate the checklist item type
+      if (!type || type.trim().length === 0) {
+        toast.error(t("Cannot update checklist: Item type is invalid. Please edit the checklist items to fix this."));
+        return;
+      }
+
       let dac: ApplicantDacEntity;
       const newValue = !applicatDacItem?.value;
 
@@ -87,8 +99,18 @@ export function ApplicantApplicationChecklistForm(
       entity.dac.push(dac);
       toast.success(t("Successfully updated checklist"));
       setEntity?.({ ...entity });
-    } catch (e) {
-      globalAjaxExceptionHandler(e, { toast: toast, t: t });
+    } catch (e: any) {
+      console.error("Application checklist error:", e);
+      // Provide more specific error messages
+      if (e?.response?.status === 404) {
+        toast.error(t("Not Found: The checklist item could not be saved. Please refresh the page and try again."));
+      } else if (e?.response?.status === 400) {
+        toast.error(t("Invalid Request: The checklist item data is invalid. Please check your input."));
+      } else if (e?.response?.data?.message) {
+        toast.error(e.response.data.message);
+      } else {
+        toast.error(t("Failed to update checklist. Please try again."));
+      }
     }
   };
 
@@ -170,6 +192,12 @@ export function ApplicantApplicationChecklistForm(
               const isHistorical = !globalItems.includes(companyDacItemType);
               const isChecked = !!applicatDacItem?.value;
 
+              // Detect placeholder/test items (short, generic names like "abc", "test", etc.)
+              const isPlaceholder = companyDacItemType && (
+                companyDacItemType.toLowerCase().trim().length <= 3 ||
+                ['test', 'abc', 'xyz', 'placeholder', 'sample'].includes(companyDacItemType.toLowerCase().trim())
+              );
+
               return (
                 <tr key={companyDacItemType}>
                   <td className="text-center">
@@ -185,6 +213,11 @@ export function ApplicantApplicationChecklistForm(
                     {isHistorical && (
                       <span className="badge bg-warning text-dark ms-2" title={t("This item was removed from the global template but data is preserved")}>
                         {t("Historical")}
+                      </span>
+                    )}
+                    {isPlaceholder && !isHistorical && (
+                      <span className="badge bg-danger text-white ms-2" title={t("This appears to be a placeholder item. Click 'Edit Checklist Items' to remove or rename it.")}>
+                        {t("Placeholder")}
                       </span>
                     )}
                   </td>

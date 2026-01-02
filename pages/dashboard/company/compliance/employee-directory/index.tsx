@@ -95,6 +95,22 @@ export default function EmployeeDirectory() {
   useEffect(() => {
     setPreviousPath(router.asPath);
     setViewMode((router.query.viewMode as ViewModeType) ?? ViewModeType.EMPLOYEE);
+
+    // Handle hireDateFrom query parameter for filtering recent hires
+    if (router.query.hireDateFrom) {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        hireDateFrom: router.query.hireDateFrom as string,
+      }));
+    }
+
+    // Handle birthdayThisWeek query parameter for filtering employees with birthdays this week
+    if (router.query.birthdayThisWeek === 'true') {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        birthdayThisWeek: true,
+      }));
+    }
   }, [router, setPreviousPath]);
 
   useEffectAsync(async () => {

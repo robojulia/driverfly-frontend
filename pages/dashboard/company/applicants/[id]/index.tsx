@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 
-import { Button, Col, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
-import { Pencil, PlusLg, Trash, ChatDots } from 'react-bootstrap-icons';
+import { Button, Col, OverlayTrigger, Row, Tooltip, Container, Card } from 'react-bootstrap';
+import { Pencil, PlusLg, Trash, ChatDots, XCircleFill, ShieldFillX, ArrowLeft } from 'react-bootstrap-icons';
 
 import FullLayout from '../../../../../components/dashboard/layouts/layout/full-layout';
 
@@ -67,6 +67,8 @@ export default function ViewApplicant({ id }) {
   const [applicantSuggestedJobs, setApplicantSuggestedJobs] = useState<
     ApplicantSuggestedJobEntity[]
   >([]);
+  const [error, setError] = useState<{ status: number; message: string } | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const backPath = '/dashboard/company/applicants';
 
@@ -74,26 +76,54 @@ export default function ViewApplicant({ id }) {
 
   useEffectAsync(async () => {
     if (id) {
-      const api = new ApplicantApi();
+      try {
+        const api = new ApplicantApi();
 
-      const data = await api.getById(+id, false, ['documents', 'notes', 'notes.user', 'jobs', 'jobs.job', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned', 'assignedUser', 'referralSource']);
+        const data = await api.getById(+id, false, ['documents', 'notes', 'notes.user', 'jobs', 'jobs.job', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned', 'assignedUser', 'referralSource']);
 
-      const suggestedJobs = await api.suggestedJobs.get(id);
-      setApplicantSuggestedJobs(suggestedJobs);
+        const suggestedJobs = await api.suggestedJobs.get(id);
+        setApplicantSuggestedJobs(suggestedJobs);
 
-      if (!data) {
-        toast.error(t('UNABLE_TO_FIND_{name}', { name: t('APPLICANT') }));
-        goBack();
-        return;
+        if (!data) {
+          setError({
+            status: 404,
+            message: t('UNABLE_TO_FIND_{name}', { name: 'APPLICANT' }, { translateProps: true })
+          });
+          setLoading(false);
+          return;
+        }
+
+        setApplicant({
+          ...data,
+          notes: data.notes.sort((a, b) => b.id - a.id),
+        });
+        setLoading(false);
+      } catch (error: any) {
+        console.error('Error loading applicant:', error);
+
+        // Handle 403 Forbidden and 404 Not Found the same way (don't reveal if resource exists)
+        if (error?.response?.status === 403 || error?.response?.status === 404) {
+          setError({
+            status: 404,
+            message: t('UNABLE_TO_FIND_{name}', { name: 'APPLICANT' }, { translateProps: true })
+          });
+          setLoading(false);
+          return;
+        }
+
+        // For other errors, set generic error message
+        setError({
+          status: error?.response?.status || 500,
+          message: t('ERROR_MESSAGE_DEFAULT')
+        });
+        setLoading(false);
       }
-
-      setApplicant({
-        ...data,
-        notes: data.notes.sort((a, b) => b.id - a.id),
-      });
     } else {
-      toast.error(t('UNABLE_TO_FIND_{name}', { name: 'APPLICANT' }, { translateProps: true }));
-      goBack();
+      setError({
+        status: 404,
+        message: t('UNABLE_TO_FIND_{name}', { name: 'APPLICANT' }, { translateProps: true })
+      });
+      setLoading(false);
     }
   }, [id]);
 
@@ -227,6 +257,39 @@ export default function ViewApplicant({ id }) {
   const messageTooltip = <Tooltip id="message-tooltip">{t('MESSAGE_APPLICANT')}</Tooltip>;
 
   const [showApplicantName, setShowApplicantName] = useState(false);
+
+  // Show nothing while loading (prevents flash of default content)
+  if (loading && !error) {
+    return null;
+  }
+
+  // If error exists, show full-page error instead of normal content
+  if (error) {
+    return (
+      <ChildPageLayout
+        backPath={backPath}
+        title={t('APPLICANT_NOT_FOUND')}
+      >
+        <Container className="py-5">
+          <Card className="border-0 shadow-sm">
+            <Card.Body className="text-center py-5">
+              <div className="mb-4">
+                <XCircleFill size={64} className="text-danger mb-3" />
+                <h4 className="mb-3">{t('APPLICANT_NOT_FOUND')}</h4>
+                <p className="text-muted mb-4">{error.message}</p>
+                <Link href={backPath}>
+                  <Button variant="primary">
+                    <ArrowLeft className="me-2" />
+                    {t('BACK_TO_APPLICANTS')}
+                  </Button>
+                </Link>
+              </div>
+            </Card.Body>
+          </Card>
+        </Container>
+      </ChildPageLayout>
+    );
+  }
 
   return (
     <>

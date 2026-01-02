@@ -1,0 +1,5 @@
+export enum SyncDirection {
+  INBOUND = 'INBOUND',
+  OUTBOUND = 'OUTBOUND',
+  BIDIRECTIONAL = 'BIDIRECTIONAL',
+}

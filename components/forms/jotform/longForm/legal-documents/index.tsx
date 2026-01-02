@@ -169,7 +169,11 @@ function LegalDocumentsContent() {
         }
 
         let response: ApplicantEntity;
-        if (applicant?.id) {
+        // Check if this is an update to the SAME company or a new application to a DIFFERENT company
+        const isSameCompany = applicant?.company?.id === company?.id;
+        const shouldUpdate = applicant?.id && isSameCompany;
+
+        if (shouldUpdate) {
           response = await applicantApi.jotform.update(
             applicant.id,
             {
@@ -184,6 +188,7 @@ function LegalDocumentsContent() {
             }
           );
         } else {
+          // CREATE new applicant OR returning applicant applying to a DIFFERENT company
           response = await applicantApi.jotform.create(company.id, {
             applicant,
             applicantExtras: filtered_extras,

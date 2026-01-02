@@ -212,11 +212,7 @@ export default function Header({ hideAuthButtons = false }: { hideAuthButtons?: 
         {isDesktop && (
           <nav ref={navRef} className="desktop-nav">
             <ul className="nav-list">
-              {visibleItems.map((item) => (
-                <li key={item.label} className="nav-item">
-                  {renderNavItem(item)}
-                </li>
-              ))}
+              {visibleItems.map((item) => renderNavItem(item))}
 
               {/* More dropdown for overflow items */}
               {overflowItems.length > 0 && (

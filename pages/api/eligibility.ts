@@ -184,4 +184,39 @@ export default class EligibilityApi extends BaseApi {
       };
     }
   }
+
+  /**
+   * Get eligible jobs for a specific applicant (reverse eligibility lookup)
+   * Uses the same eligibility scoring logic as the job candidate tab
+   */
+  async getApplicantEligibleJobs(
+    applicantId: number,
+    params?: {
+      minScore?: number;
+      limit?: number;
+      offset?: number;
+      companyId?: number;
+    }
+  ): Promise<any> {
+    try {
+      const queryParams = new URLSearchParams();
+
+      if (params?.minScore !== undefined)
+        queryParams.append('minScore', params.minScore.toString());
+      if (params?.limit !== undefined) queryParams.append('limit', params.limit.toString());
+      if (params?.offset !== undefined) queryParams.append('offset', params.offset.toString());
+      if (params?.companyId !== undefined)
+        queryParams.append('companyId', params.companyId.toString());
+
+      const queryString = queryParams.toString();
+      const url = `/eligibility/applicants/${applicantId}/jobs${queryString ? `?${queryString}` : ''}`;
+
+      const response = await this.get(url);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch eligible jobs for applicant:', error);
+      // Return empty array if API fails or endpoint doesn't exist yet
+      return { jobs: [], total: 0 };
+    }
+  }
 }

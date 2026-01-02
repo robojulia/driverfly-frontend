@@ -1,7 +1,8 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useCallback, useMemo, useState, useRef, useEffect } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Container, Card } from 'react-bootstrap';
+import { XCircleFill, ShieldFillX, ArrowLeft } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import FullLayout from '../../../../../components/dashboard/layouts/layout/full-layout';
 import { EditApplicantFormNew } from '../../../../../components/forms/company/edit-applicant-form-new';
@@ -11,6 +12,7 @@ import { useUnsavedChangesWarning } from '../../../../../hooks/use-unsaved-chang
 import { ApplicantEntity } from '../../../../../models/applicant/applicant.entity';
 import { ApplicantSuggestedJobEntity } from '../../../../../models/applicant/applicant-suggested-job.entity';
 import { useEffectAsync } from '../../../../../utils/react';
+import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
 import ApplicantApi from '../../../../api/applicant';
 import { HireApplicantForm } from '../../../../../components/forms/company/hire-applicant-form';
 import { ApplicantExtras as ApplicantExtrasEnum } from '../../../../../enums/applicants/applicant-extras.enum';
@@ -33,28 +35,131 @@ export default function EditApplicant({ id }) {
   const [applicantSuggestedJobs, setApplicantSuggestedJobs] = useState<ApplicantSuggestedJobEntity[]>([]);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<{ formId: string; errors: any }[]>([]);
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const [error, setError] = useState<{ status: number; message: string } | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // Track scroll position to show/hide floating header
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show floating header after scrolling down 100px
+      setIsScrolled(window.scrollY > 100);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffectAsync(async () => {
     if (id) {
-      const api = new ApplicantApi();
-      const entity = await api.getById(+id, true, ['documents', 'notes', 'notes.user', 'jobs', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned']);
+      try {
+        const api = new ApplicantApi();
+        const entity = await api.getById(+id, true, ['documents', 'notes', 'notes.user', 'jobs', 'jobs.job', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned']);
 
-      const suggestedJobs = await api.suggestedJobs.get(id);
-      setApplicantSuggestedJobs(suggestedJobs || []);
+        const suggestedJobs = await api.suggestedJobs.get(id);
+        setApplicantSuggestedJobs(suggestedJobs || []);
 
-      if (entity) {
-        setApplicant(entity);
-        // Extract eligibility from the response if it exists
-        if ((entity as any).eligibility) {
-          setEligibility((entity as any).eligibility);
+        if (entity) {
+          // Debug logging to verify jobs.job relation is loaded
+          const jobsWithoutTitle = entity.jobs?.filter(j => !j.job?.title) || [];
+          console.log('EditApplicant: Loaded applicant with jobs:', {
+            totalJobs: entity.jobs?.length || 0,
+            jobsWithTitle: entity.jobs?.filter(j => j.job?.title).length || 0,
+            jobsWithoutTitle: jobsWithoutTitle.length,
+            sampleJob: entity.jobs?.[0],
+          });
+
+          // WORKAROUND: If jobs don't have titles (relation not fully loaded), fetch job details separately
+          if (jobsWithoutTitle.length > 0) {
+            console.warn('Jobs.job relation not loaded by backend. Fetching job details separately...', {
+              jobsToFetch: jobsWithoutTitle.map(j => ({
+                applicantJobId: j.id,
+                jobId: j.job?.id || (j.job as any),
+                jobStructure: typeof j.job,
+              })),
+            });
+
+            const JobApi = (await import('../../../../api/job')).default;
+            const jobApi = new JobApi();
+
+            // Fetch job details for each applicant job that's missing the relation
+            const jobPromises = jobsWithoutTitle.map(async (appliedJob) => {
+              // The job might be just an ID number, an object with ID, or undefined
+              const jobId = typeof appliedJob.job === 'number' ? appliedJob.job : appliedJob.job?.id;
+
+              if (jobId) {
+                try {
+                  const jobDetails = await jobApi.getById(jobId);
+                  return { appliedJobId: appliedJob.id, jobDetails };
+                } catch (error) {
+                  console.error(`Failed to fetch job ${jobId}:`, error);
+                  return null;
+                }
+              }
+              console.warn('Cannot fetch job - no ID available for applicant job:', appliedJob.id);
+              return null;
+            });
+
+            const jobResults = await Promise.all(jobPromises);
+
+            // Merge the job details back into the applicant jobs
+            entity.jobs = entity.jobs?.map(appliedJob => {
+              if (!appliedJob.job?.title) {
+                const result = jobResults.find(r => r && r.appliedJobId === appliedJob.id);
+                if (result?.jobDetails) {
+                  return { ...appliedJob, job: result.jobDetails };
+                }
+              }
+              return appliedJob;
+            }) || [];
+
+            console.log('After enriching jobs:', {
+              totalJobs: entity.jobs.length,
+              jobsWithTitle: entity.jobs.filter(j => j.job?.title).length,
+              jobsStillMissing: entity.jobs.filter(j => !j.job?.title).length,
+            });
+          }
+
+          setApplicant(entity);
+          // Extract eligibility from the response if it exists
+          if ((entity as any).eligibility) {
+            setEligibility((entity as any).eligibility);
+          }
+          setLoading(false);
+        } else {
+          // If entity is null, treat as not found
+          setError({
+            status: 404,
+            message: t('UNABLE_TO_FIND_{name}', { name: 'APPLICANT' }, { translateProps: true })
+          });
+          setLoading(false);
         }
-      } else {
-        toast.error(t('UNABLE_TO_FIND_{name}', { name: 'APPLICANT' }, { translateProps: true }));
-        goBack();
+      } catch (error: any) {
+        console.error('Error loading applicant:', error);
+
+        // Handle 403 Forbidden and 404 Not Found the same way (don't reveal if resource exists)
+        if (error?.response?.status === 403 || error?.response?.status === 404) {
+          setError({
+            status: 404,
+            message: t('UNABLE_TO_FIND_{name}', { name: 'APPLICANT' }, { translateProps: true })
+          });
+          setLoading(false);
+          return;
+        }
+
+        // For other errors, set generic error message
+        setError({
+          status: error?.response?.status || 500,
+          message: t('ERROR_MESSAGE_DEFAULT')
+        });
+        setLoading(false);
       }
     } else {
-      toast.error(t('UNABLE_TO_FIND_{name}', { name: 'APPLICANT' }, { translateProps: true }));
-      goBack();
+      setError({
+        status: 404,
+        message: t('UNABLE_TO_FIND_{name}', { name: 'APPLICANT' }, { translateProps: true })
+      });
+      setLoading(false);
     }
   }, [id, refetchApplicant]);
 
@@ -205,8 +310,10 @@ export default function EditApplicant({ id }) {
       console.log('SSN in response:', (saved as any)?.ssn);
       console.log('SSN last4 in response:', (saved as any)?.ssn_last4);
 
-      // Update the entity
-      setApplicant({ ...applicant, ...saved });
+      // Update the entity, but preserve relations that weren't included in the update response
+      // The update response doesn't include nested relations like jobs.job, documents, notes, etc.
+      const { jobs: _jobs, documents: _documents, notes: _notes, dac: _dac, voeData: _voeData, ...savedWithoutRelations } = saved as any;
+      setApplicant({ ...applicant, ...savedWithoutRelations });
 
       toast.dismiss();
       toast.success(t('Applicant Updated Successfully') || 'Changes saved');
@@ -227,13 +334,160 @@ export default function EditApplicant({ id }) {
       // Refetch to get updated data
       setRefetchApplicant(!refetchApplicant);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Save error:', error);
+
+      // Try to extract validation errors from backend response
+      const backendErrors = error?.response?.data;
+
+      // Map of fields to their corresponding forms
+      const fieldToFormMap: Record<string, string> = {
+        // Licensing form fields
+        'license_expiry': 'licensing',
+        'license_number': 'licensing',
+        'license_state': 'licensing',
+        'license_type': 'licensing',
+        'years_cdl_experience': 'licensing',
+        'endorsements': 'licensing',
+        'endorsements_other': 'licensing',
+        'license_restrictions': 'licensing',
+        'license_restrictions_other': 'licensing',
+        'transmission_type': 'licensing',
+
+        // Basic details form fields
+        'first_name': 'basic-details',
+        'last_name': 'basic-details',
+        'phone': 'basic-details',
+        'email': 'basic-details',
+        'address_1': 'basic-details',
+        'address_2': 'basic-details',
+        'city': 'basic-details',
+        'state': 'basic-details',
+        'zip_code': 'basic-details',
+        'birthdate': 'basic-details',
+        'ssn': 'basic-details',
+      };
+
+      if (backendErrors && typeof backendErrors === 'object') {
+        // Check if it's a standard validation error response
+        if (backendErrors.errors && typeof backendErrors.errors === 'object') {
+          const errors = backendErrors.errors;
+          let hasSetError = false;
+
+          // Group errors by form
+          const errorsByForm: Record<string, Record<string, string>> = {};
+
+          // Try to set errors on the appropriate form
+          Object.keys(errors).forEach((fieldName) => {
+            const formId = fieldToFormMap[fieldName];
+
+            if (formId) {
+              const errorMessage = errors[fieldName];
+              console.log(`Backend validation error for ${fieldName} in form ${formId}:`, errorMessage);
+              hasSetError = true;
+
+              // Group errors by form
+              if (!errorsByForm[formId]) {
+                errorsByForm[formId] = {};
+              }
+              errorsByForm[formId][fieldName] = t(errorMessage) || errorMessage;
+            }
+          });
+
+          // Set errors on each form using the registry
+          let firstErrorFormId: string | null = null;
+          let firstErrorField: string | null = null;
+
+          Object.keys(errorsByForm).forEach((formId) => {
+            const formErrors = errorsByForm[formId];
+            const setErrorsFn = (window as any).__applicantFormSetErrors?.[formId];
+            if (setErrorsFn && typeof setErrorsFn === 'function') {
+              setErrorsFn(formErrors);
+
+              // Track the first error for scrolling
+              if (!firstErrorFormId) {
+                firstErrorFormId = formId;
+                firstErrorField = Object.keys(formErrors)[0];
+              }
+            }
+
+            // Also set validation errors to trigger the panel
+            setValidationErrors(prev => [
+              ...prev,
+              { formId, errors: formErrors }
+            ]);
+          });
+
+          if (hasSetError) {
+            // Scroll to the first error field
+            if (firstErrorFormId) {
+              // Scroll to the form section
+              const sectionElement = document.getElementById(firstErrorFormId);
+              if (sectionElement) {
+                sectionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }
+
+              // Try to focus the specific field after a brief delay
+              if (firstErrorField) {
+                setTimeout(() => {
+                  const fieldElement = document.querySelector(`[name="${firstErrorField}"]`) as HTMLElement;
+                  if (fieldElement) {
+                    fieldElement.focus();
+                  }
+                }, 300);
+              }
+            }
+
+            // Show a generic message
+            toast.error(t('Please fix validation errors before saving. Check the highlighted fields.'));
+            return; // Don't show the generic "Failed to save" message
+          }
+        } else if (backendErrors.message) {
+          // Handle class-validator error format
+          const messages = Array.isArray(backendErrors.message) ? backendErrors.message : [backendErrors.message];
+          messages.forEach(msg => toast.error(t(msg)));
+          return;
+        }
+      }
+
       toast.error(t('Failed to save changes'));
     } finally {
       setIsSaving(false);
     }
   };
+
+  // Show nothing while loading (prevents flash of default content)
+  if (loading && !error) {
+    return null;
+  }
+
+  // If error exists, show full-page error instead of normal content
+  if (error) {
+    return (
+      <ChildPageLayout
+        backPath={backPath}
+        title={t('APPLICANT_NOT_FOUND')}
+      >
+        <Container className="py-5">
+          <Card className="border-0 shadow-sm">
+            <Card.Body className="text-center py-5">
+              <div className="mb-4">
+                <XCircleFill size={64} className="text-danger mb-3" />
+                <h4 className="mb-3">{t('APPLICANT_NOT_FOUND')}</h4>
+                <p className="text-muted mb-4">{error.message}</p>
+                <Link href={backPath}>
+                  <Button variant="primary">
+                    <ArrowLeft className="me-2" />
+                    {t('BACK_TO_APPLICANTS')}
+                  </Button>
+                </Link>
+              </div>
+            </Card.Body>
+          </Card>
+        </Container>
+      </ChildPageLayout>
+    );
+  }
 
   return (
     <>
@@ -247,18 +501,19 @@ export default function EditApplicant({ id }) {
         />
       )}
 
-      {/* Fixed Update Button - stays in upper right as user scrolls */}
-      <div
-        style={{
-          position: 'fixed',
-          top: 20,
-          right: 20,
-          zIndex: 9999,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px'
-        }}
-      >
+      {/* Fixed Update Button - appears when user scrolls down */}
+      {isScrolled && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 20,
+            right: 20,
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px'
+          }}
+        >
         <div
           style={{
             backgroundColor: '#ffffff',
@@ -288,6 +543,7 @@ export default function EditApplicant({ id }) {
           {isSaving ? 'Updating' : t('UPDATE') || 'Update'}
         </Button>
       </div>
+      )}
 
       <ChildPageLayout
         title={t('EDIT_{name}', { name: 'APPLICANT' }, { translateProps: true })}

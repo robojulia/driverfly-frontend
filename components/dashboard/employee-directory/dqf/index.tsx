@@ -68,15 +68,26 @@ const DEFAULT_DQF_DOCUMENTS = [
 ];
 
 /**
- * Formats a string by removing underscores and converting to sentence case
- * Example: "MOTOR_VEHICLE_RECORD_MVR" -> "Motor vehicle record MVR"
+ * Formats a string by removing underscores and converting to proper title case
+ * Example: "MOTOR_VEHICLE_RECORD_MVR" -> "Motor Vehicle Record (MVR)"
  */
 const formatLabel = (label: string): string => {
     return label
         .replace(/_/g, ' ')
         .toLowerCase()
-        .replace(/^\w/, (c) => c.toUpperCase())
-        .replace(/\bmvr\b/gi, 'MVR');
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+        .replace(/\bMvr\b/g, '(MVR)')
+        .replace(/\bDot\b/g, 'DOT')
+        .replace(/\bPsp\b/g, 'PSP')
+        .replace(/\bTwic\b/g, 'TWIC')
+        .replace(/\bHos\b/g, 'HOS')
+        .replace(/\bCdl\b/g, 'CDL')
+        .replace(/\bId\b/g, 'ID')
+        .replace(/\bW 9\b/g, 'W-9')
+        .replace(/\bW 4\b/g, 'W-4')
+        .replace(/\bI 9\b/g, 'I-9');
 };
 
 export default function DQF(props: ViewEmployeeDqfProps) {
@@ -270,6 +281,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                                             ),
                                             newDqfList,
                                         ]);
+                                        setEditList(false);
                                     }}
                                 />
                             ) : (

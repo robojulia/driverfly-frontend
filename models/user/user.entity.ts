@@ -29,6 +29,8 @@ export class UserEntity {
   emailTokenTimestamp?: Date | string;
   phoneTokenTimestamp?: Date | string;
   company?: CompanyEntity;
+  company_ids?: number[]; // For creating multi-company users
+  companies?: CompanyEntity[]; // Read-only from backend (existing users)
   photo?: DocumentEntity;
 
   token?: string;
@@ -49,6 +51,7 @@ export class UserEntity {
       cell_number: yup.string().nullable(),
       timezone: yup.string().nullable(),
       language: yup.string().nullable(),
+      company_admin: yup.boolean().required(),
       // roles: yup.array(RoleEntity.yupConnectSchema()).length(1, "yup.required").nullable().required(),
       password: yup
         .string()
@@ -64,6 +67,14 @@ export class UserEntity {
           then: DocumentEntity.yupSchema(),
         })
         .optional(),
+      company_ids: yup
+        .array()
+        .of(yup.number())
+        .nullable()
+        .when('$isSuperAdmin', {
+          is: true,
+          then: yup.array().min(1, 'At least one company must be selected').required(),
+        }),
     });
   }
 }

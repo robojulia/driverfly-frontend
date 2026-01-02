@@ -5,6 +5,8 @@ import { useTranslation } from '../../../hooks/use-translation';
 import DashboardChartContext from '../../../context/dashboard-chart-context';
 import { ApplicantStatus } from '../../../enums/applicants/applicant-status.enum';
 
+export type TimePeriod = 'day' | 'week' | 'month' | 'quarter' | 'year';
+
 export interface HistoricalRangeFilters {
   ownerOperator: string;
   recruiterIds: number[];
@@ -12,6 +14,7 @@ export interface HistoricalRangeFilters {
   sourceTypes: string[];
   statuses: string[];
   referralSourceIds: number[];
+  timePeriod: TimePeriod;
 }
 
 export interface HistoricalRangeFiltersProps {
@@ -59,6 +62,7 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
       sourceTypes: [],
       statuses: [],
       referralSourceIds: [],
+      timePeriod: 'month',
     };
 
     if (initialFilters) {
@@ -150,6 +154,10 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
     setFilters({ ...filters, statuses: newArray });
   };
 
+  const handleTimePeriodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFilters({ ...filters, timePeriod: e.target.value as TimePeriod });
+  };
+
   const handleClearFilters = () => {
     const emptyFilters: HistoricalRangeFilters = {
       ownerOperator: 'all',
@@ -158,6 +166,7 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
       sourceTypes: [],
       statuses: [],
       referralSourceIds: [],
+      timePeriod: 'month',
     };
     setFilters(emptyFilters);
     if (typeof window !== 'undefined') {
@@ -177,8 +186,24 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
     <div className="mb-3">
       <Row className="g-3 align-items-end">
 
+        {/* TIME PERIOD */}
+        <Col md={2}>
+          <label className="form-label small text-muted mb-1">{t('TIME_PERIOD')}</label>
+          <select
+            className="form-select form-select-sm"
+            value={filters.timePeriod}
+            onChange={handleTimePeriodChange}
+          >
+            <option value="day">{t('DAY')}</option>
+            <option value="week">{t('WEEK')}</option>
+            <option value="month">{t('MONTH')}</option>
+            <option value="quarter">{t('QUARTER')}</option>
+            <option value="year">{t('YEAR')}</option>
+          </select>
+        </Col>
+
         {/* OWNER / OPERATOR */}
-        <Col md={3}>
+        <Col md={2}>
           <label className="form-label small text-muted mb-1">{t('OWNER_OPERATOR')}</label>
           <select
             className="form-select form-select-sm"
@@ -192,7 +217,7 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
         </Col>
 
         {/* RECRUITERS */}
-        <Col md={3}>
+        <Col md={2}>
           <label className="form-label small text-muted mb-1">{t('RECRUITER')}</label>
           <select
             className="form-select form-select-sm"
@@ -235,7 +260,7 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
         </Col>
 
         {/* STATES */}
-        <Col md={3}>
+        <Col md={2}>
           <label className="form-label small text-muted mb-1">{t('STATE')}</label>
           <select
             className="form-select form-select-sm"
@@ -276,7 +301,7 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
         </Col>
 
         {/* SOURCE TYPE / LEAD TYPE */}
-        <Col md={3}>
+        <Col md={2}>
           <label className="form-label small text-muted mb-1">{t('SOURCE')}</label>
           <select
             className="form-select form-select-sm"
@@ -314,7 +339,7 @@ export function HistoricalRangeFiltersComponent({ onFiltersChange, initialFilter
         </Col>
 
         {/* STATUS */}
-        <Col md={3}>
+        <Col md={2}>
           <label className="form-label small text-muted mb-1">{t('STATUS')}</label>
           <select
             className="form-select form-select-sm"

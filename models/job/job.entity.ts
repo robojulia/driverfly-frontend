@@ -25,6 +25,7 @@ import { JobDrugTestType } from '../../enums/jobs/job-drug-test-type.enum';
 import { numberRangeEnd, numberRangeStart } from '../../utils/yup';
 import { Status } from '../../enums/status.enum';
 import { JobOrientationEntity } from './job-orientation.entity';
+import { DocumentEntity } from '../documents/document.entity';
 
 export class JobEntity {
   id?: number;
@@ -85,6 +86,7 @@ export class JobEntity {
   created_at?: string | Date;
   applicantsCount?: number;
   status?: Status;
+  equipment_photos?: DocumentEntity[] = [];
   static yupSchema() {
     return yup.object().shape(
       {
@@ -298,6 +300,28 @@ export class JobEntity {
         must_have_clean_criminal_history: yup.boolean().default(true),
         criminal_history: (yup.array(JobCriminalEntity.yupSchema()) as any).unique('type'),
         safety_requirements_other: yup.string().max(250).nullable(),
+        equipment_photos: yup
+          .array(
+            yup
+              .mixed()
+              .when({
+                is: (v) => !!v,
+                then: DocumentEntity.yupSchema()
+                  .test('supportedImageTypes', 'INVALID_IMAGE_TYPE', (value: any) => {
+                    return (
+                      !value?.mime_type ||
+                      ['image/jpeg', 'image/png', 'image/gif'].includes(value?.mime_type)
+                    );
+                  })
+                  .test('fileSize', 'FILE_TOO_LARGE', (value: any) => {
+                    return !value?.size || value.size <= 5242880; // 5MB
+                  })
+                  .nullable(),
+              })
+          )
+          .max(3, 'MAXIMUM_3_EQUIPMENT_PHOTOS')
+          .nullable()
+          .optional(),
       },
       [['min_experience_in_months', 'min_experience_in_years']]
     );

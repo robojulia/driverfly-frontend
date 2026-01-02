@@ -66,9 +66,13 @@ export function Preferences() {
 
         let data;
 
-        if (isEditingExistingApplicant && applicant?.id) {
-          // UPDATE existing applicant - this is much more efficient!
-          console.log('Updating existing applicant:', applicant.id);
+        // Check if this is an update to the SAME company or a new application to a DIFFERENT company
+        const isSameCompany = applicant?.company?.id === company?.id;
+        const shouldUpdate = isEditingExistingApplicant && applicant?.id && isSameCompany;
+
+        if (shouldUpdate) {
+          // UPDATE existing applicant for the SAME company - this is much more efficient!
+          console.log('Updating existing applicant:', applicant.id, 'for same company:', company.id);
           data = await applicantApi.jotform.update(applicant.id, {
             applicant: {
               ...applicant,
@@ -84,8 +88,12 @@ export function Preferences() {
 
           toast.success(t('APPLICATION_UPDATED_SUCCESSFULLY'));
         } else {
-          // CREATE new applicant (original flow)
-          console.log('Creating new applicant for company:', company.id);
+          // CREATE new applicant (original flow) OR returning applicant applying to a DIFFERENT company
+          if (isEditingExistingApplicant && applicant?.id && !isSameCompany) {
+            console.log('Creating new application for returning applicant:', applicant.id, 'applying to different company:', company.id);
+          } else {
+            console.log('Creating new applicant for company:', company.id);
+          }
           data = await applicantApi.jotform.create(company.id, {
             applicant: {
               ...applicant,
@@ -286,7 +294,10 @@ export function Preferences() {
             <CheckboxGroup
               name="routes"
               label={t('ROUTES_YOU_OPEN_FOR')}
-              enumType={JobSchedule}
+              options={Object.keys(JobSchedule).filter(v => v != JobSchedule.OTHER).map(key => ({
+                value: key,
+                label: JobSchedule[key]
+              }))}
               labelPrefix="JobSchedule"
               value={form.values.routes || []}
               onChange={handleRoutesChange}

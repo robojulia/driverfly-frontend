@@ -30,6 +30,7 @@ import { CompanyPreferenceVoeLabel } from '../../../../enums/company/company-pre
 // New components
 import { SsnToggle } from '../../../../components/company-preferences/SsnToggle';
 import { ReferBackProgram } from '../../../../components/company-preferences/ReferBackProgram';
+import { AutoRecruiting } from '../../../../components/company-preferences/AutoRecruiting';
 import { SystemPreferences } from '../../../../components/company-preferences/SystemPreferences';
 import HiringCriteriaBuilder from '../../../../components/company-preferences/HiringCriteriaBuilder';
 
@@ -173,7 +174,6 @@ export default function CompanyPreference() {
     preferences.forEach((v) => {
       const label = v.label?.toLowerCase();
       if (label in form.values) {
-        form.initialValues[label] = v;
         form.setFieldValue(label, v);
       }
     });
@@ -200,6 +200,33 @@ export default function CompanyPreference() {
       setPreferences([...(preferences?.filter((p) => p?.id != pref?.id) ?? []), { ...pref }]);
     } catch (e) {
       console.error('Unable to update refer back preference', e);
+      toast.error('Unable to save information');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAutoRecruitingChange = async (enabled: boolean) => {
+    try {
+      setLoading(true);
+      let pref = preferences?.find(
+        (p) => p?.label == CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING
+      );
+      if (pref?.id) {
+        pref = await api.preferences.update(user?.company?.id, pref?.id, {
+          ...pref,
+          value: enabled,
+        });
+      } else {
+        pref = await api.preferences.create(user?.company?.id, {
+          category: CompanyPreferenceCategory.AUTO_RECRUITING,
+          label: CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING,
+          value: enabled,
+        });
+      }
+      setPreferences([...(preferences?.filter((p) => p?.id != pref?.id) ?? []), { ...pref }]);
+    } catch (e) {
+      console.error('Unable to update auto recruiting preference', e);
       toast.error('Unable to save information');
     } finally {
       setLoading(false);
@@ -271,6 +298,12 @@ export default function CompanyPreference() {
   const referBackEnabled = Boolean(
     preferences?.find(
       (pref) => pref?.label == CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM
+    )?.value
+  );
+
+  const autoRecruitingEnabled = Boolean(
+    preferences?.find(
+      (pref) => pref?.label == CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING
     )?.value
   );
 
@@ -391,6 +424,13 @@ export default function CompanyPreference() {
             onSubmit={form.handleSubmit}
             onReset={() => form.resetForm()}
             isFirstRunExperience={isFirstRunExperience}
+          />
+
+          {/* Auto Recruiting Component */}
+          <AutoRecruiting
+            isEnabled={autoRecruitingEnabled}
+            onChange={handleAutoRecruitingChange}
+            loading={loading}
           />
 
           {/* Refer Back Program Component */}

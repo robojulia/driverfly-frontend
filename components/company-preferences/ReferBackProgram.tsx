@@ -74,11 +74,6 @@ export const ReferBackProgram: React.FC<ReferBackProgramProps> = ({
               The Refer Back Program helps drivers who apply to your company but don&apos;t qualify
               for your positions by referring them to other organizations that may be a better fit.
             </p>
-            <p>
-              When drivers apply to your company but don&apos;t meet your requirements or
-              aren&apos;t hired, we&apos;ll refer them to other trucking companies that might have
-              suitable opportunities.
-            </p>
 
             <div className="alert alert-info" role="alert">
               <h6>How It Works</h6>

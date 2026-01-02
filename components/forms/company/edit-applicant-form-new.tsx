@@ -45,20 +45,196 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
   const router = useRouter();
   const routeToApplicants = () => router.push("/dashboard/company/applicants");
 
+  const handleGlobalSave = async () => {
+    try {
+      // Call all registered getter functions to get CURRENT form values
+      const registry = (window as any).__applicantFormRegistry || {};
+      const validationRegistry = (window as any).__applicantFormValidation || {};
+      const allValues: any = { ...props?.entity };
+
+      // First, collect all validation errors
+      const allErrors: any = {};
+      Object.keys(validationRegistry).forEach((formId) => {
+        const validator = validationRegistry[formId];
+        if (validator && typeof validator === 'function') {
+          const formErrors = validator();
+          if (formErrors && Object.keys(formErrors).length > 0) {
+            allErrors[formId] = formErrors;
+          }
+        }
+      });
+
+      // If there are validation errors, scroll to first error and show toast
+      if (Object.keys(allErrors).length > 0) {
+        const firstFormWithErrors = Object.keys(allErrors)[0];
+        const firstError = allErrors[firstFormWithErrors];
+        const firstErrorField = Object.keys(firstError)[0];
+        const firstErrorMessage = firstError[firstErrorField];
+
+        // Try to find and focus the first error field
+        const errorElement = document.querySelector(`[name="${firstErrorField}"]`) as HTMLElement;
+        if (errorElement) {
+          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          errorElement.focus();
+        }
+
+        toast.dismiss();
+        toast.error(`Validation Error: ${firstErrorMessage}`);
+        return;
+      }
+
+      console.log('Registry keys:', Object.keys(registry));
+      console.log('Initial entity extras DOT_NUMBER:',
+        (props?.entity?.extras || []).find((e: any) => e.type === ApplicantExtrasEnum.DOT_NUMBER)?.value);
+
+      // Collect all extras arrays from forms to merge them
+      const extrasArrays: any[] = [];
+      const formExtrasMap = new Map(); // Track which form provided which extras
+
+      // Call each getter function to get current values
+      Object.keys(registry).forEach((formId) => {
+        const getter = registry[formId];
+        if (getter && typeof getter === 'function') {
+          const formValues = getter();
+          console.log(`${formId} values:`, formValues);
+          if (formValues && typeof formValues === 'object') {
+            // Collect extras arrays separately for intelligent merging
+            if (formValues.extras && Array.isArray(formValues.extras)) {
+              extrasArrays.push({ formId, extras: formValues.extras });
+              // Track which extras come from which form
+              formValues.extras.forEach((extra: any) => {
+                if (extra?.type) {
+                  formExtrasMap.set(extra.type, { formId, extra });
+                }
+              });
+            }
+            // Assign all other fields (will overwrite, but that's OK for scalar fields)
+            const { extras, ...otherFields } = formValues;
+            Object.assign(allValues, otherFields);
+          }
+        }
+      });
+
+      console.log('Form extras map DOT_NUMBER:', formExtrasMap.get(ApplicantExtrasEnum.DOT_NUMBER));
+
+      // Intelligently merge extras: keep all unique types, last one wins for duplicates
+      const extrasMap = new Map();
+
+      // Start with existing extras from entity, but filter out DOT_NUMBER and BUSINESS_NAME
+      // (these are managed by licensing form and should come from there)
+      (props?.entity?.extras || []).forEach((extra: any) => {
+        if (extra?.type &&
+            extra.type !== ApplicantExtrasEnum.DOT_NUMBER &&
+            extra.type !== ApplicantExtrasEnum.BUSINESS_NAME) {
+          extrasMap.set(extra.type, extra);
+        }
+      });
+
+      // Merge in extras from all forms (later forms overwrite earlier ones)
+      // Process licensing form last to ensure its DOT_NUMBER and BUSINESS_NAME win
+      if (extrasArrays.length > 0) {
+        const sortedExtrasArrays = extrasArrays.sort((a, b) => {
+          if (a.formId === 'licensing') return 1; // Process licensing last
+          if (b.formId === 'licensing') return -1;
+          return 0;
+        });
+
+        sortedExtrasArrays.forEach(({ formId, extras: extrasArray }) => {
+          console.log(`Processing extras from ${formId}:`, extrasArray);
+          extrasArray.forEach((extra: any) => {
+            if (extra?.type) {
+              const oldValue = extrasMap.get(extra.type)?.value;
+              extrasMap.set(extra.type, extra);
+              console.log(`  Set ${extra.type} = ${extra.value} from ${formId} (was: ${oldValue})`);
+            }
+          });
+        });
+      }
+
+      // Completely replace allValues.extras with merged extras
+      allValues.extras = Array.from(extrasMap.values());
+      console.log('Final merged extras DOT_NUMBER:',
+        allValues.extras.find((e: any) => e.type === ApplicantExtrasEnum.DOT_NUMBER)?.value);
+      console.log('Final merged extras count:', allValues.extras.length);
+
+      console.log('Merged values:', allValues);
+
+      // Strip out fields that shouldn't be sent to backend (relations handled separately)
+      const {
+        jobs, documents, notes, dac, voeData,
+        ...payload
+      } = allValues;
+
+      // Keep certain relations and objects that should be sent
+      if (allValues.employers) payload.employers = allValues.employers;
+      if (allValues.extras) payload.extras = allValues.extras;
+      if (allValues.accident_history) payload.accident_history = allValues.accident_history;
+      if (allValues.moving_violation_history) payload.moving_violation_history = allValues.moving_violation_history;
+      if (allValues.equipment_experience) payload.equipment_experience = allValues.equipment_experience;
+      if (allValues.equipment_owned) payload.equipment_owned = allValues.equipment_owned;
+      if (allValues.vehicles) payload.vehicles = allValues.vehicles;
+      if (allValues.meta) payload.meta = allValues.meta;
+
+      console.log('Final payload:', payload);
+
+      // Send ONE consolidated request (POST for create, PUT for update)
+      const applicantApi = new ApplicantApi();
+      // Defensive check: only use update if ID is a valid number (not undefined, null, 0, or NaN)
+      const saved = (props?.entity?.id && typeof props.entity.id === 'number' && props.entity.id > 0)
+        ? await applicantApi.update(props.entity.id, payload)
+        : await applicantApi.create(payload);
+
+      // Update the entity, but preserve relations that weren't included in the update response
+      // The update response doesn't include nested relations like jobs.job, documents, notes, etc.
+      const { jobs: _jobs, documents: _documents, notes: _notes, dac: _dac, voeData: _voeData, ...savedWithoutRelations } = saved as any;
+      props?.setEntity?.({ ...props?.entity, ...savedWithoutRelations });
+
+      toast.dismiss();
+      toast.success(props?.entity?.id
+        ? (t('Applicant Updated Successfully') || 'Changes saved')
+        : (t('Applicant Created Successfully') || 'Applicant created successfully'));
+
+      // Refetch to get updated data
+      if (props.onSaveComplete) {
+        props.onSaveComplete();
+      }
+    } catch (error: any) {
+      console.error('Save error:', error);
+
+      // Handle validation errors from the backend
+      if (error?.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(t('Failed to save changes'));
+      }
+    }
+  };
+
   return (
     <>
       {/* Header actions (optional) */}
       {!props?.hideHeaderActions && (
         <Row className="px-2">
-          <Col xs="12" className="text-end">
-            <HireApplicantForm entity={props?.entity} className={props?.className} />
-            <Button
-              type="button"
-              className={`btn theme-general-btn mr-2`}
-              onClick={() => routeToApplicants()}
-            >
-              {t("BACK")}
-            </Button>
+          <Col xs="12" className="d-flex justify-content-between align-items-center">
+            <div>
+              <HireApplicantForm entity={props?.entity} className={props?.className} />
+            </div>
+            <div className="d-flex gap-2">
+              <Button
+                type="button"
+                className={`btn theme-general-btn`}
+                onClick={handleGlobalSave}
+              >
+                {props?.entity?.id ? t('UPDATE') : t('SAVE')}
+              </Button>
+              <Button
+                type="button"
+                className={`btn btn-light`}
+                onClick={() => routeToApplicants()}
+              >
+                {t("BACK")}
+              </Button>
+            </div>
           </Col>
         </Row>
       )}
@@ -201,165 +377,9 @@ export function EditApplicantFormNew(props: EditApplicantFormNewProps) {
           <Button
             type="button"
             className={`btn theme-general-btn`}
-            onClick={async () => {
-              try {
-                // Call all registered getter functions to get CURRENT form values
-                const registry = (window as any).__applicantFormRegistry || {};
-                const validationRegistry = (window as any).__applicantFormValidation || {};
-                const allValues: any = { ...props?.entity };
-
-                // First, collect all validation errors
-                const allErrors: any = {};
-                Object.keys(validationRegistry).forEach((formId) => {
-                  const validator = validationRegistry[formId];
-                  if (validator && typeof validator === 'function') {
-                    const formErrors = validator();
-                    if (formErrors && Object.keys(formErrors).length > 0) {
-                      allErrors[formId] = formErrors;
-                    }
-                  }
-                });
-
-                // If there are validation errors, scroll to first error and show toast
-                if (Object.keys(allErrors).length > 0) {
-                  const firstFormWithErrors = Object.keys(allErrors)[0];
-                  const firstError = allErrors[firstFormWithErrors];
-                  const firstErrorField = Object.keys(firstError)[0];
-                  const firstErrorMessage = firstError[firstErrorField];
-
-                  // Try to find and focus the first error field
-                  const errorElement = document.querySelector(`[name="${firstErrorField}"]`) as HTMLElement;
-                  if (errorElement) {
-                    errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    errorElement.focus();
-                  }
-
-                  toast.dismiss();
-                  toast.error(`Validation Error: ${firstErrorMessage}`);
-                  return;
-                }
-
-                console.log('Registry keys:', Object.keys(registry));
-                console.log('Initial entity extras DOT_NUMBER:',
-                  (props?.entity?.extras || []).find((e: any) => e.type === ApplicantExtrasEnum.DOT_NUMBER)?.value);
-
-                // Collect all extras arrays from forms to merge them
-                const extrasArrays: any[] = [];
-                const formExtrasMap = new Map(); // Track which form provided which extras
-
-                // Call each getter function to get current values
-                Object.keys(registry).forEach((formId) => {
-                  const getter = registry[formId];
-                  if (getter && typeof getter === 'function') {
-                    const formValues = getter();
-                    console.log(`${formId} values:`, formValues);
-                    if (formValues && typeof formValues === 'object') {
-                      // Collect extras arrays separately for intelligent merging
-                      if (formValues.extras && Array.isArray(formValues.extras)) {
-                        extrasArrays.push({ formId, extras: formValues.extras });
-                        // Track which extras come from which form
-                        formValues.extras.forEach((extra: any) => {
-                          if (extra?.type) {
-                            formExtrasMap.set(extra.type, { formId, extra });
-                          }
-                        });
-                      }
-                      // Assign all other fields (will overwrite, but that's OK for scalar fields)
-                      const { extras, ...otherFields } = formValues;
-                      Object.assign(allValues, otherFields);
-                    }
-                  }
-                });
-
-                console.log('Form extras map DOT_NUMBER:', formExtrasMap.get(ApplicantExtrasEnum.DOT_NUMBER));
-
-                // Intelligently merge extras: keep all unique types, last one wins for duplicates
-                const extrasMap = new Map();
-
-                // Start with existing extras from entity, but filter out DOT_NUMBER and BUSINESS_NAME
-                // (these are managed by licensing form and should come from there)
-                (props?.entity?.extras || []).forEach((extra: any) => {
-                  if (extra?.type &&
-                      extra.type !== ApplicantExtrasEnum.DOT_NUMBER &&
-                      extra.type !== ApplicantExtrasEnum.BUSINESS_NAME) {
-                    extrasMap.set(extra.type, extra);
-                  }
-                });
-
-                // Merge in extras from all forms (later forms overwrite earlier ones)
-                // Process licensing form last to ensure its DOT_NUMBER and BUSINESS_NAME win
-                if (extrasArrays.length > 0) {
-                  const sortedExtrasArrays = extrasArrays.sort((a, b) => {
-                    if (a.formId === 'licensing') return 1; // Process licensing last
-                    if (b.formId === 'licensing') return -1;
-                    return 0;
-                  });
-
-                  sortedExtrasArrays.forEach(({ formId, extras: extrasArray }) => {
-                    console.log(`Processing extras from ${formId}:`, extrasArray);
-                    extrasArray.forEach((extra: any) => {
-                      if (extra?.type) {
-                        const oldValue = extrasMap.get(extra.type)?.value;
-                        extrasMap.set(extra.type, extra);
-                        console.log(`  Set ${extra.type} = ${extra.value} from ${formId} (was: ${oldValue})`);
-                      }
-                    });
-                  });
-                }
-
-                // Completely replace allValues.extras with merged extras
-                allValues.extras = Array.from(extrasMap.values());
-                console.log('Final merged extras DOT_NUMBER:',
-                  allValues.extras.find((e: any) => e.type === ApplicantExtrasEnum.DOT_NUMBER)?.value);
-                console.log('Final merged extras count:', allValues.extras.length);
-
-                console.log('Merged values:', allValues);
-
-                // Strip out fields that shouldn't be sent to backend (relations handled separately)
-                const {
-                  jobs, documents, notes, dac, voeData,
-                  ...payload
-                } = allValues;
-
-                // Keep certain relations and objects that should be sent
-                if (allValues.employers) payload.employers = allValues.employers;
-                if (allValues.extras) payload.extras = allValues.extras;
-                if (allValues.accident_history) payload.accident_history = allValues.accident_history;
-                if (allValues.moving_violation_history) payload.moving_violation_history = allValues.moving_violation_history;
-                if (allValues.equipment_experience) payload.equipment_experience = allValues.equipment_experience;
-                if (allValues.equipment_owned) payload.equipment_owned = allValues.equipment_owned;
-                if (allValues.vehicles) payload.vehicles = allValues.vehicles;
-                if (allValues.meta) payload.meta = allValues.meta;
-
-                console.log('Final payload:', payload);
-
-                // Send ONE consolidated PUT request
-                const applicantApi = new ApplicantApi();
-                const saved = await applicantApi.update(props?.entity?.id, payload);
-
-                // Update the entity
-                props?.setEntity?.({ ...props?.entity, ...saved });
-
-                toast.dismiss();
-                toast.success(t('Applicant Updated Successfully') || 'Changes saved');
-
-                // Refetch to get updated data
-                if (props.onSaveComplete) {
-                  props.onSaveComplete();
-                }
-              } catch (error: any) {
-                console.error('Save error:', error);
-
-                // Handle validation errors from the backend
-                if (error?.response?.data?.message) {
-                  toast.error(error.response.data.message);
-                } else {
-                  toast.error(t('Failed to save changes'));
-                }
-              }
-            }}
+            onClick={handleGlobalSave}
           >
-            {t('SAVE')}
+            {props?.entity?.id ? t('UPDATE') : t('SAVE')}
           </Button>
         </div>
       )}

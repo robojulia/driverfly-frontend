@@ -24,6 +24,7 @@ import BaseInput from '../base-input';
 import BaseRange from '../base-range';
 import BaseSelect from '../base-select';
 import BaseTextArea from '../base-text-area';
+import FileInput from '../file-input';
 import { LocationForm } from './location-form';
 
 import JobApi from '../../../pages/api/job';
@@ -46,6 +47,8 @@ import { EducationLevel } from '../../../enums/users/education-level.enum';
 import { MvrType } from '../../../enums/users/mvr-type.enum';
 import { LocationEntity } from '../../../models/company/location.entity';
 import { JobEntity } from '../../../models/job/job.entity';
+import { DocumentType } from '../../../models/documents/document.entity';
+import { FILE_SIZE_LIMITS } from '../../../constants/file-upload.constants';
 import { buildAddress } from '../../../utils/common';
 import { focusOnErrorField } from '../../../utils/form-error';
 import BaseHoursInput from '../base-hours-input';
@@ -407,6 +410,10 @@ export function JobForm(props: JobFormProps) {
       const dto = {
         ...form.values,
       };
+      // Clean up null values in equipment_photos array
+      if (dto.equipment_photos) {
+        dto.equipment_photos = dto.equipment_photos.filter(photo => photo !== null);
+      }
       // If expiry_date is provided, convert to ISO string, otherwise set to null for never expire
       if (dto.expiry_date) {
         dto.expiry_date = new Date(dto.expiry_date).toISOString();
@@ -829,6 +836,66 @@ export function JobForm(props: JobFormProps) {
                   displayPlaceholder
                   formik={form}
                 />
+              </Row>
+            </ViewCard>
+          </Col>
+        </Row>
+        <hr />
+        {/* Equipment Photos Section */}
+        <Row>
+          <Col className="p-0 px-lg-2">
+            <ViewCard title="EQUIPMENT_PHOTOS">
+              <Row>
+                <p className="text-muted small px-3">
+                  {t('EQUIPMENT_PHOTOS_HELP_TEXT')}
+                </p>
+              </Row>
+              <Row>
+                {/* Photo 1 */}
+                <Col md={4}>
+                  <FileInput
+                    className="mb-3"
+                    label="EQUIPMENT_PHOTO_1"
+                    name="equipment_photos.0"
+                    accept="image/jpeg,image/png,image/gif"
+                    documentType={DocumentType.PHOTO}
+                    formik={form}
+                    allowedSizeInByte={FILE_SIZE_LIMITS.COMPANY_DOCUMENT}
+                    allowedTypesFriendlyName="JPG, PNG, or GIF"
+                  />
+                </Col>
+
+                {/* Photo 2 - Only show if Photo 1 exists */}
+                {form.values.equipment_photos?.[0] && (
+                  <Col md={4}>
+                    <FileInput
+                      className="mb-3"
+                      label="EQUIPMENT_PHOTO_2"
+                      name="equipment_photos.1"
+                      accept="image/jpeg,image/png,image/gif"
+                      documentType={DocumentType.PHOTO}
+                      formik={form}
+                      allowedSizeInByte={FILE_SIZE_LIMITS.COMPANY_DOCUMENT}
+                      allowedTypesFriendlyName="JPG, PNG, or GIF"
+                    />
+                  </Col>
+                )}
+
+                {/* Photo 3 - Only show if Photo 2 exists */}
+                {form.values.equipment_photos?.[1] && (
+                  <Col md={4}>
+                    <FileInput
+                      className="mb-3"
+                      label="EQUIPMENT_PHOTO_3"
+                      name="equipment_photos.2"
+                      accept="image/jpeg,image/png,image/gif"
+                      documentType={DocumentType.PHOTO}
+                      formik={form}
+                      allowedSizeInByte={FILE_SIZE_LIMITS.COMPANY_DOCUMENT}
+                      allowedTypesFriendlyName="JPG, PNG, or GIF"
+                    />
+                  </Col>
+                )}
               </Row>
             </ViewCard>
           </Col>

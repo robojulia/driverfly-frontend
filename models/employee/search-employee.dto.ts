@@ -10,4 +10,7 @@ export class SearchEmployeeDto {
   search?: string;
   sortBy?: string;
   sortOrder?: 'ASC' | 'DESC';
+  hireDateFrom?: string;
+  hireDateTo?: string;
+  birthdayThisWeek?: boolean;
 }

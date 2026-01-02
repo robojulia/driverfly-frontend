@@ -15,6 +15,7 @@ import JonInformation from '../job-information-sidebar/job-information';
 import ViewModal from '../view-details/view-modal';
 import CompanyPhoto from './company-photo';
 import JobVehicles from './job-vehicles';
+import { JobEquipmentPhotos } from './job-equipment-photos';
 import ShowFormattedDate from './show-formatted-date';
 import { isExpired } from '../../utils/date';
 import { ShowUsFormattedDateTime } from '../../utils/show-us-formatted-date-time';
@@ -151,6 +152,9 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
             <Col lg={8}>
               <JobDescription job={job} />
               {!!!hideVehicles && <JobVehicles job={job} />}
+              {!hideVehicles && job.equipment_photos?.length > 0 && (
+                <JobEquipmentPhotos photos={job.equipment_photos} />
+              )}
               {/* {!!!hideSocialLinks && < SocilShare />} */}
               {relatedJobs || <></>}
             </Col>

@@ -13,22 +13,32 @@ import { EmployeeDqf } from "../../../enums/employee/employee-dqf.enum";
 import { CompanyPreferenceCategory } from "../../../enums/company/company-preference-category.enum";
 import { CompanyPreferenceOnboardingChecklistLabel } from "../../../enums/company/company-preferences-onboarding-checklist-label.enum";
 import { CompanyPreferenceEntity } from "../../../models/company/company-preferences.entity";
-import { formSuccess } from "../../../utils/toast";
 import EntityForm from "../../layouts/page/entity-form";
 import BaseSelect from "../base-select";
 import BaseInput from "../base-input";
 import { BaseFormProps } from "./base-form-props";
 
 /**
- * Formats a string by removing underscores and converting to sentence case
- * Example: "MOTOR_VEHICLE_RECORD_MVR" -> "Motor vehicle record MVR"
+ * Formats a string by removing underscores and converting to proper title case
+ * Example: "MOTOR_VEHICLE_RECORD_MVR" -> "Motor Vehicle Record (MVR)"
  */
 const formatLabel = (label: string): string => {
 	return label
 		.replace(/_/g, ' ')
 		.toLowerCase()
-		.replace(/^\w/, (c) => c.toUpperCase())
-		.replace(/\bmvr\b/gi, 'MVR');
+		.split(' ')
+		.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+		.join(' ')
+		.replace(/\bMvr\b/g, '(MVR)')
+		.replace(/\bDot\b/g, 'DOT')
+		.replace(/\bPsp\b/g, 'PSP')
+		.replace(/\bTwic\b/g, 'TWIC')
+		.replace(/\bHos\b/g, 'HOS')
+		.replace(/\bCdl\b/g, 'CDL')
+		.replace(/\bId\b/g, 'ID')
+		.replace(/\bW 9\b/g, 'W-9')
+		.replace(/\bW 4\b/g, 'W-4')
+		.replace(/\bI 9\b/g, 'I-9');
 };
 
 export interface CompanyPreferencesDqfFormProps
@@ -87,7 +97,7 @@ export function CompanyPreferencesDqfForm(
 				}
 
 				setValues({ dqfList });
-				formSuccess(t, !!entity?.id ? "update" : "create", "COMPANY");
+				toast.success(t("SUCCESSFULLY_SAVED"));
 				if (onSaveComplete) onSaveComplete(dqfList);
 			} catch (e) {
 				console.error("Unable to save entity", e.response, e);
@@ -110,7 +120,7 @@ export function CompanyPreferencesDqfForm(
 		if (!item || !item.trim()) return;
 
 		if (form.values?.dqfList?.value?.includes(item)) {
-			form.setFieldError("dqfList.value", "ITEM_ALREADY_EXISTS");
+			form.setFieldError("dqfList.value", "DOCUMENT_ALREADY_LISTED");
 			return;
 		}
 
@@ -118,6 +128,7 @@ export function CompanyPreferencesDqfForm(
 			...(form.values?.dqfList?.value || []),
 			item.trim(),
 		]);
+		form.setFieldError("dqfList.value", undefined);
 		setItem("");
 	}, [form.values?.dqfList?.value, item]);
 
@@ -178,6 +189,7 @@ export function CompanyPreferencesDqfForm(
 							onClick={() => {
 								setInputMode("select");
 								setItem("");
+								form.setFieldError("dqfList.value", undefined);
 							}}
 						>
 							{t("SELECT_FROM_LIST")}
@@ -187,6 +199,7 @@ export function CompanyPreferencesDqfForm(
 							onClick={() => {
 								setInputMode("custom");
 								setItem("");
+								form.setFieldError("dqfList.value", undefined);
 							}}
 						>
 							{t("ADD_CUSTOM_TYPE")}
@@ -205,9 +218,10 @@ export function CompanyPreferencesDqfForm(
 						name="dqfList"
 						enumType={EmployeeDqf}
 						createLabel={(option) => formatLabel(option.value)}
-						onChange={({ target: { value } }) =>
-							setItem(value as string)
-						}
+						onChange={({ target: { value } }) => {
+							setItem(value as string);
+							form.setFieldError("dqfList.value", undefined);
+						}}
 					/>
 				) : (
 					<BaseInput
@@ -216,8 +230,10 @@ export function CompanyPreferencesDqfForm(
 						placeholder="ENTER_CUSTOM_FILE_TYPE_NAME"
 						className="col-8 offset-1"
 						name="customDqfItem"
-						error={form?.errors?.dqfList?.value as string}
-						onChange={({ target: { value } }) => setItem(value)}
+						onChange={({ target: { value } }) => {
+							setItem(value);
+							form.setFieldError("dqfList.value", undefined);
+						}}
 					/>
 				)}
 				<div className="col-1 mt-4 pt-2">
@@ -231,6 +247,15 @@ export function CompanyPreferencesDqfForm(
 					</Button>
 				</div>
 			</Row>
+			{form?.errors?.dqfList?.value && (
+				<Row className="my-2">
+					<div className="col-10 offset-1">
+						<div className="text-danger" style={{ fontSize: '0.875rem' }}>
+							{t(form.errors.dqfList.value as string)}
+						</div>
+					</div>
+				</Row>
+			)}
 			<div className="mt-5">{dqfItems}</div>
 		</EntityForm>
 	);

@@ -25,6 +25,7 @@ type StatCard = {
     isPositive: boolean;
   };
   isMainCard?: boolean; // Determines if it's a main stat card or plain text stat
+  clickable?: boolean; // Determines if the card should be clickable (default: true)
 };
 
 export const DashboardStats = () => {
@@ -93,6 +94,15 @@ export const DashboardStats = () => {
     const activeEmployees = employees.filter((v) => v?.status === EmployeeStatus.ACTIVE).length;
     const conversionRate = totalLeads > 0 ? ((activeEmployees / totalLeads) * 100).toFixed(1) : 0;
 
+    // Calculate hires in the past 30 days
+    const thirtyDaysAgo = moment().subtract(30, 'days').startOf('day');
+    const hiresThisMonth = employees.filter((v) => {
+      if (v?.status !== EmployeeStatus.ACTIVE) return false;
+      if (!v?.hire_date) return false;
+      const hireDate = moment(v.hire_date);
+      return hireDate.isSameOrAfter(thirtyDaysAgo);
+    }).length;
+
     const stats: StatCard[] = [
       // Main stat cards (3 columns)
       {
@@ -109,14 +119,14 @@ export const DashboardStats = () => {
       },
       {
         title: 'Total Hires This Month',
-        value: activeEmployees,
+        value: hiresThisMonth,
         icon: (
           <div className={styles.icon_circle} style={{ backgroundColor: '#2ec8c4' }}>
             <Search size={38} className="text-white" />
           </div>
         ),
-        link: '/dashboard/company/compliance/employee-directory',
-        linkText: 'Go to Applicants',
+        link: `/dashboard/company/compliance/employee-directory?hireDateFrom=${thirtyDaysAgo.format('YYYY-MM-DD')}`,
+        linkText: 'Go to Hires',
         isMainCard: true,
       },
       {
@@ -137,6 +147,7 @@ export const DashboardStats = () => {
         value: `${conversionRate}%`,
         link: '/dashboard/company/applicants',
         isMainCard: false,
+        clickable: false,
       },
       {
         title: 'Active Job Posts',
@@ -147,7 +158,7 @@ export const DashboardStats = () => {
       {
         title: 'Employee Birthdays This Week',
         value: birthdaysThisWeek,
-        link: '/dashboard/company/compliance/employee-directory',
+        link: `/dashboard/company/compliance/employee-directory?birthdayThisWeek=true`,
         isMainCard: false,
       },
     ];
@@ -166,24 +177,26 @@ export const DashboardStats = () => {
         {mainCards.map((stat, index) => (
           <Col md={4} key={index} className="mb-3">
             <Link href={stat.link}>
-              <Card className={`${styles.stat_card} h-100`} style={{ cursor: 'pointer' }}>
-                <CardBody className="p-4 position-relative">
-                  <div className="d-flex align-items-center">
-                    <div className="me-3">{stat.icon}</div>
-                    <div className="flex-grow-1">
-                      <div className={`${styles.stat_title} text-muted mb-2`}>{stat.title}</div>
-                      <div className={`${styles.stat_value} display-4 fw-bold`}>{stat.value}</div>
+              <a style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Card className={`${styles.stat_card} h-100`} style={{ cursor: 'pointer' }}>
+                  <CardBody className="p-4 position-relative">
+                    <div className="d-flex align-items-center">
+                      <div className="me-3">{stat.icon}</div>
+                      <div className="flex-grow-1">
+                        <div className={`${styles.stat_title} text-muted mb-2`}>{stat.title}</div>
+                        <div className={`${styles.stat_value} display-4 fw-bold`}>{stat.value}</div>
+                      </div>
                     </div>
-                  </div>
-                  {stat.linkText && (
-                    <div className="position-absolute bottom-0 end-0 p-3">
-                      <small className="text-muted" style={{ fontSize: '0.75rem' }}>
-                        {stat.linkText} →
-                      </small>
-                    </div>
-                  )}
-                </CardBody>
-              </Card>
+                    {stat.linkText && (
+                      <div className="position-absolute bottom-0 end-0 p-3">
+                        <small className="text-muted" style={{ fontSize: '0.75rem' }}>
+                          {stat.linkText} →
+                        </small>
+                      </div>
+                    )}
+                  </CardBody>
+                </Card>
+              </a>
             </Link>
           </Col>
         ))}
@@ -193,14 +206,25 @@ export const DashboardStats = () => {
       <Row className="mb-4">
         {plainStats.map((stat, index) => (
           <Col md={4} key={index} className="mb-3">
-            <Link href={stat.link}>
-              <div className={styles.plain_stat} style={{ cursor: 'pointer' }}>
+            {stat.clickable !== false ? (
+              <Link href={stat.link}>
+                <a style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <div className={styles.plain_stat} style={{ cursor: 'pointer' }}>
+                    <div className={`${styles.plain_stat_title} text-muted small`}>{stat.title}</div>
+                    <div className={`${styles.plain_stat_value} h2 fw-bold text-dark`}>
+                      {stat.value}
+                    </div>
+                  </div>
+                </a>
+              </Link>
+            ) : (
+              <div className={styles.plain_stat}>
                 <div className={`${styles.plain_stat_title} text-muted small`}>{stat.title}</div>
                 <div className={`${styles.plain_stat_value} h2 fw-bold text-dark`}>
                   {stat.value}
                 </div>
               </div>
-            </Link>
+            )}
           </Col>
         ))}
       </Row>

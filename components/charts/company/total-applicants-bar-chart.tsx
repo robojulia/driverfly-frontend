@@ -5,41 +5,98 @@ import { useTranslation } from "../../../hooks/use-translation";
 import { BarChart } from "../bar-chart";
 import { ApplicantEntity } from "../../../models/applicant";
 import { EmployeeEntity } from "../../../models/employee/employee.entity";
+import { TimePeriod } from "./historical-range-filters";
 
 export function TotalApplicantBarChart() {
   const { state, historicalFilters } = useContext(DashboardChartContext);
   const { t } = useTranslation();
   const yearToShow: number = new Date().getFullYear();
+  const timePeriod: TimePeriod = historicalFilters?.timePeriod || 'month';
 
-  const getMonthsInYear = () => {
-    const startOfYear = moment().startOf("year");
-    const endOfYear = moment().endOf("year");
-    const months = [];
-    let currentMonth = startOfYear.clone().startOf("month");
+  const periods = useMemo(() => {
+    switch (timePeriod) {
+      case 'day': {
+        // Last 30 days
+        const days = [];
+        for (let i = 29; i >= 0; i--) {
+          days.push(moment().subtract(i, 'days').startOf('day'));
+        }
+        return days;
+      }
+      case 'week': {
+        // Last 12 weeks
+        const weeks = [];
+        for (let i = 11; i >= 0; i--) {
+          weeks.push(moment().subtract(i, 'weeks').startOf('week'));
+        }
+        return weeks;
+      }
+      case 'month': {
+        // Months in current year
+        const startOfYear = moment().startOf("year");
+        const endOfYear = moment().endOf("year");
+        const months = [];
+        let currentMonth = startOfYear.clone().startOf("month");
 
-    while (currentMonth.isSameOrBefore(endOfYear)) {
-      months.push(currentMonth.clone());
-      currentMonth.add(1, "month");
+        while (currentMonth.isSameOrBefore(endOfYear)) {
+          months.push(currentMonth.clone());
+          currentMonth.add(1, "month");
+        }
+        return months;
+      }
+      case 'quarter': {
+        // Last 8 quarters
+        const quarters = [];
+        for (let i = 7; i >= 0; i--) {
+          quarters.push(moment().subtract(i, 'quarters').startOf('quarter'));
+        }
+        return quarters;
+      }
+      case 'year': {
+        // Last 5 years
+        const years = [];
+        for (let i = 4; i >= 0; i--) {
+          years.push(moment().subtract(i, 'years').startOf('year'));
+        }
+        return years;
+      }
+      default:
+        return [];
     }
-    return months;
-  };
+  }, [timePeriod]);
 
-  const labels: string[] = getMonthsInYear().map((month) =>
-    month.format("MMMM")
-  );
+  const labels: string[] = useMemo(() => {
+    switch (timePeriod) {
+      case 'day':
+        return periods.map((day) => day.format("MMM D"));
+      case 'week':
+        return periods.map((week) => week.format("MMM D"));
+      case 'month':
+        return periods.map((month) => month.format("MMMM"));
+      case 'quarter':
+        return periods.map((quarter) => `Q${quarter.quarter()} ${quarter.format("YYYY")}`);
+      case 'year':
+        return periods.map((year) => year.format("YYYY"));
+      default:
+        return [];
+    }
+  }, [periods, timePeriod]);
 
-  const isMonthData = ({
+  const isPeriodData = ({
     created_at,
-    monthStart,
-    monthEnd,
+    periodStart,
+    periodEnd,
   }: {
     created_at: string | Date;
-    monthStart: string;
-    monthEnd: string;
+    periodStart: moment.Moment;
+    periodEnd: moment.Moment;
   }) => {
+    if (!created_at) return false;
+    const date = moment(created_at);
+    if (!date.isValid()) return false;
     return (
-      moment(created_at).isSameOrAfter(monthStart, "month") &&
-      moment(created_at).isSameOrBefore(monthEnd, "month")
+      date.isSameOrAfter(periodStart) &&
+      date.isSameOrBefore(periodEnd)
     );
   };
 
@@ -143,23 +200,41 @@ export function TotalApplicantBarChart() {
   }, [historicalFilters]);
 
   const data = useMemo(() => {
-    const months = getMonthsInYear();
     const applicantData = [];
     const hiredData = [];
 
-    months.forEach((month) => {
-      const monthStart = month.clone().startOf(`${month}`).format("YYYY-MM-DD");
-      const monthEnd = month.clone().endOf(`${month}`).format("YYYY-MM-DD");
+    periods.forEach((period) => {
+      let periodEnd: moment.Moment;
+
+      switch (timePeriod) {
+        case 'day':
+          periodEnd = period.clone().endOf('day');
+          break;
+        case 'week':
+          periodEnd = period.clone().endOf('week');
+          break;
+        case 'month':
+          periodEnd = period.clone().endOf('month');
+          break;
+        case 'quarter':
+          periodEnd = period.clone().endOf('quarter');
+          break;
+        case 'year':
+          periodEnd = period.clone().endOf('year');
+          break;
+        default:
+          periodEnd = period.clone();
+      }
 
       let applicantCount = 0;
       let hiredCount = 0;
 
       state?.applicants?.forEach((applicant) => {
         if (
-          isMonthData({
+          isPeriodData({
             created_at: applicant.created_at,
-            monthStart,
-            monthEnd,
+            periodStart: period,
+            periodEnd,
           }) &&
           applicantMatchesFilter(applicant)
         ) {
@@ -169,7 +244,11 @@ export function TotalApplicantBarChart() {
 
       state?.employees?.forEach((employee) => {
         if (
-          isMonthData({ created_at: employee.hire_date, monthStart, monthEnd }) &&
+          isPeriodData({
+            created_at: employee.hire_date,
+            periodStart: period,
+            periodEnd
+          }) &&
           employeeMatchesFilter(employee)
         ) {
           hiredCount++;
@@ -198,7 +277,7 @@ export function TotalApplicantBarChart() {
         borderRadius: 10,
       },
     ];
-  }, [state, applicantMatchesFilter, employeeMatchesFilter, t]);
+  }, [state, applicantMatchesFilter, employeeMatchesFilter, t, periods]);
 
   return (
     <BarChart

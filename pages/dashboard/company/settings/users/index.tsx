@@ -153,8 +153,13 @@ export default function UserList() {
     [`Status.${Status.ACTIVE}`]: createUsersTable(
       users.filter((u) => u.status == Status.ACTIVE && !u.company_disabled)
     ),
-    [`Status.${Status.DEACTIVE}`]: createUsersTable(
-      users.filter((u) => u.status == Status.DEACTIVE || u.company_disabled)
+    [`Status.${Status.DEACTIVE}`]: (
+      <>
+        <p className="text-muted mb-3">
+          The following invitations have been sent and are awaiting user verification.
+        </p>
+        {createUsersTable(users.filter((u) => u.status == Status.DEACTIVE || u.company_disabled))}
+      </>
     ),
     [`Status.${Status.DELETED}`]: createUsersTable(users.filter((u) => u.status == Status.DELETED)),
   };

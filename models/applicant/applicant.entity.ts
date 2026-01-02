@@ -35,6 +35,8 @@ import {
   ApplicantJobEntity,
   ApplicantNoteEntity,
 } from './index';
+import { ATSProvider } from '../../enums/integrations/ats-provider.enum';
+import { ApplicantMappingEntity } from '../integrations/applicant-mapping.entity';
 
 export class ApplicantEntity {
   id?: number;
@@ -73,6 +75,7 @@ export class ApplicantEntity {
   highest_degree?: EducationLevel;
   authorized_to_work_in_us?: boolean = true;
   preferred_location?: JobGeography[] = [];
+  max_travel_distance?: number = 100;
   emergency_contact_name?: string;
   emergency_contact_number?: string;
   emergency_contact_relationship?: string;
@@ -141,6 +144,11 @@ export class ApplicantEntity {
   vehicles?: ApplicantVehicleEntity[];
   last_completed_step?: number;
 
+  // ATS Integration fields
+  integration_source?: ATSProvider; // Which ATS this came from
+  last_ats_sync_at?: Date;
+  atsMapping?: ApplicantMappingEntity; // One-to-one relationship
+
   static yupSchema() {
     return yup.object({
       first_name: yup.string().required().nullable().trim(),
@@ -158,28 +166,6 @@ export class ApplicantEntity {
       license_expiry: yup
         .date()
         .typeError('INVALID_DATE')
-        .test({
-          name: 'is-expired',
-          message: 'LICENSE_HAS_EXPIRED',
-          test: function (value) {
-            if (!value) return true;
-            return moment(value).isAfter(moment().startOf('day'));
-          },
-        })
-        .test({
-          test: (value, context) => {
-            if (!Boolean(value)) return true;
-            else {
-              return (
-                yup.date().min(moment().endOf('day')).isValidSync(value) ||
-                context.createError({
-                  path: context.path,
-                  message: 'LICENSE_MUST_BE_VALID_AFTER_TODAY',
-                })
-              );
-            }
-          },
-        })
         .nullable(),
       license_state: yup.string().nullable(),
       license_type: yup
@@ -316,15 +302,12 @@ export class ApplicantEntity {
       license_expiry: yup
         .date()
         .typeError('INVALID_DATE')
-        .test('is-expired', 'LICENSE_HAS_EXPIRED', (value) =>
-          moment(value).isAfter(moment().startOf('day'))
-        )
-        .min(moment().endOf('day'), 'LICENSE_MUST_BE_VALID_AFTER_TODAY')
         .nullable(),
       license_state: yup.string().nullable(),
       license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
       years_cdl_experience: yup.number().min(0).nullable(),
       preferred_location: yup.array((yup.string() as any).enum(JobGeography)).nullable(),
+      max_travel_distance: yup.number().min(1).max(3000).nullable(),
       license_restrictions: yup.array((yup.string() as any).enum(LicenseRestrictions)).nullable(),
       license_restrictions_other: yup
         .string()
@@ -478,20 +461,6 @@ export class ApplicantEntity {
       license_expiry: yup
         .date()
         .typeError('INVALID_DATE')
-        .test({
-          test: (value, context) => {
-            if (!Boolean(value)) return true;
-            else {
-              return (
-                yup.date().min(moment().endOf('day')).isValidSync(value) ||
-                context.createError({
-                  path: context.path,
-                  message: 'LICENSE_MUST_BE_VALID_AFTER_TODAY',
-                })
-              );
-            }
-          },
-        })
         .nullable(),
       license_state: yup.string().nullable(),
       license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
@@ -590,28 +559,6 @@ export class ApplicantEntity {
       license_expiry: yup
         .date()
         .typeError('INVALID_DATE')
-        .test({
-          name: 'is-expired',
-          message: 'LICENSE_HAS_EXPIRED',
-          test: function (value) {
-            if (!value) return true;
-            return moment(value).isAfter(moment().startOf('day'));
-          },
-        })
-        .test({
-          test: (value, context) => {
-            if (!Boolean(value)) return true;
-            else {
-              return (
-                yup.date().min(moment().endOf('day')).isValidSync(value) ||
-                context.createError({
-                  path: context.path,
-                  message: 'LICENSE_MUST_BE_VALID_AFTER_TODAY',
-                })
-              );
-            }
-          },
-        })
         .nullable(),
       license_state: yup.string().nullable(),
       license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
@@ -707,7 +654,9 @@ export class ApplicantEntity {
         })
         .nullable(),
       email: yup.string().email().nullable(),
-      birthdate: yup.date().nullable(),
+      birthdate: yup.date()
+        .max(new Date(), 'BIRTHDATE_CANNOT_BE_IN_THE_FUTURE')
+        .nullable(),
       address_1: yup.string().nullable(),
       address_2: yup.string().nullable(),
       street: yup.string().nullable(),
@@ -718,28 +667,6 @@ export class ApplicantEntity {
       license_expiry: yup
         .date()
         .typeError('INVALID_DATE')
-        .test({
-          name: 'is-expired',
-          message: 'LICENSE_HAS_EXPIRED',
-          test: function (value) {
-            if (!value) return true;
-            return moment(value).isAfter(moment().startOf('day'));
-          },
-        })
-        .test({
-          test: (value, context) => {
-            if (!Boolean(value)) return true;
-            else {
-              return (
-                yup.date().min(moment().endOf('day')).isValidSync(value) ||
-                context.createError({
-                  path: context.path,
-                  message: 'LICENSE_MUST_BE_VALID_AFTER_TODAY',
-                })
-              );
-            }
-          },
-        })
         .nullable(),
       license_state: yup.string().nullable(),
       license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
@@ -812,20 +739,6 @@ export class ApplicantEntity {
       license_expiry: yup
         .date()
         .typeError('INVALID_DATE')
-        .test({
-          test: (value, context) => {
-            if (!Boolean(value)) return true;
-            else {
-              return (
-                yup.date().min(moment().endOf('day')).isValidSync(value) ||
-                context.createError({
-                  path: context.path,
-                  message: 'LICENSE_MUST_BE_VALID_AFTER_TODAY',
-                })
-              );
-            }
-          },
-        })
         .nullable(),
       license_state: yup.string().nullable(),
       license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),

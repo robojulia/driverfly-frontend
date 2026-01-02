@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
 import { LicenseRestrictions } from "../../../enums/applicants/applicant-license-restrictions-type.enum";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
-import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
 import { ApplicantEntryMode } from "../../../enums/applicants/applicant-entry-mode.enum";
 import { HearAboutUsType } from "../../../enums/jotform/hear-about-type.enum";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
@@ -33,7 +32,6 @@ import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { focusOnErrorField } from "../../../utils/form-error";
 import { useEffectAsync } from "../../../utils/react";
 import { formFailed, formSuccess } from "../../../utils/toast";
-import { ReturningUserBanner } from "../../applicants/returning-user-banner";
 import Section from "../../view-details/section";
 import BaseCheck from "../base-check";
 import BaseCheckList from "../base-check-list";
@@ -142,10 +140,31 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
       const ssnDisplay = entity?.ssn ||
         ((entity as any)?.ssn_last4 ? `XXX-XX-${String((entity as any).ssn_last4).slice(-4)}` : '');
 
-      // Set entry_mode based on is_automated_recruiting_lead or default to COMPANY
-      const entryMode = entity?.is_automated_recruiting_lead
-        ? ApplicantType.AUTO_RECRUIT
-        : (entity?.entry_mode || ApplicantType.COMPANY);
+      // Derive entry_mode from existing data if not explicitly set
+      let entryMode = entity?.entry_mode;
+      if (!entryMode) {
+        // Try to determine entry_mode from other fields for legacy data
+        if (entity?.is_automated_recruiting_lead) {
+          entryMode = ApplicantEntryMode.AUTO_RECRUITING_LEAD;
+        } else if (entity?.integration_source) {
+          // If imported from an ATS integration
+          entryMode = ApplicantEntryMode.ATS_IMPORT;
+        } else if (entity?.type === 'DHA' || ((entity as any)?.last_completed_step !== undefined && (entity as any)?.last_completed_step !== null)) {
+          // If type is DHA or they have a last_completed_step, they went through the digital hiring app (long form)
+          entryMode = ApplicantEntryMode.DIGITAL_HIRING_APP;
+        } else if (entity?.type === 'DIRECT_JOB_APPLY') {
+          // If they directly applied on a job (short form)
+          entryMode = ApplicantEntryMode.SHORT_FORM_APPLICATION;
+        } else if (entity?.type === 'COMPANY') {
+          // If type is COMPANY, they were manually added or uploaded by company
+          // Check if they have minimal data (suggesting bulk upload) vs full data (manual entry)
+          const hasMinimalData = !entity?.license_number && !entity?.years_cdl_experience;
+          entryMode = hasMinimalData ? ApplicantEntryMode.COMPANY_UPLOADED : ApplicantEntryMode.MANUALLY_ADDED;
+        } else {
+          // Default to MANUALLY_ADDED for other legacy records
+          entryMode = ApplicantEntryMode.MANUALLY_ADDED;
+        }
+      }
 
       form.resetForm({
         values: {
@@ -163,7 +182,7 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
         values: {
           ...new ApplicantEntity(),
           type: null,
-          entry_mode: ApplicantType.COMPANY,
+          entry_mode: ApplicantEntryMode.MANUALLY_ADDED,
           extras,
           meta
         } as any
@@ -182,9 +201,7 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
   }, []);
 
   const today = new Date();
-  const OldThan18Year = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
-    .toLocaleString("en-US", { timeZone: "America/New_York" })
-    .split("T")[0];
+  const todayFormatted = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD (prevents future dates)
 
   useEffect(() => focusOnErrorField(form), [form.submitCount]);
 
@@ -212,6 +229,18 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
       (window as any).__applicantFormResetDirty = (window as any).__applicantFormResetDirty || {};
       (window as any).__applicantFormResetDirty['basic-details'] = () => {
         formRef.current.resetForm({ values: formRef.current.values });
+      };
+
+      // Register error setter function
+      (window as any).__applicantFormSetErrors = (window as any).__applicantFormSetErrors || {};
+      (window as any).__applicantFormSetErrors['basic-details'] = (errors: Record<string, string>) => {
+        // Set errors and mark fields as touched
+        formRef.current.setErrors(errors);
+        const touched: Record<string, boolean> = {};
+        Object.keys(errors).forEach(key => {
+          touched[key] = true;
+        });
+        formRef.current.setTouched(touched);
       };
 
       (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
@@ -322,6 +351,7 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
         delete (window as any).__applicantFormValidation?.['basic-details'];
         delete (window as any).__applicantFormDirty?.['basic-details'];
         delete (window as any).__applicantFormResetDirty?.['basic-details'];
+        delete (window as any).__applicantFormSetErrors?.['basic-details'];
         delete (window as any).__applicantFormRegistry?.['basic-details'];
       }
     };
@@ -414,15 +444,6 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
 
   return (
     <Form onSubmit={form.handleSubmit} className={className} onReset={form.handleReset} data-applicant-edit-form>
-      {/* Returning User Banner */}
-      {entity?.id && (
-        <Row>
-          <Col md="12" className="p-2">
-            <ReturningUserBanner applicant={entity} companyName={entity?.company?.name} />
-          </Col>
-        </Row>
-      )}
-
       {/* Basic Information - Combined Section */}
       <Row>
         <Col md="12" className="p-2 mt-2">
@@ -434,13 +455,13 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
                 <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="First Name" required name="first_name" placeholder="John" formik={form} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Middle Name" name="meta.middle_name" formik={form} />
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Middle Name" name="meta.middle_name" placeholder="Michael" formik={form} />
               </Col>
               <Col md="3" className="px-2">
                 <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Last Name" required name="last_name" placeholder="Doe" formik={form} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Suffix" name="meta.suffix" formik={form} />
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Suffix" name="meta.suffix" placeholder="Jr., Sr., III" formik={form} />
               </Col>
             </Row>
             
@@ -556,7 +577,7 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
                 <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Zip Code" name="zip_code" placeholder="83202" formik={form} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Date of Birth" type="date" name="birthdate" placeholder="mm / dd / yyyy" formik={form} max={OldThan18Year} />
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Date of Birth" type="date" name="birthdate" placeholder="mm / dd / yyyy" formik={form} max={todayFormatted} />
               </Col>
               <Col md="3" className="px-2">
                 <BaseInput
@@ -581,8 +602,8 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
                   label="Entry Mode"
                   name="entry_mode"
                   placeholder="Select entry mode"
-                  labelPrefix="ApplicantType"
-                  enumType={ApplicantType}
+                  labelPrefix="ApplicantEntryMode"
+                  enumType={ApplicantEntryMode}
                   formik={form}
                 />
               </Col>

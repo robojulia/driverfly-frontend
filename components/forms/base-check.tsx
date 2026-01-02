@@ -9,6 +9,7 @@ export interface BaseCheckProps extends BaseControlProps {
   handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   readOnly?: boolean;
   disabled?: boolean;
+  helpText?: string;
 }
 
 export default function BaseCheck({
@@ -24,6 +25,7 @@ export default function BaseCheck({
   touched,
   error,
   disabled,
+  helpText,
 }: BaseCheckProps) {
   const { t } = useTranslation();
   checked = !!checked;
@@ -99,6 +101,11 @@ export default function BaseCheck({
           </label>
         )}
       </div>
+      {helpText && (
+        <div className={`${styles.successMessage} form-text text-muted small mt-1`} style={{ marginLeft: '1.8em' }}>
+          {t(helpText)}
+        </div>
+      )}
       {touched && error && typeof error == 'string' ? (
         <span className={`${styles.errorMessage} text-danger small`}>{t(error)}</span>
       ) : null}

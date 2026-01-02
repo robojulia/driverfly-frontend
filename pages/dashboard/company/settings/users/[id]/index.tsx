@@ -113,6 +113,9 @@ export default function ViewUser({ id }) {
                 EMAIL: user.email,
                 phone: user.contact_number,
                 phone_cell: user.cell_number,
+                COMPANIES: user.companies && user.companies.length > 0
+                  ? user.companies.map((c) => c.name).join(', ')
+                  : user.company?.name || 'N/A',
                 'Company Disabled': user.company_disabled ? 'Yes' : 'No',
               }}
             />

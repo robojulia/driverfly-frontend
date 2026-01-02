@@ -6,6 +6,7 @@ import ApplicantApi from "../../../pages/api/applicant";
 import Section from "../../view-details/section";
 import BaseCheck from "../base-check";
 import BaseSelect from "../base-select";
+import BaseRange from "../base-range";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
@@ -14,7 +15,7 @@ import { BaseFormProps } from "./base-form-props";
 import { formSuccess, formFailed } from "../../../utils/toast";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { toast } from "react-toastify";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 
 export interface ApplicantPreferencesFormProps extends BaseFormProps<ApplicantEntity> {
   hideActions?: boolean;
@@ -31,6 +32,7 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
       ...(entity || ({} as ApplicantEntity)),
       routes: entity?.routes || [],
       preferred_location: entity?.preferred_location || [],
+      max_travel_distance: entity?.max_travel_distance || 100,
       other_requirements: entity?.other_requirements || [],
       other_requirements_other: entity?.other_requirements_other || ''
     },
@@ -38,10 +40,11 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
     onSubmit: async (values) => {
 
       try {
-        // Send ONLY preference fields to avoid overwriting other forms' changes 
+        // Send ONLY preference fields to avoid overwriting other forms' changes
         const payload = {
           routes: values.routes,
           preferred_location: values.preferred_location,
+          max_travel_distance: values.max_travel_distance,
           other_requirements: values.other_requirements,
           other_requirements_other: values.other_requirements_other,
         };
@@ -75,6 +78,7 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
           ...entity,
           routes: entity.routes || [],
           preferred_location: entity.preferred_location || [],
+          max_travel_distance: entity.max_travel_distance || 100,
           other_requirements: entity.other_requirements || [],
           other_requirements_other: entity.other_requirements_other || ''
         }
@@ -86,6 +90,23 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
   // Keep a ref to always have the latest form instance
   const formRef = useRef(form);
   formRef.current = form;
+
+  // Calculate max travel distance based on preferred locations
+  const maxTravelDistanceLimit = useMemo(() => {
+    const locations = form.values.preferred_location || [];
+    if (locations.includes(JobGeography.OTR)) return 3000;
+    if (locations.includes(JobGeography.REGIONAL)) return 1500;
+    if (locations.includes(JobGeography.LOCAL)) return 100;
+    return 100; // default
+  }, [form.values.preferred_location]);
+
+  // Auto-adjust max_travel_distance if it exceeds the new limit when preferred_location changes
+  useEffect(() => {
+    const currentDistance = form.values.max_travel_distance || 0;
+    if (currentDistance > maxTravelDistanceLimit) {
+      form.setFieldValue('max_travel_distance', maxTravelDistanceLimit);
+    }
+  }, [maxTravelDistanceLimit]);
 
   // Register getter function that returns CURRENT preference fields when called
   useEffect(() => {
@@ -115,6 +136,7 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
         return {
           routes: formRef.current.values.routes,
           preferred_location: formRef.current.values.preferred_location,
+          max_travel_distance: formRef.current.values.max_travel_distance,
           other_requirements: formRef.current.values.other_requirements,
           other_requirements_other: formRef.current.values.other_requirements_other,
         };
@@ -177,6 +199,19 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
                   </div>
                 ))}
               </div>
+              {(form.values.preferred_location || []).length > 0 && (
+                <div className="col-12 mt-3 px-lg-2">
+                  <BaseRange
+                    className="p-0 fire-fox-cls"
+                    label="MAX_TRAVEL_DISTANCE"
+                    name="max_travel_distance"
+                    valueSuffix="mi"
+                    min={1}
+                    max={maxTravelDistanceLimit}
+                    formik={form}
+                  />
+                </div>
+              )}
               <div className="col-12 mt-2">
                 <label>{t('SCHEDULE')}:</label>
                 <br />

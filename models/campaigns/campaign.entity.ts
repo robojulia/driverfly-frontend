@@ -3,6 +3,8 @@ import { CampaignType } from '../../enums/campaigns/campaign-type.enum';
 import { CampaignStatus } from '../../enums/campaigns/campaign-status.enum';
 import { CampaignCommunicationType } from '../../enums/campaigns/campaign-communication-type.enum';
 import { CampaignTargetEntity } from './campaign-target.entity';
+import { ATSProvider } from '../../enums/integrations/ats-provider.enum';
+import { CampaignIntegrationEntity } from './campaign-integration.entity';
 
 export interface CampaignEntity extends BasicEntity {
   id: number;
@@ -32,4 +34,9 @@ export interface CampaignEntity extends BasicEntity {
 
   // Relations
   targets?: CampaignTargetEntity[];
+
+  // ATS Integration
+  integrationConfig?: CampaignIntegrationEntity;
+  targetATSApplicantsOnly?: boolean; // Filter to only ATS-sourced applicants
+  targetSpecificATS?: ATSProvider; // Target specific ATS (e.g., only Tenstreet applicants)
 }

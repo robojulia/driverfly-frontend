@@ -26,6 +26,7 @@ import { CdlExtras } from "../../../models/jot-form/long-form/cdl-object/index.d
 import { PlusCircle, Trash } from "react-bootstrap-icons";
 import { getCDLFormat } from "../../../utils/cdl-formats";
 import stateList from "../../../utils/stateList";
+import { LicenseExpirationAlert } from '../license-expiration-alert';
 
 export interface ApplicantLicensingFormProps extends BaseFormProps<ApplicantEntity> {}
 
@@ -119,6 +120,18 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
         formRef.current.resetForm({ values: formRef.current.values });
       };
 
+      // Register error setter function
+      (window as any).__applicantFormSetErrors = (window as any).__applicantFormSetErrors || {};
+      (window as any).__applicantFormSetErrors['licensing'] = (errors: Record<string, string>) => {
+        // Set errors and mark fields as touched
+        formRef.current.setErrors(errors);
+        const touched: Record<string, boolean> = {};
+        Object.keys(errors).forEach(key => {
+          touched[key] = true;
+        });
+        formRef.current.setTouched(touched);
+      };
+
       (window as any).__applicantFormRegistry = (window as any).__applicantFormRegistry || {};
       (window as any).__applicantFormRegistry['licensing'] = () => {
         console.log('LicensingForm getter called, license_number:', formRef.current.values.license_number);
@@ -147,6 +160,7 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
         delete (window as any).__applicantFormValidation?.['licensing'];
         delete (window as any).__applicantFormDirty?.['licensing'];
         delete (window as any).__applicantFormResetDirty?.['licensing'];
+        delete (window as any).__applicantFormSetErrors?.['licensing'];
         delete (window as any).__applicantFormRegistry?.['licensing'];
       }
     };
@@ -260,15 +274,17 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
             formik={form}
             onChange={handleLicenseNumberChange}
           />
-          <BaseInput
-            className="col-6 mt-2"
-            readOnly={Boolean(entity?.is_hired)}
-            label="expiration_date"
-            name="license_expiry"
-            type="date"
-            placeholder="expiration_date"
-            formik={form}
-          />
+          <div className="col-6 mt-2">
+            <LicenseExpirationAlert expiryDate={form.values.license_expiry} />
+            <BaseInput
+              readOnly={Boolean(entity?.is_hired)}
+              label="expiration_date"
+              name="license_expiry"
+              type="date"
+              placeholder="expiration_date"
+              formik={form}
+            />
+          </div>
           <StateSelect
             className="col-6 mt-2"
             readOnly={Boolean(entity?.is_hired)}
@@ -409,6 +425,7 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
                           <label className="form-label">
                             {t('expiration_date')} <span className="text-danger">*</span>
                           </label>
+                          <LicenseExpirationAlert expiryDate={license.date} />
                           <input
                             type="date"
                             className="form-control"
@@ -418,7 +435,7 @@ export function ApplicantLicensingForm(props: ApplicantLicensingFormProps) {
                             readOnly={Boolean(entity?.is_hired)}
                           />
                           <small className="form-text text-muted">
-                            Expiration date must be at least 6 months from today
+                            Please keep license information current
                           </small>
                         </div>
                       </div>

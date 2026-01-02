@@ -268,13 +268,21 @@ export function PhoneNumber() {
         }
       } catch (error: any) {
         console.error('Applicant recognition failed:', error);
+        console.error('Error details:', {
+          status: error?.response?.status,
+          statusText: error?.response?.statusText,
+          message: error?.message,
+          data: error?.response?.data,
+        });
 
         // Distinguish between "not found" (404) and actual API errors
         const isNotFound = error?.response?.status === 404 || error?.status === 404;
+        const isAuthError = error?.response?.status === 401 || error?.status === 401;
 
-        if (isNotFound) {
-          // No existing applicant found - proceed as new applicant
-          console.log('No existing applicant found, proceeding as new applicant');
+        if (isNotFound || isAuthError) {
+          // No existing applicant found (404) or auth issue (401) - proceed as new applicant
+          // Auth errors shouldn't happen with public endpoints, but treat as new applicant if they do
+          console.log('No existing applicant found or auth issue, proceeding as new applicant');
           setApplicant({
             ...applicant,
             phone: normalizePhoneNumber(values.phone),
@@ -282,21 +290,26 @@ export function PhoneNumber() {
           stepNext();
         } else {
           // Real error - network issue, server error, timeout, etc.
-          // Show error to user and allow them to retry
-          const errorMessage = error?.message || 'Unable to verify phone number. Please try again.';
-          console.error('API error during applicant recognition:', errorMessage);
+          // For better UX, we'll allow users to proceed as new applicants even if the lookup fails
+          // The lookup is a nice-to-have feature, not critical functionality
+          const errorMessage = error?.message || 'Unable to verify phone number';
+          console.warn('⚠️ Applicant lookup failed, but allowing user to proceed as new applicant:', errorMessage);
 
-          setErrors({
-            phone: 'Connection issue. Please try again.',
-          });
-
-          toast.error(
-            'Unable to check for existing applications. Please check your connection and try again.',
+          // Show a warning but still allow them to proceed
+          toast.warning(
+            'Unable to check for existing applications. Proceeding with new application.',
             {
               position: 'top-right',
-              autoClose: 5000,
+              autoClose: 4000,
             }
           );
+
+          // Proceed as new applicant despite the error
+          setApplicant({
+            ...applicant,
+            phone: normalizePhoneNumber(values.phone),
+          });
+          stepNext();
         }
       }
     },
@@ -938,7 +951,35 @@ export function PhoneNumber() {
                     isDisabled={isVerificationSuccessful || isLoadingProfile}
                   />
                   <p className="text-muted mt-2 small text-center">
-                    Can&apos;t find the code? Check your messages or request a new one.
+                    Can&apos;t find the code? Check your messages or{' '}
+                    <button
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#0073b1',
+                        textDecoration: 'underline',
+                        cursor: 'pointer',
+                        padding: '0',
+                        fontSize: 'inherit',
+                        fontWeight: '600',
+                        transition: 'color 0.2s ease',
+                      }}
+                      onClick={requestOTP}
+                      disabled={isResending}
+                      onMouseEnter={(e) => {
+                        if (!isResending) {
+                          e.currentTarget.style.color = '#005582';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isResending) {
+                          e.currentTarget.style.color = '#0073b1';
+                        }
+                      }}
+                    >
+                      {isResending ? 'sending...' : 'request a new one'}
+                    </button>
+                    .
                   </p>
                 </div>
               )}

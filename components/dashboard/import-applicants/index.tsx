@@ -546,9 +546,6 @@ const ImportApplicants = () => {
                             value={fileName}
                             id="formFile"
                         />
-                        <small className="text-muted d-block mt-1">
-                            {t("FILE_MUST_BE_OF_{types}", { types: "CSV" })} • {t("MAXIMUM_FILE_SIZE")}: 5MB
-                        </small>
                         {!!fileName && (
                             <div className="input-group-append">
                                 <button
@@ -562,8 +559,14 @@ const ImportApplicants = () => {
                             </div>
                         )}
                     </InputGroup>
-                    <p className="small text-secondary">
+                    <small className="text-muted d-block mt-1">
+                        {t("FILE_MUST_BE_OF_{types}", { types: "CSV" })} • {t("MAXIMUM_FILE_SIZE")}: 5MB
+                    </small>
+                    <p className="small text-secondary mt-2">
                         {t("DOWNLOAD_AND_SAVE_AS_CSV")}
+                    </p>
+                    <p className="text-muted">
+                        {t("EMAIL_LARGE_FILE_INSTRUCTION")}
                     </p>
                 </Col>
                 <Col sm="6" className="my-3">

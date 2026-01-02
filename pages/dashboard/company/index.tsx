@@ -59,6 +59,7 @@ export default function Dashboard() {
     sourceTypes: [],
     statuses: [],
     referralSourceIds: [],
+    timePeriod: 'month',
   });
   const applicantApi = new ApplicantApi();
   const employeeApi = new EmployeeApi();

@@ -8,6 +8,7 @@ import { EditApplicantFormNew } from "../../../../components/forms/company/edit-
 import ChildPageLayout from "../../../../components/layouts/page/child-page-layout";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
+import { ApplicantType } from "../../../../enums/applicants/applicant-type.enum";
 import ApplicantApi from "../../../api/applicant";
 
 export default function CreateApplicant() {
@@ -15,7 +16,10 @@ export default function CreateApplicant() {
   const { t } = useTranslation();
 
   const backPath = "/dashboard/company/applicants";
-  const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
+  const [applicant, setApplicant] = useState<ApplicantEntity>({
+    ...new ApplicantEntity(),
+    type: ApplicantType.COMPANY, // Set type for company-created applicants
+  });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
@@ -129,10 +133,16 @@ export default function CreateApplicant() {
       goBack();
     } catch (error: any) {
       console.error('Save error:', error);
+      console.error('Error response:', error?.response?.data);
 
       // Handle validation errors from the backend
       if (error?.response?.data?.message) {
-        toast.error(error.response.data.message);
+        const message = Array.isArray(error.response.data.message)
+          ? error.response.data.message.join(', ')
+          : error.response.data.message;
+        toast.error(message);
+      } else if (error?.response?.data?.error) {
+        toast.error(error.response.data.error);
       } else {
         toast.error(t('Failed to create applicant'));
       }
@@ -183,6 +193,7 @@ export default function CreateApplicant() {
         isSubmitting={isSubmitting}
         setIsSubmitting={setIsSubmitting}
         hideHeaderActions
+        hideGlobalSave
         onSaveComplete={() => {
           // After creating, redirect to the list
           goBack();

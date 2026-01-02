@@ -1309,9 +1309,9 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
                 <div className={`text-center ${styles.successMessage}`}>
                   <i
                     className={`fa fa-check-circle mb-3 ${styles.iconLarge}`}
-                    style={{ color: 'var(--success)' }}
+                    style={{ color: '#30c6c2' }}
                   />
-                  <h5 className="mb-3" style={{ color: 'var(--success)' }}>
+                  <h5 className="mb-3" style={{ color: '#1d4355' }}>
                     {applicationStatus === 'update'
                       ? 'Application Updated Successfully!'
                       : 'Application Submitted Successfully!'}

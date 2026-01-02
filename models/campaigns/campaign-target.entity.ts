@@ -1,5 +1,7 @@
 import { BasicEntity } from '../BasicEntity.entity';
 import { CampaignTargetType } from '../../enums/campaigns/campaign-target-type.enum';
+import { ATSProvider } from '../../enums/integrations/ats-provider.enum';
+import { ATSActivityExportStatus } from '../../enums/integrations/sync-status.enum';
 
 export interface CampaignTargetEntity extends BasicEntity {
   campaignId: number;
@@ -27,4 +29,10 @@ export interface CampaignTargetEntity extends BasicEntity {
 
   // Additional metadata
   metadata?: Record<string, any>;
+
+  // ATS Integration fields
+  sourceATS?: ATSProvider; // Which ATS this applicant came from
+  exportedToATS?: boolean;
+  exportedToATSAt?: Date;
+  atsActivityExportStatus?: ATSActivityExportStatus;
 }

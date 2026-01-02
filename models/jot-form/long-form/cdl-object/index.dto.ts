@@ -12,7 +12,6 @@ export class CdlExtras {
       date: yup
         .date()
         .typeError("INVALID_DATE")
-        .min(moment().endOf("day"), "LICENSE_MUST_BE_VALID_AFTER_TODAY")
         .required()
         .nullable(),
       state: yup.string().required().nullable(),

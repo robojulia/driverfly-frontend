@@ -29,6 +29,9 @@ export interface EmployeeFilterDto {
     preferred_location?: string[];
     transmission_type?: string[];
     is_owner_operator?: boolean;
+    hireDateFrom?: string;
+    hireDateTo?: string;
+    birthdayThisWeek?: boolean;
 }
 
 export interface EmployeeFilterFormProps {

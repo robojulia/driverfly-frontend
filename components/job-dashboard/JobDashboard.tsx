@@ -160,13 +160,6 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
     }
   }, [job.id, loadJobCampaigns, campaignsEnabled]);
 
-  // Redirect to overview if user is on analytics tab but campaigns are disabled
-  useEffect(() => {
-    if (!campaignsEnabled && activeTab === 'analytics') {
-      handleTabChange('overview');
-    }
-  }, [campaignsEnabled, activeTab]);
-
   // Helper function to change tabs and persist selection
   const handleTabChange = (tabId: TabType) => {
     setActiveTab(tabId);
@@ -292,24 +285,16 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
       label: 'Candidates',
       icon: PeopleFill,
     },
-    ...(campaignsEnabled
-      ? [
-          {
-            id: 'analytics' as TabType,
-            label: 'Analytics',
-            icon: BarChartFill,
-          },
-        ]
-      : []),
-    ...(campaignsEnabled
-      ? [
-          {
-            id: 'ai-campaigns' as TabType,
-            label: 'AI Campaigns',
-            icon: TelephoneFill,
-          },
-        ]
-      : []),
+    {
+      id: 'analytics' as TabType,
+      label: 'Analytics',
+      icon: BarChartFill,
+    },
+    {
+      id: 'ai-campaigns' as TabType,
+      label: 'AI Campaigns',
+      icon: TelephoneFill,
+    },
   ];
 
   const can = {
@@ -477,9 +462,9 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
           </div>
         )}
 
-        {activeTab === 'analytics' && campaignsEnabled && <JobAnalyticsDashboard job={job} />}
+        {activeTab === 'analytics' && <JobAnalyticsDashboard job={job} />}
 
-        {activeTab === 'ai-campaigns' && campaignsEnabled && (
+        {activeTab === 'ai-campaigns' && (
           <JobAICampaigns
             job={job}
             campaigns={campaigns}

@@ -570,7 +570,12 @@ export function VehicleForm(props: VehicleFormProps) {
         <Row className="mt-4">
           <Col>
             <div className="form-section">
-              <BaseCheck label="Show vehicle to public users" name="is_public" formik={form} />
+              <BaseCheck
+                label="Show vehicle to public users"
+                name="is_public"
+                formik={form}
+                helpText="SHOW_VEHICLE_TO_PUBLIC_USERS_HELP"
+              />
             </div>
           </Col>
         </Row>

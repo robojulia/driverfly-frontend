@@ -3,6 +3,7 @@ import { Row, Col } from 'react-bootstrap';
 import { JobEntity } from '../../models/job/job.entity';
 import { useTranslation } from '../../hooks/use-translation';
 import ViewCard from '../view-details/view-card';
+import { JobEquipmentPhotos } from '../jobs/job-equipment-photos';
 import { buildAddress } from '../../utils/common';
 import { JobSchedule } from '../../enums/jobs/job-schedule.enum';
 import { JobEmploymentType } from '../../enums/jobs/job-employment-type.enum';
@@ -522,6 +523,20 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
           </div>
         </Col>
       </Row>
+      {job.equipment_photos && job.equipment_photos.length > 0 && (
+        <>
+          <hr />
+          <Row>
+            <Col className="p-0 px-lg-2">
+              <div className="job-overview-card">
+                <ViewCard title="EQUIPMENT_PHOTOS">
+                  <JobEquipmentPhotos photos={job.equipment_photos} readOnly={true} />
+                </ViewCard>
+              </div>
+            </Col>
+          </Row>
+        </>
+      )}
     </div>
   );
 };
