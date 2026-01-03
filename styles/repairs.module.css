@@ -40,3 +40,12 @@
   background-color: #fff3e0;
   color: #f57c00;
 }
+
+.clickableRow {
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.clickableRow:hover {
+  background-color: #e3f2fd !important;
+  transform: scale(1.001);
+}

@@ -114,6 +114,12 @@ function globalAjaxExceptionHandler(error: AjaxError, interfaces: { formik?: For
                     const { setError, setTouched } = formik.getFieldHelpers(key);
                     setError(t(value));
                     setTouched(true, false);
+
+                    // Also show a toast for backend errors so users see the actual error message
+                    // This prevents confusion from generic form validation messages
+                    if (toast) {
+                        toast.error(t(value, context, { translateProps: true }));
+                    }
                     return true;
                 }
                 else if (toast) {

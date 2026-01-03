@@ -30,6 +30,7 @@ export class SearchApplicantDto {
   withHired?: boolean;
   without?: string[];
   includeEligibility?: boolean;
+  referralSourceId?: number;
 
   static yupSchema() {
     return yup.object({

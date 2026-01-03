@@ -235,17 +235,7 @@ export function LocationForm(props: LocationFormProps) {
         {/* Address Search Autocomplete */}
         <Row className="my-2">
           <div className="col-12 mb-3 position-relative">
-            <label className="form-label">
-              {t('SEARCH_ADDRESS')} <span className="text-muted">(optional - helps auto-fill fields)</span>
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Start typing an address..."
-              value={addressSearch}
-              onChange={(e) => setAddressSearch(e.target.value)}
-              onFocus={() => addressSuggestions.length > 0 && setShowSuggestions(true)}
-            />
+         
 
             {/* Address Suggestions Dropdown */}
             {showSuggestions && addressSuggestions.length > 0 && (

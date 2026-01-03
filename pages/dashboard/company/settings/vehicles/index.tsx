@@ -6,10 +6,21 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from '../../../../../hooks/use-translation';
 
-import { EyeFill, PenFill, TrashFill } from 'react-bootstrap-icons';
+import {
+  EyeFill,
+  PenFill,
+  TrashFill,
+  TruckFrontFill,
+  ClipboardCheck,
+  Receipt,
+  Tools,
+} from 'react-bootstrap-icons';
 
 import VehicleApi from '../../../../api/vehicle';
 import EmployeeApi from '../../../../api/employee';
+import VehicleInspectionApi from '../../../../api/vehicle-inspection';
+import VehicleRepairRecordApi from '../../../../api/vehicle-repair-record';
+import VehicleMaintenanceReportApi from '../../../../api/vehicle-maintenance-report';
 import { VehicleType } from '../../../../../enums/vehicles/vehicle-type.enum';
 import { VehicleTrailerType } from '../../../../../enums/vehicles/vehicle-trailer-type.enum';
 import { VehicleAccessory } from '../../../../../enums/vehicles/vehicle-accessory.enum';
@@ -27,6 +38,17 @@ import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
 import OverlyPopover from '../../../../../components/popover/overly-popover';
 import Link from 'next/link';
 import DueInspectionsAlert from '../../../../../components/vehicles/DueInspectionsAlert';
+import MultiOptionToggle from '../../../../../components/shared/MultiOptionToggle';
+import { AllInspectionsTable, InspectionWithVehicle } from '../../../../../components/vehicle/AllInspectionsTable';
+import { AllReceiptsTable, RepairWithVehicle } from '../../../../../components/vehicle/AllReceiptsTable';
+import { AllMaintenanceReportsTable, MaintenanceReportWithVehicle } from '../../../../../components/vehicle/AllMaintenanceReportsTable';
+
+enum VehicleViewMode {
+  VEHICLES = 'vehicles',
+  INSPECTIONS = 'inspections',
+  MAINTENANCE = 'maintenance',
+  RECEIPTS = 'receipts',
+}
 
 export default function VehicleList() {
   const router = useRouter();
@@ -39,7 +61,177 @@ export default function VehicleList() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [vehicleToDelete, setVehicleToDelete] = useState<VehicleEntity | null>(null);
 
+  // View mode state
+  const [viewMode, setViewMode] = useState<VehicleViewMode>(() => {
+    if (typeof window !== 'undefined') {
+      const savedView = sessionStorage.getItem('vehicles_view_mode');
+      return (savedView as VehicleViewMode) || VehicleViewMode.VEHICLES;
+    }
+    return VehicleViewMode.VEHICLES;
+  });
+  const [allInspections, setAllInspections] = useState<InspectionWithVehicle[]>([]);
+  const [allReceipts, setAllReceipts] = useState<RepairWithVehicle[]>([]);
+  const [allMaintenanceReports, setAllMaintenanceReports] = useState<MaintenanceReportWithVehicle[]>([]);
+  const [inspectionsLoading, setInspectionsLoading] = useState(false);
+  const [receiptsLoading, setReceiptsLoading] = useState(false);
+  const [maintenanceLoading, setMaintenanceLoading] = useState(false);
+  const [inspectionsFetched, setInspectionsFetched] = useState(false);
+  const [receiptsFetched, setReceiptsFetched] = useState(false);
+  const [maintenanceFetched, setMaintenanceFetched] = useState(false);
+
   const columnSettingKey = getDataTableColumnKey('company', user, 'vehicles');
+
+  // Fetch all inspections from all vehicles
+  const fetchAllInspections = async () => {
+    if (vehicles.length === 0) return;
+
+    try {
+      setInspectionsLoading(true);
+      const inspectionApi = new VehicleInspectionApi();
+
+      // Fetch inspections for all vehicles in parallel
+      const promises = vehicles.map((vehicle) =>
+        inspectionApi.list(vehicle.id).catch(() => [])
+      );
+      const results = await Promise.all(promises);
+
+      // Flatten and add vehicle info
+      const inspectionsWithVehicle: InspectionWithVehicle[] = results.flatMap(
+        (inspections, index) =>
+          inspections.map((inspection) => ({
+            ...inspection,
+            vehicle: vehicles[index],
+          }))
+      );
+
+      // Filter: past completed + upcoming in next 30 days
+      const thirtyDaysFromNow = new Date();
+      thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+
+      const filteredInspections = inspectionsWithVehicle.filter((inspection) => {
+        // Include all passed or failed inspections (completed in the past)
+        if (['Passed', 'Failed'].includes(inspection.status)) {
+          return true;
+        }
+
+        // Include pending/scheduled inspections due in next 30 days
+        if (inspection.due_date) {
+          const dueDate = new Date(inspection.due_date);
+          return dueDate <= thirtyDaysFromNow;
+        }
+
+        return false;
+      });
+
+      setAllInspections(filteredInspections);
+      setInspectionsFetched(true);
+    } catch (e) {
+      globalAjaxExceptionHandler(e, {
+        t: t,
+        toast: toast,
+        defaultMessage: t('UNABLE_TO_LOAD_{name}', { name: 'INSPECTIONS' }, { translateProps: true }),
+      });
+    } finally {
+      setInspectionsLoading(false);
+    }
+  };
+
+  // Fetch all repair receipts from all vehicles
+  const fetchAllReceipts = async () => {
+    if (vehicles.length === 0) return;
+
+    try {
+      setReceiptsLoading(true);
+      const repairApi = new VehicleRepairRecordApi();
+
+      // Fetch repair records for all vehicles in parallel
+      const promises = vehicles.map((vehicle) =>
+        repairApi.list(vehicle.id).catch(() => [])
+      );
+      const results = await Promise.all(promises);
+
+      // Flatten and add vehicle info
+      const repairsWithVehicle: RepairWithVehicle[] = results.flatMap(
+        (repairs, index) =>
+          repairs.map((repair) => ({
+            ...repair,
+            vehicle: vehicles[index],
+          }))
+      );
+
+      // Filter: only repairs with receipt documents
+      const receiptsOnly = repairsWithVehicle.filter(
+        (repair) => repair.repair_receipt_document != null
+      );
+
+      setAllReceipts(receiptsOnly);
+      setReceiptsFetched(true);
+    } catch (e) {
+      globalAjaxExceptionHandler(e, {
+        t: t,
+        toast: toast,
+        defaultMessage: t('UNABLE_TO_LOAD_{name}', { name: 'RECEIPTS' }, { translateProps: true }),
+      });
+    } finally {
+      setReceiptsLoading(false);
+    }
+  };
+
+  // Fetch all maintenance reports from all vehicles
+  const fetchAllMaintenanceReports = async () => {
+    if (vehicles.length === 0) return;
+
+    try {
+      setMaintenanceLoading(true);
+      const maintenanceApi = new VehicleMaintenanceReportApi();
+
+      // Fetch maintenance reports for all vehicles in parallel
+      const promises = vehicles.map((vehicle) =>
+        maintenanceApi.list(vehicle.id).catch(() => [])
+      );
+      const results = await Promise.all(promises);
+
+      // Flatten and add vehicle info
+      const reportsWithVehicle: MaintenanceReportWithVehicle[] = results.flatMap(
+        (reports, index) =>
+          reports.map((report) => ({
+            ...report,
+            vehicle: vehicles[index],
+          }))
+      );
+
+      setAllMaintenanceReports(reportsWithVehicle);
+      setMaintenanceFetched(true);
+    } catch (e) {
+      globalAjaxExceptionHandler(e, {
+        t: t,
+        toast: toast,
+        defaultMessage: t('UNABLE_TO_LOAD_{name}', { name: 'MAINTENANCE_REPORTS' }, { translateProps: true }),
+      });
+    } finally {
+      setMaintenanceLoading(false);
+    }
+  };
+
+  // Handle view mode change
+  const handleViewChange = (newView: string) => {
+    const newViewMode = newView as VehicleViewMode;
+    setViewMode(newViewMode);
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('vehicles_view_mode', newViewMode);
+    }
+  };
+
+  // Lazy load data when switching views
+  useEffect(() => {
+    if (viewMode === VehicleViewMode.INSPECTIONS && !inspectionsFetched && vehicles.length > 0) {
+      fetchAllInspections();
+    } else if (viewMode === VehicleViewMode.MAINTENANCE && !maintenanceFetched && vehicles.length > 0) {
+      fetchAllMaintenanceReports();
+    } else if (viewMode === VehicleViewMode.RECEIPTS && !receiptsFetched && vehicles.length > 0) {
+      fetchAllReceipts();
+    }
+  }, [viewMode, vehicles, inspectionsFetched, maintenanceFetched, receiptsFetched]);
 
   useEffectAsync(async () => {
     const vehicleApi = new VehicleApi();
@@ -151,11 +343,50 @@ export default function VehicleList() {
         </ButtonGroup>
       }
     >
-      <DueInspectionsAlert dueInspections={dueInspections} isLoading={isDueInspectionsLoading} />
+      <div className="mb-3">
+        <MultiOptionToggle
+          options={[
+            {
+              value: VehicleViewMode.VEHICLES,
+              label: 'Vehicles',
+              icon: <TruckFrontFill size={16} />,
+              count: vehicles.length,
+            },
+            {
+              value: VehicleViewMode.INSPECTIONS,
+              label: 'Inspections',
+              icon: <ClipboardCheck size={16} />,
+              count: inspectionsFetched ? allInspections.length : undefined,
+            },
+            {
+              value: VehicleViewMode.MAINTENANCE,
+              label: 'Maintenance',
+              icon: <Tools size={16} />,
+              count: maintenanceFetched ? allMaintenanceReports.length : undefined,
+            },
+            {
+              value: VehicleViewMode.RECEIPTS,
+              label: 'Receipts',
+              icon: <Receipt size={16} />,
+              count: receiptsFetched ? allReceipts.length : undefined,
+            },
+          ]}
+          activeOption={viewMode}
+          onOptionChange={handleViewChange}
+          variant="pills"
+          size="md"
+          showCounts={true}
+        />
+      </div>
 
-      <ViewDataTable<VehicleEntity>
-        columnSettingKey={columnSettingKey}
-        columns={[
+      {viewMode === VehicleViewMode.VEHICLES && (
+        <>
+          <DueInspectionsAlert dueInspections={dueInspections} isLoading={isDueInspectionsLoading} />
+
+          <ViewDataTable<VehicleEntity>
+            columnSettingKey={columnSettingKey}
+            onRowClicked={(vehicle) => onViewClick(vehicle.id)}
+            columns={[
           {
             id: 'id',
             name: 'ID',
@@ -302,8 +533,31 @@ export default function VehicleList() {
             right: true,
           },
         ]}
-        items={vehicles}
-      />
+            items={vehicles}
+          />
+        </>
+      )}
+
+      {viewMode === VehicleViewMode.INSPECTIONS && (
+        <AllInspectionsTable
+          inspections={allInspections}
+          loading={inspectionsLoading}
+        />
+      )}
+
+      {viewMode === VehicleViewMode.MAINTENANCE && (
+        <AllMaintenanceReportsTable
+          maintenanceReports={allMaintenanceReports}
+          loading={maintenanceLoading}
+        />
+      )}
+
+      {viewMode === VehicleViewMode.RECEIPTS && (
+        <AllReceiptsTable
+          receipts={allReceipts}
+          loading={receiptsLoading}
+        />
+      )}
 
       <Modal show={showDeleteModal} onHide={handleDeleteCancel}>
         <Modal.Header closeButton>

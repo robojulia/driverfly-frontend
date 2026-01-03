@@ -12,6 +12,7 @@ import { CampaignCommunicationType } from '../../enums/campaigns/campaign-commun
 import { useTranslation } from '../use-translation';
 import { useFeatureFlag } from '../../context/feature-flag-context';
 import { globalAjaxExceptionHandler } from '../../utils/ajax';
+import { BulkLeadDto } from '../../models/campaigns/bulk-lead-upload.dto';
 
 interface UseCampaignCreationProps {
   job: JobEntity;
@@ -38,6 +39,11 @@ export const useCampaignCreation = ({
     );
   const [reachPreview, setReachPreview] = useState<CampaignReachPreviewResponse | null>(null);
   const [loadingReachPreview, setLoadingReachPreview] = useState(false);
+
+  // Bulk lead upload state
+  const [uploadMode, setUploadMode] = useState<'auto' | 'manual'>('auto');
+  const [bulkLeads, setBulkLeads] = useState<BulkLeadDto[]>([]);
+  const [leadsValid, setLeadsValid] = useState(false);
 
   // Campaign validation logic
   const draftCampaigns = campaigns.filter((c) => c.status === CampaignStatus.DRAFT);
@@ -97,19 +103,35 @@ export const useCampaignCreation = ({
   );
 
   const handleCreateCampaign = useCallback(async () => {
-    // Prevent creating duplicate draft campaigns
-    if (hasDraftCampaign) {
-      toast.warning(
-        'You already have a draft campaign for this job. Please manage the existing draft campaign.'
-      );
-      setCampaignModalOpen(false);
-      return;
+    // Validation for auto mode
+    if (uploadMode === 'auto') {
+      // Prevent creating duplicate draft campaigns
+      if (hasDraftCampaign) {
+        toast.warning(
+          'You already have a draft campaign for this job. Please manage the existing draft campaign.'
+        );
+        setCampaignModalOpen(false);
+        return;
+      }
+
+      if (!canCreateCampaign) {
+        toast.error('Cannot create campaign: No eligible candidates available.');
+        setCampaignModalOpen(false);
+        return;
+      }
     }
 
-    if (!canCreateCampaign) {
-      toast.error('Cannot create campaign: No eligible candidates available.');
-      setCampaignModalOpen(false);
-      return;
+    // Validation for manual mode
+    if (uploadMode === 'manual') {
+      if (bulkLeads.length === 0) {
+        toast.error('Please upload at least one lead before creating the campaign.');
+        return;
+      }
+
+      if (!leadsValid) {
+        toast.error('Please fix validation errors before creating the campaign.');
+        return;
+      }
     }
 
     try {
@@ -118,15 +140,15 @@ export const useCampaignCreation = ({
 
       const campaignDto: CreateJobReachoutCampaignDto = {
         jobId: job.id,
-        name: `${
+        name: `${uploadMode === 'manual' ? 'Manual Lead ' : ''}${
           selectedCommunicationType === CampaignCommunicationType.SMS ? 'SMS' : 'Voice'
         } Campaign - ${job.title}`,
-        description: `${
+        description: `${uploadMode === 'manual' ? 'Manual lead upload: ' : ''}${
           selectedCommunicationType === CampaignCommunicationType.SMS ? 'Text messaging' : 'Calling'
-        } qualified candidates for ${job.title} position`,
-        minScore: 50, // Minimum eligibility score
+        } ${uploadMode === 'manual' ? 'leads' : 'qualified candidates'} for ${job.title} position`,
+        minScore: uploadMode === 'manual' ? undefined : 50, // Only set minScore for auto mode
         communicationType: selectedCommunicationType,
-        filters: {
+        filters: uploadMode === 'manual' ? undefined : {
           appliedOnly: false,
           excludeDirectApplicants: false, // Include direct applicants, but with date filtering
           directApplicantDaysLimit: 30, // Only include applicants who applied to this job within last 30 days
@@ -135,7 +157,23 @@ export const useCampaignCreation = ({
 
       const campaign = await campaignsApi.createJobReachoutCampaign(campaignDto);
 
-      toast.success('Campaign created successfully! Redirecting to campaign management...');
+      // If manual mode, upload bulk leads
+      if (uploadMode === 'manual' && bulkLeads.length > 0) {
+        try {
+          await campaignsApi.addBulkLeads(campaign.id, bulkLeads);
+          toast.success(
+            `Campaign created with ${bulkLeads.length} lead${bulkLeads.length !== 1 ? 's' : ''}! Redirecting to campaign management...`
+          );
+        } catch (leadError) {
+          // Campaign was created but leads failed to upload
+          toast.warning(
+            'Campaign created but some leads failed to upload. You can add them later from the campaign page.'
+          );
+          console.error('Failed to upload leads:', leadError);
+        }
+      } else {
+        toast.success('Campaign created successfully! Redirecting to campaign management...');
+      }
 
       // Navigate to the campaign page
       setTimeout(() => {
@@ -165,6 +203,9 @@ export const useCampaignCreation = ({
       setCampaignModalOpen(false);
     }
   }, [
+    uploadMode,
+    bulkLeads,
+    leadsValid,
     hasDraftCampaign,
     canCreateCampaign,
     job.id,
@@ -181,6 +222,20 @@ export const useCampaignCreation = ({
 
   const closeCampaignModal = useCallback(() => {
     setCampaignModalOpen(false);
+  }, []);
+
+  const handleUploadModeChange = useCallback((mode: 'auto' | 'manual') => {
+    setUploadMode(mode);
+    // Reset bulk leads when switching modes
+    if (mode === 'auto') {
+      setBulkLeads([]);
+      setLeadsValid(false);
+    }
+  }, []);
+
+  const handleBulkLeadsChange = useCallback((leads: BulkLeadDto[], isValid: boolean) => {
+    setBulkLeads(leads);
+    setLeadsValid(isValid);
   }, []);
 
   return {
@@ -208,5 +263,12 @@ export const useCampaignCreation = ({
     hasExistingCampaigns,
     hasDraftCampaign,
     canCreateCampaign,
+
+    // Bulk lead upload state
+    uploadMode,
+    handleUploadModeChange,
+    bulkLeads,
+    handleBulkLeadsChange,
+    leadsValid,
   };
 };

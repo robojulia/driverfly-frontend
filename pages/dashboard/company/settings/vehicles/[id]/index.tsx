@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
-import { Button, ButtonGroup, Row, Col, ToggleButton } from 'react-bootstrap';
-import { Pencil, TrashFill } from 'react-bootstrap-icons';
+import { Button, ButtonGroup, Row, Col, ToggleButton, Alert, InputGroup, FormControl, Card } from 'react-bootstrap';
+import { Pencil, TrashFill, Link45deg, ArrowRepeat } from 'react-bootstrap-icons';
 import FullLayout from '../../../../../../components/dashboard/layouts/layout/full-layout';
 import ChildPageLayout from '../../../../../../components/layouts/page/child-page-layout';
 import { DeleteButton } from '../../../../../../components/buttons/delete-button';
@@ -60,6 +60,9 @@ export default function ViewVehicle({ id }) {
   const [activeTab, setActiveTab] = useState('inspections');
   const [maintenanceReports, setMaintenanceReports] = useState<VehicleMaintenanceReportEntity[]>([]);
   const [maintenanceReportToDelete, setMaintenanceReportToDelete] = useState<VehicleMaintenanceReportEntity | null>(null);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const [showRegenerateModal, setShowRegenerateModal] = useState(false);
+  const [isRegenerating, setIsRegenerating] = useState(false);
 
   const backPath = '/dashboard/company/settings/vehicles';
 
@@ -310,6 +313,36 @@ export default function ViewVehicle({ id }) {
     toast.success(t('Notification recipients saved successfully'));
   };
 
+  const handleCopyLink = () => {
+    if (vehicle.public_token && typeof window !== 'undefined') {
+      const publicUrl = `${window.location.protocol}//${window.location.host}/vehicles/public/${vehicle.public_token}`;
+      navigator.clipboard.writeText(publicUrl).then(() => {
+        setLinkCopied(true);
+        toast.success(t('LINK_COPIED'));
+        setTimeout(() => setLinkCopied(false), 3000);
+      }).catch((err) => {
+        console.error('Failed to copy:', err);
+        toast.error('Failed to copy link');
+      });
+    }
+  };
+
+  const handleRegenerateToken = async () => {
+    setIsRegenerating(true);
+    try {
+      const api = new VehicleApi();
+      const updatedVehicle = await api.regeneratePublicToken(+id);
+      setVehicle(updatedVehicle);
+      toast.success(t('TOKEN_REGENERATED'));
+      setShowRegenerateModal(false);
+    } catch (error) {
+      console.error('Error regenerating token:', error);
+      toast.error('Failed to regenerate token');
+    } finally {
+      setIsRegenerating(false);
+    }
+  };
+
   // If vehicle is not loaded, don't render the page
   if (!vehicle || !vehicle.make) return null;
 
@@ -405,6 +438,45 @@ export default function ViewVehicle({ id }) {
               vehicle={vehicle}
               onRegistrationUpdated={(updatedVehicle) => setVehicle(updatedVehicle)}
             />
+
+            {vehicle.is_public && vehicle.public_token && (
+              <Card className="mb-3">
+                <Card.Body>
+                  <h5 className="mb-3">
+                    <Link45deg className="me-2" />
+                    {t('PUBLIC_VEHICLE_URL')}
+                  </h5>
+                  <Alert variant="info" className="mb-3">
+                    <small>{t('VEHICLE_PUBLIC_NOTICE')}</small>
+                  </Alert>
+                  <InputGroup className="mb-3">
+                    <FormControl
+                      readOnly
+                      value={typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.host}/vehicles/public/${vehicle.public_token}` : ''}
+                      onClick={(e) => (e.target as HTMLInputElement).select()}
+                    />
+                    <Button
+                      variant="outline-primary"
+                      onClick={handleCopyLink}
+                    >
+                      {linkCopied ? t('LINK_COPIED') : t('COPY_LINK')}
+                    </Button>
+                  </InputGroup>
+                  {canEdit && (
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      onClick={() => setShowRegenerateModal(true)}
+                      disabled={isRegenerating}
+                    >
+                      <ArrowRepeat className="me-2" />
+                      {isRegenerating ? t('UPLOADING') + '...' : t('REGENERATE_TOKEN')}
+                    </Button>
+                  )}
+                </Card.Body>
+              </Card>
+            )}
+
             <VehicleNotificationRecipients
               assignedDriver={assignedEmployee}
               canEdit={canEdit}
@@ -515,6 +587,14 @@ export default function ViewVehicle({ id }) {
         inspection={completionInspection}
         onClose={() => setCompletionInspection(null)}
         onComplete={handleCompleteInspection}
+      />
+
+      <ConfirmationModal
+        show={showRegenerateModal}
+        title={t('REGENERATE_TOKEN')}
+        message={t('CONFIRM_REGENERATE_TOKEN')}
+        onConfirm={handleRegenerateToken}
+        onCancel={() => setShowRegenerateModal(false)}
       />
 
       <ConfirmationModal

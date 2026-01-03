@@ -56,6 +56,11 @@ export const JobAICampaigns: React.FC<JobAICampaignsProps> = ({
     canCreateCampaign,
     hasDraftCampaign,
     draftCampaigns,
+    uploadMode,
+    handleUploadModeChange,
+    bulkLeads,
+    handleBulkLeadsChange,
+    leadsValid,
   } = useCampaignCreation({
     job,
     campaigns,
@@ -210,6 +215,11 @@ export const JobAICampaigns: React.FC<JobAICampaignsProps> = ({
         eligibilityStats={eligibilityStats}
         creatingCampaign={creatingCampaign}
         onCreateCampaign={handleCreateCampaign}
+        uploadMode={uploadMode}
+        onUploadModeChange={handleUploadModeChange}
+        bulkLeads={bulkLeads}
+        onBulkLeadsChange={handleBulkLeadsChange}
+        leadsValid={leadsValid}
       />
     </div>
   );

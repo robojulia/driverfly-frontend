@@ -52,6 +52,10 @@ export default function EntityForm(props: EntityFormProps) {
     const errorFields = Object.keys(formik.errors);
     if (errorFields.length === 0) return null;
 
+    // Don't show generic validation message if form has been submitted
+    // Server errors are now handled by toast notifications
+    if (formik.submitCount > 0) return null;
+
     return t('Please fill out all required fields to continue');
   };
 

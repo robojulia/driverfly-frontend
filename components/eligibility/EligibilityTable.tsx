@@ -23,7 +23,7 @@ interface EligibilityTableProps {
 
 export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, className = '' }) => {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, isSuperAdmin } = useAuth();
   const [appliedData, setAppliedData] = useState<ApplicantEligibilityResponse | null>(null);
   const [eligibleData, setEligibleData] = useState<ApplicantEligibilityResponse | null>(null);
   const [crossCompanyData, setCrossCompanyData] = useState<ApplicantEligibilityResponse | null>(null);
@@ -38,8 +38,17 @@ export const EligibilityTable: React.FC<EligibilityTableProps> = ({ jobId, class
   const [showFitModal, setShowFitModal] = useState(false);
   const [selectedApplicant, setSelectedApplicant] = useState<ApplicantEligibilityScore | null>(null);
 
-  // Check if user manages multiple companies
-  const hasMultipleCompanies = user?.jwt?.companies && user.jwt.companies.length > 1;
+  // Show cross-company candidates if user manages multiple companies OR is a super admin
+  const hasMultipleCompanies = (user?.jwt?.companies && user.jwt.companies.length > 1) || isSuperAdmin;
+
+  // Debug logging
+  console.log('EligibilityTable Debug:', {
+    isSuperAdmin,
+    super_admin: user?.jwt?.super_admin,
+    companiesLength: user?.jwt?.companies?.length,
+    hasMultipleCompanies,
+    userJwt: user?.jwt
+  });
 
   const loadData = async (newFilters: EligibilityQueryParams = filters) => {
     try {

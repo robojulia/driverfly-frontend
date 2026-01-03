@@ -28,6 +28,8 @@ export interface ViewTableProps<TElement> {
   noDataComponent?: ReactNode;
   customStyles?: TableStyles;
   description?: string;
+  onRowClicked?: (row: TElement, e: React.MouseEvent<Element>) => void;
+  pointerOnHover?: boolean;
 }
 
 export interface ViewTableColumn<TElement> extends TableColumn<TElement> {
@@ -176,6 +178,8 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
               )
             : null
         }
+        onRowClicked={props.onRowClicked}
+        pointerOnHover={props.pointerOnHover !== undefined ? props.pointerOnHover : !!props.onRowClicked}
         subHeader={!props.hideSearch || props.hideSetting}
         subHeaderComponent={
           <>

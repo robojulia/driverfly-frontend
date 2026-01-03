@@ -55,13 +55,11 @@ export function VehicleRepairRecordForm(props: VehicleRepairRecordFormProps) {
     onSubmit: async (values) => {
       const api = new VehicleRepairRecordApi();
       try {
-        // Create a clean DTO with all fields, including the document
+        // Create a clean DTO that explicitly handles the document field
         const dto = {
-          repair_date: values.repair_date,
-          repair_type: values.repair_type,
-          amount: values.amount,
-          description: values.description,
-          repair_receipt_document: values.repair_receipt_document,
+          ...values,
+          // Ensure undefined becomes null
+          repair_receipt_document: values.repair_receipt_document || null,
         };
 
         let repair = null;

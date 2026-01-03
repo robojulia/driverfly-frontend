@@ -5,6 +5,7 @@ export class ReferralSourceEntity {
     id?: number;
     status?: Status;
     referrals?: number;
+    referralAmount?: number;
     name?: string;
     code?: string;
     source?: string;

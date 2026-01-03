@@ -52,6 +52,11 @@ export function CampaignCta({
     hasExistingCampaigns,
     completedCampaigns,
     canCreateCampaign,
+    uploadMode,
+    handleUploadModeChange,
+    bulkLeads,
+    handleBulkLeadsChange,
+    leadsValid,
   } = useCampaignCreation({
     job,
     campaigns,
@@ -185,6 +190,11 @@ export function CampaignCta({
         eligibilityStats={eligibilityStats}
         creatingCampaign={creatingCampaign}
         onCreateCampaign={handleCreateCampaign}
+        uploadMode={uploadMode}
+        onUploadModeChange={handleUploadModeChange}
+        bulkLeads={bulkLeads}
+        onBulkLeadsChange={handleBulkLeadsChange}
+        leadsValid={leadsValid}
       />
     </>
   );

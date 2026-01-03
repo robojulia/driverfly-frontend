@@ -41,16 +41,11 @@ export function VehicleMaintenanceReportForm(props: VehicleMaintenanceReportForm
     onSubmit: async (values) => {
       const api = new VehicleMaintenanceReportApi();
       try {
-        // Create a clean DTO with all fields, including the document
+        // Create a clean DTO that explicitly handles the document field
         const dto = {
-          maintenance_date: values.maintenance_date,
-          maintenance_type: values.maintenance_type,
-          description: values.description,
-          notes: values.notes,
-          odometer_reading: values.odometer_reading,
-          next_service_date: values.next_service_date,
-          next_service_odometer: values.next_service_odometer,
-          maintenance_document: values.maintenance_document,
+          ...values,
+          // Ensure undefined becomes null
+          maintenance_document: values.maintenance_document || null,
         };
 
         let report = null;
@@ -182,15 +177,6 @@ export function VehicleMaintenanceReportForm(props: VehicleMaintenanceReportForm
                 className="mb-3"
                 label="Next Service Date"
                 name="next_service_date"
-                formik={form}
-              />
-
-              <BaseInput
-                className="mb-3"
-                label="Next Service Odometer"
-                name="next_service_odometer"
-                type="number"
-                placeholder="Odometer reading for next service"
                 formik={form}
               />
             </div>

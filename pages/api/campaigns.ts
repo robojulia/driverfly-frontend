@@ -4,6 +4,10 @@ import { CampaignTargetEntity } from '../../models/campaigns/campaign-target.ent
 import { CampaignQueryDto } from '../../models/campaigns/campaign-query.dto';
 import { UpdateCampaignDto } from '../../models/campaigns/update-campaign.dto';
 import { CampaignCommunicationType } from '../../enums/campaigns/campaign-communication-type.enum';
+import {
+  BulkLeadDto,
+  BulkLeadUploadResponse,
+} from '../../models/campaigns/bulk-lead-upload.dto';
 
 export interface CreateJobReachoutCampaignDto {
   jobId: number;
@@ -153,6 +157,16 @@ export default class CampaignsApi extends BaseApi {
   }> {
     const { data } = await this.post(`${this.baseUrl}/${campaignId}/targets/manual`, {
       applicantIds,
+    });
+    return data;
+  }
+
+  async addBulkLeads(
+    campaignId: number,
+    leads: BulkLeadDto[]
+  ): Promise<BulkLeadUploadResponse> {
+    const { data } = await this.post(`${this.baseUrl}/${campaignId}/targets/bulk-leads`, {
+      leads,
     });
     return data;
   }

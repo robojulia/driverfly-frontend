@@ -28,6 +28,7 @@ export class VehicleEntity {
   accessory_other?: string;
   is_governed?: boolean = false;
   is_public?: boolean = false;
+  public_token?: string;
   max_speed?: number;
   vin?: string;
   unit_number?: string;
@@ -38,6 +39,9 @@ export class VehicleEntity {
   current_employee_id?: number;
   last_updated_at?: string | Date;
   registration_expiration_date?: string | Date;
+  inspections?: any[];
+  maintenance_reports?: any[];
+  repairs?: any[];
 
   static yupSchema() {
     return yup.object({

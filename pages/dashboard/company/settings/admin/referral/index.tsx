@@ -149,6 +149,18 @@ export default function ReferralList({ host }: { host: string }) {
 						selector: v => v.referrals,
 					},
 					{
+						id: "referralAmount",
+						name: "AMOUNT_PER_REFERRAL",
+						selector: v => v.referralAmount || 0,
+						cell: v => `$${(v.referralAmount || 0).toFixed(2)}`,
+					},
+					{
+						id: "monthlyTotal",
+						name: "MONTHLY_TOTAL",
+						selector: v => (v.referrals || 0) * (v.referralAmount || 0),
+						cell: v => `$${((v.referrals || 0) * (v.referralAmount || 0)).toFixed(2)}`,
+					},
+					{
 						id: "createdAt",
 						name: "CREATED_AT",
 						selector: v => (typeof v.createdAt == "string" ? new Date(v.createdAt) : v.createdAt).toLocaleString(),
