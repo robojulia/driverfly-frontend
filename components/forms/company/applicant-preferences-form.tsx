@@ -40,7 +40,7 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
     onSubmit: async (values) => {
 
       try {
-        // Send ONLY preference fields to avoid overwriting other forms' changes
+        // Send ONLY preference fields to avoid overwriting other forms' changes 
         const payload = {
           routes: values.routes,
           preferred_location: values.preferred_location,
