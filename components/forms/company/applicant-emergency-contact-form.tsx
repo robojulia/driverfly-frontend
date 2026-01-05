@@ -22,7 +22,10 @@ export function ApplicantEmergencyContactForm(props: ApplicantEmergencyContactFo
     initialValues: entity || ({} as ApplicantEntity),
     enableReinitialize: true,
     onSubmit: async (values) => {
-      const saved = await applicantApi.update(values.id, {
+      // Don't try to update if no entity ID (create mode) - the parent form handles creation
+      if (!entity?.id) return;
+
+      const saved = await applicantApi.update(entity.id, {
         emergency_contact_name: values.emergency_contact_name,
         emergency_contact_number: values.emergency_contact_number,
         emergency_contact_relationship: values.emergency_contact_relationship,

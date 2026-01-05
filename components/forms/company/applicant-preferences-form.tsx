@@ -38,6 +38,8 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
     },
     enableReinitialize: false,
     onSubmit: async (values) => {
+      // Don't try to update if no entity ID (create mode) - the parent form handles creation
+      if (!entity?.id) return;
 
       try {
         // Send ONLY preference fields to avoid overwriting other forms' changes 
@@ -49,7 +51,7 @@ export function ApplicantPreferencesForm(props: ApplicantPreferencesFormProps) {
           other_requirements_other: values.other_requirements_other,
         };
 
-        const saved = await applicantApi.update(values.id, payload as any);
+        const saved = await applicantApi.update(entity.id, payload as any);
 
         // Check if child toasts are suppressed by global save
         if (!(window as any).__SUPPRESS_CHILD_TOASTS__) {
