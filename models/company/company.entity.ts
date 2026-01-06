@@ -2,6 +2,7 @@ import * as yup from 'yup';
 import { Status } from '../../enums/status.enum';
 import { DocumentEntity } from '../documents/document.entity';
 import { UserEntity } from '../user/user.entity';
+import { SubscriptionEntity } from '../billing/subscription.entity';
 
 export class CompanyEntity {
   id?: number;
@@ -27,6 +28,9 @@ export class CompanyEntity {
   company_culture?: string;
   company_benefits?: string;
   specialties?: string[];
+
+  // Billing relationship
+  subscription?: SubscriptionEntity;
 
   users?: UserEntity[];
   parent?: CompanyEntity;

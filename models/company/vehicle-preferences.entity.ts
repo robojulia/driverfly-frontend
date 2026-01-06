@@ -7,6 +7,16 @@ export class VehicleNotificationSetting {
   frequency?: InspectionFrequency;
   notify_driver_email?: boolean;
   notify_driver_sms?: boolean;
+  reminder_days_before?: number;
+  enabled?: boolean;
+}
+
+export class VehicleNotificationRecipients {
+  notify_driver?: boolean;
+  driver_email?: string;
+  driver_phone?: string;
+  third_party_emails?: string[];
+  third_party_phones?: string[];
 }
 
 export class VehiclePreferencesEntity {
@@ -19,10 +29,16 @@ export class VehiclePreferencesEntity {
   maintenance_inspection_reminder_days?: number;
   additional_email_recipients?: string;
 
+  // Per-vehicle notification recipients
+  notification_recipients?: VehicleNotificationRecipients;
+
   // New notification settings structure
   notification_settings?: {
     safety_inspection?: VehicleNotificationSetting;
     maintenance_report?: VehicleNotificationSetting;
+    registration_expiration?: VehicleNotificationSetting;
+    insurance_expiration?: VehicleNotificationSetting;
+    repair_updates?: VehicleNotificationSetting;
     other?: VehicleNotificationSetting;
   };
 

@@ -34,6 +34,26 @@ export interface ConversionTimelineData {
   overallConversionRate: number;
 }
 
+export interface LeadSourceBreakdown {
+  source: string;
+  sourceName?: string;
+  views: number;
+  clicks: number;
+  applications: number;
+  conversionRate: number;
+}
+
+export interface UtmBreakdown {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_content?: string;
+  views: number;
+  clicks: number;
+  applications: number;
+  conversionRate: number;
+}
+
 export interface JobAnalyticsInsights {
   summary: JobConversionMetrics;
   timeline: ConversionTimelineData[];
@@ -196,6 +216,60 @@ export default class JobAnalyticsApi extends BaseApi {
       return Array.isArray(data.data) ? data.data : [];
     } catch (error) {
       console.error('JobAnalyticsApi.getCompanyConversionTimeline failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get lead source breakdown for a job
+   */
+  async getLeadSourceBreakdown(
+    jobId: number,
+    params?: GetJobConversionAnalyticsParams
+  ): Promise<LeadSourceBreakdown[]> {
+    if (!jobId || jobId <= 0) {
+      throw new Error('Invalid job ID provided');
+    }
+
+    const url = this.buildUrl(`${this.baseUrl}/job/${jobId}/lead-source-breakdown`, params);
+
+    try {
+      const { data } = await this.get(url);
+
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to fetch lead source breakdown');
+      }
+
+      return Array.isArray(data.data) ? data.data : [];
+    } catch (error) {
+      console.error('JobAnalyticsApi.getLeadSourceBreakdown failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get UTM parameter breakdown for a job
+   */
+  async getUtmBreakdown(
+    jobId: number,
+    params?: GetJobConversionAnalyticsParams
+  ): Promise<UtmBreakdown[]> {
+    if (!jobId || jobId <= 0) {
+      throw new Error('Invalid job ID provided');
+    }
+
+    const url = this.buildUrl(`${this.baseUrl}/job/${jobId}/utm-breakdown`, params);
+
+    try {
+      const { data } = await this.get(url);
+
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to fetch UTM breakdown');
+      }
+
+      return Array.isArray(data.data) ? data.data : [];
+    } catch (error) {
+      console.error('JobAnalyticsApi.getUtmBreakdown failed:', error);
       throw error;
     }
   }

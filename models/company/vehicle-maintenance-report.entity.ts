@@ -29,16 +29,22 @@ export class VehicleMaintenanceReportEntity {
 
   static yupSchema() {
     return Yup.object().shape({
-      maintenance_date: Yup.date().nullable(),
+      maintenance_date: Yup.date()
+        .required('Maintenance date is required')
+        .typeError('Please enter a valid date'),
       maintenance_type: Yup.string()
-        .oneOf(Object.values(MaintenanceType))
-        .nullable(),
-      description: Yup.string().nullable(),
+        .oneOf(Object.values(MaintenanceType), 'Please select a valid maintenance type')
+        .required('Maintenance type is required'),
+      description: Yup.string()
+        .required('Description is required')
+        .min(3, 'Description must be at least 3 characters'),
       notes: Yup.string().nullable(),
       odometer_reading: Yup.number()
         .min(0, 'Odometer reading must be greater than or equal to 0')
         .nullable(),
-      next_service_date: Yup.date().nullable(),
+      next_service_date: Yup.date()
+        .nullable()
+        .typeError('Please enter a valid date'),
       next_service_odometer: Yup.number()
         .min(0, 'Next service odometer must be greater than or equal to 0')
         .nullable(),

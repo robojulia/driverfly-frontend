@@ -44,6 +44,12 @@ export default class UserApi extends BaseApi {
     return data;
   }
 
+  async checkEmailExists(email: string, excludeUserId?: number): Promise<{ exists: boolean; userId?: number; inCurrentCompany?: boolean }> {
+    const { data } = await this.get(this.buildUrl('user/check-email', { email, excludeUserId }));
+
+    return data;
+  }
+
   async changePassword(dto: ChangePasswordDto): Promise<void> {
     await this.post('user/change-password', { 'change-password': dto });
   }

@@ -307,12 +307,6 @@ export default function ViewVehicle({ id }) {
     }
   };
 
-  const handleSaveNotificationRecipients = (recipients: any) => {
-    // TODO: Implement API call to save notification recipients
-    console.log('Saving notification recipients:', recipients);
-    toast.success(t('Notification recipients saved successfully'));
-  };
-
   const handleCopyLink = () => {
     if (vehicle.public_token && typeof window !== 'undefined') {
       const publicUrl = `${window.location.protocol}//${window.location.host}/vehicles/public/${vehicle.public_token}`;
@@ -478,9 +472,9 @@ export default function ViewVehicle({ id }) {
             )}
 
             <VehicleNotificationRecipients
+              vehicleId={+id}
               assignedDriver={assignedEmployee}
               canEdit={canEdit}
-              onSave={handleSaveNotificationRecipients}
             />
           </Col>
         </Row>

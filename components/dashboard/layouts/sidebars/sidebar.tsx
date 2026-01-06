@@ -243,10 +243,14 @@ function filterItems(values: SidebarItem[], hasPermission): SidebarItem[] {
     .map((i) => {
       let { permissions, items, visible } = i;
 
-      if (visible === false) return null;
+      if (visible === false) {
+        console.log(`❌ Filtered out "${i.text}" - visible is false`);
+        return null;
+      }
 
       if (items) {
         items = filterItems(items, hasPermission);
+        console.log(`🔍 Filtered subitems for "${i.text}":`, items?.length || 0, 'items', items?.map(x => x.text));
         if (!items?.length) return null;
 
         if (items.length === 1)
@@ -269,7 +273,10 @@ function filterItems(values: SidebarItem[], hasPermission): SidebarItem[] {
           permissions = [permissions];
         }
 
-        if (!hasPermission(...permissions)) return null;
+        if (!hasPermission(...permissions)) {
+          console.log(`❌ Filtered out "${i.text}" - no permission for:`, permissions);
+          return null;
+        }
       }
 
       return i;

@@ -19,6 +19,8 @@
     "@mui/material": "^5.5.2",
     "@react-pdf/renderer": "^3.0.0",
     "@sentry/nextjs": "^7.99.0",
+    "@stripe/react-stripe-js": "^5.4.1",
+    "@stripe/stripe-js": "^8.6.0",
     "@types/react-input-mask": "^3.0.6",
     "axios": "^1.6.8",
     "bootstrap": "^5.1.3",
