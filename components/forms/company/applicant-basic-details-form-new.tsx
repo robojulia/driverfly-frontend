@@ -181,7 +181,7 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
       await form.resetForm({
         values: {
           ...new ApplicantEntity(),
-          type: null,
+          type: entity?.type || null, // Preserve type from parent (e.g., COMPANY for manual creation)
           entry_mode: ApplicantEntryMode.MANUALLY_ADDED,
           extras,
           meta
@@ -753,15 +753,22 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
                               const others = (form.values.extras || []).filter((e: any) => e.type !== ApplicantExtras.DOT_VERIFICATION_RESULTS);
                               const updated = { type: ApplicantExtras.DOT_VERIFICATION_RESULTS, value: newTokens } as any;
                               const newExtras = [...others, updated];
-                              const saved = await applicantApi.update(
-                                entity?.id,
-                                {
-                                  first_name: form.values.first_name,
-                                  last_name: form.values.last_name,
-                                  extras: newExtras,
-                                } as any,
-                              );
-                              setEntity?.({ ...entity, ...saved });
+                              
+                              // Only save DOT verification results if we have an existing applicant (not in create mode)
+                              if (entity?.id) {
+                                const saved = await applicantApi.update(
+                                  entity.id,
+                                  {
+                                    first_name: form.values.first_name,
+                                    last_name: form.values.last_name,
+                                    extras: newExtras,
+                                  } as any,
+                                );
+                                setEntity?.({ ...entity, ...saved });
+                              } else {
+                                // In create mode, just update the form state - data will be saved with the main form submission
+                                form.setFieldValue('extras', newExtras);
+                              }
 
                               // Check if records array is empty
                               const data: any = (tokens as any)?.records ?? tokens;
