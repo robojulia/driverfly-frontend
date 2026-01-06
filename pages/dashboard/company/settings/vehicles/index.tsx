@@ -14,6 +14,7 @@ import {
   ClipboardCheck,
   Receipt,
   Tools,
+  BellFill,
 } from 'react-bootstrap-icons';
 
 import VehicleApi from '../../../../api/vehicle';
@@ -38,6 +39,7 @@ import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
 import OverlyPopover from '../../../../../components/popover/overly-popover';
 import Link from 'next/link';
 import DueInspectionsAlert from '../../../../../components/vehicles/DueInspectionsAlert';
+import VehicleNotificationSettings from '../../../../../components/vehicles/VehicleNotificationSettings';
 import MultiOptionToggle from '../../../../../components/shared/MultiOptionToggle';
 import { AllInspectionsTable, InspectionWithVehicle } from '../../../../../components/vehicle/AllInspectionsTable';
 import { AllReceiptsTable, RepairWithVehicle } from '../../../../../components/vehicle/AllReceiptsTable';
@@ -60,6 +62,7 @@ export default function VehicleList() {
   const [employees, setEmployees] = useState<Record<number, EmployeeEntity>>({});
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [vehicleToDelete, setVehicleToDelete] = useState<VehicleEntity | null>(null);
+  const [showNotificationSettings, setShowNotificationSettings] = useState(false);
 
   // View mode state
   const [viewMode, setViewMode] = useState<VehicleViewMode>(() => {
@@ -339,6 +342,10 @@ export default function VehicleList() {
       desciption="VEHICLES_DESC"
       actions={
         <ButtonGroup>
+          <Button variant="outline-primary" onClick={() => setShowNotificationSettings(true)}>
+            <BellFill size={16} className="me-2" />
+            {t('Notification Settings')}
+          </Button>
           {canCreate && <Button onClick={onAddClick}>{t('Add Equipment')}</Button>}
         </ButtonGroup>
       }
@@ -584,6 +591,13 @@ export default function VehicleList() {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* Notification Settings Modal */}
+      <VehicleNotificationSettings
+        show={showNotificationSettings}
+        onHide={() => setShowNotificationSettings(false)}
+        canEdit={canCreate}
+      />
     </PageLayout>
   );
 }

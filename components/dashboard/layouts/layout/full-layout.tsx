@@ -32,6 +32,7 @@ import {
   MegaphoneFill,
   Lightning,
   BookFill,
+  CreditCard,
 } from 'react-bootstrap-icons';
 import CompanyProfileNav from '../header/company-profile-nav';
 import { useAuth } from '../../../../hooks/use-auth';
@@ -48,6 +49,9 @@ const FullLayout = ({ children }) => {
   const { user, isSuperAdmin, company, isCompanyAdmin } = useAuth();
 
   console.log('FullLayout', { user, isSuperAdmin, isCompanyAdmin });
+  console.log('🔍 DEBUG - isCompanyAdmin value:', isCompanyAdmin, 'type:', typeof isCompanyAdmin);
+  console.log('🔍 DEBUG - JWT payload:', user?.jwt);
+  console.log('🔍 DEBUG - company_admin in JWT:', user?.jwt?.company_admin);
 
   if (!user?.company) {
     return <></>;
@@ -145,6 +149,13 @@ const FullLayout = ({ children }) => {
           icon: Building,
           text: 'company',
           permissions: 'CanViewCompany',
+        },
+        {
+          pathname: '/dashboard/company/settings/billing',
+          icon: CreditCard,
+          text: 'BILLING',
+          permissions: 'CanViewCompany',
+          startsWith: true,
         },
         {
           pathname: '/dashboard/company/settings/locations',

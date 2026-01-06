@@ -66,23 +66,33 @@ export function VehicleMaintenanceReportForm(props: VehicleMaintenanceReportForm
         if (onSaveComplete) onSaveComplete(report);
       } catch (e) {
         console.error('Unable to save entity', e);
-        globalAjaxExceptionHandler(e, {
-          formik: form,
-          toast: toast,
-          t: t,
-          defaultMessage: t(
-            'Forms.FAIL_{action}_{name}',
-            { action: action, name: 'MAINTENANCE_REPORT' },
-            { translateProps: true }
-          ),
-        });
+
+        // Check if it's a 404 error (endpoint not found)
+        if (e?.response?.status === 404) {
+          toast.error(
+            'The maintenance report upload endpoint is not available. Please contact your system administrator.'
+          );
+        } else {
+          // Use the global handler for other errors
+          globalAjaxExceptionHandler(e, {
+            formik: form,
+            toast: toast,
+            t: t,
+            defaultMessage: t(
+              'Forms.FAIL_{action}_{name}',
+              { action: action, name: 'MAINTENANCE_REPORT' },
+              { translateProps: true }
+            ),
+          });
+        }
+
         if (onSaveError) onSaveError(e);
       }
     },
   });
 
-  // No required fields - allow submission as long as form is valid
-  const shouldForbidSubmit = !form.isValid;
+  // Require essential fields before submission
+  const shouldForbidSubmit = !form.isValid || form.isSubmitting;
 
   // Warn user about unsaved changes when navigating away
   const unsavedChangesWarning = useUnsavedChangesWarning({
@@ -111,6 +121,7 @@ export function VehicleMaintenanceReportForm(props: VehicleMaintenanceReportForm
                 label="Maintenance Date"
                 name="maintenance_date"
                 formik={form}
+                required
               />
 
               <BaseSelect
@@ -121,6 +132,7 @@ export function VehicleMaintenanceReportForm(props: VehicleMaintenanceReportForm
                 enumType={MaintenanceType}
                 labelPrefix="MaintenanceType"
                 formik={form}
+                required
               />
 
               <BaseInput
@@ -139,6 +151,7 @@ export function VehicleMaintenanceReportForm(props: VehicleMaintenanceReportForm
                 rows={4}
                 placeholder="Enter maintenance description"
                 formik={form}
+                required
               />
 
               <BaseTextArea

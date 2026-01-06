@@ -23,6 +23,8 @@ import { ConversionFunnelChart } from './ConversionFunnelChart';
 import { InsightsPanel } from './InsightsPanel';
 import { AnalyticsAlerts } from './AnalyticsAlerts';
 import { JobComparison } from './JobComparison';
+import { LeadSourceBreakdownChart } from './LeadSourceBreakdownChart';
+import { UtmBreakdownChart } from './UtmBreakdownChart';
 
 interface JobAnalyticsDashboardProps {
   job: JobEntity;
@@ -45,10 +47,16 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
     [selectedPeriod]
   );
 
-  const { metrics, timeline, loading, error, lastUpdated, refetch } = useJobAnalyticsData(
-    job.id,
-    params
-  );
+  const {
+    metrics,
+    timeline,
+    leadSourceBreakdown,
+    utmBreakdown,
+    loading,
+    error,
+    lastUpdated,
+    refetch,
+  } = useJobAnalyticsData(job.id, params);
 
   const handlePeriodChange = (period: TimePeriod) => {
     setSelectedPeriod(period);
@@ -244,6 +252,37 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
             </Card.Header>
             <Card.Body>
               <ConversionFunnelChart metrics={metrics} />
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Lead Source and UTM Breakdown */}
+      <Row className="mb-4">
+        <Col lg={6} className="mb-4">
+          <Card className="h-100">
+            <Card.Header>
+              <Card.Title className="mb-0">
+                <GraphUpArrow className="me-2" />
+                Lead Source Breakdown
+              </Card.Title>
+            </Card.Header>
+            <Card.Body>
+              <LeadSourceBreakdownChart data={leadSourceBreakdown} />
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col lg={6} className="mb-4">
+          <Card className="h-100">
+            <Card.Header>
+              <Card.Title className="mb-0">
+                <GraphUpArrow className="me-2" />
+                UTM Parameter Breakdown
+              </Card.Title>
+            </Card.Header>
+            <Card.Body>
+              <UtmBreakdownChart data={utmBreakdown} />
             </Card.Body>
           </Card>
         </Col>
