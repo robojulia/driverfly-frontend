@@ -5,7 +5,7 @@ import { JobEquipmentType } from "../../enums/jobs/job-equipment-type.enum";
 export class ApplicantEquipmentEntity {
     type?: JobEquipmentType;
     type_other?: string;
-    quantity?: number;
+    quantity?: number = 1; // Default to 1 to satisfy backend validation
     make?: string;
     model?: string;
     year?: number;
