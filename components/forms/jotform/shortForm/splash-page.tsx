@@ -22,7 +22,9 @@ export function SplashPage() {
       if (photo?.id) {
         try {
           const api = new DocumentApi();
-          const document = await api.getSignedUrl(photo.id);
+          // Use getPhoto instead of getSignedUrl - it calls the public endpoint
+          // that doesn't require authentication (for driver application pages)
+          const document = await api.getPhoto(photo.id);
           setCompanyLogoUrl(document?.path || '');
         } catch (error) {
           console.error('Error fetching company logo:', error);
