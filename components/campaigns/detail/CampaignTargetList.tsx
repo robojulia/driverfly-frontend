@@ -1,7 +1,15 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { Row, Col, Button, Table, Badge, Modal, ModalHeader, ModalBody } from 'reactstrap';
-import { People, ExclamationTriangle } from 'react-bootstrap-icons';
+import {
+  People,
+  ExclamationTriangle,
+  CheckCircleFill,
+  XCircleFill,
+  QuestionCircleFill,
+  LightbulbFill,
+  ChatLeftTextFill,
+} from 'react-bootstrap-icons';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import { CampaignEntity } from '../../../models/campaigns/campaign.entity';
@@ -9,6 +17,20 @@ import { CampaignTargetEntity } from '../../../models/campaigns/campaign-target.
 import { CampaignStatus } from '../../../enums/campaigns/campaign-status.enum';
 import { CampaignTargetType } from '../../../enums/campaigns/campaign-target-type.enum';
 import { CampaignTargetStatus } from '../../../enums/campaigns/campaign-target-status.enum';
+
+// AI Campaign Call Summary interface
+interface CampaignCallSummary {
+  summary: string;
+  keyPoints: string[];
+  outcome: 'positive' | 'negative' | 'neutral' | 'unclear';
+  confidence: 'high' | 'medium' | 'low';
+  recommendedActions?: string[];
+  metadata?: {
+    generatedAt?: string;
+    conversationLength?: number;
+    tokensUsed?: number;
+  };
+}
 
 interface CampaignTargetListProps {
   campaign: CampaignEntity;
@@ -41,7 +63,47 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
 }) => {
   const router = useRouter();
   const [hoveredButton, setHoveredButton] = React.useState<number | null>(null);
-  const [showResultsModal, setShowResultsModal] = React.useState(false);
+  const [selectedTarget, setSelectedTarget] = React.useState<CampaignTargetEntity | null>(null);
+
+  // Helper to get outcome badge color
+  const getOutcomeBadgeColor = (outcome?: string) => {
+    switch (outcome) {
+      case 'positive':
+        return 'success';
+      case 'negative':
+        return 'danger';
+      case 'neutral':
+        return 'secondary';
+      default:
+        return 'warning';
+    }
+  };
+
+  // Helper to get outcome icon
+  const getOutcomeIcon = (outcome?: string) => {
+    switch (outcome) {
+      case 'positive':
+        return <CheckCircleFill className="me-1" />;
+      case 'negative':
+        return <XCircleFill className="me-1" />;
+      default:
+        return <QuestionCircleFill className="me-1" />;
+    }
+  };
+
+  // Helper to get confidence badge color
+  const getConfidenceBadgeColor = (confidence?: string) => {
+    switch (confidence) {
+      case 'high':
+        return 'success';
+      case 'medium':
+        return 'warning';
+      case 'low':
+        return 'secondary';
+      default:
+        return 'light';
+    }
+  };
 
   const handleTargetClick = (target: CampaignTargetEntity) => {
     if (target.targetType === CampaignTargetType.APPLICANT) {
@@ -163,7 +225,7 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
                           style={getViewResultsStyle(target.id)}
                           onMouseEnter={() => setHoveredButton(target.id)}
                           onMouseLeave={() => setHoveredButton(null)}
-                          onClick={() => setShowResultsModal(true)}
+                          onClick={() => setSelectedTarget(target)}
                           title="View campaign results for this target"
                         >
                           View Results
@@ -246,14 +308,148 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
       )}
 
       {/* Communication Summary Modal */}
-      <Modal isOpen={showResultsModal} toggle={() => setShowResultsModal(false)} centered>
-        <ModalHeader toggle={() => setShowResultsModal(false)}>
-          Communication Summary
+      <Modal isOpen={!!selectedTarget} toggle={() => setSelectedTarget(null)} centered size="lg">
+        <ModalHeader toggle={() => setSelectedTarget(null)}>
+          <ChatLeftTextFill className="me-2" />
+          Communication Summary - {selectedTarget?.name || 'Unknown'}
         </ModalHeader>
         <ModalBody>
-          <div className="text-center py-4">
-            <p className="text-muted mb-0">Coming soon</p>
-          </div>
+          {selectedTarget && (
+            <>
+              {/* Call Outcome Section */}
+              <div className="mb-4">
+                <h6 className="fw-semibold text-muted mb-3">Call Outcome</h6>
+                <div className="d-flex gap-3 align-items-center">
+                  <Badge color={selectedTarget.failed ? 'danger' : 'success'} className="px-3 py-2">
+                    {selectedTarget.failed ? 'Failed' : 'Success'}
+                  </Badge>
+                  {selectedTarget.metadata?.outcomeReason && (
+                    <span className="text-muted">
+                      Reason: <strong>{selectedTarget.metadata.outcomeReason}</strong>
+                    </span>
+                  )}
+                  {selectedTarget.processedAt && (
+                    <span className="text-muted small">
+                      {formatDate(selectedTarget.processedAt)}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* AI Summary Section */}
+              {selectedTarget.metadata?.campaignCallSummary ? (
+                <>
+                  {/* Summary */}
+                  <div className="mb-4">
+                    <h6 className="fw-semibold text-muted mb-2">
+                      <LightbulbFill className="me-2 text-warning" />
+                      AI Summary
+                    </h6>
+                    <div className="bg-light p-3 rounded border">
+                      <p className="mb-2">
+                        {(selectedTarget.metadata.campaignCallSummary as CampaignCallSummary).summary}
+                      </p>
+                      <div className="d-flex gap-2">
+                        <Badge
+                          color={getOutcomeBadgeColor(
+                            (selectedTarget.metadata.campaignCallSummary as CampaignCallSummary).outcome
+                          )}
+                        >
+                          {getOutcomeIcon(
+                            (selectedTarget.metadata.campaignCallSummary as CampaignCallSummary).outcome
+                          )}
+                          {(selectedTarget.metadata.campaignCallSummary as CampaignCallSummary).outcome?.toUpperCase()}
+                        </Badge>
+                        <Badge
+                          color={getConfidenceBadgeColor(
+                            (selectedTarget.metadata.campaignCallSummary as CampaignCallSummary).confidence
+                          )}
+                          className="text-dark"
+                        >
+                          {(selectedTarget.metadata.campaignCallSummary as CampaignCallSummary).confidence?.toUpperCase()}{' '}
+                          confidence
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Key Points */}
+                  {(selectedTarget.metadata.campaignCallSummary as CampaignCallSummary).keyPoints?.length > 0 && (
+                    <div className="mb-4">
+                      <h6 className="fw-semibold text-muted mb-2">Key Points</h6>
+                      <ul className="mb-0">
+                        {(selectedTarget.metadata.campaignCallSummary as CampaignCallSummary).keyPoints.map(
+                          (point, index) => (
+                            <li key={index} className="mb-1">
+                              {point}
+                            </li>
+                          )
+                        )}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Recommended Actions */}
+                  {(selectedTarget.metadata.campaignCallSummary as CampaignCallSummary).recommendedActions?.length >
+                    0 && (
+                    <div className="mb-4">
+                      <h6 className="fw-semibold text-muted mb-2">Recommended Actions</h6>
+                      <ul className="mb-0">
+                        {(
+                          selectedTarget.metadata.campaignCallSummary as CampaignCallSummary
+                        ).recommendedActions?.map((action, index) => (
+                          <li key={index} className="mb-1 text-primary">
+                            {action}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Metadata */}
+                  {(selectedTarget.metadata.campaignCallSummary as CampaignCallSummary).metadata && (
+                    <div className="text-muted small border-top pt-3">
+                      <span>
+                        Generated:{' '}
+                        {(selectedTarget.metadata.campaignCallSummary as CampaignCallSummary).metadata
+                          ?.generatedAt
+                          ? formatDate(
+                              (selectedTarget.metadata.campaignCallSummary as CampaignCallSummary).metadata
+                                ?.generatedAt as string
+                            )
+                          : 'Unknown'}
+                      </span>
+                      {(selectedTarget.metadata.campaignCallSummary as CampaignCallSummary).metadata
+                        ?.conversationLength && (
+                        <span className="ms-3">
+                          Conversation Items:{' '}
+                          {
+                            (selectedTarget.metadata.campaignCallSummary as CampaignCallSummary).metadata
+                              ?.conversationLength
+                          }
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-center py-4">
+                  <QuestionCircleFill size={32} className="text-muted mb-3" />
+                  <p className="text-muted mb-0">
+                    No AI summary available for this communication.
+                  </p>
+                  {selectedTarget.metadata?.entities && (
+                    <div className="mt-3 text-start">
+                      <h6 className="fw-semibold text-muted mb-2">Collected Data</h6>
+                      <pre className="bg-light p-3 rounded small">
+                        {JSON.stringify(selectedTarget.metadata.entities, null, 2)}
+                      </pre>
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          )}
         </ModalBody>
       </Modal>
     </>
