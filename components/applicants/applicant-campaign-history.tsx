@@ -194,7 +194,7 @@ export function ApplicantCampaignHistory({ applicant }: ApplicantCampaignHistory
                         <div className="fw-semibold">{item.campaign.name}</div>
                         <small className="text-muted">
                           <CalendarEvent className="me-1" size={12} />
-                          {formatDate(item.target.processedAt || item.target.createdAt)}
+                          {formatDate(item.target.processedAt)}
                         </small>
                       </div>
                       <div className="d-flex gap-2 me-3">
