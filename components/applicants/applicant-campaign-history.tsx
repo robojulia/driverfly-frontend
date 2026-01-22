@@ -121,7 +121,7 @@ export function ApplicantCampaignHistory({ applicant }: ApplicantCampaignHistory
           </h5>
         </Card.Header>
         <Card.Body className="text-center py-5">
-          <LoaderIcon />
+          <LoaderIcon isLoading={loading} />
           <p className="text-muted mt-3">Loading campaign history...</p>
         </Card.Body>
       </Card>
