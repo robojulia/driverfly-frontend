@@ -135,6 +135,17 @@ export default class CampaignsApi extends BaseApi {
     return data || [];
   }
 
+  /**
+   * Get all campaigns where the applicant was included as a target
+   * Returns campaign information along with target details (including AI summary results)
+   */
+  async findByApplicantId(
+    applicantId: number
+  ): Promise<{ campaign: CampaignEntity; target: CampaignTargetEntity }[]> {
+    const { data } = await this.get(`${this.baseUrl}/applicants/${applicantId}`);
+    return data || [];
+  }
+
   async deleteTarget(
     campaignId: number,
     targetId: number

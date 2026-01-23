@@ -34,6 +34,7 @@ import ApplicantSafetyBackground from '../../../../../components/applicants/appl
 import ViewApplicantDetail from '../../../../../components/applicants/applicant-view-details';
 import ApplicantWorkHistory from '../../../../../components/applicants/applicant-work-history';
 import { ApplicantMessages } from '../../../../../components/applicants/applicant-messages';
+import { ApplicantCampaignHistory } from '../../../../../components/applicants/applicant-campaign-history';
 import { ApplicantDocumentType } from '../../../../../enums/applicants/applicant-document-type.enum';
 import { ApplicantOnBoardingChecklist } from '../../../../../enums/applicants/applicant-onboarding-checklist.enum';
 import CompanyApi from '../../../../api/company';
@@ -530,6 +531,14 @@ export default function ViewApplicant({ id }) {
           <Row className="px-2">
             <Col md="12" className="p-0 px-lg-2">
               <ApplicantMessages applicant={applicant} />
+            </Col>
+          </Row>
+
+          {/* AI Campaign History */}
+          <div id="campaign-history" />
+          <Row className="px-2">
+            <Col md="12" className="p-0 px-lg-2">
+              <ApplicantCampaignHistory applicant={applicant} />
             </Col>
           </Row>
 

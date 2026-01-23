@@ -11,17 +11,25 @@ export function SourceBreakdownChart() {
     let company = 0;
     let jobApply = 0;
     let autoRecruit = 0;
+    let jobBoard = 0;
+    let socialMedia = 0;
     state.applicants.forEach((a) => {
       // DRIV-144 - Count all applicants regardless of hired status
-      ({
+      const typeHandlers = {
         [ApplicantType.DHA]: () => dha++,
         [ApplicantType.USER]: () => user++,
         [ApplicantType.COMPANY]: () => company++,
         [ApplicantType.DIRECT_JOB_APPLY]: () => jobApply++,
         [ApplicantType.AUTO_RECRUIT]: () => autoRecruit++,
-      })[a.type]();
+        [ApplicantType.JOB_BOARD]: () => jobBoard++,
+        [ApplicantType.SOCIAL_MEDIA]: () => socialMedia++,
+      };
+      const handler = typeHandlers[a.type];
+      if (handler) {
+        handler();
+      }
     });
-    return [dha, user, company, jobApply, autoRecruit];
+    return [dha, user, company, jobApply, autoRecruit, jobBoard, socialMedia];
   };
 
   const data = useMemo(() => {
@@ -40,6 +48,8 @@ export function SourceBreakdownChart() {
     'UPLOADED',
     'DIRECT_JOB_APPLY',
     'AUTO_RECRUIT',
+    'JOB_BOARD',
+    'SOCIAL_MEDIA',
   ].map((v) => `SourceBreakdownChartLabel.${v}`);
 
   return (
