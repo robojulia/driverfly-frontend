@@ -52,7 +52,7 @@ export const useCampaignCreation = ({
   );
   const hasExistingCampaigns = campaigns.length > 0;
   const hasDraftCampaign = draftCampaigns.length > 0;
-  const canCreateCampaign = eligibilityStats?.eligibleApplicants > 0;
+  const canCreateCampaign = (eligibilityStats?.eligibleFromSystem > 0) || (eligibilityStats?.eligibleApplicants > 0);
 
   const fetchReachPreview = useCallback(
     async (communicationType: CampaignCommunicationType) => {

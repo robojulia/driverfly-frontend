@@ -69,7 +69,7 @@ export function PhoneNumber() {
   );
   const [isCreatingJobApplication, setIsCreatingJobApplication] = useState<boolean>(false);
   const [showAlreadyAppliedAlert, setShowAlreadyAppliedAlert] = useState<boolean>(false);
-  const [shouldPrefillApplication, setShouldPrefillApplication] = useState<boolean>(false);
+  const [shouldPrefillApplication, setShouldPrefillApplication] = useState<boolean>(true);
   const [debugInfo, setDebugInfo] = useState<string[]>([]);
 
   // Helper function to analyze applicant scenario
@@ -415,9 +415,12 @@ export function PhoneNumber() {
         setIsEditingExistingApplicant(false); // This is a new applicant with prefilled data
       } else {
         // Use existing profile for same company
+        // For returning applicants to the same company, we already know they've applied before
+        // Auto-set already_applied_to_company to true to avoid asking redundant questions
         setApplicant({
           ...applicantProfile,
           documents: applicantProfile.documents || [], // Ensure documents are explicitly set
+          already_applied_to_company: true, // Auto-set for same company returning applicants
         });
         setApplicantExtras(applicantProfile.extras || []); // Set the extras from the existing profile
         setIsEditingExistingApplicant(true);
@@ -496,7 +499,7 @@ export function PhoneNumber() {
       case 'SAME_COMPANY_NEW_JOB':
         return t('EXISTING_PROFILE_FOUND');
       case 'DIFFERENT_COMPANY_PREFILL':
-        return t('PREVIOUS_APPLICATION_FOUND');
+        return 'Previous Application Found';
       default:
         return t('EXISTING_ACCOUNT_FOUND');
     }

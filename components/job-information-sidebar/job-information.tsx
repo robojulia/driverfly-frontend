@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { BlockquoteLeft, CalendarRange, CashCoin, ClockFill, CollectionFill, CurrencyDollar, ExplicitFill, GearFill, GearWideConnected, GeoAltFill, Joystick, PersonBadgeFill, PersonWorkspace, Truck, Wallet2 } from 'react-bootstrap-icons';
 import jobDetailContext from "../../context/job-detail-context";
+import { JobPayMethod } from "../../enums/jobs/job-pay-method.enum";
 import { MvrType } from "../../enums/users/mvr-type.enum";
 import { useTranslation } from "../../hooks/use-translation";
 import { JobDetailProps } from "../../types/job/job-detail-props.type";
@@ -156,6 +157,41 @@ export default function JonInformation({ job }: JobDetailProps) {
                                 <div className="value text-muted">
                                     <ShowEnumFromString labelPrefix="JobPayMethod" value={job.pay_method} />
                                 </div>
+                                {/* Pay method specific details */}
+                                {job.pay_method === JobPayMethod.RATE_PER_MILE && (job.min_rate || job.max_rate) && (
+                                    <div className="value text-muted mt-1">
+                                        <small>
+                                            <CurrencyDollar />{job.min_rate || 0} - <CurrencyDollar />{job.max_rate || 0} {t('per_mile')}
+                                            {(job.min_miles || job.max_miles) && (
+                                                <span> ({job.min_miles || 0} - {job.max_miles || 0} {t('miles_per_week')})</span>
+                                            )}
+                                        </small>
+                                    </div>
+                                )}
+                                {job.pay_method === JobPayMethod.HOURLY && (job.min_rate || job.max_rate) && (
+                                    <div className="value text-muted mt-1">
+                                        <small>
+                                            <CurrencyDollar />{job.min_rate || 0} - <CurrencyDollar />{job.max_rate || 0} {t('per_hour')}
+                                            {(job.min_hours || job.max_hours) && (
+                                                <span> ({job.min_hours || 0} - {job.max_hours || 0} {t('hours_per_week')})</span>
+                                            )}
+                                        </small>
+                                    </div>
+                                )}
+                                {job.pay_method === JobPayMethod.SALARY && (job.min_salary || job.max_salary) && (
+                                    <div className="value text-muted mt-1">
+                                        <small>
+                                            <CurrencyDollar />{(job.min_salary || 0).toLocaleString()} - <CurrencyDollar />{(job.max_salary || 0).toLocaleString()} {t('per_year')}
+                                        </small>
+                                    </div>
+                                )}
+                                {(job.pay_method === JobPayMethod.PERCENT_PER_MOVE || job.pay_method === JobPayMethod.PERCENT_PER_WEIGHT) && (job.min_percent || job.max_percent) && (
+                                    <div className="value text-muted mt-1">
+                                        <small>
+                                            {job.min_percent || 0}% - {job.max_percent || 0}%
+                                        </small>
+                                    </div>
+                                )}
                             </div>
                         </li>
 

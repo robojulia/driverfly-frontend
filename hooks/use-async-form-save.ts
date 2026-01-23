@@ -11,8 +11,8 @@ interface AsyncFormSaveHook {
 
 export const useAsyncFormSave = (
   applicantId: number | undefined,
-  stepNumber: number,
-  isHired?: boolean
+  _stepNumber?: number, // Kept for backward compatibility but no longer used - step logic handled by withAsyncSave HOC
+  _isHired?: boolean // Kept for backward compatibility but no longer used
 ): AsyncFormSaveHook => {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
@@ -27,16 +27,14 @@ export const useAsyncFormSave = (
 
   const saveFormData = useCallback(
     async (formData: any) => {
-      // Only save after the initial checkpoint (step 9)
-      if (!applicantId || stepNumber <= 9) {
+      // Require applicantId to save - the step check is now handled by the withAsyncSave HOC's shouldSave logic
+      // which accounts for both full form (steps >= 10) and longform page (applicant.id exists)
+      if (!applicantId) {
         return;
       }
 
-      // Skip auto-save for hired applicants to avoid backend validation errors
-      if (isHired) {
-        console.log('Skipping auto-save for hired applicant');
-        return;
-      }
+      // Note: Removed is_hired check to allow hired applicants to update their own applications
+      // The is_hired check in the company dashboard (for admins) is sufficient
 
       // If a save is already in progress, cancel it before starting a new one.
       if (isSaving) {
@@ -69,7 +67,7 @@ export const useAsyncFormSave = (
         }
       }
     },
-    [applicantId, stepNumber, isSaving, cancel, isHired]
+    [applicantId, isSaving, cancel]
   );
 
   return {

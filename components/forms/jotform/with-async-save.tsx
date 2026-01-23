@@ -20,13 +20,16 @@ export function withAsyncSave<P extends object>(
       state: { applicant, applicantExtras, steps },
     }: JotFormContextType = useContext(JotformContext);
 
-    // Only enable async saving for steps after the initial checkpoint (step 9)
-    const shouldSave = steps >= 10; // Long form starts after "hear-about-us" checkpoint
+    // Enable async saving when:
+    // 1. For full form: steps >= 10 (after the "hear-about-us" checkpoint)
+    // 2. For longform page: applicant already exists (has an ID), meaning they've passed the checkpoint
+    // The presence of applicant.id indicates this is a returning applicant who has already completed the initial steps
+    const shouldSave = steps >= 10 || !!applicant?.id;
 
     const { saveFormData, isSaving, lastSaved, saveError } = useAsyncFormSave(
       applicant?.id, // Use applicant ID, not UUID token
-      steps,
-      applicant?.is_hired // Pass is_hired flag to prevent saves for hired applicants
+      steps
+      // Note: Removed is_hired parameter - applicants can update their own applications even if hired
     );
 
     // Trigger save when applicant or extras data changes (and we're past checkpoint)

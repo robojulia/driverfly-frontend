@@ -9,14 +9,18 @@ import { useContext, useEffect } from 'react';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { FormActions } from '../form-buttons';
 import { Input } from '../../../shared/dha';
+import { useAsyncFormSave } from '../../../../hooks/use-async-form-save';
 
 export function CdlExperience() {
   const {
-    state: { applicant, applicantExtras },
+    state: { applicant, applicantExtras, steps },
     method: { setApplicant, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
   const { t } = useTranslation();
+
+  // Initialize async form saving
+  const { saveFormData } = useAsyncFormSave(applicant?.id, steps);
 
   const form = useFormik({
     initialValues: new CdlDto(),
@@ -24,10 +28,17 @@ export function CdlExperience() {
     onSubmit: (values) => {
       const { license_type, years_cdl_experience } = values;
 
-      setApplicant({
+      const updatedApplicant = {
         ...applicant,
         license_type,
         years_cdl_experience,
+      };
+
+      setApplicant(updatedApplicant);
+
+      // Save form data to persist changes
+      saveFormData({
+        applicant: updatedApplicant,
       });
 
       stepNext();

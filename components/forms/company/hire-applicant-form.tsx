@@ -10,8 +10,10 @@ import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import { HireApplicantDto } from "../../../models/applicant/hire-applicant.dto";
 import { JobEntity } from "../../../models/job/job.entity";
 import { SearchCompanyJobsDto } from "../../../models/job/search-company-jobs.dto";
+import { VehicleEntity } from "../../../models/company/vehicle.entity";
 import EmployeeApi from "../../../pages/api/employee";
 import JobApi from "../../../pages/api/job";
+import VehicleApi from "../../../pages/api/vehicle";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { useEffectAsync } from "../../../utils/react";
 import EntityForm from "../../layouts/page/entity-form";
@@ -20,6 +22,33 @@ import BaseSelect from "../base-select";
 import { BaseFormProps } from "./base-form-props";
 import { JobForm } from "./job-form";
 import { ExpiryStatus } from "../../../enums/jobs/expiry-status.enum";
+import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
+import { VehicleType } from "../../../enums/vehicles/vehicle-type.enum";
+import { ApplicantEquipmentEntity } from "../../../models/applicant/applicant-equipment.entity";
+
+// Map JobEquipmentType to VehicleType for converting owner operator equipment to vehicles
+const mapEquipmentTypeToVehicleType = (equipmentType: JobEquipmentType): { type: VehicleType; type_other?: string } => {
+  const mapping: Record<string, VehicleType> = {
+    [JobEquipmentType.TRACTOR_ONLY]: VehicleType.TRACTOR,
+    [JobEquipmentType.TRACTOR_TRAILER]: VehicleType.TRACTOR,
+    [JobEquipmentType.HOTSHOT]: VehicleType.HOT_SHOT_TRUCK,
+    [JobEquipmentType.DUMP_TRUCK]: VehicleType.DUMP_TRUCK,
+    [JobEquipmentType.BOXTRUCK]: VehicleType.BOX_TRUCK_REGULAR,
+    [JobEquipmentType.COURIER_VAN]: VehicleType.VAN,
+    [JobEquipmentType.DRY_VAN]: VehicleType.VAN,
+    [JobEquipmentType.REEFER]: VehicleType.BOX_TRUCK_REFRIGERATOR,
+  };
+
+  if (mapping[equipmentType]) {
+    return { type: mapping[equipmentType] };
+  }
+
+  // For equipment types without a direct mapping, use OTHER with the equipment type as description
+  return {
+    type: VehicleType.OTHER,
+    type_other: equipmentType.replace(/_/g, ' ')
+  };
+};
 
 export interface HireApplicantFormProps
   extends BaseFormProps<ApplicantEntity> {}
@@ -114,6 +143,39 @@ export function HireApplicantForm(props: HireApplicantFormProps) {
             console.error('Error copying notes to employee:', noteError);
             // Don't fail the whole hire process if note copying fails
             toast.warning(t("Employee hired successfully, but some notes could not be copied"));
+          }
+        }
+
+        // Create vehicles from owner operator's equipment_owned
+        if (entity?.is_owner_operator && entity?.equipment_owned && entity.equipment_owned.length > 0 && newEmployee?.id) {
+          try {
+            const vehicleApi = new VehicleApi();
+
+            for (const equipment of entity.equipment_owned) {
+              // Create a vehicle for each equipment item
+              const { type: vehicleType, type_other } = mapEquipmentTypeToVehicleType(equipment.type);
+
+              const vehicleData: VehicleEntity = {
+                type: vehicleType,
+                type_other: type_other || equipment.type_other,
+                make: equipment.make || 'Unknown',
+                model: equipment.model,
+                year: equipment.year,
+                current_employee_id: newEmployee.id,
+                is_governed: false,
+                is_public: false,
+                other_details: `Imported from owner operator application. Quantity: ${equipment.quantity || 1}`,
+                created_at: new Date(),
+              };
+
+              await vehicleApi.create(vehicleData);
+            }
+
+            toast.success(t("OWNER_OPERATOR_VEHICLES_CREATED"));
+          } catch (vehicleError) {
+            console.error('Error creating vehicles from equipment:', vehicleError);
+            // Don't fail the whole hire process if vehicle creation fails
+            toast.warning(t("Employee hired successfully, but some vehicles could not be created from equipment"));
           }
         }
 

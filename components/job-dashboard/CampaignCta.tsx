@@ -143,7 +143,7 @@ export function CampaignCta({
               size="lg"
               className="w-100 py-3"
               onClick={openCampaignModal}
-              disabled={!eligibilityStats?.eligibleApplicants}
+              disabled={!eligibilityStats?.eligibleApplicants && !eligibilityStats?.eligibleFromSystem}
             >
               {selectedCommunicationType === CampaignCommunicationType.SMS ? (
                 <ChatDotsFill className="me-2" />
@@ -155,7 +155,7 @@ export function CampaignCta({
               Campaign
             </Button>
 
-            {!eligibilityStats?.eligibleApplicants && (
+            {!eligibilityStats?.eligibleApplicants && !eligibilityStats?.eligibleFromSystem && (
               <div className="alert alert-warning mt-3 text-start">
                 <InfoCircleFill className="me-2" />
                 <strong>Campaign Unavailable</strong>

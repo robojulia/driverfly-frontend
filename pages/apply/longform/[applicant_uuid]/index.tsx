@@ -59,7 +59,7 @@ export default function LongForm({
   const stepBack = (): void => setSteps(steps - 1);
 
   // Total number of steps in the long form
-  const totalSteps = 20; // Based on getLongFormPages in jotform-pages.tsx
+  const totalSteps = 19; // Based on getLongFormPages in jotform-pages.tsx (reduced by 1 after removing duplicate WorkedBefore step)
 
   // Initialize form persistence for browser crash recovery
   const storageKey = `dha-progress-${initialApplicant.uuid_token}`;
@@ -209,6 +209,8 @@ export async function getServerSideProps({ query }: NextPageContext) {
         'employers',
         'accident_history',
         'moving_violation_history',
+        'equipment_experience',
+        'equipment_owned',
         'company',
       ],
     };

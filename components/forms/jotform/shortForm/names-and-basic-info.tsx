@@ -277,6 +277,7 @@ export function NamesAndBasicInfo() {
                     ? String(form.errors.first_name)
                     : undefined
                 }
+                helperText={isEditingExistingApplicant ? "Locked for returning users" : undefined}
                 autoComplete="given-name"
                 icon={<span>👤</span>}
                 size="large"
@@ -297,6 +298,7 @@ export function NamesAndBasicInfo() {
                     ? String(form.errors.last_name)
                     : undefined
                 }
+                helperText={isEditingExistingApplicant ? "Locked for returning users" : undefined}
                 autoComplete="family-name"
                 icon={<span>👤</span>}
                 size="large"
@@ -322,10 +324,12 @@ export function NamesAndBasicInfo() {
                   validateEmailExists(e.target.value);
                 }}
                 required
+                readOnly={isEditingExistingApplicant}
                 error={
                   emailExistsError ||
                   (form.touched.email && form.errors.email ? form.errors.email : undefined)
                 }
+                helperText={isEditingExistingApplicant ? "Locked for returning users" : undefined}
                 autoComplete="email"
                 icon={<span>📧</span>}
                 size="large"
@@ -342,9 +346,11 @@ export function NamesAndBasicInfo() {
                 onChange={form.handleChange}
                 onBlur={form.handleBlur}
                 required
+                disabled={isEditingExistingApplicant}
                 error={
                   form.touched.zip_code && form.errors.zip_code ? form.errors.zip_code : undefined
                 }
+                helperText={isEditingExistingApplicant ? "Locked for returning users" : undefined}
                 autoComplete="postal-code"
                 icon={<span>📍</span>}
                 size="large"
@@ -352,7 +358,7 @@ export function NamesAndBasicInfo() {
             </div>
           </Row>
 
-          {/* Owner Operator Section */}
+          {/* Owner Operator Section - Always editable, even for returning users */}
           <Row className={styles.bold}>
             <div className="col-12 my-3">
               <BaseSelect
@@ -365,6 +371,12 @@ export function NamesAndBasicInfo() {
                 label={t('ARE_YOU_AN_OWNER_OPERATOR')}
                 formik={form}
               />
+              {isEditingExistingApplicant && (
+                <div style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#28a745' }}>
+                  <i className="fa fa-info-circle me-1" />
+                  You can update your owner operator status
+                </div>
+              )}
             </div>
           </Row>
 

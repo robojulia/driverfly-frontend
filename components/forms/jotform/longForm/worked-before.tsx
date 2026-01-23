@@ -9,14 +9,18 @@ import styles from '../../../../styles/digitalhiringapp.module.css';
 import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
 import { FormActions } from '../form-buttons';
 import { Input, RadioGroup } from '../../../shared/dha';
+import { ApplicationCompletionChecklist } from '../../../applicants/application-completion-checker';
 
 export function WorkedBefore() {
   const {
-    state: { applicant, steps },
+    state: { applicant, steps, isEditingExistingApplicant },
     method: { setApplicant, stepNext, stepBack },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
+
+  // Check if this is a returning applicant to the same company
+  const isReturningApplicant = isEditingExistingApplicant && applicant?.already_applied_to_company === true;
 
   // Save form data function
   const saveFormData = async (formData: any) => {
@@ -42,7 +46,12 @@ export function WorkedBefore() {
     validateOnMount: true,
     validateOnChange: true,
     onSubmit: (values) => {
-      const updatedApplicant = { ...applicant, ...values };
+      // For returning applicants, ensure already_applied_to_company is set to true
+      const updatedApplicant = {
+        ...applicant,
+        ...values,
+        ...(isReturningApplicant && { already_applied_to_company: true })
+      };
 
       setApplicant(updatedApplicant);
 
@@ -64,7 +73,9 @@ export function WorkedBefore() {
       form.setValues({
         ...form.values,
         already_applied_to_company:
-          applicant.already_applied_to_company !== undefined
+          isReturningApplicant
+            ? true // For returning applicants, always set to true
+            : applicant.already_applied_to_company !== undefined
             ? applicant.already_applied_to_company
             : null,
         already_worked_to_company:
@@ -154,28 +165,55 @@ export function WorkedBefore() {
   return (
     <>
       <h1 className={`${styles.carrierName} ${styles.jot_form_headers_font}`}>
-        {t('WORKED_BEFORE')}
+        {isReturningApplicant ? t('UPDATE_YOUR_APPLICATION') : t('WORKED_BEFORE')}
       </h1>
 
-      <div
-        style={{
-          maxWidth: '800px',
-          margin: '0 auto 2rem auto',
-          padding: '1rem',
-          backgroundColor: '#f8f9fa',
-          border: '1px solid #e0e5eb',
-          borderRadius: '8px',
-          color: '#667788',
-          fontSize: '0.95rem',
-          lineHeight: '1.5',
-        }}
-      >
-        <p style={{ margin: 0 }}>
-          Please let us know if you have previously applied to or worked with{' '}
-          <strong>{applicant?.company?.name}</strong>. This helps us better understand your
-          background and experience with our company.
-        </p>
-      </div>
+      {isReturningApplicant ? (
+        <>
+          {/* Show completion checklist for returning applicants */}
+          <ApplicationCompletionChecklist applicant={applicant} isSameCompany={true} />
+
+          {/* Contextual message for this specific section */}
+          <div
+            style={{
+              maxWidth: '800px',
+              margin: '0 auto 2rem auto',
+              padding: '1rem',
+              backgroundColor: '#e7f3ff',
+              border: '1px solid #2196F3',
+              borderRadius: '8px',
+              color: '#004085',
+              fontSize: '0.95rem',
+              lineHeight: '1.5',
+            }}
+          >
+            <p style={{ margin: 0 }}>
+              <strong>For this section:</strong> Please confirm if you have previously worked for{' '}
+              <strong>{applicant?.company?.name}</strong> (as an employee). This is different from just applying.
+            </p>
+          </div>
+        </>
+      ) : (
+        <div
+          style={{
+            maxWidth: '800px',
+            margin: '0 auto 2rem auto',
+            padding: '1rem',
+            backgroundColor: '#f8f9fa',
+            border: '1px solid #e0e5eb',
+            borderRadius: '8px',
+            color: '#667788',
+            fontSize: '0.95rem',
+            lineHeight: '1.5',
+          }}
+        >
+          <p style={{ margin: 0 }}>
+            Please let us know if you have previously applied to or worked with{' '}
+            <strong>{applicant?.company?.name}</strong>. This helps us better understand your
+            background and experience with our company.
+          </p>
+        </div>
+      )}
 
       <Form
         onSubmit={form.handleSubmit}
@@ -183,29 +221,31 @@ export function WorkedBefore() {
         className={`${styles.align__text_left} ${styles.formStep}`}
       >
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          {/* First Question: Applied Before */}
-          <div className="my-4">
-            <RadioGroup
-              name="already_applied_to_company"
-              label={t('APPLIED_HERE_BEFORE')}
-              enumType={BooleanType}
-              value={getAppliedBeforeValue()}
-              onChange={handleAppliedBeforeChange}
-              required
-              error={
-                form.touched.already_applied_to_company && form.errors.already_applied_to_company
-                  ? String(form.errors.already_applied_to_company)
-                  : undefined
-              }
-              labelPrefix="BooleanType"
-              columns={2}
-              variant="card"
-              helperText="Select 'Yes' if you have previously submitted an application to this company"
-            />
-          </div>
+          {/* First Question: Applied Before - Only show for non-returning applicants */}
+          {!isReturningApplicant && (
+            <div className="my-4">
+              <RadioGroup
+                name="already_applied_to_company"
+                label={t('APPLIED_HERE_BEFORE')}
+                enumType={BooleanType}
+                value={getAppliedBeforeValue()}
+                onChange={handleAppliedBeforeChange}
+                required
+                error={
+                  form.touched.already_applied_to_company && form.errors.already_applied_to_company
+                    ? String(form.errors.already_applied_to_company)
+                    : undefined
+                }
+                labelPrefix="BooleanType"
+                columns={2}
+                variant="card"
+                helperText="Select 'Yes' if you have previously submitted an application to this company"
+              />
+            </div>
+          )}
 
           {/* Second Question: Worked Before (conditional) */}
-          {form.values.already_applied_to_company === true && (
+          {(form.values.already_applied_to_company === true || isReturningApplicant) && (
             <div className="my-4">
               <RadioGroup
                 name="already_worked_to_company"

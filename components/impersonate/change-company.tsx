@@ -14,6 +14,14 @@ export default function ChangeCompany() {
   const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  // Debug: log user data at component start
+  console.log('ChangeCompany DEBUG:', {
+    user: user,
+    'jwt.companies': user?.jwt?.companies,
+    'user.companies': user?.companies,
+    'company.children': user?.company?.children,
+  });
+
   const onClick = async (e: React.MouseEvent<HTMLElement>, company: CompanyEntity) => {
     const api = new AuthApi();
     const auth = await api.changeOrganization({ companyId: company.id });
@@ -27,24 +35,30 @@ export default function ChangeCompany() {
     setDropdownOpen(!dropdownOpen);
   };
 
-  // If no company or no children, return null
-  if (!user?.company?.children) return null;
+  // Get companies from multiple possible sources:
+  // 1. user.jwt.companies (JWT token)
+  // 2. user.companies (direct property)
+  // 3. user.company.children (child companies)
+  const availableCompanies = user?.jwt?.companies || user?.companies || user?.company?.children;
 
-  // Filter only active children companies
-  const activeChildren = user.company.children.filter((v) => v.status == Status.ACTIVE);
+  // If no companies available, return null
+  if (!availableCompanies || availableCompanies.length === 0) return null;
 
-  // If only one company (itself), don't render a dropdown
-  if (activeChildren.length <= 1) return null;
+  // Filter only active companies
+  const activeCompanies = availableCompanies.filter((v) => v.status == Status.ACTIVE);
+
+  // If only one company, don't render a dropdown
+  if (activeCompanies.length <= 1) return null;
 
   return (
     <div className="company-selector">
       <Dropdown show={dropdownOpen} onToggle={toggle}>
         <Dropdown.Toggle variant="light" className="company-toggle">
-          <Building className="company-icon" />
+          <Building className="company-icon" color="black" />
           <span>{user.company.name}</span>
         </Dropdown.Toggle>
         <Dropdown.Menu>
-          {activeChildren.map((company) => (
+          {activeCompanies.map((company) => (
             <Dropdown.Item
               key={company.id}
               onClick={(e) => onClick(e, company)}

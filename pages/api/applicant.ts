@@ -138,7 +138,8 @@ export default class ApplicantApi extends BaseApi {
     const baseURL = process.env.NEXT_PUBLIC_BASE_URL_API;
     // Ensure proper URL construction with trailing slash
     const normalizedBaseURL = baseURL?.endsWith('/') ? baseURL : `${baseURL}/`;
-    const url = `${normalizedBaseURL}${this.baseUrl}/verify-otp`;
+    // Add query parameter to include equipment experience and owned equipment relations
+    const url = `${normalizedBaseURL}${this.baseUrl}/verify-otp?withRelations[]=equipment_experience&withRelations[]=equipment_owned&withRelations[]=extras&withRelations[]=documents&withRelations[]=employers&withRelations[]=accident_history&withRelations[]=moving_violation_history`;
     console.log('✅ Verifying OTP at:', url);
     const { data } = await axios.post(url, dto);
 
@@ -253,7 +254,9 @@ export default class ApplicantApi extends BaseApi {
       dto: UpsertApplicantJotformDto,
       config?: AxiosRequestConfig
     ): Promise<ApplicantEntity> => {
-      const { data } = await this.put(`${this.jotform.baseUrl()}/${id}`, dto, config);
+      // Add query parameter to indicate this is an applicant self-update
+      // This allows the backend to bypass is_hired validation for applicant-initiated updates
+      const { data } = await this.put(`${this.jotform.baseUrl()}/${id}?allowSelfUpdate=true`, dto, config);
       return data;
     },
     mark: async (uuid_token: string, status: ApplicantFormStatus): Promise<void> => {

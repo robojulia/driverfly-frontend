@@ -1,12 +1,9 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
 import { ApplicantEntity } from '../../models/applicant/applicant.entity';
 
 interface ReturningUserBannerProps {
   applicant: ApplicantEntity;
   companyName?: string;
-  onGoToSignatures?: () => void;
-  showActionButton?: boolean;
   isPrefilled?: boolean; // Indicates if data was prefilled from a previous application
 }
 
@@ -22,8 +19,6 @@ interface ReturningUserBannerProps {
 export const ReturningUserBanner: React.FC<ReturningUserBannerProps> = ({
   applicant,
   companyName = 'this company',
-  onGoToSignatures,
-  showActionButton = true,
   isPrefilled = false,
 }) => {
   console.log('🔵 ReturningUserBanner - applicant:', applicant);
@@ -50,7 +45,8 @@ export const ReturningUserBanner: React.FC<ReturningUserBannerProps> = ({
   // Only show this comprehensive banner for users applying to a DIFFERENT company
   // If they applied to THIS company before, they don't need to re-complete all safety sections
   // For prefilled applications (different company), appliedHereBefore will be false
-  const isApplyingToDifferentCompany = isPrefilled || !appliedHereBefore;
+  // Key: must use AND (&&) not OR (||) - isPrefilled can be true for same-company scenarios too
+  const isApplyingToDifferentCompany = isPrefilled && !appliedHereBefore;
 
   console.log('🔵 ReturningUserBanner - isApplyingToDifferentCompany:', isApplyingToDifferentCompany);
 
@@ -119,29 +115,6 @@ export const ReturningUserBanner: React.FC<ReturningUserBannerProps> = ({
           <p style={{ margin: 0, color: '#856404', fontSize: '0.9rem', fontStyle: 'italic' }}>
             Note: Previous signatures are not valid for new applications. Please complete all signature requirements in the Legal Documents section.
           </p>
-          {showActionButton && onGoToSignatures && (
-            <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <Button
-                variant="warning"
-                size="lg"
-                onClick={onGoToSignatures}
-                style={{
-                  fontWeight: 'bold',
-                  padding: '0.75rem 1.5rem',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                  width: '100%',
-                  maxWidth: '400px',
-                }}
-              >
-                Complete Required Sections
-              </Button>
-              <div style={{ marginTop: '0.5rem' }}>
-                <span style={{ color: '#856404', fontSize: '0.85rem', fontStyle: 'italic' }}>
-                  All other information has been saved from your previous application
-                </span>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

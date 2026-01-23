@@ -7,6 +7,7 @@ import JotformContext, { JotFormContextType } from '../../../../context/jotform-
 import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
 import { useTranslation } from '../../../../hooks/use-translation';
 import { ApplicantExperienceEntity } from '../../../../models/applicant';
+import { ApplicantEquipmentEntity } from '../../../../models/applicant/applicant-equipment.entity';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { FormActions } from '../form-buttons';
 import { Input, Select, EquipmentCard, Button } from '../../../shared/dha';
@@ -22,6 +23,7 @@ export function DuiAndEquipment() {
   const form = useFormik({
     initialValues: {
       equipment_experience: [],
+      equipment_owned: [],
     },
     validationSchema: yup.object({
       equipment_experience: (yup.array(ApplicantExperienceEntity.yupSchemaForImport()) as any)
@@ -43,6 +45,8 @@ export function DuiAndEquipment() {
           }
           return true;
         }),
+      equipment_owned: (yup.array(ApplicantEquipmentEntity.yupSchema()) as any)
+        .unique('type', { mapper: ApplicantEquipmentEntity.key }),
       has_past_dui: yup.bool().nullable(),
       dui_years: yup
         .array(
@@ -53,10 +57,11 @@ export function DuiAndEquipment() {
         )
         .nullable(),
     }),
-    onSubmit: ({ equipment_experience }) => {
+    onSubmit: ({ equipment_experience, equipment_owned }) => {
       setApplicant({
         ...applicant,
         equipment_experience,
+        equipment_owned: applicant.is_owner_operator ? equipment_owned : [],
       });
       stepNext();
     },
@@ -66,10 +71,11 @@ export function DuiAndEquipment() {
   });
 
   useEffect(() => {
-    const { equipment_experience } = applicant;
+    const { equipment_experience, equipment_owned } = applicant;
 
     const initialValues = {
       equipment_experience: equipment_experience || [],
+      equipment_owned: equipment_owned || [],
     };
 
     // Set values and reset form state to clear any validation errors
@@ -109,6 +115,18 @@ export function DuiAndEquipment() {
   const removeEquipmentExperience = (index: number) => {
     const newExperiences = form.values?.equipment_experience?.filter((_, idx) => idx !== index);
     form.setFieldValue('equipment_experience', newExperiences);
+  };
+
+  const addEquipmentOwned = () => {
+    form.setFieldValue('equipment_owned', [
+      ...(form.values?.equipment_owned || []),
+      new ApplicantEquipmentEntity(),
+    ]);
+  };
+
+  const removeEquipmentOwned = (index: number) => {
+    const newEquipment = form.values?.equipment_owned?.filter((_, idx) => idx !== index);
+    form.setFieldValue('equipment_owned', newEquipment);
   };
 
   const getFieldError = (fieldName: string) => {
@@ -300,6 +318,144 @@ export function DuiAndEquipment() {
               </div>
             ) : null}
           </EquipmentCard>
+
+          {/* Equipment Owned Section - Only shows for Owner Operators */}
+          {applicant.is_owner_operator && (
+            <EquipmentCard
+              title="EQUIPMENT_OWNED"
+              emptyStateText={t('NO_EQUIPMENT_OWNED_PROVIDED')}
+              emptyStateSubtext={t('CLICK_ADD_TO_ADD_YOUR_EQUIPMENT')}
+              actions={
+                <Button
+                  size="sm"
+                  variant="outline"
+                  icon={<PlusCircle />}
+                  onClick={addEquipmentOwned}
+                  className="ml-2"
+                >
+                  {t('ADD')}
+                </Button>
+              }
+            >
+              {form.values?.equipment_owned?.length > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  {form.values?.equipment_owned.map((entity, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        padding: '1.5rem',
+                        border: '2px solid #e0e5eb',
+                        borderRadius: '8px',
+                        backgroundColor: '#f8f9fa',
+                        position: 'relative',
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                          gap: '1rem',
+                          alignItems: 'end',
+                        }}
+                      >
+                        <Select
+                          name={`equipment_owned[${i}].type`}
+                          label={t('TYPE')}
+                          placeholder="SELECT_EQUIPMENT_TYPE"
+                          labelPrefix="JobEquipmentType"
+                          enumType={JobEquipmentType}
+                          value={entity.type || ''}
+                          onChange={form.handleChange}
+                          onBlur={form.handleBlur}
+                          error={getFieldError(`equipment_owned[${i}].type`)}
+                          required
+                        />
+
+                        <Input
+                          name={`equipment_owned[${i}].quantity`}
+                          label={t('QUANTITY')}
+                          placeholder={t('ENTER_QUANTITY')}
+                          type="number"
+                          min="1"
+                          value={entity.quantity?.toString() || ''}
+                          onChange={form.handleChange}
+                          onBlur={form.handleBlur}
+                          error={getFieldError(`equipment_owned[${i}].quantity`)}
+                          required
+                        />
+
+                        <Input
+                          name={`equipment_owned[${i}].make`}
+                          label={t('MAKE')}
+                          placeholder={t('ENTER_MAKE')}
+                          value={entity.make || ''}
+                          onChange={form.handleChange}
+                          onBlur={form.handleBlur}
+                          error={getFieldError(`equipment_owned[${i}].make`)}
+                        />
+
+                        <Input
+                          name={`equipment_owned[${i}].model`}
+                          label={t('MODEL')}
+                          placeholder={t('ENTER_MODEL')}
+                          value={entity.model || ''}
+                          onChange={form.handleChange}
+                          onBlur={form.handleBlur}
+                          error={getFieldError(`equipment_owned[${i}].model`)}
+                        />
+
+                        <Input
+                          name={`equipment_owned[${i}].year`}
+                          label={t('YEAR')}
+                          placeholder={t('ENTER_YEAR')}
+                          type="number"
+                          min="1900"
+                          max={new Date().getFullYear().toString()}
+                          value={entity.year?.toString() || ''}
+                          onChange={form.handleChange}
+                          onBlur={form.handleBlur}
+                          error={getFieldError(`equipment_owned[${i}].year`)}
+                        />
+                      </div>
+
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          marginTop: '1rem',
+                        }}
+                      >
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          icon={<Trash />}
+                          onClick={() => removeEquipmentOwned(i)}
+                        >
+                          {t('REMOVE')}
+                        </Button>
+                      </div>
+
+                      {entity.type === JobEquipmentType.OTHER && (
+                        <div style={{ marginTop: '1rem' }}>
+                          <Input
+                            name={`equipment_owned[${i}].type_other`}
+                            label={t('OTHER_EQUIPMENT_TYPE')}
+                            placeholder={t('SPECIFY_OTHER_EQUIPMENT')}
+                            value={entity.type_other || ''}
+                            onChange={form.handleChange}
+                            onBlur={form.handleBlur}
+                            error={getFieldError(`equipment_owned[${i}].type_other`)}
+                            helperText="Please specify the type of equipment"
+                            required
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </EquipmentCard>
+          )}
         </div>
 
         <FormActions

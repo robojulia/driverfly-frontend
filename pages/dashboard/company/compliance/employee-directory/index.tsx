@@ -441,9 +441,19 @@ export default function EmployeeDirectory() {
         key: 'is_owner_operator',
         label: 'OWNER_OP_COMPANY_DRIVER',
         selector: (data) =>
-          data.is_owner_operator ? t('OWNER_OPERATOR') : t('COMPANY_DRIVER') || t('NONE'),
+          data.is_owner_operator === true
+            ? t('OWNER_OPERATOR')
+            : data.is_owner_operator === false
+            ? t('COMPANY_DRIVER')
+            : t('NONE'),
         sortable: true,
         hide: true,
+        render: (data) =>
+          data.is_owner_operator === true
+            ? t('OWNER_OPERATOR')
+            : data.is_owner_operator === false
+            ? t('COMPANY_DRIVER')
+            : t('NONE'),
       },
       {
         key: 'preferred_location',

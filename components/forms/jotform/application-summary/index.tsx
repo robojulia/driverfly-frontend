@@ -1,10 +1,12 @@
-import React, { useContext } from 'react';
-import { Card, Row, Col, Button, Badge } from 'react-bootstrap';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
+import { Card, Row, Col, Button, Badge, Spinner } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
 import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
 import { ApplicantExtras } from '../../../../enums/applicants/applicant-extras.enum';
 import { ReturningUserBanner } from '../../../applicants/returning-user-banner';
+import { useAsyncFormSave } from '../../../../hooks/use-async-form-save';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 
 interface SummarySection {
@@ -18,6 +20,47 @@ export function ApplicationSummary() {
     state: { applicant, applicantExtras, jobs, companyJobs, company, isPrefilled, isEditingExistingApplicant, steps },
     method: { setSteps, setIsEditingFromSummary },
   }: JotFormContextType = useContext(JotformContext);
+
+  // Save functionality
+  const { saveFormData, isSaving, lastSaved, saveError } = useAsyncFormSave(applicant?.id);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(true); // Assume changes exist when viewing summary
+
+  // Handle save application
+  const handleSaveApplication = useCallback(async () => {
+    if (!applicant?.id) {
+      toast.error('Unable to save: No applicant ID found');
+      return;
+    }
+
+    try {
+      // Prepare applicant data for saving
+      const saveData = {
+        ...applicant,
+        extras: applicantExtras,
+      };
+
+      await saveFormData(saveData);
+      setHasUnsavedChanges(false);
+      toast.success('Application saved successfully!');
+    } catch (error) {
+      console.error('Save failed:', error);
+      toast.error('Failed to save application. Please try again.');
+    }
+  }, [applicant, applicantExtras, saveFormData]);
+
+  // Warn user before leaving with unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+        return e.returnValue;
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedChanges]);
 
   // Helper function to get extra value
   const getExtraValue = (type: string): any => {
@@ -153,6 +196,8 @@ export function ApplicationSummary() {
             ownerOpParts.push(`DOT: ${applicant.owner_operator_dot_number}`);
           }
           parts.push(ownerOpParts.join(' - '));
+        } else {
+          parts.push('Company Driver');
         }
 
         // Communication authorization
@@ -314,10 +359,10 @@ export function ApplicationSummary() {
         return parts.join(' | ');
       })(),
     },
-    // Step 20: Accident History - Always show for returning users
+    // Step 19: Accident History - Always show for returning users
     {
       title: 'Accident History',
-      stepNumber: 20, // AccidentHistory step
+      stepNumber: 19, // AccidentHistory step
       summary: (() => {
         const parts: string[] = [];
 
@@ -358,10 +403,10 @@ export function ApplicationSummary() {
         return parts.join(' | ');
       })(),
     },
-    // Step 21: Violation History - Always show for returning users
+    // Step 20: Violation History - Always show for returning users
     {
       title: 'Violation History',
-      stepNumber: 21, // ViolationHistory step
+      stepNumber: 20, // ViolationHistory step
       summary: (() => {
         const parts: string[] = [];
 
@@ -400,10 +445,10 @@ export function ApplicationSummary() {
         return parts.join(' | ');
       })(),
     },
-    // Step 24: Criminal History - always show for returning users
+    // Step 23: Criminal History - always show for returning users
     {
       title: 'Criminal History',
-      stepNumber: 24,
+      stepNumber: 23,
       summary: (() => {
         const parts: string[] = [];
 
@@ -631,10 +676,10 @@ export function ApplicationSummary() {
           },
         ]
       : []),
-    // Step 22: Past Suspension - always show for returning users
+    // Step 21: Past Suspension - always show for returning users
     {
       title: 'License Suspension/DUI History',
-      stepNumber: 22,
+      stepNumber: 21,
       summary: (() => {
         const parts: string[] = [];
 
@@ -670,10 +715,10 @@ export function ApplicationSummary() {
         return parts.join(' | ');
       })(),
     },
-    // Step 23: Unable For Job - always show for returning users
+    // Step 22: Unable For Job - always show for returning users
     {
       title: 'Job Performance Limitations',
-      stepNumber: 23,
+      stepNumber: 22,
       summary: (() => {
         const reasonExtra = applicantExtras?.find(
           (e) => e.type === ApplicantExtras.REASON_FOR_UNABLE_TO_PERFORM_JOB
@@ -689,10 +734,10 @@ export function ApplicationSummary() {
         return 'Can perform all essential job functions';
       })(),
     },
-    // Step 25: Drug Test - always show for returning users
+    // Step 24: Drug Test - always show for returning users
     {
       title: 'Drug Test History',
-      stepNumber: 25,
+      stepNumber: 24,
       summary: (() => {
         const parts: string[] = [];
 
@@ -723,10 +768,10 @@ export function ApplicationSummary() {
         return parts.join(' | ');
       })(),
     },
-    // Step 26: Legal Documents/Signatures
+    // Step 25: Legal Documents/Signatures
     {
       title: 'Legal Documents',
-      stepNumber: 26, // LegalDocumentsPage step in short form
+      stepNumber: 25, // LegalDocumentsPage step in short form
       summary: signatureStatus.allSigned
         ? `All legal documents signed (${signatureStatus.signed}/${signatureStatus.total})`
         : `Legal documents: ${signatureStatus.signed}/${signatureStatus.total} signed`,
@@ -776,6 +821,7 @@ export function ApplicationSummary() {
     console.log('setSteps:', setSteps);
     console.log('setIsEditingFromSummary:', setIsEditingFromSummary);
 
+    // Navigate freely between sections - no warning needed for internal navigation
     setIsEditingFromSummary(true);
 
     // Special handling: Route "Driver's License Information" section to combined license edit page (step 99)
@@ -787,9 +833,10 @@ export function ApplicationSummary() {
 
   const handleSubmitApplication = () => {
     // For returning users applying to a DIFFERENT company, validate all safety sections are complete
-    // For returning users re-applying to the SAME company, only validate legal documents
-    // For DIFFERENT_COMPANY_PREFILL scenario: isPrefilled=true and applicant.id=null
-    const isApplyingToDifferentCompany = isPrefilled || (applicant?.id && applicant.already_applied_to_company !== true);
+    // For returning users re-applying to the SAME company, NO sections are required
+    // For DIFFERENT_COMPANY_PREFILL scenario: isPrefilled=true AND already_applied_to_company is NOT true
+    // Key: use AND (&&) - isPrefilled can be true for same-company scenarios too
+    const isApplyingToDifferentCompany = isPrefilled && applicant?.already_applied_to_company !== true;
 
     const requiredSectionsForDifferentCompany = [
       'Current Employment & Company History',
@@ -797,12 +844,9 @@ export function ApplicationSummary() {
       'Legal Documents',
     ];
 
-    const requiredSectionsForSameCompany = [
-      "Driver's License Information",
-      'Documents',
-      'Emergency Contact',
-      'Legal Documents',
-    ];
+    // For same-company returning applicants, NO sections are required
+    // (they don't need to re-sign legal documents, re-enter employment history, etc.)
+    const requiredSectionsForSameCompany: string[] = [];
 
     const requiredSections = isApplyingToDifferentCompany
       ? requiredSectionsForDifferentCompany
@@ -884,7 +928,7 @@ export function ApplicationSummary() {
       handleEditSection(incompleteSection.stepNumber);
     } else {
       // All sections complete, submit and go to thank you page
-      setSteps(27); // Thank you page
+      setSteps(26); // Thank you page
     }
   };
 
@@ -920,8 +964,6 @@ export function ApplicationSummary() {
           <ReturningUserBanner
             applicant={applicant}
             companyName={company?.name}
-            onGoToSignatures={() => handleEditSection(19)} // WorkedBefore - where they specify if they worked here before
-            showActionButton={true}
             isPrefilled={isPrefilled}
           />
         </div>
@@ -1084,10 +1126,11 @@ export function ApplicationSummary() {
 
             // Determine if this is a required section for returning users
             // For returning users applying to a DIFFERENT company, safety-related fields are cleared and must be re-completed
-            // For returning users re-applying to the SAME company, only legal documents need re-signing
-            // For DIFFERENT_COMPANY_PREFILL scenario: isPrefilled=true and applicant.id=null
+            // For returning users re-applying to the SAME company, NO sections are required
+            // For DIFFERENT_COMPANY_PREFILL scenario: isPrefilled=true AND already_applied_to_company is NOT true
             const isReturningUser = isPrefilled || applicant?.id;
-            const isApplyingToDifferentCompany = isPrefilled || (applicant?.id && applicant.already_applied_to_company !== true);
+            // Key: use AND (&&) - isPrefilled can be true for same-company scenarios too
+            const isApplyingToDifferentCompany = isPrefilled && applicant?.already_applied_to_company !== true;
 
             if (index === 0) {
               console.log('🔵 ApplicationSummary - isPrefilled:', isPrefilled);
@@ -1103,9 +1146,9 @@ export function ApplicationSummary() {
               'Legal Documents',
             ];
 
-            const requiredSectionsForSameCompany = [
-              'Legal Documents',
-            ];
+            // For same-company returning applicants, NO sections are required
+            // (they don't need to re-sign legal documents, re-enter employment history, etc.)
+            const requiredSectionsForSameCompany: string[] = [];
 
             const requiredSections = isApplyingToDifferentCompany
               ? requiredSectionsForDifferentCompany
@@ -1119,12 +1162,12 @@ export function ApplicationSummary() {
                 <Card
                   className="shadow-sm"
                   style={{
-                    border: isRequiredForReturningUser ? '3px solid #ffc107' : undefined,
-                    backgroundColor: isRequiredForReturningUser ? '#fffbf0' : undefined,
+                    border: isRequiredForReturningUser && !isComplete ? '3px solid #ffc107' : undefined,
+                    backgroundColor: isRequiredForReturningUser && !isComplete ? '#fffbf0' : undefined,
                   }}
                 >
                   <Card.Body className="py-3">
-                    {isRequiredForReturningUser && (
+                    {isRequiredForReturningUser && !isComplete && (
                       <div style={{
                         backgroundColor: '#ffc107',
                         color: '#000',
@@ -1172,13 +1215,22 @@ export function ApplicationSummary() {
                               textShadow: '0 0 3px rgba(255,107,0,0.3)',
                             }}
                           />
+                        ) : isRequiredForReturningUser ? (
+                          <i
+                            className="fa fa-square-o"
+                            style={{
+                              fontSize: '1.5rem',
+                              color: '#ffc107',
+                              textShadow: '0 0 3px rgba(255,193,7,0.3)',
+                            }}
+                          />
                         ) : (
                           <i
                             className="fa fa-times-circle"
                             style={{
                               fontSize: '1.5rem',
-                              color: isRequiredForReturningUser ? '#ffc107' : '#dc3545',
-                              textShadow: isRequiredForReturningUser ? '0 0 3px rgba(255,193,7,0.3)' : '0 0 3px rgba(220,53,69,0.3)',
+                              color: '#dc3545',
+                              textShadow: '0 0 3px rgba(220,53,69,0.3)',
                             }}
                           />
                         )}
@@ -1210,25 +1262,25 @@ export function ApplicationSummary() {
                         </p>
                       </Col>
                       <Col md={3} className="text-end">
-                        {/* Prevent editing phone number (step 2) and names (step 3) for returning users */}
-                        {isEditingExistingApplicant && (section.stepNumber === 2 || section.stepNumber === 3) ? (
+                        {/* Prevent editing phone number (step 2) for returning users */}
+                        {isEditingExistingApplicant && section.stepNumber === 2 ? (
                           <Badge bg="secondary" style={{ padding: '0.5rem 0.75rem', fontSize: '0.875rem' }}>
                             <i className="fa fa-lock me-1" />
                             Locked
                           </Badge>
                         ) : (
                           <Button
-                            variant={isRequiredForReturningUser ? 'warning' : 'outline-primary'}
-                            size={isRequiredForReturningUser ? 'lg' : 'sm'}
+                            variant={isRequiredForReturningUser && !isComplete ? 'warning' : 'outline-primary'}
+                            size={isRequiredForReturningUser && !isComplete ? 'lg' : 'sm'}
                             onClick={() => handleEditSection(section.stepNumber)}
-                            style={isRequiredForReturningUser ? {
+                            style={isRequiredForReturningUser && !isComplete ? {
                               fontWeight: 'bold',
                               padding: '0.5rem 1rem',
                               whiteSpace: 'nowrap',
                             } : undefined}
                           >
                             <i className="fa fa-edit me-1" />
-                            {isRequiredForReturningUser ? 'Complete' : (isComplete ? 'Edit' : 'Complete')}
+                            {isRequiredForReturningUser && !isComplete ? 'Complete' : (isComplete ? 'Edit' : 'Complete')}
                           </Button>
                         )}
                       </Col>
@@ -1241,15 +1293,64 @@ export function ApplicationSummary() {
         </Row>
 
         <div className="text-center mt-4">
-          <Button
-            variant={isPrefilled ? "success" : "primary"}
-            size="lg"
-            onClick={isPrefilled ? handleSubmitApplication : handleContinueToLongForm}
-            className="px-5"
-          >
-            <i className={`fa ${isPrefilled ? 'fa-check' : 'fa-arrow-right'} me-2`} />
-            {isPrefilled ? 'Submit Application' : 'Continue to Detailed Application'}
-          </Button>
+          <div className="d-flex justify-content-center gap-3 flex-wrap">
+            {/* Save Button */}
+            <Button
+              variant="outline-secondary"
+              size="lg"
+              onClick={handleSaveApplication}
+              disabled={isSaving}
+              className="px-4"
+            >
+              {isSaving ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    className="me-2"
+                  />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <i className="fa fa-save me-2" />
+                  Save Application
+                </>
+              )}
+            </Button>
+
+            {/* Submit/Continue Button */}
+            <Button
+              variant={isPrefilled ? "success" : "primary"}
+              size="lg"
+              onClick={isPrefilled ? handleSubmitApplication : handleContinueToLongForm}
+              className="px-5"
+            >
+              <i className={`fa ${isPrefilled ? 'fa-check' : 'fa-arrow-right'} me-2`} />
+              {isPrefilled ? 'Submit Application' : 'Continue to Detailed Application'}
+            </Button>
+          </div>
+
+          {/* Last saved indicator */}
+          {lastSaved && (
+            <div className="mt-2">
+              <small className="text-success">
+                <i className="fa fa-check-circle me-1" />
+                Last saved: {lastSaved.toLocaleTimeString()}
+              </small>
+            </div>
+          )}
+          {saveError && (
+            <div className="mt-2">
+              <small className="text-danger">
+                <i className="fa fa-exclamation-circle me-1" />
+                Save failed: {saveError}
+              </small>
+            </div>
+          )}
         </div>
 
         <div className="text-center mt-3  p-10">

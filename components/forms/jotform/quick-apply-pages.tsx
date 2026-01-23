@@ -18,7 +18,6 @@ import {
   Preferences,
   UnableForJob,
   ViolationHistory,
-  WorkedBefore,
 } from './longForm';
 import { ContinueLongForm, SplashPage } from './shortForm';
 import { DuiAndEquipment } from './shortForm/dui-and-equipment';
@@ -42,15 +41,14 @@ const getQuickApplyPages = (step: number): JSX.Element =>
     12: <EmergencyContact />,
     13: <EmploymentHistory />,
     14: <PastEmploymentHistory />,
-    15: <WorkedBefore />,
-    16: <AccidentHistory />,
-    17: <ViolationHistory />,
-    18: <PastSuspension />,
-    19: <UnableForJob />,
-    20: <FelonyConviction />,
-    21: <DrugTest />,
-    22: <AccordianPage />,
-    23: <ThankyouPage />,
+    15: <AccidentHistory />,
+    16: <ViolationHistory />,
+    17: <PastSuspension />,
+    18: <UnableForJob />,
+    19: <FelonyConviction />,
+    20: <DrugTest />,
+    21: <AccordianPage />,
+    22: <ThankyouPage />,
   }[step]);
 
 const getQuickApplyStyle = (step: number): CSSProperties | undefined =>
