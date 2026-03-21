@@ -10,3 +10,4 @@
 .netlify
 # Sentry Config File
 .sentryclirc
+.next
