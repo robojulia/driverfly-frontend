@@ -90,7 +90,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} toggle={onClose} centered={centered} size={size}>
+    <Modal isOpen={isOpen} toggle={onClose} centered={centered} size={size} zIndex={1300}>
       <ModalHeader toggle={onClose}>{title}</ModalHeader>
       <ModalBody>
         <div className="d-flex align-items-start mb-3">

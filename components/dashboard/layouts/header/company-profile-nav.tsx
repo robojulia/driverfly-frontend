@@ -1,7 +1,6 @@
 import React from "react";
 import { useAuth } from "../../../../hooks/use-auth";
 import ChangeCompany from "../../../impersonate/change-company";
-import { Building } from "react-bootstrap-icons";
 
 export default function CompanyProfileNav() {
   const { user } = useAuth();
@@ -24,8 +23,7 @@ export default function CompanyProfileNav() {
     return (
       <div className="company-profile-nav">
         <div className="company-name">
-          <Building className="company-icon me-2" color="black" />
-          <span>{user?.company?.name || ""}</span>
+          <span style={{ fontSize: "1.25rem", fontWeight: 500 }}>{user?.company?.name || ""}</span>
         </div>
       </div>
     );

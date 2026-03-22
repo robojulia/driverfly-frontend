@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import Select, { StylesConfig } from 'react-select';
 import { useTranslation } from "../../hooks/use-translation";
 import { ComboboxItem } from '../controls/combobox';
@@ -29,10 +29,14 @@ const csutomStyles: StylesConfig<ComboboxItem & any> = {
 			? "#2ec8c4"
 			: "#d3d3d3",
 	}),
+	valueContainer: (styles: any) => ({
+		...styles,
+		maxHeight: '80px',
+		overflowY: 'auto',
+	}),
 	option: (styles: any, { data, isDisabled, isFocused, isSelected }) => {
 		return {
 			...styles,
-			zIndex: 9999,
 			color: isFocused || isSelected
 				? "white"
 				//     ? '#2ec8c4'
@@ -178,12 +182,6 @@ function BaseMultiSelect({
 		}
 	}
 
-
-	useEffect(() => {
-		if (!formik?.dirty) {
-			formik.setFieldValue(name, []);
-		}
-	}, [formik.dirty, formik.setFieldValue, name]);
 
 	return (
 		<BaseControl

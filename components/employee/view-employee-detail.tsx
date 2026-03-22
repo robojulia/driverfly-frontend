@@ -40,6 +40,8 @@ export default function ViewEmployeeDetails({
 							obj={{
 								driver_license_number: employee.license_number,
 								expiration_date: employee.license_expiry ? new Date(employee.license_expiry) : null,
+								mvr_expiration_date: employee.mvr_expiry ? new Date(employee.mvr_expiry) : null,
+								medical_card_expiration_date: employee.medical_card_expiry ? new Date(employee.medical_card_expiry) : null,
 								state_issued: employee.license_state,
 								cdl_class_type: employee.license_type
 									? t(`DriverLicenseType.${employee.license_type}`)

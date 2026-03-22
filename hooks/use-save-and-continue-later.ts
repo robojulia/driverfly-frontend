@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import JotformContext from '../context/jotform-context';
 import ApplicantApi from '../pages/api/applicant';
 import { ApplicantFormStatus } from '../enums/applicants/applicant-form-status.enum';
+import { trackingContextToUtmReferral } from '../models/auth/utm-referral.interface';
 
 interface UseSaveAndContinueLaterReturn {
   saveAndExit: () => Promise<void>;
@@ -51,7 +52,7 @@ export function useSaveAndContinueLater(): UseSaveAndContinueLaterReturn {
           applicant: currentApplicant,
           applicantExtras: applicantExtras || [],
           jobs: jobs || [],
-          utm,
+          utm: trackingContextToUtmReferral(utm),
         },
         steps || 0
       );

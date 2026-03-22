@@ -81,6 +81,11 @@ export default class ApplicantApi extends BaseApi {
     return data;
   }
 
+  async assignToUser(id: number, userId: number): Promise<ApplicantEntity> {
+    const { data } = await this.put(`${this.baseUrl}/${id}`, { assignedUserId: userId });
+    return data;
+  }
+
   async search(params: ApplicantEntity, config?: AxiosRequestConfig): Promise<ApplicantEntity[]> {
     const { data } = await this.get(this.buildUrl(this.baseUrl + '/search', params), config);
 

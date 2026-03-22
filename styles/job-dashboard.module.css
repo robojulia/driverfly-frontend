@@ -151,7 +151,7 @@
 .tabSpecial:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(44, 122, 123, 0.3);
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-button) 100%);
+  background: var(--primary-button);
   color: white !important;
 }
 

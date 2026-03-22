@@ -268,7 +268,7 @@
 }
 
 .customButton:hover {
-  background: linear-gradient(135deg, var(--primary-brand) 0%, var(--sidebar-submenu-bg) 100%);
+  background: var(--primary-button);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(95, 203, 196, 0.3);
 }
@@ -500,12 +500,8 @@
 
 .nextButton:hover,
 .nextButton:focus {
-  background: linear-gradient(
-    135deg,
-    var(--primary-dark) 0%,
-    var(--sidebar-submenu-bg) 100%
-  ) !important;
-  border-color: var(--primary-dark) !important;
+  background: var(--primary-button) !important;
+  border-color: var(--primary-button) !important;
 }
 
 /* Error message */
@@ -902,11 +898,7 @@
 }
 
 .formButton:hover {
-  background: linear-gradient(
-    135deg,
-    var(--primary-dark) 0%,
-    var(--sidebar-submenu-bg) 100%
-  ) !important;
+  background: var(--primary-button) !important;
   box-shadow: 0 6px 20px rgba(95, 203, 196, 0.3) !important;
   color: var(--text-light) !important;
 }

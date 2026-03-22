@@ -28,6 +28,12 @@ export class SubscriptionEntity {
   current_active_jobs?: number;
   current_users?: number;
   current_applicants_this_month?: number;
+  employee_count?: number;
+  driver_seats?: number;
+  auto_recruiting_enabled?: boolean;
+  ai_agent_plan?: 'STARTER' | 'STANDARD' | 'ENTERPRISE' | null;
+  mvr_enabled?: boolean;
+  mvr_records_pulled?: number;
 
   static yupSchema() {
     return yup.object({

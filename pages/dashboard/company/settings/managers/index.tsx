@@ -29,7 +29,7 @@ import CompanyApi from "../../../../api/company";
 export default function UserList() {
   const { t } = useTranslation();
   const router = useRouter();
-  const { user, hasPermission } = useAuth();
+  const { user, hasPermission, isCompanyAdmin } = useAuth();
   const companyApi = new CompanyApi();
   const columnSettingKey = getDataTableColumnKey("company", user, "managers");
 
@@ -96,11 +96,11 @@ export default function UserList() {
             icon: EyeFill,
             label: "VIEW",
           },
-          {
+          ...(isCompanyAdmin ? [{
             onClick: (e) => onEditClick(j.id),
             icon: PenFill,
             label: "EDIT",
-          },
+          }] : []),
         ]}
         items={managers}
       />
@@ -112,9 +112,11 @@ export default function UserList() {
       title="MANAGERS"
       desciption="MANAGERS_DESC"
       actions={
-        <Button variant="primary" onClick={onAddClick}>
-          + {t("CREATE")}
-        </Button>
+        isCompanyAdmin ? (
+          <Button variant="primary" onClick={onAddClick}>
+            + {t("CREATE")}
+          </Button>
+        ) : null
       }
     >
       {createManagersTable(managers)}

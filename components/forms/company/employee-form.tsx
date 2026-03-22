@@ -84,8 +84,8 @@ export function EmployeeForm(props: EmployeeFormProps) {
     validationSchema: EmployeeEntity.employeeFormYupSchema(),
     onSubmit: async (values) => {
       try {
-        // Remove the manager object to avoid conflicts with managerId
-        const { manager, job, ...submitValues } = values;
+        // Remove relation objects to avoid conflicts with IDs and cascade issues on backend
+        const { manager, job, notes, documents, applicant, company, equipment_experience, equipment_owned, ...submitValues } = values;
         const payload = {
           ...submitValues,
           jobId: values.jobId || values.job?.id,
@@ -315,6 +315,22 @@ export function EmployeeForm(props: EmployeeFormProps) {
                 name="license_expiry"
                 type="date"
                 placeholder="expiration_date"
+                formik={form}
+              />
+              <BaseInput
+                className="col-12"
+                label="MVR Expiration Date"
+                name="mvr_expiry"
+                type="date"
+                placeholder="MVR Expiration Date"
+                formik={form}
+              />
+              <BaseInput
+                className="col-12"
+                label="Medical Card Expiration Date"
+                name="medical_card_expiry"
+                type="date"
+                placeholder="Medical Card Expiration Date"
                 formik={form}
               />
               <Row className="px-3">

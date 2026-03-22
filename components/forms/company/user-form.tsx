@@ -1,6 +1,7 @@
 import { useFormik } from 'formik';
 import { useTranslation } from '../../../hooks/use-translation';
-import { Row } from 'react-bootstrap';
+import { Row, Modal, Button, Table } from 'react-bootstrap';
+import { QuestionCircleFill, CheckCircleFill, XCircleFill } from 'react-bootstrap-icons';
 import BaseInput from '../base-input';
 import BaseInputPhone from '../base-input-phone';
 import BaseCheck from '../base-check';
@@ -15,6 +16,31 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../../hooks/use-auth';
 import { useUnsavedChangesWarning } from '../../../hooks/use-unsaved-changes-warning';
 import BaseMultiSelect from '../base-multiselect';
+
+const ROLE_PERMISSIONS = [
+  { category: 'Users', feature: 'View users list', regular: false, admin: true },
+  { category: 'Users', feature: 'Create / edit / delete users', regular: false, admin: true },
+  { category: 'Users', feature: 'Disable / enable users', regular: false, admin: true },
+  { category: 'Applicants', feature: 'View assigned applicants', regular: true, admin: true },
+  { category: 'Applicants', feature: 'View all applicants', regular: false, admin: true },
+  { category: 'Applicants', feature: 'Create / edit applicants', regular: true, admin: true },
+  { category: 'Applicants', feature: 'Delete applicants', regular: false, admin: true },
+  { category: 'Employees', feature: 'View employees hired through them', regular: true, admin: true },
+  { category: 'Employees', feature: 'View all employees', regular: false, admin: true },
+  { category: 'Employees', feature: 'Edit employees', regular: true, admin: true },
+  { category: 'Employees', feature: 'Delete employees', regular: false, admin: true },
+  { category: 'Jobs', feature: 'View job listings', regular: true, admin: true },
+  { category: 'Jobs', feature: 'Edit / delete job listings', regular: false, admin: true },
+  { category: 'Locations', feature: 'View locations', regular: true, admin: true },
+  { category: 'Locations', feature: 'Create / edit / delete locations', regular: false, admin: true },
+  { category: 'Vehicles', feature: 'View vehicles', regular: true, admin: true },
+  { category: 'Vehicles', feature: 'Create / edit / delete vehicles', regular: false, admin: true },
+  { category: 'Settings & Billing', feature: 'View company settings', regular: true, admin: true },
+  { category: 'Settings & Billing', feature: 'Edit company settings', regular: false, admin: true },
+  { category: 'Settings & Billing', feature: 'Manage billing', regular: false, admin: true },
+  { category: 'Settings & Billing', feature: 'View managers', regular: true, admin: true },
+  { category: 'Settings & Billing', feature: 'Create / edit managers', regular: false, admin: true },
+];
 // import { RoleSelect } from "../entities/role-select";
 
 export interface UserFormProps extends BaseFormProps<UserEntity> {}
@@ -26,6 +52,7 @@ export function UserForm(props: UserFormProps) {
   const { user, hasPermission } = useAuth();
   const [availableCompanies, setAvailableCompanies] = useState([]);
   const [companyOptions, setCompanyOptions] = useState([]);
+  const [showRoleInfo, setShowRoleInfo] = useState(false);
 
   // const { company } = useAuth();
 
@@ -91,7 +118,7 @@ export function UserForm(props: UserFormProps) {
         values.company_ids = entity.companies.map((c) => c.id);
       }
 
-      form.setValues(values);
+      form.resetForm({ values });
     }
   }, [entity]);
 
@@ -136,14 +163,23 @@ export function UserForm(props: UserFormProps) {
     <>
       {/* eslint-disable-next-line react/no-unknown-property */}
       <style jsx>{`
-        .btn-check:checked + .btn-outline-primary {
-          background-color: #0d6efd !important;
-          border-color: #0d6efd !important;
+        .role-btn-group .btn-outline-primary:hover {
+          background-color: #2ec8c4 !important;
+          border-color: #2ec8c4 !important;
           color: white !important;
         }
-        .btn-check:checked + .btn-outline-primary:hover {
-          background-color: #0b5ed7 !important;
-          border-color: #0a58ca !important;
+        .role-btn-group .btn-check:checked + .btn-outline-primary {
+          background-color: #2ec8c4 !important;
+          border-color: #2ec8c4 !important;
+          color: white !important;
+        }
+        .role-btn-group .btn-check:checked + .btn-outline-primary:hover {
+          background-color: #25a8a4 !important;
+          border-color: #25a8a4 !important;
+        }
+        .role-btn-group .btn-outline-primary {
+          border-color: #2ec8c4 !important;
+          color: #2ec8c4 !important;
         }
       `}</style>
       {unsavedChangesWarning}
@@ -228,11 +264,20 @@ export function UserForm(props: UserFormProps) {
                     /> */}
 
         <div className="col-12 mt-3">
-          <label className="form-label">
+          <label className="form-label d-flex align-items-center gap-2">
             {t('USER_ROLE')}
             <span className="text-danger">*</span>
+            <button
+              type="button"
+              className="btn btn-link p-0 d-inline-flex align-items-center"
+              style={{ color: '#2ec8c4', lineHeight: 1 }}
+              onClick={() => setShowRoleInfo(true)}
+              title="View permission details"
+            >
+              <QuestionCircleFill size={16} />
+            </button>
           </label>
-          <div className="btn-group w-100" role="group">
+          <div className="btn-group w-100 role-btn-group" role="group">
             <input
               type="radio"
               className="btn-check"
@@ -260,6 +305,62 @@ export function UserForm(props: UserFormProps) {
             </label>
           </div>
         </div>
+
+        <Modal show={showRoleInfo} onHide={() => setShowRoleInfo(false)} size="lg" centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Role Permissions</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p className="text-muted small mb-3">
+              The table below outlines what each role can do within your company account.
+            </p>
+            <Table bordered size="sm" className="mb-0">
+              <thead className="table-light">
+                <tr>
+                  <th>Feature</th>
+                  <th className="text-center" style={{ width: 130 }}>Regular User</th>
+                  <th className="text-center" style={{ width: 130 }}>Company Admin</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(() => {
+                  let lastCategory = '';
+                  return ROLE_PERMISSIONS.map((row, i) => {
+                    const showHeader = row.category !== lastCategory;
+                    lastCategory = row.category;
+                    return (
+                      <>
+                        {showHeader && (
+                          <tr key={`cat-${row.category}`} className="table-secondary">
+                            <td colSpan={3} className="fw-semibold small text-uppercase">
+                              {row.category}
+                            </td>
+                          </tr>
+                        )}
+                        <tr key={i}>
+                          <td className="small">{row.feature}</td>
+                          <td className="text-center">
+                            {row.regular
+                              ? <CheckCircleFill className="text-success" />
+                              : <XCircleFill className="text-danger opacity-50" />}
+                          </td>
+                          <td className="text-center">
+                            {row.admin
+                              ? <CheckCircleFill className="text-success" />
+                              : <XCircleFill className="text-danger opacity-50" />}
+                          </td>
+                        </tr>
+                      </>
+                    );
+                  });
+                })()}
+              </tbody>
+            </Table>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowRoleInfo(false)}>Close</Button>
+          </Modal.Footer>
+        </Modal>
 
         {!entity?.id && (
           <BaseInput

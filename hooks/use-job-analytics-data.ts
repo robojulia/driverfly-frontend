@@ -89,125 +89,19 @@ export const useJobAnalyticsData = (
         }
 
         // Handle lead source breakdown result
-        if (leadSourceResult.status === 'fulfilled' && leadSourceResult.value.length > 0) {
+        if (leadSourceResult.status === 'fulfilled') {
           setLeadSourceBreakdown(leadSourceResult.value);
         } else {
-          if (leadSourceResult.status === 'rejected') {
-            console.error('Failed to fetch lead source breakdown:', leadSourceResult.reason);
-          }
-          // Provide mock data for development/testing
-          setLeadSourceBreakdown([
-            {
-              source: 'indeed',
-              sourceName: 'Indeed',
-              views: 450,
-              clicks: 89,
-              applications: 42,
-              conversionRate: 9.33,
-            },
-            {
-              source: 'google',
-              sourceName: 'Google Jobs',
-              views: 320,
-              clicks: 65,
-              applications: 28,
-              conversionRate: 8.75,
-            },
-            {
-              source: 'linkedin',
-              sourceName: 'LinkedIn',
-              views: 280,
-              clicks: 52,
-              applications: 23,
-              conversionRate: 8.21,
-            },
-            {
-              source: 'direct',
-              sourceName: 'Direct Traffic',
-              views: 180,
-              clicks: 34,
-              applications: 15,
-              conversionRate: 8.33,
-            },
-            {
-              source: 'facebook',
-              sourceName: 'Facebook',
-              views: 150,
-              clicks: 22,
-              applications: 8,
-              conversionRate: 5.33,
-            },
-          ]);
+          console.error('Failed to fetch lead source breakdown:', leadSourceResult.reason);
+          setLeadSourceBreakdown([]);
         }
 
         // Handle UTM breakdown result
-        if (utmResult.status === 'fulfilled' && utmResult.value.length > 0) {
+        if (utmResult.status === 'fulfilled') {
           setUtmBreakdown(utmResult.value);
         } else {
-          if (utmResult.status === 'rejected') {
-            console.error('Failed to fetch UTM breakdown:', utmResult.reason);
-          }
-          // Provide mock data for development/testing
-          setUtmBreakdown([
-            {
-              utm_source: 'indeed',
-              utm_medium: 'cpc',
-              utm_campaign: 'summer-hiring-2024',
-              utm_content: 'ad-variant-a',
-              views: 250,
-              clicks: 48,
-              applications: 23,
-              conversionRate: 9.2,
-            },
-            {
-              utm_source: 'google',
-              utm_medium: 'organic',
-              utm_campaign: 'seo',
-              views: 200,
-              clicks: 42,
-              applications: 18,
-              conversionRate: 9.0,
-            },
-            {
-              utm_source: 'indeed',
-              utm_medium: 'cpc',
-              utm_campaign: 'fall-hiring-2024',
-              utm_content: 'ad-variant-b',
-              views: 200,
-              clicks: 41,
-              applications: 19,
-              conversionRate: 9.5,
-            },
-            {
-              utm_source: 'linkedin',
-              utm_medium: 'social',
-              utm_campaign: 'brand-awareness',
-              views: 180,
-              clicks: 35,
-              applications: 15,
-              conversionRate: 8.33,
-            },
-            {
-              utm_source: 'facebook',
-              utm_medium: 'cpc',
-              utm_campaign: 'driver-recruitment',
-              utm_content: 'carousel-ad',
-              views: 150,
-              clicks: 22,
-              applications: 8,
-              conversionRate: 5.33,
-            },
-            {
-              utm_source: 'google',
-              utm_medium: 'cpc',
-              utm_campaign: 'cdl-drivers',
-              utm_content: 'text-ad',
-              views: 120,
-              clicks: 23,
-              applications: 10,
-              conversionRate: 8.33,
-            },
-          ]);
+          console.error('Failed to fetch UTM breakdown:', utmResult.reason);
+          setUtmBreakdown([]);
         }
 
         // If all requests failed, show error

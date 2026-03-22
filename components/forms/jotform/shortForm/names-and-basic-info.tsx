@@ -15,32 +15,32 @@ import { Input, MaskedInput, Select } from '../../../shared/dha';
 import { FormActions } from '../form-buttons';
 import ApplicantApi from '../../../../pages/api/applicant';
 import { normalizePhoneNumber } from '../../../../utils/phone-normalization';
-import { UtmReferral } from '../../../../models/auth/utm-referral.interface';
+import { TrackingContext } from '../../../../models/auth/utm-referral.interface';
 
 // Helper function to check if any UTM parameters exist
-const hasUtmParameters = (utm?: UtmReferral): boolean => {
-  if (!utm) return false;
+const hasUtmParameters = (tracking?: TrackingContext): boolean => {
+  if (!tracking) return false;
   return Boolean(
-    utm.utm_source ||
-    utm.utm_medium ||
-    utm.utm_campaign ||
-    utm.utm_content ||
-    utm.referral_name
+    tracking.utm?.source ||
+    tracking.utm?.medium ||
+    tracking.utm?.campaign ||
+    tracking.utm?.content ||
+    tracking.referral?.name
   );
 };
 
 // Map UTM parameters to HearAboutUsType
-const mapUtmToHearAboutType = (utm?: UtmReferral): HearAboutUsType | null => {
-  if (!utm) return null;
+const mapUtmToHearAboutType = (tracking?: TrackingContext): HearAboutUsType | null => {
+  if (!tracking) return null;
 
-  // If there's a specific referral name, it's a referral
-  if (utm.referral_name) {
+  // If there's a specific referral name/code, it's a referral
+  if (tracking.referral?.name || tracking.referral?.code) {
     return HearAboutUsType.REFERRAL;
   }
 
-  // Check utm_source and utm_medium for clues
-  const source = utm.utm_source?.toLowerCase() || '';
-  const medium = utm.utm_medium?.toLowerCase() || '';
+  // Check utm source and medium for clues
+  const source = tracking.utm?.source?.toLowerCase() || '';
+  const medium = tracking.utm?.medium?.toLowerCase() || '';
   const combined = `${source} ${medium}`;
 
   // Map based on common patterns
@@ -192,7 +192,7 @@ export function NamesAndBasicInfo() {
 
     const referalNameObject = {
       ...new ApplicantExtrasEntity(ApplicantExtras.REFERAL_NAME),
-      value: Boolean(utm?.referral_name) ? utm?.referral_name : null,
+      value: utm?.referral?.name || null,
     };
 
     // Prepare the new form values

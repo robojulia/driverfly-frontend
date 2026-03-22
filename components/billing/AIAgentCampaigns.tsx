@@ -108,7 +108,7 @@ export function AIAgentCampaigns({
                   size="sm"
                   onClick={() => setShowPlanSelector(true)}
                 >
-                  {currentPlan ? 'Change Plan' : 'Subscribe'}
+                  {currentPlan ? 'Change Plan' : 'Choose a Plan'}
                 </Button>
                 {currentPlan && (
                   <Button

@@ -12,8 +12,9 @@ import {
   ArrowCounterclockwise,
   PersonX,
   PersonCheck,
+  TrophyFill,
 } from 'react-bootstrap-icons';
-import UserApi from '../../../../api/user';
+import UserApi, { RecruiterScoreSummary } from '../../../../api/user';
 import ViewDataTable, {
   getDataTableColumnKey,
 } from '../../../../../components/view-details/view-data-table';
@@ -23,9 +24,11 @@ import { useEffectAsync } from '../../../../../utils/react';
 import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
-import { Button } from 'react-bootstrap';
+import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { join } from 'path/posix';
 import ViewModal from '../../../../../components/view-details/view-modal';
+import { RecruiterScoreModal } from '../../../../../components/users/RecruiterScoreModal';
+import { AutoAssignSettings } from '../../../../../components/users/AutoAssignSettings';
 
 export default function UserList() {
   const { t } = useTranslation();
@@ -38,6 +41,9 @@ export default function UserList() {
     userId: null,
   });
   const [users, setUsers] = useState([]);
+  const [scoreSummaries, setScoreSummaries] = useState<RecruiterScoreSummary[]>([]);
+  const [scoreModalUser, setScoreModalUser] = useState<UserEntity | null>(null);
+  const [showScoreModal, setShowScoreModal] = useState(false);
 
   useEffectAsync(async () => {
     if (!user) return;
@@ -45,7 +51,23 @@ export default function UserList() {
     const api = new UserApi();
     const v = await api.list();
     setUsers(v);
+
+    // Load score summaries in the background; failures are non-blocking
+    api.getScoreSummaries().then(setScoreSummaries).catch((err) => {
+      console.error('Failed to load recruiter score summaries:', err?.response?.data || err?.message || err);
+    });
   }, [user]);
+
+  const scoreByUserId = React.useMemo(() => {
+    const map: Record<number, RecruiterScoreSummary> = {};
+    scoreSummaries.forEach((s) => { map[s.userId] = s; });
+    return map;
+  }, [scoreSummaries]);
+
+  const openScoreModal = (u: UserEntity) => {
+    setScoreModalUser(u);
+    setShowScoreModal(true);
+  };
 
   const can = {
     createUser: hasPermission('CanCreateUser'),
@@ -188,7 +210,7 @@ export default function UserList() {
           {
             id: 'roles',
             name: 'ROLES',
-            selector: (j) => j.roles.map((role) => role.name).join(', '),
+            selector: (j) => j.super_admin ? 'Super Admin' : j.company_admin ? 'Company Admin' : 'Regular User',
           },
 
           {
@@ -216,6 +238,49 @@ export default function UserList() {
                 {j.company_disabled ? 'Disabled' : 'Active'}
               </span>
             ),
+          },
+          {
+            id: 'summary_score',
+            name: (
+              <OverlayTrigger
+                placement="top"
+                overlay={<Tooltip>Click a score to see a full performance breakdown</Tooltip>}
+              >
+                <span style={{ cursor: 'default' }}>
+                  Summary Score <TrophyFill size={12} className="text-warning ms-1" />
+                </span>
+              </OverlayTrigger>
+            ) as any,
+            selector: (j) => scoreByUserId[j.id]?.overallScore ?? -1,
+            sortable: true,
+            cell: (j) => {
+              const summary = scoreByUserId[j.id];
+              if (!summary) {
+                return (
+                  <button
+                    className="btn btn-link btn-sm p-0 text-muted"
+                    style={{ fontSize: '0.75rem' }}
+                    onClick={() => openScoreModal(j)}
+                  >
+                    View
+                  </button>
+                );
+              }
+              const score = Math.round(summary.overallScore);
+              const bgColor =
+                score >= 75 ? '#198754' : score >= 50 ? '#e6a817' : '#dc3545';
+              return (
+                <button
+                  className="btn btn-sm px-2 py-1 text-white fw-semibold border-0"
+                  style={{ backgroundColor: bgColor, fontSize: '0.78rem', borderRadius: 6 }}
+                  onClick={() => openScoreModal(j)}
+                  title={`${score}/100 — click for breakdown`}
+                >
+                  {score}
+                  <TrophyFill size={10} className="ms-1 opacity-75" />
+                </button>
+              );
+            },
           },
         ]}
         actions={(j) => [
@@ -279,6 +344,12 @@ export default function UserList() {
         </ViewModal>
       )}
 
+      <RecruiterScoreModal
+        user={scoreModalUser}
+        show={showScoreModal}
+        onHide={() => setShowScoreModal(false)}
+      />
+
       <PageLayout
         title="USERS"
         desciption="USERS_DESC" // TODO: Fix spelling in PageLayoutProps (should be 'description')
@@ -292,6 +363,9 @@ export default function UserList() {
           </>
         }
       >
+        {can.editUser && user?.company?.id && (
+          <AutoAssignSettings companyId={user.company.id} />
+        )}
         <TabbedLayout items={tabs}></TabbedLayout>
       </PageLayout>
     </>

@@ -139,9 +139,7 @@ export function ReferralSourceForm(props: ReferralSourceFormProps) {
                         placeholder="SOURCES"
                         displayPlaceholder
                         formik={form}
-                    // onChange={slugifyHandler}
                     />
-                    {/* <span className="small text-muted">{t('UTM_FIELD_HELP_TEXT')}</span> */}
                 </Col>
                 <Col md="6">
                     <BaseInput
@@ -151,9 +149,19 @@ export function ReferralSourceForm(props: ReferralSourceFormProps) {
                         placeholder="MEDIUMS"
                         displayPlaceholder
                         formik={form}
-                    // onChange={slugifyHandler}
                     />
-                    {/* <span className="small text-muted">{t('UTM_FIELD_HELP_TEXT')}</span> */}
+                </Col>
+            </Row>
+            <Row className="mt-2">
+                <Col md="6">
+                    <BaseInput
+                        label="CAMPAIGN"
+                        name="campaign"
+                        placeholder="ENTER_CAMPAIGN"
+                        displayPlaceholder
+                        formik={form}
+                    />
+                    <span className="small text-muted">{t('UTM_FIELD_HELP_TEXT')}</span>
                 </Col>
             </Row>
         </EntityForm>

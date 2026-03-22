@@ -2,7 +2,7 @@
 
 /* Brand Gradient using CSS variables */
 .brandGradient {
-  background: linear-gradient(135deg, var(--primary-button) 0%, var(--primary) 100%) !important;
+  background: var(--primary-button) !important;
   color: white !important;
 }
 

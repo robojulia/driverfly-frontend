@@ -4,7 +4,7 @@ import { ApplicantExtrasEntity } from '../models/applicant/applicant-extras.enti
 import { ApplicantEntity } from '../models/applicant/applicant.entity';
 import { JobEntity } from '../models/job/job.entity';
 import { CompanyPreferenceEntity } from '../models/company/company-preferences.entity';
-import { UtmReferral } from '../models/auth/utm-referral.interface';
+import { TrackingContext } from '../models/auth/utm-referral.interface';
 import { CompanyEntity } from '../models/company/company.entity';
 
 export type JotFormContextType = {
@@ -16,7 +16,7 @@ export type JotFormContextType = {
     companyPreferences?: CompanyPreferenceEntity[];
     applicantExtras?: ApplicantExtrasEntity[];
     steps?: number;
-    utm?: UtmReferral;
+    utm?: TrackingContext;
     directJobId?: number | null;
     directJob?: JobEntity | null;
     isDirectJobApplication?: boolean;
@@ -49,11 +49,8 @@ const JotformContext = createContext<JotFormContextType>({
     companyPreferences: [],
     steps: 0,
     utm: {
-      utm_source: null,
-      utm_medium: null,
-      utm_campaign: null,
-      utm_content: null,
-      referral_name: null,
+      utm: { source: null, medium: null, campaign: null, content: null },
+      referral: { code: null, name: null, sourceId: null },
     },
     directJobId: null,
     directJob: null,

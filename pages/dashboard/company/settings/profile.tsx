@@ -125,7 +125,7 @@ export default function Profile() {
             />
             <BaseInput
               className="col-sm-6 mt-1"
-              label="PASSWORD"
+              label="NEW_PASSWORD"
               name="password"
               type="password"
               required

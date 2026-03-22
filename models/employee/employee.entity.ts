@@ -50,6 +50,8 @@ export class EmployeeEntity {
   license_number?: string;
   license_expiry?: Date;
   license_state?: string;
+  mvr_expiry?: Date;
+  medical_card_expiry?: Date;
   license_type?: string;
   years_cdl_experience?: number;
   can_pass_drug_test?: boolean;
@@ -99,6 +101,8 @@ export class EmployeeEntity {
       license_number: yup.string().nullable(),
       license_expiry: yup.date().nullable(),
       license_state: yup.string().nullable(),
+      mvr_expiry: yup.date().nullable(),
+      medical_card_expiry: yup.date().nullable(),
       license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
       years_cdl_experience: yup.number().min(0).nullable(),
       can_pass_drug_test: yup.bool().nullable(),

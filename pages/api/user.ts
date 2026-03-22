@@ -6,6 +6,34 @@ import { UserPreferenceCategory } from '../../enums/users/user-preference-catego
 import { UserPreferenceEntity } from '../../models/user/user-preference.entity';
 import { ChangePasswordDto } from '../../models/auth/change-password.dto';
 
+export interface ScoreMetric {
+  key: string;
+  label: string;
+  description: string;
+  howCalculated: string;
+  score: number; // 0–100
+  rawValue: number | null;
+  rawValueLabel: string;
+  companyAvgValue: number | null;
+  companyAvgLabel: string;
+  weight: number; // fraction of total score
+  higherIsBetter: boolean;
+}
+
+export interface RecruiterScore {
+  userId: number;
+  overallScore: number; // 0–100, weighted composite
+  percentile: number; // compared to peers in same company
+  period: string; // e.g. "Last 30 days"
+  metrics: ScoreMetric[];
+}
+
+export interface RecruiterScoreSummary {
+  userId: number;
+  overallScore: number;
+  percentile: number;
+}
+
 export default class UserApi extends BaseApi {
   async create(user: UserEntity): Promise<UserEntity> {
     const { data } = await this.post(`user`, user);
@@ -69,6 +97,16 @@ export default class UserApi extends BaseApi {
       await this.delete('user');
     },
   };
+
+  async getScore(id: number): Promise<RecruiterScore> {
+    const { data } = await this.get(`user/${id}/score`);
+    return data;
+  }
+
+  async getScoreSummaries(): Promise<RecruiterScoreSummary[]> {
+    const { data } = await this.get('user/scores');
+    return data;
+  }
 
   preferences = {
     baseUrl: (userId: number) => `user/${userId}/preferences`,

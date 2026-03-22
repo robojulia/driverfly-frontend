@@ -8,14 +8,28 @@ import PageLayout from '../../../../components/layouts/page/page-layout';
 import { CompanyForm } from '../../../../components/forms/company/company-form';
 import { LoaderIcon } from '../../../../components/loading/loader-icon';
 import { useTranslation } from '../../../../hooks/use-translation';
+import { useEffectAsync } from '../../../../utils/react';
+import CompanyApi from '../../../api/company';
 
 export default function Settings() {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, isCompanyAdmin } = useAuth();
   const { t } = useTranslation();
   const formRef = useRef<any>(null);
   const [formState, setFormState] = useState({ isValid: false, isSubmitting: false });
+  const [company, setCompany] = useState<CompanyEntity>(user?.company);
+
+  useEffectAsync(async () => {
+    try {
+      const api = new CompanyApi();
+      const data = await api.me.get();
+      if (data) setCompany(data);
+    } catch (e) {
+      // fall back to auth context data
+    }
+  }, []);
 
   function onSaveComplete(c: CompanyEntity) {
+    setCompany(c);
     updateUser({
       ...user,
       company: {
@@ -51,22 +65,25 @@ export default function Settings() {
     <PageLayout
       title="COMPANY"
       actions={
-        <Button
-          type="button"
-          className="theme-secondary-btn"
-          onClick={handleSubmit}
-          disabled={!formState.isValid || formState.isSubmitting}
-        >
-          <LoaderIcon isLoading={formState.isSubmitting} /> {t('UPDATE')}
-        </Button>
+        isCompanyAdmin ? (
+          <Button
+            type="button"
+            className="theme-secondary-btn"
+            onClick={handleSubmit}
+            disabled={!formState.isValid || formState.isSubmitting}
+          >
+            <LoaderIcon isLoading={formState.isSubmitting} /> {t('UPDATE')}
+          </Button>
+        ) : null
       }
     >
       <CompanyForm
         showClickToCopy
-        entity={user?.company}
+        entity={company}
         onSaveComplete={onSaveComplete}
         formRef={formRef}
         hideSubmitButton={true}
+        readOnly={!isCompanyAdmin}
       />
     </PageLayout>
   );

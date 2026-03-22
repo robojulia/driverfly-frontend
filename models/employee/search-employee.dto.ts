@@ -13,4 +13,5 @@ export class SearchEmployeeDto {
   hireDateFrom?: string;
   hireDateTo?: string;
   birthdayThisWeek?: boolean;
+  recruitedByUserId?: number;
 }

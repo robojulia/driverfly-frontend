@@ -102,14 +102,34 @@ export default function EmployeeDetailPage() {
       overdue++; // Missing license expiry is critical
     }
 
+    // Check MVR expiration
+    if (emp.mvr_expiry) {
+      const mvrExpiryDate = new Date(emp.mvr_expiry);
+      if (mvrExpiryDate <= now) {
+        overdue++;
+      } else if (mvrExpiryDate <= thirtyDaysFromNow) {
+        pending++;
+      }
+    }
+
+    // Check medical card expiration
+    if (emp.medical_card_expiry) {
+      const medExpiryDate = new Date(emp.medical_card_expiry);
+      if (medExpiryDate <= now) {
+        overdue++;
+      } else if (medExpiryDate <= thirtyDaysFromNow) {
+        pending++;
+      }
+    }
+
     // Check for required documents
     const hasDriverLicense = emp.documents?.some(doc => doc.type === 'DRIVER_LICENSE');
     const hasMedicalCard = emp.documents?.some(doc => doc.type === 'MEDICAL_CARD');
     const hasMVR = emp.documents?.some(doc => doc.type === 'MVR');
 
     if (!hasDriverLicense) overdue++;
-    if (!hasMedicalCard) overdue++;
-    if (!hasMVR) overdue++;
+    if (!hasMedicalCard && !emp.medical_card_expiry) overdue++;
+    if (!hasMVR && !emp.mvr_expiry) overdue++;
 
     const complete = emp.documents?.length || 0;
 
@@ -158,13 +178,13 @@ export default function EmployeeDetailPage() {
             )}
           </div>
           <div className="d-flex align-items-center">
-            <Button variant="link" className="p-2 mr-2">
+            <Button variant="link" className="p-2 mr-2" onClick={() => router.push('/dashboard/company/compliance/employee-directory?tab=notifications')}>
               <GearFill size={18} />
             </Button>
             <Button
               variant="link"
               className="p-2 mr-3"
-              onClick={() => setSelectedTabIndex(6)}
+              onClick={() => setSelectedTabIndex(5)}
               style={{ position: 'relative' }}
             >
               <Bell size={18} />
@@ -286,8 +306,7 @@ export default function EmployeeDetailPage() {
                 </Tab>
                 <Tab>DQF</Tab>
                 <Tab>HR Files</Tab>
-                <Tab>Additional</Tab>
-                <Tab>All Files</Tab>
+                <Tab>Additional Files</Tab>
                 <Tab>
                   <div className="d-flex align-items-center justify-content-center">
                     <ChatDots size={16} className="mr-2" />
@@ -322,33 +341,6 @@ export default function EmployeeDetailPage() {
                   employee={employee}
                   canEdit={employee.status === EmployeeStatus.ACTIVE}
                 />
-              </TabPanel>
-
-              <TabPanel>
-                <div className="bg-white p-4 rounded">
-                  <h4>{t('ALL_FILES')}</h4>
-                  <p className="text-muted">{t('ALL_FILES_DESCRIPTION')}</p>
-                  {/* All Files content showing DQF + HR + Additional Files combined */}
-                  <DQF
-                    employee={employee}
-                    canEdit={employee.status === EmployeeStatus.ACTIVE}
-                    canEditSafetyPerformance
-                    showHistory={true}
-                    title="DQF_DOCUMENTS"
-                  />
-                  <div className="mt-4">
-                    <HRFiles
-                      employee={employee}
-                      canEdit={employee.status === EmployeeStatus.ACTIVE}
-                    />
-                  </div>
-                  <div className="mt-4">
-                    <AdditionalFiles
-                      employee={employee}
-                      canEdit={employee.status === EmployeeStatus.ACTIVE}
-                    />
-                  </div>
-                </div>
               </TabPanel>
 
               <TabPanel>
@@ -455,6 +447,64 @@ export default function EmployeeDetailPage() {
                           </div>
                         )}
 
+                        {/* MVR Expiration */}
+                        {employee.mvr_expiry && (() => {
+                          const expiryDate = new Date(employee.mvr_expiry);
+                          const now = new Date();
+                          const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+                          if (expiryDate <= now) {
+                            return (
+                              <div className="list-group-item d-flex justify-content-between align-items-start">
+                                <div>
+                                  <div className="font-weight-bold">MVR Expired</div>
+                                  <small className="text-muted">Expired: {expiryDate.toLocaleDateString()}</small>
+                                </div>
+                                <Badge bg="danger">Overdue</Badge>
+                              </div>
+                            );
+                          } else if (expiryDate <= thirtyDaysFromNow) {
+                            return (
+                              <div className="list-group-item d-flex justify-content-between align-items-start">
+                                <div>
+                                  <div className="font-weight-bold">MVR Expiring Soon</div>
+                                  <small className="text-muted">Expires: {expiryDate.toLocaleDateString()}</small>
+                                </div>
+                                <Badge bg="warning">Pending</Badge>
+                              </div>
+                            );
+                          }
+                          return null;
+                        })()}
+
+                        {/* Medical Card Expiration */}
+                        {employee.medical_card_expiry && (() => {
+                          const expiryDate = new Date(employee.medical_card_expiry);
+                          const now = new Date();
+                          const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+                          if (expiryDate <= now) {
+                            return (
+                              <div className="list-group-item d-flex justify-content-between align-items-start">
+                                <div>
+                                  <div className="font-weight-bold">Medical Card Expired</div>
+                                  <small className="text-muted">Expired: {expiryDate.toLocaleDateString()}</small>
+                                </div>
+                                <Badge bg="danger">Overdue</Badge>
+                              </div>
+                            );
+                          } else if (expiryDate <= thirtyDaysFromNow) {
+                            return (
+                              <div className="list-group-item d-flex justify-content-between align-items-start">
+                                <div>
+                                  <div className="font-weight-bold">Medical Card Expiring Soon</div>
+                                  <small className="text-muted">Expires: {expiryDate.toLocaleDateString()}</small>
+                                </div>
+                                <Badge bg="warning">Pending</Badge>
+                              </div>
+                            );
+                          }
+                          return null;
+                        })()}
+
                         {/* Missing Documents */}
                         {!employee.documents?.some(doc => doc.type === 'DRIVER_LICENSE') && (
                           <div className="list-group-item d-flex justify-content-between align-items-start">
@@ -465,20 +515,20 @@ export default function EmployeeDetailPage() {
                             <Badge bg="danger">Overdue</Badge>
                           </div>
                         )}
-                        {!employee.documents?.some(doc => doc.type === 'MEDICAL_CARD') && (
+                        {!employee.documents?.some(doc => doc.type === 'MEDICAL_CARD') && !employee.medical_card_expiry && (
                           <div className="list-group-item d-flex justify-content-between align-items-start">
                             <div>
                               <div className="font-weight-bold">Medical Card</div>
-                              <small className="text-muted">Upload required medical card document</small>
+                              <small className="text-muted">Upload medical card or set expiration date</small>
                             </div>
                             <Badge bg="danger">Overdue</Badge>
                           </div>
                         )}
-                        {!employee.documents?.some(doc => doc.type === 'MVR') && (
+                        {!employee.documents?.some(doc => doc.type === 'MVR') && !employee.mvr_expiry && (
                           <div className="list-group-item d-flex justify-content-between align-items-start">
                             <div>
                               <div className="font-weight-bold">Motor Vehicle Record (MVR)</div>
-                              <small className="text-muted">Upload required MVR document</small>
+                              <small className="text-muted">Upload MVR or set expiration date</small>
                             </div>
                             <Badge bg="danger">Overdue</Badge>
                           </div>

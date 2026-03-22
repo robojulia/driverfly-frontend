@@ -42,6 +42,7 @@ import CustomPagination from '../../../../components/pagination/custom-paginatio
 import { Pagination, PagingMeta } from '../../../../types/pagination.type';
 import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
 import { ApplicantCSVExporter } from '../../../../utils/applicant-csv-exporter';
+import { useAutoAssign } from '../../../../hooks/use-auto-assign';
 
 interface ConsolodatedApplicant extends ApplicantEntity {
   jobs?: ConsolodatedApplicantJob[];
@@ -65,7 +66,7 @@ export default function Applicants() {
 
   const router = useRouter();
 
-  let { user, company, hasPermission } = useAuth();
+  let { user, company, hasPermission, isCompanyAdmin } = useAuth();
   let { jobId } = router.query;
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -78,6 +79,14 @@ export default function Applicants() {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [applicantToDelete, setApplicantToDelete] = useState<number | null>(null);
 
+  // Auto-assign: update local state when a new assignment is made
+  const handleAutoAssigned = (applicantId: number, userId: number) => {
+    setApplicants((prev) =>
+      prev.map((a) => (a.id === applicantId ? { ...a, assignedUserId: userId } : a))
+    );
+  };
+  useAutoAssign(applicants, handleAutoAssigned);
+
   const fetchApplicant = async () => {
     setLoading(true);
     const api = new ApplicantApi();
@@ -87,6 +96,8 @@ export default function Applicants() {
       jobId: jobId as any as number,
       without: ['applicant_dac', 'applicant_extras'],
       ...filters,
+      // Regular users can only see applicants assigned to them
+      ...(!isCompanyAdmin && { assignedUserId: user?.id }),
       includeEligibility: includeEligibility,
       is_paginated: true,
       page: filtersChanged ? 1 : pagingMeta?.currentPage,

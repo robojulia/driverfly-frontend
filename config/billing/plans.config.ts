@@ -5,6 +5,10 @@ import { PlanConfig } from '../../types/billing/plan-config.type';
 export const BASE_SUBSCRIPTION = {
   monthly: 30,
   annual: 21, // 30% discount: 30 * 0.7 = 21
+  displayMonthToMonthRate: 38,
+  displayAnnualMonthlyEquivalent: 30,
+  includedDriverEmployees: 6,
+  includedUserAccounts: 1,
   baseDriverSeats: 6,
   additionalSeatPrice: 10,
 };

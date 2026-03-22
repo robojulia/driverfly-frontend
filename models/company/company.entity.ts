@@ -28,6 +28,7 @@ export class CompanyEntity {
   company_culture?: string;
   company_benefits?: string;
   specialties?: string[];
+  additional_information?: string;
 
   // Billing relationship
   subscription?: SubscriptionEntity;
@@ -71,6 +72,7 @@ export class CompanyEntity {
       company_culture: yup.string().nullable().max(1000),
       company_benefits: yup.string().nullable().max(1000),
       specialties: yup.array().of(yup.string()).nullable(),
+      additional_information: yup.string().nullable().max(2000),
 
       photo: yup
         .mixed()

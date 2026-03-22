@@ -24,21 +24,56 @@ import { CompanyPreferenceAutoRecrutingLabel } from '../../../../enums/company/c
 import { CompanyPreferenceJotformLabel } from '../../../../enums/company/company-preferences-jotform-label.enum';
 import { JobEmploymentType } from '../../../../enums/jobs/job-employment-type.enum';
 import { JobGeography } from '../../../../enums/jobs/job-geography.enum';
+import { ExpiryStatus } from '../../../../enums/jobs/expiry-status.enum';
 import { useEffectAsync } from '../../../../utils/react';
 import { CompanyPreferenceVoeLabel } from '../../../../enums/company/company-preferences-voe-label.enum';
+import { JobEntity } from '../../../../models/job/job.entity';
+import JobApi from '../../../api/job';
+import { Pagination } from '../../../../types/pagination.type';
 
-// New components
+import { Clipboard, Check } from 'react-bootstrap-icons';
 import { SsnToggle } from '../../../../components/company-preferences/SsnToggle';
 import { ReferBackProgram } from '../../../../components/company-preferences/ReferBackProgram';
 import { AutoRecruiting } from '../../../../components/company-preferences/AutoRecruiting';
 import { SystemPreferences } from '../../../../components/company-preferences/SystemPreferences';
 import HiringCriteriaBuilder from '../../../../components/company-preferences/HiringCriteriaBuilder';
 
+function JobLinkRow({ job, link }: { job: JobEntity; link: string }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (e) {
+      console.error('Unable to copy', e);
+    }
+  };
+  return (
+    <tr>
+      <td>{job.title}</td>
+      <td>{link}</td>
+      <td className="text-center">
+        <Button
+          variant={copied ? 'success' : 'outline-secondary'}
+          size="sm"
+          onClick={handleCopy}
+          title="Copy link"
+        >
+          {copied ? <Check size={16} /> : <Clipboard size={16} />}
+        </Button>
+      </td>
+    </tr>
+  );
+}
+
 export default function CompanyPreference() {
   const [preferences, setPreferences] = useState<CompanyPreferenceEntity[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showAutoVoeModal, setShowAutoVoeModal] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [jobs, setJobs] = useState<JobEntity[]>([]);
+  const [jobsLoading, setJobsLoading] = useState<boolean>(true);
 
   const { user, isSuperAdmin, isCompanyAdmin, company } = useAuth();
 
@@ -143,6 +178,24 @@ export default function CompanyPreference() {
       }
     },
   });
+
+  useEffectAsync(async () => {
+    if (user.company) {
+      const jobApi = new JobApi();
+      try {
+        const jobData = await jobApi.list({
+          is_paginated: false,
+          companyId: user.company.id,
+          expiry_status: ExpiryStatus.ACTIVE,
+        });
+        setJobs((jobData as Pagination<JobEntity>)?.items ?? (jobData as JobEntity[]) ?? []);
+      } catch (e) {
+        console.error('Unable to fetch jobs', e);
+      } finally {
+        setJobsLoading(false);
+      }
+    }
+  }, []);
 
   useEffectAsync(async () => {
     if (user.company) {
@@ -358,62 +411,137 @@ export default function CompanyPreference() {
   return (
     <>
       <PageLayout hideTitle={true}>
-        {/* Header Section with Teal Background */}
-        <div style={{
-          background: 'linear-gradient(135deg, #006078 0%, #1d4354 100%)',
-          padding: '2rem 3rem',
-          marginBottom: '2rem',
-          borderRadius: '0.5rem'
-        }}>
-          <div className="d-flex justify-content-between align-items-center">
-            <div>
-              <h3 className="text-white mb-2 fw-bold">Company Preferences</h3>
-              <p className="text-white mb-0" style={{ opacity: 0.9 }}>
-                Manage your company&apos;s recruiting and qualification preferences.
-              </p>
-            </div>
-            <div className="d-flex gap-2">
-              <Button
-                variant="outline-light"
-                onClick={() => form.resetForm()}
-                disabled={loading}
-              >
-                Reset to Defaults
-              </Button>
-              <Button
-                style={{
-                  background: '#1d4355',
-                  border: 'none',
-                  color: 'white'
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  form.handleSubmit();
-                }}
-                disabled={loading}
-              >
-                Save Preferences
-              </Button>
-            </div>
-          </div>
-        </div>
-
         <Container fluid style={{ background: '#f7fafc', minHeight: '100vh', padding: '0 2rem 2rem' }}>
           {/* DHA Information Section */}
           <Card className="border-0 shadow-sm mb-4">
             <Card.Body className="p-4">
-              <h5 className="mb-3 fw-bold">Digital Hiring Application</h5>
+              <h5 className="mb-3 fw-bold">My Recruiting Links</h5>
               <p className="mb-3 text-muted">
                 Share your unique hiring application link with potential applicants.
               </p>
-              <BaseClickToCopyInput
-                label=""
-                className="my-2 border p-3 rounded link-background"
-                value={`${typeof window !== 'undefined' ? window.location.origin : ''}/apply/${user?.company?.slug}`}
-                tooltipText="Click to copy"
-              />
+              <Row>
+                <Col md={4}>
+                  <BaseClickToCopyInput
+                    label="DIGITAL_HIRING_APPLICATION"
+                    className="my-2"
+                    value={`${typeof window !== 'undefined' ? window.location.origin : ''}/apply/${user?.company?.slug}`}
+                    tooltipText="Click to copy"
+                  />
+                </Col>
+                <Col md={4}>
+                  <BaseClickToCopyInput
+                    label="COMPANY_JOBS_PAGE"
+                    className="my-2"
+                    value={`https://app.driverfly.co/employer/${user?.company?.slug}`}
+                    tooltipText="Click to copy"
+                  />
+                </Col>
+                <Col md={4}>
+                  <BaseClickToCopyInput
+                    label="COMPANY_EMEDDED_JOBS_PAGE"
+                    className="my-2"
+                    value={`<script src="https://app.driverfly.co/js/cdl-script.js" charset="UTF-8" companyId="${user?.company?.id}"></script>`}
+                    tooltipText="Click to copy"
+                    instructionsTitle="Company Embedded Job Page"
+                    instructionsContent={
+                      <div>
+                        <p>
+                          Use this script to embed your company&apos;s job listings directly on your own website.
+                          Copy the script tag and paste it into the HTML of any page where you want your jobs to appear.
+                        </p>
+                        <div className="alert alert-info" role="alert">
+                          <h6 className="mb-2">How to Use</h6>
+                          <ol className="mb-0">
+                            <li>Copy the script tag using the clipboard button.</li>
+                            <li>Paste it into the <code>&lt;body&gt;</code> of your webpage where you want the job listings to display.</li>
+                            <li>The jobs widget will automatically load your current openings.</li>
+                          </ol>
+                        </div>
+                        <p className="text-muted small mt-3">
+                          Your unique <code>companyId</code> is embedded in the script — no additional configuration is needed.
+                        </p>
+                      </div>
+                    }
+                  />
+                </Col>
+              </Row>
+
+              {/* Per-Job Application Links */}
+              <hr className="my-4" />
+              <label className="mb-1">Short Form - Quick Apply:</label>
+              <p className="text-muted small mb-3">
+                Share these links to send applicants directly to the short form for a specific job.
+              </p>
+              {jobsLoading ? (
+                <p className="text-muted small">Loading jobs...</p>
+              ) : jobs.length === 0 ? (
+                <p className="text-muted small">No active jobs found.</p>
+              ) : (
+                <div className="table-responsive">
+                  <table className="table table-sm table-bordered align-middle mb-0">
+                    <thead className="table-light">
+                      <tr>
+                        <th style={{ width: '30%' }}>Job Title</th>
+                        <th>Application Link</th>
+                        <th style={{ width: '60px' }} className="text-center">Copy</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {jobs.map((job) => {
+                        const slug = job.title
+                          ? job.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim()
+                          : 'job';
+                        const link = `${typeof window !== 'undefined' ? window.location.origin : ''}/jobs/${job.id}/${slug}`;
+                        return (
+                          <JobLinkRow key={job.id} job={job} link={link} />
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </Card.Body>
           </Card>
+
+          {/* Header Section with Teal Background */}
+          <div style={{
+            background: 'linear-gradient(135deg, #006078 0%, #1d4354 100%)',
+            padding: '2rem 3rem',
+            marginBottom: '2rem',
+            borderRadius: '0.5rem'
+          }}>
+            <div className="d-flex justify-content-between align-items-center">
+              <div>
+                <h3 className="text-white mb-2 fw-bold">Company Preferences</h3>
+                <p className="text-white mb-0" style={{ opacity: 0.9 }}>
+                  Manage your company&apos;s recruiting and qualification preferences.
+                </p>
+              </div>
+              <div className="d-flex gap-2">
+                <Button
+                  variant="outline-light"
+                  onClick={() => form.resetForm()}
+                  disabled={loading}
+                >
+                  Reset to Defaults
+                </Button>
+                <Button
+                  style={{
+                    background: '#1d4355',
+                    border: 'none',
+                    color: 'white'
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    form.handleSubmit();
+                  }}
+                  disabled={loading}
+                >
+                  Save Preferences
+                </Button>
+              </div>
+            </div>
+          </div>
 
           {/* Driver Persona Builder - Revolutionary Hiring Criteria */}
           <HiringCriteriaBuilder

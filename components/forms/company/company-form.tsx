@@ -2,8 +2,6 @@ import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import BaseClickToCopyInput from '../../../components/forms/base-click-to-copy-input';
-import { useAuth } from '../../../hooks/use-auth';
 import { useTranslation } from '../../../hooks/use-translation';
 import { useUnsavedChangesWarning } from '../../../hooks/use-unsaved-changes-warning';
 import { CompanyEntity } from '../../../models/company/company.entity';
@@ -20,22 +18,19 @@ import BaseTextArea from '../base-text-area';
 import BaseMultiSelect from '../base-multiselect';
 import FileInput from '../file-input';
 import { BaseFormProps } from './base-form-props';
-import Image from 'next/image';
 import DocumentApi from '../../../pages/api/document';
 import { useEffectAsync } from '../../../utils/react';
-import { EmbeddedCodeExamples } from './embedded-code-examples';
-
 export interface CompanyFormProps extends BaseFormProps<CompanyEntity> {
   showClickToCopy?: boolean | (() => boolean);
   skipApiCall?: boolean; // If true, form will not make API call but just pass data to onSaveComplete
   formRef?: React.MutableRefObject<any>;
   hideSubmitButton?: boolean;
+  readOnly?: boolean;
 }
 
 export function CompanyForm(props: CompanyFormProps) {
-  const { user } = useAuth();
   const { t } = useTranslation();
-  let { className, entity, onSaveComplete, onSaveError, showClickToCopy, skipApiCall, formRef, hideSubmitButton } = props;
+  let { className, entity, onSaveComplete, onSaveError, skipApiCall, formRef, hideSubmitButton, readOnly } = props;
 
   const [viewLogo, setViewLogo] = useState('');
 
@@ -108,6 +103,7 @@ export function CompanyForm(props: CompanyFormProps) {
     <>
       {unsavedChangesWarning}
       <EntityForm className={className} onSubmit={form.handleSubmit} formik={form} id={entity?.id} hideSubmitButton={hideSubmitButton}>
+        <fieldset disabled={readOnly}>
         <Row>
           <BaseInput
             className="col-12 mt-4"
@@ -131,52 +127,6 @@ export function CompanyForm(props: CompanyFormProps) {
             placeholder="http://www.example.com"
             formik={form}
           />
-          {Boolean(showClickToCopy) && (
-            <>
-              <BaseClickToCopyInput
-                label="COMPANY_APPLICATION_LINK"
-                className="rounded mt-4"
-                value={`https://app.driverfly.co/apply/${user?.company?.slug}`}
-                tooltipText={t('CLICK_TO_COPY')}
-              />
-              <BaseClickToCopyInput
-                label="COMPANY_JOBS_PAGE"
-                className="rounded mt-4"
-                value={`${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL ?? ''}employer/${user?.company?.slug}`}
-                tooltipText={t('CLICK_TO_COPY')}
-              />
-              <BaseClickToCopyInput
-                label="COMPANY_EMEDDED_JOBS_PAGE"
-                className="rounded mt-4"
-                value={`${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL ?? ''}embedded?companyId=${
-                  user?.company?.id
-                }`}
-                tooltipText={t('CLICK_TO_COPY')}
-                instructionsTitle={t('EMBED_CODE_INSTRUCTIONS')}
-                instructionsContent={
-                  <div>
-                    <p>{t('EMBED_COMPANY_JOBS_DESC')}</p>
-                    <div className="code-block bg-light p-3 rounded">
-                      <pre className="mb-0">
-                        <code>{`<script
-  src="https://app.driverfly.co/js/cdl-script.js"
-  charset="UTF-8"
-  companyId="${user?.company?.id}">
-</script>`}</code>
-                      </pre>
-                    </div>
-                    <div className="mt-3">
-                      <h6>{t('NEED_HELP')}</h6>
-                      <p>{t('EMBED_HELP_TEXT')}</p>
-                      <a href="mailto:support@driverfly.co" className="text-primary">
-                        support@driverfly.co
-                      </a>
-                    </div>
-                  </div>
-                }
-              />
-            </>
-          )}
           <BaseTextArea
             className="col-12 mt-4"
             label={t('ABOUT')}
@@ -323,7 +273,16 @@ export function CompanyForm(props: CompanyFormProps) {
               { value: 'Training Provided', label: t('TRAINING_PROVIDED') },
             ]}
           />
+          <BaseTextArea
+            className="col-12 mt-4"
+            label={t('ADDITIONAL_INFORMATION')}
+            name="additional_information"
+            rows={3}
+            placeholder={t('ADDITIONAL_INFORMATION_PLACEHOLDER')}
+            formik={form}
+          />
         </Row>
+        </fieldset>
       </EntityForm>
     </>
   );

@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Form from 'react-bootstrap/Form';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
+import { trackingContextToUtmReferral } from '../../../../models/auth/utm-referral.interface';
 import { ApplicantExtras } from '../../../../enums/applicants/applicant-extras.enum';
 import { JobGeography } from '../../../../enums/jobs/job-geography.enum';
 import { JobSchedule } from '../../../../enums/jobs/job-schedule.enum';
@@ -83,7 +84,7 @@ export function Preferences() {
             },
             applicantExtras,
             jobs,
-            utm,
+            utm: trackingContextToUtmReferral(utm),
           });
 
           toast.success(t('APPLICATION_UPDATED_SUCCESSFULLY'));
@@ -104,7 +105,7 @@ export function Preferences() {
             },
             applicantExtras,
             jobs,
-            utm,
+            utm: trackingContextToUtmReferral(utm),
           });
         }
 

@@ -26,6 +26,12 @@ export class ReferralSourceEntity {
     }
 
     static getReferralUrl(host: string, entity: ReferralSourceEntity, slug: string) {
-        return `${host}/apply/${slug}?utm_source=${entity?.source}&utm_medium=${entity?.medium}&utm_campaign=${entity?.code}&referral_name=${entity?.name}`;
+        const params = new URLSearchParams();
+        if (entity?.source) params.set('utm_source', entity.source);
+        if (entity?.medium) params.set('utm_medium', entity.medium);
+        if (entity?.campaign) params.set('utm_campaign', entity.campaign);
+        if (entity?.code) params.set('referral_code', entity.code);
+        if (entity?.name) params.set('referral_name', entity.name);
+        return `${host}/apply/${slug}?${params.toString()}`;
     }
 }

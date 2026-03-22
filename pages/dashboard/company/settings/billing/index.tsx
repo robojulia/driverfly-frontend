@@ -9,10 +9,11 @@ import { useTranslation } from '../../../../../hooks/use-translation';
 import { useEffectAsync } from '../../../../../utils/react';
 import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
 import BillingApi from '../../../../api/billing';
+import EmployeeApi from '../../../../api/employee';
+import UserApi from '../../../../api/user';
 import { SubscriptionEntity } from '../../../../../models/billing/subscription.entity';
 import { PaymentMethodEntity } from '../../../../../models/billing/payment-method.entity';
 import { InvoiceEntity } from '../../../../../models/billing/invoice.entity';
-import { UsageMetricsEntity } from '../../../../../models/billing/usage-metrics.entity';
 import { BaseSubscriptionDisplay } from '../../../../../components/billing/BaseSubscriptionDisplay';
 import { PaymentMethodsManager } from '../../../../../components/billing/PaymentMethodsManager';
 import { InvoiceList } from '../../../../../components/billing/InvoiceList';
@@ -20,6 +21,42 @@ import { AutoRecruitingAddon } from '../../../../../components/billing/AutoRecru
 import { AIAgentCampaigns } from '../../../../../components/billing/AIAgentCampaigns';
 import { MVRToggle } from '../../../../../components/billing/MVRToggle';
 import { BillingInterval } from '../../../../../enums/billing/subscription-plan.enum';
+import { EmployeeStatus } from '../../../../../enums/applicants/employee-status.enum';
+import { Status } from '../../../../../enums/status.enum';
+import { EmployeeEntity } from '../../../../../models/employee/employee.entity';
+
+function employeeDirectoryTotal(data: unknown): number | undefined {
+  if (data && typeof data === 'object' && 'meta' in data) {
+    const meta = (data as { meta?: Record<string, unknown> }).meta;
+    const total = meta?.totalItems ?? meta?.total_items;
+    if (typeof total === 'number') return total;
+  }
+  return undefined;
+}
+
+function mapUsersForBilling(list: any[]) {
+  return list
+    .filter((u) => u.status === Status.ACTIVE && !u.company_disabled)
+    .map((u) => ({
+      id: u.id as number,
+      name: (u.name || `${u.first_name || ''} ${u.last_name || ''}`).trim() || u.email || '—',
+      email: u.email || '—',
+      role: u.roles?.map((r) => r.name).filter(Boolean).join(', ') || '—',
+      isDriver: Boolean(u.roles?.some((r) => /driver/i.test(String(r.name || '')))),
+    }));
+}
+
+function mapEmployeesForBilling(list: EmployeeEntity[]) {
+  return list.map((e) => {
+    const fromEmployee = `${e.first_name || ''} ${e.last_name || ''}`.trim();
+    const fromApplicant = `${e.applicant?.first_name || ''} ${e.applicant?.last_name || ''}`.trim();
+    return {
+      id: e.id as number,
+      name: fromEmployee || fromApplicant || '—',
+      email: e.applicant?.email || '—',
+    };
+  });
+}
 
 export default function BillingPage() {
   const { t } = useTranslation();
@@ -38,7 +75,9 @@ export default function BillingPage() {
     BillingInterval.MONTHLY
   );
   const [employeeCount, setEmployeeCount] = useState<number>(0);
-  const [driverSeats, setDriverSeats] = useState<number>(0);
+  const [billingEmployees, setBillingEmployees] = useState<
+    Array<{ id: number; name: string; email: string }>
+  >([]);
   const [users, setUsers] = useState<
     Array<{
       id: number;
@@ -53,6 +92,7 @@ export default function BillingPage() {
   const [autoRecruitingEnabled, setAutoRecruitingEnabled] = useState(false);
   const [aiAgentPlan, setAiAgentPlan] = useState<'STARTER' | 'STANDARD' | 'ENTERPRISE' | null>(null);
   const [mvrEnabled, setMvrEnabled] = useState(false);
+  const [mvrRecordsPulled, setMvrRecordsPulled] = useState(0);
 
   useEffectAsync(async () => {
     await loadBillingData();
@@ -68,43 +108,61 @@ export default function BillingPage() {
     setLoading(true);
     try {
       const api = new BillingApi();
+      const employeeApi = new EmployeeApi();
+      const userApi = new UserApi();
 
-      const [subData, pmData, invData] = await Promise.all([
+      const [subData, pmData, invData, usageData, employeePage, userList] = await Promise.all([
         api.subscription.get().catch(() => null), // Subscription might not exist yet
         api.paymentMethods.list().catch(() => []),
         api.invoices.list({ limit: 12 }).catch(() => []),
+        api.usage.get().catch(() => null),
+        employeeApi.list({
+          status: [EmployeeStatus.ACTIVE],
+          is_paginated: true,
+          limit: 500,
+          page: 1,
+        }).catch(() => null),
+        userApi.list().catch(() => []),
       ]);
 
-      setSubscription(subData);
+      const mergedSub = subData ?? usageData?.subscription ?? null;
+
+      setSubscription(mergedSub);
       setPaymentMethods(pmData);
       setInvoices(invData);
 
       // Set states from subscription data if available
-      if (subData) {
+      if (mergedSub) {
         setBillingInterval(
-          subData.billing_interval || BillingInterval.MONTHLY
+          mergedSub.billing_interval || BillingInterval.MONTHLY
         );
-        setAutoRecruitingEnabled(subData.auto_recruiting_enabled || false);
-        setAiAgentPlan(subData.ai_agent_plan || null);
-        setMvrEnabled(subData.mvr_enabled || false);
-        setEmployeeCount(subData.employee_count || 0);
-        setDriverSeats(subData.driver_seats || 0);
+        setAutoRecruitingEnabled(mergedSub.auto_recruiting_enabled || false);
+        setAiAgentPlan(mergedSub.ai_agent_plan || null);
+        setMvrEnabled(mergedSub.mvr_enabled || false);
+        setMvrRecordsPulled(mergedSub.mvr_records_pulled ?? 0);
+      } else {
+        setBillingInterval(BillingInterval.MONTHLY);
+        setAutoRecruitingEnabled(false);
+        setAiAgentPlan(null);
+        setMvrEnabled(false);
+        setMvrRecordsPulled(0);
       }
 
-      // Load company users for seat allocation
-      // TODO: Replace with actual API call when backend is ready
-      // const userApi = new UserApi();
-      // const userData = await userApi.list().catch(() => []);
-      // setUsers(userData.map(u => ({
-      //   id: u.id,
-      //   name: u.name,
-      //   email: u.email,
-      //   role: u.role,
-      //   isDriver: u.is_driver || false
-      // })));
-
-      // Mock data for now
-      setUsers([]);
+      const fromDirectory = employeeDirectoryTotal(employeePage);
+      const employeeItems = (employeePage as { items?: EmployeeEntity[] })?.items;
+      if (Array.isArray(employeeItems)) {
+        setBillingEmployees(mapEmployeesForBilling(employeeItems));
+      } else {
+        setBillingEmployees([]);
+      }
+      const subEmployeeCount =
+        mergedSub?.employee_count ??
+        (mergedSub as { employeeCount?: number } | null)?.employeeCount;
+      setEmployeeCount(
+        fromDirectory ??
+          (typeof subEmployeeCount === 'number' ? subEmployeeCount : employeeItems?.length ?? 0)
+      );
+      setUsers(mapUsersForBilling(userList));
     } catch (error) {
       globalAjaxExceptionHandler(error, { t, toast });
     } finally {
@@ -203,8 +261,8 @@ export default function BillingPage() {
 
   const handleToggleAutoRecruiting = async (enabled: boolean) => {
     try {
-      const api = new BillingApi();
       // TODO: Add auto recruiting endpoint when backend is ready
+      // const api = new BillingApi();
       // await api.addons.updateAutoRecruiting({ enabled });
       setAutoRecruitingEnabled(enabled);
       toast.success(
@@ -212,7 +270,6 @@ export default function BillingPage() {
           ? t('AUTO_RECRUITING_ENABLED')
           : t('AUTO_RECRUITING_DISABLED')
       );
-      await loadBillingData();
     } catch (error) {
       globalAjaxExceptionHandler(error, { t, toast });
     }
@@ -222,14 +279,13 @@ export default function BillingPage() {
     plan: 'STARTER' | 'STANDARD' | 'ENTERPRISE' | null
   ) => {
     try {
-      const api = new BillingApi();
       // TODO: Add AI agent plan endpoint when backend is ready
+      // const api = new BillingApi();
       // await api.addons.updateAiAgentPlan({ plan });
       setAiAgentPlan(plan);
       toast.success(
         plan ? t('AI_AGENT_PLAN_UPDATED') : t('AI_AGENT_PLAN_DISABLED')
       );
-      await loadBillingData();
     } catch (error) {
       globalAjaxExceptionHandler(error, { t, toast });
     }
@@ -237,14 +293,13 @@ export default function BillingPage() {
 
   const handleToggleMvr = async (enabled: boolean) => {
     try {
-      const api = new BillingApi();
       // TODO: Add MVR toggle endpoint when backend is ready
+      // const api = new BillingApi();
       // await api.addons.updateMvr({ enabled });
       setMvrEnabled(enabled);
       toast.success(
         enabled ? t('MVR_ENABLED') : t('MVR_DISABLED')
       );
-      await loadBillingData();
     } catch (error) {
       globalAjaxExceptionHandler(error, { t, toast });
     }
@@ -263,11 +318,18 @@ export default function BillingPage() {
         ) : (
           <>
             <BaseSubscriptionDisplay
+              subscription={subscription}
               billingInterval={billingInterval}
               onIntervalChange={handleBillingIntervalChange}
-              employeeCount={employeeCount}
-              driverSeats={driverSeats}
+              trackedDriverEmployeeCount={employeeCount}
+              employees={billingEmployees}
               users={users}
+              mvrEnabled={mvrEnabled}
+              mvrRecordsPulled={mvrRecordsPulled}
+              aiAgentPlan={aiAgentPlan}
+              onToggleMvr={handleToggleMvr}
+              onCancelAiAgent={() => handleSelectAiAgentPlan(null)}
+              loading={loading}
             />
 
             <h4 className="mt-4 mb-3">Add-on Services</h4>
@@ -278,12 +340,14 @@ export default function BillingPage() {
               loading={loading}
             />
 
-            <AIAgentCampaigns
-              currentPlan={aiAgentPlan}
-              billingInterval={billingInterval}
-              onSelectPlan={handleSelectAiAgentPlan}
-              loading={loading}
-            />
+            <div id="ai-agent-campaigns">
+              <AIAgentCampaigns
+                currentPlan={aiAgentPlan}
+                billingInterval={billingInterval}
+                onSelectPlan={handleSelectAiAgentPlan}
+                loading={loading}
+              />
+            </div>
 
             <MVRToggle
               enabled={mvrEnabled}

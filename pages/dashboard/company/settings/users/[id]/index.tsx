@@ -113,6 +113,7 @@ export default function ViewUser({ id }) {
                 EMAIL: user.email,
                 phone: user.contact_number,
                 phone_cell: user.cell_number,
+                USER_ROLE: user.super_admin ? 'Super Admin' : user.company_admin ? 'Company Admin' : 'Regular User',
                 COMPANIES: user.companies && user.companies.length > 0
                   ? user.companies.map((c) => c.name).join(', ')
                   : user.company?.name || 'N/A',

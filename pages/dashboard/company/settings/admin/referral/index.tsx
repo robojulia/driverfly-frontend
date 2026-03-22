@@ -126,13 +126,13 @@ export default function ReferralList({ host }: { host: string }) {
 					},
 					{
 						id: "name",
-						name: "NAME",
+						name: "Name",
 						selector: v => v.name,
 						hidable: false,
 					},
 					{
 						id: "code",
-						name: "REFERRAL_CODE",
+						name: "Referral Code",
 						selector: v => v.code,
 					},
 					{
@@ -145,24 +145,24 @@ export default function ReferralList({ host }: { host: string }) {
 					},
 					{
 						id: "referrals",
-						name: "REFERRALS",
+						name: "Referrals",
 						selector: v => v.referrals,
 					},
 					{
 						id: "referralAmount",
-						name: "AMOUNT_PER_REFERRAL",
+						name: "Amount Per Referral",
 						selector: v => v.referralAmount || 0,
 						cell: v => `$${(v.referralAmount || 0).toFixed(2)}`,
 					},
 					{
 						id: "monthlyTotal",
-						name: "MONTHLY_TOTAL",
+						name: "Monthly Total",
 						selector: v => (v.referrals || 0) * (v.referralAmount || 0),
 						cell: v => `$${((v.referrals || 0) * (v.referralAmount || 0)).toFixed(2)}`,
 					},
 					{
 						id: "createdAt",
-						name: "CREATED_AT",
+						name: "Created At",
 						selector: v => (typeof v.createdAt == "string" ? new Date(v.createdAt) : v.createdAt).toLocaleString(),
 					},
 				]}

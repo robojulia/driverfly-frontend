@@ -28,6 +28,7 @@ import {
   PersonBadgeFill,
   PersonLinesFill,
   Link45deg,
+  Grid3x3GapFill,
   CarFront,
   MegaphoneFill,
   Lightning,
@@ -148,7 +149,6 @@ const FullLayout = ({ children }) => {
           pathname: '/dashboard/company/settings',
           icon: Building,
           text: 'company',
-          permissions: 'CanViewCompany',
         },
         {
           pathname: '/dashboard/company/settings/billing',
@@ -194,6 +194,12 @@ const FullLayout = ({ children }) => {
           pathname: '/dashboard/company/settings/support',
           icon: QuestionCircleFill,
           text: 'SUPPORT',
+        },
+        {
+          pathname: '/dashboard/company/settings/integrations/facebook',
+          icon: Grid3x3GapFill,
+          text: 'INTEGRATIONS',
+          startsWith: true,
         },
         // superadmin panel
         {

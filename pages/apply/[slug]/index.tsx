@@ -14,7 +14,7 @@ import { DevPageNavigator } from '../../../components/developer/dev-page-navigat
 import JotformContext from '../../../context/jotform-context';
 import { Status } from '../../../enums/status.enum';
 import { ApplicantEntity, ApplicantExtrasEntity } from '../../../models/applicant';
-import { UtmReferral } from '../../../models/auth/utm-referral.interface';
+import { TrackingContext } from '../../../models/auth/utm-referral.interface';
 import { CompanyPreferenceEntity } from '../../../models/company/company-preferences.entity';
 import { CompanyEntity } from '../../../models/company/company.entity';
 import { JobEntity } from '../../../models/job/job.entity';
@@ -27,7 +27,7 @@ import JobApi from '../../api/job';
 export interface FullFormProps {
   employer: CompanyEntity;
   preferences: CompanyPreferenceEntity[];
-  utm?: UtmReferral;
+  utm?: TrackingContext;
   employerJobs?: JobEntity[];
   directJobId?: number | null;
   directJob?: JobEntity | null;
@@ -191,12 +191,17 @@ export async function getServerSideProps({ query }: NextPageContext) {
     let slug = String(query?.slug);
     const jobId = query?.jobId ? parseInt(String(query.jobId), 10) : null;
 
-    const utm: UtmReferral = {
-      utm_source: (query?.utm_source as string) ?? null,
-      utm_medium: (query?.utm_medium as string) ?? null,
-      utm_campaign: (query?.utm_campaign as string) ?? null,
-      utm_content: (query?.utm_content as string) ?? null,
-      referral_name: (query?.referral_name as string) ?? null,
+    const utm: TrackingContext = {
+      utm: {
+        source: (query?.utm_source as string) ?? null,
+        medium: (query?.utm_medium as string) ?? null,
+        campaign: (query?.utm_campaign as string) ?? null,
+        content: (query?.utm_content as string) ?? null,
+      },
+      referral: {
+        name: (query?.referral_name as string) ?? null,
+        code: (query?.referral_code as string) ?? null,
+      },
     };
 
     if (!slug) {

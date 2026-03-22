@@ -373,6 +373,7 @@ export class JobAnalyticsService {
       campaignId,
       source: urlParams.get('utm_source') || (directCampaignId ? 'campaign' : undefined),
       medium: urlParams.get('utm_medium') || (directCampaignId ? 'sms' : undefined),
+      referralCode: urlParams.get('referral_code') || undefined,
     };
   }
 

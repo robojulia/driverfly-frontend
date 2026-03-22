@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
+import { Clipboard } from 'react-bootstrap-icons';
 import { JobEntity } from '../../models/job/job.entity';
 import { useTranslation } from '../../hooks/use-translation';
 import ViewCard from '../view-details/view-card';
@@ -28,6 +29,31 @@ interface JobDetailsOverviewProps {
 
 export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, className = '' }) => {
   const { t } = useTranslation();
+  const [copied, setCopied] = useState(false);
+
+  const getQuickApplyUrl = () => {
+    if (!job.id || !job.title) return '';
+    const slug = job.title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim();
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    return `${origin}/jobs/${job.id}/${slug}`;
+  };
+
+  const handleCopy = async () => {
+    const url = getQuickApplyUrl();
+    if (!url) return;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (e) {
+      console.error('Failed to copy', e);
+    }
+  };
 
   // Helper function to display field value
   const DisplayField = ({ label, value, required = false }: { label: string; value: any; required?: boolean }) => (
@@ -85,6 +111,30 @@ export const JobDetailsOverview: React.FC<JobDetailsOverviewProps> = ({ job, cla
           background-color: inherit;
         }
       `}</style>
+
+      {/* Quick Apply Link */}
+      <div className="mb-3 p-3 border rounded bg-white">
+        <label className="form-label fw-semibold mb-1">Quick Apply Link</label>
+        <p className="text-muted small mb-2">Share this link to send applicants directly to the application form for this job.</p>
+        <div className="input-group">
+          <input
+            type="text"
+            className="form-control bg-light"
+            value={getQuickApplyUrl()}
+            readOnly
+          />
+          <button
+            className="btn btn-secondary"
+            type="button"
+            onClick={handleCopy}
+            title="Copy to clipboard"
+          >
+            <Clipboard className="me-1" />
+            {copied ? 'Copied!' : 'Copy'}
+          </button>
+        </div>
+      </div>
+
       <Row className="mt-1">
         <Col md="6" lg="6" xl="6" className="p-0 px-lg-2">
           <div className="job-overview-card">

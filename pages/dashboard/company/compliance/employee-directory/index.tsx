@@ -53,7 +53,7 @@ const pagingsMetaInitialValues = (): PagingMeta => ({
 });
 
 export default function EmployeeDirectory() {
-  const { user, hasPermission } = useAuth();
+  const { user, hasPermission, isCompanyAdmin } = useAuth();
   const { setPreviousPath } = useLastPage();
   const router = useRouter();
   const { t } = useTranslation();
@@ -95,6 +95,11 @@ export default function EmployeeDirectory() {
   useEffect(() => {
     setPreviousPath(router.asPath);
     setViewMode((router.query.viewMode as ViewModeType) ?? ViewModeType.EMPLOYEE);
+
+    // Handle tab query parameter for direct navigation to a specific tab
+    if (router.query.tab === 'notifications') {
+      setActiveTab('notifications');
+    }
 
     // Handle hireDateFrom query parameter for filtering recent hires
     if (router.query.hireDateFrom) {
@@ -165,6 +170,8 @@ export default function EmployeeDirectory() {
       search: searchTerm || undefined,
       sortBy: sortBy || undefined,
       sortOrder: (sortDirection?.toUpperCase() as 'ASC' | 'DESC') || undefined,
+      // Regular users only see employees hired through them
+      ...(!isCompanyAdmin && { recruitedByUserId: user?.id }),
       ...filters,
     });
     setEmployees((data as Pagination<EmployeeEntity>)?.items);
@@ -199,6 +206,8 @@ export default function EmployeeDirectory() {
       search: searchTerm || undefined,
       sortBy: sortBy || undefined,
       sortOrder: (sortDirection?.toUpperCase() as 'ASC' | 'DESC') || undefined,
+      // Regular users only see employees hired through them
+      ...(!isCompanyAdmin && { recruitedByUserId: user?.id }),
       ...filters,
     });
     setEmployees((data as Pagination<EmployeeEntity>)?.items);
