@@ -6,7 +6,7 @@ interface UtmBreakdownChartProps {
   data: UtmBreakdown[];
 }
 
-type UtmGroupBy = 'source' | 'medium' | 'campaign' | 'content';
+type UtmGroupBy = 'source' | 'medium' | 'campaign';
 
 export const UtmBreakdownChart: React.FC<UtmBreakdownChartProps> = ({ data }) => {
   const [groupBy, setGroupBy] = useState<UtmGroupBy>('source');
@@ -29,9 +29,6 @@ export const UtmBreakdownChart: React.FC<UtmBreakdownChartProps> = ({ data }) =>
           break;
         case 'campaign':
           key = item.utm_campaign || '(not set)';
-          break;
-        case 'content':
-          key = item.utm_content || '(not set)';
           break;
         default:
           key = '(not set)';
@@ -81,8 +78,6 @@ export const UtmBreakdownChart: React.FC<UtmBreakdownChartProps> = ({ data }) =>
         return 'Medium';
       case 'campaign':
         return 'Campaign';
-      case 'content':
-        return 'Content';
     }
   };
 
@@ -100,7 +95,7 @@ export const UtmBreakdownChart: React.FC<UtmBreakdownChartProps> = ({ data }) =>
       <div className="mb-3">
         <small className="text-muted d-block mb-2">Group by UTM parameter:</small>
         <ButtonGroup size="sm">
-          {(['source', 'medium', 'campaign', 'content'] as UtmGroupBy[]).map((type) => (
+          {(['source', 'medium', 'campaign'] as UtmGroupBy[]).map((type) => (
             <Button
               key={type}
               variant={groupBy === type ? 'primary' : 'outline-primary'}

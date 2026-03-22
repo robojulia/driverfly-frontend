@@ -29,9 +29,9 @@ export class JobAnalyticsService {
 
   // Configuration
   private readonly BATCH_SIZE = 10;
-  private readonly BATCH_TIMEOUT = 30000; // 30 seconds
+  private readonly BATCH_TIMEOUT = process.env.NODE_ENV === 'development' ? 5000 : 30000; // 5s dev / 30s prod
   private readonly RETRY_DELAY = 60000; // 1 minute
-  private readonly VIEW_DEDUP_WINDOW = 300000; // 5 minutes
+  private readonly VIEW_DEDUP_WINDOW = process.env.NODE_ENV === 'development' ? 60000 : 300000; // 1min dev / 5min prod
 
   private constructor() {
     this.sessionId = this.generateSessionId();
@@ -292,10 +292,12 @@ export class JobAnalyticsService {
     try {
       if (useBeacon && typeof navigator !== 'undefined' && navigator.sendBeacon) {
         // Use sendBeacon for reliable delivery on page unload
+        // Must use Blob with application/json so NestJS body-parser reads it correctly
         const baseUrl = this.getAnalyticsBaseUrl();
+        const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
         const success = navigator.sendBeacon(
           `${baseUrl}/analytics/track-batch`,
-          JSON.stringify(payload)
+          blob
         );
 
         if (!success) {
@@ -361,16 +363,16 @@ export class JobAnalyticsService {
 
     const urlParams = new URLSearchParams(window.location.search);
 
-    // Extract campaign ID from both UTM parameter and direct campaignId parameter
-    const utmCampaign = urlParams.get('utm_campaign');
-    const directCampaignId = urlParams.get('campaignId');
-    const campaignId = directCampaignId || utmCampaign || undefined;
+    // directCampaignId is an internal campaign system ID (e.g. from SMS blast links)
+    // utm_campaign is a descriptive label — stored separately, does NOT override referrer source
+    const directCampaignId = urlParams.get('campaignId') || undefined;
 
     return {
       referrer: document.referrer,
       userAgent: navigator.userAgent,
       viewport: `${window.innerWidth}x${window.innerHeight}`,
-      campaignId,
+      campaignId: directCampaignId,
+      campaign: urlParams.get('utm_campaign') || undefined,
       source: urlParams.get('utm_source') || (directCampaignId ? 'campaign' : undefined),
       medium: urlParams.get('utm_medium') || (directCampaignId ? 'sms' : undefined),
       referralCode: urlParams.get('referral_code') || undefined,

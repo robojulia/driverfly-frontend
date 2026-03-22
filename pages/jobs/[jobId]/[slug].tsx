@@ -20,14 +20,19 @@ export default function Detail({
 
   const { t } = useTranslation();
 
-  // Automatically track job view when page loads, including campaign metadata
-  const viewMetadata = campaignInfo?.campaignId
-    ? {
-        campaignId: campaignInfo.campaignId,
-        source: campaignInfo.source,
-        medium: campaignInfo.medium,
-      }
-    : undefined;
+  // Build view metadata from server-side extracted tracking params.
+  // UTM source/medium/campaign come from server-side props so they're captured
+  // immediately on mount, before the 30s batch flush window.
+  // campaignId is only for the internal campaign system (?campaignId= param), not utm_campaign.
+  const viewMetadata =
+    campaignInfo?.source || campaignInfo?.campaignId
+      ? {
+          source: campaignInfo.source || undefined,
+          medium: campaignInfo.medium || undefined,
+          campaign: campaignInfo.campaign || undefined,
+          campaignId: campaignInfo.campaignId || undefined,
+        }
+      : undefined;
 
   useAutoJobViewTracking(job?.id, job?.company?.id, viewMetadata);
 
@@ -57,7 +62,7 @@ export default function Detail({
 export async function getServerSideProps({ params, query }) {
   try {
     const { jobId } = params;
-    const { quick_apply, campaignId, utm_campaign, utm_source, utm_medium } = query;
+    const { quick_apply, campaignId, utm_source, utm_medium, utm_campaign } = query;
 
     if (!!!jobId) return { notFound: true };
 
@@ -70,11 +75,14 @@ export async function getServerSideProps({ params, query }) {
       take: 3,
     })) as Pagination<JobEntity>;
 
-    // Extract campaign information for analytics
+    // Extract tracking information for analytics.
+    // - campaignId: internal campaign system ID (from ?campaignId= only, NOT utm_campaign)
+    // - source/medium/campaign: UTM params for channel attribution
     const campaignInfo = {
-      campaignId: campaignId || utm_campaign || null,
-      source: utm_source || (campaignId ? 'campaign' : null),
-      medium: utm_medium || (campaignId ? 'sms' : null),
+      campaignId: (campaignId as string) || null,
+      source: (utm_source as string) || (campaignId ? 'campaign' : null),
+      medium: (utm_medium as string) || (campaignId ? 'sms' : null),
+      campaign: (utm_campaign as string) || null,
     };
 
     return {

@@ -25,6 +25,7 @@ import { AnalyticsAlerts } from './AnalyticsAlerts';
 import { JobComparison } from './JobComparison';
 import { LeadSourceBreakdownChart } from './LeadSourceBreakdownChart';
 import { UtmBreakdownChart } from './UtmBreakdownChart';
+import { TrackingLinksSection } from './TrackingLinksSection';
 
 interface JobAnalyticsDashboardProps {
   job: JobEntity;
@@ -254,6 +255,13 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
               <ConversionFunnelChart metrics={metrics} />
             </Card.Body>
           </Card>
+        </Col>
+      </Row>
+
+      {/* Tracking Links */}
+      <Row className="mb-4">
+        <Col>
+          <TrackingLinksSection job={job} />
         </Col>
       </Row>
 

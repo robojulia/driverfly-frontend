@@ -25,7 +25,8 @@ export interface TrackingMetadata {
   referrer?: string;
   userAgent?: string;
   viewport?: string;
-  campaignId?: string; // Campaign ID from either ?campaignId= or ?utm_campaign= URL parameters
+  campaignId?: string; // Internal campaign system ID from ?campaignId= (e.g. SMS campaign blasts)
+  campaign?: string; // UTM campaign label from ?utm_campaign= (e.g. "spring-2026-hiring")
   source?: string; // Traffic source (utm_source, or 'campaign' for direct campaign links)
   medium?: string; // Traffic medium (utm_medium, or 'sms' for campaign SMS links)
   referralCode?: string; // Referral partner/person code from ?referral_code= URL parameter

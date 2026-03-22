@@ -4,6 +4,7 @@ export type CampaignInfo = {
   campaignId?: string;
   source?: string;
   medium?: string;
+  campaign?: string;
 };
 
 export type JobDetailProps = {

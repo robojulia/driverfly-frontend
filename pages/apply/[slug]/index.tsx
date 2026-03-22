@@ -94,8 +94,10 @@ export default function FullForm({
   useEffect(() => {
     if (isDirectJobApplication && directJob) {
       trackApplicationStart(directJob.id, directJob.company?.id || employer.id, {
-        source: 'dha_full_form',
+        // Don't set source here — let getBaseMetadata() read utm_source from the URL
+        // so UTM-tagged links are attributed correctly in analytics
         applicationType: 'full_application',
+        applicationSource: 'dha_full_form',
         additional: {
           formType: 'DHA_FullForm',
           isDirectJobApplication: true,
@@ -105,10 +107,9 @@ export default function FullForm({
         },
       });
     } else if (employer?.id) {
-      // For general company applications (not job-specific)
       trackApplicationStart(0, employer.id, {
-        source: 'dha_full_form',
         applicationType: 'full_application',
+        applicationSource: 'dha_full_form',
         additional: {
           formType: 'DHA_FullForm',
           isDirectJobApplication: false,
