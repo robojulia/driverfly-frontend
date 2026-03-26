@@ -1,531 +1,335 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   Modal,
   ModalHeader,
   ModalBody,
   ModalFooter,
   Button,
-  Input,
   Table,
-  Badge,
   Alert,
-  FormGroup,
-  Label,
-  Row,
-  Col,
+  Input,
+  FormFeedback,
   Spinner,
 } from 'reactstrap';
-import { Search, PersonPlus, People, GeoAlt } from 'react-bootstrap-icons';
+import { PersonPlus, Plus, Trash, Upload } from 'react-bootstrap-icons';
+import Papa from 'papaparse';
 import { useTranslation } from '../../hooks/use-translation';
-import { useApplicantSearch, ApplicantLite } from '../../hooks/campaigns/useApplicantSearch';
+import { BulkLeadDto, LeadEntity } from '../../models/campaigns/bulk-lead-upload.dto';
+import { normalizePhoneNumber } from '../../utils/phone-normalization';
 
 interface ManualTargetSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddTargets: (applicantIds: number[]) => Promise<void>;
+  onAddLeads: (leads: BulkLeadDto[]) => Promise<void>;
   loading?: boolean;
 }
+
+const emptyRow = (): BulkLeadDto => ({ name: '', phone: '', email: '' });
 
 export const ManualTargetSelectionModal: React.FC<ManualTargetSelectionModalProps> = ({
   isOpen,
   onClose,
-  onAddTargets,
+  onAddLeads,
   loading = false,
 }) => {
   const { t } = useTranslation();
-  const { searchApplicants, loading: searchLoading, error: searchError } = useApplicantSearch();
-
-  const [searchTerm, setSearchTerm] = useState('');
-  const [applicants, setApplicants] = useState<ApplicantLite[]>([]);
-  const [selectedApplicants, setSelectedApplicants] = useState<Set<number>>(new Set());
-  const [selectedApplicantsMap, setSelectedApplicantsMap] = useState<Map<number, ApplicantLite>>(
-    new Map()
-  );
-  const [total, setTotal] = useState(0);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [hasSearched, setHasSearched] = useState(false);
+  const [rows, setRows] = useState<BulkLeadDto[]>([emptyRow()]);
+  const [errors, setErrors] = useState<Record<number, { name?: string; phone?: string }>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [csvError, setCsvError] = useState<string | null>(null);
 
-  const pageSize = 20;
-  const MAX_MANUAL_TARGETS = 3;
+  const schema = LeadEntity.yupSchemaForBulkUpload();
 
-  // Debounced search effect
+  // Reset on open
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (searchTerm.trim() || hasSearched) {
-        handleSearch();
-      }
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
-
-  const handleSearch = async () => {
-    try {
-      setHasSearched(true);
-      const response = await searchApplicants({
-        search: searchTerm.trim() || undefined,
-        limit: pageSize,
-        offset: currentPage * pageSize,
-      });
-
-      setApplicants(response.applicants);
-      setTotal(response.total);
-    } catch (err) {
-      console.error('Search failed:', err);
+    if (isOpen) {
+      setRows([emptyRow()]);
+      setErrors({});
+      setSubmitError(null);
+      setCsvError(null);
     }
-  };
+  }, [isOpen]);
 
-  const handlePageChange = async (newPage: number) => {
-    setCurrentPage(newPage);
-    try {
-      const response = await searchApplicants({
-        search: searchTerm.trim() || undefined,
-        limit: pageSize,
-        offset: newPage * pageSize,
-      });
+  const validate = useCallback(
+    async (items: BulkLeadDto[]) => {
+      const newErrors: Record<number, { name?: string; phone?: string }> = {};
+      const phoneSet = new Set<string>();
 
-      setApplicants(response.applicants);
-    } catch (err) {
-      console.error('Page change failed:', err);
-    }
-  };
+      for (let i = 0; i < items.length; i++) {
+        const row = items[i];
+        const rowError: { name?: string; phone?: string } = {};
 
-  const toggleApplicantSelection = (applicantId: number) => {
-    const applicant = applicants.find((a) => a.id === applicantId);
-
-    setSelectedApplicants((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(applicantId)) {
-        newSet.delete(applicantId);
-      } else {
-        // Check if we're at the limit
-        if (newSet.size >= MAX_MANUAL_TARGETS) {
-          setSubmitError(
-            `You can only select up to ${MAX_MANUAL_TARGETS} targets at a time for targeted outreach.`
-          );
-          return newSet;
-        }
-        newSet.add(applicantId);
-        // Clear any previous error when successfully adding
-        setSubmitError(null);
-      }
-      return newSet;
-    });
-
-    // Keep track of selected applicant data for display
-    if (applicant) {
-      setSelectedApplicantsMap((prev) => {
-        const newMap = new Map(prev);
-        if (newMap.has(applicantId)) {
-          newMap.delete(applicantId);
-        } else {
-          // Only add if we're not at the limit
-          if (selectedApplicants.size < MAX_MANUAL_TARGETS) {
-            newMap.set(applicantId, applicant);
+        try {
+          await schema.validate(row, { abortEarly: false });
+        } catch (err: any) {
+          if (err.inner) {
+            err.inner.forEach((e: any) => {
+              rowError[e.path as 'name' | 'phone'] = e.message;
+            });
           }
         }
-        return newMap;
-      });
-    }
+
+        if (row.phone) {
+          const normalized = normalizePhoneNumber(row.phone);
+          if (normalized && phoneSet.has(normalized)) {
+            rowError.phone = 'Duplicate phone number';
+          } else if (normalized) {
+            phoneSet.add(normalized);
+          }
+        }
+
+        if (Object.keys(rowError).length > 0) newErrors[i] = rowError;
+      }
+
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    },
+    [schema]
+  );
+
+  const handleFieldChange = (index: number, field: keyof BulkLeadDto, value: string) => {
+    const processed = field === 'phone' && value ? normalizePhoneNumber(value) : value;
+    setRows((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], [field]: processed };
+      return next;
+    });
+    // Clear the specific field error on change
+    setErrors((prev) => {
+      if (!prev[index]?.[field as 'name' | 'phone']) return prev;
+      const next = { ...prev };
+      const rowErr = { ...next[index] };
+      delete rowErr[field as 'name' | 'phone'];
+      if (Object.keys(rowErr).length === 0) delete next[index];
+      else next[index] = rowErr;
+      return next;
+    });
   };
 
-  const handleSelectAll = () => {
-    const currentPageApplicantIds = applicants.map((a) => a.id);
-    const allCurrentPageSelected = currentPageApplicantIds.every((id) =>
-      selectedApplicants.has(id)
-    );
+  const handleAddRow = () => setRows((prev) => [...prev, emptyRow()]);
 
-    if (allCurrentPageSelected) {
-      // Deselect all on current page
-      setSelectedApplicants((prev) => {
-        const newSet = new Set(prev);
-        applicants.forEach((a) => newSet.delete(a.id));
-        return newSet;
-      });
-      setSelectedApplicantsMap((prev) => {
-        const newMap = new Map(prev);
-        applicants.forEach((a) => newMap.delete(a.id));
-        return newMap;
-      });
-      setSubmitError(null); // Clear any errors when deselecting
-    } else {
-      // Select all on current page (up to the limit)
-      const remainingSlots = MAX_MANUAL_TARGETS - selectedApplicants.size;
-      const applicantsToSelect = applicants.slice(0, remainingSlots);
-
-      if (remainingSlots <= 0) {
-        setSubmitError(
-          `You can only select up to ${MAX_MANUAL_TARGETS} targets at a time for targeted outreach.`
-        );
-        return;
+  const handleDeleteRow = (index: number) => {
+    setRows((prev) => prev.filter((_, i) => i !== index));
+    setErrors((prev) => {
+      const next: Record<number, any> = {};
+      for (const [k, v] of Object.entries(prev)) {
+        const ki = Number(k);
+        if (ki < index) next[ki] = v;
+        else if (ki > index) next[ki - 1] = v;
       }
+      return next;
+    });
+  };
 
-      if (applicantsToSelect.length < applicants.length) {
-        setSubmitError(
-          `Only selected first ${applicantsToSelect.length} applicant(s) due to ${MAX_MANUAL_TARGETS} target limit.`
+  const handleCsvUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    setCsvError(null);
+
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results: any) => {
+        const { data, meta } = results;
+        const fields: string[] = (meta.fields || []).map((f: string) => f.toLowerCase().trim());
+
+        const nameCol = meta.fields?.find((_: string, i: number) =>
+          /^(name|full.?name|driver.?name|first.?name)$/i.test(fields[i])
         );
-      } else {
-        setSubmitError(null);
-      }
+        const phoneCol = meta.fields?.find((_: string, i: number) =>
+          /^(phone|cell|mobile|tel|phone.?number|cell.?number|mobile.?number)$/i.test(fields[i])
+        );
+        const emailCol = meta.fields?.find((_: string, i: number) =>
+          /^(email|e.?mail)$/i.test(fields[i])
+        );
 
-      setSelectedApplicants((prev) => {
-        const newSet = new Set(prev);
-        applicantsToSelect.forEach((a) => newSet.add(a.id));
-        return newSet;
-      });
-      setSelectedApplicantsMap((prev) => {
-        const newMap = new Map(prev);
-        applicantsToSelect.forEach((a) => newMap.set(a.id, a));
-        return newMap;
-      });
-    }
+        if (!phoneCol) {
+          setCsvError(
+            'Could not find a phone column. Make sure your CSV has a column named "phone", "cell", or "mobile".'
+          );
+          return;
+        }
+
+        const parsed: BulkLeadDto[] = data
+          .map((row: any) => {
+            const phone = normalizePhoneNumber((row[phoneCol] || '').trim());
+            const name = nameCol ? (row[nameCol] || '').trim() : '';
+            const email = emailCol ? (row[emailCol] || '').trim() : '';
+            if (!phone && !name) return null;
+            return { name, phone, email: email || undefined } as BulkLeadDto;
+          })
+          .filter(Boolean);
+
+        if (parsed.length === 0) {
+          setCsvError('No valid rows found in the CSV file.');
+          return;
+        }
+
+        // Merge with existing non-empty rows
+        setRows((prev) => {
+          const nonEmpty = prev.filter((r) => r.name || r.phone);
+          return nonEmpty.length > 0 ? [...nonEmpty, ...parsed] : parsed;
+        });
+      },
+      error: (err: any) => setCsvError(err.message),
+    });
   };
 
   const handleSubmit = async () => {
-    if (selectedApplicants.size === 0) {
-      setSubmitError('Please select at least one applicant to add as a target.');
+    setSubmitError(null);
+
+    const nonEmpty = rows.filter((r) => r.name || r.phone);
+    if (nonEmpty.length === 0) {
+      setSubmitError('Add at least one driver before submitting.');
+      return;
+    }
+
+    const valid = await validate(nonEmpty);
+    if (!valid) {
+      setSubmitError('Please fix the errors below before submitting.');
       return;
     }
 
     try {
-      setSubmitError(null);
-      await onAddTargets(Array.from(selectedApplicants));
-      // Reset modal state
-      setSelectedApplicants(new Set());
-      setSelectedApplicantsMap(new Map());
-      setSearchTerm('');
-      setApplicants([]);
-      setHasSearched(false);
-      setCurrentPage(0);
+      await onAddLeads(nonEmpty);
       onClose();
     } catch (err: any) {
-      setSubmitError(err?.message || 'Failed to add manual targets. Please try again.');
+      setSubmitError(err?.message || 'Failed to add targets. Please try again.');
     }
   };
 
-  const totalPages = Math.ceil(total / pageSize);
+  const nonEmptyCount = rows.filter((r) => r.name || r.phone).length;
 
   return (
     <Modal isOpen={isOpen} toggle={onClose} size="lg" backdrop="static">
       <ModalHeader toggle={onClose}>
         <PersonPlus size={20} className="me-2" />
-        {t('ADD_TARGETS')}
+        Add Targets
       </ModalHeader>
+
       <ModalBody>
-        <div className="mb-4">
-          <p className="text-muted mb-3">{t('ADD_MANUAL_TARGETS_DESCRIPTION')}</p>
+        <p className="text-muted mb-3">
+          Enter the name and phone number for each driver you want to add. A profile will
+          automatically be created for each one so call notes can be stored.
+        </p>
 
-          {/* Target Limit Notice */}
-          <Alert color="info" className="mb-3">
-            <div className="d-flex align-items-start">
-              <People size={16} className="me-2 mt-1 flex-shrink-0" />
-              <div>
-                <strong>{t('TARGETED_OUTREACH_LIMIT')}</strong>
-                <br />
-                <small>
-                  {t('TARGETED_OUTREACH_LIMIT_DESCRIPTION', { max: MAX_MANUAL_TARGETS })}
-                </small>
-              </div>
-            </div>
-          </Alert>
-
-          {/* Search Input */}
-          <FormGroup>
-            <Label for="search-applicants">{t('SEARCH_APPLICANTS')}</Label>
-            <div className="position-relative">
-              <Input
-                id="search-applicants"
-                type="text"
-                placeholder={t('SEARCH_BY_NAME_EMAIL_PHONE')}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pe-5"
-              />
-              <Search
-                size={16}
-                className="position-absolute top-50 end-0 translate-middle-y me-3 text-muted"
-              />
-            </div>
-          </FormGroup>
+        {/* CSV upload */}
+        <div className="d-flex align-items-center gap-2 mb-3">
+          <label className="btn btn-outline-secondary btn-sm mb-0" style={{ cursor: 'pointer' }}>
+            <Upload size={14} className="me-1" />
+            Import from CSV
+            <input
+              type="file"
+              accept=".csv"
+              className="d-none"
+              onChange={handleCsvUpload}
+              disabled={loading}
+            />
+          </label>
+          <small className="text-muted">CSV should have columns: name, phone (and optionally email)</small>
         </div>
 
-        {/* Search Error */}
-        {searchError && (
-          <Alert color="danger" className="mb-3">
-            {searchError}
+        {csvError && (
+          <Alert color="warning" className="mb-3">
+            {csvError}
           </Alert>
         )}
 
-        {/* Submit Error */}
         {submitError && (
-          <Alert color="warning" className="mb-3">
+          <Alert color="danger" className="mb-3">
             {submitError}
           </Alert>
         )}
 
-        {/* Loading State */}
-        {searchLoading && (
-          <div className="text-center py-4">
-            <Spinner color="primary" className="me-2" />
-            {t('SEARCHING_APPLICANTS')}...
-          </div>
-        )}
+        <div className="table-responsive">
+          <Table size="sm" bordered>
+            <thead className="table-light">
+              <tr>
+                <th style={{ width: 40 }}>#</th>
+                <th>Name *</th>
+                <th>Phone *</th>
+                <th>Email</th>
+                <th style={{ width: 50 }}></th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr key={i}>
+                  <td className="align-middle text-center text-muted small">{i + 1}</td>
+                  <td>
+                    <Input
+                      bsSize="sm"
+                      type="text"
+                      placeholder="Full name"
+                      value={row.name}
+                      onChange={(e) => handleFieldChange(i, 'name', e.target.value)}
+                      invalid={!!errors[i]?.name}
+                      disabled={loading}
+                    />
+                    {errors[i]?.name && <FormFeedback>{errors[i].name}</FormFeedback>}
+                  </td>
+                  <td>
+                    <Input
+                      bsSize="sm"
+                      type="tel"
+                      placeholder="Phone number"
+                      value={row.phone}
+                      onChange={(e) => handleFieldChange(i, 'phone', e.target.value)}
+                      invalid={!!errors[i]?.phone}
+                      disabled={loading}
+                    />
+                    {errors[i]?.phone && <FormFeedback>{errors[i].phone}</FormFeedback>}
+                  </td>
+                  <td>
+                    <Input
+                      bsSize="sm"
+                      type="email"
+                      placeholder="Email (optional)"
+                      value={row.email || ''}
+                      onChange={(e) => handleFieldChange(i, 'email', e.target.value)}
+                      disabled={loading}
+                    />
+                  </td>
+                  <td className="text-center align-middle">
+                    {rows.length > 1 && (
+                      <Button
+                        color="link"
+                        size="sm"
+                        className="text-danger p-0"
+                        onClick={() => handleDeleteRow(i)}
+                        disabled={loading}
+                      >
+                        <Trash size={15} />
+                      </Button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
 
-        {/* Results */}
-        {!searchLoading && hasSearched && (
-          <>
-            {applicants.length > 0 ? (
-              <div>
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                  <span className="text-muted">
-                    {t('SEARCH_RESULTS_COUNT', {
-                      count: total,
-                      start: currentPage * pageSize + 1,
-                      end: Math.min((currentPage + 1) * pageSize, total),
-                    })}
-                  </span>
-                  <Button
-                    color="outline-primary"
-                    size="sm"
-                    onClick={handleSelectAll}
-                    disabled={
-                      selectedApplicants.size >= MAX_MANUAL_TARGETS &&
-                      !applicants.every((a) => selectedApplicants.has(a.id))
-                    }
-                  >
-                    {applicants.every((a) => selectedApplicants.has(a.id))
-                      ? t('DESELECT_ALL')
-                      : t('SELECT_ALL_PAGE')}
-                  </Button>
-                </div>
-
-                <div className="table-responsive" style={{ maxHeight: '400px', overflowY: 'auto' }}>
-                  <Table hover size="sm">
-                    <thead className="table-light sticky-top">
-                      <tr>
-                        <th style={{ width: '40px' }}>
-                          <div className="form-check">
-                            <input
-                              type="checkbox"
-                              checked={
-                                applicants.length > 0 &&
-                                applicants.every((a) => selectedApplicants.has(a.id))
-                              }
-                              onChange={handleSelectAll}
-                              className="form-check-input"
-                            />
-                          </div>
-                        </th>
-                        <th>{t('NAME')}</th>
-                        <th>{t('EMAIL')}</th>
-                        <th>{t('PHONE')}</th>
-                        <th>{t('LOCATION')}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {applicants.map((applicant) => {
-                        const isSelected = selectedApplicants.has(applicant.id);
-                        const isDisabled =
-                          !isSelected && selectedApplicants.size >= MAX_MANUAL_TARGETS;
-
-                        return (
-                          <tr
-                            key={applicant.id}
-                            style={{
-                              cursor: isDisabled ? 'not-allowed' : 'pointer',
-                              opacity: isDisabled ? 0.5 : 1,
-                            }}
-                            onClick={() => !isDisabled && toggleApplicantSelection(applicant.id)}
-                            className={isSelected ? 'table-primary' : ''}
-                          >
-                            <td>
-                              <div className="form-check">
-                                <input
-                                  type="checkbox"
-                                  checked={isSelected}
-                                  onChange={() =>
-                                    !isDisabled && toggleApplicantSelection(applicant.id)
-                                  }
-                                  className="form-check-input"
-                                  onClick={(e) => e.stopPropagation()}
-                                  disabled={isDisabled}
-                                />
-                              </div>
-                            </td>
-                            <td>
-                              <div className="fw-semibold">{applicant.fullName || 'N/A'}</div>
-                            </td>
-                            <td>
-                              <small className="text-muted">{applicant.email || 'N/A'}</small>
-                            </td>
-                            <td>
-                              <small className="text-muted">{applicant.phone || 'N/A'}</small>
-                            </td>
-                            <td>
-                              <small className="text-muted">
-                                {applicant.city && applicant.state ? (
-                                  <>
-                                    <GeoAlt size={12} className="me-1" />
-                                    {applicant.city}, {applicant.state}
-                                  </>
-                                ) : (
-                                  'N/A'
-                                )}
-                              </small>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </Table>
-                </div>
-
-                {/* Selected Applicants Summary */}
-                {selectedApplicants.size > 0 && (
-                  <div className="mt-3 mb-3">
-                    <Alert color="info" className="mb-0">
-                      <div className="d-flex align-items-center justify-content-between">
-                        <div>
-                          <People size={16} className="me-2" />
-                          <strong>
-                            {t('SELECTED_COUNT', { count: selectedApplicants.size })} /{' '}
-                            {MAX_MANUAL_TARGETS}
-                          </strong>
-                        </div>
-                        {selectedApplicants.size >= MAX_MANUAL_TARGETS && (
-                          <Badge color="warning" pill>
-                            {t('LIMIT_REACHED')}
-                          </Badge>
-                        )}
-                      </div>
-                      {selectedApplicants.size > 0 && (
-                        <div className="mt-2">
-                          <small className="text-muted d-block mb-2">
-                            {selectedApplicants.size <= 10
-                              ? t('SELECTED_APPLICANTS')
-                              : t('SELECTED_APPLICANTS_SHOWING_MAX', {
-                                  max: 10,
-                                  total: selectedApplicants.size,
-                                })}
-                            :
-                          </small>
-                          <div className="d-flex flex-wrap gap-1">
-                            {Array.from(selectedApplicantsMap.entries())
-                              .slice(0, 10)
-                              .map(([applicantId, applicant]) => (
-                                <Badge
-                                  key={applicantId}
-                                  color="primary"
-                                  pill
-                                  className="text-truncate"
-                                  style={{ maxWidth: '150px' }}
-                                  title={applicant.fullName || `ID: ${applicantId}`}
-                                >
-                                  {applicant.fullName || `ID: ${applicantId}`}
-                                </Badge>
-                              ))}
-                            {selectedApplicants.size > 10 && (
-                              <Badge color="secondary" pill>
-                                +{selectedApplicants.size - 10} more
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </Alert>
-                  </div>
-                )}
-
-                {/* Pagination */}
-                {totalPages > 1 && (
-                  <div className="d-flex justify-content-center mt-3">
-                    <nav>
-                      <ul className="pagination pagination-sm">
-                        <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
-                          <button
-                            className="page-link"
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 0}
-                          >
-                            {t('PREVIOUS')}
-                          </button>
-                        </li>
-                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                          const pageNum = Math.max(
-                            0,
-                            Math.min(currentPage - 2 + i, totalPages - 1)
-                          );
-                          return (
-                            <li
-                              key={pageNum}
-                              className={`page-item ${currentPage === pageNum ? 'active' : ''}`}
-                            >
-                              <button
-                                className="page-link"
-                                onClick={() => handlePageChange(pageNum)}
-                              >
-                                {pageNum + 1}
-                              </button>
-                            </li>
-                          );
-                        })}
-                        <li
-                          className={`page-item ${currentPage >= totalPages - 1 ? 'disabled' : ''}`}
-                        >
-                          <button
-                            className="page-link"
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage >= totalPages - 1}
-                          >
-                            {t('NEXT')}
-                          </button>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="text-center py-5">
-                <People size={48} className="text-muted mb-3" />
-                <h6 className="text-muted mb-2">{t('NO_APPLICANTS_FOUND')}</h6>
-                <p className="text-muted small mb-0">
-                  {searchTerm ? t('NO_SEARCH_RESULTS_MESSAGE') : t('NO_APPLICANTS_MESSAGE')}
-                </p>
-              </div>
-            )}
-          </>
-        )}
-
-        {/* Initial State */}
-        {!searchLoading && !hasSearched && (
-          <div className="text-center py-5">
-            <Search size={48} className="text-muted mb-3" />
-            <h6 className="text-muted mb-2">{t('START_SEARCHING')}</h6>
-            <p className="text-muted small mb-0">{t('START_SEARCHING_MESSAGE')}</p>
-          </div>
-        )}
+        <Button color="outline-secondary" size="sm" onClick={handleAddRow} disabled={loading}>
+          <Plus size={16} className="me-1" />
+          Add Row
+        </Button>
       </ModalBody>
+
       <ModalFooter>
         <Button color="secondary" onClick={onClose} disabled={loading}>
-          {t('CANCEL')}
+          Cancel
         </Button>
-        <Button
-          color="primary"
-          onClick={handleSubmit}
-          disabled={selectedApplicants.size === 0 || loading}
-        >
+        <Button color="primary" onClick={handleSubmit} disabled={loading || nonEmptyCount === 0}>
           {loading ? (
             <>
               <Spinner size="sm" className="me-2" />
-              {t('ADDING_TARGETS')}...
+              Adding...
             </>
           ) : (
             <>
               <PersonPlus size={16} className="me-2" />
-              {t('ADD_SELECTED_TARGETS', { count: selectedApplicants.size })}
+              Add {nonEmptyCount > 0 ? `${nonEmptyCount} ` : ''}Target{nonEmptyCount !== 1 ? 's' : ''}
             </>
           )}
         </Button>

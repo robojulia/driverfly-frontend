@@ -7,6 +7,7 @@ import { ApplicantNoteEntity } from "../../../models/applicant/applicant-note.en
 import ApplicantApi from "../../../pages/api/applicant";
 import Section from "../../view-details/section";
 import { BaseFormProps } from "./base-form-props";
+import { AiNoteLog } from "../../ai-note-log/AiNoteLog";
 
 export interface ApplicantNotesFormProps extends BaseFormProps<ApplicantEntity> {
   hideActions?: boolean;
@@ -29,6 +30,14 @@ export function ApplicantNotesForm(props: ApplicantNotesFormProps) {
       setNotes(entity.notes);
     }
   }, [entity?.notes]);
+
+  const handleAiSaveNote = async (text: string) => {
+    if (!entity?.id) throw new Error('Applicant must be saved first');
+    const newNote = await applicantApi.notes.create(entity.id, { text } as ApplicantNoteEntity);
+    const updatedNotes = [newNote, ...notes];
+    setNotes(updatedNotes);
+    if (setEntity) setEntity({ ...entity, notes: updatedNotes });
+  };
 
   const handleAddNote = async () => {
     if (!entity?.id) {
@@ -149,6 +158,15 @@ export function ApplicantNotesForm(props: ApplicantNotesFormProps) {
           <div className="d-flex justify-content-between align-items-center mb-3">
             <small className="text-muted">All notes are timestamped and preserved as records</small>
           </div>
+
+          {/* AI Note Generator */}
+          {!entity?.is_hired && entity?.id && (
+            <AiNoteLog
+              profileType="applicant"
+              profile={entity as Record<string, any>}
+              onSaveNote={handleAiSaveNote}
+            />
+          )}
 
           {/* Add new note */}
           {!entity?.is_hired && entity?.id && (

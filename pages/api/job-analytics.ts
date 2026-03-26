@@ -53,6 +53,30 @@ export interface UtmBreakdown {
   conversionRate: number;
 }
 
+export interface EntryModeBreakdown {
+  entryMode: string;
+  label: string;
+  count: number;
+  percentage: number;
+}
+
+export interface ApplicantsByState {
+  state: string;
+  count: number;
+  percentage: number;
+}
+
+export interface ApplicantStats {
+  totalApplicants: number;
+  averageAge: number | null;
+  averageYearsCdlExperience: number | null;
+  percentageWithCorrectCdlType: number | null;
+  percentageCanPassDrugTest: number | null;
+  percentageNoDui: number | null;
+  percentageCleanAccidentRecord: number | null;
+  percentageNoViolations: number | null;
+}
+
 export interface JobAnalyticsInsights {
   summary: JobConversionMetrics;
   timeline: ConversionTimelineData[];
@@ -269,6 +293,54 @@ export default class JobAnalyticsApi extends BaseApi {
       return Array.isArray(data.data) ? data.data : [];
     } catch (error) {
       console.error('JobAnalyticsApi.getUtmBreakdown failed:', error);
+      throw error;
+    }
+  }
+
+  async getEntryModeBreakdown(
+    jobId: number,
+    params?: GetJobConversionAnalyticsParams
+  ): Promise<EntryModeBreakdown[]> {
+    if (!jobId || jobId <= 0) throw new Error('Invalid job ID provided');
+    const url = this.buildUrl(`${this.baseUrl}/job/${jobId}/entry-mode-breakdown`, params);
+    try {
+      const { data } = await this.get(url);
+      if (!data.success) throw new Error(data.message || 'Failed to fetch entry mode breakdown');
+      return Array.isArray(data.data) ? data.data : [];
+    } catch (error) {
+      console.error('JobAnalyticsApi.getEntryModeBreakdown failed:', error);
+      throw error;
+    }
+  }
+
+  async getApplicantsByState(
+    jobId: number,
+    params?: GetJobConversionAnalyticsParams
+  ): Promise<ApplicantsByState[]> {
+    if (!jobId || jobId <= 0) throw new Error('Invalid job ID provided');
+    const url = this.buildUrl(`${this.baseUrl}/job/${jobId}/applicants-by-state`, params);
+    try {
+      const { data } = await this.get(url);
+      if (!data.success) throw new Error(data.message || 'Failed to fetch applicants by state');
+      return Array.isArray(data.data) ? data.data : [];
+    } catch (error) {
+      console.error('JobAnalyticsApi.getApplicantsByState failed:', error);
+      throw error;
+    }
+  }
+
+  async getApplicantStats(
+    jobId: number,
+    params?: GetJobConversionAnalyticsParams
+  ): Promise<ApplicantStats> {
+    if (!jobId || jobId <= 0) throw new Error('Invalid job ID provided');
+    const url = this.buildUrl(`${this.baseUrl}/job/${jobId}/applicant-stats`, params);
+    try {
+      const { data } = await this.get(url);
+      if (!data.success) throw new Error(data.message || 'Failed to fetch applicant stats');
+      return data.data;
+    } catch (error) {
+      console.error('JobAnalyticsApi.getApplicantStats failed:', error);
       throw error;
     }
   }

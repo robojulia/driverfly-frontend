@@ -10,7 +10,6 @@ import {
 import FormProgress from '../../../components/forms/jotform/form-progress';
 import { PoweredByLogo } from '../../../components/forms/jotform/powered-by-logo';
 import { CompanyLogoUpperRight } from '../../../components/forms/jotform/company-logo-upper-right';
-import { DevPageNavigator } from '../../../components/developer/dev-page-navigator';
 import JotformContext from '../../../context/jotform-context';
 import { Status } from '../../../enums/status.enum';
 import { ApplicantEntity, ApplicantExtrasEntity } from '../../../models/applicant';
@@ -182,7 +181,6 @@ export default function FullForm({
       </div>
 
       {/* Developer Page Navigator */}
-      <DevPageNavigator formType="full" currentStep={steps} totalSteps={totalSteps} />
     </JotformContext.Provider>
   );
 }

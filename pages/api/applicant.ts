@@ -452,6 +452,15 @@ export default class ApplicantApi extends BaseApi {
 
       return data;
     },
+    // Authenticated job-link for company-sourced leads (avoids the public endpoint's 401 risk)
+    link: async (
+      applicantId: number,
+      jobId: number,
+      dto: ApplicantJobEntity
+    ): Promise<ApplicantEntity> => {
+      const { data } = await this.post(this.jobs.baseUrl(applicantId) + `/${jobId}`, dto);
+      return data;
+    },
   };
 
   vehicle = {

@@ -14,7 +14,6 @@ import ApplicantApi from '../../../../api/applicant';
 import CompanyApi from '../../../../api/company';
 import JobApi from '../../../../api/job';
 import styles from '../../../../../styles/digitalhiringapp.module.css';
-import { DevPageNavigator } from '../../../../../components/developer/dev-page-navigator';
 
 export interface SuggestedJobsProps {
   entity: ApplicantEntity;
@@ -131,7 +130,6 @@ export default function SuggestedJobs({ entity, job, company }: SuggestedJobsPro
       </div>
 
       {/* Developer Page Navigator */}
-      <DevPageNavigator formType="suggested" currentStep={steps} totalSteps={totalSteps} />
     </JotformContext.Provider>
   );
 }

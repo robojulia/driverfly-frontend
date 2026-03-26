@@ -1,5 +1,6 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import ApplicantApi from '../pages/api/applicant';
+import axios from 'axios';
 
 interface AsyncFormSaveHook {
   saveFormData: (formData: any) => Promise<void>;
@@ -11,13 +12,22 @@ interface AsyncFormSaveHook {
 
 export const useAsyncFormSave = (
   applicantId: number | undefined,
-  _stepNumber?: number, // Kept for backward compatibility but no longer used - step logic handled by withAsyncSave HOC
+  stepNumber?: number,
   _isHired?: boolean // Kept for backward compatibility but no longer used
 ): AsyncFormSaveHook => {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      abortControllerRef.current?.abort();
+    };
+  }, []);
 
   const cancel = useCallback(() => {
     if (abortControllerRef.current) {
@@ -52,22 +62,24 @@ export const useAsyncFormSave = (
         await applicantApi.jotform.update(applicantId, formData, {
           signal: controller.signal,
         });
-        setLastSaved(new Date());
+        if (isMountedRef.current) {
+          setLastSaved(new Date());
+        }
       } catch (error) {
-        if (error.name === 'AbortError') {
-          console.log('Save request was cancelled');
-        } else {
+        if (axios.isCancel(error) || error.name === 'AbortError' || error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
+          // Request was intentionally canceled (e.g. user navigated to next step), not an error
+        } else if (isMountedRef.current) {
           console.error('Auto-save failed:', error);
           setSaveError(error instanceof Error ? error.message : 'Save failed');
         }
       } finally {
-        if (abortControllerRef.current === controller) {
+        if (isMountedRef.current && abortControllerRef.current === controller) {
           setIsSaving(false);
           abortControllerRef.current = null;
         }
       }
     },
-    [applicantId, isSaving, cancel]
+    [applicantId, stepNumber, isSaving, cancel]
   );
 
   return {

@@ -7,6 +7,9 @@ import JobAnalyticsApi, {
   GetJobConversionAnalyticsParams,
   LeadSourceBreakdown,
   UtmBreakdown,
+  EntryModeBreakdown,
+  ApplicantsByState,
+  ApplicantStats,
 } from '../pages/api/job-analytics';
 import { globalAjaxExceptionHandler } from '../utils/ajax';
 
@@ -16,6 +19,9 @@ interface UseJobAnalyticsDataResult {
   insights: JobAnalyticsInsights | null;
   leadSourceBreakdown: LeadSourceBreakdown[];
   utmBreakdown: UtmBreakdown[];
+  entryModeBreakdown: EntryModeBreakdown[];
+  applicantsByState: ApplicantsByState[];
+  applicantStats: ApplicantStats | null;
   loading: boolean;
   error: string | null;
   refetch: (newParams?: GetJobConversionAnalyticsParams) => Promise<void>;
@@ -32,6 +38,9 @@ export const useJobAnalyticsData = (
   const [insights, setInsights] = useState<JobAnalyticsInsights | null>(null);
   const [leadSourceBreakdown, setLeadSourceBreakdown] = useState<LeadSourceBreakdown[]>([]);
   const [utmBreakdown, setUtmBreakdown] = useState<UtmBreakdown[]>([]);
+  const [entryModeBreakdown, setEntryModeBreakdown] = useState<EntryModeBreakdown[]>([]);
+  const [applicantsByState, setApplicantsByState] = useState<ApplicantsByState[]>([]);
+  const [applicantStats, setApplicantStats] = useState<ApplicantStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
@@ -57,14 +66,25 @@ export const useJobAnalyticsData = (
         const currentParams = { ...memoizedParams, ...newParams };
 
         // Fetch all data in parallel with individual error handling
-        const [metricsResult, timelineResult, insightsResult, leadSourceResult, utmResult] =
-          await Promise.allSettled([
-            api.getJobConversionMetrics(jobId, currentParams),
-            api.getJobConversionTimeline(jobId, currentParams),
-            api.getJobAnalyticsInsights(jobId, currentParams),
-            api.getLeadSourceBreakdown(jobId, currentParams),
-            api.getUtmBreakdown(jobId, currentParams),
-          ]);
+        const [
+          metricsResult,
+          timelineResult,
+          insightsResult,
+          leadSourceResult,
+          utmResult,
+          entryModeResult,
+          stateResult,
+          statsResult,
+        ] = await Promise.allSettled([
+          api.getJobConversionMetrics(jobId, currentParams),
+          api.getJobConversionTimeline(jobId, currentParams),
+          api.getJobAnalyticsInsights(jobId, currentParams),
+          api.getLeadSourceBreakdown(jobId, currentParams),
+          api.getUtmBreakdown(jobId, currentParams),
+          api.getEntryModeBreakdown(jobId, currentParams),
+          api.getApplicantsByState(jobId, currentParams),
+          api.getApplicantStats(jobId, currentParams),
+        ]);
 
         // Handle metrics result
         if (metricsResult.status === 'fulfilled') {
@@ -102,6 +122,27 @@ export const useJobAnalyticsData = (
         } else {
           console.error('Failed to fetch UTM breakdown:', utmResult.reason);
           setUtmBreakdown([]);
+        }
+
+        if (entryModeResult.status === 'fulfilled') {
+          setEntryModeBreakdown(entryModeResult.value);
+        } else {
+          console.error('Failed to fetch entry mode breakdown:', entryModeResult.reason);
+          setEntryModeBreakdown([]);
+        }
+
+        if (stateResult.status === 'fulfilled') {
+          setApplicantsByState(stateResult.value);
+        } else {
+          console.error('Failed to fetch applicants by state:', stateResult.reason);
+          setApplicantsByState([]);
+        }
+
+        if (statsResult.status === 'fulfilled') {
+          setApplicantStats(statsResult.value);
+        } else {
+          console.error('Failed to fetch applicant stats:', statsResult.reason);
+          setApplicantStats(null);
         }
 
         // If all requests failed, show error
@@ -149,6 +190,9 @@ export const useJobAnalyticsData = (
     insights,
     leadSourceBreakdown,
     utmBreakdown,
+    entryModeBreakdown,
+    applicantsByState,
+    applicantStats,
     loading,
     error,
     refetch: fetchAnalytics,

@@ -227,61 +227,63 @@ export function AccidentHistory() {
     if (initializedRef.current) return;
 
     if (applicant) {
-      const existingAccidentCount = applicant.accident_count;
+      const shortFormAccidentCount = applicant.accident_count || 0;
       const existingAccidentHistory = applicant.accident_history;
       const existingAccidentDetails = applicant.accident_details;
 
-      // Determine the has_accidents state based on what's stored
+      // Detect if they've previously submitted the long form page
+      // accident_details is only set when submitting the long form
+      const hasVisitedLongForm =
+        existingAccidentDetails !== undefined ||
+        (existingAccidentHistory !== undefined && existingAccidentHistory !== null);
+
       let hasAccidentsState: boolean | null = null;
+      let accidentHistoryToSet: any[] = [];
+      let accidentDetailsToSet = '';
+      let accidentCountToSet = 0;
 
-      // Check if they've visited this form before by looking for explicit data
-      const hasVisitedForm =
-        existingAccidentCount !== undefined ||
-        existingAccidentHistory !== undefined ||
-        existingAccidentDetails !== undefined;
-
-      if (hasVisitedForm) {
-        const actualCount = existingAccidentCount || 0;
+      if (hasVisitedLongForm) {
+        // Restore previously saved long form state
         const actualHistory = existingAccidentHistory || [];
         const actualDetails = existingAccidentDetails || '';
 
-        if (actualCount > 0 || actualHistory.length > 0) {
-          // They have actual accidents, so they said yes
+        if (shortFormAccidentCount > 0 || actualHistory.length > 0) {
           hasAccidentsState = true;
         } else if (actualDetails === '__YES_NO_DETAILS__') {
-          // They said yes but haven't added details yet
           hasAccidentsState = true;
         } else if (actualDetails.trim() !== '' && actualDetails !== '__YES_NO_DETAILS__') {
-          // They have actual accident details - they said yes
           hasAccidentsState = true;
-        } else if (actualCount === 0 && Array.isArray(actualHistory) && actualDetails === '') {
-          // They have count=0, empty array, and empty details - they said NO
-          hasAccidentsState = false;
         } else {
-          // Edge case: they've visited but unclear what they chose, default to null
-          hasAccidentsState = null;
+          hasAccidentsState = false;
         }
 
-        // Clean up the special marker for display
-        const displayDetails = actualDetails === '__YES_NO_DETAILS__' ? '' : actualDetails;
-
-        form.setValues({
-          ...form.values,
-          accident_count: actualCount,
-          accident_history: actualHistory,
-          accident_details: displayDetails,
-          has_accidents: hasAccidentsState,
-        });
+        accidentHistoryToSet = actualHistory;
+        accidentDetailsToSet = actualDetails === '__YES_NO_DETAILS__' ? '' : actualDetails;
+        accidentCountToSet = shortFormAccidentCount;
       } else {
-        // First time visiting, initialize with empty state
-        form.setValues({
-          ...form.values,
-          accident_count: 0,
-          accident_history: [],
-          accident_details: '',
-          has_accidents: null,
-        });
+        // First time on this page — pre-populate from short form count
+        if (shortFormAccidentCount > 0) {
+          hasAccidentsState = true;
+          accidentHistoryToSet = Array.from({ length: shortFormAccidentCount }, () => ({
+            ...new ApplicantAccidentEntity(),
+            number_of_injured: 0,
+            number_of_fatalaties: 0,
+          }));
+          accidentCountToSet = shortFormAccidentCount;
+        } else {
+          hasAccidentsState = false;
+          accidentHistoryToSet = [];
+          accidentCountToSet = 0;
+        }
       }
+
+      form.setValues({
+        ...form.values,
+        accident_count: accidentCountToSet,
+        accident_history: accidentHistoryToSet,
+        accident_details: accidentDetailsToSet,
+        has_accidents: hasAccidentsState,
+      });
 
       initializedRef.current = true;
     }

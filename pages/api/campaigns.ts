@@ -193,4 +193,5 @@ export default class CampaignsApi extends BaseApi {
     const { data } = await this.post(`${this.baseUrl}/test/send`, { campaignId });
     return data;
   }
+
 }

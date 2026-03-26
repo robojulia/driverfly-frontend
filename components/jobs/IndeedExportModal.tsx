@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Button, Alert, Form, Spinner, Badge, Collapse } from 'react-bootstrap';
-import { CheckCircleFill, ExclamationTriangleFill, ClipboardCheck, BoxArrowUpRight } from 'react-bootstrap-icons';
-import { toast } from 'react-toastify';
+import React from 'react';
+import { Modal, Button, Badge, ListGroup } from 'react-bootstrap';
+import { BoxArrowUpRight } from 'react-bootstrap-icons';
 import { JobEntity } from '../../models/job/job.entity';
-import { JobIndeedExporter } from '../../utils/job-indeed-exporter';
+import { JobBenefits } from '../../enums/jobs/job-benefits.enum';
+import { JobEmploymentType } from '../../enums/jobs/job-employment-type.enum';
+import { JobPayMethod } from '../../enums/jobs/job-pay-method.enum';
+import { JobPayFrequency } from '../../enums/jobs/job-pay-frequency.enum';
 
 interface IndeedExportModalProps {
   show: boolean;
@@ -12,274 +14,225 @@ interface IndeedExportModalProps {
   onClose: () => void;
 }
 
-interface ValidationError {
-  jobId: number;
-  errors: string[];
+const INDEED_BENEFITS: { label: string; values: JobBenefits[] }[] = [
+  { label: 'Health insurance', values: [JobBenefits.MEDICAL] },
+  { label: 'Pet rider program', values: [JobBenefits.PETS_ALLOWED] },
+  { label: '401(k)', values: [JobBenefits.RETIREMENT_401K] },
+  { label: '401(k) matching', values: [JobBenefits.RETIREMENT_401K] },
+  { label: 'Retirement plan', values: [JobBenefits.RETIREMENT_401K] },
+  { label: 'Paid time off', values: [] },
+  { label: 'Dental insurance', values: [JobBenefits.DENTAL] },
+  { label: 'Vision insurance', values: [JobBenefits.VISION] },
+  { label: 'Passenger ride along program', values: [JobBenefits.RIDER_POLICY] },
+  { label: 'Paid orientation', values: [] },
+  { label: 'Referral program', values: [] },
+  { label: 'Life insurance', values: [] },
+  { label: 'Disability insurance', values: [] },
+  { label: 'Paid training', values: [JobBenefits.PAID_TRAINING] },
+  { label: 'Fuel discount', values: [JobBenefits.FUEL_CARD] },
+  { label: 'Fuel card', values: [JobBenefits.FUEL_CARD] },
+  { label: 'Tuition reimbursement', values: [] },
+  { label: 'Health savings account', values: [] },
+  { label: 'Flexible spending account', values: [] },
+  { label: 'Lease purchase program', values: [] },
+  { label: 'AD&D insurance', values: [] },
+  { label: 'Prescription drug insurance', values: [] },
+  { label: 'Employee assistance program', values: [] },
+  { label: 'Parental leave', values: [] },
+  { label: 'Employee discount', values: [] },
+  { label: 'Employee stock purchase plan', values: [] },
+  { label: 'Paid toll fees', values: [JobBenefits.TOLL_ROAD_PASS] },
+  { label: 'Profit sharing', values: [] },
+  { label: 'Safety equipment provided', values: [] },
+  { label: 'Paid sick time', values: [] },
+  { label: 'Cell phone reimbursement', values: [] },
+  { label: 'Employee stock ownership plan', values: [] },
+];
+
+function formatEmploymentType(type?: JobEmploymentType): string {
+  switch (type) {
+    case JobEmploymentType.W2: return 'Full-time (W2)';
+    case JobEmploymentType.CONTRACT: return 'Contract (1099)';
+    case JobEmploymentType.OWNER_OPERATOR: return 'Contract (Owner-Operator)';
+    case JobEmploymentType.PART_TIME: return 'Part-time';
+    case JobEmploymentType.SEASONAL: return 'Temporary (Seasonal)';
+    case JobEmploymentType.ONE_TIME_GIG: return 'Temporary (One-time Gig)';
+    default: return '—';
+  }
 }
 
-interface ExportResponse {
-  success: boolean;
-  feedUrl?: string;
-  message: string;
-  validationErrors?: ValidationError[];
-  xml?: string;
+function formatPayFrequency(freq?: JobPayFrequency): string {
+  switch (freq) {
+    case JobPayFrequency.WEEKLY: return 'Weekly';
+    case JobPayFrequency.BIWEEKLY: return 'Bi-weekly';
+    case JobPayFrequency.BIMONTHLY: return 'Bi-monthly';
+    case JobPayFrequency.MONTHLY: return 'Monthly';
+    case JobPayFrequency.PRE_LOAD: return 'Per load';
+    default: return '—';
+  }
 }
 
-export function IndeedExportModal({ show, jobs, companyId, onClose }: IndeedExportModalProps) {
-  const [loading, setLoading] = useState(false);
-  const [exportData, setExportData] = useState<ExportResponse | null>(null);
-  const [showXMLPreview, setShowXMLPreview] = useState(false);
-  const [xmlPreview, setXmlPreview] = useState<string>('');
-  const [copied, setCopied] = useState(false);
-
-  // Reset state when modal opens
-  useEffect(() => {
-    if (show) {
-      setExportData(null);
-      setCopied(false);
-      setShowXMLPreview(false);
-      setXmlPreview('');
-      handleExport();
-    }
-  }, [show, jobs]);
-
-  const handleExport = () => {
-    setLoading(true);
-    try {
-      // Validate jobs
-      const validationErrors: ValidationError[] = [];
-
-      jobs.forEach(job => {
-        const validation = JobIndeedExporter.validateJobForIndeed(job);
-        if (!validation.valid) {
-          validationErrors.push({
-            jobId: job.id!,
-            errors: validation.errors,
-          });
-        }
-      });
-
-      // Get base URL
-      const baseUrl = typeof window !== 'undefined'
-        ? window.location.origin
-        : process.env.NEXT_PUBLIC_BASE_URL || 'https://driverfly.com';
-
-      // Generate feed URL
-      const feedUrl = `${baseUrl}/api/indeed/feed?companyId=${companyId}`;
-
-      const validJobs = jobs.length - validationErrors.length;
-
-      setExportData({
-        success: true,
-        feedUrl,
-        message: validationErrors.length > 0
-          ? `${validationErrors.length} job(s) cannot be exported due to missing required fields. ${validJobs} job(s) ready for export.`
-          : `${jobs.length} job(s) ready for export`,
-        validationErrors: validationErrors.length > 0 ? validationErrors : undefined,
-      });
-
-      if (validJobs > 0) {
-        toast.success('Indeed export feed generated successfully!');
-      } else {
-        toast.error('Cannot export: All jobs have validation errors');
+function formatPayRange(job: JobEntity): string {
+  const fmt = (n?: number) => n != null ? `$${n.toLocaleString()}` : null;
+  switch (job.pay_method) {
+    case JobPayMethod.SALARY:
+      if (job.min_salary || job.max_salary)
+        return [fmt(job.min_salary), fmt(job.max_salary)].filter(Boolean).join(' – ') + ' /year';
+      return '—';
+    case JobPayMethod.HOURLY:
+      if (job.min_rate || job.max_rate)
+        return [fmt(job.min_rate), fmt(job.max_rate)].filter(Boolean).join(' – ') + ' /hour';
+      return '—';
+    case JobPayMethod.RATE_PER_MILE:
+      if (job.min_rate || job.max_rate) {
+        const r = [job.min_rate, job.max_rate].filter(n => n != null);
+        return r.map(n => `$${n}`).join(' – ') + ' /mile';
       }
-    } catch (error) {
-      console.error('Export error:', error);
-      toast.error('Failed to generate Indeed export');
-      setExportData({
-        success: false,
-        message: 'Failed to generate export. Please try again.',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+      return '—';
+    case JobPayMethod.SET_WEEKLY:
+      if (job.min_weekly_pay || job.max_weekly_pay)
+        return [fmt(job.min_weekly_pay), fmt(job.max_weekly_pay)].filter(Boolean).join(' – ') + ' /week';
+      return '—';
+    case JobPayMethod.PERCENT_PER_MOVE:
+      if (job.min_percent || job.max_percent)
+        return [job.min_percent, job.max_percent].filter(n => n != null).map(n => `${n}%`).join(' – ') + ' per move';
+      return '—';
+    case JobPayMethod.PERCENT_PER_WEIGHT:
+      if (job.min_percent || job.max_percent)
+        return [job.min_percent, job.max_percent].filter(n => n != null).map(n => `${n}%`).join(' – ') + ' per weight';
+      return '—';
+    case JobPayMethod.OPEN_TO_NEGOTIATE:
+      return 'Open to negotiate';
+    default:
+      return '—';
+  }
+}
 
-  const handleCopyUrl = () => {
-    if (exportData?.feedUrl) {
-      navigator.clipboard.writeText(exportData.feedUrl);
-      setCopied(true);
-      toast.success('Feed URL copied to clipboard!');
-      setTimeout(() => setCopied(false), 3000);
-    }
-  };
+function FieldRow({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <tr>
+      <td className="fw-semibold text-muted" style={{ width: '40%', paddingRight: '1rem', verticalAlign: 'top' }}>
+        {label}
+      </td>
+      <td style={{ verticalAlign: 'top' }}>{value || '—'}</td>
+    </tr>
+  );
+}
 
-  const handleDownloadXML = () => {
-    try {
-      if (!jobs || jobs.length === 0 || !jobs[0]?.company) {
-        toast.error('No company data available');
-        return;
-      }
+export function IndeedExportModal({ show, jobs, onClose }: IndeedExportModalProps) {
+  const job = jobs[0];
 
-      // Get base URL
-      const baseUrl = typeof window !== 'undefined'
-        ? window.location.origin
-        : process.env.NEXT_PUBLIC_BASE_URL || 'https://driverfly.com';
+  if (!job) return null;
 
-      // Filter to only valid jobs
-      const validJobs = jobs.filter(job => JobIndeedExporter.validateJobForIndeed(job).valid);
-
-      if (validJobs.length === 0) {
-        toast.error('No valid jobs to export');
-        return;
-      }
-
-      // Generate XML
-      const xml = JobIndeedExporter.generateXMLFeed(validJobs, jobs[0].company, baseUrl);
-
-      // Download the XML file
-      JobIndeedExporter.downloadXMLFeed(xml, `indeed-feed-${companyId}.xml`);
-      toast.success('XML file downloaded');
-    } catch (error) {
-      console.error('Download error:', error);
-      toast.error('Failed to download XML');
-    }
-  };
-
-  const getJobTitle = (jobId: number) => {
-    const job = jobs.find(j => j.id === jobId);
-    return job?.title || `Job #${jobId}`;
-  };
-
-  const validJobs = jobs.length - (exportData?.validationErrors?.length || 0);
-  const hasErrors = (exportData?.validationErrors?.length || 0) > 0;
-  const canExport = validJobs > 0;
+  const jobBenefits = job.benefits || [];
+  const activeBenefits = INDEED_BENEFITS.filter(b =>
+    b.values.length > 0 && b.values.some(v => jobBenefits.includes(v))
+  );
 
   return (
-    <Modal show={show} onHide={onClose} size="lg">
+    <Modal show={show} onHide={onClose} size="lg" scrollable>
       <Modal.Header closeButton>
-        <Modal.Title>Export to Indeed</Modal.Title>
+        <Modal.Title>Post to Indeed</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
-        {loading ? (
-          <div className="text-center py-5">
-            <Spinner animation="border" role="status" />
-            <p className="mt-3">Generating Indeed export...</p>
-          </div>
-        ) : exportData ? (
-          <>
-            {/* Status Message */}
-            <Alert variant={exportData.success ? (hasErrors ? 'warning' : 'success') : 'danger'}>
-              {exportData.success ? (
-                <>
-                  <CheckCircleFill className="me-2" />
-                  {canExport ? (
-                    <>
-                      <strong>Export Ready!</strong> {validJobs} of {jobs.length} job(s) ready for Indeed.
-                    </>
-                  ) : (
-                    <>
-                      <ExclamationTriangleFill className="me-2" />
-                      <strong>Cannot Export:</strong> All jobs have validation errors.
-                    </>
-                  )}
-                </>
-              ) : (
-                <>
-                  <ExclamationTriangleFill className="me-2" />
-                  <strong>Export Failed:</strong> {exportData.message}
-                </>
-              )}
-            </Alert>
+        {/* Indeed link button */}
+        <div className="mb-4">
+          <Button
+            variant="warning"
+            href="https://employers.indeed.com/job-posting/choose-flow"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-100 fw-bold"
+            style={{ fontSize: '1rem' }}
+          >
+            Go to Indeed Job Posting <BoxArrowUpRight className="ms-2" />
+          </Button>
+          <p className="text-muted small mt-2 mb-0">
+            Use the field values below to fill in your Indeed job posting.
+          </p>
+        </div>
 
-            {/* Validation Errors */}
-            {hasErrors && (
-              <Alert variant="danger">
-                <h6><ExclamationTriangleFill className="me-2" />Validation Errors</h6>
-                <p className="mb-2">The following jobs cannot be exported due to missing required fields:</p>
-                <ul className="mb-0">
-                  {exportData.validationErrors?.map((error, idx) => (
-                    <li key={idx}>
-                      <strong>{getJobTitle(error.jobId)}</strong>: {error.errors.join(', ')}
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-3 mb-0">
-                  <strong>To fix:</strong> Edit these jobs and ensure all required fields (Title, Description, City, State, Zip Code, Company Name) are filled in.
-                </p>
-              </Alert>
-            )}
-
-            {/* Feed URL Section */}
-            {canExport && exportData.feedUrl && (
-              <>
-                <h6 className="mb-3">Indeed XML Feed URL</h6>
-                <p className="text-muted">
-                  Copy this URL and submit it to the <a href="https://employers.indeed.com" target="_blank" rel="noopener noreferrer">
-                    Indeed Partner Console <BoxArrowUpRight size={14} />
-                  </a>. Indeed will crawl this feed periodically to import your job listings.
-                </p>
-
-                <Form.Group className="mb-3">
-                  <div className="input-group">
-                    <Form.Control
-                      type="text"
-                      value={exportData.feedUrl}
-                      readOnly
-                      onClick={(e) => (e.target as HTMLInputElement).select()}
-                    />
-                    <Button
-                      variant={copied ? 'success' : 'outline-secondary'}
-                      onClick={handleCopyUrl}
-                    >
-                      {copied ? <><ClipboardCheck className="me-2" /> Copied!</> : 'Copy URL'}
-                    </Button>
+        {/* Job fields table */}
+        <table className="table table-borderless mb-0" style={{ fontSize: '0.95rem' }}>
+          <tbody>
+            <FieldRow label="Job Title" value={job.title} />
+            <FieldRow label="Location Type" value="On the road" />
+            <FieldRow label="Consistent Starting Location?" value="No" />
+            <FieldRow
+              label="Operating Area"
+              value={[job.location?.city, job.location?.state].filter(Boolean).join(', ') || '—'}
+            />
+            <FieldRow
+              label="Number of People to Hire"
+              value={job.drivers_needed != null ? String(job.drivers_needed) : '—'}
+            />
+            <FieldRow label="Job Type" value={formatEmploymentType(job.employment_type)} />
+            <FieldRow label="Pay Range" value={formatPayRange(job)} />
+            <FieldRow label="Pay Period" value={formatPayFrequency(job.pay_frequency)} />
+            <FieldRow
+              label="Benefits"
+              value={
+                activeBenefits.length > 0 ? (
+                  <div className="d-flex flex-wrap gap-1">
+                    {activeBenefits.map(b => (
+                      <Badge key={b.label} bg="secondary" className="fw-normal">
+                        {b.label}
+                      </Badge>
+                    ))}
                   </div>
-                </Form.Group>
-
-                {/* XML Preview Toggle */}
-                <div className="mb-3">
-                  <Button
-                    variant="link"
-                    size="sm"
-                    onClick={() => setShowXMLPreview(!showXMLPreview)}
-                    className="p-0"
+                ) : (
+                  <span className="text-muted">None selected</span>
+                )
+              }
+            />
+            <FieldRow
+              label="Job Description"
+              value={
+                job.description ? (
+                  <div
+                    className="border rounded p-2 bg-light"
+                    style={{ maxHeight: '200px', overflowY: 'auto', whiteSpace: 'pre-wrap', fontSize: '0.85rem' }}
                   >
-                    {showXMLPreview ? 'Hide' : 'Show'} XML Preview
-                  </Button>
-                </div>
-
-                <Collapse in={showXMLPreview}>
-                  <div>
-                    <Alert variant="secondary">
-                      <small>
-                        <strong>XML Feed Preview:</strong>
-                        <br />
-                        The actual feed is available at the URL above. You can also{' '}
-                        <a href="#" onClick={(e) => { e.preventDefault(); handleDownloadXML(); }}>
-                          download the full XML file
-                        </a>.
-                      </small>
-                    </Alert>
+                    {job.description}
                   </div>
-                </Collapse>
+                ) : null
+              }
+            />
+          </tbody>
+        </table>
 
-                {/* Instructions */}
-                <Alert variant="info" className="mt-3">
-                  <h6>Next Steps:</h6>
-                  <ol className="mb-0">
-                    <li>Copy the feed URL above</li>
-                    <li>Go to the <a href="https://employers.indeed.com" target="_blank" rel="noopener noreferrer">Indeed Partner Console</a></li>
-                    <li>Submit your XML feed URL</li>
-                    <li>Indeed will automatically crawl your feed every 15-60 minutes to keep jobs up-to-date</li>
-                  </ol>
-                </Alert>
-              </>
-            )}
-          </>
-        ) : null}
+        {/* Full benefits reference list */}
+        <div className="mt-4">
+          <p className="fw-semibold mb-2 text-muted small">All available Indeed benefits (select on Indeed):</p>
+          <div className="d-flex flex-wrap gap-1">
+            {INDEED_BENEFITS.map(b => {
+              const active = b.values.length > 0 && b.values.some(v => jobBenefits.includes(v));
+              return (
+                <Badge key={b.label} bg={active ? 'success' : 'light'} text={active ? 'white' : 'dark'} className="fw-normal border">
+                  {b.label}
+                </Badge>
+              );
+            })}
+          </div>
+          <p className="text-muted small mt-2 mb-0">
+            <span className="badge bg-success me-1 fw-normal">green</span> = matched from your job listing
+          </p>
+        </div>
       </Modal.Body>
 
       <Modal.Footer>
         <Button variant="secondary" onClick={onClose}>
           Close
         </Button>
-        {canExport && exportData?.feedUrl && (
-          <Button variant="primary" onClick={handleDownloadXML}>
-            Download XML File
-          </Button>
-        )}
+        <Button
+          variant="warning"
+          href="https://employers.indeed.com/job-posting/choose-flow"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Post to Indeed <BoxArrowUpRight className="ms-2" />
+        </Button>
       </Modal.Footer>
     </Modal>
   );

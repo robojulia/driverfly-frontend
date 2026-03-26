@@ -70,27 +70,41 @@ export default function Dashboard() {
   useEffectAsync(async () => {
     let todayDate = new Date();
     if (company?.id) {
-      // DRIV-144 - Get all applicants without any filtering
-      // Explicitly don't exclude referralSource to ensure it loads for source tracking
-      const a = await applicantApi.list({
-        is_paginated: false,
-      });
+      try {
+        // DRIV-144 - Get all applicants without any filtering
+        // Explicitly don't exclude referralSource to ensure it loads for source tracking
+        const a = await applicantApi.list({
+          is_paginated: false,
+        });
+        setApplicants(a as ApplicantEntity[]);
+      } catch (e) {
+        console.error('Failed to load applicants:', e);
+      }
 
-      setApplicants(a as ApplicantEntity[]);
-      const e = (await employeeApi.list({
-        status: [EmployeeStatus.ACTIVE],
-      })) as EmployeeEntity[];
-      setEmployees(e);
-      const j = (
-        (await jobApi.list({
-          companyId: company?.id,
-        })) as JobEntity[]
-      )?.filter(
-        (job) =>
-          job?.status == Status.ACTIVE &&
-          (!job?.expiry_date || new Date(job?.expiry_date) >= todayDate)
-      );
-      setJobs(j);
+      try {
+        const e = (await employeeApi.list({
+          status: [EmployeeStatus.ACTIVE],
+        })) as EmployeeEntity[];
+        setEmployees(e);
+      } catch (e) {
+        console.error('Failed to load employees:', e);
+      }
+
+      try {
+        const j = (
+          (await jobApi.list({
+            companyId: company?.id,
+          })) as JobEntity[]
+        )?.filter(
+          (job) =>
+            job?.status == Status.ACTIVE &&
+            (!job?.expiry_date || new Date(job?.expiry_date) >= todayDate)
+        );
+        setJobs(j);
+      } catch (e) {
+        console.error('Failed to load jobs:', e);
+      }
+
       setIsLoading(false);
     }
   }, [company?.id]);

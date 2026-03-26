@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useFormik } from 'formik';
 import { Col, Row, Alert, Spinner } from 'react-bootstrap';
 import { ArrowRight } from 'react-bootstrap-icons';
@@ -105,6 +105,9 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
     'new' | 'update' | 'additional' | null
   >(null);
   const [referralSources, setReferralSources] = useState<ReferralSourceEntity[]>([]);
+  // Track the last phone number we've already run checkPhoneNumber on so we
+  // don't repeat the same two API calls at submit time if nothing changed.
+  const lastCheckedPhoneRef = useRef<string | null>(null);
 
   // Fetch referral sources
   useEffect(() => {
@@ -131,6 +134,7 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
   // Check if phone number has existing applicant
   const checkPhoneNumber = async (phone: string) => {
     if (!phone || phone.length < 10) return;
+    lastCheckedPhoneRef.current = phone;
 
     setIsCheckingPhone(true);
     try {
@@ -338,10 +342,13 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
     onSubmit: async (dto, { resetForm }) => {
       // Skip phone check if this is a prefilled application - phone was already verified
       // Or if we already know they have applied to this job (allow updates)
+      // Also skip if we already ran checkPhoneNumber for this exact phone on blur.
       if (!isPrefilled && !hasAppliedToCurrentJob) {
-        const hasConflict = await checkPhoneNumber(dto.phone);
-        if (hasConflict && !hasAppliedToCurrentJob) {
-          return; // Show conflict UI instead of submitting (only block for different jobs, not updates)
+        if (lastCheckedPhoneRef.current !== dto.phone) {
+          const hasConflict = await checkPhoneNumber(dto.phone);
+          if (hasConflict && !hasAppliedToCurrentJob) {
+            return; // Show conflict UI instead of submitting (only block for different jobs, not updates)
+          }
         }
       }
 
@@ -375,14 +382,9 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
           let applicantResult;
           let statusMessage = '';
 
-          // Always search for existing applicants by phone first
-          const existingApplicants = await applicantApi.searchApplicantsByPhone({
-            phone: dto.phone,
-          });
-
-          const companyApplicant = existingApplicants.find(
-            (applicant) => applicant.company?.id === job.company?.id
-          );
+          // Reuse the applicant already fetched during the phone-blur check to avoid
+          // an extra searchApplicantsByPhone round-trip on every submit.
+          const companyApplicant = existingApplicant ?? null;
 
           if (companyApplicant) {
             // Case 2 & 3: Existing applicant for this company
@@ -645,17 +647,14 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
                 !!apply_form.isSubmitting ||
                 !apply_form.isValid ||
                 !!apply_form.isValidating ||
-                (showPhoneConflict && !isPrefilled) || // Disable if phone conflict exists and not yet verified via OTP
-                isCheckingPhone
+                (showPhoneConflict && !isPrefilled) // Disable if phone conflict exists and not yet verified via OTP
               }
               type="submit"
               className="w-100"
               onClick={() => apply_form.handleSubmit()}
-              loading={!!apply_form.isSubmitting || isCheckingPhone}
+              loading={!!apply_form.isSubmitting}
             >
-              {isCheckingPhone
-                ? t('CHECKING_PHONE')
-                : showPhoneConflict && !isPrefilled
+              {showPhoneConflict && !isPrefilled
                 ? 'Verify Identity to Continue'
                 : hasAppliedToCurrentJob
                 ? 'Update Application'

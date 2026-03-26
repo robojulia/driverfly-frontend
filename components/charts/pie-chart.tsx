@@ -47,7 +47,8 @@ export function PieChart(props: PieChartProps): JSX.Element {
     '#2ec8c4',
     '#B4FD55',
     '#006078',
-    '#83e0de',
+    '#ffd93d',  // Indeed API
+    '#4267B2',  // Facebook API
   ];
 
   useEffect(() => {

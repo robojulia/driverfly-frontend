@@ -44,6 +44,8 @@ interface CampaignTargetListProps {
   handleCampaignAction: (action: 'regenerate') => void;
   handleDeleteTarget: (targetId: number) => void;
   setManualTargetModal: (open: boolean) => void;
+  onCreateProfiles?: () => void;
+  creatingProfiles?: boolean;
   isSuperAdmin?: boolean;
 }
 
@@ -59,11 +61,17 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
   handleCampaignAction,
   handleDeleteTarget,
   setManualTargetModal,
+  onCreateProfiles,
+  creatingProfiles = false,
   isSuperAdmin = false,
 }) => {
   const router = useRouter();
   const [hoveredButton, setHoveredButton] = React.useState<number | null>(null);
   const [selectedTarget, setSelectedTarget] = React.useState<CampaignTargetEntity | null>(null);
+
+  const leadTargets = nonTestTargets.filter(
+    (t) => t.targetType === CampaignTargetType.LEAD
+  );
 
   // Helper to get outcome badge color
   const getOutcomeBadgeColor = (outcome?: string) => {
@@ -130,36 +138,65 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h5 className="fw-bold text-dark mb-0">Campaign Targets ({nonTestTargets.length})</h5>
-        {(campaign?.status || CampaignStatus.DRAFT) === CampaignStatus.DRAFT && (
-          <div className="d-flex gap-2">
+        <div>
+          <h5 className="fw-bold text-dark mb-0">Campaign Targets ({nonTestTargets.length})</h5>
+          {leadTargets.length > 0 && (
+            <small className="text-muted">
+              {leadTargets.length} manually uploaded lead{leadTargets.length !== 1 ? 's' : ''} without driver profiles
+            </small>
+          )}
+        </div>
+        <div className="d-flex gap-2">
+          {leadTargets.length > 0 && onCreateProfiles && (
             <Button
-              color="info"
+              color="success"
               size="sm"
-              onClick={() => handleCampaignAction('regenerate')}
-              disabled={regeneratingTargets}
+              onClick={onCreateProfiles}
+              disabled={creatingProfiles || regeneratingTargets}
+              title="Create driver profiles for manually uploaded leads so notes from calls can be stored"
             >
-              {regeneratingTargets ? (
+              {creatingProfiles ? (
                 <>
                   <div className="spinner-border spinner-border-sm me-1" role="status">
                     <span className="visually-hidden">Loading...</span>
                   </div>
-                  {t('REFRESHING_TARGETS')}
+                  Creating Profiles...
                 </>
               ) : (
-                <>{t('REFRESH_TARGETS')}</>
+                <>Create Driver Profiles ({leadTargets.length})</>
               )}
             </Button>
-            <Button
-              color="primary"
-              size="sm"
-              onClick={() => setManualTargetModal(true)}
-              disabled={regeneratingTargets}
-            >
-              {t('ADD_TARGETS')}
-            </Button>
-          </div>
-        )}
+          )}
+          {(campaign?.status || CampaignStatus.DRAFT) === CampaignStatus.DRAFT && (
+            <>
+              <Button
+                color="info"
+                size="sm"
+                onClick={() => handleCampaignAction('regenerate')}
+                disabled={regeneratingTargets}
+              >
+                {regeneratingTargets ? (
+                  <>
+                    <div className="spinner-border spinner-border-sm me-1" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </div>
+                    {t('REFRESHING_TARGETS')}
+                  </>
+                ) : (
+                  <>{t('REFRESH_TARGETS')}</>
+                )}
+              </Button>
+              <Button
+                color="primary"
+                size="sm"
+                onClick={() => setManualTargetModal(true)}
+                disabled={regeneratingTargets}
+              >
+                {t('ADD_TARGETS')}
+              </Button>
+            </>
+          )}
+        </div>
       </div>
 
       <div className="table-responsive">
@@ -199,13 +236,21 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
                     </td>
                   )}
                   <td>
-                    <span
-                      onClick={() => handleTargetClick(target)}
-                      style={{ cursor: 'pointer', color: '#1d4355', textDecoration: 'underline' }}
-                      className="fw-semibold"
-                    >
-                      {target.name || '-'}
-                    </span>
+                    {target.targetType === CampaignTargetType.LEAD ? (
+                      <div>
+                        <span className="fw-semibold text-dark">{target.name || '-'}</span>
+                        <br />
+                        <small className="text-warning">No profile yet</small>
+                      </div>
+                    ) : (
+                      <span
+                        onClick={() => handleTargetClick(target)}
+                        style={{ cursor: 'pointer', color: '#1d4355', textDecoration: 'underline' }}
+                        className="fw-semibold"
+                      >
+                        {target.name || '-'}
+                      </span>
+                    )}
                   </td>
                   <td>{target.email || '-'}</td>
                   <td>{target.phone || '-'}</td>

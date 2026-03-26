@@ -168,39 +168,59 @@ export function ViolationHistory() {
     if (initializedRef.current) return;
 
     if (applicant) {
-      const existingViolationCount = applicant.moving_violations_count || 0;
-      const existingViolationHistory = applicant.moving_violation_history || [];
-      const existingDetails = applicant?.moving_violations_details || '';
+      const shortFormViolationCount = applicant.moving_violations_count || 0;
+      const existingViolationHistory = applicant.moving_violation_history;
+      const existingDetails = applicant.moving_violations_details;
 
-      // Enhanced state detection for form restoration
+      // Detect if they've previously submitted the long form page
+      // moving_violations_details is only set when submitting the long form
+      const hasVisitedLongForm =
+        existingDetails !== undefined ||
+        (existingViolationHistory !== undefined && existingViolationHistory !== null);
+
       let hasViolationsState: boolean | null = null;
+      let violationHistoryToSet: any[] = [];
+      let violationDetailsToSet = '';
+      let violationCountToSet = 0;
 
-      // Check if user has visited this form before
-      const hasActualViolations = existingViolationCount > 0 || existingViolationHistory.length > 0;
-      const hasActualDetails = existingDetails && existingDetails !== '__YES_NO_DETAILS__';
+      if (hasVisitedLongForm) {
+        // Restore previously saved long form state
+        const actualHistory = existingViolationHistory || [];
+        const actualDetails = existingDetails || '';
+        const hasActualViolations = shortFormViolationCount > 0 || actualHistory.length > 0;
+        const hasActualDetails = actualDetails && actualDetails !== '__YES_NO_DETAILS__';
 
-      if (hasActualViolations || hasActualDetails) {
-        // User said YES and provided actual data
-        hasViolationsState = true;
-      } else if (existingDetails === '__YES_NO_DETAILS__') {
-        // User said YES but provided no details (special marker)
-        hasViolationsState = true;
-      } else if (
-        existingViolationCount === 0 &&
-        existingViolationHistory.length === 0 &&
-        existingDetails === '' &&
-        applicant.moving_violations_details !== undefined
-      ) {
-        // User said NO (explicitly saved as empty values)
-        hasViolationsState = false;
+        if (hasActualViolations || hasActualDetails) {
+          hasViolationsState = true;
+        } else if (actualDetails === '__YES_NO_DETAILS__') {
+          hasViolationsState = true;
+        } else {
+          hasViolationsState = false;
+        }
+
+        violationHistoryToSet = actualHistory;
+        violationDetailsToSet = actualDetails === '__YES_NO_DETAILS__' ? '' : actualDetails;
+        violationCountToSet = shortFormViolationCount;
+      } else {
+        // First time on this page — pre-populate from short form count
+        if (shortFormViolationCount > 0) {
+          hasViolationsState = true;
+          violationHistoryToSet = Array.from({ length: shortFormViolationCount }, () => ({
+            ...new ApplicantMovingViolationEntity(),
+          }));
+          violationCountToSet = shortFormViolationCount;
+        } else {
+          hasViolationsState = false;
+          violationHistoryToSet = [];
+          violationCountToSet = 0;
+        }
       }
-      // Otherwise null (never visited)
 
       form.setValues({
         ...form.values,
-        moving_violations_count: existingViolationCount,
-        moving_violation_history: existingViolationHistory,
-        moving_violations_details: existingDetails === '__YES_NO_DETAILS__' ? '' : existingDetails, // Clean up marker for display
+        moving_violations_count: violationCountToSet,
+        moving_violation_history: violationHistoryToSet,
+        moving_violations_details: violationDetailsToSet,
         has_violations: hasViolationsState,
       });
 

@@ -114,7 +114,7 @@ export function EmploymentHistory() {
         can_contact:
           Boolean(employer) && employer?.can_contact !== undefined ? employer?.can_contact : null,
       },
-      is_current_employed: Boolean(employer),
+      is_current_employed: null,
       already_applied_to_company: isReturningApplicant ? true : (applicant?.already_applied_to_company !== undefined ? applicant?.already_applied_to_company : null),
       already_worked_to_company: applicant?.already_worked_to_company !== undefined ? applicant?.already_worked_to_company : null,
       already_worked_start_date: applicant?.already_worked_start_date ?? null,

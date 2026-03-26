@@ -43,10 +43,10 @@ export function ExportToIndeedButton(props: ExportToIndeedButtonProps) {
         variant="outline-primary"
         onClick={handleClick}
         disabled={isDisabled}
-        title={isDisabled ? 'No jobs available for export' : 'Export to Indeed'}
+        title={isDisabled ? 'No jobs available for export' : 'Post to Indeed'}
         {...rest}
       >
-        <CloudUpload className="me-2" /> Export to Indeed
+        <CloudUpload className="me-2" /> Post to Indeed
       </Button>
 
       <IndeedExportModal

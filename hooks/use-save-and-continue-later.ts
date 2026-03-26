@@ -2,7 +2,6 @@ import { useState, useCallback, useContext } from 'react';
 import { toast } from 'react-toastify';
 import JotformContext from '../context/jotform-context';
 import ApplicantApi from '../pages/api/applicant';
-import { ApplicantFormStatus } from '../enums/applicants/applicant-form-status.enum';
 import { trackingContextToUtmReferral } from '../models/auth/utm-referral.interface';
 
 interface UseSaveAndContinueLaterReturn {
@@ -45,16 +44,26 @@ export function useSaveAndContinueLater(): UseSaveAndContinueLaterReturn {
         return;
       }
 
+      // Convert full-form step (10–25) to longform-relative step (0–15).
+      // The longform page uses getLongFormPages which starts at index 0.
+      const LONG_FORM_OFFSET = 10;
+      const longformStep = (steps ?? 0) >= LONG_FORM_OFFSET ? (steps - LONG_FORM_OFFSET) : (steps ?? 0);
+
+      // Strip nested relation entities that cause backend 500 errors,
+      // matching the same stripping done in withAsyncSave HOC.
+      const { company, user, jobs: _jobs, documents, employee, ...applicantFields } =
+        currentApplicant as any;
+
       // Save draft with current step
       const updated = await applicantApi.jotform.saveDraft(
         currentApplicant.id,
         {
-          applicant: currentApplicant,
+          applicant: applicantFields,
           applicantExtras: applicantExtras || [],
           jobs: jobs || [],
           utm: trackingContextToUtmReferral(utm),
         },
-        steps || 0
+        longformStep
       );
 
       // Update context with the updated applicant

@@ -54,9 +54,9 @@ export default function EditApplicant({ id }) {
     if (id) {
       try {
         const api = new ApplicantApi();
-        const entity = await api.getById(+id, true, ['documents', 'notes', 'notes.user', 'jobs', 'jobs.job', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned']);
+        const entity = await api.getById(+id, true, ['documents', 'notes', 'jobs', 'jobs.job', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned']);
 
-        const suggestedJobs = await api.suggestedJobs.get(id);
+        const suggestedJobs = await api.suggestedJobs.get(id).catch(() => []);
         setApplicantSuggestedJobs(suggestedJobs || []);
 
         if (entity) {
@@ -463,17 +463,19 @@ export default function EditApplicant({ id }) {
 
   // If error exists, show full-page error instead of normal content
   if (error) {
+    const isNotFound = error.status === 404 || error.status === 403;
+    const errorTitle = isNotFound ? t('APPLICANT_NOT_FOUND') : t('ERROR_MESSAGE_DEFAULT') || 'Something went wrong';
     return (
       <ChildPageLayout
         backPath={backPath}
-        title={t('APPLICANT_NOT_FOUND')}
+        title={errorTitle}
       >
         <Container className="py-5">
           <Card className="border-0 shadow-sm">
             <Card.Body className="text-center py-5">
               <div className="mb-4">
                 <XCircleFill size={64} className="text-danger mb-3" />
-                <h4 className="mb-3">{t('APPLICANT_NOT_FOUND')}</h4>
+                <h4 className="mb-3">{errorTitle}</h4>
                 <p className="text-muted mb-4">{error.message}</p>
                 <Link href={backPath}>
                   <Button variant="primary">

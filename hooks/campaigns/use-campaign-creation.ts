@@ -5,8 +5,11 @@ import CampaignsApi, {
   CreateJobReachoutCampaignDto,
   CampaignReachPreviewResponse,
 } from '../../pages/api/campaigns';
+import ApplicantApi from '../../pages/api/applicant';
 import { JobEntity } from '../../models/job/job.entity';
 import { CampaignEntity } from '../../models/campaigns/campaign.entity';
+import { ApplicantEntity } from '../../models/applicant/applicant.entity';
+import { ApplicantType } from '../../enums/applicants/applicant-type.enum';
 import { CampaignStatus } from '../../enums/campaigns/campaign-status.enum';
 import { CampaignCommunicationType } from '../../enums/campaigns/campaign-communication-type.enum';
 import { useTranslation } from '../use-translation';
@@ -157,10 +160,30 @@ export const useCampaignCreation = ({
 
       const campaign = await campaignsApi.createJobReachoutCampaign(campaignDto);
 
-      // If manual mode, upload bulk leads
+      // If manual mode, upload bulk leads and auto-create driver profiles
       if (uploadMode === 'manual' && bulkLeads.length > 0) {
         try {
           await campaignsApi.addBulkLeads(campaign.id, bulkLeads);
+
+          // Auto-create applicant profiles for each lead so call notes can be stored
+          try {
+            const applicantApi = new ApplicantApi();
+            const applicants: ApplicantEntity[] = bulkLeads.map((lead) => {
+              const nameParts = lead.name.trim().split(/\s+/);
+              const applicant = new ApplicantEntity();
+              applicant.first_name = nameParts[0] || lead.name;
+              applicant.last_name = nameParts.slice(1).join(' ') || '';
+              applicant.phone = lead.phone;
+              applicant.email = lead.email;
+              applicant.type = ApplicantType.COMPANY;
+              return applicant;
+            });
+            await applicantApi.createBulk(applicants);
+          } catch (profileError) {
+            console.error('Failed to create driver profiles for leads:', profileError);
+            // Non-fatal: campaign and leads are created, profiles can be created from the campaign page
+          }
+
           toast.success(
             `Campaign created with ${bulkLeads.length} lead${bulkLeads.length !== 1 ? 's' : ''}! Redirecting to campaign management...`
           );

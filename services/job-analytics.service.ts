@@ -331,25 +331,13 @@ export class JobAnalyticsService {
     const eventsToRetry = this.retryQueue.splice(0, this.BATCH_SIZE);
 
     try {
-      const response = await fetch('/api/analytics/track-batch', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          events: eventsToRetry,
-          sessionId: this.sessionId,
-        }),
-      });
-
-      if (response.ok) {
-        console.debug(`[Analytics] Retry successful: ${eventsToRetry.length} events`);
-      } else {
-        // Put events back in retry queue
+      const result = await analyticsApi.trackBatch(eventsToRetry, this.sessionId);
+      if (!result.success) {
         this.retryQueue.unshift(...eventsToRetry);
+      } else {
+        console.debug(`[Analytics] Retry successful: ${eventsToRetry.length} events`);
       }
     } catch (error) {
-      // Put events back in retry queue
       this.retryQueue.unshift(...eventsToRetry);
       console.warn('[Analytics] Retry failed:', error);
     }

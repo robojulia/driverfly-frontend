@@ -30,7 +30,7 @@ import {
   Link45deg,
   Grid3x3GapFill,
   CarFront,
-  MegaphoneFill,
+  Robot,
   Lightning,
   BookFill,
   CreditCard,
@@ -96,7 +96,7 @@ const FullLayout = ({ children }) => {
     },
     {
       pathname: '/dashboard/company/campaigns',
-      icon: MegaphoneFill,
+      icon: Robot,
       text: 'CAMPAIGNS',
       startsWith: true,
       group: 'MAIN',

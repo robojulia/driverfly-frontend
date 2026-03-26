@@ -12,6 +12,7 @@
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
     "@babel/runtime": "^7.18.3",
     "@emotion/styled": "^11.11.0",
     "@fortawesome/fontawesome-free": "^6.5.1",

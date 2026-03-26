@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { getLongFormPages } from '../../../../components/forms/jotform/jotform-pages';
-import { DevPageNavigator } from '../../../../components/developer/dev-page-navigator';
 import { PoweredByLogo } from '../../../../components/forms/jotform/powered-by-logo';
 import { CompanyLogoUpperRight } from '../../../../components/forms/jotform/company-logo-upper-right';
 import { ReturningUserBanner } from '../../../../components/applicants/returning-user-banner';
@@ -190,7 +189,6 @@ export default function LongForm({
       </div>
 
       {/* Developer Page Navigator */}
-      <DevPageNavigator formType="long" currentStep={steps} totalSteps={totalSteps} />
     </JotformContext.Provider>
   );
 }

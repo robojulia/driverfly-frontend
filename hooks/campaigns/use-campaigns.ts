@@ -3,10 +3,14 @@ import CampaignsApi, {
   CampaignListResponse,
   CampaignStatsResponse,
 } from '../../pages/api/campaigns';
+import ApplicantApi from '../../pages/api/applicant';
 import { CampaignEntity } from '../../models/campaigns/campaign.entity';
 import { CampaignTargetEntity } from '../../models/campaigns/campaign-target.entity';
 import { CampaignQueryDto } from '../../models/campaigns/campaign-query.dto';
 import { UpdateCampaignDto } from '../../models/campaigns/update-campaign.dto';
+import { ApplicantEntity } from '../../models/applicant/applicant.entity';
+import { ApplicantType } from '../../enums/applicants/applicant-type.enum';
+import { CampaignTargetType } from '../../enums/campaigns/campaign-target-type.enum';
 
 export const useCampaigns = () => {
   const [campaigns, setCampaigns] = useState<CampaignEntity[]>([]);
@@ -271,6 +275,31 @@ export const useCampaign = (id: number) => {
     [id, loadCampaign]
   );
 
+  const createProfilesForLeads = useCallback(async () => {
+    if (!id) return;
+
+    const leadTargets = targets.filter((t) => t.targetType === CampaignTargetType.LEAD);
+    if (leadTargets.length === 0) return { createdCount: 0, skippedCount: 0 };
+
+    const applicantApi = new ApplicantApi();
+    const applicants: ApplicantEntity[] = leadTargets.map((target) => {
+      const nameParts = (target.name || '').trim().split(/\s+/);
+      const applicant = new ApplicantEntity();
+      applicant.first_name = nameParts[0] || target.name || '';
+      applicant.last_name = nameParts.slice(1).join(' ') || '';
+      applicant.phone = target.phone;
+      applicant.email = target.email;
+      applicant.type = ApplicantType.COMPANY;
+      return applicant;
+    });
+
+    const results = await applicantApi.createBulk(applicants);
+    const createdCount = results.filter((r) => r.data).length;
+    const skippedCount = results.filter((r) => r.error).length;
+
+    return { createdCount, skippedCount };
+  }, [id, targets]);
+
   useEffect(() => {
     loadCampaign();
   }, [loadCampaign]);
@@ -288,6 +317,7 @@ export const useCampaign = (id: number) => {
     regenerateTargets,
     deleteTarget,
     addManualTargets,
+    createProfilesForLeads,
   };
 };
 

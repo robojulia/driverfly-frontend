@@ -196,8 +196,8 @@ export const TrackingLinksSection: React.FC<TrackingLinksProps> = ({ job }) => {
                   <th style={{ width: '15%' }}>Source</th>
                   <th style={{ width: '10%' }}>Medium</th>
                   <th style={{ width: '15%' }}>Campaign</th>
-                  <th>Job Page</th>
-                  <th>Direct Application</th>
+                  <th>Job Page - Quick Apply</th>
+                  <th>Digital Hiring App - Full App</th>
                   <th></th>
                 </tr>
               </thead>

@@ -91,6 +91,7 @@ export default function Applicants() {
     setLoading(true);
     const api = new ApplicantApi();
 
+    try {
     // Single API call - backend will handle "No CDL" logic
     const data = await api.list({
       jobId: jobId as any as number,
@@ -118,6 +119,9 @@ export default function Applicants() {
       currentPage: filtersChanged ? 1 : pagingMeta?.currentPage,
       totalItems: (data as Pagination<PagingMeta>)?.meta?.totalItems,
     });
+    } catch (e) {
+      console.error('Failed to fetch applicants:', e);
+    }
 
     setTimeout(() => setLoading(false), 1000);
   };
@@ -830,7 +834,23 @@ function ApplicantView(props: ViewProps) {
                   !hasProvisionalApplicants &&
                   (applicant as any).eligibility && (
                     <div className="ms-2">
-                      {(applicant as any).eligibility.isEligible ? (
+                      {applicant?.license_type === null ||
+                      applicant?.license_type === undefined ||
+                      applicant?.years_cdl_experience === null ||
+                      applicant?.years_cdl_experience === undefined ? (
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip id={`unknown-tooltip-${applicant.id}`}>
+                              Insufficient data to determine hiring criteria fit
+                            </Tooltip>
+                          }
+                        >
+                          <span className="badge bg-secondary" style={{ cursor: 'help' }}>
+                            ?
+                          </span>
+                        </OverlayTrigger>
+                      ) : (applicant as any).eligibility.isEligible ? (
                         <OverlayTrigger
                           placement="top"
                           overlay={
@@ -925,21 +945,24 @@ function ApplicantView(props: ViewProps) {
             id: 'license_type',
             name: `CDL_TYPE`,
             wrap: true,
-            selector: (applicant) =>
-              applicant?.license_type === DriverLicenseType.NO_CDL ||
-              applicant?.license_type === null
+            selector: (applicant) => {
+              if (applicant?.license_type === null || applicant?.license_type === undefined) {
+                return '—';
+              }
+              return applicant.license_type === DriverLicenseType.NO_CDL
                 ? t('DriverLicenseType.NONE')
-                : t(`DriverLicenseType.${applicant.license_type}`) || t('DriverLicenseType.NONE'),
+                : t(`DriverLicenseType.${applicant.license_type}`) || t('DriverLicenseType.NONE');
+            },
           },
           {
             id: 'years_cdl_experience',
             name: 'years_cdl_experience',
             wrap: true,
-            selector: (applicant) => applicant?.years_cdl_experience ?? 0,
+            selector: (applicant) => applicant?.years_cdl_experience ?? null,
             cell: (applicant) => {
               const years = applicant?.years_cdl_experience;
               if (years === null || years === undefined) {
-                return t('ZERO');
+                return '—';
               }
               return years.toFixed(1);
             },

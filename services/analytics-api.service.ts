@@ -10,7 +10,7 @@ class AnalyticsApi extends BaseApi {
    */
   async trackEvent(event: AnalyticsEvent): Promise<AnalyticsResponse> {
     try {
-      const response = await this.post('/analytics/events', event);
+      const response = await this.post('/analytics/track', event);
       return response.data;
     } catch (error) {
       console.error('[Analytics API] Failed to track event:', error);

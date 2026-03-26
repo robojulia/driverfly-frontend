@@ -1,8 +1,14 @@
-import { useState } from "react";
-import { Button, Form, Modal, Badge, InputGroup, FormControl } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import { Button, Form, Modal, Badge, InputGroup, FormControl, Spinner } from "react-bootstrap";
 import { PlusCircle, Trash, PersonCircle, Envelope, PencilSquare } from "react-bootstrap-icons";
+import { toast } from "react-toastify";
 import { useTranslation } from "../../../../hooks/use-translation";
+import { useAuth } from "../../../../hooks/use-auth";
 import { EmployeeEntity } from "../../../../models/employee/employee.entity";
+import CompanyApi from "../../../../pages/api/company";
+import { CompanyPreferenceCategory } from "../../../../enums/company/company-preference-category.enum";
+
+const NOTIFICATION_RULES_LABEL = 'notification_rules';
 
 interface NotificationsProps {
     employee: EmployeeEntity;
@@ -81,8 +87,14 @@ function getTriggerValue(formData: Partial<NotificationRule>): string {
 
 export default function Notifications({ employee, canEdit = true }: NotificationsProps) {
     const { t } = useTranslation();
+    const { user } = useAuth();
+    const companyId = user?.company?.id;
 
     const isGlobalMode = !employee;
+
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [preferenceId, setPreferenceId] = useState<number | null>(null);
 
     // Notification Rules State
     const [notificationRules, setNotificationRules] = useState<NotificationRule[]>([
@@ -176,6 +188,51 @@ export default function Notifications({ employee, canEdit = true }: Notification
     });
 
     const [modalFormData, setModalFormData] = useState<Partial<NotificationRule>>(emptyRule());
+
+    // Load notification rules from backend on mount
+    useEffect(() => {
+        if (!companyId) { setLoading(false); return; }
+        const companyApi = new CompanyApi();
+        companyApi.preferences.list(companyId, {
+            category: CompanyPreferenceCategory.NOTIFICATION_RULES,
+            label: NOTIFICATION_RULES_LABEL,
+        }).then(prefs => {
+            const pref = prefs?.[0];
+            if (pref?.value?.length) {
+                setNotificationRules(pref.value);
+                setPreferenceId(pref.id ?? null);
+            }
+        }).catch(() => {
+            // Use defaults if backend doesn't have saved rules yet
+        }).finally(() => setLoading(false));
+    }, [companyId]);
+
+    const handleSaveSettings = async () => {
+        if (!companyId) return;
+        setSaving(true);
+        const companyApi = new CompanyApi();
+        try {
+            if (preferenceId) {
+                await companyApi.preferences.update(companyId, preferenceId, {
+                    category: CompanyPreferenceCategory.NOTIFICATION_RULES,
+                    label: NOTIFICATION_RULES_LABEL,
+                    value: notificationRules,
+                });
+            } else {
+                const created = await companyApi.preferences.create(companyId, {
+                    category: CompanyPreferenceCategory.NOTIFICATION_RULES,
+                    label: NOTIFICATION_RULES_LABEL,
+                    value: notificationRules,
+                });
+                if (created?.id) setPreferenceId(created.id);
+            }
+            toast.success('Notification settings saved');
+        } catch {
+            toast.error('Failed to save notification settings');
+        } finally {
+            setSaving(false);
+        }
+    };
 
     const handleAddRule = () => {
         setIsNewRule(true);
@@ -272,6 +329,15 @@ export default function Notifications({ employee, canEdit = true }: Notification
     };
 
     const accentStyle = { width: '8px', height: '24px', backgroundColor: 'rgb(0, 96, 120)', marginRight: '0.75rem', borderRadius: '2px' } as const;
+
+    if (loading) {
+        return (
+            <div className="d-flex justify-content-center align-items-center py-5">
+                <Spinner animation="border" size="sm" className="mr-2" />
+                <span>Loading notification settings...</span>
+            </div>
+        );
+    }
 
     return (
         <div className="employee_directory_tabs">
@@ -444,9 +510,15 @@ export default function Notifications({ employee, canEdit = true }: Notification
             <div className="d-flex justify-content-end mt-4">
                 <Button
                     style={{ backgroundColor: 'rgb(0, 96, 120)', border: 'none', padding: '0.5rem 2rem' }}
-                    disabled={!canEdit}
+                    disabled={!canEdit || saving}
+                    onClick={handleSaveSettings}
                 >
-                    Save Settings
+                    {saving ? (
+                        <>
+                            <Spinner animation="border" size="sm" className="mr-2" />
+                            Saving...
+                        </>
+                    ) : 'Save Settings'}
                 </Button>
             </div>
 

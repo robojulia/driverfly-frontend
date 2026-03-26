@@ -9,6 +9,10 @@ import {
   Download,
   Share,
   CloudDownload,
+  PinMapFill,
+  BarChartFill,
+  PersonBadgeFill,
+  Link45deg,
 } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { JobEntity } from '../../models/job/job.entity';
@@ -16,15 +20,14 @@ import { useJobAnalyticsData } from '../../hooks/use-job-analytics-data';
 import { GetJobConversionAnalyticsParams } from '../../pages/api/job-analytics';
 import { AnalyticsExporter } from '../../utils/analytics-exporter';
 
-// Import components locally to avoid module resolution issues
 import { ConversionMetricsCards } from './ConversionMetricsCards';
 import { ConversionTimelineChart } from './ConversionTimelineChart';
 import { ConversionFunnelChart } from './ConversionFunnelChart';
-import { InsightsPanel } from './InsightsPanel';
-import { AnalyticsAlerts } from './AnalyticsAlerts';
 import { JobComparison } from './JobComparison';
-import { LeadSourceBreakdownChart } from './LeadSourceBreakdownChart';
-import { UtmBreakdownChart } from './UtmBreakdownChart';
+import { EnhancedLeadSourceChart } from './EnhancedLeadSourceChart';
+import { ApplicationsByEntryModeChart } from './ApplicationsByEntryModeChart';
+import { ApplicantsByStateHeatmap } from './ApplicantsByStateHeatmap';
+import { ApplicantStatsPanel } from './ApplicantStatsPanel';
 import { TrackingLinksSection } from './TrackingLinksSection';
 
 interface JobAnalyticsDashboardProps {
@@ -40,11 +43,8 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
 }) => {
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>('30d');
 
-  // Memoize params to prevent infinite re-renders
   const params: GetJobConversionAnalyticsParams = useMemo(
-    () => ({
-      period: selectedPeriod,
-    }),
+    () => ({ period: selectedPeriod }),
     [selectedPeriod]
   );
 
@@ -53,26 +53,20 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
     timeline,
     leadSourceBreakdown,
     utmBreakdown,
+    entryModeBreakdown,
+    applicantsByState,
+    applicantStats,
     loading,
     error,
     lastUpdated,
     refetch,
   } = useJobAnalyticsData(job.id, params);
 
-  const handlePeriodChange = (period: TimePeriod) => {
-    setSelectedPeriod(period);
-  };
-
   const getPeriodLabel = (period: TimePeriod) => {
     switch (period) {
-      case '7d':
-        return 'Last 7 Days';
-      case '30d':
-        return 'Last 30 Days';
-      case '90d':
-        return 'Last 90 Days';
-      default:
-        return period;
+      case '7d': return 'Last 7 Days';
+      case '30d': return 'Last 30 Days';
+      case '90d': return 'Last 90 Days';
     }
   };
 
@@ -81,15 +75,8 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
       toast.error('No data available to export');
       return;
     }
-
     try {
-      const filename = `job-analytics-${job.id}-${selectedPeriod}`;
-      const options = {
-        format,
-        includeTimeline: true,
-        dateRange: selectedPeriod,
-      };
-
+      const options = { format, includeTimeline: true, dateRange: selectedPeriod };
       if (format === 'csv') {
         AnalyticsExporter.exportToCSV(metrics, timeline, options);
         toast.success('Analytics data exported to CSV');
@@ -97,20 +84,14 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
         AnalyticsExporter.exportToJSON(metrics, timeline, options);
         toast.success('Analytics data exported to JSON');
       }
-    } catch (error) {
-      console.error('Export failed:', error);
+    } catch {
       toast.error('Failed to export analytics data');
     }
   };
 
   const handleCopyInsights = async () => {
-    if (!metrics) {
-      toast.error('No metrics available to copy');
-      return;
-    }
-
+    if (!metrics) { toast.error('No metrics available to copy'); return; }
     try {
-      // Generate insights summary for clipboard
       const summary =
         `Job Analytics Summary - ${job.title}\n` +
         `Period: ${getPeriodLabel(selectedPeriod)}\n` +
@@ -120,11 +101,9 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
         `View-to-Click Rate: ${metrics.viewToClickRate.toFixed(1)}%\n` +
         `Click-to-Application Rate: ${metrics.clickToApplicationRate.toFixed(1)}%\n` +
         `Overall Conversion Rate: ${metrics.overallConversionRate.toFixed(1)}%`;
-
       await navigator.clipboard.writeText(summary);
       toast.success('Insights copied to clipboard');
-    } catch (error) {
-      console.error('Copy failed:', error);
+    } catch {
       toast.error('Failed to copy insights');
     }
   };
@@ -147,9 +126,7 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
           <Alert variant="danger">
             <Alert.Heading>Error Loading Analytics</Alert.Heading>
             <p>{error}</p>
-            <Button variant="outline-danger" onClick={() => refetch()}>
-              Try Again
-            </Button>
+            <Button variant="outline-danger" onClick={() => refetch()}>Try Again</Button>
           </Alert>
         </Card.Body>
       </Card>
@@ -174,7 +151,6 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
       {/* Controls */}
       <Row className="mb-4 mt-4">
         <Col className="d-flex justify-content-end align-items-center gap-2">
-          {/* Export Dropdown */}
           <Dropdown>
             <Dropdown.Toggle variant="outline-primary" size="sm">
               <Download className="me-1" size={14} />
@@ -182,28 +158,24 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item onClick={() => handleExport('csv')}>
-                <CloudDownload className="me-2" size={14} />
-                Export as CSV
+                <CloudDownload className="me-2" size={14} />Export as CSV
               </Dropdown.Item>
               <Dropdown.Item onClick={() => handleExport('json')}>
-                <CloudDownload className="me-2" size={14} />
-                Export as JSON
+                <CloudDownload className="me-2" size={14} />Export as JSON
               </Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item onClick={handleCopyInsights}>
-                <Share className="me-2" size={14} />
-                Copy Insights to Clipboard
+                <Share className="me-2" size={14} />Copy Insights to Clipboard
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
 
-          {/* Time Period Selector */}
           <ButtonGroup size="sm">
             {(['7d', '30d', '90d'] as TimePeriod[]).map((period) => (
               <Button
                 key={period}
                 variant={selectedPeriod === period ? 'primary' : 'outline-primary'}
-                onClick={() => handlePeriodChange(period)}
+                onClick={() => setSelectedPeriod(period)}
               >
                 {getPeriodLabel(period)}
               </Button>
@@ -212,14 +184,28 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
         </Col>
       </Row>
 
-      {/* Performance Alerts - Hidden for now */}
-      {/* <AnalyticsAlerts metrics={metrics} period={selectedPeriod} /> */}
+      {/* Applicant Quality Stats — top-level overview */}
+      <Row className="mb-4">
+        <Col>
+          <Card>
+            <Card.Header>
+              <Card.Title className="mb-0">
+                <PersonBadgeFill className="me-2" />
+                Applicant Quality Overview
+              </Card.Title>
+            </Card.Header>
+            <Card.Body>
+              <ApplicantStatsPanel stats={applicantStats} />
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
 
-      {/* Key Metrics Cards */}
+      {/* Conversion Metrics Cards — above charts */}
       <ConversionMetricsCards metrics={metrics} period={selectedPeriod} />
 
+      {/* Timeline + Funnel */}
       <Row className="mb-4">
-        {/* Timeline Chart */}
         <Col lg={6} className="mb-4">
           <Card className="h-100">
             <Card.Header>
@@ -242,7 +228,6 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
           </Card>
         </Col>
 
-        {/* Conversion Funnel */}
         <Col lg={6} className="mb-4">
           <Card className="h-100">
             <Card.Header>
@@ -258,6 +243,36 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
         </Col>
       </Row>
 
+      {/* Applications by Entry Mode + Applicants by State — side by side */}
+      <Row className="mb-4">
+        <Col lg={5} className="mb-4">
+          <Card className="h-100">
+            <Card.Header>
+              <Card.Title className="mb-0">
+                <BarChartFill className="me-2" />
+                Applications by Entry Mode
+              </Card.Title>
+            </Card.Header>
+            <Card.Body>
+              <ApplicationsByEntryModeChart data={entryModeBreakdown} />
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col lg={7} className="mb-4">
+          <Card className="h-100">
+            <Card.Header>
+              <Card.Title className="mb-0">
+                <PinMapFill className="me-2" />
+                Applicants by State
+              </Card.Title>
+            </Card.Header>
+            <Card.Body>
+              <ApplicantsByStateHeatmap data={applicantsByState} />
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
       {/* Tracking Links */}
       <Row className="mb-4">
         <Col>
@@ -265,32 +280,21 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
         </Col>
       </Row>
 
-      {/* Lead Source and UTM Breakdown */}
+      {/* Lead Source Breakdown — full width, filterable by source/medium/campaign */}
       <Row className="mb-4">
-        <Col lg={6} className="mb-4">
-          <Card className="h-100">
+        <Col>
+          <Card>
             <Card.Header>
               <Card.Title className="mb-0">
                 <GraphUpArrow className="me-2" />
                 Lead Source Breakdown
               </Card.Title>
+              <small className="text-muted">
+                Filter by source, medium, or campaign to correlate with your tracking links
+              </small>
             </Card.Header>
             <Card.Body>
-              <LeadSourceBreakdownChart data={leadSourceBreakdown} />
-            </Card.Body>
-          </Card>
-        </Col>
-
-        <Col lg={6} className="mb-4">
-          <Card className="h-100">
-            <Card.Header>
-              <Card.Title className="mb-0">
-                <GraphUpArrow className="me-2" />
-                UTM Parameter Breakdown
-              </Card.Title>
-            </Card.Header>
-            <Card.Body>
-              <UtmBreakdownChart data={utmBreakdown} />
+              <EnhancedLeadSourceChart data={utmBreakdown} />
             </Card.Body>
           </Card>
         </Col>
@@ -304,13 +308,6 @@ export const JobAnalyticsDashboard: React.FC<JobAnalyticsDashboardProps> = ({
           </Col>
         </Row>
       )}
-
-      {/* Insights Panel - Removed placeholder */}
-      {/* <Row>
-        <Col>
-          <InsightsPanel insights={null} />
-        </Col>
-      </Row> */}
     </div>
   );
 };

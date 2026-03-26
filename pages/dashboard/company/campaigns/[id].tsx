@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 import {
   Container,
@@ -60,6 +61,10 @@ import CampaignActions from '../../../../components/campaigns/detail/CampaignAct
 import CampaignStats from '../../../../components/campaigns/detail/CampaignStats';
 import CampaignReadinessAlert from '../../../../components/campaigns/detail/CampaignReadinessAlert';
 import CampaignsApi from '../../../../pages/api/campaigns';
+import ApplicantApi from '../../../../pages/api/applicant';
+import { ApplicantEntity } from '../../../../models/applicant/applicant.entity';
+import { ApplicantType } from '../../../../enums/applicants/applicant-type.enum';
+import { BulkLeadDto } from '../../../../models/campaigns/bulk-lead-upload.dto';
 
 const CampaignDetailPage = () => {
   const { t } = useTranslation();
@@ -83,7 +88,7 @@ const CampaignDetailPage = () => {
     startCampaign,
     regenerateTargets,
     deleteTarget,
-    addManualTargets,
+    createProfilesForLeads,
   } = useCampaign(campaignId);
 
   const [activeTab, setActiveTab] = useState('overview');
@@ -95,6 +100,7 @@ const CampaignDetailPage = () => {
   const [confirmRefreshModal, setConfirmRefreshModal] = useState(false);
   const [manualTargetModal, setManualTargetModal] = useState(false);
   const [addingManualTargets, setAddingManualTargets] = useState(false);
+  const [creatingProfiles, setCreatingProfiles] = useState(false);
   const [targetToDelete, setTargetToDelete] = useState<{ id: number; name: string } | null>(null);
   const [editingCommunicationType, setEditingCommunicationType] = useState(false);
   const [selectedCommunicationType, setSelectedCommunicationType] =
@@ -272,18 +278,89 @@ const CampaignDetailPage = () => {
     }
   };
 
-  const handleAddManualTargets = async (applicantIds: number[]) => {
+  const handleAddLeads = async (leads: BulkLeadDto[]) => {
+    setAddingManualTargets(true);
     try {
-      setAddingManualTargets(true);
-      const result = await addManualTargets(applicantIds);
+      const applicantApi = new ApplicantApi();
+      const applicantIds: number[] = [];
 
-      // Show success message or handle result
-      console.log('Manual targets added:', result);
+      // Step 1: Create a driver profile for each lead (or find existing by phone)
+      for (const lead of leads) {
+        let applicantId: number | null = null;
+
+        try {
+          const parts = lead.name.trim().split(/\s+/);
+          const applicant = new ApplicantEntity();
+          applicant.first_name = parts[0] || lead.name;
+          applicant.last_name = parts.slice(1).join(' ') || '';
+          applicant.phone = lead.phone;
+          applicant.email = lead.email;
+          applicant.type = ApplicantType.COMPANY;
+          const created = await applicantApi.create(applicant);
+          applicantId = created?.id ?? null;
+        } catch (e: any) {
+          if (e?.response?.status === 409) {
+            // Profile already exists for this phone — look it up via the standard company-scoped search
+            try {
+              const results = await applicantApi.search({ phone: lead.phone } as ApplicantEntity);
+              if (results?.length > 0 && results[0].id) applicantId = results[0].id;
+            } catch {
+              // ignore — profile exists but couldn't be retrieved
+            }
+          }
+        }
+
+        if (applicantId) applicantIds.push(applicantId);
+      }
+
+      if (applicantIds.length === 0) {
+        throw new Error('Could not create or find driver profiles for these phone numbers. Please try again.');
+      }
+
+      // Step 2: Add as campaign targets
+      const campaignsApi = new CampaignsApi();
+      const result = await campaignsApi.addManualTargets(campaignId, applicantIds);
+
+      const added = result.addedCount ?? applicantIds.length;
+      const skipped = result.skippedCount ?? 0;
+
+      if (added > 0) {
+        toast.success(
+          `${added} target${added !== 1 ? 's' : ''} added to campaign. Driver profiles created so call notes can be stored.` +
+          (skipped > 0 ? ` (${skipped} already in campaign)` : '')
+        );
+      } else {
+        toast.info('All leads are already in this campaign. Driver profiles are available for call notes.');
+      }
+
+      await loadCampaign();
     } catch (err) {
-      console.error('Error adding manual targets:', err);
+      console.error('Error adding leads:', err);
       throw err;
     } finally {
       setAddingManualTargets(false);
+    }
+  };
+
+  const handleCreateProfiles = async () => {
+    try {
+      setCreatingProfiles(true);
+      const result = await createProfilesForLeads();
+      if (result) {
+        if (result.createdCount > 0) {
+          toast.success(
+            `Created ${result.createdCount} driver profile${result.createdCount !== 1 ? 's' : ''}. You can now find them in the Applicants list and add call notes to each profile.`
+          );
+        }
+        if (result.skippedCount > 0) {
+          toast.warning(`${result.skippedCount} profile${result.skippedCount !== 1 ? 's' : ''} could not be created (may already exist).`);
+        }
+      }
+    } catch (err) {
+      console.error('Error creating profiles for leads:', err);
+      toast.error('Failed to create driver profiles. Please try again.');
+    } finally {
+      setCreatingProfiles(false);
     }
   };
 
@@ -594,6 +671,8 @@ const CampaignDetailPage = () => {
                       handleCampaignAction={handleCampaignAction}
                       handleDeleteTarget={handleDeleteTarget}
                       setManualTargetModal={setManualTargetModal}
+                      onCreateProfiles={handleCreateProfiles}
+                      creatingProfiles={creatingProfiles}
                       isSuperAdmin={isSuperAdmin}
                     />
                   </TabPane>
@@ -733,7 +812,7 @@ const CampaignDetailPage = () => {
         <ManualTargetSelectionModal
           isOpen={manualTargetModal}
           onClose={() => setManualTargetModal(false)}
-          onAddTargets={handleAddManualTargets}
+          onAddLeads={handleAddLeads}
           loading={addingManualTargets}
         />
       </Container>

@@ -107,7 +107,7 @@ export function PastEmploymentHistory() {
     form.setValues({
       ...form.values,
       employers: normalizedEmployers,
-      is_previous_employed: !!employers?.length,
+      is_previous_employed: null,
       employment_gap_details: applicant.employment_gap_details || '',
     });
   }, [applicant]);

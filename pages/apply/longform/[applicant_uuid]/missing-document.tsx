@@ -9,7 +9,6 @@ import { ApplicantEntity } from '../../../../models/applicant';
 import ApplicantApi from '../../../api/applicant';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { DevPageNavigator } from '../../../../components/developer/dev-page-navigator';
 
 export interface MissingDocumentsProps {
   entity: ApplicantEntity;
@@ -53,7 +52,6 @@ export default function MissingDocuments({ entity }: MissingDocumentsProps) {
       </div>
 
       {/* Developer Page Navigator */}
-      <DevPageNavigator formType="missing" currentStep={steps} totalSteps={totalSteps} />
     </JotformContext.Provider>
   );
 }

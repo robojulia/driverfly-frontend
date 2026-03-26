@@ -9,7 +9,6 @@ export function SourceBreakdownChart() {
     let dha = 0;
     let user = 0;
     let company = 0;
-    let jobApply = 0;
     let autoRecruit = 0;
     let jobBoard = 0;
     let socialMedia = 0;
@@ -19,7 +18,6 @@ export function SourceBreakdownChart() {
         [ApplicantType.DHA]: () => dha++,
         [ApplicantType.USER]: () => user++,
         [ApplicantType.COMPANY]: () => company++,
-        [ApplicantType.DIRECT_JOB_APPLY]: () => jobApply++,
         [ApplicantType.AUTO_RECRUIT]: () => autoRecruit++,
         [ApplicantType.JOB_BOARD]: () => jobBoard++,
         [ApplicantType.SOCIAL_MEDIA]: () => socialMedia++,
@@ -29,7 +27,7 @@ export function SourceBreakdownChart() {
         handler();
       }
     });
-    return [dha, user, company, jobApply, autoRecruit, jobBoard, socialMedia];
+    return [dha, user, company, autoRecruit, jobBoard, socialMedia];
   };
 
   const data = useMemo(() => {
@@ -46,7 +44,6 @@ export function SourceBreakdownChart() {
     'DIGITAL_HIRING_APP',
     'DRIVERFLY',
     'UPLOADED',
-    'DIRECT_JOB_APPLY',
     'AUTO_RECRUIT',
     'JOB_BOARD',
     'SOCIAL_MEDIA',
