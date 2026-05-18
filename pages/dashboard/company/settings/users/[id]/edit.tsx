@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import FullLayout from '../../../../../../components/dashboard/layouts/layout/full-layout';
 import { UserForm } from '../../../../../../components/forms/company/user-form';
 import ChildPageLayout from '../../../../../../components/layouts/page/child-page-layout';
+import { AdminPasswordResetModal } from '../../../../../../components/users/AdminPasswordResetModal';
 import { useAuth } from '../../../../../../hooks/use-auth';
 import { useTranslation } from '../../../../../../hooks/use-translation';
 import { UserEntity } from '../../../../../../models/user/user.entity';
@@ -22,6 +23,7 @@ export default function EditUser({ id }) {
 
   const [user, setUser] = useState<UserEntity | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
 
   useEffectAsync(async () => {
     if (id) {
@@ -61,11 +63,36 @@ export default function EditUser({ id }) {
           </div>
         </div>
       ) : (
-        <UserForm
-          entity={user}
-          onSaveComplete={goBack}
-          // onSaveError={goBack}
-        />
+        <>
+          <UserForm
+            entity={user}
+            onSaveComplete={goBack}
+          />
+
+          <div className="mt-4 pt-3 border-top">
+            <div className="d-flex justify-content-between align-items-center">
+              <div>
+                <h6 className="mb-1">Password Reset</h6>
+                <p className="text-muted small mb-0">
+                  Send a reset email or set a temporary password on behalf of this user.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="btn btn-outline-secondary btn-sm"
+                onClick={() => setShowPasswordReset(true)}
+              >
+                Reset Password
+              </button>
+            </div>
+          </div>
+
+          <AdminPasswordResetModal
+            user={user}
+            show={showPasswordReset}
+            onHide={() => setShowPasswordReset(false)}
+          />
+        </>
       )}
     </ChildPageLayout>
   );

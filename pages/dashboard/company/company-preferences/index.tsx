@@ -37,6 +37,7 @@ import { ReferBackProgram } from '../../../../components/company-preferences/Ref
 import { AutoRecruiting } from '../../../../components/company-preferences/AutoRecruiting';
 import { SystemPreferences } from '../../../../components/company-preferences/SystemPreferences';
 import HiringCriteriaBuilder from '../../../../components/company-preferences/HiringCriteriaBuilder';
+import { useUnsavedChangesWarning } from '../../../../hooks/use-unsaved-changes-warning';
 
 function JobLinkRow({ job, link }: { job: JobEntity; link: string }) {
   const [copied, setCopied] = useState(false);
@@ -224,12 +225,14 @@ export default function CompanyPreference() {
   }, []);
 
   const populateForm = function (preferences) {
+    const newValues = { ...form.values };
     preferences.forEach((v) => {
       const label = v.label?.toLowerCase();
-      if (label in form.values) {
-        form.setFieldValue(label, v);
+      if (label in newValues) {
+        newValues[label] = v;
       }
     });
+    form.resetForm({ values: newValues });
   };
 
   const handleReferBackChange = async (enabled: boolean) => {
@@ -407,6 +410,11 @@ export default function CompanyPreference() {
   const isFirstRunExperience = !preferences?.some(
     (pref) => pref.category === CompanyPreferenceCategory.JOTFORM
   );
+
+  const unsavedChangesModal = useUnsavedChangesWarning({
+    isDirty: form.dirty,
+    shouldWarn: !form.isSubmitting,
+  });
 
   return (
     <>
@@ -650,6 +658,7 @@ export default function CompanyPreference() {
           </ViewModal>
         )}
       </PageLayout>
+      {unsavedChangesModal}
     </>
   );
 }

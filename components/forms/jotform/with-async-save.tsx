@@ -37,9 +37,14 @@ export function withAsyncSave<P extends object>(
     // Trigger save when applicant or extras data changes (and we're past checkpoint)
     useEffect(() => {
       if (shouldSave && applicant && applicantExtras) {
-        // Strip nested relation entities that cause backend 500 errors.
-        // The backend only needs scalar/array form fields, not full joined objects.
-        const { company, user, jobs, documents, employee, ...applicantFields } = applicant as any;
+        // Strip all nested relation objects. Sending full joined entities causes backend errors:
+        // full nested objects (e.g. company) caused 500s; remaining relation fields (e.g.
+        // referralSource, assignedUser) cause 400s when the backend has strict DTO validation.
+        const {
+          company, user, jobs, documents, employee,
+          referralSource, assignedUser, atsMapping, job_history, notes,
+          ...applicantFields
+        } = applicant as any;
         saveFormData({ applicant: applicantFields, applicantExtras });
       }
     }, [applicant, applicantExtras, shouldSave, saveFormData]);

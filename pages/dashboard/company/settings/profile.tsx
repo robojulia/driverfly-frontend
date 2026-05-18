@@ -2,6 +2,7 @@ import { toast } from 'react-toastify';
 import { Col, Row } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
+import * as yup from 'yup';
 import { useAuth } from '../../../../hooks/use-auth';
 import { useTranslation } from '../../../../hooks/use-translation';
 
@@ -14,8 +15,15 @@ import BaseInputPhone from '../../../../components/forms/base-input-phone';
 import BaseInput from '../../../../components/forms/base-input';
 
 import UserApi from '../../../api/user';
-import { UserEntity } from '../../../../models/user/user.entity';
 import { ChangePasswordDto } from '../../../../models/auth/change-password.dto';
+
+const profileSchema = yup.object({
+  first_name: yup.string().required().nullable(),
+  last_name: yup.string().required().nullable(),
+  email: yup.string().email().required().nullable(),
+  contact_number: yup.string().nullable(),
+  cell_number: yup.string().nullable(),
+});
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -24,7 +32,8 @@ export default function Profile() {
 
   const form = useFormik({
     initialValues: user,
-    validationSchema: UserEntity.yupSchema(),
+    enableReinitialize: true,
+    validationSchema: profileSchema,
     onSubmit: async (values) => {
       const api = new UserApi();
 

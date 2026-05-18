@@ -6,20 +6,24 @@ import FullLayout from '../../../../components/dashboard/layouts/layout/full-lay
 import PageLayout from '../../../../components/layouts/page/page-layout';
 import { CampaignsView, ViewMode } from '../../../../components/campaigns/CampaignsView';
 import RequestCampaignModal from '../../../../components/campaigns/RequestCampaignModal';
+import RequestInboundModal from '../../../../components/campaigns/RequestInboundModal';
 import { useFeatureFlags } from '../../../../context/feature-flag-context';
 import { useTranslation } from '../../../../hooks/use-translation';
+import { CampaignCommunicationType } from '../../../../enums/campaigns/campaign-communication-type.enum';
+
+type TabType = CampaignCommunicationType | 'INBOUND_CALLS';
 
 const CampaignsPage = () => {
   const { t } = useTranslation();
   const { isFeatureEnabled, isLoading: flagsLoading } = useFeatureFlags();
   const [pageTitle, setPageTitle] = useState<string>('MARKETING_CAMPAIGNS');
   const [showRequestModal, setShowRequestModal] = useState(false);
+  const [showInboundModal, setShowInboundModal] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('summary');
+  const [activeTab, setActiveTab] = useState<TabType>(CampaignCommunicationType.VOICE);
 
-  // Feature flag check first
   const campaignsEnabled = !flagsLoading && isFeatureEnabled('CAMPAIGNS_ENABLED');
 
-  // Show loading while feature flags are loading
   if (flagsLoading) {
     return (
       <Container>
@@ -32,7 +36,6 @@ const CampaignsPage = () => {
     );
   }
 
-  // Show warning if campaigns are not enabled
   if (!campaignsEnabled) {
     return (
       <PageLayout title="MARKETING_CAMPAIGNS">
@@ -43,30 +46,42 @@ const CampaignsPage = () => {
     );
   }
 
+  const renderHeaderAction = () => {
+    if (viewMode !== 'summary') return null;
+
+    if (activeTab === 'INBOUND_CALLS') {
+      return (
+        <Button variant="primary" onClick={() => setShowInboundModal(true)}>
+          Request Inbound AI Setup
+        </Button>
+      );
+    }
+
+    return (
+      <Button variant="primary" onClick={() => setShowRequestModal(true)}>
+        {t('REQUEST_A_NEW_CAMPAIGN')}
+      </Button>
+    );
+  };
+
   return (
     <>
-      <PageLayout
-        title={pageTitle}
-        actions={
-          viewMode === 'summary' ? (
-            <Button
-              variant="primary"
-              onClick={() => setShowRequestModal(true)}
-            >
-              {t('REQUEST_A_NEW_CAMPAIGN')}
-            </Button>
-          ) : null
-        }
-      >
+      <PageLayout title={pageTitle} actions={renderHeaderAction()}>
         <CampaignsView
           onTitleChange={setPageTitle}
           onViewModeChange={setViewMode}
+          onTabChange={setActiveTab}
         />
       </PageLayout>
 
       <RequestCampaignModal
         show={showRequestModal}
         onHide={() => setShowRequestModal(false)}
+      />
+
+      <RequestInboundModal
+        show={showInboundModal}
+        onHide={() => setShowInboundModal(false)}
       />
     </>
   );

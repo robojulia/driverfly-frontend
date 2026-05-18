@@ -45,6 +45,7 @@ import stateList from "../../../utils/stateList";
 import provinceList from "../../../utils/provinceList";
 import mexicoStateList from "../../../utils/mexicoStateList";
 import { BaseFormProps } from "./base-form-props";
+import SSNDisplay from "../../shared/SSNDisplay";
 
 export interface ApplicantBasicDetailsFormNewProps extends BaseFormProps<ApplicantEntity> {
   isSubmitting: boolean;
@@ -470,62 +471,74 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
               <Col md="3" className="px-2">
                 <div className="col-12">
                   <label>{t("Social Security Number")}:</label>
-                  <div className="d-flex align-items-center gap-2">
-                    <div className="flex-grow-1">
-                      <BaseInput
-                        className="w-100"
-                        readOnly={Boolean(entity?.is_hired) || (Boolean((entity as any)?.ssn_last4) && !(form.values as any).ssnEditMode)}
-                        name="ssn"
-                        placeholder={(form.values as any).ssnEditMode ? "XXX-XX-XXXX" : ""}
-                        formik={form}
-                        maxLength={11}
-                        onChange={(e) => {
-                          const inputValue = e.target.value;
-                          const digitsOnly = inputValue.replace(/\D/g, '').slice(0, 9);
-
-                          // Format the value for display
-                          let formattedValue = '';
-                          if (digitsOnly.length <= 3) {
-                            formattedValue = digitsOnly;
-                          } else if (digitsOnly.length <= 5) {
-                            formattedValue = digitsOnly.slice(0, 3) + '-' + digitsOnly.slice(3);
-                          } else {
-                            formattedValue = digitsOnly.slice(0, 3) + '-' + digitsOnly.slice(3, 5) + '-' + digitsOnly.slice(5);
-                          }
-
-                          // Store the formatted value in formik (for display)
-                          form.setFieldValue('ssn', formattedValue);
-                        }}
-                      />
-                    </div>
-                    {/* Show Change/Cancel button if SSN exists */}
-                    {(entity as any)?.ssn_last4 && !Boolean(entity?.is_hired) && (
-                      <Button
-                        type="button"
-                        variant={(form.values as any).ssnEditMode ? "secondary" : "outline-primary"}
-                        size="sm"
-                        style={{ whiteSpace: 'nowrap', minWidth: '80px' }}
-                        onClick={() => {
-                          if ((form.values as any).ssnEditMode) {
-                            // Cancel editing - restore masked SSN
+                  {(form.values as any).ssnEditMode ? (
+                    <div>
+                      <div className="d-flex align-items-center gap-2">
+                        <div className="flex-grow-1">
+                          <BaseInput
+                            className="w-100"
+                            name="ssn"
+                            placeholder="XXX-XX-XXXX"
+                            formik={form}
+                            maxLength={11}
+                            onChange={(e) => {
+                              const inputValue = e.target.value;
+                              const digitsOnly = inputValue.replace(/\D/g, '').slice(0, 9);
+                              let formattedValue = '';
+                              if (digitsOnly.length <= 3) {
+                                formattedValue = digitsOnly;
+                              } else if (digitsOnly.length <= 5) {
+                                formattedValue = digitsOnly.slice(0, 3) + '-' + digitsOnly.slice(3);
+                              } else {
+                                formattedValue = digitsOnly.slice(0, 3) + '-' + digitsOnly.slice(3, 5) + '-' + digitsOnly.slice(5);
+                              }
+                              form.setFieldValue('ssn', formattedValue);
+                            }}
+                          />
+                        </div>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="sm"
+                          style={{ whiteSpace: 'nowrap', minWidth: '80px' }}
+                          onClick={() => {
                             const ssnLast4 = (entity as any)?.ssn_last4;
                             form.setFieldValue('ssn', `XXX-XX-${String(ssnLast4).slice(-4)}`);
                             form.setFieldValue('ssnEditMode', false);
-                          } else {
-                            // Enable editing - clear the field
+                          }}
+                        >
+                          {t('Cancel')}
+                        </Button>
+                      </div>
+                      <small className="text-muted">
+                        Enter the complete 9-digit SSN to replace the existing one
+                      </small>
+                    </div>
+                  ) : (entity as any)?.ssn_last4 ? (
+                    <div>
+                      <SSNDisplay
+                        applicantId={entity?.id}
+                        last4={(entity as any)?.ssn_last4}
+                        className="mt-1"
+                      />
+                      {!Boolean(entity?.is_hired) && (
+                        <Button
+                          type="button"
+                          variant="outline-primary"
+                          size="sm"
+                          className="mt-2"
+                          style={{ whiteSpace: 'nowrap' }}
+                          onClick={() => {
                             form.setFieldValue('ssn', '');
                             form.setFieldValue('ssnEditMode', true);
-                          }
-                        }}
-                      >
-                        {(form.values as any).ssnEditMode ? t('Cancel') : t('Change')}
-                      </Button>
-                    )}
-                  </div>
-                  {(form.values as any).ssnEditMode && (
-                    <small className="text-muted">
-                      Enter the complete 9-digit SSN to replace the existing one
-                    </small>
+                          }}
+                        >
+                          {t('Change')}
+                        </Button>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="mt-1 text-muted small">SSN not provided</div>
                   )}
                 </div>
               </Col>

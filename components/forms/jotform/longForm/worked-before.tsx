@@ -221,8 +221,8 @@ export function WorkedBefore() {
         className={`${styles.align__text_left} ${styles.formStep}`}
       >
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          {/* First Question: Applied Before - Only show for non-returning applicants */}
-          {!isReturningApplicant && (
+          {/* First Question: Applied Before - Only show for non-returning applicants who haven't answered yet */}
+          {!isReturningApplicant && form.values.already_applied_to_company === null && (
             <div className="my-4">
               <RadioGroup
                 name="already_applied_to_company"

@@ -27,13 +27,20 @@ export default function ResetPassword({ passwordResetToken }) {
     },
     validationSchema: yup.object({
       passwordResetToken: yup.string().required().nullable(),
-      password: yup.string().required().nullable(),
+      password: yup
+        .string()
+        .min(8, 'PASSWORD_REQUIREMENT_LENGTH')
+        .matches(/\d/, 'PASSWORD_REQUIREMENT_NUMBER')
+        .matches(/[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/, 'PASSWORD_REQUIREMENT_SPECIAL_CHARACTER')
+        .required()
+        .nullable(),
       passwordConfirm: yup
         .string()
+        .required()
         .test({
           test: (value, context) => {
             const password = context.resolve(yup.ref('password'));
-            if (value == password) return true;
+            if (value === password) return true;
 
             return context.createError({
               path: context.path,

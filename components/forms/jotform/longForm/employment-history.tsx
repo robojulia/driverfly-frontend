@@ -317,8 +317,8 @@ export function EmploymentHistory() {
             </div>
           )}
 
-          {/* First Question: Applied Before - Only show for non-returning applicants */}
-          {!isReturningApplicant && (
+          {/* First Question: Applied Before - Only show for non-returning applicants who haven't answered yet */}
+          {!isReturningApplicant && form.values.already_applied_to_company === null && (
             <div style={{ marginBottom: '2rem' }}>
               <RadioGroup
                 name="already_applied_to_company"

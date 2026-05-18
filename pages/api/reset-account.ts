@@ -2,7 +2,7 @@ import BaseApi from "./_baseApi";
 
 export class NewPasswordDto {
   password: string;
-  confirmPassword: string;
+  passwordConfirm: string;
   passwordResetToken: string;
 }
 

@@ -20,6 +20,10 @@ export const useAsyncFormSave = (
   const [saveError, setSaveError] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const isMountedRef = useRef(true);
+  // Ref-based tracking avoids isSaving being in the useCallback deps (which would cause an
+  // infinite re-render loop: save starts → isSaving changes → saveFormData ref changes →
+  // withAsyncSave useEffect re-fires → another save starts → repeat).
+  const isSavingRef = useRef(false);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -37,23 +41,19 @@ export const useAsyncFormSave = (
 
   const saveFormData = useCallback(
     async (formData: any) => {
-      // Require applicantId to save - the step check is now handled by the withAsyncSave HOC's shouldSave logic
-      // which accounts for both full form (steps >= 10) and longform page (applicant.id exists)
       if (!applicantId) {
         return;
       }
 
-      // Note: Removed is_hired check to allow hired applicants to update their own applications
-      // The is_hired check in the company dashboard (for admins) is sufficient
-
       // If a save is already in progress, cancel it before starting a new one.
-      if (isSaving) {
+      if (isSavingRef.current) {
         cancel();
       }
 
       const controller = new AbortController();
       abortControllerRef.current = controller;
 
+      isSavingRef.current = true;
       setIsSaving(true);
       setSaveError(null);
 
@@ -70,16 +70,20 @@ export const useAsyncFormSave = (
           // Request was intentionally canceled (e.g. user navigated to next step), not an error
         } else if (isMountedRef.current) {
           console.error('Auto-save failed:', error);
+          if ((error as any).response?.data) {
+            console.error('Auto-save backend error details:', (error as any).response.data);
+          }
           setSaveError(error instanceof Error ? error.message : 'Save failed');
         }
       } finally {
         if (isMountedRef.current && abortControllerRef.current === controller) {
+          isSavingRef.current = false;
           setIsSaving(false);
           abortControllerRef.current = null;
         }
       }
     },
-    [applicantId, stepNumber, isSaving, cancel]
+    [applicantId, stepNumber, cancel] // isSaving intentionally omitted — use isSavingRef instead
   );
 
   return {

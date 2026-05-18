@@ -31,6 +31,8 @@ export class SearchApplicantDto {
   without?: string[];
   includeEligibility?: boolean;
   referralSourceId?: number;
+  sortBy?: string;
+  sortOrder?: 'ASC' | 'DESC';
 
   static yupSchema() {
     return yup.object({

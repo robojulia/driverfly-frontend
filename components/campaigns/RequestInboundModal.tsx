@@ -3,92 +3,73 @@ import { Modal, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useTranslation } from '../../hooks/use-translation';
-import CampaignRequestApi from '../../pages/api/campaign-request';
-import { CampaignRequestDTO } from '../../models/campaigns/campaign-request.dto';
-import { CampaignCommunicationType } from '../../enums/campaigns/campaign-communication-type.enum';
-import { globalAjaxExceptionHandler } from '../../utils/ajax';
+import { InboundRequestDTO } from '../../models/campaigns/inbound-request.dto';
 
 import BaseInput from '../forms/base-input';
 import BaseSelect from '../forms/base-select';
 import BaseTextArea from '../forms/base-text-area';
 import BaseDateInput from '../forms/base-date-input';
-import BaseMoneyInput from '../forms/base-money-input';
 
-interface RequestCampaignModalProps {
+interface RequestInboundModalProps {
   show: boolean;
   onHide: () => void;
   onRequestSubmitted?: () => void;
 }
 
-export default function RequestCampaignModal({
+const HOUR_OPTIONS = Array.from({ length: 24 }, (_, i) => {
+  const hour = i % 12 === 0 ? 12 : i % 12;
+  const period = i < 12 ? 'AM' : 'PM';
+  const value = `${String(i).padStart(2, '0')}:00`;
+  return { value, label: `${hour}:00 ${period}` };
+});
+
+export default function RequestInboundModal({
   show,
   onHide,
   onRequestSubmitted,
-}: RequestCampaignModalProps) {
+}: RequestInboundModalProps) {
   const { t } = useTranslation();
 
   const form = useFormik({
     initialValues: {
-      communicationType: '',
-      campaignType: '',
-      targetAudience: '',
-      budgetRangeMax: '',
-      desiredStartDate: '',
+      businessHoursStart: '08:00',
+      businessHoursEnd: '17:00',
+      callRoutingGoal: '',
+      greeting: '',
+      callbackEnabled: false,
       goals: '',
+      desiredStartDate: '',
       personaGender: 'female',
       personaAccent: 'neutral',
       personaTone: 'professional',
       personaName: '',
     },
-    validationSchema: CampaignRequestDTO.yupSchema(),
+    validationSchema: InboundRequestDTO.yupSchema(),
     onSubmit: async (values) => {
       try {
-        const api = new CampaignRequestApi();
-
-        const dto: CampaignRequestDTO = {
-          communicationType: values.communicationType,
-          campaignType: values.campaignType,
-          targetAudience: values.targetAudience,
-          budgetRangeMax: parseFloat(values.budgetRangeMax),
-          desiredStartDate: new Date(values.desiredStartDate),
-          goals: values.goals,
-          personaGender: values.personaGender,
-          personaAccent: values.personaAccent,
-          personaTone: values.personaTone,
-          personaName: values.personaName,
-        };
-
-        await api.submitRequest(dto);
-
-        // Notify development team
         await axios.post('/api/send-intake-email', {
-          type: 'campaign',
+          type: 'inbound',
           fields: {
-            'Communication Type': values.communicationType,
-            'Campaign Type': values.campaignType,
-            'Target Audience': values.targetAudience,
-            'Maximum Budget': `$${values.budgetRangeMax}`,
+            'Business Hours': `${values.businessHoursStart} – ${values.businessHoursEnd}`,
+            'Call Routing Goal': values.callRoutingGoal,
+            'Greeting / Script': values.greeting,
+            'Callback Enabled': values.callbackEnabled ? 'Yes' : 'No',
             'Desired Start Date': values.desiredStartDate,
-            'Goals': values.goals,
+            'Goals / Objectives': values.goals,
             'Persona Name': values.personaName,
             'Persona Gender': values.personaGender,
             'Persona Accent': values.personaAccent,
             'Persona Tone': values.personaTone,
           },
-        }).catch((err) => console.warn('Email notification failed:', err));
+        });
 
-        toast.success(t('CAMPAIGN_REQUEST_SUBMITTED_SUCCESSFULLY'));
+        toast.success('Inbound request submitted successfully!');
         form.resetForm();
         onHide();
         onRequestSubmitted?.();
       } catch (e) {
-        console.error('Unable to submit campaign request', e);
-        globalAjaxExceptionHandler(e, {
-          formik: form,
-          toast: toast,
-          t: t,
-          defaultMessage: t('Failed to submit campaign request. Please try again.'),
-        });
+        console.error('Unable to submit inbound request', e);
+        toast.error('Failed to submit inbound request. Please try again.');
       }
     },
   });
@@ -107,57 +88,26 @@ export default function RequestCampaignModal({
       `}</style>
       <form onSubmit={form.handleSubmit}>
         <Modal.Header closeButton>
-          <Modal.Title>{t('REQUEST_A_NEW_CAMPAIGN')}</Modal.Title>
+          <Modal.Title>Request Inbound AI Setup</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <BaseSelect
-            className="mb-4"
-            label={t('COMMUNICATION_TYPE')}
-            name="communicationType"
-            enumType={CampaignCommunicationType}
-            formik={form}
-            required
-            placeholder={t('COMMUNICATION_TYPE_PLACEHOLDER')}
-          />
-
-          <BaseTextArea
-            className="mb-4"
-            label={t('CAMPAIGN_TYPE')}
-            name="campaignType"
-            rows={3}
-            maxLength={500}
-            formik={form}
-            required
-            placeholder={t('CAMPAIGN_TYPE_PLACEHOLDER')}
-          />
-
-          <BaseTextArea
-            className="mb-4"
-            label={t('TARGET_AUDIENCE_DESCRIPTION')}
-            name="targetAudience"
-            rows={3}
-            maxLength={500}
-            formik={form}
-            required
-            placeholder={t('TARGET_AUDIENCE_PLACEHOLDER')}
-          />
-
           <div className="row">
             <div className="col-md-6">
-              <BaseMoneyInput
+              <BaseSelect
                 className="mb-4"
-                label={t('MAXIMUM_BUDGET')}
-                name="budgetRangeMax"
+                label="Business Hours Start"
+                name="businessHoursStart"
+                options={HOUR_OPTIONS}
                 formik={form}
                 required
-                placeholder="0.00"
               />
             </div>
             <div className="col-md-6">
-              <BaseDateInput
+              <BaseSelect
                 className="mb-4"
-                label={t('DESIRED_START_DATE')}
-                name="desiredStartDate"
+                label="Business Hours End"
+                name="businessHoursEnd"
+                options={HOUR_OPTIONS}
                 formik={form}
                 required
               />
@@ -166,13 +116,65 @@ export default function RequestCampaignModal({
 
           <BaseTextArea
             className="mb-4"
-            label={t('SPECIFIC_CAMPAIGN_GOALS')}
+            label="Call Routing Goal"
+            name="callRoutingGoal"
+            rows={3}
+            maxLength={500}
+            formik={form}
+            required
+            placeholder="Describe how inbound calls should be handled and routed (e.g., screen applicants, schedule interviews, answer job questions)"
+          />
+
+          <BaseTextArea
+            className="mb-4"
+            label="Greeting / Script Preference"
+            name="greeting"
+            rows={3}
+            maxLength={500}
+            formik={form}
+            required
+            placeholder="Describe the preferred greeting and tone for inbound callers"
+          />
+
+          <div className="row">
+            <div className="col-md-6">
+              <BaseDateInput
+                className="mb-4"
+                label="Desired Start Date"
+                name="desiredStartDate"
+                formik={form}
+                required
+              />
+            </div>
+            <div className="col-md-6">
+              <div className="mb-4">
+                <label className="form-label">Enable Callback</label>
+                <div className="form-check mt-2">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="callbackEnabled"
+                    name="callbackEnabled"
+                    checked={form.values.callbackEnabled}
+                    onChange={form.handleChange}
+                  />
+                  <label className="form-check-label" htmlFor="callbackEnabled">
+                    Allow AI to schedule a callback for missed calls
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <BaseTextArea
+            className="mb-4"
+            label="Goals / Objectives"
             name="goals"
             rows={3}
             maxLength={1000}
             formik={form}
             required
-            placeholder={t('CAMPAIGN_GOALS_PLACEHOLDER')}
+            placeholder="Describe what you want to achieve with inbound AI (e.g., pre-qualify drivers, reduce receptionist load, 24/7 availability)"
           />
 
           <div className="mt-4 mb-3">
@@ -187,7 +189,7 @@ export default function RequestCampaignModal({
                 name="personaGender"
                 options={[
                   { value: 'female', label: t('FEMALE') },
-                  { value: 'male', label: t('MALE') }
+                  { value: 'male', label: t('MALE') },
                 ]}
                 formik={form}
                 placeholder={t('PERSONA_GENDER_PLACEHOLDER')}
@@ -208,7 +210,7 @@ export default function RequestCampaignModal({
                   { value: 'african_american', label: t('AFRICAN_AMERICAN') },
                   { value: 'middle_eastern', label: t('MIDDLE_EASTERN') },
                   { value: 'russian', label: t('RUSSIAN') },
-                  { value: 'indian', label: t('INDIAN') }
+                  { value: 'indian', label: t('INDIAN') },
                 ]}
                 formik={form}
                 placeholder={t('PERSONA_ACCENT_PLACEHOLDER')}
@@ -226,7 +228,7 @@ export default function RequestCampaignModal({
                   { value: 'professional', label: t('PROFESSIONAL') },
                   { value: 'friendly', label: t('FRIENDLY') },
                   { value: 'casual', label: t('CASUAL') },
-                  { value: 'formal', label: t('FORMAL') }
+                  { value: 'formal', label: t('FORMAL') },
                 ]}
                 formik={form}
                 placeholder={t('PERSONA_TONE_PLACEHOLDER')}
@@ -256,7 +258,7 @@ export default function RequestCampaignModal({
             type="submit"
             disabled={form.isSubmitting || !form.isValid}
           >
-            {form.isSubmitting ? t('SUBMITTING') : t('REQUEST_CAMPAIGN')}
+            {form.isSubmitting ? t('SUBMITTING') : 'Request Inbound Setup'}
           </Button>
         </Modal.Footer>
       </form>

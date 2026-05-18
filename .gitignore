@@ -11,3 +11,8 @@
 # Sentry Config File
 .sentryclirc
 .next
+node_modules
+.next
+dist
+build
+.cache

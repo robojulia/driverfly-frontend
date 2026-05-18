@@ -13,6 +13,7 @@ import {
   PersonX,
   PersonCheck,
   TrophyFill,
+  KeyFill,
 } from 'react-bootstrap-icons';
 import UserApi, { RecruiterScoreSummary } from '../../../../api/user';
 import ViewDataTable, {
@@ -29,6 +30,7 @@ import { join } from 'path/posix';
 import ViewModal from '../../../../../components/view-details/view-modal';
 import { RecruiterScoreModal } from '../../../../../components/users/RecruiterScoreModal';
 import { AutoAssignSettings } from '../../../../../components/users/AutoAssignSettings';
+import { AdminPasswordResetModal } from '../../../../../components/users/AdminPasswordResetModal';
 
 export default function UserList() {
   const { t } = useTranslation();
@@ -44,6 +46,8 @@ export default function UserList() {
   const [scoreSummaries, setScoreSummaries] = useState<RecruiterScoreSummary[]>([]);
   const [scoreModalUser, setScoreModalUser] = useState<UserEntity | null>(null);
   const [showScoreModal, setShowScoreModal] = useState(false);
+  const [passwordResetUser, setPasswordResetUser] = useState<UserEntity | null>(null);
+  const [showPasswordResetModal, setShowPasswordResetModal] = useState(false);
 
   useEffectAsync(async () => {
     if (!user) return;
@@ -74,7 +78,8 @@ export default function UserList() {
     viewUser: hasPermission('CanViewUser'),
     editUser: hasPermission('CanUpdateUser'),
     deleteUser: hasPermission('CanDeleteUser'),
-    disableUser: hasPermission('CanUpdateUser'), // Company admins can disable users
+    disableUser: hasPermission('CanUpdateUser'),
+    resetPassword: hasPermission('CanUpdateUser'),
   };
 
   const onAddClick = (e: React.MouseEvent) => {
@@ -297,6 +302,12 @@ export default function UserList() {
             hide: !can.editUser || j.id === user.id,
           },
           {
+            onClick: () => { setPasswordResetUser(j); setShowPasswordResetModal(true); },
+            icon: KeyFill,
+            label: 'RESET_PASSWORD',
+            hide: !can.resetPassword || j.id === user.id,
+          },
+          {
             onClick: (e) => onToggleCompanyDisabledClick(j.id, !j.company_disabled),
             icon: j.company_disabled ? PersonCheck : PersonX,
             label: j.company_disabled ? 'ENABLE_USER' : 'DISABLE_USER',
@@ -348,6 +359,12 @@ export default function UserList() {
         user={scoreModalUser}
         show={showScoreModal}
         onHide={() => setShowScoreModal(false)}
+      />
+
+      <AdminPasswordResetModal
+        user={passwordResetUser}
+        show={showPasswordResetModal}
+        onHide={() => setShowPasswordResetModal(false)}
       />
 
       <PageLayout

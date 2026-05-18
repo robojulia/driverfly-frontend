@@ -19,15 +19,21 @@ interface DetailView {
 interface CampaignsViewProps {
   onTitleChange?: (title: string) => void;
   onViewModeChange?: (mode: ViewMode) => void;
+  onTabChange?: (tab: TabType) => void;
 }
 
 type TabType = CampaignCommunicationType | 'INBOUND_CALLS';
 
-export const CampaignsView: React.FC<CampaignsViewProps> = ({ onTitleChange, onViewModeChange }) => {
+export const CampaignsView: React.FC<CampaignsViewProps> = ({ onTitleChange, onViewModeChange, onTabChange }) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabType>(
     CampaignCommunicationType.VOICE
   );
+
+  const handleTabChange = (tab: TabType) => {
+    setActiveTab(tab);
+    onTabChange?.(tab);
+  };
   const [viewMode, setViewMode] = useState<ViewMode>('summary');
   const [detailView, setDetailView] = useState<DetailView | null>(null);
 
@@ -192,7 +198,7 @@ export const CampaignsView: React.FC<CampaignsViewProps> = ({ onTitleChange, onV
           }}
         >
           <button
-            onClick={() => setActiveTab(CampaignCommunicationType.VOICE)}
+            onClick={() => handleTabChange(CampaignCommunicationType.VOICE)}
             style={{
               padding: '0.875rem 1.5rem',
               fontSize: '1.125rem',
@@ -237,7 +243,7 @@ export const CampaignsView: React.FC<CampaignsViewProps> = ({ onTitleChange, onV
             Voice Campaigns
           </button>
           <button
-            onClick={() => setActiveTab(CampaignCommunicationType.SMS)}
+            onClick={() => handleTabChange(CampaignCommunicationType.SMS)}
             style={{
               padding: '0.875rem 1.5rem',
               fontSize: '1.125rem',
@@ -282,7 +288,7 @@ export const CampaignsView: React.FC<CampaignsViewProps> = ({ onTitleChange, onV
             Text Campaigns
           </button>
           <button
-            onClick={() => setActiveTab('INBOUND_CALLS')}
+            onClick={() => handleTabChange('INBOUND_CALLS')}
             style={{
               padding: '0.875rem 1.5rem',
               fontSize: '1.125rem',

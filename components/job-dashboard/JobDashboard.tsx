@@ -14,6 +14,7 @@ import {
   ChevronDown,
   ChevronUp,
   BoxArrowUpRight,
+  Robot,
 } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { DeleteButton } from '../buttons/delete-button';
@@ -292,8 +293,8 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
     },
     {
       id: 'ai-campaigns' as TabType,
-      label: 'AI Campaigns',
-      icon: TelephoneFill,
+      label: 'AI',
+      icon: Robot,
     },
   ];
 

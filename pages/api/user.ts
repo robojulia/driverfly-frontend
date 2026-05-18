@@ -82,6 +82,10 @@ export default class UserApi extends BaseApi {
     await this.post('user/change-password', { 'change-password': dto });
   }
 
+  async adminSetPassword(id: number, password: string): Promise<void> {
+    await this.put(`user/${id}/admin-reset-password`, { password });
+  }
+
   me = {
     get: async (): Promise<UserEntity> => {
       const { data } = await this.get('user');

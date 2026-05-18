@@ -991,6 +991,14 @@ function ApplicantView(props: ViewProps) {
             hide: 0,
           },
           {
+            id: 'date_modified',
+            name: 'DATE_MODIFIED',
+            wrap: true,
+            selector: (applicant) => applicant.last_updated_at,
+            cell: (applicant) => <ShowFormattedDate date={applicant.last_updated_at} />,
+            hide: 0,
+          },
+          {
             id: 'source',
             name: 'LEAD_TYPE',
             wrap: true,

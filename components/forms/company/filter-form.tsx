@@ -176,6 +176,27 @@ export default function ApplicantFilterForm({ className, onSearch }: ApplicantFi
                         }])}
                         formik={form}
                     />
+                    <BaseSelect
+                        className="col-md-3 mt-1 mb-3"
+                        placeholder="SORT_BY"
+                        name="sortBy"
+                        options={[
+                            { label: t('DATE_ADDED'), value: 'created_at' },
+                            { label: t('DATE_MODIFIED'), value: 'last_updated_at' },
+                            { label: t('NAME'), value: 'first_name' },
+                        ]}
+                        formik={form}
+                    />
+                    <BaseSelect
+                        className="col-md-2 mt-1 mb-3"
+                        placeholder="SORT_ORDER"
+                        name="sortOrder"
+                        options={[
+                            { label: t('DESCENDING'), value: 'DESC' },
+                            { label: t('ASCENDING'), value: 'ASC' },
+                        ]}
+                        formik={form}
+                    />
                     <Button
                         className="col-md-1 ml-3 mt-1 mb-3 mr-3 "
                         variant="primary"
