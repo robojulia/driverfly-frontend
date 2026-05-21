@@ -446,6 +446,20 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
                 },
               });
             }
+
+            fetch('/api/send-application-update-email', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                applicantId: applicantResult?.id ?? companyApplicant.id,
+                companyId: job.company?.id,
+                applicantFirstName: dto.first_name,
+                applicantLastName: dto.last_name,
+                applicantEmail: dto.email,
+                applicantPhone: dto.phone,
+                companyName: job.company?.name,
+              }),
+            }).catch(() => {});
           } else {
             // Case 1: New applicant - create using jotform endpoint
             setApplicationStatus('new');

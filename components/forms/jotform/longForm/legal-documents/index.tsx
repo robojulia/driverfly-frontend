@@ -187,6 +187,19 @@ function LegalDocumentsContent() {
               },
             }
           );
+          fetch('/api/send-application-update-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              applicantId: applicant.id,
+              companyId: company?.id,
+              applicantFirstName: applicant.first_name,
+              applicantLastName: applicant.last_name,
+              applicantEmail: applicant.email,
+              applicantPhone: applicant.phone,
+              companyName: company?.name,
+            }),
+          }).catch(() => {});
         } else {
           // CREATE new applicant OR returning applicant applying to a DIFFERENT company
           response = await applicantApi.jotform.create(company.id, {
