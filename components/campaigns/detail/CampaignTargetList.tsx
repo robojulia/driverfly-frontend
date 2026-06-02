@@ -9,6 +9,7 @@ import {
   QuestionCircleFill,
   LightbulbFill,
   ChatLeftTextFill,
+  PersonPlusFill,
 } from 'react-bootstrap-icons';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
@@ -17,6 +18,8 @@ import { CampaignTargetEntity } from '../../../models/campaigns/campaign-target.
 import { CampaignStatus } from '../../../enums/campaigns/campaign-status.enum';
 import { CampaignTargetType } from '../../../enums/campaigns/campaign-target-type.enum';
 import { CampaignTargetStatus } from '../../../enums/campaigns/campaign-target-status.enum';
+import { CampaignHandoffStatus } from '../../../enums/campaigns/campaign-handoff-status.enum';
+import { ACTIVE_HANDOFF_STATUSES } from '../../../models/campaigns/campaign-handoff.entity';
 
 // AI Campaign Call Summary interface
 interface CampaignCallSummary {
@@ -47,6 +50,7 @@ interface CampaignTargetListProps {
   onCreateProfiles?: () => void;
   creatingProfiles?: boolean;
   isSuperAdmin?: boolean;
+  onHandoff?: (target: CampaignTargetEntity) => void;
 }
 
 export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
@@ -64,6 +68,7 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
   onCreateProfiles,
   creatingProfiles = false,
   isSuperAdmin = false,
+  onHandoff,
 }) => {
   const router = useRouter();
   const [hoveredButton, setHoveredButton] = React.useState<number | null>(null);
@@ -107,6 +112,22 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
       case 'medium':
         return 'warning';
       case 'low':
+        return 'secondary';
+      default:
+        return 'light';
+    }
+  };
+
+  // Helper to get handoff status badge color
+  const getHandoffBadgeColor = (status?: CampaignHandoffStatus) => {
+    switch (status) {
+      case CampaignHandoffStatus.PENDING:
+        return 'warning';
+      case CampaignHandoffStatus.ACCEPTED:
+        return 'info';
+      case CampaignHandoffStatus.COMPLETED:
+        return 'success';
+      case CampaignHandoffStatus.DISMISSED:
         return 'secondary';
       default:
         return 'light';
@@ -219,6 +240,7 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
               <th className="fw-semibold">{t('EMAIL')}</th>
               <th className="fw-semibold">{t('PHONE')}</th>
               <th className="fw-semibold">{t('STATUS')}</th>
+              <th className="fw-semibold">{t('HANDOFF')}</th>
               <th className="fw-semibold">{t('PROCESSED_AT')}</th>
               <th className="fw-semibold" style={{ width: '150px' }}>
                 {t('ACTIONS')}
@@ -259,6 +281,27 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
                       {targetStatus.toUpperCase()}
                     </Badge>
                   </td>
+                  <td>
+                    {target.handoff ? (
+                      <div>
+                        <Badge color={getHandoffBadgeColor(target.handoff.status)}>
+                          {target.handoff.status.toUpperCase()}
+                        </Badge>
+                        {target.handoff.assignedUser && (
+                          <div className="small text-muted mt-1">
+                            {[
+                              target.handoff.assignedUser.first_name,
+                              target.handoff.assignedUser.last_name,
+                            ]
+                              .filter(Boolean)
+                              .join(' ') || target.handoff.assignedUser.email}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <span className="text-muted">-</span>
+                    )}
+                  </td>
                   <td>{target.processedAt ? formatDate(target.processedAt) : '-'}</td>
                   <td>
                     <div className="d-flex gap-2">
@@ -276,6 +319,34 @@ export const CampaignTargetList: React.FC<CampaignTargetListProps> = ({
                           View Results
                         </Button>
                       )}
+                      {onHandoff &&
+                        target.targetType !== CampaignTargetType.LEAD &&
+                        (!target.handoff ||
+                          !ACTIVE_HANDOFF_STATUSES.includes(target.handoff.status)) && (
+                          <Button
+                            color="primary"
+                            size="sm"
+                            outline
+                            onClick={() => onHandoff(target)}
+                            title="Hand this driver off to a recruiter for follow-up"
+                          >
+                            <PersonPlusFill className="me-1" />
+                            {target.handoff ? 'Re-hand off' : 'Hand off'}
+                          </Button>
+                        )}
+                      {onHandoff &&
+                        target.handoff &&
+                        ACTIVE_HANDOFF_STATUSES.includes(target.handoff.status) && (
+                          <Button
+                            color="primary"
+                            size="sm"
+                            outline
+                            onClick={() => onHandoff(target)}
+                            title="Reassign this handoff to a different recruiter"
+                          >
+                            Reassign
+                          </Button>
+                        )}
                       {(campaign?.status || CampaignStatus.DRAFT) === CampaignStatus.DRAFT && (
                         <Button
                           color="danger"

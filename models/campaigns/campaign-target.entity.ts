@@ -2,6 +2,7 @@ import { BasicEntity } from '../BasicEntity.entity';
 import { CampaignTargetType } from '../../enums/campaigns/campaign-target-type.enum';
 import { ATSProvider } from '../../enums/integrations/ats-provider.enum';
 import { ATSActivityExportStatus } from '../../enums/integrations/sync-status.enum';
+import type { CampaignHandoffEntity } from './campaign-handoff.entity';
 
 /**
  * AI-generated campaign call summary
@@ -88,4 +89,7 @@ export interface CampaignTargetEntity extends BasicEntity {
   exportedToATS?: boolean;
   exportedToATSAt?: Date;
   atsActivityExportStatus?: ATSActivityExportStatus;
+
+  // Active handoff to a human owner, if any (hydrated by backend)
+  handoff?: CampaignHandoffEntity;
 }

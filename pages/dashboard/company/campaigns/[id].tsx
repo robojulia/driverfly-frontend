@@ -53,7 +53,20 @@ import {
   CampaignOverview,
   CampaignTargetList,
   CampaignTestView,
+  CampaignHandoffSettings,
+  HandoffModal,
 } from '../../../../components/campaigns/detail';
+import {
+  useCampaignHandoffs,
+  useAssignableUsers,
+  resolveHandoffAssignee,
+} from '../../../../hooks/campaigns/use-handoffs';
+import {
+  CampaignHandoffConfig,
+  DEFAULT_CAMPAIGN_HANDOFF_CONFIG,
+} from '../../../../models/campaigns/campaign-handoff.entity';
+import { CreateHandoffDto } from '../../../../models/campaigns/create-handoff.dto';
+import { CampaignTargetEntity } from '../../../../models/campaigns/campaign-target.entity';
 import { AdminCampaignTest } from '../../../../components/campaigns/detail/AdminCampaignTest';
 import { ManualTargetSelectionModal } from '../../../../components/campaigns/ManualTargetSelectionModal';
 import CampaignHeader from '../../../../components/campaigns/detail/CampaignHeader';
@@ -91,7 +104,11 @@ const CampaignDetailPage = () => {
     createProfilesForLeads,
   } = useCampaign(campaignId);
 
+  const { createHandoff } = useCampaignHandoffs(campaignId);
+  const { users: assignableUsers } = useAssignableUsers();
+
   const [activeTab, setActiveTab] = useState('overview');
+  const [handoffModalTarget, setHandoffModalTarget] = useState<CampaignTargetEntity | null>(null);
   const [regeneratingTargets, setRegeneratingTargets] = useState(false);
   const [deletingTargets, setDeletingTargets] = useState<Set<number>>(new Set());
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
@@ -247,6 +264,26 @@ const CampaignDetailPage = () => {
       // Error handling is managed by the hook
     }
   };
+
+  const handleCreateHandoff = async (dto: CreateHandoffDto) => {
+    await createHandoff(dto);
+    // Refresh so the target row reflects the new handoff
+    await loadCampaign();
+  };
+
+  const handoffConfig: CampaignHandoffConfig = {
+    ...DEFAULT_CAMPAIGN_HANDOFF_CONFIG,
+    ...(campaign?.config?.handoff as Partial<CampaignHandoffConfig> | undefined),
+  };
+
+  const resolveAutoAssignee = () =>
+    resolveHandoffAssignee({
+      companyId: user?.company?.id as number,
+      users: assignableUsers,
+      defaultAssigneeUserId: handoffConfig.defaultAssigneeUserId,
+      autoAssign: handoffConfig.autoAssign,
+      autoAssignMethod: handoffConfig.autoAssignMethod,
+    });
 
   const handleDeleteTarget = async (targetId: number) => {
     const target = targets?.find((t) => t.id === targetId);
@@ -649,6 +686,13 @@ const CampaignDetailPage = () => {
                       handleSendTest={handleSendTest}
                     />
 
+                    {/* Recruiter Handoff Settings */}
+                    <CampaignHandoffSettings
+                      campaign={campaign}
+                      users={assignableUsers}
+                      onSaved={loadCampaign}
+                    />
+
                     {/* Admin Test Campaign Section - Super Admin Only */}
                     {isSuperAdmin && campaign.type === CampaignType.REIGNITE_PAST_LEADS && (
                       <AdminCampaignTest
@@ -674,6 +718,7 @@ const CampaignDetailPage = () => {
                       onCreateProfiles={handleCreateProfiles}
                       creatingProfiles={creatingProfiles}
                       isSuperAdmin={isSuperAdmin}
+                      onHandoff={(target) => setHandoffModalTarget(target)}
                     />
                   </TabPane>
                 </TabContent>
@@ -814,6 +859,16 @@ const CampaignDetailPage = () => {
           onClose={() => setManualTargetModal(false)}
           onAddLeads={handleAddLeads}
           loading={addingManualTargets}
+        />
+
+        {/* Recruiter Handoff Modal */}
+        <HandoffModal
+          show={!!handoffModalTarget}
+          onHide={() => setHandoffModalTarget(null)}
+          target={handoffModalTarget}
+          users={assignableUsers}
+          resolveAutoAssignee={resolveAutoAssignee}
+          onSubmit={handleCreateHandoff}
         />
       </Container>
     </PageLayout>

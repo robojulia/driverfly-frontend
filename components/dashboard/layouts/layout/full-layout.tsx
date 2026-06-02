@@ -34,6 +34,7 @@ import {
   Lightning,
   BookFill,
   CreditCard,
+  PersonCheck,
 } from 'react-bootstrap-icons';
 import CompanyProfileNav from '../header/company-profile-nav';
 import { useAuth } from '../../../../hooks/use-auth';
@@ -98,6 +99,14 @@ const FullLayout = ({ children }) => {
       pathname: '/dashboard/company/campaigns',
       icon: Robot,
       text: 'CAMPAIGNS',
+      startsWith: true,
+      group: 'MAIN',
+      visible: isFeatureEnabled('CAMPAIGNS_ENABLED'),
+    },
+    {
+      pathname: '/dashboard/company/handoffs',
+      icon: PersonCheck,
+      text: 'HANDOFFS',
       startsWith: true,
       group: 'MAIN',
       visible: isFeatureEnabled('CAMPAIGNS_ENABLED'),
