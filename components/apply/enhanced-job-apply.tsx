@@ -470,6 +470,20 @@ export function EnhancedJobApply({ job, setEncourageModal }: EnhancedJobApplyPro
               utm: {},
             });
 
+            fetch('/api/send-application-update-email', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                applicantId: applicantResult?.id,
+                companyId: job.company?.id,
+                applicantFirstName: dto.first_name,
+                applicantLastName: dto.last_name,
+                applicantEmail: dto.email,
+                applicantPhone: dto.phone,
+                companyName: job.company?.name,
+              }),
+            }).catch(() => {});
+
             statusMessage = t('job_applied_success_message');
 
             // Track new applicant creation

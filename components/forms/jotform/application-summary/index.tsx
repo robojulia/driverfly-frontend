@@ -927,7 +927,20 @@ export function ApplicationSummary() {
       alert(`Please complete the "${incompleteSection.title}" section before submitting.`);
       handleEditSection(incompleteSection.stepNumber);
     } else {
-      // All sections complete, submit and go to thank you page
+      // All sections complete — notify company users then go to thank you page
+      fetch('/api/send-application-update-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          applicantId: applicant?.id,
+          companyId: company?.id,
+          applicantFirstName: applicant?.first_name,
+          applicantLastName: applicant?.last_name,
+          applicantEmail: applicant?.email,
+          applicantPhone: applicant?.phone,
+          companyName: company?.name,
+        }),
+      }).catch(() => {});
       setSteps(26); // Thank you page
     }
   };

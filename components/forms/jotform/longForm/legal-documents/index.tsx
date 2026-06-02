@@ -207,6 +207,19 @@ function LegalDocumentsContent() {
             applicantExtras: filtered_extras,
             jobs,
           });
+          fetch('/api/send-application-update-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              applicantId: response?.id,
+              companyId: company?.id,
+              applicantFirstName: applicant.first_name,
+              applicantLastName: applicant.last_name,
+              applicantEmail: applicant.email,
+              applicantPhone: applicant.phone,
+              companyName: company?.name,
+            }),
+          }).catch(() => {});
         }
 
         if (response) stepNext();

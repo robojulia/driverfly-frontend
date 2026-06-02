@@ -610,10 +610,9 @@ export function PhoneNumber() {
     try {
       const applicantApi = new ApplicantApi();
       const { phone } = form.values;
-      // Use the original phone format from the form, not normalized
-      // The backend will handle formatting for SMS delivery
-      console.log('📱 handleGoToMyApplication - Requesting OTP for phone:', phone);
-      const OTPresponse = await applicantApi.requestOTP({ phone: phone });
+      const normalizedPhone = normalizePhoneNumber(phone);
+      console.log('📱 handleGoToMyApplication - Requesting OTP for phone:', normalizedPhone);
+      const OTPresponse = await applicantApi.requestOTP({ phone: normalizedPhone });
       console.log('✅ OTP Response received in handleGoToMyApplication:', OTPresponse);
       setOtpApplicant(OTPresponse);
       seShowtOtpField(true);
@@ -648,23 +647,19 @@ export function PhoneNumber() {
     setDebugInfo(prev => [...prev, `🔵 requestOTP called at ${new Date().toLocaleTimeString()}`]);
     setDebugInfo(prev => [...prev, `📱 Phone number: ${phone}`]);
 
-    // Use the original phone format from the form, not normalized
-    // The backend will handle formatting for SMS delivery
-    console.log('📱 Requesting OTP for phone:', phone);
+    const normalizedPhone = normalizePhoneNumber(phone);
+    console.log('📱 Requesting OTP for phone:', normalizedPhone);
     try {
       let otpResponse;
 
       if (applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL') {
-        // For cross-company prefill, we don't need existing applicant ID
-        // We'll use the phone number to get the most recent profile
         setDebugInfo(prev => [...prev, `🔄 Scenario: DIFFERENT_COMPANY_PREFILL`]);
-        console.log('📱 DIFFERENT_COMPANY_PREFILL - Requesting OTP with phone:', phone);
-        otpResponse = await applicantApi.requestOTP({ phone: phone });
+        console.log('📱 DIFFERENT_COMPANY_PREFILL - Requesting OTP with phone:', normalizedPhone);
+        otpResponse = await applicantApi.requestOTP({ phone: normalizedPhone });
       } else {
-        // For same company scenarios, use the existing flow
         setDebugInfo(prev => [...prev, `🔄 Scenario: ${applicantScenario?.type || 'Unknown'}`]);
-        console.log('📱 Same company scenario - Requesting OTP with phone:', phone);
-        otpResponse = await applicantApi.requestOTP({ phone: phone });
+        console.log('📱 Same company scenario - Requesting OTP with phone:', normalizedPhone);
+        otpResponse = await applicantApi.requestOTP({ phone: normalizedPhone });
       }
 
       console.log('✅ OTP Response received:', otpResponse);
