@@ -6,6 +6,9 @@ export class CurrentEmploymentHistoryDto extends ApplicantEmployerEntity {
   constructor() {
     super();
     this.is_current = true;
+    // Current employer must not inherit the entity's "default Yes" contact
+    // preference; the driver explicitly chooses whether we may contact them.
+    this.can_contact = undefined;
   }
 
   static derivedYupSchema() {

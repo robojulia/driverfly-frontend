@@ -111,9 +111,10 @@ export function EmploymentHistory() {
         is_subject_to_fmcsrs: Boolean(employer) ? employer?.is_subject_to_fmcsrs : true,
         is_subject_to_drug_tests: Boolean(employer) ? employer?.is_subject_to_drug_tests : true,
         is_current: true,
-        // Default "may we contact this employer?" to Yes when not explicitly set
-        // (keeps an existing explicit No/false as-is).
-        can_contact: employer?.can_contact ?? true,
+        // Current employer does NOT default to Yes — the driver must explicitly
+        // choose whether we may contact their current employer.
+        can_contact:
+          Boolean(employer) && employer?.can_contact !== undefined ? employer?.can_contact : null,
       },
       is_current_employed: null,
       already_applied_to_company: isReturningApplicant ? true : (applicant?.already_applied_to_company !== undefined ? applicant?.already_applied_to_company : null),
