@@ -96,12 +96,14 @@ export function PastEmploymentHistory() {
       (v) => !!!v.is_current
     ) as PastEmploymentHistoryDto[];
 
-    // Ensure can_contact and title are properly initialized for existing employers
+    // Ensure can_contact and title are properly initialized for existing employers.
+    // Default "may we contact this employer?" to Yes when not explicitly set
+    // (keeps an existing explicit No/false as-is).
     const normalizedEmployers =
       employers?.map((emp) => ({
         ...emp,
         title: emp.title || 'Driver',
-        can_contact: emp.can_contact !== undefined ? emp.can_contact : null,
+        can_contact: emp.can_contact ?? true,
       })) || [];
 
     form.setValues({
@@ -150,7 +152,7 @@ export function PastEmploymentHistory() {
         is_subject_to_fmcsrs: true,
         is_subject_to_drug_tests: true,
         is_current: false,
-        can_contact: null,
+        can_contact: true,
       },
     ]);
   };

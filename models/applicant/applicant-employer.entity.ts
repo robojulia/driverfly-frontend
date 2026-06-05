@@ -16,7 +16,7 @@ export class ApplicantEmployerEntity {
   state?: string;
   zip_code?: string;
   phone?: string;
-  can_contact?: boolean = false;
+  can_contact?: boolean = true;
   is_subject_to_fmcsrs?: boolean = false;
   is_subject_to_drug_tests?: boolean = false;
   created_at?: string;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { CloudArrowDownFill, Eye } from 'react-bootstrap-icons';
+import { CloudArrowDownFill, Eye, FileEarmarkText } from 'react-bootstrap-icons';
 import {
   Document,
   Page,
@@ -181,12 +181,34 @@ export function hasVoeSignature(applicant: ApplicantEntity): boolean {
 
 // Renders "View" and "Download" controls that produce a VOE authorization
 // document for one specific employer, reusing the driver's single signature.
-export function VoeAuthorizationActions({ applicant, employer }: VoeAuthorizationProps) {
+// When `disabled` (e.g. the driver has no VOE signature on file) the controls
+// render inert with `disabledReason` surfaced as a tooltip.
+export function VoeAuthorizationActions({
+  applicant,
+  employer,
+  disabled = false,
+  disabledReason,
+}: VoeAuthorizationProps & { disabled?: boolean; disabledReason?: string }) {
   const { t } = useTranslation();
   const [isOpening, setIsOpening] = useState(false);
 
   const fileName = `VOE_${(applicant?.first_name || '').trim()}_${(applicant?.last_name || '').trim()}_${(employer?.name || 'employer').trim()}.pdf`
     .replace(/\s+/g, '_');
+
+  if (disabled) {
+    return (
+      <div className="d-flex gap-2" title={disabledReason}>
+        <Button size="sm" variant="outline-secondary" disabled>
+          <Eye className="me-1" />
+          {t('VIEW_VOE')}
+        </Button>
+        <Button size="sm" variant="outline-secondary" disabled>
+          <CloudArrowDownFill className="me-1" />
+          {t('DOWNLOAD_VOE')}
+        </Button>
+      </div>
+    );
+  }
 
   const handleView = async () => {
     setIsOpening(true);
@@ -227,6 +249,50 @@ export function VoeAuthorizationActions({ applicant, employer }: VoeAuthorizatio
           </>
         )}
       </PDFDownloadLink>
+    </div>
+  );
+}
+
+// Lists every employer on the applicant with per-employer View/Download VOE
+// controls. When the driver has no VOE signature on file the controls are
+// shown disabled with an explanatory note, so the section is never silently
+// empty.
+export function VoeAuthorizationList({ applicant }: { applicant: ApplicantEntity }) {
+  const { t } = useTranslation();
+  const signed = hasVoeSignature(applicant);
+  const employers = (applicant?.employers || []).filter((e) => e?.name);
+
+  if (!employers.length) {
+    return <div className="text-muted small">{t('NO_EMPLOYERS_ON_FILE')}</div>;
+  }
+
+  return (
+    <div className="d-flex flex-column" style={{ gap: 12 }}>
+      {!signed && (
+        <div className="alert alert-warning py-2 px-3 mb-0 small" role="alert">
+          {t('NO_VOE_SIGNATURE_ON_FILE')}
+        </div>
+      )}
+      {employers.map((employer, i) => (
+        <div
+          key={employer.id || i}
+          className="p-3 border rounded d-flex align-items-center justify-content-between"
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <FileEarmarkText />
+            <span style={{ fontWeight: 600 }}>{employer.name}</span>
+            {employer.is_current && (
+              <span className="badge bg-success ms-1">{t('CURRENT')}</span>
+            )}
+          </div>
+          <VoeAuthorizationActions
+            applicant={applicant}
+            employer={employer}
+            disabled={!signed}
+            disabledReason={t('NO_VOE_SIGNATURE_ON_FILE')}
+          />
+        </div>
+      ))}
     </div>
   );
 }

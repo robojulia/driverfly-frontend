@@ -25,7 +25,6 @@ import StateSelect from '../state-select';
 import { BaseFormProps } from './base-form-props';
 import { LoaderIcon } from '../../loading/loader-icon';
 import BaseTextArea from '../base-text-area';
-import { VoeAuthorizationActions, hasVoeSignature } from '../../pdf/voe-authorization';
 
 export interface ApplicantWorkHistoryFormProps extends BaseFormProps<ApplicantEntity> {
   isSubmitting: boolean;
@@ -677,17 +676,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                           </span>
                         </OverlayTrigger>
                       </div>
-                      {employer?.name && hasVoeSignature(entity) && (
-                        <div className="col-12 mt-3">
-                          <Col className="p-0 mb-2">
-                            <strong>{t('VOE_FORMS')}</strong>
-                            <div className="text-muted small">
-                              {t('DOWNLOAD_VOE_FOR_EMPLOYER')}
-                            </div>
-                          </Col>
-                          <VoeAuthorizationActions applicant={entity} employer={employer} />
-                        </div>
-                      )}
                     </Row></div>
                   ))}
                 </>
