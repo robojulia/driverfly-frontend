@@ -9,11 +9,20 @@ default:
 variables:
   IMAGE_NAME: '$ACR_LOGIN_SERVER/driverflyfrontend:$CI_COMMIT_SHA'
   IMAGE_LATEST: '$ACR_LOGIN_SERVER/driverflyfrontend:latest'
+  # Dedicated tag that stores the cacheable "builder" stage (incl. the slow
+  # `npm ci` layer) so it can be reused across pipelines.
+  IMAGE_BUILDER: '$ACR_LOGIN_SERVER/driverflyfrontend:builder'
   # Required so docker-in-docker works without TLS certs
   DOCKER_TLS_CERTDIR: ''
+  # Enable BuildKit so --cache-from / inline cache works with docker build.
+  DOCKER_BUILDKIT: '1'
 
 build:
   stage: build
+  # Let GitLab auto-cancel this run when a newer pipeline supersedes it.
+  interruptible: true
+  # Safety net for the first cache-populating run; cached runs finish well under this.
+  timeout: 2h
   script:
     - echo "Building Docker image..."
     - docker login $ACR_LOGIN_SERVER -u $ACR_USERNAME -p $ACR_PASSWORD
@@ -67,7 +76,15 @@ build:
       # Re-enable errexit for subsequent commands
       set -e
     - |
-      docker build --no-cache \
+      # Best-effort: warm the local cache from previously pushed images so the
+      # expensive `npm ci` builder layer can be reused instead of rebuilt.
+      echo "Pulling cache images (best-effort)..."
+      docker pull "$IMAGE_BUILDER" || echo "No builder cache yet (first cached run)."
+      docker pull "$IMAGE_LATEST" || echo "No latest image yet."
+    - |
+      # Common build args (shared by both build passes). NEXT_PUBLIC_* values are
+      # inlined by `next build` in the builder stage.
+      set -- \
         --build-arg BUILD_DATE="$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
         --build-arg GIT_COMMIT="$CI_COMMIT_SHA" \
         --build-arg BASE_URL="$BASE_URL" \
@@ -85,8 +102,26 @@ build:
         --build-arg NEXT_PUBLIC_TWILIO_APP_NAME="$NEXT_PUBLIC_TWILIO_APP_NAME" \
         --build-arg PHONE_INPUT_COUNTRY_ALLOWED="$NEXT_PUBLIC_PHONE_INPUT_COUNTRY_ALLOWED" \
         --build-arg NEXT_PUBLIC_PHONE_INPUT_COUNTRY_ALLOWED="$NEXT_PUBLIC_PHONE_INPUT_COUNTRY_ALLOWED" \
-        --build-arg NEXT_PUBLIC_GOOGLE_ANALYTICS="$NEXT_PUBLIC_GOOGLE_ANALYTICS" \
-        -t $IMAGE_NAME .
+        --build-arg NEXT_PUBLIC_GOOGLE_ANALYTICS="$NEXT_PUBLIC_GOOGLE_ANALYTICS"
+
+      echo "Building cacheable 'builder' stage..."
+      docker build \
+        --target builder \
+        --build-arg BUILDKIT_INLINE_CACHE=1 \
+        --cache-from "$IMAGE_BUILDER" \
+        "$@" \
+        -t "$IMAGE_BUILDER" .
+      # Push the builder cache as early as possible so future pipelines benefit
+      # even if a later step fails.
+      docker push "$IMAGE_BUILDER" || echo "WARN: failed to push builder cache (non-fatal)."
+
+      echo "Building final image (reusing builder + latest cache)..."
+      docker build \
+        --build-arg BUILDKIT_INLINE_CACHE=1 \
+        --cache-from "$IMAGE_BUILDER" \
+        --cache-from "$IMAGE_LATEST" \
+        "$@" \
+        -t "$IMAGE_NAME" .
     - echo "Verifying build contains latest code..."
     - docker run --rm $IMAGE_NAME sh -c "echo Build completed successfully"
     - docker push $IMAGE_NAME

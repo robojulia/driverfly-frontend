@@ -6,8 +6,12 @@ WORKDIR /app
 # Copy package files first for better layer caching
 COPY package*.json ./
 
-# Install all dependencies (including dev dependencies for build)
-RUN npm ci && npm cache clean --force
+# Install all dependencies (including dev dependencies for build).
+# --no-audit/--no-fund skip extra registry calls that can hang; fetch retries
+# add resilience to flaky network during CI installs.
+RUN npm ci --no-audit --no-fund \
+      --fetch-retries=5 --fetch-retry-mintimeout=20000 --fetch-retry-maxtimeout=120000 \
+    && npm cache clean --force
 
 # Add build timestamp to invalidate cache for source code layers
 ARG BUILD_DATE
@@ -69,7 +73,9 @@ RUN adduser -S driverfly -u 1001
 
 # Copy package files and install production dependencies
 COPY package*.json ./
-RUN npm ci --omit=dev && npm cache clean --force
+RUN npm ci --omit=dev --no-audit --no-fund \
+      --fetch-retries=5 --fetch-retry-mintimeout=20000 --fetch-retry-maxtimeout=120000 \
+    && npm cache clean --force
 
 # Copy built application (Next.js outputs to .next folder)
 COPY --from=builder /app/.next ./.next
