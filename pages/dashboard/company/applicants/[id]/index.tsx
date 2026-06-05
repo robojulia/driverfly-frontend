@@ -80,7 +80,7 @@ export default function ViewApplicant({ id }) {
       try {
         const api = new ApplicantApi();
 
-        const data = await api.getById(+id, false, ['documents', 'notes', 'notes.user', 'jobs', 'jobs.job', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned', 'assignedUser', 'referralSource']);
+        const data = await api.getById(+id, false, ['documents', 'notes', 'notes.user', 'jobs', 'jobs.job', 'extras', 'dac', 'employers', 'accident_history', 'moving_violation_history', 'equipment_experience', 'equipment_owned', 'assignedUser', 'referralSource', 'company', 'company.users']);
 
         const suggestedJobs = await api.suggestedJobs.get(id);
         setApplicantSuggestedJobs(suggestedJobs);
