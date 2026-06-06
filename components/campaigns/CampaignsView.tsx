@@ -1,6 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Button } from 'reactstrap';
-import { ArrowLeft } from 'react-bootstrap-icons';
+import { Button as BsButton } from 'react-bootstrap';
+import {
+  ArrowLeft,
+  TelephoneInbound,
+  Clock,
+  PersonCheck,
+  CalendarCheck,
+} from 'react-bootstrap-icons';
 import { CampaignEntity } from '../../models/campaigns/campaign.entity';
 import { CampaignCommunicationType } from '../../enums/campaigns/campaign-communication-type.enum';
 import { CampaignType } from '../../enums/campaigns/campaign-type.enum';
@@ -20,11 +27,12 @@ interface CampaignsViewProps {
   onTitleChange?: (title: string) => void;
   onViewModeChange?: (mode: ViewMode) => void;
   onTabChange?: (tab: TabType) => void;
+  onRequestInbound?: () => void;
 }
 
 type TabType = CampaignCommunicationType | 'INBOUND_CALLS';
 
-export const CampaignsView: React.FC<CampaignsViewProps> = ({ onTitleChange, onViewModeChange, onTabChange }) => {
+export const CampaignsView: React.FC<CampaignsViewProps> = ({ onTitleChange, onViewModeChange, onTabChange, onRequestInbound }) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabType>(
     CampaignCommunicationType.VOICE
@@ -136,6 +144,90 @@ export const CampaignsView: React.FC<CampaignsViewProps> = ({ onTitleChange, onV
         campaignsByType={campaignsByType}
         onTypeClick={(type) => handleDrillDown(communicationType, type as CampaignType)}
       />
+    );
+  };
+
+  const renderInboundView = () => {
+    const features = [
+      {
+        icon: <Clock size={22} />,
+        title: 'Always Available',
+        description:
+          'Answers every inbound call 24/7 so no applicant or lead ever reaches a busy signal or voicemail.',
+      },
+      {
+        icon: <PersonCheck size={22} />,
+        title: 'Pre-Qualifies Drivers',
+        description:
+          'Screens callers against your requirements and routes qualified applicants straight into your pipeline.',
+      },
+      {
+        icon: <CalendarCheck size={22} />,
+        title: 'Schedules Callbacks',
+        description:
+          'Captures caller details and books follow-up callbacks for anything it can’t resolve on the spot.',
+      },
+    ];
+
+    return (
+      <div className="text-center py-5">
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '72px',
+            height: '72px',
+            borderRadius: '50%',
+            backgroundColor: 'rgba(0, 96, 120, 0.1)',
+            color: 'var(--primary-dark, #006078)',
+            marginBottom: '1rem',
+          }}
+        >
+          <TelephoneInbound size={32} />
+        </div>
+
+        <h4 style={{ fontWeight: 600 }}>AI Inbound Call Agent</h4>
+        <p className="text-muted" style={{ maxWidth: '560px', margin: '0.5rem auto 0' }}>
+          Set up an AI receptionist that answers your inbound calls, screens drivers,
+          and books callbacks around the clock. Tell us how you want calls handled and
+          our team will configure your agent.
+        </p>
+
+        <div
+          className="row justify-content-center"
+          style={{ maxWidth: '900px', margin: '2.5rem auto 0' }}
+        >
+          {features.map((feature) => (
+            <div className="col-md-4 mb-4" key={feature.title}>
+              <div
+                style={{
+                  height: '100%',
+                  padding: '1.5rem',
+                  borderRadius: '12px',
+                  border: '1px solid var(--medium-gray, #dee2e6)',
+                  backgroundColor: 'var(--form-info-bg, #f8f9fa)',
+                  textAlign: 'left',
+                }}
+              >
+                <div style={{ color: 'var(--primary-dark, #006078)', marginBottom: '0.75rem' }}>
+                  {feature.icon}
+                </div>
+                <div style={{ fontWeight: 600, marginBottom: '0.35rem' }}>{feature.title}</div>
+                <div className="text-muted" style={{ fontSize: '0.9rem' }}>
+                  {feature.description}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {onRequestInbound && (
+          <BsButton variant="primary" size="lg" onClick={onRequestInbound}>
+            Request Inbound AI Setup
+          </BsButton>
+        )}
+      </div>
     );
   };
 
@@ -341,11 +433,7 @@ export const CampaignsView: React.FC<CampaignsViewProps> = ({ onTitleChange, onV
           renderSummaryView(CampaignCommunicationType.VOICE)}
         {activeTab === CampaignCommunicationType.SMS &&
           renderSummaryView(CampaignCommunicationType.SMS)}
-        {activeTab === 'INBOUND_CALLS' && (
-          <div className="text-center py-5">
-            <p className="text-muted">Inbound Calls content coming soon</p>
-          </div>
-        )}
+        {activeTab === 'INBOUND_CALLS' && renderInboundView()}
       </div>
     </div>
   );

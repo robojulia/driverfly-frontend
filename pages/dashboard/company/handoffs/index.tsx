@@ -1,65 +1,17 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Container, Card, CardBody, Alert } from 'reactstrap';
+import React from 'react';
+import { Container, Alert } from 'reactstrap';
+import { PersonCheck } from 'react-bootstrap-icons';
 
 import FullLayout from '../../../../components/dashboard/layouts/layout/full-layout';
 import PageLayout from '../../../../components/layouts/page/page-layout';
-import { HandoffInboxTable } from '../../../../components/campaigns';
-import { useHandoffInbox } from '../../../../hooks/campaigns/use-handoffs';
 import { useFeatureFlags } from '../../../../context/feature-flag-context';
 import { useTranslation } from '../../../../hooks/use-translation';
-import { CampaignHandoffStatus } from '../../../../enums/campaigns/campaign-handoff-status.enum';
-
-type StatusFilter = 'all' | CampaignHandoffStatus;
-
-const FILTERS: { value: StatusFilter; label: string }[] = [
-  { value: 'all', label: 'All' },
-  { value: CampaignHandoffStatus.PENDING, label: 'Pending' },
-  { value: CampaignHandoffStatus.ACCEPTED, label: 'In Progress' },
-  { value: CampaignHandoffStatus.COMPLETED, label: 'Completed' },
-  { value: CampaignHandoffStatus.DISMISSED, label: 'Dismissed' },
-];
 
 const HandoffsPage = () => {
   const { t } = useTranslation();
   const { isFeatureEnabled, isLoading: flagsLoading } = useFeatureFlags();
-  const { handoffs, stats, loading, error, load, accept, complete, dismiss } = useHandoffInbox();
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [actioningIds, setActioningIds] = useState<Set<number>>(new Set());
 
   const campaignsEnabled = !flagsLoading && isFeatureEnabled('CAMPAIGNS_ENABLED');
-
-  useEffect(() => {
-    if (!campaignsEnabled) return;
-    load(statusFilter === 'all' ? undefined : { status: statusFilter });
-  }, [campaignsEnabled, statusFilter, load]);
-
-  const withAction = useCallback(
-    async (id: number, fn: (id: number) => Promise<unknown>) => {
-      setActioningIds((prev) => new Set(prev).add(id));
-      try {
-        await fn(id);
-        // Refresh to reflect the filtered list / stats
-        await load(statusFilter === 'all' ? undefined : { status: statusFilter });
-      } catch (err) {
-        console.error('Handoff action failed:', err);
-      } finally {
-        setActioningIds((prev) => {
-          const next = new Set(prev);
-          next.delete(id);
-          return next;
-        });
-      }
-    },
-    [load, statusFilter]
-  );
-
-  const countFor = (value: StatusFilter) => {
-    if (!stats) return undefined;
-    if (value === 'all') {
-      return Object.values(stats).reduce((sum, n) => sum + (n || 0), 0);
-    }
-    return stats[value];
-  };
 
   if (flagsLoading) {
     return (
@@ -86,66 +38,48 @@ const HandoffsPage = () => {
   return (
     <PageLayout title="HANDOFFS">
       <Container fluid>
-        {/* Status filter pills */}
-        <div style={{ marginBottom: '1.5rem' }}>
+        <div className="text-center py-5">
           <div
             style={{
               display: 'inline-flex',
-              padding: '4px',
-              backgroundColor: 'var(--form-info-bg, #f8f9fa)',
-              borderRadius: '12px',
-              border: '1px solid var(--medium-gray, #dee2e6)',
-              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '72px',
+              height: '72px',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(0, 96, 120, 0.1)',
+              color: 'var(--primary-dark, #006078)',
+              marginBottom: '1rem',
             }}
           >
-            {FILTERS.map((filter) => {
-              const isActive = statusFilter === filter.value;
-              const count = countFor(filter.value);
-              return (
-                <button
-                  key={filter.value}
-                  onClick={() => setStatusFilter(filter.value)}
-                  style={{
-                    padding: '0.625rem 1.25rem',
-                    fontSize: '1rem',
-                    backgroundColor: isActive ? 'var(--primary-dark, #006078)' : 'transparent',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontWeight: 500,
-                    color: isActive ? '#fff' : 'var(--text-secondary, #6c757d)',
-                  }}
-                >
-                  {filter.label}
-                  {count != null && <span className="ms-2 opacity-75">({count})</span>}
-                </button>
-              );
-            })}
+            <PersonCheck size={32} />
           </div>
+
+          <h4 style={{ fontWeight: 600 }}>Campaign Handoffs</h4>
+          <p
+            className="text-muted"
+            style={{ maxWidth: '560px', margin: '0.5rem auto 0' }}
+          >
+            Soon your AI agents will be able to hand qualified drivers straight to
+            your recruiters — with full context and a ready-to-action inbox.
+          </p>
+
+          <span
+            className="badge"
+            style={{
+              display: 'inline-block',
+              marginTop: '1.5rem',
+              padding: '0.5rem 1.25rem',
+              fontSize: '0.95rem',
+              fontWeight: 600,
+              borderRadius: '999px',
+              backgroundColor: 'rgba(0, 96, 120, 0.1)',
+              color: 'var(--primary-dark, #006078)',
+            }}
+          >
+            Coming soon
+          </span>
         </div>
-
-        {error && <Alert color="danger">{error}</Alert>}
-
-        <Card className="shadow-sm">
-          <CardBody className="p-3">
-            {loading && handoffs.length === 0 ? (
-              <div className="text-center py-5">
-                <div className="spinner-border" role="status">
-                  <span className="sr-only">{t('LOADING')}</span>
-                </div>
-              </div>
-            ) : (
-              <HandoffInboxTable
-                handoffs={handoffs}
-                loading={loading}
-                actioningIds={actioningIds}
-                onAccept={(id) => withAction(id, accept)}
-                onComplete={(id) => withAction(id, complete)}
-                onDismiss={(id) => withAction(id, dismiss)}
-              />
-            )}
-          </CardBody>
-        </Card>
       </Container>
     </PageLayout>
   );

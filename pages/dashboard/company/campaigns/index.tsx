@@ -71,6 +71,7 @@ const CampaignsPage = () => {
           onTitleChange={setPageTitle}
           onViewModeChange={setViewMode}
           onTabChange={setActiveTab}
+          onRequestInbound={() => setShowInboundModal(true)}
         />
       </PageLayout>
 

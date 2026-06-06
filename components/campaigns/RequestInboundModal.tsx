@@ -3,6 +3,7 @@ import { Modal, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useTranslation } from '../../hooks/use-translation';
+import { useAuth } from '../../hooks/use-auth';
 import { InboundRequestDTO } from '../../models/campaigns/inbound-request.dto';
 
 import BaseInput from '../forms/base-input';
@@ -29,6 +30,7 @@ export default function RequestInboundModal({
   onRequestSubmitted,
 }: RequestInboundModalProps) {
   const { t } = useTranslation();
+  const { company, user } = useAuth();
 
   const form = useFormik({
     initialValues: {
@@ -47,6 +49,10 @@ export default function RequestInboundModal({
     validationSchema: InboundRequestDTO.yupSchema(),
     onSubmit: async (values) => {
       try {
+        const requesterName = [user?.first_name, user?.last_name]
+          .filter(Boolean)
+          .join(' ');
+
         await axios.post('/api/send-intake-email', {
           type: 'inbound',
           fields: {
@@ -60,6 +66,13 @@ export default function RequestInboundModal({
             'Persona Gender': values.personaGender,
             'Persona Accent': values.personaAccent,
             'Persona Tone': values.personaTone,
+          },
+          companyInfo: {
+            'Company': company?.name,
+            'Company ID': company?.id != null ? String(company.id) : '',
+            'Company Phone': company?.phone,
+            'Requested By': requesterName,
+            'Requester Email': user?.email,
           },
         });
 
