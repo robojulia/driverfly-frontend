@@ -9,12 +9,11 @@ default:
 variables:
   IMAGE_NAME: '$ACR_LOGIN_SERVER/driverflyfrontend:$CI_COMMIT_SHA'
   IMAGE_LATEST: '$ACR_LOGIN_SERVER/driverflyfrontend:latest'
-  # Dedicated tag that stores the cacheable "builder" stage (incl. the slow
-  # `npm ci` layer) so it can be reused across pipelines.
-  IMAGE_BUILDER: '$ACR_LOGIN_SERVER/driverflyfrontend:builder'
+  # Registry-backed BuildKit cache (mode=max caches ALL stages, incl. the slow
+  # `npm ci` builder layer) so it is reused across pipelines.
+  IMAGE_CACHE: '$ACR_LOGIN_SERVER/driverflyfrontend:buildcache'
   # Required so docker-in-docker works without TLS certs
   DOCKER_TLS_CERTDIR: ''
-  # Enable BuildKit so --cache-from / inline cache works with docker build.
   DOCKER_BUILDKIT: '1'
 
 build:
@@ -76,14 +75,13 @@ build:
       # Re-enable errexit for subsequent commands
       set -e
     - |
-      # Best-effort: warm the local cache from previously pushed images so the
-      # expensive `npm ci` builder layer can be reused instead of rebuilt.
-      echo "Pulling cache images (best-effort)..."
-      docker pull "$IMAGE_BUILDER" || echo "No builder cache yet (first cached run)."
-      docker pull "$IMAGE_LATEST" || echo "No latest image yet."
+      # Use a docker-container buildx builder so we can export a registry cache
+      # (cache-to type=registry requires this driver; the default docker driver cannot).
+      docker buildx create --use --name dfbuilder --driver docker-container >/dev/null 2>&1 \
+        || docker buildx use dfbuilder
+      docker buildx inspect --bootstrap
     - |
-      # Common build args (shared by both build passes). NEXT_PUBLIC_* values are
-      # inlined by `next build` in the builder stage.
+      # Common build args. NEXT_PUBLIC_* values are inlined by `next build`.
       set -- \
         --build-arg BUILD_DATE="$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
         --build-arg GIT_COMMIT="$CI_COMMIT_SHA" \
@@ -104,28 +102,16 @@ build:
         --build-arg NEXT_PUBLIC_PHONE_INPUT_COUNTRY_ALLOWED="$NEXT_PUBLIC_PHONE_INPUT_COUNTRY_ALLOWED" \
         --build-arg NEXT_PUBLIC_GOOGLE_ANALYTICS="$NEXT_PUBLIC_GOOGLE_ANALYTICS"
 
-      echo "Building cacheable 'builder' stage..."
-      docker build \
-        --target builder \
-        --build-arg BUILDKIT_INLINE_CACHE=1 \
-        --cache-from "$IMAGE_BUILDER" \
+      echo "Building + pushing image with registry layer cache..."
+      # --cache-from pulls the prior cache; --cache-to mode=max writes cache for
+      # every stage (incl. `npm ci`). image-manifest=true keeps it ACR-compatible.
+      docker buildx build \
+        --cache-from "type=registry,ref=$IMAGE_CACHE" \
+        --cache-to "type=registry,ref=$IMAGE_CACHE,mode=max,image-manifest=true,oci-mediatypes=true" \
         "$@" \
-        -t "$IMAGE_BUILDER" .
-      # Push the builder cache as early as possible so future pipelines benefit
-      # even if a later step fails.
-      docker push "$IMAGE_BUILDER" || echo "WARN: failed to push builder cache (non-fatal)."
-
-      echo "Building final image (reusing builder + latest cache)..."
-      docker build \
-        --build-arg BUILDKIT_INLINE_CACHE=1 \
-        --cache-from "$IMAGE_BUILDER" \
-        --cache-from "$IMAGE_LATEST" \
-        "$@" \
-        -t "$IMAGE_NAME" .
-    - echo "Verifying build contains latest code..."
-    - docker run --rm $IMAGE_NAME sh -c "echo Build completed successfully"
-    - docker push $IMAGE_NAME
-    - docker tag $IMAGE_NAME $IMAGE_LATEST
-    - docker push $IMAGE_LATEST
+        -t "$IMAGE_NAME" \
+        -t "$IMAGE_LATEST" \
+        --push \
+        .
   only:
     - main
