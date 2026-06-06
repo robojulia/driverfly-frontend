@@ -7,11 +7,17 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install all dependencies (including dev dependencies for build).
-# --no-audit/--no-fund skip extra registry calls that can hang; fetch retries
-# add resilience to flaky network during CI installs.
-RUN npm ci --no-audit --no-fund \
-      --fetch-retries=5 --fetch-retry-mintimeout=20000 --fetch-retry-maxtimeout=120000 \
-    && npm cache clean --force
+#
+# EMERGENCY FIX: the builder install was hanging at `npm ci` because dev-only
+# packages `sharp` and `@netlify/esbuild` (pulled in transitively by the
+# Netlify-only `@netlify/plugin-nextjs`, which is unused by `next build`) run
+# postinstall scripts that download native binaries — those downloads stall in
+# the dind builder. `--ignore-scripts` skips those lifecycle scripts; nothing
+# the build needs (Next uses SWC) depends on them. `--loglevel verbose` surfaces
+# which package is fetching if it ever stalls again. The builder stage is not
+# shipped, so we deliberately do NOT run `npm cache clean` here.
+RUN npm install --legacy-peer-deps --no-audit --no-fund --ignore-scripts --loglevel verbose \
+      --fetch-retries=5 --fetch-retry-mintimeout=20000 --fetch-retry-maxtimeout=120000
 
 # Add build timestamp to invalidate cache for source code layers
 ARG BUILD_DATE
