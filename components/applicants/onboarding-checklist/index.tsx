@@ -46,7 +46,6 @@ import { CompanyPreferencesOnboardingChecklistForm } from "../../forms/company/c
 import { LoaderIcon } from "../../loading/loader-icon";
 import SafetyPerformanceHistory from "../safety-performance-history";
 import { ApplicantUploadedDocumentsForm } from "../../forms/company/applicant-uploaded-documents-form";
-import { VoeAuthorizationList } from "../../pdf/voe-authorization";
 
 function DacItemEditor({ dacForm, companyDacItemType }) {
   const { t } = useTranslation();
@@ -827,13 +826,6 @@ export default function OnboardingChecklist(
           );
         });
       })()}
-      </div>
-
-      {/* VOE Forms: one signed authorization per employer, to send out individually */}
-      <div className="mt-4">
-        <h3 className="mb-1">{t('VOE_FORMS')}</h3>
-        <p className="text-muted small mb-3">{t('DOWNLOAD_VOE_FOR_EMPLOYER')}</p>
-        <VoeAuthorizationList applicant={applicant} />
       </div>
 
       {/* Uploaded Documents as a subsection inside the Onboarding Documents card (bottom) */}

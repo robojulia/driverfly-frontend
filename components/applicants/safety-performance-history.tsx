@@ -30,6 +30,8 @@ import ViewDataTable from "../view-details/view-data-table";
 import ViewDetails from "../view-details/view-details";
 import ViewModal from "../view-details/view-modal";
 import ViewPdf from "../view-details/view-pdf";
+import { VoeAuthorizationActions, hasVoeSignature } from "../pdf/voe-authorization";
+import { formatDate } from "../jobs/show-formatted-date";
 
 export default function SafetyPerformanceHistory({
   buttonClass,
@@ -174,10 +176,44 @@ export default function SafetyPerformanceHistory({
     }
   };
 
+  // Whether the driver has a VOE authorization signature on file (required to
+  // generate the per-employer VOE authorization form).
+  const voeSigned = hasVoeSignature(applicant);
+
+  /**
+   * Determines whether a VOE request can be pushed to a given past employer,
+   * mirroring the backend gating (email + applicant authorization to contact +
+   * employer subject to the FMCSRs). When not eligible, `reason` is a
+   * translation key explaining exactly which condition blocks the send so it
+   * can be surfaced next to the greyed-out button.
+   */
+  const getVoeSendState = (
+    employer: ApplicantEmployerEntity
+  ): { eligible: boolean; reason?: string } => {
+    if (!Boolean(employer?.email))
+      return { eligible: false, reason: "VOE_BLOCKED_NO_EMAIL" };
+    if (!Boolean(employer?.can_contact))
+      return { eligible: false, reason: "VOE_BLOCKED_NO_CONTACT" };
+    if (!Boolean(employer?.is_subject_to_fmcsrs))
+      return { eligible: false, reason: "VOE_BLOCKED_NOT_FMCSR" };
+    return { eligible: true };
+  };
+
   const ButtonList = ({ employer, document, type }) => (
     <>
       {form?.values?.employer?.id != employer?.id && (
-        <div className="d-flex w-100 mt-2 justify-content-end" style={{ gap: 10 }}>
+        <div
+          className="d-flex w-100 mt-2 justify-content-end align-items-center flex-wrap"
+          style={{ gap: 10 }}
+        >
+          {/* Driver's signed VOE authorization form for this employer:
+              viewable / downloadable directly from the popup. */}
+          <VoeAuthorizationActions
+            applicant={applicant}
+            employer={employer}
+            disabled={!voeSigned}
+            disabledReason={t("NO_VOE_SIGNATURE_ON_FILE")}
+          />
           {!document?.name?.includes(".doc") && (
             <ViewDocumentButton
               document={document}
@@ -231,39 +267,47 @@ export default function SafetyPerformanceHistory({
                 />
               )}
               {Boolean(showResendButton) &&
-                Boolean(employer?.email) &&
-                Boolean(employer?.is_subject_to_fmcsrs) && (
-                  <OverlyPopover
-                    str={
-                      Boolean(employer.can_contact)
-                        ? "RESEND_VOE"
-                        : "REQUESTING_OR_UPLOADING_NOT_AUTHORIZED_TO_COMMUNICATE"
-                    }
-                    className="popover-class"
-                  >
-                    <Button
-                      disabled={!Boolean(employer?.can_contact) || sentEmployerId === employer?.id}
-                      className="mr-2 w-100 "
-                      onClick={() =>
-                        Boolean(employer?.can_contact) &&
-                        resendVoeRequest(employer.id)
-                      }
-                    >
-                      {Boolean(
-                        isLoading?.action == "RESEND" &&
-                          isLoading.id == employer?.id
-                      ) ? (
-                        <LoaderIcon isLoading />
-                      ) : sentEmployerId === employer?.id ? (
-                        t("SENT")
-                      ) : (
-                        <>
-                          {t("RESEND")} <Send />
-                        </>
+                (() => {
+                  const sendState = getVoeSendState(employer);
+                  const isSending =
+                    isLoading?.action == "RESEND" && isLoading.id == employer?.id;
+                  const alreadyAttempted = Boolean(employer?.voe_attempts?.length);
+                  return (
+                    <div className="d-flex align-items-center" style={{ gap: 8 }}>
+                      <Button
+                        disabled={
+                          !sendState.eligible ||
+                          isSending ||
+                          sentEmployerId === employer?.id
+                        }
+                        className="mr-0"
+                        onClick={() =>
+                          sendState.eligible && resendVoeRequest(employer.id)
+                        }
+                      >
+                        {isSending ? (
+                          <LoaderIcon isLoading />
+                        ) : sentEmployerId === employer?.id ? (
+                          t("SENT")
+                        ) : (
+                          <>
+                            {t(alreadyAttempted ? "RESEND" : "SEND_VOE")} <Send />
+                          </>
+                        )}
+                      </Button>
+                      {/* When gating blocks the push, explain why next to the
+                          greyed-out button. */}
+                      {!sendState.eligible && (
+                        <span
+                          className="text-muted small font-italic"
+                          style={{ maxWidth: 240 }}
+                        >
+                          {t(sendState.reason)}
+                        </span>
                       )}
-                    </Button>
-                  </OverlyPopover>
-                )}
+                    </div>
+                  );
+                })()}
             </>
           )}
           
@@ -409,6 +453,60 @@ export default function SafetyPerformanceHistory({
                       <li className="list-group-item">0</li>
                     )}
                   </ol>
+                </Col>
+              </Row>
+              {/* Past employer's VOE response, captured and viewable inline
+                  once they complete and submit the request. */}
+              <Row className="mb-2">
+                <Col>
+                  <label className="font-weight-bold">{t("VOE_RESPONSE")}</label>
+                  {data?.voeData?.id ? (
+                    <ViewDetails
+                      default={t("NOT_ANSWERED")}
+                      obj={{
+                        EMPLOYED_BY_US: Boolean(data.voeData.was_employed)
+                          ? t("YES")
+                          : t("NO"),
+                        POSITION: data.voeData.position || t("N/A"),
+                        START_DATE: data.voeData.start_date
+                          ? formatDate(data.voeData.start_date, true)
+                          : t("N/A"),
+                        END_DATE: data.voeData.end_date
+                          ? formatDate(data.voeData.end_date, true)
+                          : t("N/A"),
+                        VOE_DRIVER_QUES: Boolean(data.voeData.drived_vehicle)
+                          ? t("YES")
+                          : t("NO"),
+                        VEHICLE_TYPE: data.voeData.drived_vehicle || t("N/A"),
+                        SAFETY_PERFORMANCE_REPORT: Boolean(
+                          data.voeData.safety_performance
+                        )
+                          ? t("YES")
+                          : t("NO"),
+                        ACCIDENT_REGISTER: Boolean(
+                          data.voeData.registered_accidents_details
+                        )
+                          ? t("YES")
+                          : t("NO"),
+                        REASON_TO_LEAVE_EMPLOYMENT: data.voeData.reason_to_leave
+                          ? t(
+                              `ReasonsForLeavingEmployment.${data.voeData.reason_to_leave}`
+                            )
+                          : t("N/A"),
+                        FULL_NAME: data.voeData.focal_person_name || t("N/A"),
+                        title: data.voeData.focal_person_title || t("N/A"),
+                        phone: data.voeData.focal_person_phone || t("N/A"),
+                        email: data.voeData.focal_person_email || t("N/A"),
+                        DATE: data.voeData.signed_date
+                          ? formatDate(data.voeData.signed_date, true)
+                          : t("N/A"),
+                      }}
+                    />
+                  ) : (
+                    <p className="text-muted small font-italic mb-0">
+                      {t("NO_VOE_RESPONSE_YET")}
+                    </p>
+                  )}
                 </Col>
               </Row>
             </>

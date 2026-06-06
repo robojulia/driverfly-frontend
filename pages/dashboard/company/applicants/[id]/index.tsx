@@ -504,7 +504,7 @@ export default function ViewApplicant({ id }) {
                   canEdit={false}
                   showCompleted={true}
                   canEditSafetyPerformance={false}
-                  showResendButton={false}
+                  showResendButton={true}
                 />
               </Col>
             </Row>
