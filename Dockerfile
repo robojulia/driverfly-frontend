@@ -8,15 +8,18 @@ COPY package*.json ./
 
 # Install all dependencies (including dev dependencies for build).
 #
-# EMERGENCY FIX: the builder install was hanging at `npm ci` because dev-only
-# packages `sharp` and `@netlify/esbuild` (pulled in transitively by the
-# Netlify-only `@netlify/plugin-nextjs`, which is unused by `next build`) run
-# postinstall scripts that download native binaries — those downloads stall in
-# the dind builder. `--ignore-scripts` skips those lifecycle scripts; nothing
-# the build needs (Next uses SWC) depends on them. `--loglevel verbose` surfaces
-# which package is fetching if it ever stalls again. The builder stage is not
-# shipped, so we deliberately do NOT run `npm cache clean` here.
-RUN npm install --legacy-peer-deps --no-audit --no-fund --ignore-scripts --loglevel verbose \
+# The builder install was hanging because dev-only packages `sharp` and
+# `@netlify/esbuild` (pulled in transitively by the Netlify-only
+# `@netlify/plugin-nextjs`, unused by `next build`) run postinstall scripts that
+# download native binaries, and those downloads stall in the dind builder.
+# `--ignore-scripts` skips those lifecycle scripts; nothing the build needs (Next
+# uses prebuilt SWC) depends on them.
+#
+# Must use `npm ci` (not `npm install`): the locked tree hoists `styled-components`
+# (an undeclared, transitive dependency that app code imports directly) to the top
+# level so its bare import resolves. `npm install` re-resolves and de-hoists it,
+# breaking `next build`. The builder stage is not shipped, so no `npm cache clean`.
+RUN npm ci --no-audit --no-fund --ignore-scripts \
       --fetch-retries=5 --fetch-retry-mintimeout=20000 --fetch-retry-maxtimeout=120000
 
 # Add build timestamp to invalidate cache for source code layers
