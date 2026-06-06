@@ -27,4 +27,30 @@ module.exports = {
     defaultLocale: 'en-us',
     locales: ['en-us'],
   },
+  webpack: (config, { webpack }) => {
+    const path = require('path');
+    // @react-pdf/renderer pulls in fontkit's ESM `.mjs` browser build; relax
+    // strict ESM resolution for node_modules `.mjs` files.
+    config.module.rules.push({
+      test: /\.mjs$/,
+      include: /node_modules/,
+      type: 'javascript/auto',
+      resolve: { fullySpecified: false },
+    });
+    // fontkit imports `@swc/helpers/_/x` subpaths that Next 12's webpack fails
+    // to resolve via the package `exports` map. Rewrite those requests to the
+    // real esm files before resolution (works regardless of importer file type,
+    // unlike resolve.alias which the .mjs resolver bypasses here).
+    const swcHelpersEsm = path.join(
+      path.dirname(require.resolve('@swc/helpers/package.json')),
+      'esm'
+    );
+    config.plugins.push(
+      new webpack.NormalModuleReplacementPlugin(/^@swc\/helpers\/_\/.+$/, (resource) => {
+        const helper = resource.request.replace(/^@swc\/helpers\/_\//, '');
+        resource.request = path.join(swcHelpersEsm, `${helper}.js`);
+      })
+    );
+    return config;
+  },
 };
