@@ -1002,7 +1002,7 @@ function ApplicantView(props: ViewProps) {
             id: 'source',
             name: 'LEAD_TYPE',
             wrap: true,
-            hide: 1,
+            hide: 0,
             cell: (applicant) =>
               applicant.type ? (
                 <OverlyPopover str={t(`ApplicantType.${applicant.type}`)}>

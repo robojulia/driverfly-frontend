@@ -60,8 +60,10 @@ const HandoffsPage = () => {
             className="text-muted"
             style={{ maxWidth: '560px', margin: '0.5rem auto 0' }}
           >
-            Soon your AI agents will be able to hand qualified drivers straight to
-            your recruiters — with full context and a ready-to-action inbox.
+            Handoffs is a page that notifies you and your recruiters with
+            responses and handoff action items from your AI campaigns. We are
+            rolling out this page to select partners. For inquiries, reach out to
+            info@driverfly.co
           </p>
 
           <span

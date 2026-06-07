@@ -456,7 +456,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                         <BaseInput
                           readOnly={Boolean(entity?.is_hired)}
                           name={`employers[${i}].name`}
-                          placeholder="ABC Transport Co."
                           required
                           formik={form}
                         />
@@ -468,7 +467,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                         <BaseInput
                           readOnly={Boolean(entity?.is_hired)}
                           name={`employers[${i}].title`}
-                          placeholder="Truck Driver"
                           formik={form}
                         />
                       </div>
@@ -494,7 +492,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                         <BaseInput
                           readOnly={Boolean(entity?.is_hired)}
                           name={`employers[${i}].street`}
-                          placeholder="123 Main St"
                           formik={form}
                         />
                       </div>
@@ -505,7 +502,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                         <BaseInput
                           readOnly={Boolean(entity?.is_hired)}
                           name={`employers[${i}].city`}
-                          placeholder="City"
                           formik={form}
                         />
                       </div>
@@ -527,7 +523,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                         <BaseInput
                           readOnly={Boolean(entity?.is_hired)}
                           name={`employers[${i}].zip_code`}
-                          placeholder="12345"
                           formik={form}
                         />
                       </div>
@@ -538,7 +533,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                         <BaseInputPhone
                           readOnly={Boolean(entity?.is_hired)}
                           name={`employers[${i}].phone`}
-                          placeholder="(555) 555-5555"
                           formik={form}
                         />
                       </div>
@@ -550,7 +544,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                           readOnly={Boolean(entity?.is_hired)}
                           name={`employers[${i}].email`}
                           type="email"
-                          placeholder="email@company.com"
                           formik={form}
                         />
                       </div>
@@ -561,7 +554,6 @@ export function ApplicantWorkHistoryForm(props: ApplicantWorkHistoryFormProps) {
                         <BaseInput
                           readOnly={Boolean(entity?.is_hired)}
                           name={`employers[${i}].manager_name`}
-                          placeholder="John Smith"
                           formik={form}
                         />
                       </div>

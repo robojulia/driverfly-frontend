@@ -453,13 +453,13 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
             {/* Name fields */}
             <Row className="mb-2">
               <Col md="3" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="First Name" required name="first_name" placeholder="John" formik={form} />
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="First Name" required name="first_name" formik={form} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Middle Name" name="meta.middle_name" placeholder="Michael" formik={form} />
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Middle Name" name="meta.middle_name" formik={form} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Last Name" required name="last_name" placeholder="Doe" formik={form} />
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Last Name" required name="last_name" formik={form} />
               </Col>
               <Col md="3" className="px-2">
                 <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Suffix" name="meta.suffix" placeholder="Jr., Sr., III" formik={form} />
@@ -544,16 +544,16 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
               </Col>
               <Col md="3" className="px-2">
                 <div style={{ maxWidth: '100%' }}>
-                  <BaseInputPhone className="col-12" readOnly={Boolean(entity?.is_hired)} label="Phone Number" required name="phone" placeholder="(555) 987-6543" formik={form} />
+                  <BaseInputPhone className="col-12" readOnly={Boolean(entity?.is_hired)} label="Phone Number" required name="phone" formik={form} />
                 </div>
               </Col>
               <Col md="3" className="px-2">
                 <div style={{ maxWidth: '100%' }}>
-                  <BaseInputPhone className="col-12" readOnly={Boolean(entity?.is_hired)} label="Alternative Phone Number" name="meta.alternative_phone" placeholder="(555) 987-6543" formik={form} />
+                  <BaseInputPhone className="col-12" readOnly={Boolean(entity?.is_hired)} label="Alternative Phone Number" name="meta.alternative_phone" formik={form} />
                 </div>
               </Col>
               <Col md="3" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Email" type="email" name="email" placeholder="john.doe@example.com" formik={form} />
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Email" type="email" name="email" formik={form} />
               </Col>
             </Row>
 
@@ -563,13 +563,13 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
                 <BaseSelect className="col-12" readOnly={Boolean(entity?.is_hired)} label="Country" name="meta.country" placeholder="Select country" options={["United States","Canada","Mexico"]} formik={form} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Street Address" name="address_1" placeholder="120 Folsom St." formik={form} />
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Street Address" name="address_1" formik={form} />
               </Col>
               <Col md="3" className="px-2">
                 <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Address Line 2" name="address_2" placeholder="Apt, Suite, Unit, etc." formik={form} />
               </Col>
               <Col md="3" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="City" name="city" placeholder="Atlanta" formik={form} />
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="City" name="city" formik={form} />
               </Col>
             </Row>
 
@@ -587,7 +587,7 @@ export function ApplicantBasicDetailsFormNew(props: ApplicantBasicDetailsFormNew
                 />
               </Col>
               <Col md="3" className="px-2">
-                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Zip Code" name="zip_code" placeholder="83202" formik={form} />
+                <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Zip Code" name="zip_code" formik={form} />
               </Col>
               <Col md="3" className="px-2">
                 <BaseInput className="col-12" readOnly={Boolean(entity?.is_hired)} label="Date of Birth" type="date" name="birthdate" placeholder="mm / dd / yyyy" formik={form} max={todayFormatted} />
