@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   label: { fontWeight: 'bold' },
   signatureRow: { flexDirection: 'row', marginTop: 16, marginBottom: 6 },
   signatureCol: { flex: 1 },
-  signatureImg: { width: 90, height: 36, objectFit: 'contain', marginTop: 4 },
+  signatureImg: { width: 200, height: 80, objectFit: 'contain', marginTop: 4, alignSelf: 'flex-start' },
   signatureLine: { borderTop: '1px solid #000', width: 180, marginTop: 18, paddingTop: 2 },
   // Section II accident table
   tableHeaderRow: { flexDirection: 'row', marginTop: 4, marginBottom: 2 },
@@ -86,12 +86,20 @@ export function VoeAuthorizationDocument({
 }: VoeAuthorizationDocumentProps) {
   const applicantName = `${applicant?.first_name || ''} ${applicant?.last_name || ''}`.trim();
 
-  // The driver's single VOE authorization signature, exactly as the applicant
-  // drew/typed it at signing — reused verbatim here, never substituted for a
-  // generated/default signature.
-  const signature = applicant?.extras?.find(
-    (e) => e?.type === ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION
+  // Prefer the handwritten signature the driver drew on their initial hiring
+  // application (ApplicantExtras.SIGNATURE). The VOE-specific signature field is
+  // frequently the "Use Typed Signature" (Dancing Script) variant, which renders
+  // as a generated/"digital" signature rather than the driver's real hand-drawn
+  // one. We fall back to the VOE authorization signature only when no application
+  // signature is on file. Either way the image is the signature the applicant
+  // actually provided — never a default/substituted one.
+  const applicationSignature = applicant?.extras?.find(
+    (e) => e?.type === ApplicantExtras.SIGNATURE && e?.value
   );
+  const voeSignature = applicant?.extras?.find(
+    (e) => e?.type === ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION && e?.value
+  );
+  const signature = applicationSignature || voeSignature;
   const applyDate = applicant?.extras?.find((e) => e?.type === ApplicantExtras.APPLY_DATE);
 
   const ssnMasked = applicant?.ssn_last4 ? `XX-XXXX-${String(applicant.ssn_last4).slice(-4)}` : '';
@@ -228,6 +236,9 @@ export function VoeAuthorizationDocument({
 }
 
 export function hasVoeSignature(applicant: ApplicantEntity): boolean {
+  // Gate VOE generation on the driver having completed the VOE authorization
+  // consent step. (The signature *image* shown on the form prefers their
+  // hand-drawn application signature — see VoeAuthorizationDocument.)
   return Boolean(
     applicant?.extras?.find((e) => e?.type === ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION)?.value
   );
