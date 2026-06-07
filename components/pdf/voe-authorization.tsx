@@ -13,8 +13,11 @@ import {
 } from '@react-pdf/renderer';
 
 import { useTranslation } from '../../hooks/use-translation';
+import { useAuth } from '../../hooks/use-auth';
 import { ApplicantExtras } from '../../enums/applicants/applicant-extras.enum';
 import { ApplicantEmployerEntity, ApplicantEntity } from '../../models/applicant';
+import { CompanyEntity } from '../../models/company/company.entity';
+import { UserEntity } from '../../models/user/user.entity';
 import { buildAddress } from '../../utils/common';
 
 export interface VoeAuthorizationProps {
@@ -61,6 +64,11 @@ export interface VoeAuthorizationDocumentProps {
   applicant: ApplicantEntity;
   employer: ApplicantEmployerEntity;
   t: TFn;
+  // The hiring company (Section I-A "new employer"). Passed from the logged-in
+  // recruiter's auth context, since the applicant payload doesn't always carry
+  // its `company` relation. The signed-in user is the designated employer rep.
+  company?: CompanyEntity;
+  companyUser?: UserEntity;
 }
 
 // Builds the per-employer VOE authorization document. The driver's single
@@ -69,7 +77,13 @@ export interface VoeAuthorizationDocumentProps {
 // authorization language intentionally still references "all previous employers"
 // so the document reflects the single, blanket consent the driver gave at
 // signing (FMCSR Part 391.23), rather than implying a per-employer signature.
-export function VoeAuthorizationDocument({ applicant, employer, t }: VoeAuthorizationDocumentProps) {
+export function VoeAuthorizationDocument({
+  applicant,
+  employer,
+  t,
+  company,
+  companyUser,
+}: VoeAuthorizationDocumentProps) {
   const applicantName = `${applicant?.first_name || ''} ${applicant?.last_name || ''}`.trim();
 
   // The driver's single VOE authorization signature, exactly as the applicant
@@ -82,15 +96,18 @@ export function VoeAuthorizationDocument({ applicant, employer, t }: VoeAuthoriz
 
   const ssnMasked = applicant?.ssn_last4 ? `XX-XXXX-${String(applicant.ssn_last4).slice(-4)}` : '';
 
-  // Section I-A — the hiring company (new/prospective employer) the driver applied to.
-  const companyUser = applicant?.company?.users?.[0];
+  // Section I-A — the hiring company (new/prospective employer) the driver
+  // applied to. Prefer the logged-in recruiter's company/user (always loaded),
+  // falling back to anything carried on the applicant payload.
+  const hiringCompany = company || applicant?.company;
+  const hiringUser = companyUser || applicant?.company?.users?.[0];
   const companyDer =
-    `${companyUser?.first_name || ''} ${companyUser?.last_name || ''}`.trim() ||
-    companyUser?.name ||
+    `${hiringUser?.first_name || ''} ${hiringUser?.last_name || ''}`.trim() ||
+    hiringUser?.name ||
     '';
-  const newEmployerName = applicant?.company?.name || '';
-  const newEmployerAddress = applicant?.company?.location || '';
-  const newEmployerPhone = applicant?.company?.phone || companyUser?.contact_number || '';
+  const newEmployerName = hiringCompany?.name || '';
+  const newEmployerAddress = hiringCompany?.location || '';
+  const newEmployerPhone = hiringCompany?.phone || hiringUser?.contact_number || '';
 
   // Section I-B — the previous employer this VOE is being transmitted to.
   const employerAddress = buildAddress(employer) || employer?.address || '';
@@ -227,6 +244,8 @@ export function VoeAuthorizationActions({
   disabledReason,
 }: VoeAuthorizationProps & { disabled?: boolean; disabledReason?: string }) {
   const { t } = useTranslation();
+  // The signed-in recruiter is the new (hiring) employer in Section I-A.
+  const { user, company } = useAuth();
   const [isOpening, setIsOpening] = useState(false);
 
   const fileName = `VOE_${(applicant?.first_name || '').trim()}_${(applicant?.last_name || '').trim()}_${(employer?.name || 'employer').trim()}.pdf`
@@ -251,7 +270,13 @@ export function VoeAuthorizationActions({
     setIsOpening(true);
     try {
       const blob = await pdf(
-        <VoeAuthorizationDocument applicant={applicant} employer={employer} t={t} />
+        <VoeAuthorizationDocument
+          applicant={applicant}
+          employer={employer}
+          t={t}
+          company={company}
+          companyUser={user}
+        />
       ).toBlob();
       const url = URL.createObjectURL(blob);
       window.open(url, '_blank', 'noopener,noreferrer');
@@ -271,7 +296,15 @@ export function VoeAuthorizationActions({
         {t('VIEW_VOE')}
       </Button>
       <PDFDownloadLink
-        document={<VoeAuthorizationDocument applicant={applicant} employer={employer} t={t} />}
+        document={
+          <VoeAuthorizationDocument
+            applicant={applicant}
+            employer={employer}
+            t={t}
+            company={company}
+            companyUser={user}
+          />
+        }
         fileName={fileName}
         className="btn btn-sm btn-outline-secondary"
       >
