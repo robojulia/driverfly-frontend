@@ -16,7 +16,6 @@ import { useTranslation } from '../../hooks/use-translation';
 import { ApplicantExtras } from '../../enums/applicants/applicant-extras.enum';
 import { ApplicantEmployerEntity, ApplicantEntity } from '../../models/applicant';
 import { buildAddress } from '../../utils/common';
-import { ShowUsFormattedDateTime } from '../../utils/show-us-formatted-date-time';
 
 export interface VoeAuthorizationProps {
   applicant: ApplicantEntity;
@@ -24,33 +23,37 @@ export interface VoeAuthorizationProps {
 }
 
 const styles = StyleSheet.create({
-  page: { padding: 30, fontSize: 9.5, lineHeight: 1.35, color: '#111' },
-  title: { fontSize: 15, textAlign: 'center', fontWeight: 'bold' },
-  subtitle: { fontSize: 10.5, textAlign: 'center', marginBottom: 8 },
-  sectionHeading: { fontSize: 11.5, fontWeight: 'bold', marginTop: 8, marginBottom: 3 },
-  helper: { fontStyle: 'italic', marginBottom: 5 },
-  paragraph: { marginBottom: 5, textAlign: 'justify' },
-  field: { marginBottom: 3 },
+  page: { paddingVertical: 40, paddingHorizontal: 45, fontSize: 11, lineHeight: 1.4, color: '#000' },
+  title: { fontSize: 18, textAlign: 'center', fontWeight: 'bold', marginBottom: 16 },
+  sectionHeading: { fontSize: 18, fontWeight: 'bold', marginTop: 14, marginBottom: 4 },
+  helper: { marginBottom: 8 },
+  subHeading: { fontWeight: 'bold', marginTop: 12, marginBottom: 4 },
+  paragraph: { marginBottom: 10 },
+  field: { marginBottom: 2 },
+  fieldSpaced: { marginBottom: 10 },
   label: { fontWeight: 'bold' },
-  block: {
-    marginTop: 5,
-    padding: 6,
-    border: '1px solid #ccc',
-    borderRadius: 4,
-  },
-  signatureRow: { flexDirection: 'row', marginTop: 8, marginBottom: 8 },
+  signatureRow: { flexDirection: 'row', marginTop: 16, marginBottom: 6 },
   signatureCol: { flex: 1 },
-  signatureImg: { width: 170, height: 62, objectFit: 'contain' },
-  signatureLine: { borderTop: '1px solid #000', width: 200, marginTop: 4, paddingTop: 2 },
-  footerNote: {
-    marginTop: 10,
-    paddingTop: 6,
-    borderTop: '1px solid #ccc',
-    fontSize: 8,
-    color: '#555',
-    fontStyle: 'italic',
-  },
+  signatureImg: { width: 90, height: 36, objectFit: 'contain', marginTop: 4 },
+  signatureLine: { borderTop: '1px solid #000', width: 180, marginTop: 18, paddingTop: 2 },
+  // Section II accident table
+  tableHeaderRow: { flexDirection: 'row', marginTop: 4, marginBottom: 2 },
+  tableNumberRow: { flexDirection: 'row', marginBottom: 2 },
+  colNum: { width: 24 },
+  colDate: { flex: 2 },
+  colLoc: { flex: 2 },
+  colInj: { flex: 2 },
+  colFat: { flex: 2 },
+  colHaz: { flex: 2 },
+  blankLine: { marginBottom: 2 },
 });
+
+const DATE_FORMAT_OPTS: Intl.DateTimeFormatOptions = {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+};
 
 type TFn = (key: string, params?: any, opts?: any) => string;
 
@@ -69,49 +72,57 @@ export interface VoeAuthorizationDocumentProps {
 export function VoeAuthorizationDocument({ applicant, employer, t }: VoeAuthorizationDocumentProps) {
   const applicantName = `${applicant?.first_name || ''} ${applicant?.last_name || ''}`.trim();
 
+  // The driver's single VOE authorization signature, exactly as the applicant
+  // drew/typed it at signing — reused verbatim here, never substituted for a
+  // generated/default signature.
   const signature = applicant?.extras?.find(
     (e) => e?.type === ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION
   );
   const applyDate = applicant?.extras?.find((e) => e?.type === ApplicantExtras.APPLY_DATE);
 
-  const ssnMasked = applicant?.ssn_last4
-    ? `XXX-XX-${String(applicant.ssn_last4).slice(-4)}`
-    : t('N/A');
+  const ssnMasked = applicant?.ssn_last4 ? `XX-XXXX-${String(applicant.ssn_last4).slice(-4)}` : '';
 
-  const employerAddress =
-    buildAddress(employer) || employer?.address || t('N/A');
+  // Section I-A — the hiring company (new/prospective employer) the driver applied to.
+  const companyUser = applicant?.company?.users?.[0];
+  const companyDer =
+    `${companyUser?.first_name || ''} ${companyUser?.last_name || ''}`.trim() ||
+    companyUser?.name ||
+    '';
+  const newEmployerName = applicant?.company?.name || '';
+  const newEmployerAddress = applicant?.company?.location || '';
+  const newEmployerPhone = applicant?.company?.phone || companyUser?.contact_number || '';
 
-  const hiringCompanyName = applicant?.company?.name || t('N/A');
-  const hiringCompanyPhone = applicant?.company?.users?.[0]?.contact_number || t('N/A');
+  // Section I-B — the previous employer this VOE is being transmitted to.
+  const employerAddress = buildAddress(employer) || employer?.address || '';
 
   const dateText = applyDate?.value
-    ? ShowUsFormattedDateTime(new Date(applyDate.value), true)
+    ? new Date(applyDate.value).toLocaleDateString('en-US', DATE_FORMAT_OPTS)
     : '';
+
+  const blankLine = '__________________________________________________________';
 
   return (
     <Document title={`VOE - ${applicantName} - ${employer?.name || ''}`}>
       <Page size="A4" style={styles.page}>
-        <Text style={styles.title}>{t('VERIFICATION_OF_EMPLOYMENT')}</Text>
-        <Text style={styles.subtitle}>{t('SAFETY_PERFORMANCE_HISTORY_RECORDS_REQUEST')}</Text>
+        <Text style={styles.title}>VERIFICATION OF EMPLOYMENT</Text>
 
         <Text style={styles.sectionHeading}>{t('SECTION_I')}</Text>
         <Text style={styles.helper}>{t('TO_BE_COMPLETED_BY_THE_NEW_EMPLOYER')}</Text>
 
         <Text style={styles.field}>
-          <Text style={styles.label}>
-            {t('EMPLOYEE_NAME_NAUTILUS_{employee_name}', { employee_name: '' }, { translateProps: true })}
-          </Text>
-          {applicantName || t('N/A')}
+          <Text style={styles.label}>{t('VOE_EMPLOYEE_NAME_LABEL')}</Text>
+          <Text style={styles.label}>{applicantName}</Text>
         </Text>
-        <Text style={styles.field}>
-          <Text style={styles.label}>{t('EMPLOYEE_SSN')} </Text>
-          {ssnMasked}
+        <Text style={styles.fieldSpaced}>
+          <Text style={styles.label}>{t('VOE_EMPLOYEE_SS_OR_ID_LABEL')}</Text>
+          <Text style={styles.label}>{ssnMasked}</Text>
         </Text>
 
         <Text style={styles.paragraph}>{t('VERIFICATION_OF_EMPLOYMENT_FMCSR_AUTHORIZED')}</Text>
         <Text style={styles.paragraph}>{t('UNDERSTAND_CONSENT_REQUESTED')}</Text>
         <Text style={styles.paragraph}>
-          {t('{name}_AUTHORIZE_COMPANY', { name: applicantName }, { translateProps: true })}
+          I <Text style={styles.label}>{applicantName} </Text>
+          {t('VOE_AUTHORIZE_COMPANY_SUFFIX')}
         </Text>
 
         <View style={styles.signatureRow}>
@@ -120,54 +131,80 @@ export function VoeAuthorizationDocument({ applicant, employer, t }: VoeAuthoriz
             {signature?.value ? (
               <Image style={styles.signatureImg} src={signature.value} />
             ) : (
-              <Text style={styles.signatureLine}>{t('N/A')}</Text>
+              <Text style={styles.signatureLine}> </Text>
             )}
           </View>
           <View style={styles.signatureCol}>
             <Text style={styles.label}>{t('DATE')}</Text>
-            <Text style={{ marginTop: 4 }}>{dateText || t('N/A')}</Text>
+            <Text style={{ marginTop: 4 }}>{dateText}</Text>
           </View>
         </View>
 
-        <Text style={styles.sectionHeading}>{t('NEW_EMPLOYER')}</Text>
-        <View style={styles.block}>
-          <Text style={styles.field}>
-            <Text style={styles.label}>{t('COMPANY')}: </Text>
-            {hiringCompanyName}
-          </Text>
-          <Text style={styles.field}>
-            <Text style={styles.label}>{t('PHONE')}: </Text>
-            {hiringCompanyPhone}
-          </Text>
-        </View>
+        {/* I-A: hiring company (the company user's details) */}
+        <Text style={styles.subHeading}>{t('VOE_SECTION_I_A')}</Text>
+        <Text style={styles.field}>{t('VOE_NEW_EMPLOYER_NAME_LABEL')}{newEmployerName}</Text>
+        <Text style={styles.field}>{t('VOE_ADDRESS_LABEL')}{newEmployerAddress}</Text>
+        <Text style={styles.field}>{t('VOE_PHONE_LABEL')}{newEmployerPhone}</Text>
+        <Text style={styles.field}>{t('VOE_DER_LABEL')}{companyDer}</Text>
 
-        <Text style={styles.sectionHeading}>
-          {employer?.is_current ? t('CURENNT_COMPANY_DATA') : t('PAST_COMPANY_DATA')}
+        {/* I-B: previous employer this form is transmitted to */}
+        <Text style={styles.subHeading}>{t('VOE_SECTION_I_B')}</Text>
+        <Text style={styles.field}>
+          {employer?.is_current ? t('VOE_CURRENT_COMPANY_NAME_LABEL') : t('VOE_PREVIOUS_COMPANY_NAME_LABEL')}
+          {employer?.name || ''}
         </Text>
-        <View style={styles.block}>
-          <Text style={styles.field}>
-            <Text style={styles.label}>{t('NAME')}: </Text>
-            {employer?.name || t('N/A')}
-          </Text>
-          <Text style={styles.field}>
-            <Text style={styles.label}>{t('ADDRESS')}: </Text>
-            {employerAddress}
-          </Text>
-          <Text style={styles.field}>
-            <Text style={styles.label}>{t('PHONE')}: </Text>
-            {employer?.phone || t('N/A')}
-          </Text>
-          <Text style={styles.field}>
-            <Text style={styles.label}>{t('DESIGNATED_EMPLOYER_REPRESENTATIVE')}: </Text>
-            {employer?.manager_name || t('N/A')}
-          </Text>
-          <Text style={styles.field}>
-            <Text style={styles.label}>{t('EMAIL')}: </Text>
-            {employer?.email || t('N/A')}
-          </Text>
-        </View>
+        <Text style={styles.field}>{t('VOE_ADDRESS_LABEL')}{employerAddress}</Text>
+        <Text style={styles.field}>{t('VOE_PHONE_LABEL')}{employer?.phone || ''}</Text>
+        <Text style={styles.field}>{t('VOE_DER_IF_KNOWN_LABEL')}{employer?.manager_name || ''}</Text>
 
-        <Text style={styles.footerNote}>{t('VOE_SINGLE_SIGNATURE_NOTE')}</Text>
+        <Text style={styles.sectionHeading}>{t('VOE_SECTION_II_HEADING')}</Text>
+        <Text style={styles.helper}>{t('VOE_TO_BE_COMPLETED_BY_PREVIOUS_EMPLOYER')}</Text>
+        <Text style={styles.label}>{t('II_A_ACCIDENT_HISTORY')}</Text>
+      </Page>
+
+      <Page size="A4" style={styles.page}>
+        <Text style={styles.field}>{t('THE_APPLICANT_NAMED_ABOVE')}</Text>
+        <Text style={styles.fieldSpaced}>{t('EMPLOYES_AS___________________________')}</Text>
+        <Text style={styles.field}>{t('DID_HE/SHE_DRIVE_MOTOR_VEHICLE')}</Text>
+        <Text style={styles.field}>{t('REASON_FOR_LEAVING_YOUR_EMPLOY')}</Text>
+        <Text style={styles.fieldSpaced}>{t('IF_THERE_IS_NO_SAFETY')}</Text>
+
+        <Text style={styles.paragraph}>{t('VOE_ACCIDENTS_INTRO')}</Text>
+
+        <View style={styles.tableHeaderRow}>
+          <Text style={styles.colNum}> </Text>
+          <Text style={styles.colDate}>{t('VOE_COL_DATE')}</Text>
+          <Text style={styles.colLoc}>{t('VOE_COL_LOCATION')}</Text>
+          <Text style={styles.colInj}>{t('VOE_COL_INJURIES')}</Text>
+          <Text style={styles.colFat}>{t('VOE_COL_FATALITIES')}</Text>
+          <Text style={styles.colHaz}>{t('VOE_COL_HAZMAT')}</Text>
+        </View>
+        {['1.', '2.', '3.'].map((n) => (
+          <View key={n} style={styles.tableNumberRow}>
+            <Text style={styles.colNum}>{n}</Text>
+            <Text style={styles.colDate}> </Text>
+            <Text style={styles.colLoc}> </Text>
+            <Text style={styles.colInj}> </Text>
+            <Text style={styles.colFat}> </Text>
+            <Text style={styles.colHaz}> </Text>
+          </View>
+        ))}
+
+        <Text style={[styles.paragraph, { marginTop: 8 }]}>{t('VOE_OTHER_ACCIDENTS')}</Text>
+        {[0, 1, 2, 3].map((i) => (
+          <Text key={`oa-${i}`} style={styles.blankLine}>{blankLine}</Text>
+        ))}
+
+        <Text style={[styles.field, { marginTop: 8 }]}>{t('ANY_OTHER_MARK')}</Text>
+        {[0, 1, 2].map((i) => (
+          <Text key={`rm-${i}`} style={styles.blankLine}>{blankLine}</Text>
+        ))}
+
+        <Text style={[styles.subHeading, { fontSize: 11 }]}>{t('II_B')}</Text>
+        <Text style={styles.fieldSpaced}>{t('VOE_NAME_OF_PERSON_SECTION_IIA')}</Text>
+        <Text style={styles.field}>{t('VOE_TITLE_LABEL')}</Text>
+        <Text style={styles.field}>{t('VOE_PHONE_LABEL')}</Text>
+        <Text style={styles.field}>{t('DATE')}:</Text>
       </Page>
     </Document>
   );
