@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import JotformContext from '../context/jotform-context';
 import ApplicantApi from '../pages/api/applicant';
 import { trackingContextToUtmReferral } from '../models/auth/utm-referral.interface';
+import { stripApplicantRelations } from '../utils/strip-applicant-relations';
 
 interface UseSaveAndContinueLaterReturn {
   saveAndExit: () => Promise<void>;
@@ -20,7 +21,7 @@ export function useSaveAndContinueLater(): UseSaveAndContinueLaterReturn {
   const [resumeUrl, setResumeUrl] = useState<string | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  const { applicant, applicantExtras, jobs, company, steps, utm } = state;
+  const { applicant, applicantExtras, jobs, company, steps, utm, isLongFormPage } = state;
   const { setApplicant } = method;
 
   const closeSuccessModal = useCallback(() => {
@@ -44,15 +45,23 @@ export function useSaveAndContinueLater(): UseSaveAndContinueLaterReturn {
         return;
       }
 
-      // Convert full-form step (10–25) to longform-relative step (0–15).
-      // The longform page uses getLongFormPages which starts at index 0.
+      // Resolve the step to persist as last_completed_step, in long-form-relative
+      // terms (getLongFormPages starts at index 0).
+      // - On the long-form page, context `steps` is ALREADY long-form-relative
+      //   (0–16), so use it as-is.
+      // - On the full form, the long-form section starts at step 10, so convert
+      //   full-form step (10–25) to long-form-relative step (0–15).
       const LONG_FORM_OFFSET = 10;
-      const longformStep = (steps ?? 0) >= LONG_FORM_OFFSET ? (steps - LONG_FORM_OFFSET) : (steps ?? 0);
+      const currentStep = steps ?? 0;
+      const longformStep = isLongFormPage
+        ? currentStep
+        : currentStep >= LONG_FORM_OFFSET
+          ? currentStep - LONG_FORM_OFFSET
+          : currentStep;
 
-      // Strip nested relation entities that cause backend 500 errors,
+      // Strip nested relation entities that cause backend errors,
       // matching the same stripping done in withAsyncSave HOC.
-      const { company, user, jobs: _jobs, documents, employee, ...applicantFields } =
-        currentApplicant as any;
+      const applicantFields = stripApplicantRelations(currentApplicant);
 
       // Save draft with current step
       const updated = await applicantApi.jotform.saveDraft(
@@ -88,7 +97,7 @@ export function useSaveAndContinueLater(): UseSaveAndContinueLaterReturn {
     } finally {
       setIsSaving(false);
     }
-  }, [applicant, applicantExtras, jobs, company, steps, utm, setApplicant]);
+  }, [applicant, applicantExtras, jobs, company, steps, utm, isLongFormPage, setApplicant]);
 
   return {
     saveAndExit,

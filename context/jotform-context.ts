@@ -23,6 +23,9 @@ export type JotFormContextType = {
     isEditingExistingApplicant?: boolean;
     isPrefilled?: boolean;
     isEditingFromSummary?: boolean;
+    // True when rendered by the standalone long-form page (/apply/longform/[uuid]),
+    // where `steps` is already long-form-relative (0–16) rather than full-form.
+    isLongFormPage?: boolean;
   };
   method: {
     setApplicant?: (e?: any) => void;

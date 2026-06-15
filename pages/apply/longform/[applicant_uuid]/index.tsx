@@ -157,6 +157,7 @@ export default function LongForm({
           isEditingExistingApplicant,
           isPrefilled,
           isEditingFromSummary,
+          isLongFormPage: true,
         },
         method: {
           setApplicant,
