@@ -1,6 +1,6 @@
 import { NextPageContext } from 'next';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { getLongFormPages } from '../../../../components/forms/jotform/jotform-pages';
@@ -188,6 +188,9 @@ export default function LongForm({
           <PoweredByLogo />
         </div>
       </div>
+
+      {/* Mounts react-toastify so save/error/welcome-back toasts are actually visible on this page */}
+      <ToastContainer />
 
       {/* Developer Page Navigator */}
     </JotformContext.Provider>
