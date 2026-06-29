@@ -65,7 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     await transport.sendMail({
-      from: 'noreply@driverfly.com',
+      from: 'noreply@alert.driverfly.co',
       to: RECIPIENT_EMAIL,
       subject,
       html,

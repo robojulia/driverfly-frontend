@@ -10,7 +10,7 @@ interface FormProgressProps {
 
 const FormProgress: React.FC<FormProgressProps> = ({ currentStep, totalSteps }) => {
   const {
-    state: { isEditingExistingApplicant, isPrefilled },
+    state: { isEditingExistingApplicant, isPrefilled, isLongFormPage },
     method: { setSteps },
   }: JotFormContextType = useContext(JotformContext);
 
@@ -49,7 +49,15 @@ const FormProgress: React.FC<FormProgressProps> = ({ currentStep, totalSteps }) 
             </small>
           </div>
         )}
-        {isPrefilled && (
+        {/*
+          The Application Summary (step -1) is a full-form-only feature: its
+          edit/continue navigation uses full-form step indices, and only
+          getFullFormPages handles step === -1. The long-form page renders via
+          getLongFormPages (0–16, no -1 entry), so showing this button there
+          navigates to a non-existent page ("Updating Step 0 of N" + error).
+          Only offer it on the full form.
+        */}
+        {isPrefilled && !isLongFormPage && (
           <div className="mt-2">
             <button
               type="button"

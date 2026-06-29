@@ -84,7 +84,24 @@ export function useSaveAndContinueLater(): UseSaveAndContinueLaterReturn {
       const url = `${window.location.origin}/apply/longform/${updated.uuid_token}`;
       setResumeUrl(url);
 
-      // Show success modal (email sent by backend)
+      // Send the "resume your application" email (fire-and-forget so a mail
+      // failure never blocks the save). Replaces the generic backend
+      // "Personal Application Link" email with intent-clear copy.
+      const recipientEmail = updated.email || currentApplicant.email;
+      if (recipientEmail) {
+        fetch('/api/send-resume-application-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            applicantEmail: recipientEmail,
+            applicantFirstName: updated.first_name || currentApplicant.first_name,
+            companyName: company?.name,
+            resumeUrl: url,
+          }),
+        }).catch(() => {});
+      }
+
+      // Show success modal
       setShowSuccessModal(true);
 
       toast.success('Your progress has been saved!');
