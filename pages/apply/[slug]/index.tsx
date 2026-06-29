@@ -231,7 +231,9 @@ function FullFormInner({
 
 // Cap each server-side backend call so a slow/unreachable backend fails fast
 // (and renders the retry screen) instead of hanging the whole page request.
-const SSR_FETCH_TIMEOUT_MS = 12000;
+// Kept well under typical gateway/CDN timeouts so the retry screen renders
+// rather than the gateway returning a 504.
+const SSR_FETCH_TIMEOUT_MS = 6000;
 
 function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
   return Promise.race([
