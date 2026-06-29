@@ -3,6 +3,16 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { isBrowser } from '../../utils/common';
 import * as https from 'https';
 
+// Default request timeout (ms). Without this, axios waits indefinitely, so a
+// slow/unreachable backend makes pages (e.g. the driver apply flow rendered via
+// getServerSideProps) hang forever instead of failing with an error. Generous
+// by default so large uploads still complete; override per-call via config.timeout
+// or globally via NEXT_PUBLIC_API_TIMEOUT_MS.
+const DEFAULT_API_TIMEOUT_MS = (() => {
+  const fromEnv = Number(process.env.NEXT_PUBLIC_API_TIMEOUT_MS);
+  return Number.isFinite(fromEnv) && fromEnv > 0 ? fromEnv : 60000;
+})();
+
 // Add axios response interceptor to handle 401 errors globally
 if (isBrowser()) {
   let isRedirecting = false;
@@ -106,6 +116,10 @@ export default class BaseApi {
         config.baseURL = config.baseURL + '/';
       }
     }
+
+    // Apply a default timeout so requests fail fast instead of hanging forever
+    // when the backend is unreachable. Per-call config.timeout still wins.
+    if (config.timeout == null) config.timeout = DEFAULT_API_TIMEOUT_MS;
 
     const token = getTokenFromStorage();
 

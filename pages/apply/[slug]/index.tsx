@@ -24,21 +24,65 @@ import CompanyApi from '../../api/company';
 import JobApi from '../../api/job';
 
 export interface FullFormProps {
-  employer: CompanyEntity;
-  preferences: CompanyPreferenceEntity[];
+  employer?: CompanyEntity | null;
+  preferences?: CompanyPreferenceEntity[];
   utm?: TrackingContext;
   employerJobs?: JobEntity[];
   directJobId?: number | null;
   directJob?: JobEntity | null;
+  backendError?: boolean;
 }
-export default function FullForm({
+
+// Shown when the backend can't be reached so drivers get a clear, retryable
+// message instead of an endless spinner.
+function ApplyUnavailable() {
+  return (
+    <div className={styles.container}>
+      <div className={styles.main}>
+        <div
+          className={styles.main_form}
+          style={{ textAlign: 'center', padding: '2.5rem 1.5rem' }}
+        >
+          <h1 className={styles.jot_form_headers_font} style={{ marginBottom: '1rem' }}>
+            We&rsquo;re having trouble loading the application
+          </h1>
+          <p style={{ marginBottom: '1.5rem' }}>
+            This is usually temporary. Please check your connection and try again in a moment.
+          </p>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => {
+              if (typeof window !== 'undefined') window.location.reload();
+            }}
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+      <PoweredByLogo />
+    </div>
+  );
+}
+
+export default function FullForm(props: FullFormProps) {
+  // A missing employer means the backend fetch failed or timed out in
+  // getServerSideProps — render a friendly, retryable screen rather than hang.
+  if (props.backendError || !props.employer) {
+    return <ApplyUnavailable />;
+  }
+
+  return <FullFormInner {...props} employer={props.employer} />;
+}
+
+function FullFormInner({
   employer,
-  preferences,
+  preferences = [],
   utm,
-  employerJobs,
-  directJobId,
-  directJob,
-}: FullFormProps) {
+  employerJobs = [],
+  directJobId = null,
+  directJob = null,
+}: FullFormProps & { employer: CompanyEntity }) {
   const { trackApplicationStart } = useJobAnalytics();
 
   const [jobs, setJobs] = useState<JobEntity[]>(directJob ? [directJob] : []);
@@ -185,9 +229,33 @@ export default function FullForm({
   );
 }
 
+// Cap each server-side backend call so a slow/unreachable backend fails fast
+// (and renders the retry screen) instead of hanging the whole page request.
+const SSR_FETCH_TIMEOUT_MS = 12000;
+
+function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`Timed out after ${ms}ms fetching ${label}`)), ms)
+    ),
+  ]);
+}
+
+// Distinguish "the backend is down/slow" (retryable) from "this company/job
+// genuinely doesn't exist" (a real 404). Only the former should show the retry
+// screen; the latter should still 404.
+function isBackendUnavailable(error: any): boolean {
+  if (error?.code === 'ECONNABORTED' || error?.code === 'ETIMEDOUT') return true; // axios timeout
+  if (typeof error?.message === 'string' && error.message.startsWith('Timed out after')) return true;
+  const status = error?.response?.status;
+  if (status == null) return true; // no HTTP response => network/DNS/TLS failure
+  return status >= 500; // backend error, not a missing record
+}
+
 export async function getServerSideProps({ query }: NextPageContext) {
+  const slug = query?.slug ? String(query.slug) : '';
   try {
-    let slug = String(query?.slug);
     const jobId = query?.jobId ? parseInt(String(query.jobId), 10) : null;
 
     const utm: TrackingContext = {
@@ -210,30 +278,45 @@ export async function getServerSideProps({ query }: NextPageContext) {
 
     const companyApi = new CompanyApi();
     const jobApi = new JobApi();
-    const employer: CompanyEntity = await companyApi.employer.getBySlug(slug);
-    const preferences: CompanyPreferenceEntity[] = await companyApi.preferences.list(employer.id);
+    const employer: CompanyEntity = await withTimeout(
+      companyApi.employer.getBySlug(slug),
+      SSR_FETCH_TIMEOUT_MS,
+      'employer'
+    );
 
-    if (employer?.status != Status.ACTIVE) {
+    // A missing or inactive employer is a genuine 404 — check before any
+    // further calls so we don't misclassify it as a backend outage.
+    if (employer == null || employer.status != Status.ACTIVE) {
       if (employer == null) {
-        console.error(`form/jotform: Employer ${query?.slug} not found - does not exist`);
+        console.error(`form/jotform: Employer ${slug} not found - does not exist`);
       } else {
         console.error(
-          `form/jotform: Employer ${query?.slug} found, but status is not ACTIVE (status = ${employer?.status})`
+          `form/jotform: Employer ${slug} found, but status is not ACTIVE (status = ${employer.status})`
         );
       }
       return { notFound: true };
     }
 
-    const employerJobs = (await jobApi.search({
-      companyId: employer?.id,
-      withoutPagination: true,
-    })) as JobEntity[];
+    const preferences: CompanyPreferenceEntity[] = await withTimeout(
+      companyApi.preferences.list(employer.id),
+      SSR_FETCH_TIMEOUT_MS,
+      'preferences'
+    );
+
+    const employerJobs = (await withTimeout(
+      jobApi.search({
+        companyId: employer?.id,
+        withoutPagination: true,
+      }),
+      SSR_FETCH_TIMEOUT_MS,
+      'employerJobs'
+    )) as JobEntity[];
 
     // Handle direct job application
     let directJob: JobEntity | null = null;
     if (jobId) {
       try {
-        directJob = await jobApi.getById(jobId);
+        directJob = await withTimeout(jobApi.getById(jobId), SSR_FETCH_TIMEOUT_MS, 'directJob');
 
         // Verify that the job belongs to the specified company
         if (!directJob || directJob.company?.id !== employer.id) {
@@ -249,7 +332,10 @@ export async function getServerSideProps({ query }: NextPageContext) {
           return { notFound: true };
         }
       } catch (error) {
-        console.error(`form/jotform: Error fetching job ${jobId}:`, error.message);
+        // Backend failures bubble up to the outer handler (retry screen);
+        // anything else here is a genuine job lookup failure (404).
+        if (isBackendUnavailable(error)) throw error;
+        console.error(`form/jotform: Error fetching job ${jobId}:`, error?.message);
         return { notFound: true };
       }
     }
@@ -265,9 +351,18 @@ export async function getServerSideProps({ query }: NextPageContext) {
       },
     };
   } catch (error) {
+    // Backend unreachable/slow => show the retryable screen instead of a
+    // misleading "page not found" or an indefinite hang.
+    if (isBackendUnavailable(error)) {
+      console.error(
+        `form/jotform: backend unavailable while loading apply page for slug "${slug}":`,
+        error?.message
+      );
+      return { props: { backendError: true } };
+    }
     console.error(
-      `form/jotform: Exception when attempting to fetch details for companyId: ${query?.companyId}`,
-      error.message
+      `form/jotform: Exception when attempting to fetch details for slug "${slug}":`,
+      error?.message
     );
     return { notFound: true };
   }
