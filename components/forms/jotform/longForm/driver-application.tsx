@@ -18,7 +18,7 @@ export interface DriverApplicationProps {
 
 export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationProps) {
   const {
-    state: { applicant, applicantExtras, company, steps, isPrefilled, isEditingFromSummary },
+    state: { applicant, applicantExtras, company, steps, isPrefilled, isEditingFromSummary, isLongFormPage },
     method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
   }: JotFormContextType = useContext(JotformContext);
 
@@ -119,11 +119,25 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
     // BUT: Don't skip if:
     // - User is intentionally editing from the summary
     // - Form has already been submitted (to prevent double navigation)
-    if (isPrefilled && apx_sign?.value && stepNext && !hasSkipped.current && !isEditingFromSummary && !hasSubmitted.current) {
+    // - We're on the long-form RESUME page: there the driver is deliberately
+    //   navigating (and `isPrefilled` is always true), so this component remounts
+    //   every time they step BACK to it. The per-mount `hasSkipped` ref resets on
+    //   each remount, so auto-skipping here would fire stepNext() and bounce them
+    //   forward — making it impossible to go backward. They already signed, so
+    //   just let them view/edit the step.
+    if (
+      isPrefilled &&
+      !isLongFormPage &&
+      apx_sign?.value &&
+      stepNext &&
+      !hasSkipped.current &&
+      !isEditingFromSummary &&
+      !hasSubmitted.current
+    ) {
       hasSkipped.current = true;
       stepNext();
     }
-  }, [isPrefilled, applicantExtras, stepNext, isEditingFromSummary]);
+  }, [isPrefilled, isLongFormPage, applicantExtras, stepNext, isEditingFromSummary]);
 
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const now = new Date().toLocaleString('en-US', { timeZone: userTimeZone });
