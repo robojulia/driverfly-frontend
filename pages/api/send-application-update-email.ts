@@ -33,6 +33,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // RETIRED: company notifications are now owned end-to-end by the backend, which
+  // sends a single typed email (new / incomplete / updated-with-changed-fields)
+  // with the generated application PDF + signed forms attached — context this
+  // route never had. Kept as a no-op (rather than deleting) so the existing
+  // fire-and-forget callers don't 404 and so it's easy to revert if needed.
+  // See backend ApplicantsService.viewApplicantProfileMC.
+  return res.status(200).json({ success: true, skipped: true, reason: 'retired_use_backend' });
+
+  // eslint-disable-next-line no-unreachable
   const { applicantId, companyId, applicantFirstName, applicantLastName, applicantEmail, applicantPhone, companyName } =
     req.body as {
       applicantId?: number;
