@@ -147,7 +147,7 @@ export const PartnerSurveyModal: React.FC<PartnerSurveyModalProps> = ({ show, on
               />
             </div>
             <div className="col-12">
-              <label style={labelStyle}>Email (optional — so we can follow up)</label>
+              <label style={labelStyle}>Email (optional, so we can follow up)</label>
               <input
                 type="email"
                 style={inputStyle}
