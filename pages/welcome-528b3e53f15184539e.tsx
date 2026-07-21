@@ -32,7 +32,7 @@ export default function PartnerSignup() {
     <>
       <Head>
         <title>Driverfly | Partner Welcome &amp; Getting Started</title>
-        {/* Keep this page out of search engines — it is shared directly with invited partners. */}
+        {/* Keep this page out of search engines; it is shared directly with invited partners. */}
         <meta name="robots" content="noindex, nofollow" />
         <meta name="googlebot" content="noindex, nofollow" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -88,7 +88,7 @@ export default function PartnerSignup() {
         {/* ---------------- Step 1: Register ---------------- */}
         <section className={`${styles.section} ${styles.sectionAlt}`} id="register">
           <div className={styles.kicker}>Getting Started</div>
-          <h2>Step 1 — Create your account</h2>
+          <h2>Step 1: Create your account</h2>
           <p className={styles.lead}>
             If you haven&apos;t already set up an account, head to{' '}
             <a href={SIGNUP_URL} target="_blank" rel="noreferrer">
@@ -107,7 +107,7 @@ export default function PartnerSignup() {
                 </li>
                 <li>
                   Leave <strong>&quot;Managing multiple companies&quot;</strong> turned{' '}
-                  <strong>off</strong> — unless you are a third-party recruiter managing more than
+                  <strong>off</strong>, unless you are a third-party recruiter managing more than
                   one company.
                 </li>
                 <li>
@@ -118,7 +118,7 @@ export default function PartnerSignup() {
           </div>
 
           <p className={styles.lead}>
-            Once you&apos;re logged in, there are two things to set up — creating your first job and
+            Once you&apos;re logged in, there are two things to set up: creating your first job and
             initializing your recruiting settings. We cover both below.
           </p>
         </section>
@@ -131,7 +131,7 @@ export default function PartnerSignup() {
               <h3>Create your first job</h3>
               <p>
                 Go to <strong>Job Listings &gt; Create</strong> and add details for however many
-                open positions you have — as much or as little as you&apos;d like.
+                open positions you have, as much or as little as you&apos;d like.
               </p>
               <Shot
                 src="/partner-onboarding/01-job-listings.png"
@@ -171,7 +171,7 @@ export default function PartnerSignup() {
               />
 
               <div className={styles.callout}>
-                <strong>Tip — track your lead sources.</strong> Add UTM parameters to the end of
+                <strong>Tip: track your lead sources.</strong> Add UTM parameters to the end of
                 your Digital Hiring App URL and we&apos;ll capture the source on each driver
                 application. For example, for an Indeed posting add{' '}
                 <code>?source=indeed</code>:{' '}
@@ -181,12 +181,12 @@ export default function PartnerSignup() {
               <p>Below the link you can tell our system whether you&apos;d like to:</p>
               <ul className={styles.checklist}>
                 <li>
-                  Join the <strong>Refer Back Program</strong> — share ill-fit candidates (per your
+                  Join the <strong>Refer Back Program</strong>: share ill-fit candidates (per your
                   match criteria) and earn <strong>$250</strong> each time our system successfully
                   places one elsewhere.
                 </li>
                 <li>
-                  Join the <strong>Auto Recruiting Program</strong> — receive full applications from
+                  Join the <strong>Auto Recruiting Program</strong>: receive full applications from
                   candidates who meet your criteria and are interested in one of your jobs.
                 </li>
                 <li>Request and store a driver&apos;s SSN on the full application.</li>
@@ -223,7 +223,7 @@ export default function PartnerSignup() {
             </p>
             <ul className={styles.checklist} style={{ marginBottom: 0 }}>
               <li>Inbound or outbound communication?</li>
-              <li>The mode — call or SMS?</li>
+              <li>The mode: call or SMS?</li>
               <li>
                 The use case (e.g. &quot;reach out to drivers 60 days before their license and
                 medical cards expire&quot;).
@@ -251,7 +251,7 @@ export default function PartnerSignup() {
               <h3>Bulk-upload your applicants &amp; hires</h3>
               <p>
                 Using DriverFly as your applicant tracking system? You can add candidates one at a
-                time or mass-import them by CSV — for both applicants and employees.
+                time or mass-import them by CSV, for both applicants and employees.
               </p>
               <Shot
                 src="/partner-onboarding/04-import-applicants.png"
@@ -274,7 +274,7 @@ export default function PartnerSignup() {
               />
               <div className={styles.callout}>
                 Run into a formatting issue on upload (e.g. <code>08.02.2026</code> vs{' '}
-                <code>08/02/2026</code>)? Reach out — we&apos;ll help transform your data into the
+                <code>08/02/2026</code>)? Reach out and we&apos;ll help transform your data into the
                 right format.
               </div>
             </div>
@@ -302,7 +302,7 @@ export default function PartnerSignup() {
             <div className={styles.stepBody} style={{ width: '100%' }}>
               <h3>Update your company profile</h3>
               <p>
-                In <strong>Settings &gt; Company</strong>, fill out your company profile — this is
+                In <strong>Settings &gt; Company</strong>, fill out your company profile. This is
                 what shows up on our public-facing job board (which you&apos;ll also have access
                 to).
               </p>
@@ -349,7 +349,7 @@ PartnerSignup.getLayout = function getLayout(page: React.ReactElement) {
 
 // This page is shared privately with invited partners via an unguessable URL.
 // Set the noindex directive as an HTTP header (not just a meta tag) so crawlers
-// that don't execute JS still honor it — the app renders a client-side shell,
+// that don't execute JS still honor it; the app renders a client-side shell,
 // so the <Head> meta isn't present in the initial server HTML on its own.
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');

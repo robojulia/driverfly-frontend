@@ -39,7 +39,7 @@
   font-size: clamp(1rem, 2vw, 1.2rem);
   max-width: 720px;
   margin: 0 auto 28px;
-  color: rgba(255, 255, 255, 0.92);
+  color: #ffffff;
   line-height: 1.6;
 }
 
@@ -53,12 +53,10 @@
 }
 
 .perk {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  padding: 14px 20px;
+  padding: 4px 8px;
   font-weight: 600;
   font-size: 0.98rem;
+  color: #ffffff;
 }
 
 .ctaRow {
