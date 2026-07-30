@@ -5,6 +5,8 @@ import axios from 'axios';
 import { useTranslation } from '../../hooks/use-translation';
 import { useAuth } from '../../hooks/use-auth';
 import { InboundRequestDTO } from '../../models/campaigns/inbound-request.dto';
+import InboundRequestApi from '../../pages/api/inbound-request';
+import { globalAjaxExceptionHandler } from '../../utils/ajax';
 
 import BaseInput from '../forms/base-input';
 import BaseSelect from '../forms/base-select';
@@ -53,6 +55,34 @@ export default function RequestInboundModal({
           .filter(Boolean)
           .join(' ');
 
+        const dto: InboundRequestDTO = {
+          businessHoursStart: values.businessHoursStart,
+          businessHoursEnd: values.businessHoursEnd,
+          callRoutingGoal: values.callRoutingGoal,
+          greeting: values.greeting,
+          callbackEnabled: values.callbackEnabled,
+          goals: values.goals,
+          desiredStartDate: new Date(values.desiredStartDate),
+          personaGender: values.personaGender,
+          personaAccent: values.personaAccent,
+          personaTone: values.personaTone,
+          personaName: values.personaName,
+        };
+
+        // Persist the request to the backend. Best-effort for now: the
+        // `inbound-requests` endpoint may not be deployed yet, in which case we
+        // still notify the team by email below so no request is lost.
+        try {
+          await new InboundRequestApi().submitRequest(dto);
+        } catch (persistErr) {
+          console.warn(
+            'inbound-requests endpoint unavailable, falling back to email only',
+            persistErr
+          );
+        }
+
+        // Notify the development team. This is the reliable delivery channel,
+        // so a failure here surfaces as an error to the user.
         await axios.post('/api/send-intake-email', {
           type: 'inbound',
           fields: {
@@ -82,7 +112,12 @@ export default function RequestInboundModal({
         onRequestSubmitted?.();
       } catch (e) {
         console.error('Unable to submit inbound request', e);
-        toast.error('Failed to submit inbound request. Please try again.');
+        globalAjaxExceptionHandler(e, {
+          formik: form,
+          toast,
+          t,
+          defaultMessage: 'Failed to submit inbound request. Please try again.',
+        });
       }
     },
   });
