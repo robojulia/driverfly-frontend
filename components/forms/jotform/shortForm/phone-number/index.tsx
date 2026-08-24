@@ -40,6 +40,83 @@ interface ExistingApplicantScenario {
   mostRecentApplicant?: any;
 }
 
+// Company-specific fields that must never carry over from a previous employer's
+// application. `id`/`uuid_token` are the critical ones: withAsyncSave auto-saves
+// whenever applicant.id is set, so a retained id makes every step of the new
+// application PUT over the previous company's record — replacing its employer
+// rows and wiping that work history.
+function buildNewCompanyProfile(verifiedApplicant: any, company: any): any {
+  return {
+    ...verifiedApplicant,
+
+    // Detach from the previous company's applicant record
+    id: null,
+    uuid_token: null,
+    company,
+    jobs: [],
+    notes: [],
+    created_at: null,
+    is_hired: false, // Reset hired status - this is a new application at a different company
+
+    // Clear critical safety-related fields that must be re-submitted for each company
+    moving_violations_count: null,
+    all_violations_count: null,
+    accident_count: null,
+    license_revoked: null,
+    criminal_history: null,
+    accident_history: null,
+    moving_violation_history: null,
+    accident_details: null,
+    moving_violations_details: null,
+
+    // Company-specific employment history, uploads and questions
+    //
+    // documents are per-application uploads: they are stored against the previous
+    // applicant record and the jotform save can only re-attach a document that
+    // arrives with file_base64, which a prefilled (GET-loaded) document never has.
+    // Carrying them over made the summary report "License Document: Uploaded" and
+    // mark the Documents section complete for files that never reach this
+    // company's application. (The backend has a share() path for real carry-over,
+    // but nothing in this flow calls it.)
+    documents: [],
+    employers: [], // Clear employment history - must be updated for new company
+    already_applied_to_company: null, // Clear - must answer for this company
+    already_worked_to_company: null, // Clear - must answer for this company
+    already_worked_start_date: null,
+    already_worked_end_date: null,
+
+    // Note: can_pass_drug_test and authorized_to_work_in_us are personal attributes,
+    // not company-specific, so they are preserved from previous application.
+    // Personal information (first_name, last_name, phone, email, birthdate, ...)
+    // is preserved for prefilling.
+  };
+}
+
+// Signature extras are per-company consents and must be re-signed for each
+// application, so they are dropped when prefilling at a new company.
+const COMPANY_SPECIFIC_SIGNATURE_EXTRA_TYPES = [
+  'SIGNATURE_GENERAL_CONSENT',
+  'SIGNATURE_IMPORTANT_BACKGROUND',
+  'SIGNATURE_DISCLOSURE_AUTHORIZATION',
+  'SIGNATURE_VOE_AUTHORIZATION',
+  'SIGNATURE', // Application authorization signature
+  'APPLY_DATE',
+];
+
+/**
+ * Carry the driver's non-signature answers over to a new company's application.
+ *
+ * Row identity is dropped along with the signatures: extras loaded from the API
+ * carry the previous applicant's `id`/`applicantId`, and echoing those back on a
+ * new company's save points the row at the old application. Nothing on the
+ * client reads these — extras are matched by `type` everywhere.
+ */
+function prefillableExtras(verifiedApplicant: any): any[] {
+  return (verifiedApplicant?.extras || [])
+    .filter((extra) => !COMPANY_SPECIFIC_SIGNATURE_EXTRA_TYPES.includes(extra?.type))
+    .map(({ id, applicantId, created_at, last_updated_at, ...extra }: any) => extra);
+}
+
 export function PhoneNumber() {
   const {
     state: { applicant, companyJobs, steps, company, directJob, isDirectJobApplication, isEditingExistingApplicant },
@@ -339,42 +416,22 @@ export function PhoneNumber() {
         otp,
       });
 
-      // For DIFFERENT_COMPANY_PREFILL, use the verified applicant data for prefilling
+      // A verified applicant record always belongs to the company it was created
+      // for. When that is NOT the current company, the profile must be detached
+      // from that record before it reaches the form context — see
+      // buildNewCompanyProfile. The company check is deliberately independent of
+      // shouldPrefillApplication: "Start Fresh" reaches this code too (the
+      // scenario card sends an OTP), and adopting the previous record's id there
+      // silently overwrote the earlier company's application.
+      const verifiedCompanyId = verifiedApplicant?.company?.id ?? null;
+      const isPreviousCompanyApplicant =
+        applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' ||
+        (verifiedCompanyId != null && company?.id != null && verifiedCompanyId !== company.id);
+
       let applicantProfile;
-      if (applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' && shouldPrefillApplication) {
-        // Use the verified applicant data and clear company-specific fields
-        console.log('🔍 Using verified applicant data for prefill');
-        applicantProfile = { ...verifiedApplicant };
-
-        // Clear sensitive company-specific data while keeping personal information
-        if (applicantProfile) {
-          // Reset company-specific fields but keep personal data
-          applicantProfile.company = company;
-          applicantProfile.id = null; // This will create a new applicant
-          applicantProfile.uuid_token = null;
-          applicantProfile.jobs = [];
-          applicantProfile.notes = [];
-          applicantProfile.created_at = null;
-          applicantProfile.is_hired = false; // Reset hired status - this is a new application at a different company
-
-          // Clear critical safety-related fields that must be re-submitted for each company
-          // These fields are company-specific and must be updated for the new application
-          applicantProfile.moving_violations_count = null;
-          applicantProfile.all_violations_count = null;
-          applicantProfile.accident_count = null;
-          applicantProfile.license_revoked = null;
-          applicantProfile.criminal_history = null;
-          applicantProfile.accident_history = null;
-          applicantProfile.moving_violation_history = null;
-          applicantProfile.accident_details = null;
-          applicantProfile.moving_violations_details = null;
-
-          // Note: can_pass_drug_test and authorized_to_work_in_us are personal attributes,
-          // not company-specific, so they are preserved from previous application
-
-          // Keep personal information for prefilling
-          // first_name, last_name, phone, email, birthdate, etc. will be preserved
-        }
+      if (isPreviousCompanyApplicant) {
+        console.log('🔍 Detaching verified applicant from previous company record');
+        applicantProfile = buildNewCompanyProfile(verifiedApplicant, company);
       } else {
         // For same company scenarios, use the verified profile
         applicantProfile = verifiedApplicant;
@@ -384,35 +441,21 @@ export function PhoneNumber() {
       setIsVerificationSuccessful(true);
 
       // Set applicant data
-      if (applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' && shouldPrefillApplication) {
-        // Use prefilled data for new company
-        // Clear company-specific employment history and signatures
-        const clearedApplicant = {
-          ...applicantProfile,
-          documents: applicantProfile.documents || [],
-          employers: [], // Clear employment history - must be updated for new company
-          already_applied_to_company: null, // Clear - must answer for this company
-          already_worked_to_company: null, // Clear - must answer for this company
-          already_worked_start_date: null,
-          already_worked_end_date: null,
-        };
-
-        // Filter out all signature-related extras for the new company application
-        const filteredExtras = (applicantProfile.extras || []).filter(extra => {
-          const signatureTypes = [
-            'SIGNATURE_GENERAL_CONSENT',
-            'SIGNATURE_IMPORTANT_BACKGROUND',
-            'SIGNATURE_DISCLOSURE_AUTHORIZATION',
-            'SIGNATURE_VOE_AUTHORIZATION',
-            'SIGNATURE', // Application authorization signature
-            'APPLY_DATE',
-          ];
-          return !signatureTypes.includes(extra.type);
-        });
-
-        setApplicant(clearedApplicant);
-        setApplicantExtras(filteredExtras); // Only keep non-signature extras
-        setIsEditingExistingApplicant(false); // This is a new applicant with prefilled data
+      if (isPreviousCompanyApplicant) {
+        if (shouldPrefillApplication) {
+          setApplicant(applicantProfile);
+          // Only keep non-signature extras, detached from the previous record
+          setApplicantExtras(prefillableExtras(verifiedApplicant));
+        } else {
+          // "Start Fresh": carry nothing over from the previous application
+          // except the phone number that was just verified.
+          setApplicant({
+            ...applicant,
+            phone: normalizePhoneNumber(form.values.phone),
+          });
+          setApplicantExtras([]);
+        }
+        setIsEditingExistingApplicant(false); // This is a new applicant record at this company
       } else {
         // Use existing profile for same company
         // For returning applicants to the same company, we already know they've applied before
@@ -475,9 +518,11 @@ export function PhoneNumber() {
           applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' &&
           shouldPrefillApplication
         ) {
-          // For prefilled applications, set the prefilled flag and go to ApplicationSummary
+          // For prefilled applications, set the prefilled flag and go to ApplicationSummary.
+          // isEditingExistingApplicant stays false (set above): there is no existing
+          // applicant record at this company to edit, only prefilled data for a new
+          // one. The three same-company branches above set it for the opposite reason.
           setIsPrefilled(true);
-          setIsEditingExistingApplicant(true);
           setSteps(-1); // Special step for ApplicationSummary
         } else {
           // For other scenarios, proceed normally to next step
@@ -682,6 +727,29 @@ export function PhoneNumber() {
       setIsResending(false);
       setDebugInfo(prev => [...prev, `🏁 Request completed at ${new Date().toLocaleTimeString()}`]);
     }
+  };
+
+  // Entry point for the "Choose Application Method" card. "Start Fresh" carries
+  // nothing over from the previous company's application, so there is nothing to
+  // unlock and no OTP to send. The card body and its button must agree here: when
+  // only the button honoured the choice, clicking the card sent an OTP anyway and
+  // the verified (previous-company) record was adopted wholesale.
+  const startFreshAtThisCompany = () => {
+    setApplicant({
+      ...applicant,
+      phone: normalizePhoneNumber(form.values.phone),
+    });
+    setOpenModal(false);
+    stepNext();
+  };
+
+  const handleContinueFromScenarioCard = () => {
+    if (applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' && !shouldPrefillApplication) {
+      startFreshAtThisCompany();
+      return;
+    }
+
+    requestOTP();
   };
 
   useEffect(() => {
@@ -1099,7 +1167,7 @@ export function PhoneNumber() {
                       transition: 'all 0.2s ease-in-out',
                       boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
                     }}
-                    onClick={requestOTP}
+                    onClick={handleContinueFromScenarioCard}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor = '#f8f9fa';
                       e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
@@ -1126,7 +1194,7 @@ export function PhoneNumber() {
                         : applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL'
                         ? shouldPrefillApplication
                           ? "We'll verify your identity first, then prefill your application with previous data."
-                          : "We'll verify your identity first, then start a fresh application."
+                          : "Start a blank application for this company. None of your previous application data is carried over."
                         : "Submit your existing information for this position. You'll be able to review and update your details after applying."}
                     </p>
                     <Button
@@ -1134,22 +1202,7 @@ export function PhoneNumber() {
                       className="px-4"
                       onClick={(e) => {
                         e.stopPropagation();
-                        // Handle special case for DIFFERENT_COMPANY_PREFILL without prefilling
-                        if (
-                          applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' &&
-                          !shouldPrefillApplication
-                        ) {
-                          // Skip OTP verification and proceed with fresh application
-                          setApplicant({
-                            ...applicant,
-                            phone: form.values.phone,
-                          });
-                          setOpenModal(false);
-                          stepNext();
-                        } else {
-                          // Normal flow with OTP verification
-                          requestOTP();
-                        }
+                        handleContinueFromScenarioCard();
                       }}
                     >
                       {applicantScenario?.type === 'DIFFERENT_COMPANY_PREFILL' &&

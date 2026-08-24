@@ -38,11 +38,26 @@ export function PastEmploymentHistory() {
     is_previous_employed,
     employment_gap_details,
   }: PastEmploymentPageDto) {
-    const all_employers: ApplicantEmployerEntity[] = is_previous_employed ? past_employers : [];
     const current_employer: ApplicantEmployerEntity = applicant?.employers?.find(
       (v) => !!v.is_current
     );
-    if (current_employer) all_employers.push(current_employer);
+    const existing_past_employers: ApplicantEmployerEntity[] =
+      applicant?.employers?.filter((v) => !!!v.is_current) || [];
+
+    // Only an explicit "No" clears the driver's past employment. While the
+    // question is still unanswered — which is the state on every remount of this
+    // step, including whenever the driver navigates BACK into it — we keep what
+    // is already on record. Treating "unanswered" as "No" silently deleted the
+    // driver's work history from the form and, via the per-step auto-save
+    // (withAsyncSave -> PUT jotform, which replaces the employer rows), from the
+    // database too. That took the VOE authorization forms with it, since those
+    // are generated per past employer.
+    let all_employers: ApplicantEmployerEntity[];
+    if (is_previous_employed === true) all_employers = past_employers || [];
+    else if (is_previous_employed === false) all_employers = [];
+    else all_employers = existing_past_employers;
+
+    if (current_employer) all_employers = [...all_employers, current_employer];
 
     setApplicant({
       ...applicant,
@@ -109,7 +124,11 @@ export function PastEmploymentHistory() {
     form.setValues({
       ...form.values,
       employers: normalizedEmployers,
-      is_previous_employed: null,
+      // Pre-answer "Yes" when past employers are already on record, so a driver
+      // who navigates back to this step sees their work history instead of a
+      // blank, seemingly-unanswered question (which invites them to re-answer
+      // "No" and wipe it).
+      is_previous_employed: normalizedEmployers.length > 0 ? true : null,
       employment_gap_details: applicant.employment_gap_details || '',
     });
   }, [applicant]);

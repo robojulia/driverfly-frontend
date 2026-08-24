@@ -44,9 +44,11 @@ export function EmploymentHistory() {
     onSubmit: (values) => {
       const { employer, is_current_employed, already_applied_to_company, already_worked_to_company, already_worked_start_date, already_worked_end_date } = values;
 
-      const employers: ApplicantEmployerEntity[] = applicant?.employers?.filter(
-        (v) => !!!v?.is_current
-      );
+      // `|| []` guards the .push below: a driver with no employers yet has an
+      // undefined relation, and dropping out here would abort the step submit
+      // (and lose the rest of the page's answers).
+      const employers: ApplicantEmployerEntity[] =
+        applicant?.employers?.filter((v) => !!!v?.is_current) || [];
 
       if (!!is_current_employed) employers.push(employer);
 
