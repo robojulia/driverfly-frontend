@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { useEffectAsync } from '../../../../../../utils/react';
 import { useTranslation } from '../../../../../../hooks/use-translation';
 import { useAuth } from '../../../../../../hooks/use-auth';
+import { companyRoleLabel, isProtectedCompanyAccount } from '../../../../../../utils/company-access';
 
 import UserApi from '../../../../../api/user';
 import { UserEntity } from '../../../../../../models/user/user.entity';
@@ -30,7 +31,7 @@ export default function ViewUser({ id }) {
 
   const { t } = useTranslation();
 
-  const { company, hasPermission } = useAuth();
+  const { company, hasPermission, isCompanyAdministrator, isSuperAdmin } = useAuth();
 
   const [user, setUser] = useState<UserEntity | null>(null);
   const [loading, setLoading] = useState(true);
@@ -77,8 +78,10 @@ export default function ViewUser({ id }) {
     await router.push(backPath);
   };
 
-  const canEdit = hasPermission('CanUpdateUser');
-  const canDelete = hasPermission('CanDeleteUser');
+  // Owners and company admins manage users; only a super admin may change an owner or super admin.
+  const canManage = isCompanyAdministrator && (isSuperAdmin || (user && !isProtectedCompanyAccount(user)));
+  const canEdit = canManage && hasPermission('CanUpdateUser');
+  const canDelete = canManage && hasPermission('CanDeleteUser');
 
   return (
     <ChildPageLayout
@@ -113,7 +116,7 @@ export default function ViewUser({ id }) {
                 EMAIL: user.email,
                 phone: user.contact_number,
                 phone_cell: user.cell_number,
-                USER_ROLE: user.super_admin ? 'Super Admin' : user.company_admin ? 'Company Admin' : 'Regular User',
+                USER_ROLE: companyRoleLabel(user),
                 COMPANIES: user.companies && user.companies.length > 0
                   ? user.companies.map((c) => c.name).join(', ')
                   : user.company?.name || 'N/A',

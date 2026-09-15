@@ -61,7 +61,7 @@ function mapEmployeesForBilling(list: EmployeeEntity[]) {
 export default function BillingPage() {
   const { t } = useTranslation();
   const router = useRouter();
-  const { user, hasPermission } = useAuth();
+  const { user, isCompanyAdministrator } = useAuth();
 
   const [subscription, setSubscription] = useState<SubscriptionEntity | null>(
     null
@@ -95,11 +95,11 @@ export default function BillingPage() {
   const [mvrRecordsPulled, setMvrRecordsPulled] = useState(0);
 
   useEffectAsync(async () => {
-    await loadBillingData();
+    if (isCompanyAdministrator) await loadBillingData();
   }, []);
 
-  // Permission check - same as other company settings pages
-  if (!hasPermission('CanViewCompany')) {
+  // Billing is for company owners and company admins only (the backend enforces the same).
+  if (!isCompanyAdministrator) {
     router.push('/dashboard/company');
     return null;
   }

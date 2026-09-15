@@ -3,6 +3,7 @@ import FullLayout from '../../../../../components/dashboard/layouts/layout/full-
 import PageLayout from '../../../../../components/layouts/page/page-layout';
 import { TabbedLayout } from '../../../../../components/layouts/page/tabbed-layout';
 import { useAuth } from '../../../../../hooks/use-auth';
+import { companyRoleLabel, isProtectedCompanyAccount } from '../../../../../utils/company-access';
 import { useRouter } from 'next/router';
 import { useTranslation } from '../../../../../hooks/use-translation';
 import {
@@ -35,7 +36,7 @@ import { AdminPasswordResetModal } from '../../../../../components/users/AdminPa
 export default function UserList() {
   const { t } = useTranslation();
   const router = useRouter();
-  const { user, hasPermission } = useAuth();
+  const { user, hasPermission, isCompanyAdministrator, isSuperAdmin } = useAuth();
   const [showModal, setShowModal] = useState<boolean>(false);
   const columnSettingKey = getDataTableColumnKey('company', user, 'users');
   const [confirmationModal, setConfirmationModal] = useState<any>({
@@ -73,14 +74,17 @@ export default function UserList() {
     setShowScoreModal(true);
   };
 
+  // Managing users is for company owners and company admins; the backend enforces the same.
   const can = {
-    createUser: hasPermission('CanCreateUser'),
+    createUser: isCompanyAdministrator && hasPermission('CanCreateUser'),
     viewUser: hasPermission('CanViewUser'),
-    editUser: hasPermission('CanUpdateUser'),
-    deleteUser: hasPermission('CanDeleteUser'),
-    disableUser: hasPermission('CanUpdateUser'),
-    resetPassword: hasPermission('CanUpdateUser'),
+    editUser: isCompanyAdministrator && hasPermission('CanUpdateUser'),
+    deleteUser: isCompanyAdministrator && hasPermission('CanDeleteUser'),
+    disableUser: isCompanyAdministrator && hasPermission('CanUpdateUser'),
+    resetPassword: isCompanyAdministrator && hasPermission('CanUpdateUser'),
   };
+  // Only a DriverFly super admin may change the company owner or a super admin account.
+  const canManage = (j: UserEntity) => j.id !== user.id && (isSuperAdmin || !isProtectedCompanyAccount(j));
 
   const onAddClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -215,7 +219,7 @@ export default function UserList() {
           {
             id: 'roles',
             name: 'ROLES',
-            selector: (j) => j.super_admin ? 'Super Admin' : j.company_admin ? 'Company Admin' : 'Regular User',
+            selector: (j) => companyRoleLabel(j),
           },
 
           {
@@ -299,33 +303,33 @@ export default function UserList() {
             onClick: (e) => onEditClick(j.id),
             icon: PenFill,
             label: 'EDIT',
-            hide: !can.editUser || j.id === user.id,
+            hide: !can.editUser || !canManage(j),
           },
           {
             onClick: () => { setPasswordResetUser(j); setShowPasswordResetModal(true); },
             icon: KeyFill,
             label: 'RESET_PASSWORD',
-            hide: !can.resetPassword || j.id === user.id,
+            hide: !can.resetPassword || !canManage(j),
           },
           {
             onClick: (e) => onToggleCompanyDisabledClick(j.id, !j.company_disabled),
             icon: j.company_disabled ? PersonCheck : PersonX,
             label: j.company_disabled ? 'ENABLE_USER' : 'DISABLE_USER',
-            hide: !can.disableUser || j.status !== Status.ACTIVE || j.id === user.id,
+            hide: !can.disableUser || j.status !== Status.ACTIVE || !canManage(j),
           },
           {
             onClick: (e) => onDeleteClick(j.id),
             icon: TrashFill,
             label: 'DELETE',
             hide:
-              !((can.deleteUser && j.status == Status.ACTIVE) || j.status == Status.DEACTIVE) ||
-              j.id === user.id,
+              !(can.deleteUser && (j.status == Status.ACTIVE || j.status == Status.DEACTIVE)) ||
+              !canManage(j),
           },
           {
             onClick: (e) => onRestoreClick(j.id),
             icon: ArrowCounterclockwise,
             label: 'RESTORE',
-            hide: !(can.deleteUser && j.status == Status.DELETED) || j.id === user.id,
+            hide: !(can.deleteUser && j.status == Status.DELETED) || !canManage(j),
           },
         ]}
         items={users}

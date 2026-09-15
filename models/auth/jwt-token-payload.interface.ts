@@ -9,6 +9,9 @@ export interface JwtTokenPayload extends JwtUser {
     // roles == "admin"
     super_admin: boolean;
     company_admin: boolean;
+    // company owner, company admin or super admin (set by the backend at login). Only decides
+    // which controls to show: the backend re-checks every administrative request itself.
+    company_administrator?: boolean;
     // enumerated list of CAN* permissions assigned to user
     permissions: string[];
     // companies

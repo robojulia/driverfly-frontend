@@ -48,12 +48,7 @@ const FullLayout = ({ children }) => {
   const router = useRouter();
   const { isFeatureEnabled } = useFeatureFlags();
 
-  const { user, isSuperAdmin, company, isCompanyAdmin } = useAuth();
-
-  console.log('FullLayout', { user, isSuperAdmin, isCompanyAdmin });
-  console.log('🔍 DEBUG - isCompanyAdmin value:', isCompanyAdmin, 'type:', typeof isCompanyAdmin);
-  console.log('🔍 DEBUG - JWT payload:', user?.jwt);
-  console.log('🔍 DEBUG - company_admin in JWT:', user?.jwt?.company_admin);
+  const { user, company, isCompanyAdmin, isCompanyAdministrator } = useAuth();
 
   if (!user?.company) {
     return <></>;
@@ -87,6 +82,7 @@ const FullLayout = ({ children }) => {
       icon: Sliders,
       text: 'Recruitment',
       group: 'MAIN',
+      visible: isCompanyAdministrator,
     },
     {
       pathname: '/dashboard/company/messages',
@@ -165,6 +161,7 @@ const FullLayout = ({ children }) => {
           text: 'BILLING',
           permissions: 'CanViewCompany',
           startsWith: true,
+          visible: isCompanyAdministrator,
         },
         {
           pathname: '/dashboard/company/settings/locations',
@@ -187,12 +184,14 @@ const FullLayout = ({ children }) => {
           text: 'USERS',
           permissions: 'CanViewUser',
           startsWith: true,
+          visible: isCompanyAdministrator,
         },
         {
           pathname: '/dashboard/company/settings/managers',
           icon: PersonLinesFill,
           text: 'MANAGERS',
           startsWith: true,
+          visible: isCompanyAdministrator,
         },
         {
           pathname: '/dashboard/company/settings/profile',
@@ -209,6 +208,7 @@ const FullLayout = ({ children }) => {
           icon: Grid3x3GapFill,
           text: 'INTEGRATIONS',
           startsWith: true,
+          visible: isCompanyAdministrator,
         },
         // superadmin panel
         {

@@ -12,7 +12,7 @@ import { useEffectAsync } from '../../../../utils/react';
 import CompanyApi from '../../../api/company';
 
 export default function Settings() {
-  const { user, updateUser, isCompanyAdmin } = useAuth();
+  const { user, updateUser, isCompanyAdministrator } = useAuth();
   const { t } = useTranslation();
   const formRef = useRef<any>(null);
   const [formState, setFormState] = useState({ isValid: false, isSubmitting: false });
@@ -65,7 +65,7 @@ export default function Settings() {
     <PageLayout
       title="COMPANY"
       actions={
-        isCompanyAdmin ? (
+        isCompanyAdministrator ? (
           <Button
             type="button"
             className="theme-secondary-btn"
@@ -83,7 +83,7 @@ export default function Settings() {
         onSaveComplete={onSaveComplete}
         formRef={formRef}
         hideSubmitButton={true}
-        readOnly={!isCompanyAdmin}
+        readOnly={!isCompanyAdministrator}
       />
     </PageLayout>
   );

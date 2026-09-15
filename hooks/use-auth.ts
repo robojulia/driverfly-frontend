@@ -235,6 +235,11 @@ export function useAuth() {
     isImpersonating: !!userContext.user?.jwt?.impersonatedBy,
     isSuperAdmin: !!userContext.user?.jwt?.super_admin,
     isCompanyAdmin: !!userContext.user?.jwt?.company_admin,
+    // Tokens issued before the backend added company_administrator all belong to users who
+    // still hold full access, so a missing claim counts as administrator.
+    isCompanyAdministrator:
+      !!userContext.user?.jwt &&
+      (!!userContext.user.jwt.super_admin || userContext.user.jwt.company_administrator !== false),
     updateUser,
     getUser: () => userContext.user,
     getCompany: () => userContext.user?.company,
