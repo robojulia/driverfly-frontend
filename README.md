@@ -37,12 +37,11 @@ DriverFly is a modern web application built with Next.js, React, and TypeScript,
    MAPBOX_API_KEY=<your-mapbox-api-key>
    TWILIO_APP_NAME=<your-twilio-app-name>
    PHONE_INPUT_COUNTRY_ALLOWED=<allowed-countries>
-   RECAPTCHA_SECRET_KEY=<your-recaptcha-secret>
    RECAPTCHA_SITE_KEY=<your-recaptcha-site-key>
    NEXT_PUBLIC_MICROSOFT_CLARITY=<your-clarity-id>
    ```
 
-4. Create a reCAPTCHA account and get the secret and site keys. https://cloud.google.com/recaptcha/docs/create-key-website. Add the site key and secret key to the `.env` file. Ensure the site key is also in the backend .env file.
+4. Create a reCAPTCHA account and get the secret and site keys. https://cloud.google.com/recaptcha/docs/create-key-website. Add the site key to this `.env` file. The secret key belongs only in the backend `.env` (`RECAPTCHA_SECRET_KEY`) — never put it in the frontend, its build args, or CI variables for this project.
 
 5. Create a MapBox account and get the API key. https://www.mapbox.com/. Add the API key to the `.env` file.
 

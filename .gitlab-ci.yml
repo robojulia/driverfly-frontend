@@ -38,7 +38,7 @@ build:
           echo "OK: $v present"
         fi
       done
-      optional="NEXT_PUBLIC_RECAPTCHA_SITE_KEY RECAPTCHA_SECRET_KEY NEXT_PUBLIC_MICROSOFT_CLARITY NEXT_PUBLIC_MAPBOX_API_KEY NEXT_PUBLIC_TWILIO_APP_NAME NEXT_PUBLIC_PHONE_INPUT_COUNTRY_ALLOWED NEXT_PUBLIC_GOOGLE_ANALYTICS"
+      optional="NEXT_PUBLIC_RECAPTCHA_SITE_KEY NEXT_PUBLIC_MICROSOFT_CLARITY NEXT_PUBLIC_MAPBOX_API_KEY NEXT_PUBLIC_TWILIO_APP_NAME NEXT_PUBLIC_PHONE_INPUT_COUNTRY_ALLOWED NEXT_PUBLIC_GOOGLE_ANALYTICS"
       for v in $optional; do
         eval val="\${$v}"
         if [ -z "$val" ]; then
@@ -64,14 +64,7 @@ build:
       echo "NEXT_PUBLIC_MAPBOX_API_KEY=$NEXT_PUBLIC_MAPBOX_API_KEY"
       echo "TWILIO_APP_NAME=$NEXT_PUBLIC_TWILIO_APP_NAME"
       echo "NEXT_PUBLIC_TWILIO_APP_NAME=$NEXT_PUBLIC_TWILIO_APP_NAME"
-      for v in RECAPTCHA_SECRET_KEY; do
-        eval val="\${$v}"
-        if [ -n "$val" ]; then
-          echo "$v is set"
-        else
-          echo "$v is not set"
-        fi
-      done
+      # RECAPTCHA_SECRET_KEY is backend-only; it must never be passed to this build.
       # Re-enable errexit for subsequent commands
       set -e
     - |
@@ -95,7 +88,6 @@ build:
         --build-arg NEXT_PUBLIC_MICROSOFT_CLARITY="$NEXT_PUBLIC_MICROSOFT_CLARITY" \
         --build-arg RECAPTCHA_SITE_KEY="$NEXT_PUBLIC_RECAPTCHA_SITE_KEY" \
         --build-arg NEXT_PUBLIC_RECAPTCHA_SITE_KEY="$NEXT_PUBLIC_RECAPTCHA_SITE_KEY" \
-        --build-arg RECAPTCHA_SECRET_KEY="$RECAPTCHA_SECRET_KEY" \
         --build-arg TWILIO_APP_NAME="$NEXT_PUBLIC_TWILIO_APP_NAME" \
         --build-arg NEXT_PUBLIC_TWILIO_APP_NAME="$NEXT_PUBLIC_TWILIO_APP_NAME" \
         --build-arg PHONE_INPUT_COUNTRY_ALLOWED="$NEXT_PUBLIC_PHONE_INPUT_COUNTRY_ALLOWED" \

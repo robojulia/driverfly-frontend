@@ -2,6 +2,13 @@ import * as yup from "yup";
 import { SignUpRole } from "../../enums/auth/sign-up-role.enum";
 import { stringEnum } from "../../utils/yup";
 
+// Mirrors the backend SignUpDto: letters in any script plus space ' ’ . -
+const PERSON_NAME_PATTERN = new RegExp("^\\p{L}[\\p{L}\\p{M} '’.-]*$", "u");
+const NO_LINK_PATTERN = /^(?!.*(:\/\/|www\.|bit\.ly))/i;
+
+const personName = () =>
+	yup.string().trim().max(50).matches(PERSON_NAME_PATTERN, "INVALID_NAME").required().nullable();
+
 export class SignUpDto {
 	role: SignUpRole;
 	name: string;
@@ -29,12 +36,12 @@ export class SignUpDto {
 				.string()
 				.when("role", {
 					is: SignUpRole.COMPANY,
-					then: yup.string().trim().required().nullable(),
+					then: yup.string().trim().max(100).matches(NO_LINK_PATTERN, "INVALID_NAME").required().nullable(),
 				})
 				.trim()
 				.nullable(),
-			first_name: yup.string().trim().required().nullable(),
-			last_name: yup.string().trim().required().nullable(),
+			first_name: personName(),
+			last_name: personName(),
 			phone: yup.string().trim().nullable(),
 			email: yup.string().trim().email().required().nullable(),
 
