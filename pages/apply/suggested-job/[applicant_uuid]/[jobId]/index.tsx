@@ -9,6 +9,7 @@ import JotformContext from '../../../../../context/jotform-context';
 import { ApplicantExtras } from '../../../../../enums/applicants/applicant-extras.enum';
 import { ApplicantEntity, ApplicantExtrasEntity } from '../../../../../models/applicant';
 import { CompanyEntity } from '../../../../../models/company/company.entity';
+import { CompanyPreferenceEntity } from '../../../../../models/company/company-preferences.entity';
 import { JobEntity } from '../../../../../models/job/job.entity';
 import ApplicantApi from '../../../../api/applicant';
 import CompanyApi from '../../../../api/company';
@@ -19,9 +20,10 @@ export interface SuggestedJobsProps {
   entity: ApplicantEntity;
   job: JobEntity;
   company: CompanyEntity;
+  preferences?: CompanyPreferenceEntity[];
 }
 
-export default function SuggestedJobs({ entity, job, company }: SuggestedJobsProps) {
+export default function SuggestedJobs({ entity, job, company, preferences = [] }: SuggestedJobsProps) {
   const [jobs, setJobs] = useState<JobEntity[]>([job]);
   const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
   const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>(entity.extras);
@@ -102,6 +104,7 @@ export default function SuggestedJobs({ entity, job, company }: SuggestedJobsPro
           steps,
           jobs,
           company,
+          companyPreferences: preferences,
           isEditingExistingApplicant,
         },
         method: {
@@ -161,6 +164,15 @@ export async function getServerSideProps({ query }) {
     const companyApi = new CompanyApi();
     const company: CompanyEntity = await companyApi.employer.getById(job.company?.id);
 
+    // The legal-documents step needs the company's SSN preferences; see the
+    // long-form resume page for why a failure here falls back to none.
+    let preferences: CompanyPreferenceEntity[] = [];
+    try {
+      preferences = (await companyApi.preferences.list(company.id)) || [];
+    } catch (error) {
+      console.error(`suggested-job: could not load preferences for company ${company?.id}:`, error?.message);
+    }
+
     delete entity?.id;
     delete entity?.user;
     delete entity?.company;
@@ -178,7 +190,7 @@ export async function getServerSideProps({ query }) {
           !Boolean([ApplicantExtras.GOOD_FIT, ApplicantExtras.BAD_FIT_REASON].includes(type))
       );
 
-    return { props: { entity, job, company } };
+    return { props: { entity, job, company, preferences } };
   } catch (error) {
     console.log('error', error.message);
 

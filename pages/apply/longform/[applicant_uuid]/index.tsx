@@ -13,6 +13,7 @@ import { CompanyPreferenceEntity } from '../../../../models/company/company-pref
 import { JobEntity } from '../../../../models/job/job.entity';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import ApplicantApi from '../../../api/applicant';
+import CompanyApi from '../../../api/company';
 import FormProgress from '../../../../components/forms/jotform/form-progress';
 import { useFormPersistence } from '../../../../hooks/use-form-persistence';
 import ProgressSaveIndicator from '../../../../components/forms/jotform/progress-save-indicator';
@@ -227,7 +228,22 @@ export async function getServerSideProps({ query }: NextPageContext) {
     // Extract applicant extras and other related data
     const applicantExtras = applicant.extras || [];
     const jobs: JobEntity[] = []; // Initialize empty jobs array for longform
-    const companyPreferences: CompanyPreferenceEntity[] = []; // You may want to fetch these based on company
+
+    // The legal-documents step reads these (ADD_SSN_ON_DHA, SSN_REQUIRED): without
+    // them a driver finishing from their resume link was never asked for the SSN
+    // the company requires. A lookup failure shouldn't lock the driver out of
+    // their own application, so fall back to none rather than 404.
+    let companyPreferences: CompanyPreferenceEntity[] = [];
+    if (applicant.company?.id) {
+      try {
+        companyPreferences = (await new CompanyApi().preferences.list(applicant.company.id)) || [];
+      } catch (error) {
+        console.error(
+          `longform: could not load preferences for company ${applicant.company.id}:`,
+          error?.message
+        );
+      }
+    }
 
     return {
       props: {
