@@ -27,7 +27,13 @@ export default function ApplicantInfoReleaseConsent({
         </div>
       </div>
       <div className="Row">
-        <p style={{ color: 'black', display: 'inline' }}>{t('I_HEREBT_AUTHORIZE_ANY_PERSONAL')}</p>
+        <p style={{ color: 'black', display: 'inline' }}>
+          {t(
+            'I_HEREBT_AUTHORIZE_ANY_PERSONAL',
+            { company_name: applicant?.company?.name },
+            { translateProps: true }
+          )}
+        </p>
       </div>
       <div className="Row" style={{ marginTop: '30px' }}>
         <p style={{ color: 'black', fontWeight: 'bold', margin: '0px' }}>

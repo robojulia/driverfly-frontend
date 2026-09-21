@@ -46,6 +46,8 @@ import { CompanyPreferencesOnboardingChecklistForm } from "../../forms/company/c
 import { LoaderIcon } from "../../loading/loader-icon";
 import SafetyPerformanceHistory from "../safety-performance-history";
 import { ApplicantUploadedDocumentsForm } from "../../forms/company/applicant-uploaded-documents-form";
+import { VoeAuthorizationList } from "../../pdf/voe-authorization";
+import { SignedAgreementsPdfList } from "../../pdf/signed-agreements";
 
 function DacItemEditor({ dacForm, companyDacItemType }) {
   const { t } = useTranslation();
@@ -826,6 +828,23 @@ export default function OnboardingChecklist(
           );
         });
       })()}
+      </div>
+
+      {/* VOE forms — one per previous employer, generated from the driver's single
+          VOE authorization signature so a recruiter can print or email them manually
+          when the automated request can't be used. */}
+      <div className="mt-4">
+        <h3 className="mb-1">{t('VOE_FORMS')}</h3>
+        <p className="text-muted small mb-3">{t('VOE_FORMS_SECTION_HELP')}</p>
+        <VoeAuthorizationList applicant={applicant} />
+      </div>
+
+      {/* Every agreement signed on the final step of the digital hiring application,
+          as a downloadable PDF. */}
+      <div className="mt-4">
+        <h3 className="mb-1">{t('SIGNED_APPLICATION_FORMS')}</h3>
+        <p className="text-muted small mb-3">{t('SIGNED_APPLICATION_FORMS_HELP')}</p>
+        <SignedAgreementsPdfList applicant={applicant} />
       </div>
 
       {/* Uploaded Documents as a subsection inside the Onboarding Documents card (bottom) */}

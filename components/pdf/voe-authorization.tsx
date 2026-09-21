@@ -8,7 +8,6 @@ import {
   Text,
   Image,
   StyleSheet,
-  PDFDownloadLink,
   pdf,
 } from '@react-pdf/renderer';
 
@@ -257,7 +256,7 @@ export function VoeAuthorizationActions({
   const { t } = useTranslation();
   // The signed-in recruiter is the new (hiring) employer in Section I-A.
   const { user, company } = useAuth();
-  const [isOpening, setIsOpening] = useState(false);
+  const [busy, setBusy] = useState<'view' | 'download' | null>(null);
 
   const fileName = `VOE_${(applicant?.first_name || '').trim()}_${(applicant?.last_name || '').trim()}_${(employer?.name || 'employer').trim()}.pdf`
     .replace(/\s+/g, '_');
@@ -277,59 +276,64 @@ export function VoeAuthorizationActions({
     );
   }
 
+  // Rendered on demand rather than through PDFDownloadLink: these controls are
+  // listed once per previous employer, so eager links would build every VOE PDF
+  // on each render even though most are never opened.
+  const buildBlob = () =>
+    pdf(
+      <VoeAuthorizationDocument
+        applicant={applicant}
+        employer={employer}
+        t={t}
+        company={company}
+        companyUser={user}
+      />
+    ).toBlob();
+
   const handleView = async () => {
-    setIsOpening(true);
+    setBusy('view');
     try {
-      const blob = await pdf(
-        <VoeAuthorizationDocument
-          applicant={applicant}
-          employer={employer}
-          t={t}
-          company={company}
-          companyUser={user}
-        />
-      ).toBlob();
-      const url = URL.createObjectURL(blob);
+      const url = URL.createObjectURL(await buildBlob());
       window.open(url, '_blank', 'noopener,noreferrer');
     } finally {
-      setIsOpening(false);
+      setBusy(null);
+    }
+  };
+
+  const handleDownload = async () => {
+    setBusy('download');
+    try {
+      const url = URL.createObjectURL(await buildBlob());
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } finally {
+      setBusy(null);
     }
   };
 
   return (
     <div className="d-flex gap-2">
-      <Button size="sm" variant="outline-secondary" onClick={handleView} disabled={isOpening}>
-        {isOpening ? (
+      <Button size="sm" variant="outline-secondary" onClick={handleView} disabled={!!busy}>
+        {busy === 'view' ? (
           <span className="spinner-grow spinner-grow-sm" />
         ) : (
           <Eye className="me-1" />
         )}
         {t('VIEW_VOE')}
       </Button>
-      <PDFDownloadLink
-        document={
-          <VoeAuthorizationDocument
-            applicant={applicant}
-            employer={employer}
-            t={t}
-            company={company}
-            companyUser={user}
-          />
-        }
-        fileName={fileName}
-        className="btn btn-sm btn-outline-secondary"
-      >
-        {({ loading }) => (
-          <>
-            {loading ? (
-              <span className="spinner-grow spinner-grow-sm" />
-            ) : (
-              <CloudArrowDownFill className="me-1" />
-            )}
-            {t('DOWNLOAD_VOE')}
-          </>
+      <Button size="sm" variant="outline-secondary" onClick={handleDownload} disabled={!!busy}>
+        {busy === 'download' ? (
+          <span className="spinner-grow spinner-grow-sm" />
+        ) : (
+          <CloudArrowDownFill className="me-1" />
         )}
-      </PDFDownloadLink>
+        {t('DOWNLOAD_VOE')}
+      </Button>
     </div>
   );
 }
