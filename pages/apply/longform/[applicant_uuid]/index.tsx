@@ -17,6 +17,7 @@ import CompanyApi from '../../../api/company';
 import FormProgress from '../../../../components/forms/jotform/form-progress';
 import { useFormPersistence } from '../../../../hooks/use-form-persistence';
 import ProgressSaveIndicator from '../../../../components/forms/jotform/progress-save-indicator';
+import { mergeRestoredExtras } from '../../../../utils/merge-restored-extras';
 
 export interface LongFormProps {
   applicant: ApplicantEntity;
@@ -122,7 +123,13 @@ export default function LongForm({
             setApplicant({ ...applicant, ...restored.formData.applicant });
           }
           if (restored.formData.applicantExtras) {
-            setApplicantExtras(restored.formData.applicantExtras);
+            // Merge rather than replace: the snapshot is whatever this one
+            // browser last held, so overwriting the server set with it discards
+            // answers the server has and the snapshot lacks - signatures
+            // included. See mergeRestoredExtras.
+            setApplicantExtras((current) =>
+              mergeRestoredExtras(current, restored.formData.applicantExtras)
+            );
           }
           setSteps(restored.currentStep);
 
