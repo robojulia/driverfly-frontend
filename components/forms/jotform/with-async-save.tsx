@@ -5,6 +5,7 @@ import { useSaveAndContinueLater } from '../../../hooks/use-save-and-continue-la
 import { SaveAndContinueLaterButton } from './save-and-continue-later-button';
 import { SaveSuccessModal } from './save-success-modal';
 import { stripApplicantRelations } from '../../../utils/strip-applicant-relations';
+import { dropBlankSignatureExtras } from '../../../utils/drop-blank-signature-extras';
 
 interface WithAsyncSaveProps {
   // Any additional props can be added here
@@ -41,9 +42,14 @@ export function withAsyncSave<P extends object>(
     useEffect(() => {
       if (shouldSave && applicant && applicantExtras) {
         // Strip nested relation objects (see stripApplicantRelations) so the
-        // auto-save payload matches the manual "Save & Continue Later" payload.
+        // auto-save payload matches the manual "Save & Continue Later" payload,
+        // and drop blank signatures so a cleared pad can't null out a signature
+        // the driver already saved (see dropBlankSignatureExtras).
         const applicantFields = stripApplicantRelations(applicant);
-        saveFormData({ applicant: applicantFields, applicantExtras });
+        saveFormData({
+          applicant: applicantFields,
+          applicantExtras: dropBlankSignatureExtras(applicantExtras),
+        });
       }
     }, [applicant, applicantExtras, shouldSave, saveFormData]);
 

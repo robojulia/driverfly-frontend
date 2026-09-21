@@ -4,6 +4,7 @@ import JotformContext from '../context/jotform-context';
 import ApplicantApi from '../pages/api/applicant';
 import { trackingContextToUtmReferral } from '../models/auth/utm-referral.interface';
 import { stripApplicantRelations } from '../utils/strip-applicant-relations';
+import { dropBlankSignatureExtras } from '../utils/drop-blank-signature-extras';
 
 // The long-form section starts at step 10 on the full form; getLongFormPages is
 // 0-indexed. Shared by the manual save and the on-exit flush so both persist the
@@ -75,7 +76,9 @@ export function useSaveAndContinueLater(): UseSaveAndContinueLaterReturn {
         currentApplicant.id,
         {
           applicant: applicantFields,
-          applicantExtras: applicantExtras || [],
+          // Saving progress must never destroy a stored signature - see
+          // dropBlankSignatureExtras.
+          applicantExtras: dropBlankSignatureExtras(applicantExtras),
           jobs: jobs || [],
           utm: trackingContextToUtmReferral(utm),
         },
@@ -170,7 +173,7 @@ export function useSaveAndContinueLater(): UseSaveAndContinueLaterReturn {
 
       const body = JSON.stringify({
         applicant: stripApplicantRelations(s.applicant),
-        applicantExtras: s.applicantExtras || [],
+        applicantExtras: dropBlankSignatureExtras(s.applicantExtras),
         jobs: s.jobs || [],
         utm: trackingContextToUtmReferral(s.utm),
       });

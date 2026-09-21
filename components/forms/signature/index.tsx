@@ -26,6 +26,10 @@ export function SignatureComponent({
   const [hasSignature, setHasSignature] = useState(false);
   const [initialSignatureApplied, setInitialSignatureApplied] = useState(false);
   const lastSignatureRef = useRef<string | null>(null);
+  // Where the signature currently on the pad came from. Unticking the typed
+  // signature consent box may only discard a signature that box produced — it
+  // must not wipe one the driver drew, or one restored from a previous session.
+  const signatureSourceRef = useRef<'typed' | 'drawn' | 'restored' | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [canvasDimensions, setCanvasDimensions] = useState({ width: 600, height: 200 });
 
@@ -34,6 +38,7 @@ export function SignatureComponent({
       padRef.current.clear();
       setHasSignature(false);
       lastSignatureRef.current = null;
+      signatureSourceRef.current = null;
       onSignatureChange(null);
     }
   };
@@ -52,6 +57,7 @@ export function SignatureComponent({
     // Only update if the signature has actually changed
     if (signatureValue !== lastSignatureRef.current) {
       lastSignatureRef.current = signatureValue;
+      signatureSourceRef.current = 'drawn';
       setHasSignature(true);
       onSignatureChange(signatureValue);
     }
@@ -116,6 +122,7 @@ export function SignatureComponent({
     // Only update if the signature has actually changed
     if (signatureValue !== lastSignatureRef.current) {
       lastSignatureRef.current = signatureValue;
+      signatureSourceRef.current = 'typed';
       setHasSignature(true);
       onSignatureChange(signatureValue);
     }
@@ -123,7 +130,11 @@ export function SignatureComponent({
 
   const handleConsentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTypedSignatureConsent(e.target.checked);
-    if (!e.target.checked) {
+    // Withdrawing consent discards the typed signature that consent produced —
+    // and nothing else. This used to clear the pad unconditionally, so a driver
+    // who drew their signature and then touched this box lost it, and the next
+    // background save wrote that blank back over the stored one.
+    if (!e.target.checked && signatureSourceRef.current === 'typed') {
       clearSignatureCanvas();
     }
   };
@@ -136,6 +147,7 @@ export function SignatureComponent({
         try {
           padRef.current.fromDataURL(initialSignature);
           lastSignatureRef.current = initialSignature;
+          signatureSourceRef.current = 'restored';
           setHasSignature(true);
           setInitialSignatureApplied(true);
         } catch (error) {
