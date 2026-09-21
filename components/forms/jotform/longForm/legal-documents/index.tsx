@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import { useContext, useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
-import { ChevronDown, ChevronUp } from 'react-bootstrap-icons';
+import { ChevronDown, ChevronUp, ExclamationTriangleFill } from 'react-bootstrap-icons';
 import { Form } from 'react-bootstrap';
 import JotformContext, { JotFormContextType } from '../../../../../context/jotform-context';
 import { useTranslation } from '../../../../../hooks/use-translation';
@@ -357,6 +357,31 @@ function LegalDocumentsContent() {
   // Check if all documents are completed
   const allDocumentsComplete = completedDocuments.length === LEGAL_DOCUMENTS.length;
 
+  // A driver is "mid-signing" once they have signed at least one section but not
+  // all of them. Each signature is saved as it is drawn, so this is a state
+  // drivers reach routinely — by hitting Back, closing the tab, or wandering off
+  // — not an edge case. Nothing they have signed reaches the carrier until the
+  // whole set is done (the backend releases the authorization forms
+  // all-or-nothing), so the cost of leaving here is silent: the driver believes
+  // they signed, the recruiter receives no forms at all.
+  const isPartiallySigned = completedDocuments.length > 0 && !allDocumentsComplete;
+  const remainingDocuments = LEGAL_DOCUMENTS.length - completedDocuments.length;
+
+  // Warn before a refresh, tab close, or navigation away mid-signing. Browsers
+  // show their own generic wording and ignore any string we provide, so this
+  // only buys the confirmation dialog, not the explanation — the on-page banner
+  // below carries that.
+  useEffect(() => {
+    if (!isPartiallySigned) return;
+    const warnBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+      return '';
+    };
+    window.addEventListener('beforeunload', warnBeforeUnload);
+    return () => window.removeEventListener('beforeunload', warnBeforeUnload);
+  }, [isPartiallySigned]);
+
   const currentDocument = LEGAL_DOCUMENTS[currentStep];
   const isCurrentDocumentComplete = completedDocuments.includes(currentDocument.id);
 
@@ -384,6 +409,25 @@ function LegalDocumentsContent() {
       stepBack();
     }
   }, [currentStep, setCurrentStep, stepBack]);
+
+  // The Back button resets the form and leaves the legal-documents step
+  // entirely. Confirm first when the driver is mid-signing: without it, the most
+  // common way to end up with a half-signed application is a driver who meant to
+  // glance at a previous answer and never came back.
+  const confirmLeaveWhilePartiallySigned = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (!isPartiallySigned) return;
+      const proceed = window.confirm(
+        `You have signed ${completedDocuments.length} of ${LEGAL_DOCUMENTS.length} documents. ` +
+          `Your application is not submitted, and none of your signed forms are sent to the ` +
+          `carrier until all ${LEGAL_DOCUMENTS.length} are signed — ${remainingDocuments} to go. ` +
+          `Leave this step anyway?`
+      );
+      // Cancelling the click also cancels the button's native form reset.
+      if (!proceed) e.preventDefault();
+    },
+    [isPartiallySigned, completedDocuments.length, remainingDocuments]
+  );
 
   // Scroll to top when switching documents and reset expansion state for first doc
   useEffect(() => {
@@ -522,6 +566,25 @@ function LegalDocumentsContent() {
 
           {/* Navigation */}
           <div className="mt-4 pt-4 border-top">
+            {/* Says out loud what the all-or-nothing release rule means for the
+                driver: signing some of these is the same, to the carrier, as
+                signing none of them. */}
+            {isPartiallySigned && (
+              <div className="alert alert-warning d-flex align-items-start" role="status">
+                <ExclamationTriangleFill className="me-2 mt-1 flex-shrink-0" size={16} />
+                <div>
+                  <strong>
+                    {remainingDocuments} of {LEGAL_DOCUMENTS.length} documents still need your
+                    signature.
+                  </strong>{' '}
+                  Your signed forms are only sent to the carrier once all{' '}
+                  {LEGAL_DOCUMENTS.length} are signed — a partly signed application is not
+                  submitted. Your signatures are saved, so you can finish later from the link we
+                  emailed you.
+                </div>
+              </div>
+            )}
+
             {/* Progress Text - Mobile First */}
             <div className="text-center mb-3 d-block d-lg-none">
               <small className="text-muted">
@@ -531,7 +594,11 @@ function LegalDocumentsContent() {
 
             {/* Desktop Navigation */}
             <div className="d-none d-lg-flex justify-content-between align-items-center">
-              <SecondaryButton type="reset" style={{ minWidth: '120px' }}>
+              <SecondaryButton
+                type="reset"
+                onClick={confirmLeaveWhilePartiallySigned}
+                style={{ minWidth: '120px' }}
+              >
                 {t('BACK')}
               </SecondaryButton>
 
@@ -581,6 +648,7 @@ function LegalDocumentsContent() {
                 <div className="col-6">
                   <SecondaryButton
                     type="reset"
+                    onClick={confirmLeaveWhilePartiallySigned}
                     style={{
                       width: '100%',
                       padding: '0.75rem 1rem',

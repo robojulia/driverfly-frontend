@@ -4,7 +4,9 @@ import JotformContext, { JotFormContextType } from '../../../context/jotform-con
 import { SaveAndContinueLaterButton } from './save-and-continue-later-button';
 
 interface PrimaryButtonProps {
-  onClick?: () => void;
+  // Receives the click event so a caller can cancel the button's native form
+  // action (e.g. a `type="reset"` Back button held behind a confirmation).
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
   children: React.ReactNode;
