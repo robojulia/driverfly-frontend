@@ -11,6 +11,7 @@ import {
   X,
   InfoCircle,
   Tools,
+  ListCheck,
 } from 'react-bootstrap-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -20,6 +21,7 @@ import Impersonate from '../../../impersonate/impersonate';
 import CompanyDisableBanner from '../../../company/disable-banner/company-disable-banner';
 import styles from '../../../../public/css/dashboard-layout.module.css';
 import { getBuildInfo } from '../../../../utils/version';
+import { GETTING_STARTED_QUERY } from '../../getting-started/getting-started';
 
 export interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -155,6 +157,16 @@ export default function DashboardLayout({ children, sidebarItems }: DashboardLay
                     >
                       <Person className="me-2" size={16} /> {t('MY_PROFILE')}
                     </Dropdown.Item>
+                    {user?.company && (
+                      <Dropdown.Item
+                        onClick={() =>
+                          router.push(`/dashboard/company?${GETTING_STARTED_QUERY}=1`)
+                        }
+                        className={styles['dropdown-item']}
+                      >
+                        <ListCheck className="me-2" size={16} /> {t('GETTING_STARTED')}
+                      </Dropdown.Item>
+                    )}
                     <Dropdown.Item
                       onClick={() => setShowSupportModal(true)}
                       className={styles['dropdown-item']}

@@ -33,6 +33,7 @@ export class UserEntity {
   company_ids?: number[]; // For creating multi-company users
   companies?: CompanyEntity[]; // Read-only from backend (existing users)
   photo?: DocumentEntity;
+  created_at?: Date | string;
 
   token?: string;
   jwt?: JwtTokenPayload;

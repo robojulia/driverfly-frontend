@@ -18,7 +18,7 @@ import { CompanyPreferenceEntity } from '../../../models/company/company-prefere
 import CompanyApi from '../../api/company';
 
 import { DashboardStats } from '../../../components/charts/dashboard-stats';
-import { WelcomeBanner } from '../../../components/dashboard/WelcomeBanner';
+import { GettingStarted } from '../../../components/dashboard/getting-started/getting-started';
 import DashboardChartContext from '../../../context/dashboard-chart-context';
 import { EmployeeStatus } from '../../../enums/applicants/employee-status.enum';
 import { Status } from '../../../enums/status.enum';
@@ -37,7 +37,6 @@ export default function Dashboard() {
   const { isFeatureEnabled } = useFeatureFlags();
   const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
   const [employees, setEmployees] = useState<EmployeeEntity[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { user, isSuperAdmin, isCompanyAdmin } = useAuth();
   const api = new CompanyApi();
   const { t } = useTranslation();
@@ -64,8 +63,6 @@ export default function Dashboard() {
   const applicantApi = new ApplicantApi();
   const employeeApi = new EmployeeApi();
   const jobApi = new JobApi();
-
-  const isNewUser = !isLoading && !applicants.length && !employees.length && !jobs.length;
 
   useEffectAsync(async () => {
     let todayDate = new Date();
@@ -104,8 +101,6 @@ export default function Dashboard() {
       } catch (e) {
         console.error('Failed to load jobs:', e);
       }
-
-      setIsLoading(false);
     }
   }, [company?.id]);
 
@@ -187,6 +182,10 @@ export default function Dashboard() {
 
       {/* Main Dashboard Container with Max Width */}
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+        <div className="px-4">
+          <GettingStarted />
+        </div>
+
         {hasPermission('CanViewApplicant') && (
           <DashboardChartContext.Provider
             value={{
@@ -199,8 +198,6 @@ export default function Dashboard() {
             }}
           >
             <div className="px-4 py-3">
-              {isNewUser && <WelcomeBanner userName={user?.first_name} />}
-
               {/* Dashboard Stats - No wrapper needed */}
               <DashboardStats />
 
