@@ -9,6 +9,8 @@ import AdditionalFiles from '../../../../../../components/dashboard/employee-dir
 import Background from '../../../../../../components/dashboard/employee-directory/background';
 import DQF from '../../../../../../components/dashboard/employee-directory/dqf';
 import HRFiles from '../../../../../../components/dashboard/employee-directory/hr-files';
+import Notifications from '../../../../../../components/dashboard/employee-directory/notifications';
+import ConfigureScopeModal from '../../../../../../components/dashboard/employee-directory/notifications/configure-scope-modal';
 import FullLayout from '../../../../../../components/dashboard/layouts/layout/full-layout';
 import { EmployeeMessages } from '../../../../../../components/employees/employee-messages';
 import { EmployeeStatus } from '../../../../../../enums/applicants/employee-status.enum';
@@ -23,7 +25,7 @@ export default function EmployeeDetailPage() {
   const router = useRouter();
   const { id } = router.query;
   const { t } = useTranslation();
-  const { user, hasPermission } = useAuth();
+  const { user, hasPermission, isCompanyAdministrator } = useAuth();
   const employeeApi = new EmployeeApi();
 
   const [employee, setEmployee] = useState<EmployeeEntity | null>(null);
@@ -31,6 +33,13 @@ export default function EmployeeDetailPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [showConfigureModal, setShowConfigureModal] = useState<boolean>(false);
+  // Bell tab: showing this driver's notification settings instead of the compliance updates
+  const [configuringDriver, setConfiguringDriver] = useState<boolean>(false);
+
+  useEffect(() => {
+    setConfiguringDriver(false);
+  }, [id]);
 
   useEffectAsync(async () => {
     if (id && user) {
@@ -348,11 +357,33 @@ export default function EmployeeDetailPage() {
               </TabPanel>
 
               <TabPanel>
+                {configuringDriver ? (
+                  <div style={{ padding: '1.5rem' }}>
+                    <Button variant="link" className="p-0 mb-3 d-flex align-items-center" onClick={() => setConfiguringDriver(false)}>
+                      <ArrowLeft size={16} className="mr-2" />
+                      Back to compliance updates
+                    </Button>
+                    <Notifications
+                      employee={employee}
+                      canEdit={hasPermission('CanEditEmployee') && isCompanyAdministrator}
+                    />
+                  </div>
+                ) : (
                 <div className="bg-white rounded" style={{ padding: '1.5rem' }}>
-                  <h4 className="mb-3">
-                    <Bell size={20} className="mr-2" />
-                    Compliance Updates
-                  </h4>
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h4 className="mb-0">
+                      <Bell size={20} className="mr-2" />
+                      Compliance Updates
+                    </h4>
+                    <Button
+                      variant="link"
+                      className="p-0 d-flex align-items-center"
+                      onClick={() => setShowConfigureModal(true)}
+                    >
+                      <GearFill size={15} className="mr-2" />
+                      Configure notifications
+                    </Button>
+                  </div>
 
                   {/* Recent Document Uploads */}
                   {complianceNotifications.recentUploads > 0 && (
@@ -548,8 +579,18 @@ export default function EmployeeDetailPage() {
                     </div>
                   )}
                 </div>
+                )}
               </TabPanel>
             </Tabs>
+            <ConfigureScopeModal
+              show={showConfigureModal}
+              onHide={() => setShowConfigureModal(false)}
+              employee={employee}
+              onConfigureDriver={() => {
+                setSelectedTabIndex(5);
+                setConfiguringDriver(true);
+              }}
+            />
           </Container>
         </div>
       </div>

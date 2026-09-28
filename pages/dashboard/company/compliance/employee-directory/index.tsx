@@ -53,7 +53,7 @@ const pagingsMetaInitialValues = (): PagingMeta => ({
 });
 
 export default function EmployeeDirectory() {
-  const { user, hasPermission, isCompanyAdmin } = useAuth();
+  const { user, hasPermission, isCompanyAdmin, isCompanyAdministrator } = useAuth();
   const { setPreviousPath } = useLastPage();
   const router = useRouter();
   const { t } = useTranslation();
@@ -868,7 +868,11 @@ export default function EmployeeDirectory() {
         </Accordion>
       ) : (
         <div style={{ padding: '1.5rem 0' }}>
-          <Notifications employee={null} canEdit={can.editUser} />
+          <Notifications
+            employee={null}
+            canEdit={can.editUser && isCompanyAdministrator}
+            audienceFilter={typeof router.query.audience === 'string' ? router.query.audience : undefined}
+          />
         </div>
       )}
       </PageLayout>
