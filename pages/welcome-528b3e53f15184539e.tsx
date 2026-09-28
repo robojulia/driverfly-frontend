@@ -44,16 +44,15 @@ export default function PartnerSignup() {
           <div className="container">
             <span className={styles.badge}>Special Offer</span>
             <h1>Welcome to DriverFly</h1>
-            <p className="sub">
-              You&apos;ve been invited to get started with an exclusive offer built for early
-              partners. Follow the quick steps below to set up your account and get your recruiting
-              engine running.
+            <p className={styles.sub}>
+              You&apos;ve been invited to join DriverFly through an exclusive offer. Follow the quick
+              steps below to set up your account and get your recruiting engine running.
             </p>
 
             <div className={styles.perks}>
-              <div className={styles.perk}>✅ 2 months of free coverage</div>
-              <div className={styles.perk}>💸 Specially discounted long-term rates</div>
-              <div className={styles.perk}>🤝 Hands-on onboarding from our team</div>
+              <div className={styles.perk}>✓ 2 months of free coverage</div>
+              <div className={styles.perk}>✓ Specially discounted long-term rates</div>
+              <div className={styles.perk}>✓ Hands-on onboarding from our team</div>
             </div>
 
             <div className={styles.ctaRow}>
@@ -65,6 +64,99 @@ export default function PartnerSignup() {
               </span>
             </div>
           </div>
+        </section>
+
+        {/* ---------------- Pricing ---------------- */}
+        <section className={`${styles.section} ${styles.sectionAlt}`} id="pricing">
+          <div className={styles.kicker}>Your pilot pricing</div>
+          <h2>Simple pricing, starting at free</h2>
+          <p className={styles.lead}>
+            Everything you need to run recruiting and compliance is in the core system. Add
+            recruiting services or AI agents only if and when you want them.
+          </p>
+
+          <div className={styles.priceHero}>
+            <div className={styles.priceHeroMain}>
+              <div className={styles.priceTag}>Core ATS</div>
+              <div className={styles.priceBig}>
+                Free <span>for 2 months</span>
+              </div>
+              <div className={styles.priceThen}>then $50/mo flat</div>
+            </div>
+            <ul className={`${styles.checklist} ${styles.priceIncludes}`}>
+              <li>Digital hiring application</li>
+              <li>Applicant tracking</li>
+              <li>Job posting</li>
+              <li>Equipment tracking</li>
+              <li>Employee compliance alerts</li>
+            </ul>
+          </div>
+
+          <p className={styles.priceHint}>Optional add-ons. Tap one to see the details.</p>
+
+          <details className={styles.priceDetail}>
+            <summary>
+              <span className={styles.priceDetailName}>Auto Recruiting Services</span>
+              <span className={styles.priceDetailFrom}>Pay per result</span>
+            </summary>
+            <div className={styles.priceDetailBody}>
+              <p>
+                We send you full applications from drivers who meet your criteria and are interested
+                in one of your jobs. You only pay for what you receive.
+              </p>
+              <ul className={styles.priceRows}>
+                <li>
+                  <span>Lead generation (qualified lead, full application)</span>
+                  <strong>$50 per lead</strong>
+                </li>
+                <li>
+                  <span>Hire conversion</span>
+                  <strong>$450 per hire</strong>
+                </li>
+              </ul>
+              <p className={styles.priceFine}>
+                A hire counts once a driver stays in &quot;Hired&quot; status for more than one
+                week. The hire fee still applies if you hire a referred driver later on.
+              </p>
+            </div>
+          </details>
+
+          <details className={styles.priceDetail}>
+            <summary>
+              <span className={styles.priceDetailName}>AI Call &amp; SMS Agents</span>
+              <span className={styles.priceDetailFrom}>At cost for 3 months</span>
+            </summary>
+            <div className={styles.priceDetailBody}>
+              <p>
+                AI agents call or text your drivers and applicants for you, for example to follow up
+                on applications or remind drivers before their license or medical card expires.
+                Usage is billed at cost for your first 3 months, then:
+              </p>
+              <ul className={styles.priceRows}>
+                <li>
+                  <span>Base subscription</span>
+                  <strong>$50/mo</strong>
+                </li>
+                <li>
+                  <span>Per text message</span>
+                  <strong>$0.05</strong>
+                </li>
+                <li>
+                  <span>Per minute of call</span>
+                  <strong>$0.40</strong>
+                </li>
+                <li>
+                  <span>Phone line</span>
+                  <strong>$5 per line/mo</strong>
+                </li>
+              </ul>
+            </div>
+          </details>
+
+          <p className={styles.priceFine} style={{ marginTop: 16 }}>
+            Questions about pricing? Email{' '}
+            <a href="mailto:info@driverfly.co">info@driverfly.co</a>.
+          </p>
         </section>
 
         {/* ---------------- Video walkthrough ---------------- */}
@@ -208,11 +300,17 @@ export default function PartnerSignup() {
           </p>
           <ul className={styles.checklist}>
             <li>
-              The <strong>.csv or .xls file</strong> of applicants and/or employees you&apos;d like
-              tracked in the system.
+              Your preferred <strong>area code</strong> for your company phone number.
             </li>
             <li>
-              Your preferred <strong>area code</strong> for your company phone number.
+              <strong>Your existing applicants and/or employees</strong>, if you&apos;d like us to
+              load them for you: send a link to your source file (e.g. a Google Sheet, or a shared
+              .csv or .xls file) and we&apos;ll import it. Prefer to do it yourself? Skip this and
+              use the{' '}
+              <a href="#bulk-upload">bulk upload</a> instead.
+            </li>
+            <li>
+              Any <strong>special requests</strong> that the system doesn&apos;t already cover.
             </li>
           </ul>
 
@@ -246,7 +344,7 @@ export default function PartnerSignup() {
           <div className={styles.kicker}>Make the most of it</div>
           <h2>Other things you can do</h2>
 
-          <div className={styles.step} style={{ marginTop: 24 }}>
+          <div className={styles.step} style={{ marginTop: 24 }} id="bulk-upload">
             <div className={styles.stepBody} style={{ width: '100%' }}>
               <h3>Bulk-upload your applicants &amp; hires</h3>
               <p>
@@ -272,11 +370,6 @@ export default function PartnerSignup() {
                 alt="Import screen showing the Download Template and Import buttons"
                 caption="Download the template (#1), then upload and Import (#2)"
               />
-              <div className={styles.callout}>
-                Run into a formatting issue on upload (e.g. <code>08.02.2026</code> vs{' '}
-                <code>08/02/2026</code>)? Reach out and we&apos;ll help transform your data into the
-                right format.
-              </div>
             </div>
           </div>
 
