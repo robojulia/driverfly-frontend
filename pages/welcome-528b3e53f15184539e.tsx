@@ -50,9 +50,15 @@ export default function PartnerSignup() {
             </p>
 
             <div className={styles.perks}>
-              <div className={styles.perk}>✓ 2 months of free coverage</div>
-              <div className={styles.perk}>✓ Specially discounted long-term rates</div>
-              <div className={styles.perk}>✓ Hands-on onboarding from our team</div>
+              <div className={styles.perk}>
+                <span className={styles.perkCheck}>✓</span> 2 months of free coverage
+              </div>
+              <div className={styles.perk}>
+                <span className={styles.perkCheck}>✓</span> Specially discounted long-term rates
+              </div>
+              <div className={styles.perk}>
+                <span className={styles.perkCheck}>✓</span> Hands-on onboarding from our team
+              </div>
             </div>
 
             <div className={styles.ctaRow}>
@@ -65,6 +71,8 @@ export default function PartnerSignup() {
             </div>
           </div>
         </section>
+
+        <div className={styles.waveDivider} aria-hidden="true" />
 
         {/* ---------------- Pricing ---------------- */}
         <section className={`${styles.section} ${styles.sectionAlt}`} id="pricing">
@@ -81,7 +89,10 @@ export default function PartnerSignup() {
               <div className={styles.priceBig}>
                 Free <span>for 2 months</span>
               </div>
-              <div className={styles.priceThen}>then $50/mo flat</div>
+              <div className={styles.priceThen}>
+                then $50/mo, or $35/mo on a 1-year plan
+              </div>
+              <div className={styles.priceScope}>Covers up to 6 driver employees</div>
             </div>
             <ul className={`${styles.checklist} ${styles.priceIncludes}`}>
               <li>Digital hiring application</li>
@@ -91,6 +102,37 @@ export default function PartnerSignup() {
               <li>Employee compliance alerts</li>
             </ul>
           </div>
+
+          <details className={styles.priceDetail}>
+            <summary>
+              <span className={styles.priceDetailName}>More drivers or users?</span>
+              <span className={styles.priceDetailFrom}>From $2 per driver/mo</span>
+            </summary>
+            <div className={styles.priceDetailBody}>
+              <p>Beyond the first 6 driver employees, each additional driver employee is:</p>
+              <ul className={styles.priceRows}>
+                <li>
+                  <span>0–10 driver employees</span>
+                  <strong>$4 per employee/mo</strong>
+                </li>
+                <li>
+                  <span>11–50 driver employees</span>
+                  <strong>$3 per employee/mo</strong>
+                </li>
+                <li>
+                  <span>More than 50 driver employees</span>
+                  <strong>$2 per employee/mo</strong>
+                </li>
+              </ul>
+              <p>Need more people logging in, like extra recruiters or admins?</p>
+              <ul className={styles.priceRows}>
+                <li>
+                  <span>Additional user seat</span>
+                  <strong>$10 per user/mo</strong>
+                </li>
+              </ul>
+            </div>
+          </details>
 
           <p className={styles.priceHint}>Optional add-ons. Tap one to see the details.</p>
 
