@@ -3479,5 +3479,17 @@
   "Download PDF": "Download PDF",
   "VOE_FORMS_SECTION_HELP": "One Verification of Employment form per previous employer, ready to print or email manually.",
   "SIGNED_APPLICATION_FORMS": "Signed Application Forms",
-  "SIGNED_APPLICATION_FORMS_HELP": "Every agreement signed at the end of the digital hiring application, as a downloadable PDF."
+  "SIGNED_APPLICATION_FORMS_HELP": "Every agreement signed at the end of the digital hiring application, as a downloadable PDF.",
+  "MAP_IMPORT_COLUMNS_EXPLANATION": "Your file's columns don't all match our template. Choose which field each column goes into, or let AI suggest a mapping. AI only picks columns and matching options - your data is imported exactly as it appears in the file, and you can review every row before importing.",
+  "SUGGEST_MAPPING_WITH_AI": "Suggest mapping with AI",
+  "AI_MAPPING_SUGGESTED_{count}": "AI mapped {{count}} column(s). Please review before continuing.",
+  "FILE_COLUMN": "File column",
+  "SAMPLE_VALUES": "Sample values",
+  "MAPS_TO": "Maps to",
+  "VALUE_TRANSLATIONS": "Value translations",
+  "IGNORE_COLUMN": "— Ignore —",
+  "KEEP_AS_IS": "Keep as is",
+  "REQUIRED_FIELDS_NOT_MAPPED": "Required fields not mapped",
+  "PREVIEW_{count}_ROWS": "Preview {{count}} row(s)",
+  "REMAP_COLUMNS": "Re-map columns"
 }

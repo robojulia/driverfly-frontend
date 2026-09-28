@@ -120,5 +120,17 @@
   "HR Notes": "Notas de RH",
   "NO_HR_NOTES": "No hay notas de RH disponibles",
   "HR_NOTES": "Notas de RH",
-  "ENTER_HR_NOTES": "Ingrese notas sobre este empleado"
+  "ENTER_HR_NOTES": "Ingrese notas sobre este empleado",
+  "MAP_IMPORT_COLUMNS_EXPLANATION": "No todas las columnas de su archivo coinciden con nuestra plantilla. Elija a qué campo va cada columna o deje que la IA sugiera una asignación. La IA solo elige columnas y opciones equivalentes: sus datos se importan tal como aparecen en el archivo y puede revisar cada fila antes de importar.",
+  "SUGGEST_MAPPING_WITH_AI": "Sugerir asignación con IA",
+  "AI_MAPPING_SUGGESTED_{count}": "La IA asignó {{count}} columna(s). Revíselas antes de continuar.",
+  "FILE_COLUMN": "Columna del archivo",
+  "SAMPLE_VALUES": "Valores de ejemplo",
+  "MAPS_TO": "Asignar a",
+  "VALUE_TRANSLATIONS": "Traducción de valores",
+  "IGNORE_COLUMN": "— Ignorar —",
+  "KEEP_AS_IS": "Dejar igual",
+  "REQUIRED_FIELDS_NOT_MAPPED": "Campos obligatorios sin asignar",
+  "PREVIEW_{count}_ROWS": "Vista previa de {{count}} fila(s)",
+  "REMAP_COLUMNS": "Reasignar columnas"
 }

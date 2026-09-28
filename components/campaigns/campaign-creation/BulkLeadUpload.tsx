@@ -8,11 +8,18 @@ import {
   Form,
   ProgressBar,
   Row,
+  Spinner,
   Table,
 } from 'react-bootstrap';
-import { ArrowRight, Check, Download, Plus, Trash, Upload, X } from 'react-bootstrap-icons';
+import { ArrowRight, Check, Download, Magic, Plus, Trash, Upload, X } from 'react-bootstrap-icons';
+import { toast } from 'react-toastify';
 import { BulkLeadDto, LeadEntity } from '../../../models/campaigns/bulk-lead-upload.dto';
 import { normalizePhoneNumber } from '../../../utils/phone-normalization';
+import {
+  aiErrorMessage,
+  ImportFieldSpec,
+  suggestMappingWithAi,
+} from '../../../utils/ai-import-mapping';
 
 type TargetField = 'name' | 'first_name' | 'last_name' | 'phone' | 'email' | 'ignore';
 type Step = 'upload' | 'mapping' | 'preview';
@@ -33,6 +40,15 @@ const TARGET_FIELD_OPTIONS: { value: TargetField; label: string }[] = [
   { value: 'phone', label: 'Phone Number' },
   { value: 'email', label: 'Email Address' },
 ];
+
+const AI_FIELDS: ImportFieldSpec[] = TARGET_FIELD_OPTIONS.filter((o) => o.value !== 'ignore').map(
+  (o) => ({
+    key: o.value,
+    label: o.label,
+    type: 'string',
+    description: o.value === 'name' ? 'whole name in one column; prefer first/last when split' : undefined,
+  })
+);
 
 const NAME_PATTERNS = /^(full.?name|name|driver.?name|contact.?name)$/i;
 const FIRST_NAME_PATTERNS = /^(first.?name|first|fname|given.?name)$/i;
@@ -68,6 +84,11 @@ function autoDetectMapping(columns: string[]): ColumnMapping {
   }
 
   return mapping;
+}
+
+function isMappingValid(mapping: ColumnMapping): boolean {
+  const targets = Object.values(mapping);
+  return targets.some((v) => ['name', 'first_name', 'last_name'].includes(v)) && targets.includes('phone');
 }
 
 function applyMapping(rows: any[], mapping: ColumnMapping): BulkLeadDto[] {
@@ -124,6 +145,7 @@ const BulkLeadUpload: React.FC<BulkLeadUploadProps> = ({ onLeadsChange }) => {
   const [validationErrors, setValidationErrors] = useState<Record<number, any>>({});
   const [onlyErrors, setOnlyErrors] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [aiLoading, setAiLoading] = useState(false);
 
   const schema = LeadEntity.yupSchemaForBulkUpload();
 
@@ -202,13 +224,44 @@ const BulkLeadUpload: React.FC<BulkLeadUploadProps> = ({ onLeadsChange }) => {
         if (errors?.length) setCsvErrors(errors);
 
         const columns: string[] = meta.fields || [];
+        const detected = autoDetectMapping(columns);
         setCsvColumns(columns);
         setRawRows(data);
-        setColumnMapping(autoDetectMapping(columns));
+        setColumnMapping(detected);
         setStep('mapping');
+        if (!isMappingValid(detected)) suggestWithAi(columns, data);
       },
       error: (err: any) => setCsvErrors([{ message: err.message }]),
     });
+  };
+
+  // AI only fills columns the header patterns left on "ignore"; the cells themselves are copied
+  // by applyMapping exactly as uploaded.
+  const suggestWithAi = async (columns: string[], rows: any[]) => {
+    setAiLoading(true);
+    try {
+      const { mapping } = await suggestMappingWithAi(
+        'campaign leads (truck driver contacts)',
+        AI_FIELDS,
+        columns,
+        rows
+      );
+      // Merge into the latest state so choices made while the request ran are kept.
+      setColumnMapping((prev) => {
+        const next = { ...prev };
+        const used = new Set(Object.values(prev).filter((v) => v !== 'ignore'));
+        for (const [col, field] of Object.entries(mapping)) {
+          if (!field || next[col] !== 'ignore' || used.has(field as TargetField)) continue;
+          next[col] = field as TargetField;
+          used.add(field as TargetField);
+        }
+        return next;
+      });
+    } catch (e) {
+      toast.error(aiErrorMessage(e));
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   const handleMappingChange = (col: string, target: TargetField) => {
@@ -280,11 +333,7 @@ const BulkLeadUpload: React.FC<BulkLeadUploadProps> = ({ onLeadsChange }) => {
   const errorCount = Object.keys(validationErrors).length;
   const displayedLeads = onlyErrors ? allLeads.filter((_, i) => validationErrors[i]) : allLeads;
 
-  const mappingHasName = Object.values(columnMapping).some((v) =>
-    ['name', 'first_name', 'last_name'].includes(v)
-  );
-  const mappingHasPhone = Object.values(columnMapping).includes('phone');
-  const mappingIsValid = mappingHasName && mappingHasPhone;
+  const mappingIsValid = isMappingValid(columnMapping);
 
   return (
     <Card className="mb-3">
@@ -347,6 +396,21 @@ const BulkLeadUpload: React.FC<BulkLeadUploadProps> = ({ onLeadsChange }) => {
               minimum, map a name and a phone column.
             </Alert>
 
+            <Button
+              variant="outline-primary"
+              size="sm"
+              className="mb-3"
+              disabled={aiLoading}
+              onClick={() => suggestWithAi(csvColumns, rawRows)}
+            >
+              {aiLoading ? (
+                <Spinner size="sm" animation="border" className="me-2" />
+              ) : (
+                <Magic className="me-2" />
+              )}
+              Suggest unmapped columns with AI
+            </Button>
+
             <Table bordered size="sm" className="mb-3">
               <thead className="table-light">
                 <tr>
@@ -395,7 +459,11 @@ const BulkLeadUpload: React.FC<BulkLeadUploadProps> = ({ onLeadsChange }) => {
               <Button variant="outline-secondary" onClick={handleReset}>
                 Back
               </Button>
-              <Button variant="primary" disabled={!mappingIsValid} onClick={applyMappingAndPreview}>
+              <Button
+                variant="primary"
+                disabled={!mappingIsValid || aiLoading}
+                onClick={applyMappingAndPreview}
+              >
                 <ArrowRight className="me-2" />
                 Preview {rawRows.length} Lead{rawRows.length !== 1 ? 's' : ''}
               </Button>

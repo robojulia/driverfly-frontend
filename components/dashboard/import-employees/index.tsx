@@ -9,6 +9,7 @@ import { SchemaDescription, SchemaObjectDescription } from 'yup/lib/schema';
 import Switch from '../../../components/controls/switch';
 import OverlyPopover from '../../../components/popover/overly-popover';
 import { JobEquipmentType } from '../../../enums/jobs/job-equipment-type.enum';
+import { JobGeography } from '../../../enums/jobs/job-geography.enum';
 import { DriverEndorsement } from '../../../enums/users/driver-endorsement.enum';
 import { DriverLicenseType } from '../../../enums/users/driver-license-type.enum';
 import { EducationLevel } from '../../../enums/users/education-level.enum';
@@ -23,10 +24,36 @@ import { matchEnum } from '../../../utils/enums.utils';
 import { FormikInterface } from '../../../utils/formik';
 import { normalizePhoneNumber } from '../../../utils/phone-normalization';
 import { useRouter } from 'next/router';
+import {
+  ColumnMapping,
+  exactMapping,
+  ImportFieldSpec,
+  remapRow,
+  translateValue,
+  ValueMaps,
+} from '../../../utils/ai-import-mapping';
+import ColumnMappingStep from './column-mapping-step';
 
 function unique<T>(value: T, index: number, self: T[]) {
   return Boolean(value) && self.indexOf(value) == index;
 }
+
+const ENUM_FIELDS: Record<string, object> = {
+  license_type: DriverLicenseType,
+  highest_degree: EducationLevel,
+  transmission_type: VehicleTransmissionType,
+  endorsements: DriverEndorsement,
+  equipment_experience: JobEquipmentType,
+  preferred_location: JobGeography,
+};
+
+const FIELD_DESCRIPTIONS: Record<string, string> = {
+  jobId: 'numeric DriverFly job ID the employee is hired into',
+  managerId: 'numeric DriverFly user ID of the manager',
+  license_state: 'state that issued the driver license',
+  equipment_experience: 'comma-separated equipment types the driver has experience with',
+  preferred_location: 'comma-separated route types the driver prefers',
+};
 
 const ImportEmployees = () => {
   const router = useRouter();
@@ -39,8 +66,47 @@ const ImportEmployees = () => {
 
   const schemaDescribe = schema.describe();
 
+  const headers = Object.keys(schemaDescribe.fields).filter((v) => {
+    switch (v) {
+      case 'equipment_owned':
+      case 'employers':
+      case 'documents':
+      case 'street':
+      case 'jobs':
+        return false;
+      default:
+        return true;
+    }
+  });
+
+  const isRequired = (k: string) =>
+    (schemaDescribe.fields[k] as SchemaDescription).tests.some((v) => v.name == 'required');
+
+  const importFields: ImportFieldSpec[] = headers.map((key) => {
+    const type = (schemaDescribe.fields[key] as SchemaDescription).type;
+    const enumObj = ENUM_FIELDS[key];
+    return {
+      key,
+      label: key,
+      type: enumObj
+        ? type == 'array'
+          ? 'enum[]'
+          : 'enum'
+        : type == 'array'
+        ? 'string'
+        : (type as ImportFieldSpec['type']),
+      options: enumObj ? Object.values(enumObj).map(String) : undefined,
+      description: FIELD_DESCRIPTIONS[key],
+    };
+  });
+
   const [warnings, setWarnings] = useState({});
   const [csvErrors, setCsvErrors] = useState([]);
+  const [step, setStep] = useState<'upload' | 'mapping' | 'preview'>('upload');
+  const [csvColumns, setCsvColumns] = useState<string[]>([]);
+  const [rawRows, setRawRows] = useState<Record<string, any>[]>([]);
+  const [columnMapping, setColumnMapping] = useState<ColumnMapping>({});
+  const [valueMaps, setValueMaps] = useState<ValueMaps>({});
 
   const api = new EmployeeApi();
   /**
@@ -202,28 +268,43 @@ const ImportEmployees = () => {
       await Papa.parse(file, {
         header: true,
         skipEmptyLines: true,
-        complete: validateFileContent,
+        complete: onFileParsed,
       });
     }
   }
 
-  function validateFileContent(results): void {
-    let {
+  function onFileParsed(results): void {
+    const {
       data,
       errors,
       meta: { fields },
     } = results;
-    console.log('results', { data, errors, fields });
+    const isBlank = (row) => !Object.values(row ?? {}).some(Boolean);
+    const rows = (data ?? []).filter((row) => !isBlank(row));
+    const parseErrors = (errors ?? []).filter((e) => !data?.[e.row] || !isBlank(data[e.row]));
+    if (parseErrors.length) setCsvErrors(parseErrors);
 
-    const contents = data
-      ?.map((row, i) => {
+    const columns: string[] = (fields ?? []).filter((c: string) => c.trim());
+    const mapping = exactMapping(columns, importFields);
+    setCsvColumns(columns);
+    setRawRows(rows);
+    setColumnMapping(mapping);
+    setValueMaps({});
+
+    // Files built from our template already line up; anything else gets a mapping review first.
+    if (columns.length && columns.every((c) => mapping[c])) {
+      applyMapping(rows, mapping, {});
+    } else {
+      setStep('mapping');
+    }
+  }
+
+  function applyMapping(rows: Record<string, any>[], mapping: ColumnMapping, maps: ValueMaps): void {
+    const contents = rows
+      ?.map((row) => {
         const entity = new EmployeeEntity();
-        if (!Object.values(row)?.some(Boolean)) {
-          errors = errors.filter((v) => v.row != i);
-          return false;
-        }
 
-        Object.entries(row)
+        Object.entries(remapRow(row, mapping))
           ?.map(([key, value]: [string, any]) => {
             const fieldSchema = schemaDescribe.fields[key];
             if (!fieldSchema) return;
@@ -237,7 +318,8 @@ const ImportEmployees = () => {
                 entity[key] = value
                   .split(',')
                   ?.map((v) => v.trim())
-                  .filter((v) => !!v);
+                  .filter((v) => !!v)
+                  .map((v) => translateValue(maps, mapping, key, v));
                 break;
               case 'number':
                 entity[key] = value != '' ? Number(value) : null;
@@ -246,7 +328,7 @@ const ImportEmployees = () => {
                 entity[key] = value != '' ? value : null;
                 break;
               default:
-                entity[key] = value.trim();
+                entity[key] = translateValue(maps, mapping, key, value.trim());
             }
 
             switch (key) {
@@ -328,28 +410,20 @@ const ImportEmployees = () => {
         return entity;
       })
       ?.filter(Boolean);
-    if (errors?.length) setCsvErrors(errors);
+    setStep('preview');
     form?.setValues({ items: contents }, true);
   }
-
-  const headers = Object.keys(schemaDescribe.fields).filter((v) => {
-    switch (v) {
-      case 'equipment_owned':
-      case 'employers':
-      case 'documents':
-      case 'street':
-      case 'jobs':
-        return false;
-      default:
-        return true;
-    }
-  }); //Object.keys(new ApplicantEntity());
 
   const onClearClick = (e) => {
     form.resetForm();
     setFileName('');
     setProgress(0);
     setCsvErrors([]);
+    setStep('upload');
+    setCsvColumns([]);
+    setRawRows([]);
+    setColumnMapping({});
+    setValueMaps({});
   };
 
   const [onlyErrors, setOnlyErrors] = useState(false);
@@ -364,7 +438,11 @@ const ImportEmployees = () => {
 
   const canUpload = !fileName && !form.isValidating && !form.isSubmitting;
   const canImport =
-    form.isValid && !form.isValidating && !form.isSubmitting && form.values.items.length > 0;
+    step === 'preview' &&
+    form.isValid &&
+    !form.isValidating &&
+    !form.isSubmitting &&
+    form.values.items.length > 0;
   const canClear =
     (form.values.items.length > 0 || fileName) && !form.isValidating && !form.isSubmitting;
   return (
@@ -422,7 +500,38 @@ const ImportEmployees = () => {
           </div>
         </Col>
       </Row>
-      <Row>
+      {step === 'mapping' && (
+        <ColumnMappingStep
+          target="employee (truck driver) records"
+          fields={importFields}
+          requiredFields={headers.filter(isRequired)}
+          columns={csvColumns}
+          rows={rawRows}
+          mapping={columnMapping}
+          valueMaps={valueMaps}
+          onChange={(mapping, maps) => {
+            setColumnMapping(mapping);
+            setValueMaps(maps);
+          }}
+          onBack={() => onClearClick(null)}
+          onContinue={() => applyMapping(rawRows, columnMapping, valueMaps)}
+        />
+      )}
+      {step === 'preview' && rawRows.length > 0 && (
+        <Row className="mb-2">
+          <Col>
+            <button
+              type="button"
+              disabled={form.isSubmitting}
+              onClick={() => setStep('mapping')}
+              className="btn btn-sm btn-outline-secondary"
+            >
+              {t('REMAP_COLUMNS')}
+            </button>
+          </Col>
+        </Row>
+      )}
+      <Row className={step === 'mapping' ? 'd-none' : ''}>
         <Col>
           <div style={{ float: 'left' }}>
             {!form.isValid && (
@@ -468,7 +577,7 @@ const ImportEmployees = () => {
           </Col>
         </Row>
       )}
-      <Row>
+      <Row className={step === 'mapping' ? 'd-none' : ''}>
         <Col className={`p-0 ${style.table_wrapper_overflowX}`}>
           <Table striped bordered hover className={style.table_overflowX}>
             <thead>
@@ -478,13 +587,7 @@ const ImportEmployees = () => {
                 </th>
                 <th className={style.frozen_col}>#</th>
                 {headers.map((k) => {
-                  const text = `${k}${
-                    (schemaDescribe.fields[k] as SchemaDescription).tests.some(
-                      (v) => v.name == 'required'
-                    )
-                      ? '*'
-                      : ''
-                  }`;
+                  const text = `${k}${isRequired(k) ? '*' : ''}`;
 
                   switch (k) {
                     // case "license_restrictions":
