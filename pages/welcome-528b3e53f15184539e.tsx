@@ -25,6 +25,27 @@ const Shot: React.FC<ShotProps> = ({ src, alt, caption }) => (
   </>
 );
 
+const CodePill: React.FC = () => {
+  const [copied, setCopied] = useState(false);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(INVITATION_CODE);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard can be blocked (e.g. insecure context); the code stays visible to copy by hand.
+    }
+  };
+
+  return (
+    <button type="button" className={styles.codePill} onClick={copy} title="Click to copy">
+      Invitation Code:&nbsp;<strong>{INVITATION_CODE}</strong>
+      <span className={styles.copyHint}>{copied ? 'Copied!' : 'Copy'}</span>
+    </button>
+  );
+};
+
 export default function PartnerSignup() {
   const [showSurvey, setShowSurvey] = useState(false);
 
@@ -65,9 +86,7 @@ export default function PartnerSignup() {
               <a className={styles.btnPrimary} href={SIGNUP_URL} target="_blank" rel="noreferrer">
                 Create Your Account
               </a>
-              <span className={styles.codePill}>
-                Invitation Code:&nbsp;<strong>{INVITATION_CODE}</strong>
-              </span>
+              <CodePill />
             </div>
           </div>
         </section>
@@ -105,30 +124,44 @@ export default function PartnerSignup() {
 
           <details className={styles.priceDetail}>
             <summary>
-              <span className={styles.priceDetailName}>More drivers or users?</span>
-              <span className={styles.priceDetailFrom}>From $2 per driver/mo</span>
+              <span className={styles.priceDetailName}>Need more drivers or users?</span>
+              <span className={styles.priceDetailFrom}>From $1 per driver/mo</span>
             </summary>
             <div className={styles.priceDetailBody}>
-              <p>Beyond the first 6 driver employees, each additional driver employee is:</p>
+              <p>
+                <strong>
+                  Beyond the first 6 driver employees, each additional driver employee is:
+                </strong>
+              </p>
               <ul className={styles.priceRows}>
                 <li>
                   <span>0–10 driver employees</span>
-                  <strong>$4 per employee/mo</strong>
+                  <strong>
+                    <s className={styles.wasPrice}>$4</s> $3 per employee/mo
+                  </strong>
                 </li>
                 <li>
                   <span>11–50 driver employees</span>
-                  <strong>$3 per employee/mo</strong>
+                  <strong>
+                    <s className={styles.wasPrice}>$3</s> $2 per employee/mo
+                  </strong>
                 </li>
                 <li>
                   <span>More than 50 driver employees</span>
-                  <strong>$2 per employee/mo</strong>
+                  <strong>
+                    <s className={styles.wasPrice}>$2</s> $1 per employee/mo
+                  </strong>
                 </li>
               </ul>
-              <p>Need more people logging in, like extra recruiters or admins?</p>
+              <p>
+                <strong>Need more people logging in, like extra recruiters or admins?</strong>
+              </p>
               <ul className={styles.priceRows}>
                 <li>
                   <span>Additional user seat</span>
-                  <strong>$10 per user/mo</strong>
+                  <strong>
+                    <s className={styles.wasPrice}>$15/mo</s> $10/mo per user
+                  </strong>
                 </li>
               </ul>
             </div>
@@ -171,8 +204,8 @@ export default function PartnerSignup() {
             <div className={styles.priceDetailBody}>
               <p>
                 AI agents call or text your drivers and applicants for you, for example to follow up
-                on applications or remind drivers before their license or medical card expires.
-                Usage is billed at cost for your first 2 months, then:
+                on applications or remind drivers before their license or medical card expires.{' '}
+                <strong>Usage is billed at cost for your first 2 months</strong>, then:
               </p>
               <ul className={styles.priceRows}>
                 <li>
@@ -197,11 +230,9 @@ export default function PartnerSignup() {
 
           <div className={`${styles.ctaRow} ${styles.ctaRowLight}`}>
             <a className={styles.btnPrimary} href={SIGNUP_URL} target="_blank" rel="noreferrer">
-              Create Your Account
+              Get Started
             </a>
-            <span className={styles.codePill}>
-              Invitation Code:&nbsp;<strong>{INVITATION_CODE}</strong>
-            </span>
+            <CodePill />
           </div>
 
           <p className={styles.priceFine} style={{ marginTop: 16 }}>
