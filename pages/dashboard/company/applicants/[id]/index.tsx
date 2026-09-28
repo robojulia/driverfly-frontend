@@ -47,6 +47,9 @@ import { ApplicantSafetyBackgroundForm } from '../../../../../components/forms/c
 import { ApplicantSignedAgreementsForm } from '../../../../../components/forms/company/applicant-signed-agreements-form';
 import { ApplicantAlreadyWorkedForm } from '../../../../../components/forms/company/applicant-already-worked-form';
 import OnboardingChecklist from '../../../../../components/applicants/onboarding-checklist';
+import ClearinghouseQueryHistory from '../../../../../components/clearinghouse/clearinghouse-query-history';
+import MvrOrderHistory from '../../../../../components/mvr/mvr-order-history';
+import { ClearinghouseQueryType } from '../../../../api/clearinghouse';
 import { ApplicantApplicationChecklistForm } from '../../../../../components/forms/company/applicant-application-checklist-form';
 import { ApplicantNotesForm } from '../../../../../components/forms/company/applicant-notes-form';
 import { ApplicantEmergencyContactForm } from '../../../../../components/forms/company/applicant-emergency-contact-form';
@@ -505,6 +508,18 @@ export default function ViewApplicant({ id }) {
                   showCompleted={true}
                   canEditSafetyPerformance={false}
                   showResendButton={true}
+                />
+                <ClearinghouseQueryHistory
+                  subjectType="applicants"
+                  subjectId={applicant.id}
+                  driverName={`${applicant.first_name ?? ''} ${applicant.last_name ?? ''}`.trim()}
+                  defaultQueryType={ClearinghouseQueryType.PRE_EMPLOYMENT}
+                />
+                <MvrOrderHistory
+                  subjectType="applicants"
+                  subjectId={applicant.id}
+                  driverName={`${applicant.first_name ?? ''} ${applicant.last_name ?? ''}`.trim()}
+                  defaultPurpose="PRE_EMPLOYMENT"
                 />
               </Col>
             </Row>

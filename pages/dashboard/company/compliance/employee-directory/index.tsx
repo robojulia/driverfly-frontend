@@ -38,6 +38,8 @@ import EmployeeApi from '../../../../api/employee';
 import DataViewToggle from '../../../../../components/shared/DataViewToggle';
 import Notifications from '../../../../../components/dashboard/employee-directory/notifications';
 import { EmployeeCSVExporter } from '../../../../../utils/employee-csv-exporter';
+import ClearinghouseQueryModal from '../../../../../components/clearinghouse/clearinghouse-query-modal';
+import MvrOrderModal from '../../../../../components/mvr/mvr-order-modal';
 
 enum ViewModeType {
   EMPLOYEE = 'EMPLOYEE',
@@ -69,6 +71,8 @@ export default function EmployeeDirectory() {
   }>(null);
   const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingsMetaInitialValues);
   const [activeTab, setActiveTab] = useState<string>('directory');
+  const [clearinghouseOpen, setClearinghouseOpen] = useState<boolean>(false);
+  const [mvrOpen, setMvrOpen] = useState<boolean>(false);
 
   // Add search and sorting state
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -666,6 +670,53 @@ export default function EmployeeDirectory() {
                 <Download size={14} className="mr-1" />
                 Export
               </Button>
+              {viewMode == ViewModeType.EMPLOYEE && (
+                <Button
+                  variant="outline-secondary"
+                  onClick={() => setClearinghouseOpen(true)}
+                  title="Run the annual FMCSA Clearinghouse query for every active employee"
+                  style={{
+                    height: '38px',
+                    padding: '0.375rem 0.75rem',
+                    borderRadius: '0.25rem',
+                    fontSize: '1rem',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  Clearinghouse Query
+                </Button>
+              )}
+              <ClearinghouseQueryModal
+                isOpen={clearinghouseOpen}
+                onClose={() => setClearinghouseOpen(false)}
+                selection={{ allActiveEmployees: true }}
+                description="All active employees. Use this for the annual limited query (49 CFR 382.701(b))."
+              />
+              {viewMode == ViewModeType.EMPLOYEE && (
+                <Button
+                  variant="outline-secondary"
+                  onClick={() => setMvrOpen(true)}
+                  title="Pull the annual Motor Vehicle Record for every active employee"
+                  style={{
+                    height: '38px',
+                    padding: '0.375rem 0.75rem',
+                    borderRadius: '0.25rem',
+                    fontSize: '1rem',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  Annual MVRs
+                </Button>
+              )}
+              <MvrOrderModal
+                isOpen={mvrOpen}
+                onClose={() => setMvrOpen(false)}
+                selection={{ allActiveEmployees: true }}
+                description="All active employees. Use this for the annual MVR review (49 CFR 391.25)."
+                defaultPurpose="ANNUAL_REVIEW"
+              />
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>

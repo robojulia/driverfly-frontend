@@ -34,6 +34,8 @@ import BaseApi from '../../../../api/_baseApi';
 import { FacebookFormJobMapping } from '../../../../../models/integrations/providers/facebook/facebook-lead-types';
 import { JobEntity } from '../../../../../models/job/job.entity';
 import { JobIndeedExporter } from '../../../../../utils/job-indeed-exporter';
+import ClearinghouseProviderSettingsTab from '../../../../../components/clearinghouse/clearinghouse-provider-settings';
+import MvrProviderSettingsTab from '../../../../../components/mvr/mvr-provider-settings';
 
 // ─── Indeed token API helper ───────────────────────────────────────────────────
 class IndeedApi extends BaseApi {
@@ -72,6 +74,8 @@ export default function IntegrationsPage() {
         items={{
           'Facebook Lead Ads': { item: <FacebookTab companyId={companyId} jobs={jobs} t={t} /> },
           'Indeed Job Posting': { item: <IndeedTab companyId={companyId} jobs={jobs} company={company} /> },
+          'FMCSA Clearinghouse': { item: <ClearinghouseProviderSettingsTab companyId={companyId} /> },
+          'Motor Vehicle Records (MVR)': { item: <MvrProviderSettingsTab companyId={companyId} /> },
         }}
       />
     </PageLayout>

@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import AdditionalFiles from '../../../../../../components/dashboard/employee-directory/additional-files';
 import Background from '../../../../../../components/dashboard/employee-directory/background';
 import DQF from '../../../../../../components/dashboard/employee-directory/dqf';
+import ClearinghouseQueryHistory from '../../../../../../components/clearinghouse/clearinghouse-query-history';
+import MvrOrderHistory from '../../../../../../components/mvr/mvr-order-history';
 import HRFiles from '../../../../../../components/dashboard/employee-directory/hr-files';
 import Notifications from '../../../../../../components/dashboard/employee-directory/notifications';
 import ConfigureScopeModal from '../../../../../../components/dashboard/employee-directory/notifications/configure-scope-modal';
@@ -330,6 +332,17 @@ export default function EmployeeDetailPage() {
               </TabPanel>
 
               <TabPanel>
+                <ClearinghouseQueryHistory
+                  subjectType="employee"
+                  subjectId={employee.id}
+                  driverName={`${employee.first_name ?? ''} ${employee.last_name ?? ''}`.trim()}
+                />
+                <MvrOrderHistory
+                  subjectType="employee"
+                  subjectId={employee.id}
+                  driverName={`${employee.first_name ?? ''} ${employee.last_name ?? ''}`.trim()}
+                  defaultPurpose="ANNUAL_REVIEW"
+                />
                 <DQF
                   employee={employee}
                   canEdit={employee.status === EmployeeStatus.ACTIVE}
