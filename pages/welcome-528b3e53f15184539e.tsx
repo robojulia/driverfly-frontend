@@ -124,13 +124,13 @@ export default function PartnerSignup() {
           <details className={styles.priceDetail}>
             <summary>
               <span className={styles.priceDetailName}>AI Call &amp; SMS Agents</span>
-              <span className={styles.priceDetailFrom}>At cost for 3 months</span>
+              <span className={styles.priceDetailFrom}>At cost for 2 months</span>
             </summary>
             <div className={styles.priceDetailBody}>
               <p>
                 AI agents call or text your drivers and applicants for you, for example to follow up
                 on applications or remind drivers before their license or medical card expires.
-                Usage is billed at cost for your first 3 months, then:
+                Usage is billed at cost for your first 2 months, then:
               </p>
               <ul className={styles.priceRows}>
                 <li>
@@ -152,6 +152,15 @@ export default function PartnerSignup() {
               </ul>
             </div>
           </details>
+
+          <div className={`${styles.ctaRow} ${styles.ctaRowLight}`}>
+            <a className={styles.btnPrimary} href={SIGNUP_URL} target="_blank" rel="noreferrer">
+              Create Your Account
+            </a>
+            <span className={styles.codePill}>
+              Invitation Code:&nbsp;<strong>{INVITATION_CODE}</strong>
+            </span>
+          </div>
 
           <p className={styles.priceFine} style={{ marginTop: 16 }}>
             Questions about pricing? Email{' '}

@@ -423,6 +423,28 @@ p.priceFine {
   line-height: 1.6;
 }
 
+/* Same CTA on a light background */
+.ctaRowLight {
+  justify-content: flex-start;
+  margin-top: 24px;
+}
+
+.ctaRowLight .btnPrimary {
+  background: var(--brand);
+  color: #ffffff !important;
+}
+
+.ctaRowLight .btnPrimary:hover {
+  background: var(--brand-dark);
+  color: #ffffff !important;
+}
+
+.ctaRowLight .codePill {
+  background: #ffffff;
+  border-color: var(--brand);
+  color: var(--brand-dark);
+}
+
 /* ---------- Cards ---------- */
 .cardGrid {
   display: grid;

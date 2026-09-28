@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -33,9 +33,15 @@ export default function Signup() {
 
 	const { t } = useTranslation();
 
+	// Don't flag empty fields until the user first tries to submit; after that,
+	// validate live so errors clear as they're fixed.
+	const [attemptedSubmit, setAttemptedSubmit] = useState(false);
+
 	const form = useFormik({
 		initialValues: new SignUpDto(),
 		validationSchema: SignUpDto.yupSchema(),
+		validateOnChange: attemptedSubmit,
+		validateOnBlur: attemptedSubmit,
 		onSubmit: async (dto) => {
 			const authApi = new AuthApi();
 			try {
@@ -77,7 +83,7 @@ export default function Signup() {
 			utm_campaign: `${utm_campaign || ""}`,
 			utm_content: `${utm_content || ""}`,
 			role: SignUpRole.COMPANY // by default all accoounts will be registered as company
-		});
+		}, false);
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -103,7 +109,12 @@ export default function Signup() {
 			</div>
 			<Row className="justify-content-lg-center">
 				<Col lg="8">
-					<form onSubmit={form.handleSubmit}>
+					<form
+						onSubmit={(e) => {
+							setAttemptedSubmit(true);
+							form.handleSubmit(e);
+						}}
+					>
 						<Row>
 							{/* <BaseSelect
 								className="col-12 mt-1"
