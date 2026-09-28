@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import { useContext, useEffect, useState } from 'react';
-import { Form, Button as BootstrapButton, Row } from 'react-bootstrap';
+import { Form, Row } from 'react-bootstrap';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { useTranslation } from '../../../../hooks/use-translation';
 import { useAsyncFormSave } from '../../../../hooks/use-async-form-save';
@@ -12,8 +12,7 @@ import stateList from '../../../../utils/stateList';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
 import { FormActions } from '../form-buttons';
-import CompanyLookupModal from '../../../modals/company-lookup-modal';
-import { Search } from 'react-bootstrap-icons';
+import { EmployerNameAutocomplete, FmcsaEmployerFields } from './employer-name-autocomplete';
 import { ApplicationCompletionChecklist } from '../../../applicants/application-completion-checker';
 
 export function EmploymentHistory() {
@@ -24,7 +23,6 @@ export function EmploymentHistory() {
 
   const { t } = useTranslation();
   const [isFormValid, setIsFormValid] = useState(false);
-  const [showLookupModal, setShowLookupModal] = useState(false);
 
   // Check if this is a returning applicant to the same company
   const isReturningApplicant = isEditingExistingApplicant && applicant?.already_applied_to_company === true;
@@ -176,21 +174,8 @@ export function EmploymentHistory() {
     }, 0);
   };
 
-  const handleSelectCompany = (company: any) => {
-    const address = company.phy_street || '';
-    const city = company.phy_city || '';
-    const state = company.phy_state || '';
-    const zipCode = company.phy_zip || '';
-    const phone = company.phone || '';
-    const email = company.email_address || '';
-
-    form.setFieldValue('employer.name', company.legal_name || company.dba_name || '');
-    if (address) form.setFieldValue('employer.address', address);
-    if (city) form.setFieldValue('employer.city', city);
-    if (state) form.setFieldValue('employer.state', state);
-    if (zipCode) form.setFieldValue('employer.zip_code', zipCode);
-    if (phone) form.setFieldValue('employer.phone', phone);
-    if (email) form.setFieldValue('employer.email', email);
+  const handleSelectCarrier = (fields: FmcsaEmployerFields) => {
+    form.setFieldValue('employer', { ...form.values.employer, ...fields });
   };
 
   // Helper functions for company history questions
@@ -548,34 +533,21 @@ export function EmploymentHistory() {
                   marginBottom: '1.5rem',
                 }}
               >
-                <div>
-                  <Input
-                    name="employer.name"
-                    label={t('CURRENT_COMPANY_NAME')}
-                    placeholder={t('CURRENT_COMPANY_NAME')}
-                    value={form.values.employer?.name || ''}
-                    onChange={form.handleChange}
-                    onBlur={form.handleBlur}
-                    required
-                    error={
-                      form.touched.employer?.name && form.errors.employer?.name
-                        ? String(form.errors.employer?.name)
-                        : undefined
-                    }
-                    autoComplete="organization"
-                  />
-                  <BootstrapButton
-                    variant="outline-primary"
-                    size="sm"
-                    onClick={() => setShowLookupModal(true)}
-                    disabled={!form.values.employer?.name?.trim()}
-                    className="company-lookup-btn"
-                    style={{ marginTop: '0.5rem', width: '100%' }}
-                  >
-                    <Search style={{ marginRight: '0.5rem' }} />
-                    Lookup Company
-                  </BootstrapButton>
-                </div>
+                <EmployerNameAutocomplete
+                  name="employer.name"
+                  label={t('CURRENT_COMPANY_NAME')}
+                  placeholder={t('CURRENT_COMPANY_NAME')}
+                  value={form.values.employer?.name || ''}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  required
+                  error={
+                    form.touched.employer?.name && form.errors.employer?.name
+                      ? String(form.errors.employer?.name)
+                      : undefined
+                  }
+                  onSelectCarrier={handleSelectCarrier}
+                />
 
                 <Input
                   name="employer.title"
@@ -844,27 +816,7 @@ export function EmploymentHistory() {
             grid-template-columns: 1fr !important;
           }
         }
-        .company-lookup-btn:hover:not(:disabled) {
-          background-color: #17a2b8 !important;
-          color: white !important;
-          border-color: #17a2b8 !important;
-        }
-        .company-lookup-btn:active:not(:disabled),
-        .company-lookup-btn:focus:not(:disabled) {
-          background-color: #17a2b8 !important;
-          color: white !important;
-          border-color: #17a2b8 !important;
-          box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.5) !important;
-        }
       `}</style>
-
-      {/* Company Lookup Modal */}
-      <CompanyLookupModal
-        show={showLookupModal}
-        onHide={() => setShowLookupModal(false)}
-        onSelectCompany={handleSelectCompany}
-        searchTerm={form.values.employer?.name || ''}
-      />
     </>
   );
 }

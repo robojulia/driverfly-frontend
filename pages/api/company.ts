@@ -7,6 +7,21 @@ import { CompanyPreferenceEntity } from '../../models/company/company-preference
 import { CompanyManagerEntity } from '../../models/company/company-manager.entity';
 import { LocationEntity } from '../../models/company/location.entity';
 
+/** A company from the FMCSA census, as returned by the backend's company search. */
+export interface FmcsaCarrier {
+  dot_number: string;
+  legal_name: string | null;
+  dba_name: string | null;
+  /** A = active, I = inactive. */
+  status_code: string | null;
+  phy_street: string | null;
+  phy_city: string | null;
+  phy_state: string | null;
+  phy_zip: string | null;
+  phone: string | null;
+  email_address: string | null;
+}
+
 export default class CompanyApi extends BaseApi {
   baseUrl: string = 'companies';
   async list(params?: { withPhoto?: boolean }): Promise<CompanyEntity[]> {
@@ -201,9 +216,9 @@ export default class CompanyApi extends BaseApi {
     return data;
   };
 
-  fmcsaCompanySearch = async (companyName: string): Promise<any> => {
+  fmcsaCompanySearch = async (companyName: string): Promise<{ records: FmcsaCarrier[] }> => {
     const { data } = await this.post(`${this.baseUrl}/fmcsa-company-search`, {
-      company_name: companyName
+      company_name: companyName,
     });
     return data;
   };

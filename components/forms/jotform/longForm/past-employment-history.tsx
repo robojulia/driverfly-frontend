@@ -1,7 +1,7 @@
 import { useFormik } from 'formik';
 import { useContext, useEffect, useState } from 'react';
-import { Form, Button as BootstrapButton } from 'react-bootstrap';
-import { DashCircle, PlusCircle, Search } from 'react-bootstrap-icons';
+import { Form } from 'react-bootstrap';
+import { DashCircle, PlusCircle } from 'react-bootstrap-icons';
 import JotformContext, { JotFormContextType } from '../../../../context/jotform-context';
 import { useTranslation } from '../../../../hooks/use-translation';
 import { ApplicantEmployerEntity } from '../../../../models/applicant';
@@ -20,7 +20,7 @@ import {
 import stateList from '../../../../utils/stateList';
 import { BooleanType } from '../../../../enums/jotform/boolean-type.enum';
 import { FormActions } from '../form-buttons';
-import CompanyLookupModal from '../../../modals/company-lookup-modal';
+import { EmployerNameAutocomplete, FmcsaEmployerFields } from './employer-name-autocomplete';
 
 export function PastEmploymentHistory() {
   const {
@@ -30,8 +30,6 @@ export function PastEmploymentHistory() {
 
   const { t } = useTranslation();
   const [isFormValid, setIsFormValid] = useState(false);
-  const [showLookupModal, setShowLookupModal] = useState(false);
-  const [lookupEmployerIndex, setLookupEmployerIndex] = useState<number | null>(null);
 
   function updateApplicat({
     employers: past_employers,
@@ -225,28 +223,13 @@ export function PastEmploymentHistory() {
     }, 0);
   };
 
-  const handleOpenLookup = (index: number) => {
-    setLookupEmployerIndex(index);
-    setShowLookupModal(true);
-  };
-
-  const handleSelectCompany = (company: any) => {
-    if (lookupEmployerIndex === null) return;
-
-    const address = company.phy_street || '';
-    const city = company.phy_city || '';
-    const state = company.phy_state || '';
-    const zipCode = company.phy_zip || '';
-    const phone = company.phone || '';
-    const email = company.email_address || '';
-
-    form.setFieldValue(`employers[${lookupEmployerIndex}].name`, company.legal_name || company.dba_name || '');
-    if (address) form.setFieldValue(`employers[${lookupEmployerIndex}].address`, address);
-    if (city) form.setFieldValue(`employers[${lookupEmployerIndex}].city`, city);
-    if (state) form.setFieldValue(`employers[${lookupEmployerIndex}].state`, state);
-    if (zipCode) form.setFieldValue(`employers[${lookupEmployerIndex}].zip_code`, zipCode);
-    if (phone) form.setFieldValue(`employers[${lookupEmployerIndex}].phone`, phone);
-    if (email) form.setFieldValue(`employers[${lookupEmployerIndex}].email`, email);
+  const handleSelectCarrier = (index: number, fields: FmcsaEmployerFields) => {
+    form.setValues({
+      ...form.values,
+      employers: form.values.employers.map((employer, idx) =>
+        idx === index ? { ...employer, ...fields } : employer
+      ),
+    });
   };
 
   return (
@@ -386,30 +369,17 @@ export function PastEmploymentHistory() {
                       marginBottom: '1.5rem',
                     }}
                   >
-                    <div>
-                      <Input
-                        name={`employers[${i}].name`}
-                        label={t('PREVIOUS_COMPANY_NAME')}
-                        placeholder={t('PREVIOUS_COMPANY_NAME')}
-                        value={form.values.employers?.[i]?.name || ''}
-                        onChange={form.handleChange}
-                        onBlur={form.handleBlur}
-                        required
-                        error={getFieldError(`employers[${i}].name`)}
-                        autoComplete="organization"
-                      />
-                      <BootstrapButton
-                        variant="outline-primary"
-                        size="sm"
-                        onClick={() => handleOpenLookup(i)}
-                        disabled={!form.values.employers?.[i]?.name?.trim()}
-                        className="company-lookup-btn"
-                        style={{ marginTop: '0.5rem', width: '100%' }}
-                      >
-                        <Search style={{ marginRight: '0.5rem' }} />
-                        Lookup Company
-                      </BootstrapButton>
-                    </div>
+                    <EmployerNameAutocomplete
+                      name={`employers[${i}].name`}
+                      label={t('PREVIOUS_COMPANY_NAME')}
+                      placeholder={t('PREVIOUS_COMPANY_NAME')}
+                      value={form.values.employers?.[i]?.name || ''}
+                      onChange={form.handleChange}
+                      onBlur={form.handleBlur}
+                      required
+                      error={getFieldError(`employers[${i}].name`)}
+                      onSelectCarrier={(fields) => handleSelectCarrier(i, fields)}
+                    />
 
                     <Input
                       name={`employers[${i}].title`}
@@ -700,34 +670,7 @@ export function PastEmploymentHistory() {
             grid-template-columns: 1fr !important;
           }
         }
-        .company-lookup-btn:hover:not(:disabled) {
-          background-color: #17a2b8 !important;
-          color: white !important;
-          border-color: #17a2b8 !important;
-        }
-        .company-lookup-btn:active:not(:disabled),
-        .company-lookup-btn:focus:not(:disabled) {
-          background-color: #17a2b8 !important;
-          color: white !important;
-          border-color: #17a2b8 !important;
-          box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.5) !important;
-        }
       `}</style>
-
-      {/* Company Lookup Modal */}
-      <CompanyLookupModal
-        show={showLookupModal}
-        onHide={() => {
-          setShowLookupModal(false);
-          setLookupEmployerIndex(null);
-        }}
-        onSelectCompany={handleSelectCompany}
-        searchTerm={
-          lookupEmployerIndex !== null
-            ? form.values.employers?.[lookupEmployerIndex]?.name || ''
-            : ''
-        }
-      />
     </>
   );
 }
