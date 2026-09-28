@@ -23,6 +23,15 @@ module.exports = {
     NEXT_PUBLIC_MICROSOFT_CLARITY: process.env.NEXT_PUBLIC_MICROSOFT_CLARITY,
     NEXT_PUBLIC_GOOGLE_ANALYTICS: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS,
   },
+  async redirects() {
+    return [
+      { source: '/blog', destination: 'https://driverfly.co/blog/', permanent: true },
+      { source: '/blog-eldt', destination: 'https://driverfly.co/blog/', permanent: true },
+      { source: '/blog-tips', destination: 'https://driverfly.co/blog/', permanent: true },
+      { source: '/otr-general-freight-drivers', destination: '/find-jobs', permanent: true },
+      { source: '/terms-of-service', destination: '/terms-and-policies', permanent: true },
+    ];
+  },
   i18n: {
     defaultLocale: 'en-us',
     locales: ['en-us'],

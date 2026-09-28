@@ -31,8 +31,8 @@ const navItems: NavItem[] = [
     label: 'Motor Carrier Solutions',
     children: [
       { label: 'Our Solutions', href: 'https://driverfly.co/our-software/', external: true },
-      { label: 'Pricing', href: 'https://driverfly.co/pricing', external: true },
-      { label: 'Request Quote', href: 'https://driverfly.co/contact-us/', external: true },
+      { label: 'Pricing', href: 'https://driverfly.co/pricing/', external: true },
+      { label: 'Schedule Demo', href: 'https://driverfly.co/book-demo/', external: true },
       { label: 'Digital Hiring App', href: 'https://digitalhiringapp.com/', external: true },
       { label: 'Third Party Resources', href: '/third-party-resources' },
     ],

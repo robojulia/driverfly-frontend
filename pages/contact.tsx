@@ -31,9 +31,7 @@ export default function Contact() {
         toast.success(t("THANKS_FOR_CONTACTING_US"));
         form.resetForm();
       } catch (e) {
-        if (e.response?.data?.recaptchaValue == "INVALID_RECAPTCHA_TOKEN")
-
-          globalAjaxExceptionHandler(e, {
+        globalAjaxExceptionHandler(e, {
             formik: form,
             toast: toast,
             t: t,
@@ -71,24 +69,19 @@ export default function Contact() {
                 <div className="contact-infomation">
                   <h2>{t("CONTACT_INFORMARION")}</h2>
                   <p>{t("HAVE_QUENTIONS")}</p>
-                  {/* <ul className="address_list">
-          <li>
-            <a href="#" className="nav-link px-0">
-            {" "}
-            {t("LOS_ANGELES_CA")}
-            </a>
-          </li>
-          <li>
-            <a href="mailto:#" className="nav-link px-0">
-            {t("EMAIL_INFO_DRIVERFLY_CO")}
-            </a>
-          </li>
-          <li>
-            <a href="#" className="nav-link px-0">
-            {t("Call_(614)_259_7225")}
-            </a>
-          </li>
-          </ul> */}
+                  <ul className="address_list">
+                    <li className="nav-link px-0">{t("LOS_ANGELES_CA")}</li>
+                    <li>
+                      <a href="mailto:info@driverfly.co" className="nav-link px-0">
+                        {t("EMAIL_INFO_DRIVERFLY_CO")}
+                      </a>
+                    </li>
+                    <li>
+                      <a href="tel:+17143405502" className="nav-link px-0">
+                        {t("CALL_DRIVERFLY_PHONE")}
+                      </a>
+                    </li>
+                  </ul>
                 </div>
               </article>
             </div>
@@ -164,8 +157,8 @@ export default function Contact() {
                 <Newspaper />
               </div>
               <h3 className="title text-center my-4">
-                <Link href="/blog">
-                  <a className="text-black">{t("READ_OUR_LATEST_NEWS")}</a>
+                <Link href="https://driverfly.co/blog/">
+                  <a className="text-black" target="_blank">{t("READ_OUR_LATEST_NEWS")}</a>
                 </Link>
               </h3>
             </div>

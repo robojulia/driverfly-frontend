@@ -124,7 +124,7 @@ export function CompanyForm(props: CompanyFormProps) {
             className="col-12 mt-4"
             label={t('WEBSITE')}
             name={`website`}
-            placeholder="http://www.example.com"
+            placeholder="https://www.example.com"
             formik={form}
           />
           <BaseTextArea
@@ -173,7 +173,7 @@ export function CompanyForm(props: CompanyFormProps) {
                 className=""
                 label={t('FACEBOOK')}
                 name={`facebook`}
-                placeholder="http://www.facebook.com"
+                placeholder="https://www.facebook.com"
                 formik={form}
               />
             </div>
@@ -182,7 +182,7 @@ export function CompanyForm(props: CompanyFormProps) {
                 className=""
                 label={t('INSTAGRAM')}
                 name={`instagram`}
-                placeholder="http://www.instagram.com"
+                placeholder="https://www.instagram.com"
                 formik={form}
               />
             </div>
@@ -191,7 +191,7 @@ export function CompanyForm(props: CompanyFormProps) {
                 className=""
                 label={t('LINKEDIN')}
                 name={`linkedin`}
-                placeholder="http://www.linkedin.com"
+                placeholder="https://www.linkedin.com"
                 formik={form}
               />
             </div>
@@ -200,7 +200,7 @@ export function CompanyForm(props: CompanyFormProps) {
                 className=""
                 label={t('TWITTER')}
                 name={`twitter`}
-                placeholder="http://www.twitter.com"
+                placeholder="https://www.twitter.com"
                 formik={form}
               />
             </div>

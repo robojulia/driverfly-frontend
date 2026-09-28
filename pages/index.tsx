@@ -50,6 +50,8 @@ export default function Index() {
   return (
     <>
       <Head>
+        <title>{t('HOME_META_TITLE')}</title>
+        <meta name="description" content={t('HOME_META_DESC')} key="desc" />
         <meta
           name="google-site-verification"
           content="m9bfVuOGxtYDxi8eKLetXlJplLbdwnewUO37wDyw96I"

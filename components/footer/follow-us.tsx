@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Facebook, Instagram } from 'react-bootstrap-icons';
+import { Facebook, Instagram, Linkedin } from 'react-bootstrap-icons';
 import { useTranslation } from "../../hooks/use-translation";
 
 export default function FollowUs() {
@@ -24,6 +24,14 @@ justify-content-md-end justify-content-center  ">
                         <Link href="https://www.instagram.com/driver_hiring/">
                             <a target="_blank">
                                 < Instagram />
+                            </a>
+                        </Link>
+
+                    </div>
+                    <div className="social">
+                        <Link href="https://www.linkedin.com/company/driverfly/">
+                            <a target="_blank">
+                                < Linkedin />
                             </a>
                         </Link>
 

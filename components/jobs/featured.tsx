@@ -20,8 +20,15 @@ export default function FeaturedJobs() {
         const api = new JobApi();
 
         try {
-            const { items } = await api.search({ take: 6, order_by: "ASC" }) as Pagination<JobEntity>;
-            setJobs(items);
+            // No featured flag exists, so show the newest active job from each of up to 6 different companies.
+            const { items } = await api.search({ take: 30, order_by: "DESC" }) as Pagination<JobEntity>;
+            const seenCompanies = new Set();
+            setJobs(items.filter((job) => {
+                const companyKey = job.company?.id ?? job.id;
+                if (seenCompanies.has(companyKey)) return false;
+                seenCompanies.add(companyKey);
+                return true;
+            }).slice(0, 6));
         }
         catch (e) {
             globalAjaxExceptionHandler(e, { t: t, toast: toast });

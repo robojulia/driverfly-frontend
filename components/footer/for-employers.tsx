@@ -25,18 +25,18 @@ export default function ForEmployers() {
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link href="https://ctrecruiting.com/">
+                        <Link href="https://driverfly.co/driver-recruiting/">
                             <a className="nav-link" target="_blank">{t("DRIVER_RECRUITING")}</a>
                         </Link>
                     </li>
                     <li className="nav-item">
                         <Link href="/login">
-                            <a className="nav-link" href="#">{t("CREATE_JOB_POSTING")}</a>
+                            <a className="nav-link">{t("CREATE_JOB_POSTING")}</a>
                         </Link>
                     </li>
                     <li className="nav-item">
                         <Link href={myJobsLink}>
-                            <a className="nav-link" href="#">{t("MY_JOBS")}</a>
+                            <a className="nav-link">{t("MY_JOBS")}</a>
                         </Link>
                     </li>
                 </ul>

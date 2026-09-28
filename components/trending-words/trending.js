@@ -1,4 +1,20 @@
+import Link from "next/link";
 import { useTranslation } from "../../hooks/use-translation";
+
+// Search matches job title/description by substring, so each keyword is a short term that returns results.
+const TRENDING_KEYWORDS = [
+    "CDL",
+    "Class A",
+    "Local",
+    "Regional",
+    "OTR",
+    "Owner Operator",
+    "Flatbed",
+    "Reefer",
+    "Dry Van",
+    "Hotshot",
+    "Drayage",
+];
 
 export default function TrendingWords() {
     const { t } = useTranslation();
@@ -8,29 +24,13 @@ export default function TrendingWords() {
             <div className="content-trending ">
                 <ul className="trending-keywords">
                     <li className="title">{t("TRENDING_KEYWORDS")}</li>
-                    <li className="item"><a href="#">Drivers,</a></li>
-                    <li className="item"><a href="#">CDL Driver,</a></li>
-                    <li className="item"><a href="#">Truck Drivers,</a></li>
-                    <li className="item"><a href="#">Truck Driving,</a></li>
-                    <li className="item"><a href="#">All CDL Jobs,</a></li>
-                    <li className="item"><a href="#">Trucking Jobs,</a></li>
-                    <li className="item"><a href="#">Class A CDL,</a></li>
-                    <li className="item"><a href="#">Class B CDL,</a></li>
-                    <li className="item"><a href="#">Local Driver,</a></li>
-                    <li className="item"><a href="#">Regional Drivers,</a></li>
-                    <li className="item"><a href="#">Over The Road,</a></li>
-                    <li className="item"><a href="#">OTR / Long Haul Truck Driver,</a></li>
-                    <li className="item"><a href="#">White Glove Delivery Drivers,</a></li>
-                    <li className="item"><a href="#">Drayage &amp; Intermodal Container,</a></li>
-                    <li className="item"><a href="#">Transport Drivers,</a></li>
-                    <li className="item"><a href="#">Owner Operator Truck Driver,</a></li>
-                    <li className="item"><a href="#">Heavy Towing,</a></li>
-                    <li className="item"><a href="#">Boxtruck Drivers,</a></li>
-                    <li className="item"><a href="#">Hazmat Certified Drivers,</a></li>
-                    <li className="item"><a href="#">Auto Hauling Drivers,</a></li>
-                    <li className="item"><a href="#">Construction Transport Haulers,</a></li>
-                    <li className="item"><a href="#">Logging Drivers,</a></li>
-                    <li className="item"><a href="#">Pick-Up &amp; Delivery Drivers</a></li>
+                    {TRENDING_KEYWORDS.map((keyword, index) => (
+                        <li className="item" key={keyword}>
+                            <Link href={{ pathname: "/find-jobs", query: { keywords: keyword } }}>
+                                <a>{keyword}{index < TRENDING_KEYWORDS.length - 1 ? "," : ""}</a>
+                            </Link>
+                        </li>
+                    ))}
                 </ul>
             </div>
         </>

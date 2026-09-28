@@ -10,26 +10,19 @@ export const getServerSideProps = async ({ res }) => {
   const jobs = await jobApi.sitemap()
 
   const staticPagesPath = [
+    '',
     'about',
-    'blog-eldt',
-    'blog-tips',
-    'blog',
     'contact',
     'faq',
     'find-jobs',
     'find-schools',
-    'forgot-password',
     'login',
-    'otr-general-freight-drivers',
     'owner-operators',
-    'pricing',
     'privacy-policy',
-    'reset-password',
+    'resources',
     'signup',
     'terms-and-policies',
-    'terms-of-service',
     'third-party-resources',
-    'verify-email-token',
   ].map((staticPagePath) => (`${baseUrl}${staticPagePath}`))
 
 

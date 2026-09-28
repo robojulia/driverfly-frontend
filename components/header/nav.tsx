@@ -91,7 +91,7 @@ export default function MyNav() {
               </NavDropdown.Item>
             </NavDropdown>
             <Nav.Link className="nav-item ml-30">
-              <Link href="http://blog.driverfly.co" target="_blank">
+              <Link href="https://driverfly.co/blog/" target="_blank">
                 <div>{t('BLOGS')}</div>
               </Link>
             </Nav.Link>
