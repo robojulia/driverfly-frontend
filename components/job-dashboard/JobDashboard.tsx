@@ -19,7 +19,7 @@ import {
 import { toast } from 'react-toastify';
 import { DeleteButton } from '../buttons/delete-button';
 import { ReactivateJobButton } from '../jobs/reactivate-job';
-import { ExportToIndeedButton } from '../jobs/ExportToIndeedButton';
+import { PostToJobBoardsButton } from '../job-boards/post-to-job-boards-button';
 import { JobAICampaigns } from './JobAICampaigns';
 import { EligibilityOverview } from './EligibilityOverview';
 import { JobDetailsOverview } from './JobDetailsOverview';
@@ -345,11 +345,7 @@ export const JobDashboard: React.FC<JobDashboardProps> = ({
                 <BoxArrowUpRight className="me-1" />
                 View Job Posting
               </Button>
-              <ExportToIndeedButton
-                job={job}
-                mode="single"
-                className="me-2"
-              />
+              <PostToJobBoardsButton job={job} className="me-2" />
               <ReactivateJobButton
                 variant="outline-success"
                 job={job}
