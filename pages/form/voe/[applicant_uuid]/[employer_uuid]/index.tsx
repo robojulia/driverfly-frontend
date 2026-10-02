@@ -8,6 +8,7 @@ import {
 } from '../../../../../models/applicant';
 import ApplicantApi from '../../../../api/applicant';
 import styles from '../../../../../styles/digitalhiringapp.module.css';
+import { TitleLayout } from '../../../../../components/layouts/title-layout';
 
 export interface VoeFormProps {
   applicant: ApplicantEntity;
@@ -85,3 +86,7 @@ export async function getServerSideProps({ query }) {
     return { notFound: true };
   }
 }
+
+VoeForm.getLayout = function getLayout(page) {
+  return <TitleLayout title="Verification of Employment">{page}</TitleLayout>;
+};

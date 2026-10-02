@@ -3,6 +3,7 @@ import ApplicantInfoReleaseConsent from "../../../../components/forms/jotform/vo
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import ApplicantApi from "../../../api/applicant";
 import styles from "../../../../styles/digitalhiringapp.module.css";
+import { TitleLayout } from "../../../../components/layouts/title-layout";
 
 export interface ApplicantInfoReleaseConsentPageProps {
 	applicant: ApplicantEntity
@@ -44,3 +45,7 @@ export async function getServerSideProps({ query }) {
 		return { notFound: true };
 	}
 }
+
+ApplicantInfoReleaseConsentPage.getLayout = function getLayout(page) {
+  return <TitleLayout title="Applicant Information Release Consent">{page}</TitleLayout>;
+};

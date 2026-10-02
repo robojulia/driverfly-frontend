@@ -4,6 +4,7 @@ import styles from "../../../styles/digitalhiringapp.module.css";
 import { ApplicantFormStatus } from "../../../enums/applicants/applicant-form-status.enum";
 import { useTranslation } from "../../../hooks/use-translation";
 import ApplicantApi from "../../api/applicant";
+import { TitleLayout } from "../../../components/layouts/title-layout";
 
 export interface ApplicantHireStatusProps {
   applicant_uuid: string,
@@ -79,3 +80,6 @@ export async function getServerSideProps({ query }) {
   }
 }
 
+ApplicantHireStatusPage.getLayout = function getLayout(page) {
+  return <TitleLayout title="Applicant Hire Status">{page}</TitleLayout>;
+};

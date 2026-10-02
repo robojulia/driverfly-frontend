@@ -17,6 +17,7 @@ import {
 } from 'react-bootstrap-icons';
 import styles from './admin.module.css';
 import { getAdminSidebarItems } from '../../utils/admin-sidebar-config';
+import { TitleLayout } from '../../components/layouts/title-layout';
 
 const microservices = [
   {
@@ -131,5 +132,9 @@ export async function getServerSideProps() {
     props: {},
   };
 }
+
+AdminMicroservices.getLayout = function getLayout(page) {
+  return <TitleLayout title="Admin | Microservices">{page}</TitleLayout>;
+};
 
 export default AdminMicroservices;

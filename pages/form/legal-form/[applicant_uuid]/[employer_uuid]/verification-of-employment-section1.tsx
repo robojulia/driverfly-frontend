@@ -5,6 +5,7 @@ import { ApplicantEntity } from "../../../../../models/applicant/applicant.entit
 import ApplicantApi from "../../../../api/applicant";
 import { VerificationOfEmploymentSection1 } from "../../../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-1";
 import { ApplicantEmployerEntity } from "../../../../../models/applicant";
+import { TitleLayout } from "../../../../../components/layouts/title-layout";
 
 export interface VerificationOfEmploymentSection1PageProps {
 	applicant: ApplicantEntity,
@@ -57,3 +58,7 @@ export async function getServerSideProps({ query }) {
 		return { notFound: true };
 	}
 }
+
+VerificationOfEmploymentSection1Page.getLayout = function getLayout(page) {
+  return <TitleLayout title="Verification of Employment">{page}</TitleLayout>;
+};

@@ -8,6 +8,7 @@ import PageLayout from "../../../../components/layouts/page/page-layout";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../models/applicant";
 import ApplicantApi from "../../../api/applicant";
+import { TitleLayout } from "../../../../components/layouts/title-layout";
 
 export interface LongFormProps {
   entity: ApplicantEntity;
@@ -85,3 +86,6 @@ export async function getServerSideProps({ query }) {
   }
 }
 
+ApplicantProfile.getLayout = function getLayout(page) {
+  return <TitleLayout title="Applicant Profile">{page}</TitleLayout>;
+};

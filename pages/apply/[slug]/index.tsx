@@ -22,6 +22,7 @@ import { useJobAnalytics } from '../../../hooks/use-job-analytics';
 import styles from '../../../styles/digitalhiringapp.module.css';
 import CompanyApi from '../../api/company';
 import JobApi from '../../api/job';
+import { TitleLayout } from '../../../components/layouts/title-layout';
 
 export interface FullFormProps {
   employer?: CompanyEntity | null;
@@ -369,3 +370,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
     return { notFound: true };
   }
 }
+
+FullForm.getLayout = function getLayout(page) {
+  return <TitleLayout title={page.props.employer?.name ? `Apply to ${page.props.employer.name}` : 'Apply'}>{page}</TitleLayout>;
+};

@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { ApplicantEntity, ApplicantSuggestedJobEntity } from '../../../models/applicant'
 import { useTranslation } from '../../../hooks/use-translation'
 import { useEffectAsync } from '../../../utils/react'
+import { TitleLayout } from '../../../components/layouts/title-layout';
 
 export default function FindJobs({ applicant }) {
 
@@ -74,3 +75,7 @@ export async function getServerSideProps({ query }: GetServerSidePropsContext) {
         return { notFound: true };
     }
 }
+
+FindJobs.getLayout = function getLayout(page) {
+  return <TitleLayout title="Suggested Jobs">{page}</TitleLayout>;
+};

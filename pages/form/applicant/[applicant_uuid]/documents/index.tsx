@@ -14,6 +14,7 @@ import { ApplicantMissingDocumentsDto } from "../../../../../models/applicant/ap
 import { DocumentEntity } from "../../../../../models/documents/document.entity";
 import ApplicantApi from "../../../../api/applicant";
 import styles from "../../../../../styles/digitalhiringapp.module.css";
+import { TitleLayout } from "../../../../../components/layouts/title-layout";
 
 export interface MissingDocumentsProps {
     entity: ApplicantEntity;
@@ -134,3 +135,7 @@ export async function getServerSideProps({ query }) {
         return { notFound: true };
     }
 }
+
+MissingDocuments.getLayout = function getLayout(page) {
+  return <TitleLayout title="Upload Documents">{page}</TitleLayout>;
+};

@@ -18,6 +18,7 @@ import FormProgress from '../../../../components/forms/jotform/form-progress';
 import { useFormPersistence } from '../../../../hooks/use-form-persistence';
 import ProgressSaveIndicator from '../../../../components/forms/jotform/progress-save-indicator';
 import { mergeRestoredExtras } from '../../../../utils/merge-restored-extras';
+import { TitleLayout } from '../../../../components/layouts/title-layout';
 
 export interface LongFormProps {
   applicant: ApplicantEntity;
@@ -265,3 +266,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
     return { notFound: true };
   }
 }
+
+LongForm.getLayout = function getLayout(page) {
+  return <TitleLayout title="Driver Application">{page}</TitleLayout>;
+};

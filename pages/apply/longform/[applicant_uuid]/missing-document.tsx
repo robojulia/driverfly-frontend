@@ -9,6 +9,7 @@ import { ApplicantEntity } from '../../../../models/applicant';
 import ApplicantApi from '../../../api/applicant';
 import styles from '../../../../styles/digitalhiringapp.module.css';
 import 'react-toastify/dist/ReactToastify.css';
+import { TitleLayout } from '../../../../components/layouts/title-layout';
 
 export interface MissingDocumentsProps {
   entity: ApplicantEntity;
@@ -74,3 +75,7 @@ export async function getServerSideProps({ query }) {
     return { notFound: true };
   }
 }
+
+MissingDocuments.getLayout = function getLayout(page) {
+  return <TitleLayout title="Missing Documents">{page}</TitleLayout>;
+};

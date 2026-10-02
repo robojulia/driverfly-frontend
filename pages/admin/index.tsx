@@ -18,6 +18,7 @@ import {
 import Link from 'next/link';
 import styles from './admin.module.css';
 import { getAdminSidebarItems } from '../../utils/admin-sidebar-config';
+import { TitleLayout } from '../../components/layouts/title-layout';
 
 const AdminDashboard = () => {
   const { user, isSuperAdmin } = useAuth();
@@ -143,6 +144,10 @@ const AdminDashboard = () => {
       </Container>
     </DashboardLayout>
   );
+};
+
+AdminDashboard.getLayout = function getLayout(page) {
+  return <TitleLayout title="Admin Dashboard">{page}</TitleLayout>;
 };
 
 export default AdminDashboard;

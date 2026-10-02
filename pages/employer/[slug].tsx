@@ -151,5 +151,5 @@ export async function getServerSideProps(context) {
 }
 
 CompanyDetail.getLayout = function getLayout(page) {
-	return <PublicLayout>{page}</PublicLayout>;
+	return <PublicLayout title={page.props.company?.name || 'Employer'}>{page}</PublicLayout>;
 };

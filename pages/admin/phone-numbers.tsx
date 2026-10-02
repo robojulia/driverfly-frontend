@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/use-auth';
 import DashboardLayout from '../../components/dashboard/layouts/layout/dashboard-layout';
 import PhoneNumbersManagement from '../../components/admin/PhoneNumbersManagement';
 import { getAdminSidebarItems } from '../../utils/admin-sidebar-config';
+import { TitleLayout } from '../../components/layouts/title-layout';
 
 const AdminPhoneNumbersPage = () => {
   const { user, isSuperAdmin } = useAuth();
@@ -38,6 +39,10 @@ const AdminPhoneNumbersPage = () => {
       </Container>
     </DashboardLayout>
   );
+};
+
+AdminPhoneNumbersPage.getLayout = function getLayout(page) {
+  return <TitleLayout title="Admin | Phone Numbers">{page}</TitleLayout>;
 };
 
 export default AdminPhoneNumbersPage;

@@ -159,5 +159,5 @@ export async function getServerSideProps({ query }) {
 }
 
 VerifyPhone.getLayout = function getLayout(page) {
-  return <PublicLayout>{page}</PublicLayout>;
+  return <PublicLayout title="Verify Phone">{page}</PublicLayout>;
 };

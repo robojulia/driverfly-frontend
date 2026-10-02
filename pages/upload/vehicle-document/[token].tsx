@@ -5,6 +5,7 @@ import { FileEarmarkArrowUp, CheckCircle, XCircle, Upload } from 'react-bootstra
 import VehicleUploadTokenApi from '../../api/vehicle-upload-token';
 import { VehicleUploadTokenEntity } from '../../../models/company/vehicle-upload-token.entity';
 import { DocumentReminderType } from '../../../enums/vehicles/document-reminder-type.enum';
+import { TitleLayout } from '../../../components/layouts/title-layout';
 
 export default function VehicleDocumentUpload() {
   const router = useRouter();
@@ -462,3 +463,7 @@ export default function VehicleDocumentUpload() {
     </div>
   );
 }
+
+VehicleDocumentUpload.getLayout = function getLayout(page) {
+  return <TitleLayout title="Upload Vehicle Document">{page}</TitleLayout>;
+};

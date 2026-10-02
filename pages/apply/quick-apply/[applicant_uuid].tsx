@@ -16,6 +16,7 @@ import { CompanyEntity } from '../../../models/company/company.entity';
 import styles from '../../../styles/digitalhiringapp.module.css';
 import ApplicantApi from '../../api/applicant';
 import CompanyApi from '../../api/company';
+import { TitleLayout } from '../../../components/layouts/title-layout';
 
 export interface QuickApplyProps {
   entity: ApplicantEntity;
@@ -135,3 +136,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
     return { notFound: true };
   }
 }
+
+QuickApply.getLayout = function getLayout(page) {
+  return <TitleLayout title="Quick Apply">{page}</TitleLayout>;
+};

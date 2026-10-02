@@ -29,6 +29,7 @@ import DocumentApi from '../../api/document';
 import { VehicleEntity } from '../../../models/company/vehicle.entity';
 import { VehicleType } from '../../../enums/vehicles/vehicle-type.enum';
 import { VehicleAccessory } from '../../../enums/vehicles/vehicle-accessory.enum';
+import { TitleLayout } from '../../../components/layouts/title-layout';
 
 export default function PublicVehicle() {
   const router = useRouter();
@@ -752,3 +753,7 @@ export default function PublicVehicle() {
     </div>
   );
 }
+
+PublicVehicle.getLayout = function getLayout(page) {
+  return <TitleLayout title="Vehicle Details">{page}</TitleLayout>;
+};

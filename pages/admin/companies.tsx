@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/use-auth';
 import DashboardLayout from '../../components/dashboard/layouts/layout/dashboard-layout';
 import CompanyManager from '../../components/admin/CompanyManager';
 import { getAdminSidebarItems } from '../../utils/admin-sidebar-config';
+import { TitleLayout } from '../../components/layouts/title-layout';
 
 const AdminCompanies = () => {
   const { user, isSuperAdmin } = useAuth();
@@ -40,6 +41,10 @@ const AdminCompanies = () => {
       </Container>
     </DashboardLayout>
   );
+};
+
+AdminCompanies.getLayout = function getLayout(page) {
+  return <TitleLayout title="Admin | Companies">{page}</TitleLayout>;
 };
 
 export default AdminCompanies;

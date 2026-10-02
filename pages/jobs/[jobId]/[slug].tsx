@@ -108,5 +108,5 @@ export async function getServerSideProps({ params, query }) {
 }
 
 Detail.getLayout = function getLayout(page) {
-  return <PublicLayout>{page}</PublicLayout>;
+  return <PublicLayout title={page.props.job?.title || 'Job Details'}>{page}</PublicLayout>;
 };

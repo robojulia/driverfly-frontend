@@ -3,6 +3,7 @@ import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import ApplicantApi from "../../../api/applicant";
 import styles from "../../../../styles/digitalhiringapp.module.css";
 import "react-toastify/dist/ReactToastify.css";
+import { TitleLayout } from "../../../../components/layouts/title-layout";
 
 export interface DisclosureAttachmentPageProps {
 	applicant: ApplicantEntity
@@ -44,3 +45,7 @@ export async function getServerSideProps({ query }) {
 		return { notFound: true };
 	}
 }
+
+DisclosureAttachmentPage.getLayout = function getLayout(page) {
+  return <TitleLayout title="Disclosure & Authorization">{page}</TitleLayout>;
+};

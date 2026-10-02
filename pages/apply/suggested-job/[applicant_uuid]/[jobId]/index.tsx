@@ -15,6 +15,7 @@ import ApplicantApi from '../../../../api/applicant';
 import CompanyApi from '../../../../api/company';
 import JobApi from '../../../../api/job';
 import styles from '../../../../../styles/digitalhiringapp.module.css';
+import { TitleLayout } from '../../../../../components/layouts/title-layout';
 
 export interface SuggestedJobsProps {
   entity: ApplicantEntity;
@@ -197,3 +198,7 @@ export async function getServerSideProps({ query }) {
     return { notFound: true };
   }
 }
+
+SuggestedJobs.getLayout = function getLayout(page) {
+  return <TitleLayout title="Suggested Job">{page}</TitleLayout>;
+};

@@ -153,7 +153,7 @@ export async function getServerSideProps({ query }) {
 
 VerifyEmail.getLayout = function getLayout(page) {
   return (
-    <PublicLayout>
+    <PublicLayout title="Verify Email">
       {page}
     </PublicLayout>
   )

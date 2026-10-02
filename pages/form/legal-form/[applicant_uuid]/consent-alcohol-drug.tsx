@@ -2,6 +2,7 @@ import ConsentAlcoholDrug from "../../../../components/forms/jotform/voe-forms/l
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import ApplicantApi from "../../../api/applicant";
 import styles from "../../../../styles/digitalhiringapp.module.css";
+import { TitleLayout } from "../../../../components/layouts/title-layout";
 
 export interface ConsentAlcoholDrugPageProps {
 	applicant: ApplicantEntity
@@ -43,3 +44,7 @@ export async function getServerSideProps({ query }) {
 		return { notFound: true };
 	}
 }
+
+ConsentAlcoholDrugPage.getLayout = function getLayout(page) {
+  return <TitleLayout title="Drug & Alcohol Testing Consent">{page}</TitleLayout>;
+};

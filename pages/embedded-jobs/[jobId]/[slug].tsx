@@ -48,7 +48,7 @@ export async function getServerSideProps(context) {
 
 Detail.getLayout = function getLayout(page) {
   return (
-    <EmbeddedLayout>
+    <EmbeddedLayout title={page.props.job?.title || 'Job Details'}>
       {page}
     </EmbeddedLayout>
   )

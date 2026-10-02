@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/use-auth';
 import DashboardLayout from '../../components/dashboard/layouts/layout/dashboard-layout';
 import ApplicantSearchManager from '../../components/admin/ApplicantSearchManager';
 import { getAdminSidebarItems } from '../../utils/admin-sidebar-config';
+import { TitleLayout } from '../../components/layouts/title-layout';
 
 const AdminApplicantSearch = () => {
   const { user, isSuperAdmin } = useAuth();
@@ -41,6 +42,10 @@ const AdminApplicantSearch = () => {
       </Container>
     </DashboardLayout>
   );
+};
+
+AdminApplicantSearch.getLayout = function getLayout(page) {
+  return <TitleLayout title="Admin | Applicant Search">{page}</TitleLayout>;
 };
 
 export default AdminApplicantSearch;

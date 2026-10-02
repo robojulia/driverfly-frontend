@@ -7,6 +7,7 @@ import { ApplicantEmployerEntity, ApplicantEntity } from '../../../../../models/
 import { ShowUsFormattedDateTime } from '../../../../../utils/show-us-formatted-date-time';
 import ApplicantApi from '../../../../api/applicant';
 import styles from '../../../../../styles/digitalhiringapp.module.css';
+import { TitleLayout } from '../../../../../components/layouts/title-layout';
 
 export interface VoeFormProps {
   applicant: ApplicantEntity;
@@ -137,3 +138,7 @@ export async function getServerSideProps({ query }) {
     return { notFound: true };
   }
 }
+
+ViewVoeForm.getLayout = function getLayout(page) {
+  return <TitleLayout title="Verification of Employment">{page}</TitleLayout>;
+};

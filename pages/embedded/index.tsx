@@ -189,7 +189,7 @@ export async function getServerSideProps({ query }: GetServerSidePropsContext) {
 }
 Embedded.getLayout = function getLayout(page) {
     return (
-        <EmbeddedLayout>
+        <EmbeddedLayout title="Find Jobs">
             {page}
         </EmbeddedLayout>
     )

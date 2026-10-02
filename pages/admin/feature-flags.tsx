@@ -15,6 +15,7 @@ import {
 import { useAuth } from '../../hooks/use-auth';
 import { useRouter } from 'next/router';
 import DashboardLayout from '../../components/dashboard/layouts/layout/dashboard-layout';
+import { TitleLayout } from '../../components/layouts/title-layout';
 import { Plus, Pencil, Trash, Eye, EyeSlash } from 'react-bootstrap-icons';
 import FeatureFlagsApi, { FeatureFlag } from '../api/feature-flags';
 import { toast } from 'react-toastify';
@@ -397,6 +398,8 @@ export default function FeatureFlagsAdmin() {
 
 FeatureFlagsAdmin.getLayout = function getLayout(page) {
   return (
-    <DashboardLayout sidebarItems={getAdminSidebarItems('Feature Flags')}>{page}</DashboardLayout>
+    <TitleLayout title="Admin | Feature Flags">
+      <DashboardLayout sidebarItems={getAdminSidebarItems('Feature Flags')}>{page}</DashboardLayout>
+    </TitleLayout>
   );
 };

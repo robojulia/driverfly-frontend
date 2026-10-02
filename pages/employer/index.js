@@ -11,7 +11,7 @@ export default function Index()
 
 Index.getLayout = function getLayout(page) {
     return (
-        <PublicLayout>
+        <PublicLayout title="Employers">
             {page}
         </PublicLayout>
     )

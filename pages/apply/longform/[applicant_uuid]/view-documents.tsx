@@ -7,6 +7,7 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../models/applicant";
 import ApplicantApi from "../../../api/applicant";
 import styles from "../../../../styles/digitalhiringapp.module.css";
+import { TitleLayout } from "../../../../components/layouts/title-layout";
 
 export interface DocumentsProps {
   entity: ApplicantEntity;
@@ -75,3 +76,7 @@ export async function getServerSideProps({ query }) {
     return { notFound: true };
   }
 }
+
+Documents.getLayout = function getLayout(page) {
+  return <TitleLayout title="Application Documents">{page}</TitleLayout>;
+};
